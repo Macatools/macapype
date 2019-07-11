@@ -6,12 +6,15 @@ import nipype.pipeline.engine as pe
 
 from nipype.utils.misc import show_files
 
+import nipype.interfaces.fsl as fsl
+fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
+
 import os
 
-from segment_pnh_pipes import (create_denoised_cropped_pipe, create_cropped_denoised_pipe,
-                               create_correct_bias_pipe,
-                               create_brain_extraction_pipe,
-                               create_brain_segment_pipe)
+from macapype.pipelines.segment import (
+    create_denoised_cropped_pipe, create_cropped_denoised_pipe,
+    create_correct_bias_pipe, create_brain_extraction_pipe,
+    create_brain_segment_pipe)
 
 data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
@@ -69,19 +72,19 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes", crop_list = [(88, 
     ##seg_pipe.connect(preproc_pipe,'denoise_T2.aonlm_denoised_img_file',correct_bias_pipe,'inputnode.cropped_T2')
 
 
-    #### otherwise using nibabel node
-    from segment_pnh_nodes import correct_bias_T1_T2
+    ##### otherwise using nibabel node
+    #from nodes.segment_pnh_nodes import correct_bias_T1_T2
 
-    correct_bias = pe.Node(interface = niu.Function(
-        input_names=["preproc_T1_file","preproc_T2_file", "sigma"],
-        output_names =  ["thresh_lower_file", "norm_mult_file", "bias_file", "smooth_bias_file", "restore_T1_file", "restore_T2_file"],
-        function = correct_bias_T1_T2),
-        name = "correct_bias")
+    #correct_bias = pe.Node(interface = niu.Function(
+        #input_names=["preproc_T1_file","preproc_T2_file", "sigma"],
+        #output_names =  ["thresh_lower_file", "norm_mult_file", "bias_file", "smooth_bias_file", "restore_T1_file", "restore_T2_file"],
+        #function = correct_bias_T1_T2),
+        #name = "correct_bias")
 
-    correct_bias.inputs.sigma = sigma*2
+    #correct_bias.inputs.sigma = sigma*2
 
-    seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias,'preproc_T1_file')
-    seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
+    #seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias,'preproc_T1_file')
+    #seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
 
     ####################
     brain_extraction_pipe = create_brain_extraction_pipe()
@@ -98,7 +101,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes", crop_list = [(88, 
 
 def create_main_workflow():
 
-    main_workflow = pe.Workflow(name= "test_pnh_subpipelines_avmult_tmp")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee")
     main_workflow.base_dir = main_path
 
     ## Infosource
@@ -131,4 +134,4 @@ if __name__ =='__main__':
     wf.config['execution'] = {'remove_unnecessary_outputs':'false'}
 
     #wf.run()
-    #wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+    wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
