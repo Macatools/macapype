@@ -11,10 +11,12 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 import os
 
-from macapype.pipelines.segment import (
-    create_denoised_cropped_pipe, create_cropped_denoised_pipe,
-    create_correct_bias_pipe, create_brain_extraction_pipe,
-    create_brain_segment_pipe)
+from macapype.pipelines.denoise import (
+    create_denoised_cropped_pipe, create_cropped_denoised_pipe)
+
+from macapype.pipelines.correct_bias import create_correct_bias_pipe
+from macapype.pipelines.extract_brain import create_brain_extraction_pipe
+from macapype.pipelines.segment import create_brain_segment_pipe
 
 data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
@@ -40,7 +42,9 @@ def create_datasource():
 
    return datasource
 
-def create_segment_pnh_subpipes(name= "segment_pnh_subpipes", crop_list = [(88, 144), (14, 180), (27, 103)], sigma = 4):
+def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
+                                crop_list = [(88, 144), (14, 180), (27, 103)],
+                                sigma = 4):
 
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
@@ -65,6 +69,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes", crop_list = [(88, 
 
     seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias_pipe,'inputnode.preproc_T2')
+
 
     ##correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
 
@@ -92,6 +97,8 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes", crop_list = [(88, 
     seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file', brain_extraction_pipe,"inputnode.restore_T1")
     seg_pipe.connect(correct_bias_pipe,'restore_T2.out_file', brain_extraction_pipe,"inputnode.restore_T2")
 
+    return seg_pipe
+
     ################### segment
     brain_segment_pipe = create_brain_segment_pipe()
 
@@ -101,7 +108,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes", crop_list = [(88, 
 
 def create_main_workflow():
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee2")
     main_workflow.base_dir = main_path
 
     ## Infosource

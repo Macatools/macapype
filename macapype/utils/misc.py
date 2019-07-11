@@ -1,3 +1,10 @@
+#### on the fly function for checking what is passed in "connect"
+#### should end up in ~ nipype.utils.misc
+
+def show_files(files):
+    print(files)
+    return files
+
 def print_val(val):
     print(val)
     return val
