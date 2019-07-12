@@ -43,6 +43,7 @@ def create_datasource():
 
    return datasource
 
+###############################################################################
 def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
                                 crop_list = [(88, 144), (14, 180), (27, 103)],
                                 sigma = 4):
@@ -56,7 +57,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
         name='inputnode')
 
     """
-    old version (when we worked together)
+    old version (when we worked together a few months ago)
     - preproc
     - cropped_denoise
     - correct_bias
@@ -117,6 +118,85 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     return seg_pipe
 
+
+###############################################################################
+
+def create_segment_pnh_subpipes_new(name= "segment_pnh_subpipes",
+                                crop_list = [(88, 144), (14, 180), (27, 103)],
+                                sigma = 4):
+
+    # creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1','T2']),
+        name='inputnode')
+
+    """
+    new version (as it is now)
+    - preproc
+    - correct_bias
+    - denoise_cropped
+    - extract_brain
+    - segment
+    """
+
+    #### preprocessing (avg and align)
+    preproc_pipe = create_average_align_pipe()
+
+    seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
+    seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
+
+    #### Correct_bias_T1_T2
+    correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
+
+    seg_pipe.connect(preproc_pipe, "av_T1.avg_img",correct_bias_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", correct_bias_pipe,'inputnode.preproc_T2')
+    """
+    ##### otherwise using nibabel node
+    #from nodes.segment_pnh_nodes import correct_bias_T1_T2
+
+    #correct_bias = pe.Node(interface = niu.Function(
+        #input_names=["preproc_T1_file","preproc_T2_file", "sigma"],
+        #output_names =  ["thresh_lower_file", "norm_mult_file", "bias_file", "smooth_bias_file", "restore_T1_file", "restore_T2_file"],
+        #function = correct_bias_T1_T2),
+        #name = "correct_bias")
+
+    #correct_bias.inputs.sigma = sigma*2
+
+    #seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias,'preproc_T1_file')
+    #seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
+    """
+
+    #### denoising and cropping
+    denoise_pipe = create_denoised_cropped_pipe(crop_list = crop_list, sigma = sigma)
+
+    seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
+
+    #### brain extraction
+    brain_extraction_pipe = create_brain_extraction_pipe()
+
+    #### si cropped_denoise
+    ##correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
+
+    ##seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
+    ##seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
+
+    #### si denoised_cropped
+    correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
+
+    seg_pipe.connect(denoise_pipe,'crop_bb_T1.roi_file',brain_extraction_pipe,"inputnode.restore_T1")
+    seg_pipe.connect(denoise_pipe,'crop_bb_T2.roi_file',brain_extraction_pipe,"inputnode.restore_T2")
+
+    ################### segment
+    brain_segment_pipe = create_brain_segment_pipe()
+
+    seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
+
+    return seg_pipe
+
 def create_main_workflow():
 
     main_workflow = pe.Workflow(name= "test_pipeline_kepkee_modif")
@@ -136,7 +216,8 @@ def create_main_workflow():
 
     print('segment_pnh')
 
-    segment_pnh = create_segment_pnh_subpipes()
+    #segment_pnh = create_segment_pnh_subpipes()
+    segment_pnh = create_segment_pnh_subpipes_new()
 
     main_workflow.connect(datasource,'T1',segment_pnh,'inputnode.T1')
     main_workflow.connect(datasource,'T2',segment_pnh,'inputnode.T2')
