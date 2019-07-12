@@ -11,6 +11,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 import os
 
+from macapype.pipelines.preproc import create_average_align_pipe
 from macapype.pipelines.denoise import (
     create_denoised_cropped_pipe, create_cropped_denoised_pipe)
 
@@ -54,27 +55,39 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
         niu.IdentityInterface(fields=['T1','T2']),
         name='inputnode')
 
-    preproc_pipe = create_denoised_cropped_pipe(crop_list = crop_list, sigma = sigma)
+    """
+    old version (when we worked together)
+    - preproc
+    - cropped_denoise
+    - correct_bias
+    - extract_brain
+    - segment
+    """
+
+    ########### preprocessing (avg and align)
+    preproc_pipe = create_average_align_pipe()
 
     seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
     seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
 
-    ##preproc_pipe = create_cropped_denoised_pipe(crop_list = crop_list, sigma = sigma)
+    ########### denoising and cropping
+    denoise_pipe = create_cropped_denoised_pipe(crop_list = crop_list, sigma = sigma)
 
-    ##seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
-    ##seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
+    seg_pipe.connect(preproc_pipe, "av_T1.avg_img", denoise_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", denoise_pipe,'inputnode.preproc_T2')
 
     ##### Correct_bias_T1_T2
+    ### if denoised_cropped
+    #correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
+
+    #seg_pipe.connect(denoise_pipe, 'crop_bb_T1.roi_file',correct_bias_pipe,'inputnode.preproc_T1')
+    #seg_pipe.connect(denoise_pipe, 'crop_bb_T2.roi_file',correct_bias_pipe,'inputnode.preproc_T2')
+
+    ### if cropped_denoised
     correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
 
-    seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias_pipe,'inputnode.preproc_T2')
-
-
-    ##correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
-
-    ##seg_pipe.connect(preproc_pipe,'denoise_T1.aonlm_denoised_img_file',correct_bias_pipe,'inputnode.cropped_T1')
-    ##seg_pipe.connect(preproc_pipe,'denoise_T2.aonlm_denoised_img_file',correct_bias_pipe,'inputnode.cropped_T2')
+    seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',correct_bias_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',correct_bias_pipe,'inputnode.preproc_T2')
 
 
     ##### otherwise using nibabel node
@@ -97,8 +110,6 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file', brain_extraction_pipe,"inputnode.restore_T1")
     seg_pipe.connect(correct_bias_pipe,'restore_T2.out_file', brain_extraction_pipe,"inputnode.restore_T2")
 
-    return seg_pipe
-
     ################### segment
     brain_segment_pipe = create_brain_segment_pipe()
 
@@ -108,7 +119,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
 def create_main_workflow():
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee2")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_modif")
     main_workflow.base_dir = main_path
 
     ## Infosource
@@ -141,4 +152,4 @@ if __name__ =='__main__':
     wf.config['execution'] = {'remove_unnecessary_outputs':'false'}
 
     #wf.run()
-    wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+    #wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
