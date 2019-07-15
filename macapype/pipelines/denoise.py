@@ -15,7 +15,7 @@ from nipype.utils.filemanip import split_filename as split_f
 from ..nodes.denoise import nonlocal_denoise
 
 ######################### Preprocessing: Avg multiples images, align T2 to T1, and crop/denoise in both order
-def create_cropped_denoised_pipe(name= "cropped_denoised_pipe", crop_list = [(88, 144), (14, 180), (27, 103)], sigma = 4):
+def create_cropped_denoised_pipe(crop_list, name= "cropped_denoised_pipe"):
 
     # creating pipeline
     cropped_denoised_pipe = pe.Workflow(name=name)
@@ -52,9 +52,7 @@ def create_cropped_denoised_pipe(name= "cropped_denoised_pipe", crop_list = [(88
 
     return cropped_denoised_pipe
 
-def create_denoised_cropped_pipe(name="denoised_cropped_pipe",
-                                 crop_list=[(88, 144), (14, 180), (27, 103)],
-                                 sigma=4):
+def create_denoised_cropped_pipe(crop_list, name="denoised_cropped_pipe"):
 
     # creating pipeline
     denoised_cropped_pipe = pe.Workflow(name=name)
