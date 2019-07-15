@@ -17,7 +17,8 @@ from macapype.pipelines.denoise import (
 
 from macapype.pipelines.correct_bias import create_correct_bias_pipe
 from macapype.pipelines.extract_brain import create_brain_extraction_pipe
-from macapype.pipelines.segment import create_brain_segment_pipe
+from macapype.pipelines.segment import (create_brain_segment_pipe,
+    create_full_segment_pipe)
 
 data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
@@ -123,7 +124,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
 def create_segment_pnh_subpipes_new(name= "segment_pnh_subpipes",
                                 crop_list = [(88, 144), (14, 180), (27, 103)],
-                                sigma = 4):
+                                sigma = 2):
 
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
@@ -170,7 +171,7 @@ def create_segment_pnh_subpipes_new(name= "segment_pnh_subpipes",
     """
 
     #### denoising and cropping
-    denoise_pipe = create_denoised_cropped_pipe(crop_list = crop_list, sigma = sigma)
+    denoise_pipe = create_denoised_cropped_pipe(crop_list = crop_list)
 
     seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
@@ -179,27 +180,30 @@ def create_segment_pnh_subpipes_new(name= "segment_pnh_subpipes",
     brain_extraction_pipe = create_brain_extraction_pipe()
 
     #### si cropped_denoise
-    ##correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
-
     ##seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
     ##seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
 
     #### si denoised_cropped
-    correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
-
     seg_pipe.connect(denoise_pipe,'crop_bb_T1.roi_file',brain_extraction_pipe,"inputnode.restore_T1")
     seg_pipe.connect(denoise_pipe,'crop_bb_T2.roi_file',brain_extraction_pipe,"inputnode.restore_T2")
 
     ################### segment
-    brain_segment_pipe = create_brain_segment_pipe()
+    #brain_segment_pipe = create_brain_segment_pipe()
+    #seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
 
-    seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
+    ################### full_segment
+    brain_segment_pipe = create_full_segment_pipe(crop_list = crop_list, sigma = sigma)
+
+    seg_pipe.connect(preproc_pipe, "av_T1.avg_img",brain_segment_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", brain_segment_pipe,'inputnode.preproc_T2')
+
+    seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
 
     return seg_pipe
 
 def create_main_workflow():
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_modif")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_full")
     main_workflow.base_dir = main_path
 
     ## Infosource
@@ -232,5 +236,5 @@ if __name__ =='__main__':
     wf.write_graph(graph2use = "colored")
     wf.config['execution'] = {'remove_unnecessary_outputs':'false'}
 
-    #wf.run()
+    wf.run()
     #wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
