@@ -113,7 +113,7 @@ def wrap_NMT_subject_align(T1_file):
     ## just to be sure...
     #os.chdir(nmt_dir)
 
-    os.system("tcsh -x {} {} {}".format(script_file, nmt_ss_file, T1_file))
+    os.system("tcsh -x {} {} {}".format(script_file, T1_file, nmt_ss_file))
 
     shft_aff_file = os.path.abspath(fname + "_shft_aff" + ext )
     warpinv_file = os.path.abspath(fname + "_shft_WARPINV" + ext )
