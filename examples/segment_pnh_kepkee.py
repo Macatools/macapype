@@ -4,8 +4,6 @@ import nipype.interfaces.io as nio
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
-from nipype.utils.misc import show_files
-
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
@@ -19,6 +17,8 @@ from macapype.pipelines.correct_bias import create_correct_bias_pipe
 from macapype.pipelines.extract_brain import create_brain_extraction_pipe
 from macapype.pipelines.segment import (create_brain_segment_pipe,
     create_full_segment_pipe)
+
+from macapype.utils.misc import show_files
 
 data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
