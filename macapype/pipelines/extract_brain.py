@@ -9,7 +9,6 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.ants as ants
 
-from nipype.utils.misc import show_files
 from nipype.utils.filemanip import split_filename as split_f
 
 from ..nodes.extract_brain import apply_atlasBREX

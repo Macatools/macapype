@@ -10,12 +10,11 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.ants as ants
 
-from nipype.utils.misc import show_files
 from nipype.utils.filemanip import split_filename as split_f
 
 #fsl.FSLCommand.set_default_output_type('NIFTI')
 
-from ..utils.misc import (print_val, print_nii_data)
+from ..utils.misc import (show_files, print_val, print_nii_data)
 
 from ..nodes.segment import (wrap_NMT_subject_align, wrap_antsAtroposN4_dirty,
     add_Nwarp)
