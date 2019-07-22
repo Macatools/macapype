@@ -203,7 +203,7 @@ def create_segment_pnh_subpipes_new(name= "segment_pnh_subpipes",
 
 def create_main_workflow():
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_full")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_by_kepkee")
     main_workflow.base_dir = main_path
 
     ## Infosource
