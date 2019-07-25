@@ -215,8 +215,7 @@ def create_full_segment_pipe(crop_list, sigma, name="full_segment_pipe"):
     brain_segment_pipe.connect(norm_intensity, "output_image",
                                bin_norm_intensity, "in_file")
 
-    # align subj to nmt
-    # NMT_subject_align
+    # align subj to nmt (with NMT_subject_align)
     NMT_subject_align = pe.Node(niu.Function(
         input_names=["T1_file"],
         output_names=["shft_aff_file", "warpinv_file", "transfo_file",
