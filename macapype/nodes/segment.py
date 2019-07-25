@@ -107,7 +107,7 @@ def wrap_NMT_subject_align(T1_file):
 
     script_file = os.path.join(nmt_dir,"NMT_subject_align.csh")
 
-    path, fname, ext = split_f(nmt_ss_file)
+    path, fname, ext = split_f(T1_file)
     #shutil.copy(T1_file,cur_dir)
 
     ## just to be sure...
