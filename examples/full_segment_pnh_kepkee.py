@@ -26,60 +26,59 @@ def create_infosource():
 
     return infosource
 
-main_path = "/hpc/meca/users/loh.k/test_pipeline"
-prev_pipe_path = os.path.join(main_path, "test_pipeline_kepkee_by_kepkee",
-                             "segment_pnh_subpipes")
-def create_datasource_preproc_by_macapype():
-   datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2', 'mask']),name = 'datasource')
-   datasource.inputs.base_directory = prev_pipe_path
-   datasource.inputs.template = '%s/%s%s/%s%s/%ssub-%s_ses-001_run-*_%s.nii.gz'
-   datasource.inputs.template_args = dict(
-       T1=[["average_align_pipe","_subject_id_", 'subject_id',"","av_T1","",
-            'subject_id',"T1w_flirt"]],
-       T2=[["average_align_pipe","_subject_id_", 'subject_id',"","align_T2_on_T1",
-            "",'subject_id',"T2w_flirt"]],
-       mask=[["brain_extraction_pipe", "_subject_id_",
-              'subject_id', "","smooth_mask", "avg_", 'subject_id',
-              #'T1w_maths_aonlm_denoised_roi_brain_bin_bin_nice']],
-              'T1w_maths_aonlm_denoised_roi_brain_bin_bin']],
-       )
-   datasource.inputs.sort_filelist = True
-
-   return datasource
-
-
-#main_path = "/hpc/meca/users/loh.k/macaque_preprocessing/preprocessed_030419/"
-#site = "sbri"
-#subject_ids = ['032311']
-
-#def create_datasource_preproc_by_bash():
+#main_path = "/hpc/meca/users/loh.k/test_pipeline"
+#prev_pipe_path = os.path.join(main_path, "test_pipeline_kepkee_by_kepkee",
+                             #"segment_pnh_subpipes")
+#def create_datasource_preproc_by_macapype():
    #datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2', 'mask']),name = 'datasource')
-   #datasource.inputs.base_directory = main_path
-   #datasource.inputs.template = '%s_%s/%s_%s_%s.nii.gz'
+   #datasource.inputs.base_directory = prev_pipe_path
+   #datasource.inputs.template = '%s/%s%s/%s%s/%ssub-%s_ses-001_run-*_%s.nii.gz'
    #datasource.inputs.template_args = dict(
-       #T1=[[site,'subject_id',site,'subject_id','t1']],
-       #T2=[[site,'subject_id',site,'subject_id','t2']],
-       #mask=[[site,'subject_id',site,'subject_id','brainmask']])
-       ##mask=[[site,'subject_id',site,'subject_id','brainmask_nice']])
+       #T1=[["average_align_pipe","_subject_id_", 'subject_id',"","av_T1","",
+            #'subject_id',"T1w_flirt"]],
+       #T2=[["average_align_pipe","_subject_id_", 'subject_id',"","align_T2_on_T1",
+            #"",'subject_id',"T2w_flirt"]],
+       #mask=[["brain_extraction_pipe", "_subject_id_",
+              #'subject_id', "","smooth_mask", "avg_", 'subject_id',
+              ##'T1w_maths_aonlm_denoised_roi_brain_bin_bin_nice']],
+              #'T1w_maths_aonlm_denoised_roi_brain_bin_bin']],
+       #)
    #datasource.inputs.sort_filelist = True
 
    #return datasource
+
+
+data_path = "/hpc/meca/users/loh.k/macaque_preprocessing/preprocessed_030419/"
+main_path = "/hpc/meca/users/loh.k/test_pipeline"
+
+def create_datasource_preproc_by_bash():
+   datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2', 'mask']),name = 'datasource')
+   datasource.inputs.base_directory = data_path
+   datasource.inputs.template = '%s_%s/%s_%s_%s.nii.gz'
+   datasource.inputs.template_args = dict(
+       T1=[[site,'subject_id',site,'subject_id','t1']],
+       T2=[[site,'subject_id',site,'subject_id','t2']],
+       mask=[[site,'subject_id',site,'subject_id','brainmask']])
+       #mask=[[site,'subject_id',site,'subject_id','brainmask_nice']])
+   datasource.inputs.sort_filelist = True
+
+   return datasource
 
 ###############################################################################
 
 def create_main_workflow():
 
-    main_workflow = pe.Workflow(name= "test_pipeline_full_segment")
+    main_workflow = pe.Workflow(name= "test_pipeline_full_segment_bash")
     main_workflow.base_dir = main_path
 
     ## Infosource
     infosource = create_infosource()
 
     ## Data source
-    datasource = create_datasource_preproc_by_macapype() # if done with other
+    #datasource = create_datasource_preproc_by_macapype() # if done with other
     # script segment_pnh_kepkee.py
 
-    #datasource = create_datasource_preproc_by_bash() # if done with bash
+    datasource = create_datasource_preproc_by_bash() # if done with bash
     # script
 
     ## connect
