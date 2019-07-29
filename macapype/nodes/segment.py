@@ -135,9 +135,9 @@ def add_Nwarp(list_prior_files):
 
         path, fname, ext = split_f(prior_file)
         #out_files.append(os.path.join(path,fname + "_Nwarp" + ext))
-        out_files.append(os.path.join(path,fname + "_Nwarp" + ext))
+        out_files.append(os.path.abspath(fname + "_Nwarp" + ext))
 
     for i in range(1,4):
-        out_files.append(os.path.join(path,"tmp_%02d.nii.gz"%i))
+        out_files.append(os.path.abspath("tmp_%02d.nii.gz"%i))
 
     return out_files
