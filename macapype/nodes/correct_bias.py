@@ -183,3 +183,22 @@ def correct_bias_T1_T2(preproc_T1_file, preproc_T2_file, sigma = 8):
     nib.save(nib.Nifti1Image(restore_T2,header = preproc_T2_img.get_header(),affine = preproc_T2_img.get_affine()),restore_T2_file)
 
     return thresh_lower_file, norm_mult_file, bias_file, smooth_bias_file, restore_T1_file, restore_T2_file
+
+
+def interative_N4_debias(input_image, stop_param):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path,name,ext = split_f(input_image)
+
+    debiased_image = os.path.abspath( name + "_corrected" + ext)
+
+    cmd_line = "N4BiasFieldCorrection -i {} -o {}".format(input_image,
+                                                          debiased_image)
+    os.system(cmd_line)
+
+    return debiased_image
+
+
+
