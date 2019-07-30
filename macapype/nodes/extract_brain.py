@@ -9,7 +9,7 @@ def apply_atlasBREX(t1_restored_file):
     from nipype.utils.filemanip import split_filename as split_f
 
     cur_dir = os.path.abspath("")
-    print cur_dir
+    print(cur_dir)
 
     script_dir = "/hpc/meca/users/loh.k/macaque_preprocessing/preproc_cloud/processing_scripts/"
     script_atlas_BREX = os.path.join(script_dir,"atlasBREX_fslfrioul.sh")
