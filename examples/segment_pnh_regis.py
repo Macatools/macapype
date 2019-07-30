@@ -20,10 +20,17 @@ from macapype.pipelines.correct_bias import create_debias_N4_pipe
 from macapype.nodes.correct_bias import interative_N4_debias
 from macapype.nodes.denoise import nonlocal_denoise
 
+from macapype.nodes.register import interative_flirt
+
 
 #from macapype.pipelines.extract_brain import create_brain_extraction_pipe
 #from macapype.pipelines.segment import (create_brain_segment_pipe,
 #    create_full_segment_pipe)
+
+nmt_dir="/hpc/meca/users/loh.k/macaque_preprocessing/NMT_v1.2/"
+
+nmt_file = os.path.join(nmt_dir,"NMT.nii.gz")
+nmt_mask_file = os.path.join(nmt_dir, 'masks','anatomical_masks','NMT_brainmask.nii.gz')
 
 from macapype.utils.misc import show_files
 
@@ -96,15 +103,17 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
 
     #######  !!!! Attention , brain extraction should come in between !!!!!!!
     register = pe.Node(
-        niu.Function(input_names=["img_file","mask_file",'n_iter'],
+        niu.Function(input_names=["anat_file","template_file","template_mask_file",'n_iter'],
                      output_names=["realigned_file"],
                      function=interative_flirt),
         name = "register")
 
     seg_pipe.connect(denoise_T1, 'denoised_img_file',
-                                  register, 'img_file')
+                                  register, 'anat_file')
 
-
+    register.inputs.template_file = nmt_file
+    register.inputs.template_mask_file = nmt_mask_file
+    register.inputs.n_iter = 4
 
     return seg_pipe
 
