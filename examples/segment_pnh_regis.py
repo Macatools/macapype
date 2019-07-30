@@ -20,7 +20,7 @@ from macapype.pipelines.correct_bias import create_debias_N4_pipe
 from macapype.nodes.correct_bias import interative_N4_debias
 from macapype.nodes.denoise import nonlocal_denoise
 
-from macapype.nodes.register import interative_flirt
+from macapype.pipelines.register import create_register_pipe
 
 
 #from macapype.pipelines.extract_brain import create_brain_extraction_pipe
@@ -37,7 +37,12 @@ from macapype.utils.misc import show_files
 #data_path = "/home/INT/meunier.d/ownCloud/Documents/Hackaton/Data-Hackaton/Primavoice"
 data_path = "/hpc/crise/cagna.b/Primavoice"
 
-main_path = "/hpc/banco/cagna.b/projects/pipeline-anat-macaque/tests/"
+gm_prob_file = os.path.join(data_path, 'FSL','NMT_SS_pve_1.nii.gz')
+wm_prob_file = os.path.join(data_path, 'FSL','NMT_SS_pve_2.nii.gz')
+csf_prob_file = os.path.join(data_path, 'FSL','NMT_SS_pve_3.nii.gz')
+
+main_path = os.path.join(os.path.split(__file__)[0],"../tests/")
+
 
 subject_ids = ['Elouk']
 
@@ -101,18 +106,21 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
     seg_pipe.connect(debias_N4, 'output_image', denoise_T1, 'img_file')
 
     #######  !!!! Attention , brain extraction should come in between !!!!!!!
-    register = pe.Node(
-        niu.Function(input_names=["anat_file","template_file","template_mask_file",'n_iter'],
-                     output_names=["realigned_file"],
-                     function=interative_flirt),
-        name = "register")
 
+    bet = pe.Node(fsl.BET(), name = 'bet')
     seg_pipe.connect(denoise_T1, 'denoised_img_file',
-                                  register, 'anat_file')
+                                  bet, 'in_file')
+    bet.inputs.frac = 0.7
 
-    register.inputs.template_file = nmt_file
-    register.inputs.template_mask_file = nmt_mask_file
-    register.inputs.n_iter = 4
+    register_pipe = create_register_pipe(template_file = nmt_file,
+                                         template_mask_file=nmt_mask_file,
+                                         gm_prob_file=gm_prob_file,
+                                         wm_prob_file=wm_prob_file,
+                                         csf_prob_file=csf_prob_file, n_iter = 2)
+    seg_pipe.connect(bet, 'out_file', register_pipe, "inputnode.anat_file_BET")
+    seg_pipe.connect(denoise_T1, 'denoised_img_file', register_pipe, 'inputnode.anat_file')
+
+    return seg_pipe
 
 
     # Segment in to 6 tissues
