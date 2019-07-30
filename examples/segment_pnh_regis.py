@@ -4,7 +4,6 @@ import nipype.interfaces.io as nio
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 import nipype.interfaces.ants as ants
-import nipype.interfaces.spm as spm
 
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
@@ -104,12 +103,6 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
     #                              register, 'img_file')
 
 
-    # Segment in to 6 tissues
-    old_segment = pe.Node(spm.Segment(), name="old_segment")
-    # TODO: change input
-    seg_pipe.connect(debias_N4, 'output_image', old_segment, 'data')
-
-    # Thresholds
     
     return seg_pipe
 
