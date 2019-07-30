@@ -3,11 +3,11 @@ import nipype
 import nipype.interfaces.io as nio
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
+import nipype.interfaces.ants as ants
+import nipype.interfaces.spm as spm
 
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
-
-import nipype.interfaces.ants as ants
 
 import os
 
@@ -37,7 +37,7 @@ from macapype.utils.misc import show_files
 #data_path = "/home/INT/meunier.d/ownCloud/Documents/Hackaton/Data-Hackaton/Primavoice"
 data_path = "/hpc/crise/cagna.b/Primavoice"
 
-main_path = "/hpc/crise/meunier.d/test_pipeline_regis"
+main_path = "/hpc/banco/cagna.b/projects/pipeline-anat-macaque/tests/"
 
 subject_ids = ['Elouk']
 
@@ -98,8 +98,7 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
                      function=nonlocal_denoise),
         name = "denoise_T1")
 
-    seg_pipe.connect(debias_N4, 'output_image',
-                                  denoise_T1, 'img_file')
+    seg_pipe.connect(debias_N4, 'output_image', denoise_T1, 'img_file')
 
     #######  !!!! Attention , brain extraction should come in between !!!!!!!
     register = pe.Node(
@@ -114,6 +113,13 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
     register.inputs.template_file = nmt_file
     register.inputs.template_mask_file = nmt_mask_file
     register.inputs.n_iter = 4
+
+
+    # Segment in to 6 tissues
+    old_segment = pe.Node(spm.Segment(), name="old_segment")
+    seg_pipe.connect(register, 'realigned_file', old_segment, 'data')
+
+    # Thresholds
 
     return seg_pipe
 
