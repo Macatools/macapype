@@ -317,3 +317,7 @@ def create_full_segment_pipe(crop_list, sigma, name="full_segment_pipe"):
     brain_segment_pipe.connect(align_seg_wm, 'out_file', seg_at, "ex_prior3")
 
     return brain_segment_pipe
+
+
+def 
+
