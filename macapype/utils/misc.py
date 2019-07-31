@@ -25,7 +25,7 @@ def print_nii_data(nii_file):
 def get_elem(list_elem, index_elem):
     assert isinstance(list_elem, list), 'Error, list_elem should be a list'
     assert 0 <= index_elem and index_elem <= len(list_elem),\
-        ('error with index {}, does not math a list with {} elements'.format(
+        ('error with index {}, does not match a list with {} elements'.format(
             index_elem, len(list_elem)))
 
     elem = list_elem[index_elem]

@@ -14,15 +14,13 @@ from nipype.utils.filemanip import split_filename as split_f
 
 #fsl.FSLCommand.set_default_output_type('NIFTI')
 
-from ..utils.misc import get_elem
-
 from ..utils.misc import (show_files, print_val, print_nii_data)
 
-from ..nodes.segment import (wrap_NMT_subject_align, wrap_antsAtroposN4_dirty,
-    add_Nwarp)
+from ..nodes.segment import wrap_antsAtroposN4_dirty
 
 from .denoise import create_cropped_denoised_pipe
 from .correct_bias import create_masked_correct_bias_pipe
+from .register import create_register_NMT_pipe
 
 def create_brain_segment_pipe(name = "brain_segment_pipe"):
 
@@ -180,6 +178,7 @@ def create_full_segment_pipe(crop_list, sigma, name="full_segment_pipe"):
     brain_segment_pipe.connect(inputnode, 'preproc_T2',
                                crop_denoise_pipe, "inputnode.preproc_T2")
 
+    ############### correcting for bias T1/T2, but this time with a mask ######
     masked_correct_bias_pipe = create_masked_correct_bias_pipe(sigma=sigma)
 
     brain_segment_pipe.connect(
@@ -194,41 +193,7 @@ def create_full_segment_pipe(crop_list, sigma, name="full_segment_pipe"):
                                masked_correct_bias_pipe,
                                "inputnode.brain_mask")
 
-    # STEP2: N4 intensity normalization over brain
-    norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
-                             name='norm_intensity')
-    norm_intensity.inputs.dimension = 3
-    norm_intensity.inputs.bspline_fitting_distance = 200
-    norm_intensity.inputs.n_iterations = [50, 50, 40, 30]
-    norm_intensity.inputs.convergence_threshold = 0.00000001
-    norm_intensity.inputs.shrink_factor = 2
-    norm_intensity.inputs.args = "r 0 --verbose 1"
-
-    brain_segment_pipe.connect(
-        masked_correct_bias_pipe, 'restore_mask_T1.out_file',
-        norm_intensity, "input_image")
-
-    # bin_norm_intensity
-    bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
-    bin_norm_intensity.inputs.operation = "bin"
-
-    brain_segment_pipe.connect(norm_intensity, "output_image",
-                               bin_norm_intensity, "in_file")
-
-    # align subj to nmt (with NMT_subject_align)
-    NMT_subject_align = pe.Node(niu.Function(
-        input_names=["T1_file"],
-        output_names=["shft_aff_file", "warpinv_file", "transfo_file",
-                      "inv_transfo_file"],
-        function=wrap_NMT_subject_align), name='NMT_subject_align')
-
-    brain_segment_pipe.connect(norm_intensity, 'output_image',
-                               NMT_subject_align, "T1_file")
-
-    # segmentation
-
-    # STEP1 : align_masks
-
+    ############# register NMT template, template mask and priors to subject T1
     nmt_dir = "/hpc/meca/users/loh.k/macaque_preprocessing/NMT_v1.2/"
     p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
 
@@ -240,61 +205,54 @@ def create_full_segment_pipe(crop_list, sigma, name="full_segment_pipe"):
     NMT_brainmask_GM = os.path.join(p_dir, "NMT_segmentation_GM.nii.gz")
     NMT_brainmask_WM = os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")
 
-    list_priors = [NMT_file, NMT_brainmask_prob, NMT_brainmask,
-                   NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM]
+    register_NMT_pipe = create_register_NMT_pipe(NMT_file,
+                                                 NMT_brainmask,
+                                                 NMT_brainmask_prob,
+                                                 NMT_brainmask_CSF,
+                                                 NMT_brainmask_GM,
+                                                 NMT_brainmask_WM)
 
-    align_masks = pe.Node(afni.NwarpApply(), name='align_masks')
-    align_masks.inputs.in_file = list_priors
-    align_masks.inputs.out_file = add_Nwarp(list_priors)
-    align_masks.inputs.interp = "NN"
-    align_masks.inputs.args = "-overwrite"
+    brain_segment_pipe.connect(
+        masked_correct_bias_pipe, 'restore_mask_T1.out_file',
+        register_NMT_pipe, "inputnode.T1_file")
 
-    brain_segment_pipe.connect(NMT_subject_align, 'shft_aff_file',
-                               align_masks, 'master')
-    brain_segment_pipe.connect(NMT_subject_align, 'warpinv_file',
-                               align_masks, "warp")
+    ######################################### ants Atropos ####################
+    segment_atropos_pipe = create_segment_atropos_pipe(dimension = 3,
+                                                       numberOfClasses = 3)
 
-    # seg_csf
-    align_seg_csf = pe.Node(
-        afni.Allineate(), name="align_seg_csf", iterfield=['in_file'])
-    align_seg_csf.inputs.final_interpolation = "nearestneighbour"
-    align_seg_csf.inputs.overwrite = True
-    align_seg_csf.inputs.outputtype = "NIFTI_GZ"
+    brain_segment_pipe.connect(
+        register_NMT_pipe, 'norm_intensity.output_image',
+        segment_atropos_pipe, "inputnode.brain_file")
 
-    brain_segment_pipe.connect(align_masks, ('out_file', get_elem, 3),
-                               align_seg_csf, "in_file")  # -source
-    brain_segment_pipe.connect(norm_intensity, 'output_image',
-                               align_seg_csf, "reference")  # -base
-    brain_segment_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                               align_seg_csf, "in_matrix")  # -1Dmatrix_apply
+    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
+                               segment_atropos_pipe, "inputnode.csf_prior_file")
+    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
+                               segment_atropos_pipe, "inputnode.gm_prior_file")
+    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
+                               segment_atropos_pipe, "inputnode.wm_prior_file")
 
-    # seg_gm
-    align_seg_gm = pe.Node(
-        afni.Allineate(), name="align_seg_gm", iterfield=['in_file'])
-    align_seg_gm.inputs.final_interpolation = "nearestneighbour"
-    align_seg_gm.inputs.overwrite = True
-    align_seg_gm.inputs.outputtype = "NIFTI_GZ"
+    return brain_segment_pipe
 
-    brain_segment_pipe.connect(align_masks, ('out_file', get_elem, 4),
-                               align_seg_gm, "in_file")  # -source
-    brain_segment_pipe.connect(norm_intensity, 'output_image',
-                               align_seg_gm, "reference")  # -base
-    brain_segment_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                               align_seg_gm, "in_matrix")  # -1Dmatrix_apply
 
-    # seg_wm
-    align_seg_wm = pe.Node(afni.Allineate(), name="align_seg_wm",
-                           iterfield=['in_file'])
-    align_seg_wm.inputs.final_interpolation = "nearestneighbour"
-    align_seg_wm.inputs.overwrite = True
-    align_seg_wm.inputs.outputtype = "NIFTI_GZ"
+def create_segment_atropos_pipe(dimension, numberOfClasses,
+                                name="segment_atropos_pipe"):
 
-    brain_segment_pipe.connect(align_masks, ('out_file', get_elem, 5),
-                               align_seg_wm, "in_file")  # -source
-    brain_segment_pipe.connect(norm_intensity, 'output_image',
-                               align_seg_wm, "reference")  # -base
-    brain_segment_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                               align_seg_wm, "in_matrix")  # -1Dmatrix_apply
+    # creating pipeline
+    segment_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["brain_file", "gm_prior_file", "wm_prior_file", "csf_prior_file"]),
+        name='inputnode')
+
+
+    # bin_norm_intensity (a cheat from Kepkee if I understood well!)
+    bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
+    bin_norm_intensity.inputs.operation = "bin"
+
+    segment_pipe.connect(inputnode, "brain_file",
+                               bin_norm_intensity, "in_file")
 
     # STEP 3: ants Atropos
     # Atropos
@@ -305,19 +263,19 @@ def create_full_segment_pipe(crop_list, sigma, name="full_segment_pipe"):
                       "seg_post2_file", "seg_post3_file"],
         function=wrap_antsAtroposN4_dirty), name='seg_at')
 
-    seg_at.inputs.dimension = 3
-    seg_at.inputs.numberOfClasses = 3
+    seg_at.inputs.dimension = dimension
+    seg_at.inputs.numberOfClasses = numberOfClasses
 
-    brain_segment_pipe.connect(norm_intensity, 'output_image',
+    segment_pipe.connect(inputnode, 'brain_file',
                                seg_at, "brain_file")
-    brain_segment_pipe.connect(bin_norm_intensity, 'out_file',
+    segment_pipe.connect(bin_norm_intensity, 'out_file',
                                seg_at, "brainmask_file")
-    brain_segment_pipe.connect(align_seg_csf, 'out_file', seg_at, "ex_prior1")
-    brain_segment_pipe.connect(align_seg_gm, 'out_file', seg_at, "ex_prior2")
-    brain_segment_pipe.connect(align_seg_wm, 'out_file', seg_at, "ex_prior3")
 
-    return brain_segment_pipe
+    #TODO ## was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
+    segment_pipe.connect(inputnode, 'csf_prior_file', seg_at, "ex_prior1")
+    segment_pipe.connect(inputnode, 'gm_prior_file', seg_at, "ex_prior2")
+    segment_pipe.connect(inputnode, 'wm_prior_file', seg_at, "ex_prior3")
 
+    return segment_pipe
 
-def 
 

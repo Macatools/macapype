@@ -3,32 +3,26 @@ import nipype
 import nipype.interfaces.io as nio
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
-import nipype.interfaces.ants as ants
 
+import nipype.interfaces.spm as spm
+import nipype.interfaces.ants as ants
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-import os
 
-#from macapype.pipelines.preproc import create_average_align_pipe
-#from macapype.pipelines.denoise import (
-#    create_denoised_cropped_pipe, create_cropped_denoised_pipe)
+import os
 
 from macapype.pipelines.correct_bias import create_debias_N4_pipe
 
 from macapype.nodes.correct_bias import interative_N4_debias
 from macapype.nodes.denoise import nonlocal_denoise
 
-from macapype.pipelines.register import create_register_pipe
+from macapype.pipelines.register import create_iterative_register_pipe
 
-
-#from macapype.pipelines.extract_brain import create_brain_extraction_pipe
-#from macapype.pipelines.segment import (create_brain_segment_pipe,
-#    create_full_segment_pipe)
 
 nmt_dir="/hpc/meca/users/loh.k/macaque_preprocessing/NMT_v1.2/"
-
 nmt_file = os.path.join(nmt_dir,"NMT.nii.gz")
+nmt_SS_file = os.path.join(nmt_dir,"NMT_SS.nii.gz")
 nmt_mask_file = os.path.join(nmt_dir, 'masks','anatomical_masks','NMT_brainmask.nii.gz')
 
 from macapype.utils.misc import show_files
@@ -36,14 +30,18 @@ from macapype.utils.misc import show_files
 #data_path = "/home/INT/meunier.d/ownCloud/Documents/Hackaton/Data-Hackaton/Primavoice"
 data_path = "/hpc/crise/cagna.b/Primavoice"
 
+### there also exists probabilistic maps in NMT_v1.2 folder,
+# do not know why Regis used these files he generated
 gm_prob_file = os.path.join(data_path, 'FSL','NMT_SS_pve_1.nii.gz')
 wm_prob_file = os.path.join(data_path, 'FSL','NMT_SS_pve_2.nii.gz')
 csf_prob_file = os.path.join(data_path, 'FSL','NMT_SS_pve_3.nii.gz')
 
-main_path = os.path.join(os.path.split(__file__)[0],"../tests/")
-
-
 subject_ids = ['Elouk']
+
+
+
+# we create a relative dir for generating the analysis
+main_path = os.path.join(os.path.split(__file__)[0],"../tests/")
 
 def create_infosource():
     infosource = pe.Node(interface=niu.IdentityInterface(fields=['subject_id']),name="infosource")
@@ -111,15 +109,27 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
                                   bet, 'in_file')
     bet.inputs.frac = 0.7
 
-    register_pipe = create_register_pipe(template_file = nmt_file,
-                                         template_mask_file=nmt_mask_file,
-                                         gm_prob_file=gm_prob_file,
-                                         wm_prob_file=wm_prob_file,
-                                         csf_prob_file=csf_prob_file, n_iter = 2)
-    seg_pipe.connect(bet, 'out_file', register_pipe, "inputnode.anat_file_BET")
-    seg_pipe.connect(denoise_T1, 'denoised_img_file', register_pipe, 'inputnode.anat_file')
+    ### register template to anat (need also skullstripped anat)
+    # use iterative flirt
+    iterative_register_pipe = create_iterative_register_pipe(
+        template_file=nmt_file, template_brain_file=nmt_SS_file,
+        template_mask_file=nmt_mask_file,
+        gm_prob_file=gm_prob_file, wm_prob_file=wm_prob_file,
+        csf_prob_file=csf_prob_file, n_iter=1)
 
-    return seg_pipe
+    seg_pipe.connect(bet, 'out_file', iterative_register_pipe, "inputnode.anat_file_BET")
+    seg_pipe.connect(denoise_T1, 'denoised_img_file',
+                     iterative_register_pipe, 'inputnode.anat_file')
+
+    # old segment (Bastien's job) - the input of the segment can be used directly as it is
+    old_segment = pe.Node(spm.Segment(), name = "old_segment")
+
+    old_segment.inputs.gm_output_type = [False,False,True]
+    old_segment.inputs.wm_output_type = [False,False,True]
+    old_segment.inputs.csf_output_type = [False,False,True]
+
+    seg_pipe.connect(iterative_register_pipe, 'merge_3_files.list3files', old_segment, "tissue_prob_maps")
+    seg_pipe.connect(iterative_register_pipe, 'register.anat_file_brain', old_segment, "data")
 
 
     return seg_pipe
@@ -128,7 +138,6 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
 
 def create_main_workflow():
 
-    #main_workflow = pe.Workflow(name= "test_pipeline_kepkee_by_david")
     main_workflow = pe.Workflow(name= "test_pipeline_with_bastien_and_kepkee")
     main_workflow.base_dir = main_path
 
@@ -146,9 +155,7 @@ def create_main_workflow():
 
     print('segment_pnh')
 
-    #segment_pnh = create_segment_pnh_subpipes()
     segment_pnh = create_segment_pnh_onlyT1()
-
     main_workflow.connect(datasource,'T1',segment_pnh,'inputnode.T1')
 
     return main_workflow

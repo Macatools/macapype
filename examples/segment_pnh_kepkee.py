@@ -22,7 +22,10 @@ from macapype.utils.misc import show_files
 
 data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
-main_path = "/hpc/meca/users/loh.k/test_pipeline"
+
+
+main_path = os.path.join(os.path.split(__file__)[0],"../tests/")
+
 site = "sbri"
 subject_ids = ['032311']
 
@@ -203,8 +206,7 @@ def create_segment_pnh_subpipes_new(name= "segment_pnh_subpipes",
 
 def create_main_workflow():
 
-    #main_workflow = pe.Workflow(name= "test_pipeline_kepkee_by_david")
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_by_kepkee")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee")
     main_workflow.base_dir = main_path
 
     ## Infosource

@@ -86,7 +86,7 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1'], ['seg_priors']),
+        niu.IdentityInterface(fields=['T1', 'seg_priors']),
         name='inputnode'
     )
     
