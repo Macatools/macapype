@@ -8,6 +8,6 @@
 
 $ git clone https://framagit.org/mars-hackat2019/anat-mri-pipeline/pipeline-anat-macaque.git  
 $ cd pipeline-anat-macaque  
-$ python setup.py develop__
-OR if you do not have sudo access:__
-$ python setup.py develop --user
+$ python setup.py develop  
+OR if you do not have sudo access:  
+$ python setup.py develop --user  
