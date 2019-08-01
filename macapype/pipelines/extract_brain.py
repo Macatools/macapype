@@ -16,8 +16,8 @@ from ..nodes.extract_brain import AtlasBREX
 
 
 def create_brain_extraction_pipe(script_atlas_BREX, NMT_file, NMT_SS_file,
-                                 f= 0.5, reg = 1, w = "10,10,10",
-                                 msk = "a,0,0", name="brain_extraction_pipe"):
+                                 f= 0.5, reg=1, w="10,10,10", msk="a,0,0",
+                                 name="brain_extraction_pipe"):
 
     # creating pipeline
     brain_extraction_pipe = pe.Workflow(name=name)
