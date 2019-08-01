@@ -15,6 +15,14 @@ def create_iterative_register_pipe(
     template_file, template_brain_file, template_mask_file, gm_prob_file,
     wm_prob_file, csf_prob_file, n_iter, name = "register_pipe"):
 
+
+    """
+    Registration of template (NMT or other) accroding to Regis:
+    - The iterative FLIRT is between NMT_SS and subject's anat after a quick skull-stripping
+    but the anat is more and more refined to corresponds to the brain
+    - there is also a FNIRT done once, for comparison of the quality of the template on the subject's brain
+
+    """
     register_pipe = pe.Workflow(name = name)
 
     # creating inputnode
@@ -45,7 +53,7 @@ def create_iterative_register_pipe(
     register_gm.inputs.in_file = gm_prob_file
     register_gm.inputs.apply_xfm = True
     register_gm.inputs.interp = "nearestneighbour"
-    register_gm.inputs.output_type = "NIFTI"
+    register_gm.inputs.output_type = "NIFTI" # for SPM segment
 
 
     register_pipe.connect(register, 'anat_file_brain', register_gm, 'reference')
@@ -57,7 +65,7 @@ def create_iterative_register_pipe(
     register_wm.inputs.in_file = wm_prob_file
     register_wm.inputs.apply_xfm = True
     register_wm.inputs.interp = "nearestneighbour"
-    register_wm.inputs.output_type = "NIFTI"
+    register_wm.inputs.output_type = "NIFTI" # for SPM segment
 
 
     register_pipe.connect(register, 'anat_file_brain', register_wm, 'reference')
@@ -70,7 +78,7 @@ def create_iterative_register_pipe(
     register_csf.inputs.in_file = csf_prob_file
     register_csf.inputs.apply_xfm = True
     register_csf.inputs.interp = "nearestneighbour"
-    register_csf.inputs.output_type = "NIFTI"
+    register_csf.inputs.output_type = "NIFTI"  # for SPM segment
 
 
     register_pipe.connect(register, 'anat_file_brain', register_csf, 'reference')
@@ -90,12 +98,6 @@ def create_iterative_register_pipe(
     register_pipe.connect(register_gm, 'out_file', merge_3_files, "file1")
     register_pipe.connect(register_wm, 'out_file', merge_3_files, "file2")
     register_pipe.connect(register_csf, 'out_file', merge_3_files, "file3")
-
-    ## merge_tissues
-    #merge_tissues = pe.Node(fsl.Merge(), name = "merge_tissues")
-    #merge_tissues.inputs.dimension = "t"
-    #register_pipe.connect(merge_3_files, 'list3files',
-                          #merge_tissues, "in_files")
 
     ################## same with non linear
     # non linear register between anat and head
@@ -121,6 +123,10 @@ def create_iterative_register_pipe(
 def create_register_NMT_pipe(NMT_file, NMT_brainmask_prob, NMT_brainmask,
                    NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM, name = "register_NMT_pipe"):
 
+    """
+    Register template to anat with the script NMT_subject_align, and then apply it to tissues list_priors
+    ##TODO the wrap of both scripts could be done in a cleaner way with traits
+    """
     register_NMT_pipe = pe.Workflow(name = name)
 
     # creating inputnode
