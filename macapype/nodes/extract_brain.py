@@ -117,7 +117,7 @@ class AtlasBREX(CommandLine):
 
     def _list_outputs(self):
         outputs = self._outputs().get()
-        fname, ext = split(self.inputs.t1_restored_file,".")
+        fname, ext = os.path.split(self.inputs.t1_restored_file,".")
         outputs["brain_file"] = os.path.abspath(fname + '_brain.' + ext)
         return outputs
 
