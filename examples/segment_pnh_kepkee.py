@@ -29,10 +29,14 @@ main_path = os.path.join(os.path.split(__file__)[0],"../tests/")
 site = "sbri"
 subject_ids = ['032311']
 
-nmt_dir = "/hpc/meca/users/loh.k/macaque_preprocessing/NMT_v1.2/"
+ref_dir = "/hpc/meca/users/loh.k/macaque_preprocessing/"
+nmt_dir = os.path.join(ref_dir,"NMT_v1.2/")
+
 p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
 
 NMT_file = os.path.join(nmt_dir, "NMT.nii.gz")
+NMT_SS_file = os.path.join(nmt_dir, "NMT_SS.nii.gz")
+
 NMT_brainmask = os.path.join(nmt_dir, "masks", "anatomical_masks",
                                 "NMT_brainmask.nii.gz")
 NMT_brainmask_prob = os.path.join(p_dir, "NMT_brainmask_prob.nii.gz")
@@ -40,6 +44,8 @@ NMT_brainmask_CSF = os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz")
 NMT_brainmask_GM = os.path.join(p_dir, "NMT_segmentation_GM.nii.gz")
 NMT_brainmask_WM = os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")
 
+script_dir = os.path.join(ref_dir,"preproc_cloud/processing_scripts/")
+script_atlas_BREX = os.path.join(script_dir,"atlasBREX_fslfrioul.sh")
 
 def create_infosource():
     infosource = pe.Node(interface=niu.IdentityInterface(fields=['subject_id']),name="infosource")
@@ -117,7 +123,8 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
 
     #### brain extraction
-    brain_extraction_pipe = create_brain_extraction_pipe()
+    brain_extraction_pipe = create_brain_extraction_pipe(
+        script_atlas_BREX=script_atlas_BREX, NMT_file=NMT_file, NMT_SS_file=NMT_SS_file, name = "devel_atlas_brex")
 
     #### si cropped_denoise
     ##seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")

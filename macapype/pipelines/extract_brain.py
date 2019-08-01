@@ -11,10 +11,13 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.spm as spm
 
-from ..nodes.extract_brain import apply_atlasBREX
+from ..nodes.extract_brain import AtlasBREX
+#from ..nodes.extract_brain import apply_atlasBREX
 
 
-def create_brain_extraction_pipe(name="brain_extraction_pipe"):
+def create_brain_extraction_pipe(script_atlas_BREX, NMT_file, NMT_SS_file,
+                                 f= 0.5, reg = 1, w = "10,10,10",
+                                 msk = "a,0,0", name="brain_extraction_pipe"):
 
     # creating pipeline
     brain_extraction_pipe = pe.Workflow(name=name)
@@ -25,13 +28,20 @@ def create_brain_extraction_pipe(name="brain_extraction_pipe"):
         name='inputnode')
 
     # atlas_brex
-    atlas_brex = pe.Node(niu.Function(input_names=['t1_restored_file'],
-                                      output_names=['brain_file'],
-                                      function=apply_atlasBREX),
-                         name='atlas_brex')
+    atlas_brex = pe.Node(AtlasBREX(),name='atlas_brex')
 
     brain_extraction_pipe.connect(inputnode, "restore_T1",
                                   atlas_brex, 't1_restored_file')
+
+    atlas_brex.inputs.script_atlas_BREX = script_atlas_BREX
+    atlas_brex.inputs.NMT_file = NMT_file
+    atlas_brex.inputs.NMT_SS_file = NMT_SS_file
+    atlas_brex.inputs.f = f
+    atlas_brex.inputs.reg = reg
+    atlas_brex.inputs.w = w
+    atlas_brex.inputs.msk = msk
+
+
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
