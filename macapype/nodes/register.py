@@ -79,9 +79,6 @@ def interative_flirt(anat_file, anat_file_BET, template_brain_file,
 
 
 ########### NMT_subject_align
-
-
-
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File

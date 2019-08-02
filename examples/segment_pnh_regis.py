@@ -108,6 +108,8 @@ def create_segment_pnh_onlyT1(name= "segment_pnh_subpipes"):
     seg_pipe.connect(denoise_T1, 'denoised_img_file',
                                   bet, 'in_file')
     bet.inputs.frac = 0.7
+    #bet.inputs.center = [,,]
+
 
     ### register template to anat (need also skullstripped anat)
     # use iterative flirt
