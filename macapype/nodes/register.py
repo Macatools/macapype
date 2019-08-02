@@ -178,9 +178,11 @@ class NMTSubjectAlign(CommandLine):
 
     def _list_outputs(self):
 
+        from nipype.utils.filemanip import split_filename as split_f
+
         outputs = self._outputs().get()
 
-        fname, ext = os.path.split(self.inputs.T1_file,".")
+        path, fname, ext = split_f(self.inputs.T1_file)
 
         outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext )
         outputs["warpinv_file"] = os.path.abspath(fname + "_shft_WARPINV" + ext )
