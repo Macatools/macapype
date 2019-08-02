@@ -8,8 +8,13 @@ import nipype.interfaces.ants as ants
 
 from ..utils.misc import get_elem
 
-from ..nodes.register import (interative_flirt, wrap_NMT_subject_align,
-                              add_Nwarp)
+#from ..nodes.register import (interative_flirt, wrap_NMT_subject_align,
+                              #add_Nwarp)
+
+from ..nodes.register import (interative_flirt, NMTSubjectAlign,
+                              NwarpApplyPriors)
+
+
 
 def create_iterative_register_pipe(
     template_file, template_brain_file, template_mask_file, gm_prob_file,
@@ -120,12 +125,13 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
-def create_register_NMT_pipe(NMT_file, NMT_brainmask_prob, NMT_brainmask,
-                   NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM, name = "register_NMT_pipe"):
+def create_register_NMT_pipe(NMT_file, NMT_SS_file, NMT_brainmask_prob, NMT_brainmask,
+                   NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM, script_NMT_subject_align, name = "register_NMT_pipe"):
 
     """
     Register template to anat with the script NMT_subject_align, and then apply it to tissues list_priors
     ##TODO the wrap of both scripts could be done in a cleaner way with traits
+    (one is "done", still one to do)
     """
     register_NMT_pipe = pe.Workflow(name = name)
 
@@ -150,23 +156,35 @@ def create_register_NMT_pipe(NMT_file, NMT_brainmask_prob, NMT_brainmask,
     register_NMT_pipe.connect(inputnode, 'T1_file',
                                norm_intensity, "input_image")
 
-    # align subj to nmt (with NMT_subject_align)
-    NMT_subject_align = pe.Node(niu.Function(
-        input_names=["T1_file"],
-        output_names=["shft_aff_file", "warpinv_file", "transfo_file",
-                      "inv_transfo_file"],
-        function=wrap_NMT_subject_align), name='NMT_subject_align')
+    ## align subj to nmt (with NMT_subject_align)
+    #NMT_subject_align = pe.Node(niu.Function(
+        #input_names=["T1_file", "NMT_SS_file"],
+        #output_names=["shft_aff_file", "warpinv_file", "transfo_file",
+                      #"inv_transfo_file"],
+        #function=wrap_NMT_subject_align), name='NMT_subject_align')
+
+    #register_NMT_pipe.connect(norm_intensity, 'output_image',
+                               #NMT_subject_align, "T1_file")
+
+    #NMT_subject_align.inputs.NMT_SS_file = NMT_SS_file
+
+    # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
+    NMT_subject_align = pe.Node(NMTSubjectAlign(), name='NMT_subject_align')
 
     register_NMT_pipe.connect(norm_intensity, 'output_image',
-                               NMT_subject_align, "T1_file")
+                              NMT_subject_align, "T1_file")
+
+    NMT_subject_align.inputs.NMT_SS_file = NMT_SS_file
+    NMT_subject_align.inputs.script_file = script_NMT_subject_align
 
     # align_masks
+    # "overwrap" of NwarpApply, with specifying the outputs as wished
     list_priors = [NMT_file, NMT_brainmask_prob, NMT_brainmask,
                    NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM]
 
-    align_masks = pe.Node(afni.NwarpApply(), name='align_masks')
+    align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors
-    align_masks.inputs.out_file = add_Nwarp(list_priors)
+    align_masks.inputs.out_file = list_priors
     align_masks.inputs.interp = "NN"
     align_masks.inputs.args = "-overwrite"
 

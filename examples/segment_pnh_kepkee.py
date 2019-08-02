@@ -36,9 +36,9 @@ p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
 
 NMT_file = os.path.join(nmt_dir, "NMT.nii.gz")
 NMT_SS_file = os.path.join(nmt_dir, "NMT_SS.nii.gz")
-
 NMT_brainmask = os.path.join(nmt_dir, "masks", "anatomical_masks",
                                 "NMT_brainmask.nii.gz")
+
 NMT_brainmask_prob = os.path.join(p_dir, "NMT_brainmask_prob.nii.gz")
 NMT_brainmask_CSF = os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz")
 NMT_brainmask_GM = os.path.join(p_dir, "NMT_segmentation_GM.nii.gz")
@@ -46,6 +46,8 @@ NMT_brainmask_WM = os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")
 
 script_dir = os.path.join(ref_dir,"preproc_cloud/processing_scripts/")
 script_atlas_BREX = os.path.join(script_dir,"atlasBREX_fslfrioul.sh")
+
+script_NMT_subject_align = os.path.join(nmt_dir,"NMT_subject_align.csh")
 
 def create_infosource():
     infosource = pe.Node(interface=niu.IdentityInterface(fields=['subject_id']),name="infosource")
@@ -142,17 +144,20 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     #seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
 
-    #################### full_segment (restarting from the avg_align files,)
-    #brain_segment_pipe = create_full_segment_pipe(
-        #crop_list=crop_list, sigma=sigma, NMT_file=NMT_file,
-        #NMT_brainmask=NMT_brainmask, NMT_brainmask_prob=NMT_brainmask_prob,
-        #NMT_brainmask_CSF=NMT_brainmask_CSF, NMT_brainmask_GM=NMT_brainmask_GM,
-        #NMT_brainmask_WM=NMT_brainmask_WM)
+    ################### full_segment (restarting from the avg_align files,)
+    brain_segment_pipe = create_full_segment_pipe(
+        crop_list=crop_list, sigma=sigma, NMT_file=NMT_file,
+        NMT_SS_file=NMT_SS_file, NMT_brainmask=NMT_brainmask,
+        NMT_brainmask_prob=NMT_brainmask_prob,
+        NMT_brainmask_CSF=NMT_brainmask_CSF, NMT_brainmask_GM=NMT_brainmask_GM,
+        NMT_brainmask_WM=NMT_brainmask_WM,
+        script_NMT_subject_align=script_NMT_subject_align,
+        name="segment_devel_NMT_sub_align")
 
-    #seg_pipe.connect(preproc_pipe, "av_T1.avg_img",brain_segment_pipe,'inputnode.preproc_T1')
-    #seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", brain_segment_pipe,'inputnode.preproc_T2')
+    seg_pipe.connect(preproc_pipe, "av_T1.avg_img",brain_segment_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", brain_segment_pipe,'inputnode.preproc_T2')
 
-    #seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
+    seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
 
     return seg_pipe
 
