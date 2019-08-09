@@ -4,8 +4,8 @@ from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File
 
-# AtlasBREX
 
+# AtlasBREX
 class AtlasBREXInputSpec(CommandLineInputSpec):
 
     script_atlas_BREX = File(
@@ -46,7 +46,6 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
     msk = traits.String(
         "a,0,0", usedefault=True, desc="msk", position=7, argstr="-msk %s",
         mandatory=True)
-
 
 
 class AtlasBREXOutputSpec(TraitedSpec):

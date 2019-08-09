@@ -4,6 +4,8 @@
 """
 import os.path as op
 
+from scipy.ndimage import binary_fill_holes
+
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -11,6 +13,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.spm as spm
 
+from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty #BinaryFillHoles
 from ..nodes.extract_brain import AtlasBREX
 #from ..nodes.extract_brain import apply_atlasBREX
 
@@ -40,8 +43,6 @@ def create_brain_extraction_pipe(script_atlas_BREX, NMT_file, NMT_SS_file,
     atlas_brex.inputs.reg = reg
     atlas_brex.inputs.w = w
     atlas_brex.inputs.msk = msk
-
-
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
@@ -82,10 +83,18 @@ def create_brain_extraction_pipe(script_atlas_BREX, NMT_file, NMT_SS_file,
 
 def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     """ Extract brain using tissues masks outputed by SPM's old_segment function
+    
+    1 - Segment the T1 using given priors;
+    2 - Threshold GM, WM and CSF maps;
+    3 - Compute union of those 3 tissues;
+    4 - Apply morphological opening on the union mask
+    5 - Fill holes
 
     Inputs
     ---------
-
+    T1: T1 file name
+    seg_priors: list of file names
+    
     Outputs
     --------
     
@@ -126,7 +135,7 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     be_pipe.connect(thd_nodes['gm'], 'out_file', wmgm_union, 'in_file')
     be_pipe.connect(thd_nodes['wm'], 'out_file', wmgm_union, 'operand_file')
 
-    tissues_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
+    tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
     tissues_union.inputs.operation = "add"
     be_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
     be_pipe.connect(thd_nodes['csf'], 'out_file', tissues_union, 'operand_file')
@@ -134,20 +143,42 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     # Opening
     opening_shape = "sphere"
     opening_size = 2
-    dilate_mask = pe.Node(fsl.BinaryMaths(), name="dilate_mask")
+    dilate_mask = pe.Node(fsl.DilateImage(), name="dilate_mask")
     # Arbitrary operation
     dilate_mask.inputs.operation = "mean"
     dilate_mask.inputs.kernel_shape = opening_shape
     dilate_mask.inputs.kernel_size = opening_size
     be_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
 
-    
-    erode_mask = pe.Node(fsl.BinaryMaths(), name="erode_mask")
+    erode_mask = pe.Node(fsl.ErodeImage(), name="erode_mask")
     erode_mask.inputs.kernel_shape = opening_shape
     erode_mask.inputs.kernel_size = opening_size
     be_pipe.connect(dilate_mask, 'out_file', erode_mask, 'in_file')
 
-    # TODO: Add hole filling
+    # # Holes filling on open image
+    # fill_holes = pe.Node(fsl.BinaryMaths(), name="fill_holes")
+    # be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
+    #
+    # fill_holes_dil = pe.Node(fsl.BinaryMaths(), name="fill_holes_dil")
+    # be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
+    
+    # Temporary dirty version
+    # FIXME: the clean version doesn't work
+    fill_holes = pe.Node(
+        niu.Function(input_names=["in_file"],
+                     output_names=["out_file"],
+                     function=apply_binary_fill_holes_dirty),
+        name="fill_holes"
+    )
+    be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
+    fill_holes_dil = pe.Node(
+        niu.Function(input_names=["in_file"],
+                     output_names=["out_file"],
+                     function=apply_binary_fill_holes_dirty),
+        name="fill_holes_dil"
+    )
+    be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
+    
     return be_pipe
 

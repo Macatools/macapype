@@ -24,7 +24,7 @@ data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
 
 
-main_path = os.path.join(os.path.split(__file__)[0],"../tests/")
+main_path = os.path.join(os.path.split(__file__)[0], "../local_tests/")
 
 site = "sbri"
 subject_ids = ['032311']

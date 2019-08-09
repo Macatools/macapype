@@ -46,6 +46,7 @@ def wrap_antsAtroposN4(dimension, shft_aff_file, brainmask_file, numberOfClasses
     #TODO surely more robust way can be used
     return out_files, seg_file, seg_post1_file, seg_post2_file, seg_post3_file
 
+
 def wrap_antsAtroposN4_dirty(dimension, brain_file, brainmask_file, numberOfClasses, ex_prior1, ex_prior2, ex_prior3):
 
     import os
