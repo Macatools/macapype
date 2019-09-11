@@ -34,11 +34,13 @@ def create_infosource():
 
 def create_datasource():
    datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2']),name = 'datasource')
-   datasource.inputs.base_directory = data_path
-   datasource.inputs.template = '%s/sub-%s/ses-001/%s/sub-%s_ses-001_run-*_%s.nii.gz'
+   datasource.inputs.base_directory = "/hpc/meca/"
+   datasource.inputs.template = '%s/%s/%s%s/%s/%s/sub-%s_ses-001_run-*_%s.nii.gz'
    datasource.inputs.template_args = dict(
-       T1=[[site,'subject_id',"anat",'subject_id',"T1w"]],
-       T2=[[site,'subject_id',"anat",'subject_id',"T2w"]],
+       T1=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T1w"]],
+       T2=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T2w"]],
+       mask=[["users/loh.k/test_pipeline","test_pipeline_kepkee_by_kepkee","segment_pnh_subpipes","brain_extraction_pipe","smooth_mask"
+              site,'subject_id',"mask",'subject_id',"mask"]],
        )
    datasource.inputs.sort_filelist = True
 
