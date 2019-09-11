@@ -9,3 +9,5 @@
 $ git clone https://framagit.org/mars-hackat2019/anat-mri-pipeline/pipeline-anat-macaque.git  
 $ cd pipeline-anat-macaque  
 $ python setup.py  
+
+$ git remote add public git@framagit.org:mars-hackat2019/anat-mri-pipeline/macapype.git
