@@ -118,7 +118,7 @@ def create_iterative_register_pipe(
 
     # apply non linear warp to NMT_SS
     nl_apply = pe.Node(fsl.ApplyWarp(), name="nl_apply")
-    nl_register.inputs.in_file = template_brain_file
+    nl_apply.inputs.in_file = template_brain_file
     register_pipe.connect(inputnode, 'anat_file', nl_apply, 'ref_file')
     register_pipe.connect(nl_register, 'fieldcoeff_file', nl_apply, 'field_file') ## iout from fnirt
 
