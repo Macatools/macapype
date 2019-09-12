@@ -55,8 +55,8 @@ import nipype.interfaces.fsl as fsl
 import os.path as op
 import argparse
 
-# from macapype.pipelines.correct_bias import create_debias_N4_pipe
-# from macapype.nodes.correct_bias import interative_N4_debias
+# from macapype.pipelines.correct_bias import create_debias_N4_pipe
+# from macapype.nodes.correct_bias import interative_N4_debias
  
 from macapype.nodes.denoise import nonlocal_denoise
 from macapype.pipelines.register import create_iterative_register_pipe
