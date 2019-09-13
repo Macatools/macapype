@@ -81,7 +81,8 @@ def create_datasource(data_dir):
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
-    datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
+    #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
+    datasource.inputs.template = '%s/sub-%s_ses-01_%sCropped.nii'
     datasource.inputs.template_args = dict(
         T1=[['subject_id', 'subject_id', "T1w"]],
     )
@@ -159,17 +160,17 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
         iterative_register_pipe, 'inputnode.anat_file'
     )
 
-    # Compute brain mask using old_segment of SPM and postprocessing on
-    # tissues' masks
-    extract_brain = create_old_segment_extraction_pipe()
-    seg_pipe.connect(
-        iterative_register_pipe, 'register.anat_file_brain',
-        extract_brain, "inputnode.T1"
-    )
-    seg_pipe.connect(
-        iterative_register_pipe, 'merge_3_files.list3files',
-        extract_brain, "inputnode.seg_priors"
-    )
+    ## Compute brain mask using old_segment of SPM and postprocessing on
+    ## tissues' masks
+    #extract_brain = create_old_segment_extraction_pipe()
+    #seg_pipe.connect(
+        #iterative_register_pipe, 'register.anat_file_brain',
+        #extract_brain, "inputnode.T1"
+    #)
+    #seg_pipe.connect(
+        #iterative_register_pipe, 'merge_3_files.list3files',
+        #extract_brain, "inputnode.seg_priors"
+    #)
 
     return seg_pipe
 
