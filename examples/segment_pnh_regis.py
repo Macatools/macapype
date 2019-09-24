@@ -17,7 +17,8 @@
         See 'Resources files' paragraph for further informations.
         
     -out:
-        Nipype's processing directory. It's where all the outputs will be saved.
+        Nipype's processing directory. 
+        It's where all the outputs will be saved.
         
     -subjects:
         IDs list of subjects to process.
@@ -37,7 +38,10 @@
     
     Requirements
     --------------
-    TODO: add software requirement
+    This workflow use:
+        - ANTS
+        - SPM
+        - FSL
     
 """
 
