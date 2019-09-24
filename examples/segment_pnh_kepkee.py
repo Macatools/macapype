@@ -25,7 +25,7 @@ data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 
 from macapype.utils.utils_tests import load_test_data
 
-main_path = os.path.join(os.path.split(__file__)[0], "../local_tests/")
+main_path = os.path.join(os.path.split(__file__)[0], "../local_test/")
 
 site = "sbri"
 subject_ids = ['032311']
@@ -174,5 +174,5 @@ if __name__ =='__main__':
     wf.write_graph(graph2use = "colored")
     wf.config['execution'] = {'remove_unnecessary_outputs':'false'}
 
-    wf.run()
+    #wf.run()
     #wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
