@@ -1,3 +1,4 @@
+import os
 
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
@@ -173,9 +174,9 @@ def create_register_NMT_pipe(nmt_dir, name = "register_NMT_pipe"):
         os.path.join(p_dir, "NMT_brainmask_prob.nii.gz"),
         os.path.join(nmt_dir, "masks", "anatomical_masks",
                      "NMT_brainmask.nii.gz"),
-        NMT_brainmask_CSF = os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz"),
-        NMT_brainmask_GM = os.path.join(p_dir, "NMT_segmentation_GM.nii.gz"),
-        NMT_brainmask_WM = os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")]
+        os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz"),
+        os.path.join(p_dir, "NMT_segmentation_GM.nii.gz"),
+        os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")]
 
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors

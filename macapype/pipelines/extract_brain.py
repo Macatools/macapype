@@ -36,11 +36,11 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
     brain_extraction_pipe.connect(inputnode, "restore_T1",
                                   atlas_brex, 't1_restored_file')
 
-    script_atlas_BREX = os.path.join(atlasbrex_dir,"atlasBREX_fslfrioul.sh")
+    script_atlas_BREX = op.join(atlasbrex_dir,"atlasBREX_fslfrioul.sh")
 
     atlas_brex.inputs.script_atlas_BREX = script_atlas_BREX
-    atlas_brex.inputs.NMT_file = os.path.join(nmt_dir, "NMT.nii.gz")
-    atlas_brex.inputs.NMT_SS_file = os.path.join(nmt_dir, "NMT_SS.nii.gz")
+    atlas_brex.inputs.NMT_file = op.join(nmt_dir, "NMT.nii.gz")
+    atlas_brex.inputs.NMT_SS_file = op.join(nmt_dir, "NMT_SS.nii.gz")
     atlas_brex.inputs.f = f
     atlas_brex.inputs.reg = reg
     atlas_brex.inputs.w = w
