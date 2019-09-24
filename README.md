@@ -6,7 +6,7 @@
 ## Image & Templates
 
 To run examples, you will need to download and unzip this file:
-[Example Resources](https://intcloud.intlocal.univ-amu.fr/index.php/s/8bCJ5CWWPfHRyHs)
+[Example Resources](https://cloud.int.univ-amu.fr/index.php/s/8bCJ5CWWPfHRyHs)
 
 
 # How to install
