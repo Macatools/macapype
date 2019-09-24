@@ -1,5 +1,5 @@
-/tests/
 /local*
+/data
 *.pyc
 *~
 *.pklz

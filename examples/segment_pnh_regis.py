@@ -25,7 +25,7 @@
     
     Example
     ---------
-    python segment_pnh_regis.py -data [PATH_TO_BIDS] -resources ../local_resources -out ../tests/ -subjects Elouk
+    python segment_pnh_regis.py -data [PATH_TO_BIDS] -out ../tests/ -subjects Elouk
     
     Resources files
     -----------------
@@ -65,6 +65,7 @@ import argparse
 from macapype.nodes.denoise import nonlocal_denoise
 from macapype.pipelines.register import create_iterative_register_pipe
 from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
+from macapype.utils.utils_tests import load_test_data
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
@@ -106,7 +107,8 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['T1']),
-        name='inputnode')
+        name='inputnode'
+    )
 
     # Preprocessing (avg and align)
     # debias_pipe = create_debias_N4_pipe()
@@ -180,9 +182,17 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
 
 
 ###############################################################################
-def create_main_workflow(data_dir, process_dir, subject_ids, nmt_file,
-                         nmt_ss_file, nmt_mask_file, gm_prob_file, wm_prob_file,
-                         csf_prob_file):
+def create_main_workflow(data_dir, process_dir, subject_ids, nmt_dir, 
+                         nmt_fsl_dir):
+    """ """
+    nmt_file = op.join(nmt_dir, "NMT.nii.gz")
+    nmt_ss_file = op.join(nmt_dir, "NMT_SS.nii.gz")
+    nmt_mask_file = op.join(nmt_dir, 'masks', 'anatomical_masks',
+                            'NMT_brainmask.nii.gz')
+
+    gm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_1.nii.gz')
+    wm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_2.nii.gz')
+    csf_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_3.nii.gz')
 
     main_workflow = pe.Workflow(name="test_pipeline_regis")
     main_workflow.base_dir = process_dir
@@ -210,21 +220,16 @@ def create_main_workflow(data_dir, process_dir, subject_ids, nmt_file,
 
 
 ################################################################################
-def main(data_path, main_path, resources_dir, subjects):
+def main(data_path, main_path, subjects):
     data_path = op.abspath(data_path)
-    resources_dir = op.abspath(resources_dir)
+    #resources_dir = op.abspath(resources_dir)
     
-    nmt_dir = op.join(resources_dir, 'NMT_v1.2')
-    nmt_file = op.join(nmt_dir, "NMT.nii.gz")
-    nmt_ss_file = op.join(nmt_dir, "NMT_SS.nii.gz")
-    nmt_mask_file = op.join(nmt_dir, 'masks', 'anatomical_masks',
-                            'NMT_brainmask.nii.gz')
+    nmt_dir = load_test_data("NMT_v1.2")
+    #nmt_dir = op.join(resources_dir, 'NMT_v1.2')
     
     # There also exists probabilistic maps in NMT_v1.2 folder,
     # do not know why Regis used these files he generated
-    gm_prob_file = op.join(resources_dir, 'FSL', 'NMT_SS_pve_1.nii.gz')
-    wm_prob_file = op.join(resources_dir, 'FSL', 'NMT_SS_pve_2.nii.gz')
-    csf_prob_file = op.join(resources_dir, 'FSL', 'NMT_SS_pve_3.nii.gz')
+    nmt_fsl_dir = load_test_data("NMT_FSL")
     
     # main_workflow
     print("Initialising the pipeline...")
@@ -232,19 +237,15 @@ def main(data_path, main_path, resources_dir, subjects):
         data_dir=data_path,
         process_dir=main_path,
         subject_ids=subjects,
-        nmt_file=nmt_file,
-        nmt_ss_file=nmt_ss_file,
-        nmt_mask_file=nmt_mask_file,
-        gm_prob_file=gm_prob_file,
-        wm_prob_file=wm_prob_file,
-        csf_prob_file=csf_prob_file
+        nmt_dir=nmt_dir,
+        nmt_fsl_dir=nmt_fsl_dir
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
     print('The PNH segmentation pipeline is ready')
     
     print("Start to process")
-    wf.run()
+    # wf.run()
     # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
     
 
@@ -254,8 +255,6 @@ if __name__ == '__main__':
         description="PNH segmenation pipeline from Regis Trapeau")
     parser.add_argument("-data", dest="data", type=str, required=True,
                         help="Directory containing MRI data (BIDS)")
-    parser.add_argument("-resources", dest="resources", type=str,
-                        help="Resources directory", required=True)
     parser.add_argument("-out", dest="out", type=str,
                         help="Output directory", required=True)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
@@ -265,6 +264,6 @@ if __name__ == '__main__':
     main(
         data_path=args.data,
         main_path=args.out,
-        resources_dir=args.resources,
         subjects=args.subjects
     )
+
