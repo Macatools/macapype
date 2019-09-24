@@ -125,8 +125,7 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
-def create_register_NMT_pipe(NMT_file, NMT_SS_file, NMT_brainmask_prob, NMT_brainmask,
-                   NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM, script_NMT_subject_align, name = "register_NMT_pipe"):
+def create_register_NMT_pipe(nmt_dir, name = "register_NMT_pipe"):
 
     """
     Register template to anat with the script NMT_subject_align, and then apply it to tissues list_priors
@@ -156,17 +155,6 @@ def create_register_NMT_pipe(NMT_file, NMT_SS_file, NMT_brainmask_prob, NMT_brai
     register_NMT_pipe.connect(inputnode, 'T1_file',
                                norm_intensity, "input_image")
 
-    ## align subj to nmt (with NMT_subject_align)
-    #NMT_subject_align = pe.Node(niu.Function(
-        #input_names=["T1_file", "NMT_SS_file"],
-        #output_names=["shft_aff_file", "warpinv_file", "transfo_file",
-                      #"inv_transfo_file"],
-        #function=wrap_NMT_subject_align), name='NMT_subject_align')
-
-    #register_NMT_pipe.connect(norm_intensity, 'output_image',
-                               #NMT_subject_align, "T1_file")
-
-    #NMT_subject_align.inputs.NMT_SS_file = NMT_SS_file
 
     # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
     NMT_subject_align = pe.Node(NMTSubjectAlign(), name='NMT_subject_align')
@@ -174,13 +162,20 @@ def create_register_NMT_pipe(NMT_file, NMT_SS_file, NMT_brainmask_prob, NMT_brai
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               NMT_subject_align, "T1_file")
 
-    NMT_subject_align.inputs.NMT_SS_file = NMT_SS_file
-    NMT_subject_align.inputs.script_file = script_NMT_subject_align
+    NMT_subject_align.inputs.NMT_SS_file = os.path.join(nmt_dir, "NMT_SS.nii.gz")
+    NMT_subject_align.inputs.script_file = os.path.join(nmt_dir,"NMT_subject_align.csh")
 
-    # align_masks
     # "overwrap" of NwarpApply, with specifying the outputs as wished
-    list_priors = [NMT_file, NMT_brainmask_prob, NMT_brainmask,
-                   NMT_brainmask_CSF, NMT_brainmask_GM, NMT_brainmask_WM]
+    p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
+
+    list_priors = [
+        os.path.join(nmt_dir, "NMT.nii.gz"),
+        os.path.join(p_dir, "NMT_brainmask_prob.nii.gz"),
+        os.path.join(nmt_dir, "masks", "anatomical_masks",
+                     "NMT_brainmask.nii.gz"),
+        NMT_brainmask_CSF = os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz"),
+        NMT_brainmask_GM = os.path.join(p_dir, "NMT_segmentation_GM.nii.gz"),
+        NMT_brainmask_WM = os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")]
 
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors

@@ -23,31 +23,15 @@ from macapype.utils.misc import show_files
 data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
 #main_path = "/hpc/crise/meunier.d/Data/"
 
+from macapype.utils.utils_tests import load_test_data
 
 main_path = os.path.join(os.path.split(__file__)[0], "../local_tests/")
 
 site = "sbri"
 subject_ids = ['032311']
 
-ref_dir = "/hpc/meca/users/loh.k/macaque_preprocessing/"
-nmt_dir = os.path.join(ref_dir,"NMT_v1.2/")
-
-p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
-
-NMT_file = os.path.join(nmt_dir, "NMT.nii.gz")
-NMT_SS_file = os.path.join(nmt_dir, "NMT_SS.nii.gz")
-NMT_brainmask = os.path.join(nmt_dir, "masks", "anatomical_masks",
-                                "NMT_brainmask.nii.gz")
-
-NMT_brainmask_prob = os.path.join(p_dir, "NMT_brainmask_prob.nii.gz")
-NMT_brainmask_CSF = os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz")
-NMT_brainmask_GM = os.path.join(p_dir, "NMT_segmentation_GM.nii.gz")
-NMT_brainmask_WM = os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")
-
-script_dir = os.path.join(ref_dir,"preproc_cloud/processing_scripts/")
-script_atlas_BREX = os.path.join(script_dir,"atlasBREX_fslfrioul.sh")
-
-script_NMT_subject_align = os.path.join(nmt_dir,"NMT_subject_align.csh")
+nmt_dir = load_test_data('NMT_v1.2')
+atlasbrex_dir = load_test_data('AtlasBREX')
 
 def create_infosource():
     infosource = pe.Node(interface=niu.IdentityInterface(fields=['subject_id']),name="infosource")
@@ -61,9 +45,7 @@ def create_datasource():
    datasource.inputs.template = '%s/%s/%s%s/%s/%s/sub-%s_ses-001_run-*_%s.nii.gz'
    datasource.inputs.template_args = dict(
        T1=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T1w"]],
-       T2=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T2w"]],
-       mask=[["users/loh.k/test_pipeline","test_pipeline_kepkee_by_kepkee","segment_pnh_subpipes","brain_extraction_pipe","smooth_mask"
-              site,'subject_id',"mask",'subject_id',"mask"]],
+       T2=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T2w"]]
        )
    datasource.inputs.sort_filelist = True
 
@@ -128,7 +110,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     #### brain extraction
     brain_extraction_pipe = create_brain_extraction_pipe(
-        script_atlas_BREX=script_atlas_BREX, NMT_file=NMT_file, NMT_SS_file=NMT_SS_file, name = "devel_atlas_brex")
+        atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir, name = "devel_atlas_brex")
 
     #### si cropped_denoise
     ##seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
@@ -148,12 +130,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     ################### full_segment (restarting from the avg_align files,)
     brain_segment_pipe = create_full_segment_pipe(
-        crop_list=crop_list, sigma=sigma, NMT_file=NMT_file,
-        NMT_SS_file=NMT_SS_file, NMT_brainmask=NMT_brainmask,
-        NMT_brainmask_prob=NMT_brainmask_prob,
-        NMT_brainmask_CSF=NMT_brainmask_CSF, NMT_brainmask_GM=NMT_brainmask_GM,
-        NMT_brainmask_WM=NMT_brainmask_WM,
-        script_NMT_subject_align=script_NMT_subject_align,
+        crop_list=crop_list, sigma=sigma, nmt_dir = nmt_dir,
         name="segment_devel_NMT_sub_align")
 
     seg_pipe.connect(preproc_pipe, "av_T1.avg_img",brain_segment_pipe,'inputnode.preproc_T1')
@@ -199,82 +176,3 @@ if __name__ =='__main__':
 
     wf.run()
     #wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
-
-"""
-Old version of kepkee's pipeline
-Not used anymore
-
-old version (when we worked together a few months ago)
-    - preproc
-    - cropped_denoise
-    - correct_bias
-    - extract_brain
-    - segment
-
-#def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
-                                #crop_list = [(88, 144), (14, 180), (27, 103)],
-                                #sigma = 4):
-
-    ## creating pipeline
-    #seg_pipe = pe.Workflow(name=name)
-
-    ## creating inputnode
-    #inputnode = pe.Node(
-        #niu.IdentityInterface(fields=['T1','T2']),
-        #name='inputnode')
-
-    ############ preprocessing (avg and align)
-    #preproc_pipe = create_average_align_pipe()
-
-    #seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
-    #seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
-
-    ############ denoising and cropping
-    #denoise_pipe = create_cropped_denoised_pipe(crop_list = crop_list, sigma = sigma)
-
-    #seg_pipe.connect(preproc_pipe, "av_T1.avg_img", denoise_pipe,'inputnode.preproc_T1')
-    #seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", denoise_pipe,'inputnode.preproc_T2')
-
-    ###### Correct_bias_T1_T2
-    #### if denoised_cropped
-    ##correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
-
-    ##seg_pipe.connect(denoise_pipe, 'crop_bb_T1.roi_file',correct_bias_pipe,'inputnode.preproc_T1')
-    ##seg_pipe.connect(denoise_pipe, 'crop_bb_T2.roi_file',correct_bias_pipe,'inputnode.preproc_T2')
-
-    #### if cropped_denoised
-    #correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
-
-    #seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',correct_bias_pipe,'inputnode.preproc_T1')
-    #seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',correct_bias_pipe,'inputnode.preproc_T2')
-
-
-    ###### otherwise using nibabel node
-    ##from nodes.segment_pnh_nodes import correct_bias_T1_T2
-
-    ##correct_bias = pe.Node(interface = niu.Function(
-        ##input_names=["preproc_T1_file","preproc_T2_file", "sigma"],
-        ##output_names =  ["thresh_lower_file", "norm_mult_file", "bias_file", "smooth_bias_file", "restore_T1_file", "restore_T2_file"],
-        ##function = correct_bias_T1_T2),
-        ##name = "correct_bias")
-
-    ##correct_bias.inputs.sigma = sigma*2
-
-    ##seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias,'preproc_T1_file')
-    ##seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
-
-    #####################
-    #brain_extraction_pipe = create_brain_extraction_pipe()
-
-    #seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file', brain_extraction_pipe,"inputnode.restore_T1")
-    #seg_pipe.connect(correct_bias_pipe,'restore_T2.out_file', brain_extraction_pipe,"inputnode.restore_T2")
-
-    #################### segment
-    #brain_segment_pipe = create_brain_segment_pipe(NMT_file, NMT_brainmask_prob, NMT_brainmask,
-                              #NMT_brainmask_CSF, NMT_brainmask_GM,
-                              #NMT_brainmask_WM,)
-
-    #seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
-
-    #return seg_pipe
-"""

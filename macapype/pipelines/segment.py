@@ -23,10 +23,7 @@ from .correct_bias import create_masked_correct_bias_pipe
 from .register import create_register_NMT_pipe
 
 
-def create_full_segment_pipe(crop_list, sigma, NMT_file, NMT_SS_file,
-                             NMT_brainmask, NMT_brainmask_prob,
-                             NMT_brainmask_CSF, NMT_brainmask_GM,
-                             NMT_brainmask_WM, script_NMT_subject_align,
+def create_full_segment_pipe(crop_list, sigma, nmt_dir,
                              name="full_segment_pipe"):
 
     # creating pipeline
@@ -61,14 +58,7 @@ def create_full_segment_pipe(crop_list, sigma, NMT_file, NMT_SS_file,
                                "inputnode.brain_mask")
 
     ############# register NMT template, template mask and priors to subject T1
-    register_NMT_pipe = create_register_NMT_pipe(NMT_file,
-                                                 NMT_SS_file,
-                                                 NMT_brainmask,
-                                                 NMT_brainmask_prob,
-                                                 NMT_brainmask_CSF,
-                                                 NMT_brainmask_GM,
-                                                 NMT_brainmask_WM,
-                                                 script_NMT_subject_align)
+    register_NMT_pipe = create_register_NMT_pipe(nmt_dir = nmt_dir)
 
     brain_segment_pipe.connect(
         masked_correct_bias_pipe, 'restore_mask_T1.out_file',
