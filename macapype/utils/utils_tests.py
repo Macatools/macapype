@@ -1,12 +1,17 @@
 """
-Support function for loading test datasets
+    Support function for loading test datasets
 """
 import os
 
 
 def load_test_data(name):
-    """load test data"""
-    data_dir = {"AtlasBREX": "xtffSJfiBqCQZWi"}
+    """ Load test data, template and needed scripts """
+
+    data_dir = {
+        "AtlasBREX": "xtffSJfiBqCQZWi", 
+        "NMT_v1.2": "8LXLzFAE89x28Lp",
+        "NMT_FSL": "ajAtB7qgaPAmKyJ"
+    }
 
     data_path = os.path.join(os.getcwd(), name)
     data_zip = os.path.join(os.getcwd(), "{}.zip".format(name))
@@ -33,3 +38,4 @@ def load_test_data(name):
     assert os.path.exists(data_path)
 
     return data_path
+
