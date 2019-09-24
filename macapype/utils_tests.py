@@ -6,11 +6,9 @@ import os
 
 def load_test_data(name):
     """load test data"""
-    data_dir = {"data_nii": "STtqD3Y4ZZYqpTm",
-                "data_con": "kEXrxPs4DgAJaLs",
-                "data_gather": "5SQpidYQJXqij6F",
-                "data_con_meg": "yAbqiq5WqAzSRkC",
-                "data_inv_ts": "HT85yik8iR5W5rF"}
+    data_dir = {"AtlasBREX": "xtffSJfiBqCQZWi",
+                "NMT_template": "HT85yik8iR5W5rF",
+                "NMT_FSL": "HT85yik8iR5W5rF"}
 
     data_path = os.path.join(os.getcwd(), name)
     data_zip = os.path.join(os.getcwd(), "{}.zip".format(name))
