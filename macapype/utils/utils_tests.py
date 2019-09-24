@@ -17,7 +17,10 @@ def load_test_data(name):
 
     data_dirpath = op.join(op.split(__file__)[0], "..", "..", "data")
     
-    makedirs(data_dirpath, exist_ok=True)
+    try:
+        makedirs(data_dirpath)
+    except:
+        print("data_dirpath {} already exists".format(data_dirpath))
 
     data_path = op.join(data_dirpath, name)
     data_zip = op.join(data_dirpath, "{}.zip".format(name))
