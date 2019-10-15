@@ -11,8 +11,8 @@ To run examples, you will need to download and unzip this file:
 
 # How to install
 
-$ git clone https://framagit.org/mars-hackat2019/anat-mri-pipeline/macapype.git
-$ cd macapype
+$ git clone https://framagit.org/mars-hackat2019/anat-mri-pipeline/macapype.git  
+$ cd macapype  
 $ python setup.py develop  
 OR if you do not have sudo access:  
 $ python setup.py develop --user  
