@@ -91,10 +91,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     preproc_pipe = create_average_align_pipe()
 
     seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
-    #seg_pipe.connect(inputnode,'T1cropbox',preproc_pipe,'inputnode.T1cropbox')
     seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
-
-    return seg_pipe
 
 
     #### Correct_bias_T1_T2
@@ -102,6 +99,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     seg_pipe.connect(preproc_pipe, "av_T1.avg_img",correct_bias_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", correct_bias_pipe,'inputnode.preproc_T2')
+
 
     """
     ##### otherwise using nibabel node
@@ -120,10 +118,17 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     """
 
     #### denoising and cropping
-    denoise_pipe = create_denoised_cropped_pipe(crop_list = crop_list)
+    denoise_pipe = create_denoised_cropped_pipe()
 
     seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
+
+
+    seg_pipe.connect(inputnode,'T1cropbox',denoise_pipe,'inputnode.T1cropbox')
+    seg_pipe.connect(inputnode,'T1cropbox',denoise_pipe,'inputnode.T2cropbox')
+
+    return seg_pipe
+
 
     #### brain extraction
     brain_extraction_pipe = create_brain_extraction_pipe(

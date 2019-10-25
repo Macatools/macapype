@@ -13,6 +13,23 @@ from nipype.utils.filemanip import split_filename as split_f
 
 from ..nodes.denoise import nonlocal_denoise
 
+################## on the fly
+def read_cropbox(cropbox_file):
+
+    import os.path as op
+
+    assert op.exists(cropbox_file), \
+        "Error {} do not exists".format(cropbox_file)
+
+    with open(cropbox_file) as f:
+        crop_list = []
+        for line in f.readlines():
+            print (line.strip().split())
+            crop_list.append( tuple(map(int,map(float, line.strip().split()))))
+
+    print(crop_list )
+    return crop_list
+
 ######################### Preprocessing: Avg multiples images, align T2 to T1, and crop/denoise in both order
 def create_cropped_denoised_pipe(crop_list, name="cropped_denoised_pipe"):
 
@@ -59,14 +76,14 @@ def create_cropped_denoised_pipe(crop_list, name="cropped_denoised_pipe"):
 
     return cropped_denoised_pipe
 
-def create_denoised_cropped_pipe(crop_list, name="denoised_cropped_pipe"):
+def create_denoised_cropped_pipe(name="denoised_cropped_pipe"):
 
     # creating pipeline
     denoised_cropped_pipe = pe.Workflow(name=name)
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
+        niu.IdentityInterface(fields=['preproc_T1', 'T1cropbox', 'preproc_T2', 'T2cropbox']),
         name='inputnode')
 
     ## denoise aonlm
@@ -90,14 +107,21 @@ def create_denoised_cropped_pipe(crop_list, name="denoised_cropped_pipe"):
     # cropping
     # Crop bounding box for T1
     crop_bb_T1 = pe.Node(fsl.ExtractROI(), name='crop_bb_T1')
-    crop_bb_T1.inputs.crop_list = crop_list
+
+
+    denoised_cropped_pipe.connect(inputnode, ("T1cropbox",read_cropbox),
+                                  crop_bb_T1, 'crop_list')
+    #crop_bb_T1.inputs.crop_list = crop_list
 
     denoised_cropped_pipe.connect(denoise_T1, "denoised_img_file",
                                   crop_bb_T1, 'in_file')
 
     # Crop bounding box for T2
     crop_bb_T2 = pe.Node(fsl.ExtractROI(), name='crop_bb_T2')
-    crop_bb_T2.inputs.crop_list = crop_list
+
+
+    denoised_cropped_pipe.connect(inputnode, ("T2cropbox",read_cropbox),
+                                  crop_bb_T2, 'crop_list')
 
     denoised_cropped_pipe.connect(denoise_T2, "denoised_img_file",
                                   crop_bb_T2, 'in_file')
