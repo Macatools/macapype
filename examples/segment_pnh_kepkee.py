@@ -1,3 +1,9 @@
+import os
+import os.path as op
+
+import argparse
+
+
 import nipype
 
 import nipype.interfaces.io as nio
@@ -7,55 +13,61 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-import os
-
 from macapype.pipelines.preproc import create_average_align_pipe
 from macapype.pipelines.denoise import (
     create_denoised_cropped_pipe, create_cropped_denoised_pipe)
 
 from macapype.pipelines.correct_bias import create_correct_bias_pipe
 from macapype.pipelines.extract_brain import create_brain_extraction_pipe
-#from macapype.pipelines.segment import create_brain_segment_pipe
 from macapype.pipelines.segment import create_full_segment_pipe
 
 from macapype.utils.misc import show_files
-
-data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/"
-#main_path = "/hpc/crise/meunier.d/Data/"
-
 from macapype.utils.utils_tests import load_test_data
-
-main_path = os.path.join(os.path.split(__file__)[0], "../local_test/")
-
-site = "sbri"
-subject_ids = ['032311']
 
 nmt_dir = load_test_data('NMT_v1.2')
 atlasbrex_dir = load_test_data('AtlasBREX')
 
-def create_infosource():
+def create_infosource(subject_ids):
     infosource = pe.Node(interface=niu.IdentityInterface(fields=['subject_id']),name="infosource")
     infosource.iterables = [('subject_id', subject_ids)]
 
     return infosource
 
-def create_datasource():
-   datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2']),name = 'datasource')
-   datasource.inputs.base_directory = "/hpc/meca/"
-   datasource.inputs.template = '%s/%s/%s%s/%s/%s/sub-%s_ses-001_run-*_%s.nii.gz'
-   datasource.inputs.template_args = dict(
-       T1=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T1w"]],
-       T2=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T2w"]]
-       )
-   datasource.inputs.sort_filelist = True
 
-   return datasource
+def create_datasource(data_dir):
+    datasource = pe.Node(
+        interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T1cropbox', 'T2']),
+        name='datasource'
+    )
+    datasource.inputs.base_directory = data_dir
+    #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
+    datasource.inputs.template = 'sub-%s_ses-01_%s.%s'
+    datasource.inputs.template_args = dict(
+        T1=[['subject_id', "mp2rageT1w", "nii.gz"]],
+        T1cropbox=[[ 'subject_id', "mp2rageT1wCropped", "cropbox"]],
+        T2=[[ 'subject_id', "T2w", "nii.gz"]],
+    )
+    datasource.inputs.sort_filelist = True
+
+    return datasource
+
+
+#def create_datasource(data_dir):
+   #datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2']),name = 'datasource')
+   #datasource.inputs.base_directory = "/hpc/meca/"
+   #datasource.inputs.template = '%s/%s/%s%s/%s/%s/sub-%s_ses-001_run-*_%s.nii.gz'
+   #datasource.inputs.template_args = dict(
+       #T1=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T1w"]],
+       #T2=[["data/Macaques/Macaque_hiphop/",site,"sub-",'subject_id',"ses-001","anat",'subject_id',"T2w"]]
+       #)
+   #datasource.inputs.sort_filelist = True
+
+   #return datasource
 
 
 ###############################################################################
 
 def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
-                                crop_list = [(88, 144), (14, 180), (27, 103)],
                                 sigma = 2):
 
     # creating pipeline
@@ -63,7 +75,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2']),
+        niu.IdentityInterface(fields=['T1', 'T1cropbox', 'T2']),
         name='inputnode')
 
     """
@@ -79,13 +91,18 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     preproc_pipe = create_average_align_pipe()
 
     seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
+    #seg_pipe.connect(inputnode,'T1cropbox',preproc_pipe,'inputnode.T1cropbox')
     seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
+
+    return seg_pipe
+
 
     #### Correct_bias_T1_T2
     correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
 
     seg_pipe.connect(preproc_pipe, "av_T1.avg_img",correct_bias_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", correct_bias_pipe,'inputnode.preproc_T2')
+
     """
     ##### otherwise using nibabel node
     #from nodes.segment_pnh_nodes import correct_bias_T1_T2
@@ -140,16 +157,16 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     return seg_pipe
 
-def create_main_workflow():
+def create_main_workflow(data_dir, process_dir, subject_ids):
 
     main_workflow = pe.Workflow(name= "test_pipeline_kepkee")
-    main_workflow.base_dir = main_path
+    main_workflow.base_dir = process_dir
 
     ## Infosource
-    infosource = create_infosource()
+    infosource = create_infosource(subject_ids)
 
     ## Data source
-    datasource = create_datasource()
+    datasource = create_datasource(data_dir)
 
     ## connect
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -162,17 +179,55 @@ def create_main_workflow():
     segment_pnh = create_segment_pnh_subpipes()
 
     main_workflow.connect(datasource,'T1',segment_pnh,'inputnode.T1')
+    main_workflow.connect(datasource,'T1cropbox',segment_pnh,'inputnode.T1cropbox')
     main_workflow.connect(datasource,'T2',segment_pnh,'inputnode.T2')
 
     return main_workflow
 
 
-if __name__ =='__main__':
+def main(data_path, main_path, subjects):
+    #data_path = op.abspath(data_path)
+    #main_path = op.abspath(main_path)
 
-    ### main_workflow
-    wf = create_main_workflow()
-    wf.write_graph(graph2use = "colored")
-    wf.config['execution'] = {'remove_unnecessary_outputs':'false'}
+    #nmt_dir = load_test_data("NMT_v1.2")
+    #nmt_dir = op.join(resources_dir, 'NMT_v1.2')
 
-    #wf.run()
-    #wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+    # There also exists probabilistic maps in NMT_v1.2 folder,
+    # do not know why Regis used these files he generated
+    #nmt_fsl_dir = load_test_data("NMT_FSL")
+
+    # main_workflow
+    print("Initialising the pipeline...")
+    wf = create_main_workflow(
+        data_dir=data_path,
+        process_dir=main_path,
+        subject_ids=subjects
+    )
+    wf.write_graph(graph2use="colored")
+    wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+    print('The PNH segmentation pipeline is ready')
+
+    print("Start to process")
+    wf.run()
+    # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+
+
+
+if __name__ == '__main__':
+    # Command line parser
+    parser = argparse.ArgumentParser(
+        description="PNH segmenation pipeline from Kepkee Loh / Julien Sein")
+
+    parser.add_argument("-data", dest="data", type=str, required=True,
+                        help="Directory containing MRI data (BIDS)")
+    parser.add_argument("-out", dest="out", type=str, #nargs='+',
+                        help="Output dir", required=True)
+    parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
+                        help="Subjects' ID", required=True)
+    args = parser.parse_args()
+
+    main(
+        data_path=args.data,
+        main_path=args.out,
+        subjects=args.subjects
+    )

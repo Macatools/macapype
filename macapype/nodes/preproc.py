@@ -9,7 +9,7 @@ def average_align(list_img):
     from nipype.utils.filemanip import split_filename as split_f
     import nipype.interfaces.fsl as fsl
 
-    print list_img
+    print(list_img)
 
     if isinstance(list_img, list):
 
