@@ -13,9 +13,8 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-from macapype.pipelines.preproc import create_average_align_pipe
-from macapype.pipelines.denoise import (
-    create_denoised_cropped_pipe, create_cropped_denoised_pipe)
+from macapype.pipelines.preproc import create_average_align_cropped_pipe
+from macapype.pipelines.denoise import create_denoised_pipe
 
 from macapype.pipelines.correct_bias import create_correct_bias_pipe
 from macapype.pipelines.extract_brain import create_brain_extraction_pipe
@@ -87,19 +86,20 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     - segment
     """
 
-    #### preprocessing (avg and align)
-    preproc_pipe = create_average_align_pipe()
+    #### preprocessing (avg and align, and crop)
+    preproc_pipe = create_average_align_cropped_pipe()
 
     seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
     seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
 
+    seg_pipe.connect(inputnode,'T1cropbox',preproc_pipe,'inputnode.T1cropbox')
+    seg_pipe.connect(inputnode,'T1cropbox',preproc_pipe,'inputnode.T2cropbox')
 
     #### Correct_bias_T1_T2
     correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
 
-    seg_pipe.connect(preproc_pipe, "av_T1.avg_img",correct_bias_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", correct_bias_pipe,'inputnode.preproc_T2')
-
+    seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file",correct_bias_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "crop_bb_T2.roi_file", correct_bias_pipe,'inputnode.preproc_T2')
 
     """
     ##### otherwise using nibabel node
@@ -118,29 +118,18 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     """
 
     #### denoising and cropping
-    denoise_pipe = create_denoised_cropped_pipe()
+    denoise_pipe = create_denoised_pipe()
 
     seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
-
-
-    seg_pipe.connect(inputnode,'T1cropbox',denoise_pipe,'inputnode.T1cropbox')
-    seg_pipe.connect(inputnode,'T1cropbox',denoise_pipe,'inputnode.T2cropbox')
-
-    return seg_pipe
 
 
     #### brain extraction
     brain_extraction_pipe = create_brain_extraction_pipe(
         atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir, name = "devel_atlas_brex")
 
-    #### si cropped_denoise
-    ##seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
-    ##seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
-
-    #### si denoised_cropped
-    seg_pipe.connect(denoise_pipe,'crop_bb_T1.roi_file',brain_extraction_pipe,"inputnode.restore_T1")
-    seg_pipe.connect(denoise_pipe,'crop_bb_T2.roi_file',brain_extraction_pipe,"inputnode.restore_T2")
+    seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
+    seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
 
     ################### segment (restarting from skull-stripped T1)
     # (segmentation is done NMT template space for now)
@@ -151,12 +140,11 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     #seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
 
     ################### full_segment (restarting from the avg_align files,)
-    brain_segment_pipe = create_full_segment_pipe(
-        crop_list=crop_list, sigma=sigma, nmt_dir = nmt_dir,
+    brain_segment_pipe = create_full_segment_pipe(sigma=sigma, nmt_dir = nmt_dir,
         name="segment_devel_NMT_sub_align")
 
-    seg_pipe.connect(preproc_pipe, "av_T1.avg_img",brain_segment_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", brain_segment_pipe,'inputnode.preproc_T2')
+    seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file",brain_segment_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file", brain_segment_pipe,'inputnode.preproc_T2')
 
     seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
 

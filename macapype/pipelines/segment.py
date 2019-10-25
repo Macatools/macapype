@@ -18,12 +18,12 @@ from ..utils.misc import (show_files, print_val, print_nii_data)
 
 from ..nodes.segment import wrap_antsAtroposN4_dirty
 
-from .denoise import create_cropped_denoised_pipe
+from .denoise import create_denoised_pipe
 from .correct_bias import create_masked_correct_bias_pipe
 from .register import create_register_NMT_pipe
 
 
-def create_full_segment_pipe(crop_list, sigma, nmt_dir,
+def create_full_segment_pipe(sigma, nmt_dir,
                              name="full_segment_pipe"):
 
     # creating pipeline
@@ -35,22 +35,22 @@ def create_full_segment_pipe(crop_list, sigma, nmt_dir,
             fields=['preproc_T1', 'preproc_T2', 'brain_mask']),
         name='inputnode')
 
-    crop_denoise_pipe = create_cropped_denoised_pipe(crop_list=crop_list)
+    denoise_pipe = create_denoised_pipe()
 
     brain_segment_pipe.connect(inputnode, 'preproc_T1',
-                               crop_denoise_pipe, "inputnode.preproc_T1")
+                               denoise_pipe, "inputnode.preproc_T1")
     brain_segment_pipe.connect(inputnode, 'preproc_T2',
-                               crop_denoise_pipe, "inputnode.preproc_T2")
+                               denoise_pipe, "inputnode.preproc_T2")
 
     ############### correcting for bias T1/T2, but this time with a mask ######
     masked_correct_bias_pipe = create_masked_correct_bias_pipe(sigma=sigma)
 
     brain_segment_pipe.connect(
-        crop_denoise_pipe, 'denoise_T1.denoised_img_file',
+        denoise_pipe, 'denoise_T1.denoised_img_file',
         masked_correct_bias_pipe, "inputnode.preproc_T1")
 
     brain_segment_pipe.connect(
-        crop_denoise_pipe, 'denoise_T2.denoised_img_file',
+        denoise_pipe, 'denoise_T2.denoised_img_file',
         masked_correct_bias_pipe, "inputnode.preproc_T2")
 
     brain_segment_pipe.connect(inputnode, 'brain_mask',
