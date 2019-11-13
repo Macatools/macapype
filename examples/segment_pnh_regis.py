@@ -80,14 +80,14 @@ def create_infosource(subject_ids):
     return infosource
 
 
-def create_datasource(data_dir):
+def create_datasource(data_dir, sess):
     datasource = pe.Node(
         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1']),
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = '%s/sub-%s_ses-01_%sCropped.nii'
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_%sCropped.nii'.format(sess, sess)
     datasource.inputs.template_args = dict(
         T1=[['subject_id', 'subject_id', "T1w"]],
     )
@@ -182,7 +182,7 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
 
 
 ###############################################################################
-def create_main_workflow(data_dir, process_dir, subject_ids, nmt_dir, 
+def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir, 
                          nmt_fsl_dir):
     """ """
     nmt_file = op.join(nmt_dir, "NMT.nii.gz")
@@ -202,7 +202,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, nmt_dir,
     infosource = create_infosource(subject_ids)
 
     # Data source
-    datasource = create_datasource(data_dir)
+    datasource = create_datasource(data_dir, sess)
 
     # connect
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -220,7 +220,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, nmt_dir,
 
 
 ################################################################################
-def main(data_path, main_path, subjects):
+def main(data_path, main_path, subjects, sess):
     data_path = op.abspath(data_path)
     #resources_dir = op.abspath(resources_dir)
     
@@ -237,6 +237,7 @@ def main(data_path, main_path, subjects):
         data_dir=data_path,
         process_dir=main_path,
         subject_ids=subjects,
+        sess=sess,
         nmt_dir=nmt_dir,
         nmt_fsl_dir=nmt_fsl_dir
     )
@@ -245,7 +246,7 @@ def main(data_path, main_path, subjects):
     print('The PNH segmentation pipeline is ready')
     
     print("Start to process")
-    # wf.run()
+    wf.run()
     # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
     
 
@@ -257,6 +258,8 @@ if __name__ == '__main__':
                         help="Directory containing MRI data (BIDS)")
     parser.add_argument("-out", dest="out", type=str,
                         help="Output directory", required=True)
+    parser.add_argument("-sess", dest="sess", type=str,
+                        help="Session", required=True)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=True)
     args = parser.parse_args()
@@ -264,6 +267,7 @@ if __name__ == '__main__':
     main(
         data_path=args.data,
         main_path=args.out,
-        subjects=args.subjects
+        subjects=args.subjects,
+        sess=args.sess
     )
 
