@@ -14,7 +14,7 @@ import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.preproc import create_average_align_cropped_pipe
-from macapype.pipelines.denoise import create_denoised_pipe
+#from macapype.pipelines.denoise import create_denoised_pipe
 
 from macapype.pipelines.correct_bias import create_correct_bias_pipe
 from macapype.pipelines.extract_brain import create_brain_extraction_pipe
@@ -40,11 +40,11 @@ def create_datasource(data_dir):
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s_ses-01_%s.%s'
+    datasource.inputs.template = 'sub-%s/ses-01/sub-%s_ses-01_%s.%s'
     datasource.inputs.template_args = dict(
-        T1=[['subject_id', "mp2rageT1w", "nii.gz"]],
-        T1cropbox=[[ 'subject_id', "mp2rageT1wCropped", "cropbox"]],
-        T2=[[ 'subject_id', "T2w", "nii.gz"]],
+        T1=[['subject_id','subject_id', "mp2rageT1w", "nii.gz"]],
+        T1cropbox=[['subject_id', 'subject_id', "mp2rageT1wCropped", "cropbox"]],
+        T2=[['subject_id', 'subject_id', "T2w", "nii.gz"]],
     )
     datasource.inputs.sort_filelist = True
 
@@ -117,19 +117,19 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     #seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
     """
 
-    #### denoising and cropping
-    denoise_pipe = create_denoised_pipe()
+    ##### denoising and cropping
+    #denoise_pipe = create_denoised_pipe()
 
-    seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
+    #seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
+    #seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
 
 
     #### brain extraction
     brain_extraction_pipe = create_brain_extraction_pipe(
         atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir, name = "devel_atlas_brex")
 
-    seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
-    seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
+    seg_pipe.connect(denoise_pipe,'restore_T1.out_file',brain_extraction_pipe,"inputnode.restore_T1")
+    seg_pipe.connect(denoise_pipe,'restore_T2.out_file',brain_extraction_pipe,"inputnode.restore_T2")
 
     ################### segment (restarting from skull-stripped T1)
     # (segmentation is done NMT template space for now)

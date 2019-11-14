@@ -10,6 +10,6 @@ setup(
     packages=find_packages(),
     author="David Meunier",
     description="Pipeline for anatomic processing for macaque",
-    lisence='BSD 3',
+    license='BSD 3',
     install_requires=["nipype", "networkx>=2.0"]
 )
