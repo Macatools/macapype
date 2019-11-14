@@ -40,11 +40,11 @@ def create_datasource(data_dir):
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s/ses-01/sub-%s_ses-01_%s.%s'
+    datasource.inputs.template = 'sub-%s/ses-01/anat/sub-%s_ses-01_%s.%s'
     datasource.inputs.template_args = dict(
-        T1=[['subject_id','subject_id', "mp2rageT1w", "nii.gz"]],
+        T1=[['subject_id','subject_id', "mp2rageT1w", "nii"]],
         T1cropbox=[['subject_id', 'subject_id', "mp2rageT1wCropped", "cropbox"]],
-        T2=[['subject_id', 'subject_id', "T2w", "nii.gz"]],
+        T2=[['subject_id', 'subject_id', "T2w", "nii"]],
     )
     datasource.inputs.sort_filelist = True
 

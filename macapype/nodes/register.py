@@ -263,7 +263,130 @@ def add_Nwarp(list_prior_files):
 
 # NwarpApplyPriors
 
-from nipype.interfaces.afni import NwarpApply
+#from nipype.interfaces.afni import NwarpApply
+
+from nipype.interfaces.afni.base import (CommandLineInputSpec, CommandLine)
+
+from nipype.interfaces.afni.base import (AFNICommandBase, AFNICommandOutputSpec, )
+
+
+class NwarpApplyInputSpec(CommandLineInputSpec):
+    in_file = traits.Either(
+        File(exists=True),
+        traits.List(File(exists=True)),
+        mandatory=True,
+        argstr='-source %s',
+        desc='the name of the dataset to be warped '
+        'can be multiple datasets')
+    warp = traits.String(
+        desc='the name of the warp dataset. '
+        'multiple warps can be concatenated (make sure they exist)',
+        argstr='-nwarp %s',
+        mandatory=True)
+    inv_warp = traits.Bool(
+        desc='After the warp specified in \'-nwarp\' is computed, invert it',
+        argstr='-iwarp')
+    master = traits.File(
+        exists=True,
+        desc='the name of the master dataset, which defines the output grid',
+        argstr='-master %s')
+    interp = traits.Enum(
+        'wsinc5',
+        'NN',
+        'nearestneighbour',
+        'nearestneighbor',
+        'linear',
+        'trilinear',
+        'cubic',
+        'tricubic',
+        'quintic',
+        'triquintic',
+        desc='defines interpolation method to use during warp',
+        argstr='-interp %s',
+        usedefault=True)
+    ainterp = traits.Enum(
+        'NN',
+        'nearestneighbour',
+        'nearestneighbor',
+        'linear',
+        'trilinear',
+        'cubic',
+        'tricubic',
+        'quintic',
+        'triquintic',
+        'wsinc5',
+        desc='specify a different interpolation method than might '
+        'be used for the warp',
+        argstr='-ainterp %s')
+    out_file = traits.Either(
+        File(),
+        traits.List(File()),
+        mandatory=True,
+        argstr='-prefix %s',
+        desc='output image file name')
+    #File(
+        #name_template='%s_Nwarp',
+        #desc='output image file name',
+        #argstr='-prefix %s',
+        #name_source='in_file')
+    short = traits.Bool(
+        desc='Write output dataset using 16-bit short integers, rather than '
+        'the usual 32-bit floats.',
+        argstr='-short')
+    quiet = traits.Bool(
+        desc='don\'t be verbose :(', argstr='-quiet', xor=['verb'])
+    verb = traits.Bool(
+        desc='be extra verbose :)', argstr='-verb', xor=['quiet'])
+
+class NwarpApplyOutputSpec(AFNICommandOutputSpec):
+    out_file = traits.Either(
+            File(),
+            traits.List(File()))
+
+class NwarpApply(AFNICommandBase):
+    """Program to apply a nonlinear 3D warp saved from 3dQwarp
+    (or 3dNwarpCat, etc.) to a 3D dataset, to produce a warped
+    version of the source dataset.
+
+    For complete details, see the `3dNwarpApply Documentation.
+    <https://afni.nimh.nih.gov/pub/dist/doc/program_help/3dNwarpApply.html>`_
+
+    Examples
+    ========
+
+    >>> from nipype.interfaces import afni
+    >>> nwarp = afni.NwarpApply()
+    >>> nwarp.inputs.in_file = 'Fred+orig'
+    >>> nwarp.inputs.master = 'NWARP'
+    >>> nwarp.inputs.warp = "'Fred_WARP+tlrc Fred.Xaff12.1D'"
+    >>> nwarp.cmdline
+    "3dNwarpApply -source Fred+orig -interp wsinc5 -master NWARP -prefix Fred+orig_Nwarp -nwarp \'Fred_WARP+tlrc Fred.Xaff12.1D\'"
+    >>> res = nwarp.run()  # doctest: +SKIP
+
+    """
+    _cmd = '3dNwarpApply'
+    input_spec = NwarpApplyInputSpec
+    output_spec = NwarpApplyOutputSpec
+
+    def _list_outputs(self):
+        outputs = self.output_spec().get()
+        if isdefined(self.inputs.out_file):
+
+            if isinstance(self.inputs.out_file,list):
+                print ([os.path.abspath(out) for out in self.inputs.out_file])
+                outputs['out_file'] = [os.path.abspath(out) for out in self.inputs.out_file]
+            else:
+                outputs['out_file'] = os.path.abspath(self.inputs.out_file)
+        #else:
+            #outputs['out_file'] = os.path.abspath(
+                #self._gen_fname(
+                    #self.inputs.in_files[0],
+                    #suffix='_NwarpCat+tlrc',
+                    #ext='.HEAD'))
+
+        return outputs
+
+
 
 from nipype.utils.filemanip import split_filename as split_f
 
