@@ -168,15 +168,15 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
 
     ## Compute brain mask using old_segment of SPM and postprocessing on
     ## tissues' masks
-    #extract_brain = create_old_segment_extraction_pipe()
-    #seg_pipe.connect(
-        #iterative_register_pipe, 'register.anat_file_brain',
-        #extract_brain, "inputnode.T1"
-    #)
-    #seg_pipe.connect(
-        #iterative_register_pipe, 'merge_3_files.list3files',
-        #extract_brain, "inputnode.seg_priors"
-    #)
+    extract_brain = create_old_segment_extraction_pipe()
+    seg_pipe.connect(
+        iterative_register_pipe, 'register.anat_file_brain',
+        extract_brain, "inputnode.T1"
+    )
+    seg_pipe.connect(
+        iterative_register_pipe, 'merge_3_files.list3files',
+        extract_brain, "inputnode.seg_priors"
+    )
 
     return seg_pipe
 
