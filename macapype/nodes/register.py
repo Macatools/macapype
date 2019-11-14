@@ -261,9 +261,9 @@ def add_Nwarp(list_prior_files):
 
     return out_files
 
-# NwarpApplyPriors
-
 #from nipype.interfaces.afni import NwarpApply
+
+############### should be added to nipype instead of here...
 
 from nipype.interfaces.afni.base import (CommandLineInputSpec, CommandLine)
 
@@ -387,6 +387,7 @@ class NwarpApply(AFNICommandBase):
         return outputs
 
 
+# NwarpApplyPriors
 
 from nipype.utils.filemanip import split_filename as split_f
 
