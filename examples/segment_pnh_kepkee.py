@@ -128,8 +128,8 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     brain_extraction_pipe = create_brain_extraction_pipe(
         atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir, name = "devel_atlas_brex")
 
-    seg_pipe.connect(denoise_pipe,'restore_T1.out_file',brain_extraction_pipe,"inputnode.restore_T1")
-    seg_pipe.connect(denoise_pipe,'restore_T2.out_file',brain_extraction_pipe,"inputnode.restore_T2")
+    seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file',brain_extraction_pipe,"inputnode.restore_T1")
+    seg_pipe.connect(correct_bias_pipe,'restore_T2.out_file',brain_extraction_pipe,"inputnode.restore_T2")
 
     ################### segment (restarting from skull-stripped T1)
     # (segmentation is done NMT template space for now)
