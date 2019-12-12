@@ -67,6 +67,11 @@ from macapype.pipelines.register import create_iterative_register_pipe
 from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
 from macapype.utils.utils_tests import load_test_data
 
+from macapype.utils.utils_spm import set_spm
+
+assert set_spm(), "Error, SPM was not found, cannot run Regis pipeline"
+
+
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
