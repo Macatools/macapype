@@ -226,6 +226,6 @@ if __name__ == '__main__':
     main(
         data_path=args.data,
         main_path=args.out,
-        subjects=args.subjects
+        subjects=args.subjects,
         sess=args.sess
     )
