@@ -227,4 +227,5 @@ if __name__ == '__main__':
         data_path=args.data,
         main_path=args.out,
         subjects=args.subjects
+        sess=args.sess
     )
