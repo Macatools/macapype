@@ -271,8 +271,11 @@ from nipype.interfaces.afni.base import (AFNICommandBase,
                                          AFNICommandOutputSpec,
                                          isdefined)
 
+# NwarpApplyPriors
+from nipype.utils.filemanip import split_filename as split_f
 
-class NwarpApplyInputSpec(CommandLineInputSpec):
+
+class NwarpApplyPriorsInputSpec(CommandLineInputSpec):
     in_file = traits.Either(
         File(exists=True),
         traits.List(File(exists=True)),
@@ -326,11 +329,6 @@ class NwarpApplyInputSpec(CommandLineInputSpec):
         mandatory=True,
         argstr='-prefix %s',
         desc='output image file name')
-    #File(
-        #name_template='%s_Nwarp',
-        #desc='output image file name',
-        #argstr='-prefix %s',
-        #name_source='in_file')
     short = traits.Bool(
         desc='Write output dataset using 16-bit short integers, rather than '
         'the usual 32-bit floats.',
@@ -340,60 +338,12 @@ class NwarpApplyInputSpec(CommandLineInputSpec):
     verb = traits.Bool(
         desc='be extra verbose :)', argstr='-verb', xor=['quiet'])
 
-class NwarpApplyOutputSpec(AFNICommandOutputSpec):
+class NwarpApplyPriorsOutputSpec(AFNICommandOutputSpec):
     out_file = traits.Either(
             File(),
             traits.List(File()))
 
-class NwarpApply(AFNICommandBase):
-    """Program to apply a nonlinear 3D warp saved from 3dQwarp
-    (or 3dNwarpCat, etc.) to a 3D dataset, to produce a warped
-    version of the source dataset.
-
-    For complete details, see the `3dNwarpApply Documentation.
-    <https://afni.nimh.nih.gov/pub/dist/doc/program_help/3dNwarpApply.html>`_
-
-    Examples
-    ========
-
-    >>> from nipype.interfaces import afni
-    >>> nwarp = afni.NwarpApply()
-    >>> nwarp.inputs.in_file = 'Fred+orig'
-    >>> nwarp.inputs.master = 'NWARP'
-    >>> nwarp.inputs.warp = "'Fred_WARP+tlrc Fred.Xaff12.1D'"
-    >>> nwarp.cmdline
-    "3dNwarpApply -source Fred+orig -interp wsinc5 -master NWARP -prefix Fred+orig_Nwarp -nwarp \'Fred_WARP+tlrc Fred.Xaff12.1D\'"
-    >>> res = nwarp.run()  # doctest: +SKIP
-
-    """
-    _cmd = '3dNwarpApply'
-    input_spec = NwarpApplyInputSpec
-    output_spec = NwarpApplyOutputSpec
-
-    def _list_outputs(self):
-        outputs = self.output_spec().get()
-        if isdefined(self.inputs.out_file):
-
-            if isinstance(self.inputs.out_file,list):
-                print ([os.path.abspath(out) for out in self.inputs.out_file])
-                outputs['out_file'] = [os.path.abspath(out) for out in self.inputs.out_file]
-            else:
-                outputs['out_file'] = os.path.abspath(self.inputs.out_file)
-        #else:
-            #outputs['out_file'] = os.path.abspath(
-                #self._gen_fname(
-                    #self.inputs.in_files[0],
-                    #suffix='_NwarpCat+tlrc',
-                    #ext='.HEAD'))
-
-        return outputs
-
-
-# NwarpApplyPriors
-
-from nipype.utils.filemanip import split_filename as split_f
-
-class NwarpApplyPriors(NwarpApply):
+class NwarpApplyPriors(AFNICommandBase):
     """
     Over Wrap of NwarpApply (afni node) in order to generate files in the right
     node directory (instead of in the original data directory, or the script directory
@@ -401,6 +351,10 @@ class NwarpApplyPriors(NwarpApply):
 
     Modifications are made over inputs and outputs
     """
+
+    _cmd = '3dNwarpApply'
+    input_spec = NwarpApplyPriorsInputSpec
+    output_spec = NwarpApplyPriorsOutputSpec
 
     def _format_arg(self, name, spec, value):
 
@@ -433,7 +387,24 @@ class NwarpApplyPriors(NwarpApply):
                 new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz"%i))
             value = new_value
 
-        return super(NwarpApplyPriors, self)._format_arg(name, spec, value)
+    def _list_outputs(self):
+        outputs = self.output_spec().get()
+        if isdefined(self.inputs.out_file):
+
+            if isinstance(self.inputs.out_file,list):
+                print ([os.path.abspath(out) for out in self.inputs.out_file])
+                outputs['out_file'] = [os.path.abspath(out) for out in self.inputs.out_file]
+            else:
+                outputs['out_file'] = os.path.abspath(self.inputs.out_file)
+        #else:
+            #outputs['out_file'] = os.path.abspath(
+                #self._gen_fname(
+                    #self.inputs.in_files[0],
+                    #suffix='_NwarpCat+tlrc',
+                    #ext='.HEAD'))
+
+        return outputs
+
 
 
 
