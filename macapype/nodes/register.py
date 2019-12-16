@@ -267,7 +267,9 @@ def add_Nwarp(list_prior_files):
 
 from nipype.interfaces.afni.base import (CommandLineInputSpec, CommandLine)
 
-from nipype.interfaces.afni.base import (AFNICommandBase, AFNICommandOutputSpec, )
+from nipype.interfaces.afni.base import (AFNICommandBase,
+                                         AFNICommandOutputSpec,
+                                         isdefined)
 
 
 class NwarpApplyInputSpec(CommandLineInputSpec):
