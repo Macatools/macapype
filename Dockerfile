@@ -11,7 +11,6 @@ RUN pip3 install xvfbwrapper psutil numpy scipy matplotlib statsmodels pandas ne
 RUN pip3 install mock prov click funcsigs pydotplus pydot rdflib pbr nibabel packaging pytest
 #nipype==0.12
 RUN mkdir -p /root/packages/
-
 ########## nipype
 RUN pip3 install nipype
 #WORKDIR /root/packages/
@@ -22,9 +21,6 @@ RUN pip3 install nipype
 # Error with dot packages:
 RUN pip3 install graphviz
 RUN apt-get -y install graphviz
-
-
-
 
 
 
@@ -110,6 +106,7 @@ RUN chmod +x /opt/spm${SPM_VERSION}/spm${SPM_VERSION}
 RUN chmod +x /opt/spm${SPM_VERSION}/run_spm12.sh
 
 #COPY version /version
+
 #
 # ENTRYPOINT ["/opt/spm12/run.sh"]
 # #ENTRYPOINT ["/opt/spm12/spm12","script","/opt/spm12/spm_BIDS_App.m"]
@@ -149,9 +146,6 @@ RUN ldconfig && mkdir -p /N/u /N/home /N/dc2 /N/soft
 
 #https://wiki.ubuntu.com/DashAsBinSh
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
-
-
 
 ############################################# Ants
 
