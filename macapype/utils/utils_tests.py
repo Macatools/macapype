@@ -15,7 +15,7 @@ def load_test_data(name):
         "NMT_FSL": "ajAtB7qgaPAmKyJ"
     }
 
-    data_dirpath = op.join(op.expanduser("~"), "data")
+    data_dirpath = op.join(op.split(__file__)[0], "..", "..", "data")
     
     try:
         makedirs(data_dirpath)

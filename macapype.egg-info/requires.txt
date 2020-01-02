@@ -1,0 +1,2 @@
+nipype
+networkx>=2.0
