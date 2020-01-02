@@ -13,6 +13,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.spm as spm
 
+
 from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty #BinaryFillHoles
 from ..nodes.extract_brain import AtlasBREX
 #from ..nodes.extract_brain import apply_atlasBREX
@@ -101,6 +102,9 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     --------
     
     """
+    from nipype.interfaces import spm
+    matlab_cmd = '/opt/spm12/run_spm12.sh /opt/mcr/v95 script'
+    spm.SPMCommand.set_mlab_paths(matlab_cmd=matlab_cmd, use_mcr=True)
 
     # creating pipeline
     be_pipe = pe.Workflow(name=name)
