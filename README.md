@@ -22,14 +22,5 @@ $ git remote add public git@framagit.org:mars-hackat2019/anat-mri-pipeline/macap
 # How to run examples
 $ python examples/segment_pnh_regis.py -data /hpc/crise/cagna.b/Prima  -resources /hpc/crise/cagna.b/Primavoice  -out ./local_test_cropped -subjects Elouk
 
-################################### docker
-
-In the directory where the Dockerfile is located:
-$ docker build -t macapype .
-
-Example of pipelines:
-$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
-$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
-
 
 

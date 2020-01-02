@@ -33,14 +33,14 @@ def create_infosource(subject_ids):
     return infosource
 
 
-def create_datasource(data_dir, sess):
+def create_datasource(data_dir):
     datasource = pe.Node(
         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T1cropbox', 'T2']),
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_%s.%s'.format(sess, sess)
+    datasource.inputs.template = 'sub-%s/ses-01/anat/sub-%s_ses-01_%s.%s'
     datasource.inputs.template_args = dict(
         T1=[['subject_id','subject_id', "mp2rageT1w", "nii"]],
         T1cropbox=[['subject_id', 'subject_id', "mp2rageT1wCropped", "cropbox"]],
@@ -150,7 +150,7 @@ def create_segment_pnh_subpipes(name= "segment_pnh_subpipes",
 
     return seg_pipe
 
-def create_main_workflow(data_dir, process_dir, subject_ids, sess):
+def create_main_workflow(data_dir, process_dir, subject_ids):
 
     main_workflow = pe.Workflow(name= "test_pipeline_kepkee")
     main_workflow.base_dir = process_dir
@@ -159,7 +159,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess):
     infosource = create_infosource(subject_ids)
 
     ## Data source
-    datasource = create_datasource(data_dir, sess)
+    datasource = create_datasource(data_dir)
 
     ## connect
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -178,7 +178,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess):
     return main_workflow
 
 
-def main(data_path, main_path, subjects, sess):
+def main(data_path, main_path, subjects):
     #data_path = op.abspath(data_path)
     #main_path = op.abspath(main_path)
 
@@ -194,8 +194,7 @@ def main(data_path, main_path, subjects, sess):
     wf = create_main_workflow(
         data_dir=data_path,
         process_dir=main_path,
-        subject_ids=subjects,
-        sess=sess
+        subject_ids=subjects
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -216,16 +215,12 @@ if __name__ == '__main__':
                         help="Directory containing MRI data (BIDS)")
     parser.add_argument("-out", dest="out", type=str, #nargs='+',
                         help="Output dir", required=True)
-    parser.add_argument("-sess", dest="sess", type=str,
-                        help="Session", required=True)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=True)
-
     args = parser.parse_args()
 
     main(
         data_path=args.data,
         main_path=args.out,
-        subjects=args.subjects,
-        sess=args.sess
+        subjects=args.subjects
     )
