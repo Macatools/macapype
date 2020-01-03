@@ -11,6 +11,7 @@ RUN pip3 install xvfbwrapper psutil numpy scipy matplotlib statsmodels pandas ne
 RUN pip3 install mock prov click funcsigs pydotplus pydot rdflib pbr nibabel packaging pytest
 #nipype==0.12
 RUN mkdir -p /root/packages/
+
 ########## nipype
 RUN pip3 install nipype
 #WORKDIR /root/packages/
@@ -21,6 +22,9 @@ RUN pip3 install nipype
 # Error with dot packages:
 RUN pip3 install graphviz
 RUN apt-get -y install graphviz
+
+
+
 
 
 
@@ -106,7 +110,6 @@ RUN chmod +x /opt/spm${SPM_VERSION}/spm${SPM_VERSION}
 RUN chmod +x /opt/spm${SPM_VERSION}/run_spm12.sh
 
 #COPY version /version
-
 #
 # ENTRYPOINT ["/opt/spm12/run.sh"]
 # #ENTRYPOINT ["/opt/spm12/spm12","script","/opt/spm12/spm_BIDS_App.m"]
@@ -147,6 +150,9 @@ RUN ldconfig && mkdir -p /N/u /N/home /N/dc2 /N/soft
 #https://wiki.ubuntu.com/DashAsBinSh
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
+
+
+
 ############################################# Ants
 
 RUN apt-get install -y ants # python3 python3-pip wget unzip && \
@@ -155,65 +161,37 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ENV ANTSPATH=/usr/lib/ants/
 ENV PATH=$ANTSPATH:$PATH
 
-
 ############################################# AFNI
 
 ### avec la neurodebian
 RUN apt-get install -y afni #
 ENV PATH=/usr/lib/afni/bin:$PATH
 
-#
-#
-# ENV PATH=/opt/afni:$PATH
-# #RUN apt-get update -qq
-# RUN apt-get install -yq --no-install-recommends ed gsl-bin libglu1-mesa-dev libglib2.0-0 libglw1-mesa \
-#     libgomp1 libjpeg62 libxm4 netpbm tcsh xfonts-base xvfb #python python3 python3-pip python3-setuptools python3-tk
+############################################## denoise
+RUN pip3 install cython
+WORKDIR /root/packages/
+ADD https://api.github.com/repos/davidmeunier79/denoise/git/refs/heads/master version.json
+RUN git clone https://github.com/davidmeunier79/denoise.git
+WORKDIR /root/packages/denoise/aonlm
+RUN python3 setup.py install
 
-#sudo add-apt-repository ppa:linuxuprising/libpng12
-#sudo apt update
-#sudo apt install libpng12-0
-
-# RUN apt-get install -y curl
-# RUN libs_path=/usr/lib/x86_64-linux-gnu \
-#     && if [ -f $libs_path/libgsl.so.19 ]; then \
-#            ln $libs_path/libgsl.so.19 $libs_path/libgsl.so.0; \
-#        fi
-#
-# RUN echo "Install libxp (not in all ubuntu/debian repositories)" \
-#     && apt-get install -yq --no-install-recommends libxp6 \
-#     || /bin/bash -c " \
-#        curl --retry 5 -o /tmp/libxp6.deb -sSL http://mirrors.kernel.org/debian/pool/main/libx/libxp/libxp6_1.0.2-2_amd64.deb \
-#        && dpkg -i /tmp/libxp6.deb && rm -f /tmp/libxp6.deb"
-#
-# RUN echo "Install libpng12 (not in all ubuntu/debian repositories" \
-#     && apt-get install -yq --no-install-recommends libpng12-0 \
-#     || /bin/bash -c " \
-#        curl -o /tmp/libpng12.deb -sSL http://mirrors.kernel.org/debian/pool/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb \
-#        && dpkg -i /tmp/libpng12.deb && rm -f /tmp/libpng12.deb"
-#
-# RUN apt-get clean \
-#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-#     && echo "Downloading AFNI ..." \
-#     && mkdir -p /opt/afni \
-#     && curl -sSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
-#     | tar zx -C /opt/afni --strip-components=1 \
-#     && pip3 install jinja2 pandas matplotlib
-#
-
-########### macapype
-ADD https://api.github.com/repos/davidmeunier79/macapype/git/refs/heads/add_docker version.json
+############################################# install macapype
+ADD https://api.github.com/repos/davidmeunier79/macapype/git/refs/heads/add_denoise_2 version.json
 WORKDIR /root/packages/
 RUN git clone https://github.com/davidmeunier79/macapype.git
 WORKDIR /root/packages/macapype
-RUN git checkout add_docker
+RUN git checkout add_denoise_2
 RUN python3 setup.py develop
 
+#####################################################################################################
+############################################ extra (exemple of a line to launch) ####################
+#####################################################################################################
 
-### extra (exemple of a line to launch)
 ## pipeline regis
 #docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
 
-
-
-### pipepline kepkee
+### pipepline kepkee # takes ~ 5 hours to run
 # docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+
+## test_denoise
+# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/test_denoise.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
