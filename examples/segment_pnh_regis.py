@@ -62,10 +62,15 @@ import argparse
 # from macapype.pipelines.correct_bias import create_debias_N4_pipe
 # from macapype.nodes.correct_bias import interative_N4_debias
  
-# from macapype.nodes.denoise import nonlocal_denoise
+from macapype.nodes.denoise import nonlocal_denoise
 from macapype.pipelines.register import create_iterative_register_pipe
 from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
 from macapype.utils.utils_tests import load_test_data
+
+from macapype.utils.utils_spm import set_spm
+
+assert set_spm(), "Error, SPM was not found, cannot run Regis pipeline"
+
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
@@ -129,21 +134,29 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
     # seg_pipe.connect(inputnode,'T1',iterative_debias_N4,'input_image')
     # iterative_debias_N4.inputs.stop_param = 0.01
 
-    #denoise_T1 = pe.Node(
-    #   niu.Function(input_names=["img_file"],
-    #                output_names=["denoised_img_file"],
-    #                function=nonlocal_denoise),
-    #   name="denoise_T1"
-    #)
-    #seg_pipe.connect(debias_N4, 'output_image', denoise_T1, 'img_file')
+    denoise_T1 = pe.Node(
+      niu.Function(input_names=["img_file"],
+                   output_names=["denoised_img_file"],
+                   function=nonlocal_denoise),
+      name="denoise_T1"
+    )
+    seg_pipe.connect(debias_N4, 'output_image', denoise_T1, 'img_file')
+
+
+
 
     # TODO: Attention , brain extraction should come in between !!!
-
     bet = pe.Node(fsl.BET(), name='bet')
     bet.inputs.frac = 0.7
     # TODO: specify center (depending of the subject)
     # bet.inputs.center = [,,]
-    seg_pipe.connect(debias_N4, 'output_image', bet, 'in_file')
+
+
+
+
+
+    #seg_pipe.connect(debias_N4, 'output_image', bet, 'in_file') # without denoise
+    seg_pipe.connect(denoise_T1,'denoised_img_file', bet, 'in_file')
 
     # Register template to anat (need also skullstripped anat)
     # use iterative flirt
@@ -194,7 +207,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir,
     wm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_2.nii.gz')
     csf_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_3.nii.gz')
 
-    main_workflow = pe.Workflow(name="test_pipeline_regis")
+    main_workflow = pe.Workflow(name="test_pipeline_regis_denoise")
     main_workflow.base_dir = process_dir
 
     print('adding info source and data source')
