@@ -176,11 +176,11 @@ WORKDIR /root/packages/denoise/aonlm
 RUN python3 setup.py install
 
 ############################################# install macapype
-ADD https://api.github.com/repos/davidmeunier79/macapype/git/refs/heads/add_docker version.json
+ADD https://api.github.com/repos/davidmeunier79/macapype/git/refs/heads/add_denoise_2 version.json
 WORKDIR /root/packages/
 RUN git clone https://github.com/davidmeunier79/macapype.git
 WORKDIR /root/packages/macapype
-RUN git checkout add_docker
+RUN git checkout add_denoise_2
 RUN python3 setup.py develop
 
 #####################################################################################################
@@ -190,7 +190,7 @@ RUN python3 setup.py develop
 ## pipeline regis
 #docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
 
-### pipepline kepkee
+### pipepline kepkee # takes ~ 5 hours to run
 # docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
 
 ## test_denoise
