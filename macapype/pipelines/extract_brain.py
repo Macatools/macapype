@@ -103,8 +103,6 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     
     """
     from nipype.interfaces import spm
-    matlab_cmd = '/opt/spm12/run_spm12.sh /opt/mcr/v95 script'
-    spm.SPMCommand.set_mlab_paths(matlab_cmd=matlab_cmd, use_mcr=True)
 
     # creating pipeline
     be_pipe = pe.Workflow(name=name)
