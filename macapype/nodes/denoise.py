@@ -1,5 +1,7 @@
 
-def nonlocal_denoise(img_file, params = [3,1,1], method = "aonlm"):
+#def nonlocal_denoise(img_file, params = [3,1,1], method = "aonlm"):
+#def nonlocal_denoise(img_file, params = [1,1,3], method = "mabonlm3d"):
+def nonlocal_denoise(img_file, params = [3,1,1], method = "mabonlm3d"):
 
     import time
     import os
@@ -7,7 +9,7 @@ def nonlocal_denoise(img_file, params = [3,1,1], method = "aonlm"):
     import numpy as np
 
     from nipype.utils.filemanip import split_filename as split_f
-    from aonlm import aonlm
+    from aonlm import aonlm, mabonlm3d
 
     assert len(params) == 3, "Error, params should have 3 values".format(params)
     assert os.path.exists(img_file), "Error, file {} do not exist".format(img_file)

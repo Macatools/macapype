@@ -59,6 +59,11 @@ import nipype.interfaces.fsl as fsl
 import os.path as op
 import argparse
 
+#import pybids
+from bids.layout import BIDSLayout
+
+from nipype.interfaces.io import BIDSDataGrabber
+
 # from macapype.pipelines.correct_bias import create_debias_N4_pipe
 # from macapype.nodes.correct_bias import interative_N4_debias
  
@@ -67,13 +72,13 @@ from macapype.pipelines.register import create_iterative_register_pipe
 from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
 from macapype.utils.utils_tests import load_test_data
 
+from macapype.utils.misc import get_first_elem
+
 from macapype.utils.utils_spm import set_spm
 
 assert set_spm(), "Error, SPM was not found, cannot run Regis pipeline"
 
-
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
-
 
 def create_infosource(subject_ids):
     infosource = pe.Node(
@@ -100,6 +105,38 @@ def create_datasource(data_dir, sess):
     
     return datasource
 
+def create_bids_datasource(data_dir):
+
+    bids_datasource = pe.Node(
+        interface=nio.BIDSDataGrabber(),
+        name='bids_datasource'
+    )
+
+    bids_datasource.inputs.base_dir = data_dir
+
+    bids_datasource.inputs.output_query = {'T1': {"datatype": "anat", "suffix": "T1w",
+                        "extensions": ["nii", ".nii.gz"]}}
+
+    layout = BIDSLayout(data_dir)
+    print (layout)
+    print(layout.get_subjects())
+    print(layout.get_sessions())
+
+    iterables = []
+    if len(layout.get_subjects()) == 1:
+         bids_datasource.inputs.subject = layout.get_subjects()[0]
+    else:
+        iterables.append(('subject', layout.get_subjects()[:2]))
+
+    if len(layout.get_sessions()) == 1:
+         bids_datasource.inputs.session = layout.get_sessions()[0]
+    else:
+        iterables.append(('session', layout.get_sessions()[:2]))
+
+    if len(iterables):
+        bids_datasource.iterables = iterables
+
+    return bids_datasource
 
 ###############################################################################
 def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
@@ -142,18 +179,11 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
     )
     seg_pipe.connect(debias_N4, 'output_image', denoise_T1, 'img_file')
 
-
-
-
     # TODO: Attention , brain extraction should come in between !!!
     bet = pe.Node(fsl.BET(), name='bet')
     bet.inputs.frac = 0.7
     # TODO: specify center (depending of the subject)
     # bet.inputs.center = [,,]
-
-
-
-
 
     #seg_pipe.connect(debias_N4, 'output_image', bet, 'in_file') # without denoise
     seg_pipe.connect(denoise_T1,'denoised_img_file', bet, 'in_file')
@@ -207,18 +237,27 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir,
     wm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_2.nii.gz')
     csf_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_3.nii.gz')
 
-    main_workflow = pe.Workflow(name="test_pipeline_regis_denoise")
+    main_workflow = pe.Workflow(name="test_pipeline_regis_denoise_bids")
     main_workflow.base_dir = process_dir
 
-    print('adding info source and data source')
     # Infosource
-    infosource = create_infosource(subject_ids)
 
-    # Data source
-    datasource = create_datasource(data_dir, sess)
+    if subject_ids is None or sess is None:
+        print('adding BIDS data source')
 
-    # connect
-    main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
+        datasource = create_bids_datasource(data_dir)
+
+    else:
+
+        print('adding info source and data source')
+        infosource = create_infosource(subject_ids)
+
+        # Data source
+        datasource = create_datasource(data_dir, sess)
+
+        # connect
+        main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
+
 
     # *************************** Preprocessing ********************************
     # segment_pnh
@@ -227,7 +266,9 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir,
         nmt_file, nmt_ss_file, nmt_mask_file, gm_prob_file, wm_prob_file,
         csf_prob_file
     )
-    main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
+
+    #main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
+    main_workflow.connect(datasource, ('T1', get_first_elem), segment_pnh, 'inputnode.T1')
 
     return main_workflow
 
@@ -254,7 +295,7 @@ def main(data_path, main_path, subjects, sess):
         nmt_dir=nmt_dir,
         nmt_fsl_dir=nmt_fsl_dir
     )
-    wf.write_graph(graph2use="colored")
+    #wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
     print('The PNH segmentation pipeline is ready')
     
@@ -272,9 +313,9 @@ if __name__ == '__main__':
     parser.add_argument("-out", dest="out", type=str,
                         help="Output directory", required=True)
     parser.add_argument("-sess", dest="sess", type=str,
-                        help="Session", required=True)
+                        help="Session", required=False)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
-                        help="Subjects' ID", required=True)
+                        help="Subjects' ID", required=False)
     args = parser.parse_args()
     
     main(
