@@ -56,6 +56,24 @@ def create_datasource(data_dir, sess):
 
     return datasource
 
+
+def create_datasource_ucdavid(data_dir, sess):
+    datasource = pe.Node(
+        interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T1cropbox', 'T2']),
+        name='datasource'
+    )
+    datasource.inputs.base_directory = data_dir
+    #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_run-1_%s.%s'.format(sess, sess)
+    datasource.inputs.template_args = dict(
+        T1=[['subject_id','subject_id', "T1w", "nii.gz"]],
+        T1cropbox=[['subject_id', 'subject_id', "T1wCropped", "cropbox"]],
+        T2=[['subject_id', 'subject_id', "T2w", "nii.gz"]],
+    )
+    datasource.inputs.sort_filelist = True
+
+    return datasource
+
 def create_bids_datasource(data_dir):
 
     bids_datasource = pe.Node(
@@ -128,8 +146,6 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
         seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
         seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
 
-        return seg_pipe
-
         #### Correct_bias_T1_T2
         correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
 
@@ -151,8 +167,6 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
         seg_pipe.connect(inputnode,'T1cropbox',preproc_pipe,'inputnode.T1cropbox')
         seg_pipe.connect(inputnode,'T1cropbox',preproc_pipe,'inputnode.T2cropbox')
 
-        return seg_pipe
-
         #### Correct_bias_T1_T2
         correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
 
@@ -173,7 +187,6 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
         #seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias,'preproc_T1_file')
         #seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
 
-
     #### denoising
     denoise_pipe = create_denoised_pipe()
 
@@ -187,6 +200,9 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
 
     seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
     seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
+
+    return seg_pipe
+
 
     # (if no denoise)
     #seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file',brain_extraction_pipe,"inputnode.restore_T1")
@@ -213,7 +229,7 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
 
 def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_denoise_cropped")
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_ucdavid")
     main_workflow.base_dir = process_dir
 
     if subject_ids is None or sess is None and cropped is not None:
@@ -229,12 +245,10 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
 
         # Data source
         datasource = create_datasource(data_dir, sess)
+        datasource = create_datasource_ucdavid(data_dir, sess)
 
         # connect
         main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
-
-
-
 
     ############################################## Preprocessing ################################
     ##### segment_pnh
