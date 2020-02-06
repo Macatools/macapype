@@ -261,13 +261,89 @@ def add_Nwarp(list_prior_files):
 
     return out_files
 
+#from nipype.interfaces.afni import NwarpApply
+
+############### should be added to nipype instead of here...
+
+from nipype.interfaces.afni.base import (CommandLineInputSpec, CommandLine)
+
+from nipype.interfaces.afni.base import (AFNICommandBase,
+                                         AFNICommandOutputSpec,
+                                         isdefined)
+
 # NwarpApplyPriors
-
-from nipype.interfaces.afni import NwarpApply
-
 from nipype.utils.filemanip import split_filename as split_f
 
-class NwarpApplyPriors(NwarpApply):
+
+class NwarpApplyPriorsInputSpec(CommandLineInputSpec):
+    in_file = traits.Either(
+        File(exists=True),
+        traits.List(File(exists=True)),
+        mandatory=True,
+        argstr='-source %s',
+        desc='the name of the dataset to be warped '
+        'can be multiple datasets')
+    warp = traits.String(
+        desc='the name of the warp dataset. '
+        'multiple warps can be concatenated (make sure they exist)',
+        argstr='-nwarp %s',
+        mandatory=True)
+    inv_warp = traits.Bool(
+        desc='After the warp specified in \'-nwarp\' is computed, invert it',
+        argstr='-iwarp')
+    master = traits.File(
+        exists=True,
+        desc='the name of the master dataset, which defines the output grid',
+        argstr='-master %s')
+    interp = traits.Enum(
+        'wsinc5',
+        'NN',
+        'nearestneighbour',
+        'nearestneighbor',
+        'linear',
+        'trilinear',
+        'cubic',
+        'tricubic',
+        'quintic',
+        'triquintic',
+        desc='defines interpolation method to use during warp',
+        argstr='-interp %s',
+        usedefault=True)
+    ainterp = traits.Enum(
+        'NN',
+        'nearestneighbour',
+        'nearestneighbor',
+        'linear',
+        'trilinear',
+        'cubic',
+        'tricubic',
+        'quintic',
+        'triquintic',
+        'wsinc5',
+        desc='specify a different interpolation method than might '
+        'be used for the warp',
+        argstr='-ainterp %s')
+    out_file = traits.Either(
+        File(),
+        traits.List(File()),
+        mandatory=True,
+        argstr='-prefix %s',
+        desc='output image file name')
+    short = traits.Bool(
+        desc='Write output dataset using 16-bit short integers, rather than '
+        'the usual 32-bit floats.',
+        argstr='-short')
+    quiet = traits.Bool(
+        desc='don\'t be verbose :(', argstr='-quiet', xor=['verb'])
+    verb = traits.Bool(
+        desc='be extra verbose :)', argstr='-verb', xor=['quiet'])
+
+class NwarpApplyPriorsOutputSpec(AFNICommandOutputSpec):
+    out_file = traits.Either(
+            File(),
+            traits.List(File()))
+
+class NwarpApplyPriors(AFNICommandBase):
     """
     Over Wrap of NwarpApply (afni node) in order to generate files in the right
     node directory (instead of in the original data directory, or the script directory
@@ -275,6 +351,10 @@ class NwarpApplyPriors(NwarpApply):
 
     Modifications are made over inputs and outputs
     """
+
+    _cmd = '3dNwarpApply'
+    input_spec = NwarpApplyPriorsInputSpec
+    output_spec = NwarpApplyPriorsOutputSpec
 
     def _format_arg(self, name, spec, value):
 
@@ -307,7 +387,24 @@ class NwarpApplyPriors(NwarpApply):
                 new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz"%i))
             value = new_value
 
-        return super(NwarpApplyPriors, self)._format_arg(name, spec, value)
+    def _list_outputs(self):
+        outputs = self.output_spec().get()
+        if isdefined(self.inputs.out_file):
+
+            if isinstance(self.inputs.out_file,list):
+                print ([os.path.abspath(out) for out in self.inputs.out_file])
+                outputs['out_file'] = [os.path.abspath(out) for out in self.inputs.out_file]
+            else:
+                outputs['out_file'] = os.path.abspath(self.inputs.out_file)
+        #else:
+            #outputs['out_file'] = os.path.abspath(
+                #self._gen_fname(
+                    #self.inputs.in_files[0],
+                    #suffix='_NwarpCat+tlrc',
+                    #ext='.HEAD'))
+
+        return outputs
+
 
 
 

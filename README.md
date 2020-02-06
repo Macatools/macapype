@@ -11,16 +11,43 @@ To run examples, you will need to download and unzip this file:
 
 # How to install
 
-$ git clone https://framagit.org/mars-hackat2019/anat-mri-pipeline/macapype.git  
+$ git clone git@github.com:davidmeunier79/macapype.git/
+OR
+$ git clone https://github.com/Macatools/macapype.git
+
 $ cd macapype  
+
 $ python setup.py develop  
 OR if you do not have sudo access:  
 $ python setup.py develop --user  
 
-$ git remote add public git@framagit.org:mars-hackat2019/anat-mri-pipeline/macapype.git
-
 # How to run examples
-$ python examples/segment_pnh_regis.py -data /hpc/crise/cagna.b/Prima  -resources /hpc/crise/cagna.b/Primavoice  -out ./local_test_cropped -subjects Elouk
 
+Following the BIDS format:  
 
+$ python examples/segment_pnh_regis.py -data /hpc/crise/cagna.b/Prima -out ./local_test_cropped -subjects Elouk -sess 01  
+$ python examples/segment_pnh_regis.py -data /hpc/crise/cagna.b/Prima -out ./local_test_cropped -subjects Elouk  
+
+Will find the corresponding data if follows BIDS :  
+$ python examples/segment_pnh_regis.py -data /hpc/crise/cagna.b/Prima -out ./local_test_cropped  
+-- Warning-- cropped data should be used for more efficient processing  
+-- Warning-- cropped data should also be saved as 'T1w.nii' instead of 'T1wCropped.nii'  
+
+$ python examples/segment_pnh_kepkee.py -data /hpc/crise/cagna.b/Prima -out ./local_test_cropped -cropped True  
+-- Warning-- cropped data should be used for more efficient processing  
+-- Warning-- cropped T1 should also be saved as 'T1w.nii' instead of 'T1wCropped.nii'  
+-- Warning-- cropped T2 should also be saved as 'T2w.nii' instead of 'T2wRegT1wCropped.nii'  
+
+# TODO : follow the same syntax for datagrabber with pybids or not
+
+# docker
+
+In the directory where the Dockerfile is located:  
+$ docker build -t macapype .  
+
+Example of pipelines:  
+$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01  
+$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01  
+$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype  
+$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -cropped True  
 

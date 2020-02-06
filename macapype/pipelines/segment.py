@@ -42,17 +42,29 @@ def create_full_segment_pipe(sigma, nmt_dir,
     brain_segment_pipe.connect(inputnode, 'preproc_T2',
                                denoise_pipe, "inputnode.preproc_T2")
 
+
+
     ############### correcting for bias T1/T2, but this time with a mask ######
     masked_correct_bias_pipe = create_masked_correct_bias_pipe(sigma=sigma)
 
-    brain_segment_pipe.connect(
-        denoise_pipe, 'denoise_T1.denoised_img_file',
-        masked_correct_bias_pipe, "inputnode.preproc_T1")
+    ## without denoise
+    #brain_segment_pipe.connect(
+        #inputnode, 'preproc_T1',
+        #masked_correct_bias_pipe, "inputnode.preproc_T1")
 
+    #brain_segment_pipe.connect(
+        #inputnode, 'preproc_T1',
+        #masked_correct_bias_pipe, "inputnode.preproc_T2")
+
+    # with denoise
     brain_segment_pipe.connect(
-        denoise_pipe, 'denoise_T2.denoised_img_file',
+        denoise_pipe,'denoise_T1.denoised_img_file',
+        masked_correct_bias_pipe, "inputnode.preproc_T1")
+    brain_segment_pipe.connect(
+        denoise_pipe,'denoise_T2.denoised_img_file',
         masked_correct_bias_pipe, "inputnode.preproc_T2")
 
+    # segment
     brain_segment_pipe.connect(inputnode, 'brain_mask',
                                masked_correct_bias_pipe,
                                "inputnode.brain_mask")
