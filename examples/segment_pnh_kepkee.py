@@ -152,7 +152,7 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
     """
     print("Cropped:", cropped)
 
-    if cropped:
+    if cropped == False:
 
         inputnode = pe.Node(
             niu.IdentityInterface(fields=['T1', 'T2']),
