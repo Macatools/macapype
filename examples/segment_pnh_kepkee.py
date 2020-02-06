@@ -57,14 +57,14 @@ def create_datasource(data_dir, sess):
     return datasource
 
 
-def create_datasource_ucdavid(data_dir, sess):
+def create_datasource_ucdavis(data_dir, sess):
     datasource = pe.Node(
         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T1cropbox', 'T2']),
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_run-1_%s.%s'.format(sess, sess)
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_run-*_%s.%s'.format(sess, sess)
     datasource.inputs.template_args = dict(
         T1=[['subject_id','subject_id', "T1w", "nii.gz"]],
         T1cropbox=[['subject_id', 'subject_id', "T1wCropped", "cropbox"]],
@@ -193,13 +193,12 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
     seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
 
-
     ##### brain extraction
     brain_extraction_pipe = create_brain_extraction_pipe(
         atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir, name = "devel_atlas_brex")
 
-    seg_pipe.connect(denoise_pipe,'denoise_T1.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T1")
-    seg_pipe.connect(denoise_pipe,'denoise_T2.denoised_img_file',brain_extraction_pipe,"inputnode.restore_T2")
+    seg_pipe.connect(denoise_pipe,'denoise_T1.output_image',brain_extraction_pipe,"inputnode.restore_T1")
+    seg_pipe.connect(denoise_pipe,'denoise_T2.output_image',brain_extraction_pipe,"inputnode.restore_T2")
 
     return seg_pipe
 
@@ -221,7 +220,7 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
         name="segment_devel_NMT_sub_align")
 
     seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file",brain_segment_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file", brain_segment_pipe,'inputnode.preproc_T2')
+    seg_pipe.connect(preproc_pipe, "crop_bb_T2.roi_file", brain_segment_pipe,'inputnode.preproc_T2')
 
     seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
 
@@ -245,7 +244,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
 
         # Data source
         datasource = create_datasource(data_dir, sess)
-        datasource = create_datasource_ucdavid(data_dir, sess)
+        datasource = create_datasource_ucdavis(data_dir, sess)
 
         # connect
         main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')

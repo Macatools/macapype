@@ -1,7 +1,6 @@
 
-def nonlocal_denoise(img_file, params = [3,1,1], method = "aonlm"):
-#def nonlocal_denoise(img_file, params = [1,1,3], method = "mabonlm3d"):
 
+def nonlocal_denoise(img_file, params = [3,1,1], method = "mabonlm3d"):
     import time
     import os
     import nibabel as nib

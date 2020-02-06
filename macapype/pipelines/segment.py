@@ -58,10 +58,10 @@ def create_full_segment_pipe(sigma, nmt_dir,
 
     # with denoise
     brain_segment_pipe.connect(
-        denoise_pipe,'denoise_T1.denoised_img_file',
+        denoise_pipe,'denoise_T1.output_image',
         masked_correct_bias_pipe, "inputnode.preproc_T1")
     brain_segment_pipe.connect(
-        denoise_pipe,'denoise_T2.denoised_img_file',
+        denoise_pipe,'denoise_T2.output_image',
         masked_correct_bias_pipe, "inputnode.preproc_T2")
 
     # segment
