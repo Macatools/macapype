@@ -235,8 +235,13 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
     brain_segment_pipe = create_full_segment_pipe(sigma=sigma, nmt_dir = nmt_dir,
         name="segment_devel_NMT_sub_align")
 
-    seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file",brain_segment_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc_pipe, "crop_bb_T2.roi_file", brain_segment_pipe,'inputnode.preproc_T2')
+    #cropped False
+    seg_pipe.connect(preproc_pipe, "av_T1.avg_img", ,brain_segment_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", brain_segment_pipe,'inputnode.preproc_T2')
+
+    # Cropped True
+    #seg_pipe.connect(preproc_pipe, "crop_bb_T1.roi_file",brain_segment_pipe,'inputnode.preproc_T1')
+    #seg_pipe.connect(preproc_pipe, "crop_bb_T2.roi_file", brain_segment_pipe,'inputnode.preproc_T2')
 
     seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
 
