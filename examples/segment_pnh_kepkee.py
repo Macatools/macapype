@@ -266,7 +266,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
     infosource = create_infosource(subject_ids)
 
     # Data source
-    if cropped is not True:
+    if cropped is True:
         datasource = create_datasource_ucdavis(data_dir, sess)
     else:
         print ("Datasource cropped")
