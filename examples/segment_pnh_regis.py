@@ -138,11 +138,13 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
     #seg_pipe.connect(debias_N4, 'output_image', denoise_T1, 'img_file')
 
     # TODO: Attention , brain extraction should come in between !!!
+    # Interactive node to get manual gravity center ?
 
     bet = pe.Node(fsl.BET(), name='bet')
-    bet.inputs.frac = 0.7
+    bet.inputs.frac = 0.4 # 0.7
     # TODO: specify center (depending of the subject)
-    # bet.inputs.center = [,,]
+    bet.inputs.center = [49, 53, 30]
+    # bet.inputs. = [184, 26, 118]
     seg_pipe.connect(debias_N4, 'output_image', bet, 'in_file')
 
     # Register template to anat (need also skullstripped anat)
