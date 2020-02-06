@@ -200,6 +200,9 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
     seg_pipe.connect(denoise_pipe,'denoise_T1.output_image',brain_extraction_pipe,"inputnode.restore_T1")
     seg_pipe.connect(denoise_pipe,'denoise_T2.output_image',brain_extraction_pipe,"inputnode.restore_T2")
 
+    return seg_pipe
+
+
     # (if no denoise)
     #seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file',brain_extraction_pipe,"inputnode.restore_T1")
     #seg_pipe.connect(correct_bias_pipe,'restore_T2.out_file',brain_extraction_pipe,"inputnode.restore_T2")
