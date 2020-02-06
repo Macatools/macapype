@@ -74,6 +74,24 @@ def create_datasource_ucdavis(data_dir, sess):
 
     return datasource
 
+
+def create_datasource_ucdavis_cropped(data_dir, sess):
+    datasource = pe.Node(
+        interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T2']),
+        name='datasource'
+    )
+    datasource.inputs.base_directory = data_dir
+    #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_run-*_%s.%s'.format(sess, sess)
+    datasource.inputs.template_args = dict(
+        T1=[['subject_id','subject_id', "T1w", "nii.gz"]],
+        T2=[['subject_id', 'subject_id', "T2w", "nii.gz"]],
+    )
+    datasource.inputs.sort_filelist = True
+
+    return datasource
+
+
 def create_bids_datasource(data_dir):
 
     bids_datasource = pe.Node(
@@ -241,7 +259,11 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
 
         # Data source
         datasource = create_datasource(data_dir, sess)
-        datasource = create_datasource_ucdavis(data_dir, sess)
+
+        if cropped is not True:
+            datasource = create_datasource_ucdavis(data_dir, sess)
+        else:
+            datasource = create_datasource_ucdavis_cropped(data_dir, sess)
 
         # connect
         main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
