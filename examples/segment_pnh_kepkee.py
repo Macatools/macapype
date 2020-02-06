@@ -236,7 +236,7 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
         name="segment_devel_NMT_sub_align")
 
     #cropped False
-    seg_pipe.connect(preproc_pipe, "av_T1.avg_img", ,brain_segment_pipe,'inputnode.preproc_T1')
+    seg_pipe.connect(preproc_pipe, "av_T1.avg_img" ,brain_segment_pipe,'inputnode.preproc_T1')
     seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", brain_segment_pipe,'inputnode.preproc_T2')
 
     # Cropped True
