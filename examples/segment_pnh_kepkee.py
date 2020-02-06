@@ -249,6 +249,10 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
     main_workflow = pe.Workflow(name= "test_pipeline_kepkee_ucdavid")
     main_workflow.base_dir = process_dir
 
+
+    print (" cropped:",cropped)
+
+
     if subject_ids is None or sess is None and cropped is not None:
         print('adding BIDS data source')
         datasource = create_bids_datasource(data_dir)
@@ -261,11 +265,10 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
         infosource = create_infosource(subject_ids)
 
         # Data source
-        datasource = create_datasource(data_dir, sess)
-
         if cropped is not True:
             datasource = create_datasource_ucdavis(data_dir, sess)
         else:
+            print ("Datasource cropped")
             datasource = create_datasource_ucdavis_cropped(data_dir, sess)
 
         # connect
