@@ -161,20 +161,20 @@ ENV PATH=$ANTSPATH:$PATH
 RUN apt-get install -y afni #
 ENV PATH=/usr/lib/afni/bin:$PATH
 
-############################################## denoise
-RUN pip3 install cython
-WORKDIR /root/packages/
-ADD https://api.github.com/repos/davidmeunier79/denoise/git/refs/heads/master version.json
-RUN git clone https://github.com/davidmeunier79/denoise.git
-WORKDIR /root/packages/denoise/aonlm
-RUN python3 setup.py install
+# ############################################## denoise
+# RUN pip3 install cython
+# WORKDIR /root/packages/
+# ADD https://api.github.com/repos/davidmeunier79/denoise/git/refs/heads/master version.json
+# RUN git clone https://github.com/davidmeunier79/denoise.git
+# WORKDIR /root/packages/denoise/aonlm
+# RUN python3 setup.py install
 
 ############################################# install macapype
-ADD https://api.github.com/repos/davidmeunier79/macapype/git/refs/heads/add_denoise_2 version.json
+ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
 WORKDIR /root/packages/
-RUN git clone https://github.com/davidmeunier79/macapype.git
+RUN git clone https://github.com/macatools/macapype.git
 WORKDIR /root/packages/macapype
-RUN git checkout add_denoise_2
+RUN git checkout master
 RUN python3 setup.py develop
 
 #####################################################################################################

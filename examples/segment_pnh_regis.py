@@ -303,7 +303,6 @@ def main(data_path, main_path, subjects, sess):
     wf.run()
     # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
     
-
 if __name__ == '__main__':
     # Command line parser
     parser = argparse.ArgumentParser(
@@ -316,6 +315,7 @@ if __name__ == '__main__':
                         help="Session", required=False)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=False)
+
     args = parser.parse_args()
     
     main(

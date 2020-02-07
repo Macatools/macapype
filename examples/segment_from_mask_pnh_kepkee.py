@@ -32,10 +32,10 @@ def create_infosource(subject_ids):
 
 
 
-def create_datasource_preproc_by_macapype(data_dir, sess):
+def create_datasource_preproc_cropped_by_macapype(data_dir, ses):
    datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2', 'mask']),name = 'datasource')
    datasource.inputs.base_directory = data_dir
-   datasource.inputs.template = '%s/%s%s/%s%s/%ssub-%s_{}_run-1_%s.nii.gz'.format(sess)
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_*run-*_%s.%s'.format(ses)
    datasource.inputs.template_args = dict(
        T1=[["average_align_pipe","_subject_id_", 'subject_id',"","crop_bb_T1","*",
             'subject_id',"T1w_roi"]],
@@ -49,6 +49,26 @@ def create_datasource_preproc_by_macapype(data_dir, sess):
    datasource.inputs.sort_filelist = True
 
    return datasource
+
+
+def create_datasource_preproc_by_macapype(data_dir, ses):
+   datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],outfields=['T1','T2', 'mask']),name = 'datasource')
+   datasource.inputs.base_directory = data_dir
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_*run-*_%s.%s'.format(ses)
+   datasource.inputs.template_args = dict(
+       T1=[["average_align_pipe","_subject_id_", 'subject_id',"","crop_bb_T1","*",
+            'subject_id',"T1w"]],
+       T2=[["average_align_pipe","_subject_id_", 'subject_id',"","crop_bb_T2",
+            "*",'subject_id',"T2w_flirt"]],
+       mask=[["devel_atlas_brex", "_subject_id_",
+              'subject_id', "","smooth_mask", "*", 'subject_id',
+              'T1w_roi_maths_noise_corrected_brain_bin_bin_nice']],
+              #'T1w_maths_aonlm_denoised_roi_brain_bin_bin']],
+       )
+   datasource.inputs.sort_filelist = True
+
+   return datasource
+
 
 
 #data_path = "/hpc/meca/users/loh.k/macaque_preprocessing/preprocessed_030419/"
@@ -69,31 +89,35 @@ def create_datasource_preproc_by_macapype(data_dir, sess):
 
 ###############################################################################
 
-def create_main_workflow(data_dir, process_dir, subject_ids, sess, ):
+def create_main_workflow(data_dir, process_dir, subject_ids, ses, crop_req):
 
     main_workflow = pe.Workflow(name= "test_pipeline_segment_from_mask")
     main_workflow.base_dir = data_dir
 
-    if subject_ids is None or sess is None:
-        print('adding BIDS data source')
-        datasource = create_bids_datasource(data_dir)
-        print(datasource.outputs)
+    #if subject_ids is None or sess is None:
+        #print('adding BIDS data source')
+        #datasource = create_bids_datasource(data_dir)
+        #print(datasource.outputs)
 
+    #else:
+
+    print('adding infosource and datasource')
+
+    # Infosource
+    infosource = create_infosource(subject_ids)
+
+    ## Data source
+    if crop_req:
+        datasource = create_datasource_preproc_cropped_by_macapype(data_dir, ses)
     else:
-        print('adding infosource and datasource')
+        datasource = create_datasource_preproc_by_macapype(data_dir, ses) # if done with other
+    # script segment_pnh_kepkee.py
 
-        # Infosource
-        infosource = create_infosource(subject_ids)
+    #datasource = create_datasource_preproc_by_bash() # if done with bash
+    # script
 
-        ## Data source
-        datasource = create_datasource_preproc_by_macapype(data_dir, sess) # if done with other
-        # script segment_pnh_kepkee.py
-
-        #datasource = create_datasource_preproc_by_bash() # if done with bash
-        # script
-
-        # connect
-        main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
+    # connect
+    main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
 
 
 
@@ -130,6 +154,9 @@ if __name__ == '__main__':
                         help="Session", required=False)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=False)
+    parser.add_argument("-crop_req", dest="crop_req", default = True,
+                        action='store_false', help="The Cropping was done by Macapype")
+
     args = parser.parse_args()
 
     # main_workflow
@@ -138,7 +165,8 @@ if __name__ == '__main__':
         data_dir=args.data,
         process_dir=args.out,
         subject_ids=args.subjects,
-        sess=args.sess
+        ses=args.ses,
+        crop_req=args.crop_req
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
