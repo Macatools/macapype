@@ -17,7 +17,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 from bids.layout import BIDSLayout
 from nipype.interfaces.io import BIDSDataGrabber
 
-from macapype.pipelines.preproc import (create_average_align_cropped_pipe,
+from macapype.pipelines.preproc import (create_average_align_crop_pipe,
                                         create_average_align_pipe)
 
 from macapype.pipelines.denoise import create_denoised_pipe
@@ -39,14 +39,14 @@ def create_infosource(subject_ids):
     return infosource
 
 
-def create_datasource(data_dir, sess):
+def create_datasource(data_dir, ses):
     datasource = pe.Node(
         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T1cropbox', 'T2']),
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s/{}/sub-%s_{}_%s.%s'.format(sess, sess)
+    datasource.inputs.template = 'sub-%s/{}/sub-%s_{}_%s.%s'.format(ses, ses)
     datasource.inputs.template_args = dict(
         T1=[['subject_id','subject_id', "mp2rageT1w", "nii"]],
         T1cropbox=[['subject_id', 'subject_id', "mp2rageT1wCropped", "cropbox"]],
@@ -57,14 +57,14 @@ def create_datasource(data_dir, sess):
     return datasource
 
 
-def create_datasource_ucdavis(data_dir, sess):
+def create_datasource_ucdavis_crop_req(data_dir, ses):
     datasource = pe.Node(
         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T1cropbox', 'T2']),
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_run-*_%s.%s'.format(sess, sess)
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_*run-*_%s.%s'.format(ses)
     datasource.inputs.template_args = dict(
         T1=[['subject_id','subject_id', "T1w", "nii.gz"]],
         T1cropbox=[['subject_id', 'subject_id', "T1wCropped", "cropbox"]],
@@ -75,14 +75,14 @@ def create_datasource_ucdavis(data_dir, sess):
     return datasource
 
 
-def create_datasource_ucdavis_cropped(data_dir, sess):
+def create_datasource_ucdavis(data_dir, ses):
     datasource = pe.Node(
         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1', 'T2']),
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
     #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
-    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_run-*_%s.%s'.format(sess, sess)
+    datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_*run-*_%s.%s'.format(ses)
     datasource.inputs.template_args = dict(
         T1=[['subject_id','subject_id', "T1w", "nii.gz"]],
         T2=[['subject_id', 'subject_id', "T2w", "nii.gz"]],
@@ -136,7 +136,7 @@ def create_bids_datasource(data_dir):
 
 ###############################################################################
 
-def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
+def create_segment_pnh_subpipes(crop_req, name= "segment_pnh_subpipes",
                                 sigma = 2):
 
     # creating pipeline
@@ -150,34 +150,16 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
     - extract_brain
     - segment
     """
-    print("Cropped:", cropped)
+    print("crop_req:", crop_req)
 
-    if cropped == False:
-
-        inputnode = pe.Node(
-            niu.IdentityInterface(fields=['T1', 'T2']),
-            name='inputnode')
-
-        #### preprocessing (avg and align)
-        preproc_pipe = create_average_align_pipe()
-
-        seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
-        seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
-
-        #### Correct_bias_T1_T2
-        correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
-
-        seg_pipe.connect(preproc_pipe, "av_T1.avg_img", correct_bias_pipe,'inputnode.preproc_T1')
-        seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", correct_bias_pipe,'inputnode.preproc_T2')
-
-    else:
+    if crop_req:
 
         inputnode = pe.Node(
             niu.IdentityInterface(fields=['T1', 'T1cropbox', 'T2']),
             name='inputnode')
 
         #### preprocessing (avg and align)
-        preproc_pipe = create_average_align_cropped_pipe()
+        preproc_pipe = create_average_align_crop_pipe()
 
         seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
         seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
@@ -205,6 +187,24 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
         #seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',correct_bias,'preproc_T1_file')
         #seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',correct_bias,'preproc_T2_file')
 
+    else:
+        inputnode = pe.Node(
+            niu.IdentityInterface(fields=['T1', 'T2']),
+            name='inputnode')
+
+        #### preprocessing (avg and align)
+        preproc_pipe = create_average_align_pipe()
+
+        seg_pipe.connect(inputnode,'T1',preproc_pipe,'inputnode.T1')
+        seg_pipe.connect(inputnode,'T2',preproc_pipe,'inputnode.T2')
+
+        #### Correct_bias_T1_T2
+        correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
+
+        seg_pipe.connect(preproc_pipe, "av_T1.avg_img", correct_bias_pipe,'inputnode.preproc_T1')
+        seg_pipe.connect(preproc_pipe, "align_T2_on_T1.out_file", correct_bias_pipe,'inputnode.preproc_T2')
+
+
     #### denoising
     denoise_pipe = create_denoised_pipe()
 
@@ -217,19 +217,6 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
 
     seg_pipe.connect(denoise_pipe,'denoise_T1.output_image',brain_extraction_pipe,"inputnode.restore_T1")
     seg_pipe.connect(denoise_pipe,'denoise_T2.output_image',brain_extraction_pipe,"inputnode.restore_T2")
-
-
-    # (if no denoise)
-    #seg_pipe.connect(correct_bias_pipe,'restore_T1.out_file',brain_extraction_pipe,"inputnode.restore_T1")
-    #seg_pipe.connect(correct_bias_pipe,'restore_T2.out_file',brain_extraction_pipe,"inputnode.restore_T2")
-
-    ################### segment (restarting from skull-stripped T1) old version
-    #(segmentation is done NMT template space for now)
-    #brain_segment_pipe = create_brain_segment_pipe(
-       #NMT_file, NMT_brainmask_prob, NMT_brainmask, NMT_brainmask_CSF,
-       #NMT_brainmask_GM, NMT_brainmask_WM)
-
-    #seg_pipe.connect(brain_extraction_pipe,"mult_T1.out_file",brain_segment_pipe,"inputnode.extracted_T1")
 
     ################### full_segment (restarting from the avg_align files,)
     brain_segment_pipe = create_full_segment_pipe(sigma=sigma, nmt_dir = nmt_dir,
@@ -247,13 +234,13 @@ def create_segment_pnh_subpipes(cropped, name= "segment_pnh_subpipes",
 
     return seg_pipe
 
-def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
+def create_main_workflow(data_dir, process_dir, subject_ids, ses, crop_req):
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_ucdavid")
+    main_workflow = pe.Workflow(name= "test_pipeline_david_no_crop_req")
     main_workflow.base_dir = process_dir
 
 
-    print (" cropped:",cropped)
+    print ("crop_req:", crop_req)
 
 
     #if subject_ids is None or sess is None and cropped is not None:
@@ -269,11 +256,12 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
     infosource = create_infosource(subject_ids)
 
     # Data source
-    if cropped is True:
-        datasource = create_datasource_ucdavis(data_dir, sess)
+    if crop_req is True:
+        print ("Datasource crop_req")
+        datasource = create_datasource_ucdavis_crop_req(data_dir, ses)
     else:
-        print ("Datasource cropped")
-        datasource = create_datasource_ucdavis_cropped(data_dir, sess)
+        print ("Datasource already cropped")
+        datasource = create_datasource_ucdavis(data_dir, ses)
 
     # connect
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -283,12 +271,12 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, cropped):
 
     print('segment_pnh')
 
-    segment_pnh = create_segment_pnh_subpipes(cropped = cropped)
+    segment_pnh = create_segment_pnh_subpipes(crop_req = crop_req)
 
     main_workflow.connect(datasource,'T1',segment_pnh,'inputnode.T1')
     main_workflow.connect(datasource,'T2',segment_pnh,'inputnode.T2')
 
-    if cropped is True:
+    if crop_req is True:
         main_workflow.connect(datasource,'T1cropbox',segment_pnh,'inputnode.T1cropbox')
 
     return main_workflow
@@ -303,12 +291,12 @@ if __name__ == '__main__':
                         help="Directory containing MRI data (BIDS)")
     parser.add_argument("-out", dest="out", type=str, #nargs='+',
                         help="Output dir", required=True)
-    parser.add_argument("-sess", dest="sess", type=str,
+    parser.add_argument("-ses", dest="ses", type=str,
                         help="Session", required=False)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=False)
-    parser.add_argument("-cropped", dest="cropped", default = True,
-                        action='store_false', help="Already Cropped")
+    parser.add_argument("-crop_req", dest="crop_req", default = False,
+                        action='store_true', help="Crop required")
 
     args = parser.parse_args()
 
@@ -318,8 +306,8 @@ if __name__ == '__main__':
         data_dir=args.data,
         process_dir=args.out,
         subject_ids=args.subjects,
-        sess=args.sess,
-        cropped=args.cropped
+        ses=args.ses,
+        crop_req=args.crop_req
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}

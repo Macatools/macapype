@@ -38,6 +38,11 @@ $ python examples/segment_pnh_kepkee.py -data /hpc/crise/cagna.b/Prima -out ./lo
 -- Warning-- cropped T1 should also be saved as 'T1w.nii' instead of 'T1wCropped.nii'  
 -- Warning-- cropped T2 should also be saved as 'T2w.nii' instead of 'T2wRegT1wCropped.nii'  
 
+if already cropped, or no cropbox is provided:
+python segment_pnh_kepkee.py -data /hpc/meca/data/Macaques/Macaque_hiphop/sbri/ -out /hpc/crise/meunier.d/Data/ -subjects 032311 -ses ses-001
+
+Add the -crop_req if cropping is required, and .cropbox is provided
+
 # TODO : follow the same syntax for datagrabber with pybids or not
 
 # docker

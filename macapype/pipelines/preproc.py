@@ -30,12 +30,13 @@ def read_cropbox(cropbox_file):
     print(crop_list )
     return crop_list
 
-def create_average_align_cropped_pipe(name = 'average_align_pipe'):
+def create_average_align_crop_pipe(name = 'average_align_pipe'):
     """
     preprocessing:
     - av = checking if multiples T1 and T2 and if it is the case,
     coregister and average (~ flirt_average)
     - coregister T2 on T1 with FLIRT
+    - crop using .cropbox file
     """
 
     # creating pipeline
@@ -46,10 +47,16 @@ def create_average_align_cropped_pipe(name = 'average_align_pipe'):
         niu.IdentityInterface(fields=['T1', 'T2', 'T1cropbox', 'T2cropbox']),
         name='inputnode')
 
-    av_T1 = pe.Node(niu.Function(input_names = ['list_img'], output_names = ['avg_img'], function = average_align), name = "av_T1")
+    av_T1 = pe.Node(niu.Function(input_names = ['list_img'],
+                                 output_names = ['avg_img'],
+                                 function = average_align), name = "av_T1")
+
     preproc_pipe.connect(inputnode,'T1',av_T1,'list_img')
 
-    av_T2 = pe.Node(niu.Function(input_names = ['list_img'], output_names = ['avg_img'], function = average_align), name = "av_T2")
+    av_T2 = pe.Node(niu.Function(input_names = ['list_img'],
+                                 output_names = ['avg_img'],
+                                 function = average_align), name = "av_T2")
+
     preproc_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
 
     ### align avg T2 on avg T1
@@ -62,7 +69,6 @@ def create_average_align_cropped_pipe(name = 'average_align_pipe'):
     # cropping
     # Crop bounding box for T1
     crop_bb_T1 = pe.Node(fsl.ExtractROI(), name='crop_bb_T1')
-
 
     preproc_pipe.connect(inputnode, ("T1cropbox",read_cropbox),
                                   crop_bb_T1, 'crop_list')
