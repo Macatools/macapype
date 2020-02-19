@@ -137,3 +137,347 @@ class T1xT2BET(CommandLine):
         outputs["brain_file"] = os.path.abspath(fname +  ext)
         return outputs
 
+
+# T1xT2BiasFieldCorrection
+class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
+
+    t1_file = File(
+        exists=True,
+        desc='Whole-head T1w image',
+        mandatory=True, position=0, argstr="-t1 %s")
+
+    t2_file = File(
+        exists=True,
+        desc='Whole-head T2w image (use -aT2 if T2w image is not in the T1w space)',
+        mandatory=True, position=1, argstr="-t2 %s")
+
+    os = traits.String(
+        "_debiased", usedefault=True,
+        desc="Suffix for the bias field corrected images (default is \"_debiased\")",
+        position=2, argstr="-os %s",mandatory=False)
+
+    aT2 = traits.Bool(True, usedefault = True,
+        position=3, argstr="-aT2",
+        desc="Will coregrister T2w to T1w using flirt. Output will have the\
+            suffix provided. Will only work for spatially close images.",
+        mandatory = False)
+
+    # as -> opt_as, as is already a part of python keywords...
+    opt_as = traits.Bool(False, usedefault=True,
+        position=3, argstr="-as",
+        desc="Suffix for T2w to T1w registration \
+            (\"-in-T1w\" if not specified)",
+        mandatory = False)
+
+    s = traits.Int(4, usedefault=True,
+        desc='size of gauss kernel in mm when performing mean filtering (default=4)',
+        position=3, argstr="-s %d", mandatory=False)
+
+    # exists = True ???
+    b = traits.File(
+        position=3, argstr="-b %s",
+        desc="Brain mask file. Will also output bias corrected brain files with the format "output_prefix_brain.nii.gz"",
+        mandatory = False)
+
+
+    bet = traits.Int(0, usedefault=True,
+        desc='Will try to "smart" BET the anat files to get a brain mask: n = the number of iterations BET will be run
+                  to find center of gravity (default=0, will not BET if option -b has been specified).',
+        position=3, argstr="-bet %d", mandatory=False)
+
+    bs = traits.String(
+        "_BET", usedefault=True,
+        desc="Suffix for the BET masked images (default is \"_BET\")",
+        position=3, argstr="-bs %s",mandatory=False)
+
+    f = traits.Float(
+        0.5, usedefault=True,
+        desc='-f options of BET: fractional intensity threshold (0->1); \
+            default=0.5; smaller values give larger brain outline estimates',
+        position=3, argstr="-f %f", mandatory=True)
+
+    g = traits.Float(
+        0.0, usedefault=True, desc='-g options of BET:\
+                  vertical gradient in fractional intensity threshold (-1->1);\
+                  default=0; positive values give larger brain outline at\
+                  bottom, smaller at top',
+        position=2, argstr="-g %f", mandatory=True)
+
+
+    k = traits.Bool(False, usedefault=True,
+        position=3, argstr="-k",
+        desc="Will keep temporary files",
+        mandatory = True)
+
+    p = traits.String(
+        desc="Prefix for running FSL functions\
+            (can be a path or just a prefix)",
+        position=3, argstr="-p %s")
+
+
+class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
+    debiased_file = File(
+        exists=True,
+        desc="debiased brain from T1xT2BiasFieldCorrection.sh")
+
+
+class T1xT2BiasFieldCorrection(CommandLine):
+    """
+    Description:
+        Bias field correction using T1w & T2w images. Provides an attempt of brain extration if wanted.
+
+
+    Inputs:
+
+    Outputs:
+
+        brain_file:
+            type = File, exists=True, desc="extracted brain from T1xT2BiasFieldCorrection.sh"
+
+    """
+    input_spec = T1xT2BiasFieldCorrectionInputSpec
+    output_spec = T1xT2BiasFieldCorrectionOutputSpec
+
+    _cmd = 'bash ../bash/T1xT2BiasFieldCorrection.sh'
+
+    def _list_outputs(self):
+
+        import os
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+
+        path, fname, ext = split_f(self.inputs.t1_file)
+
+        outfile = fname
+
+        fname = fname + self.inputs.os
+
+        outputs["debiased_file"] = os.path.abspath(fname +  ext)
+        return outputs
+
+
+# IterREGBET
+
+class IterREGBETInputSpec(CommandLineInputSpec):
+
+    # mandatory
+    inw_file = File(
+        exists=True,
+        desc='Moving Whole-head image',
+        mandatory=True, position=0, argstr="-inw %s")
+
+    inb_file = File(
+        exists=True,
+        desc='Moving brain image',
+        mandatory=True, position=1, argstr="-inb %s")
+
+    refb_file = File(
+        exists=True,
+        desc='Fixed reference brain image',
+        mandatory=True, position=2, argstr="-refb %s")
+
+    # optional
+    -xp <prefix>  Prefix for the registration outputs ("in_FLIRT-to_ref" if not specified)
+    -bs <suffix>  Suffix for the brain files ("in_IRbrain" & "in_IRbrain_mask" if not specified)
+    -dof <dof>    FLIRT degrees of freedom (6=rigid body, 7=scale, 12=affine{default}). Use dof 6 for intra-subject, 12 for inter-subject registration
+    -cost <cost>  FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,labeldiff,bbr}    (default is normmi)
+    -n <n>        n = the number of FLIRT iterations (>=2, default=2).
+    -m <method>   At each new iteration, either use:
+                    - the reference brain mask, m=ref (default)
+                    - the union of the reference and input brain masks, m=union (use if your input brain is too small)
+                    - the intersection of the reference and input brain masks, m=inter (use if your input brain is too big)
+                    - a mix between union & intersection, m=mix (give it a try!)
+    -refw <file>  Do a whole-head non-linear registration (using FNIRT) during last iteration (provide reference whole-head image)
+    -k            Will keep temporary files.
+    -p <p>        Prefix for running FSL functions (can be a path or just a prefix)
+
+
+    xp = traits.String(
+        "in_FLIRT-to_ref", usedefault=True,
+        desc="Prefix for the registration outputs (\"in_FLIRT-to_ref\" if not specified)",
+        position=3, argstr="-xp %s",mandatory=False)
+
+
+    bs = traits.String(
+        "in_IRbrain", usedefault=True,
+        desc="Suffix for the brain files ("in_IRbrain" & "in_IRbrain_mask" if not specified)",
+        position=3, argstr="-bs %s",mandatory=False)
+
+    dof = traits.Enum(
+        12, 6, 7, desc='FLIRT degrees of freedom (6=rigid body, 7=scale, \
+        12=affine\{default\}). Use dof 6 for intra-subject, 12 for inter-subject registration',
+        argstr='-dof %d',
+        usedefault=True)
+
+    cost = traits.Enum(
+        'normmi', 'leastsq', 'labeldiff', 'bbr', 'mutualinfo', 'corratio',
+        'normcorr',
+        desc='FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,labeldiff,bbr}    (default is normmi)',
+        argstr='-cost %s',
+        usedefault=True)
+
+    # how to assert minimal value in traits def? is now in _parse_args
+    n = traits.Int(2, usedefault=True,
+        desc='n = the number of FLIRT iterations (>=2, default=2).',
+        position=3, argstr="-n %d", mandatory=True)
+
+    m = traits.Enum(
+        'ref', 'union', 'inter', 'mix'
+        desc='At each new iteration, either use:\
+            - the reference brain mask, m=ref (default)\
+            - the union of the reference and input brain masks, \
+            m=union (use if your input brain is too small)\
+            - the intersection of the reference and input brain masks, m=inter\
+            (use if your input brain is too big)\
+            - a mix between union & intersection, m=mix (give it a try!)',
+        argstr='-m %s',
+        usedefault=True)
+
+    refw_file = File(
+        exists=True,
+        desc='Do a whole-head non-linear registration (using FNIRT) during\
+            last iteration (provide reference whole-head image)',
+        mandatory=False, argstr="-refw %s")
+
+    k = traits.Bool(False, usedefault=True,
+        position=3, argstr="-k",
+        desc="Will keep temporary files",
+        mandatory = True)
+
+    p = traits.String(
+        desc="Prefix for running FSL functions\
+            (can be a path or just a prefix)",
+        position=3, argstr="-p %s")
+
+
+class IterREGBETOutputSpec(TraitedSpec):
+    mask_file = File(
+        exists=True,
+        desc="masked brain from IterREGBET.sh")
+
+
+class IterREGBET(CommandLine):
+    """
+    Description:
+        Iterative registration of the in-file to the ref file (registered brain mask of the ref image is used at each iteration).
+To use when the input brain mask is not optimal (eg. an output of FSL BET).
+Will output a better brain mask of the in-file.
+
+
+    Inputs:
+
+    Outputs:
+
+        brain_file:
+            type = File, exists=True, desc="extracted brain from IterREGBET.sh"
+
+    """
+    input_spec = IterREGBETInputSpec
+    output_spec = IterREGBETOutputSpec
+
+    _cmd = 'bash ../bash/IterREGBET.sh'
+
+    def _format_arg(name, spec, value):
+        if name == 'n':
+            assert value >= 2, \
+                "Error, n {} should be higher than 2".format(value)
+
+    def _list_outputs(self):
+
+        import os
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+
+        path, fname, ext = split_f(self.inputs.t1_file)
+
+        outfile = self.inputs.xp + fname + self.inputs.bs
+
+        outputs["mask_file"] = os.path.abspath(outfile +  ext)
+        return outputs
+
+
+# CropVolume
+class CropVolumeInputSpec(CommandLineInputSpec):
+
+    # mandatory
+    i_file = File(
+        exists=True,
+        desc='Volume to crop (you can specify as many -in as you want)',
+        mandatory=True, position=0, argstr="-i %s")
+
+    b_file = File(
+        exists=True,
+        desc='Brain image or brain mask, in the same space as the in-file(s)',
+        mandatory=True, position=1, argstr="-inb %s")
+
+    # optional
+    o = traits.String(
+        desc="Prefix for the cropped image(s) (Must provide as many prefixes\
+            as input images with -o, default is the base name of each input \
+            image).",
+        argstr="-o %s", mandatory=False)
+
+
+    s = traits.String(
+        "_cropped", usedefault=True,
+        desc="Suffix for the cropped image(s) (default is \"_cropped\")",
+        argstr="-s %s", mandatory=False)
+
+    c = traits.Int(10, usedefault=True,
+        desc='c is the space between the brain and the limits of\
+            the crop box expressed in percentage of the brain size (eg. if the\
+            brain size is 200 voxels in one dimension and c=10: the sides of\
+            the brain in this dimension will be 20 voxels away from the\
+            borders of the resulting crop box in this dimension). \
+            Default: c=10',
+        argstr="-c %d", mandatory=False)
+
+    p = traits.String(
+        desc="Prefix for running FSL functions\
+            (can be a path or just a prefix)",
+        argstr="-p %s", mandatory=False)
+
+
+class CropVolumeOutputSpec(TraitedSpec):
+    cropped_file = File(
+        exists=True,
+        desc="cropped image from CropVolume.sh")
+
+
+class CropVolume(CommandLine):
+    """
+    Description:
+        Crop image(s) based on a brain extraction. Multiple images can be \
+        cropped at once. Will crop each volume preceeded by the -i option
+
+    Inputs:
+
+    Outputs:
+
+        brain_file:
+            type = File, exists=True, desc="extracted brain from CropVolume.sh"
+
+    """
+    input_spec = CropVolumeInputSpec
+    output_spec = CropVolumeOutputSpec
+
+    _cmd = 'bash ../bash/CropVolume.sh'
+
+    def _list_outputs(self):
+
+        import os
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+
+        path, fname, ext = split_f(self.inputs.t1_file)
+
+        outfile = fname + self.inputs.s
+
+        if self.inputs.o:
+            outfile = self.inputs.o + outfile
+
+        outputs["cropped_file"] = os.path.abspath(outfile +  ext)
+        return outputs
