@@ -40,7 +40,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         position=3, argstr="-n %d", mandatory=True)
 
     m = traits.Bool(False, usedefault=True,
-        position=3, argstr="-m",
+        argstr="-m",
         desc="Will output the BET mask at the format \
             output_prefixT1_mask.nii.gz)",
         mandatory = True)
@@ -95,9 +95,16 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
 
 
 class T1xT2BETOutputSpec(TraitedSpec):
-    brain_file = File(
+    t1_brain_file = File(
         exists=True,
-        desc="extracted brain from T1xT2BET.sh")
+        desc="extracted brain from T1")
+
+    t2_brain_file = File(
+        exists=True,
+        desc="extracted brain from T2")
+
+    mask_file = File(
+        desc="extracted mask from T1")
 
 
 class T1xT2BET(FSLCommand):
@@ -127,17 +134,27 @@ class T1xT2BET(FSLCommand):
 
         outputs = self._outputs().get()
 
-        path, fname, ext = split_f(self.inputs.t1_file)
+        t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
+        t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-        outfile = fname
-
-        fname = fname + self.inputs.os
+        t1_fname += self.inputs.os
+        t2_fname += self.inputs.os
 
         if self.inputs.c:
-            fname = fname + self.inputs.cs
+            t1_fname += self.inputs.cs
+            t2_fname += self.inputs.cs
 
         # !!!!warning, in Regis bash, only .nii.gz are handled
-        outputs["brain_file"] = os.path.join(path, fname +  ".nii.gz")
+        outputs["t1_brain_file"] = os.path.join(t1_path, t1_fname +  ".nii.gz")
+        outputs["t2_brain_file"] = os.path.join(t2_path, t2_fname +  ".nii.gz")
+
+        if self.inputs.m:
+
+            t1_fname += self.inputs.ms
+
+            # !!!!warning, in Regis bash, only .nii.gz are handled
+            outputs["mask_file"] = os.path.join(t1_path, t1_fname +  ".nii.gz")
+
 
         return outputs
 
@@ -222,9 +239,13 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
 
 
 class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
-    debiased_file = File(
+    t1_debiased_file = File(
         exists=True,
-        desc="debiased brain from T1xT2BiasFieldCorrection.sh")
+        desc="debiased T1")
+
+    t2_debiased_file = File(
+        exists=True,
+        desc="debiased T2")
 
 
 class T1xT2BiasFieldCorrection(CommandLine):
@@ -276,19 +297,19 @@ Optional arguments:
 
         outputs = self._outputs().get()
 
-        path, fname, ext = split_f(self.inputs.t1_file)
+        t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
+        t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-        outfile = fname
-
-        fname = fname + self.inputs.os
+        t1_fname += self.inputs.os
+        t2_fname += self.inputs.os
 
         # !!!!warning, in Regis bash, only .nii.gz are handled
-        outputs["debiased_file"] = os.path.join(path, fname +  ".nii.gz")
+        outputs["t1_debiased_file"] = os.path.join(t1_path, t1_fname +  ".nii.gz")
+        outputs["t2_debiased_file"] = os.path.join(t2_path, t2_fname +  ".nii.gz")
         return outputs
 
 
 # IterREGBET
-
 class IterREGBETInputSpec(CommandLineInputSpec):
 
     # mandatory
@@ -457,7 +478,7 @@ class CropVolumeInputSpec(CommandLineInputSpec):
     b_file = File(
         exists=True,
         desc='Brain image or brain mask, in the same space as the in-file(s)',
-        mandatory=True, position=1, argstr="-inb %s")
+        mandatory=True, position=1, argstr="-b %s")
 
     # optional
     o = traits.String(
