@@ -1,9 +1,10 @@
-
+import os
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
+from nipype.interfaces.fsl.base import (FSLCommand, FSLCommandInputSpec)
 from nipype.interfaces.base import traits, File
 
-class T1xT2BETInputSpec(CommandLineInputSpec):
+class T1xT2BETInputSpec(FSLCommandInputSpec):
 
     t1_file = File(
         exists=True,
@@ -99,7 +100,7 @@ class T1xT2BETOutputSpec(TraitedSpec):
         desc="extracted brain from T1xT2BET.sh")
 
 
-class T1xT2BET(CommandLine):
+class T1xT2BET(FSLCommand):
     """
     Description:
         Brain extraction using T1 and T2 images
@@ -116,7 +117,8 @@ class T1xT2BET(CommandLine):
     input_spec = T1xT2BETInputSpec
     output_spec = T1xT2BETOutputSpec
 
-    _cmd = 'bash ../bash/T1xT2BET.sh'
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/T1xT2BET.sh'.format(package_directory)
 
     def _list_outputs(self):
 
@@ -134,7 +136,9 @@ class T1xT2BET(CommandLine):
         if self.inputs.c:
             fname = fname + self.inputs.cs
 
-        outputs["brain_file"] = os.path.abspath(fname +  ext)
+        # !!!!warning, in Regis bash, only .nii.gz are handled
+        outputs["brain_file"] = os.path.join(path, fname +  ".nii.gz")
+
         return outputs
 
 
@@ -176,13 +180,15 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
     # exists = True ???
     b = traits.File(
         position=3, argstr="-b %s",
-        desc="Brain mask file. Will also output bias corrected brain files with the format "output_prefix_brain.nii.gz"",
+        desc="Brain mask file. Will also output bias corrected brain files \
+            with the format \"output_prefix_brain.nii.gz\"",
         mandatory = False)
 
 
     bet = traits.Int(0, usedefault=True,
-        desc='Will try to "smart" BET the anat files to get a brain mask: n = the number of iterations BET will be run
-                  to find center of gravity (default=0, will not BET if option -b has been specified).',
+        desc='Will try to "smart" BET the anat files to get a brain mask: n =\
+            the number of iterations BET will be run to find center of gravity\
+            (default=0, will not BET if option -b has been specified).',
         position=3, argstr="-bet %d", mandatory=False)
 
     bs = traits.String(
@@ -229,6 +235,28 @@ class T1xT2BiasFieldCorrection(CommandLine):
 
     Inputs:
 
+Compulsory arguments:
+    -t1           Whole-head T1w image
+    -t2           Whole-head T2w image (use -aT2 if T2w image is not in the T1w space)
+
+Optional arguments:
+    -os <suffix>  Suffix for the bias field corrected images (default is "_debiased")
+    -aT2          Will coregrister T2w to T1w using flirt. Output will have the suffix provided.
+                  Will only work for spatially close images.
+    -as           Suffix for T2w to T1w registration ("-in-T1w" if not specified)
+    -s <s>        size of gauss kernel in mm when performing mean filtering (default=4)
+    -b <mask>     Brain mask file. Will also output bias corrected brain files with the format "output_prefix_brain.nii.gz"
+    -bet <n>      Will try to "smart" BET the anat files to get a brain mask: n = the number of iterations BET will be run
+                  to find center of gravity (default=0, will not BET if option -b has been specified).
+                  Will also output bias corrected brain files and the BET mask
+    -bs <suffix>  Suffix for the BET masked images (default is "_BET")
+    -f <f>        -f options of BET:
+                  fractional intensity threshold (0->1); default=0.5; smaller values give larger brain outline estimates
+    -g <g>        -g options of BET:
+                  vertical gradient in fractional intensity threshold (-1->1); default=0; positive values give larger brain outline at bottom, smaller at top
+    -k            Will keep temporary files.
+    -p <p>        Prefix for running FSL functions (can be a path or just a prefix)
+
     Outputs:
 
         brain_file:
@@ -238,7 +266,8 @@ class T1xT2BiasFieldCorrection(CommandLine):
     input_spec = T1xT2BiasFieldCorrectionInputSpec
     output_spec = T1xT2BiasFieldCorrectionOutputSpec
 
-    _cmd = 'bash ../bash/T1xT2BiasFieldCorrection.sh'
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/T1xT2BiasFieldCorrection.sh'.format(package_directory)
 
     def _list_outputs(self):
 
@@ -253,7 +282,8 @@ class T1xT2BiasFieldCorrection(CommandLine):
 
         fname = fname + self.inputs.os
 
-        outputs["debiased_file"] = os.path.abspath(fname +  ext)
+        # !!!!warning, in Regis bash, only .nii.gz are handled
+        outputs["debiased_file"] = os.path.join(path, fname +  ".nii.gz")
         return outputs
 
 
@@ -278,21 +308,6 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         mandatory=True, position=2, argstr="-refb %s")
 
     # optional
-    -xp <prefix>  Prefix for the registration outputs ("in_FLIRT-to_ref" if not specified)
-    -bs <suffix>  Suffix for the brain files ("in_IRbrain" & "in_IRbrain_mask" if not specified)
-    -dof <dof>    FLIRT degrees of freedom (6=rigid body, 7=scale, 12=affine{default}). Use dof 6 for intra-subject, 12 for inter-subject registration
-    -cost <cost>  FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,labeldiff,bbr}    (default is normmi)
-    -n <n>        n = the number of FLIRT iterations (>=2, default=2).
-    -m <method>   At each new iteration, either use:
-                    - the reference brain mask, m=ref (default)
-                    - the union of the reference and input brain masks, m=union (use if your input brain is too small)
-                    - the intersection of the reference and input brain masks, m=inter (use if your input brain is too big)
-                    - a mix between union & intersection, m=mix (give it a try!)
-    -refw <file>  Do a whole-head non-linear registration (using FNIRT) during last iteration (provide reference whole-head image)
-    -k            Will keep temporary files.
-    -p <p>        Prefix for running FSL functions (can be a path or just a prefix)
-
-
     xp = traits.String(
         "in_FLIRT-to_ref", usedefault=True,
         desc="Prefix for the registration outputs (\"in_FLIRT-to_ref\" if not specified)",
@@ -301,12 +316,13 @@ class IterREGBETInputSpec(CommandLineInputSpec):
 
     bs = traits.String(
         "in_IRbrain", usedefault=True,
-        desc="Suffix for the brain files ("in_IRbrain" & "in_IRbrain_mask" if not specified)",
+        desc="Suffix for the brain files (\"in_IRbrain\" & \"in_IRbrain_mask\"\
+            if not specified)",
         position=3, argstr="-bs %s",mandatory=False)
 
     dof = traits.Enum(
         12, 6, 7, desc='FLIRT degrees of freedom (6=rigid body, 7=scale, \
-        12=affine\{default\}). Use dof 6 for intra-subject, 12 for inter-subject registration',
+        12=affine (default)). Use dof 6 for intra-subject, 12 for inter-subject registration',
         argstr='-dof %d',
         usedefault=True)
 
@@ -323,7 +339,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         position=3, argstr="-n %d", mandatory=True)
 
     m = traits.Enum(
-        'ref', 'union', 'inter', 'mix'
+        'ref', 'union', 'inter', 'mix',
         desc='At each new iteration, either use:\
             - the reference brain mask, m=ref (default)\
             - the union of the reference and input brain masks, \
@@ -367,6 +383,36 @@ Will output a better brain mask of the in-file.
 
     Inputs:
 
+        IterREGBET. Iterative registration of the in-file to the ref file (registered brain mask of the ref image is used at each iteration).
+        To use when the input brain mask is not optimal (eg. an output of FSL BET).
+        Will output a better brain mask of the in-file.
+
+        Usage:
+            bash ${0##*/} -in <moving-whole-head-image> -inb <moving-brain-image> -ref <ref-brain-image> -o <output-prefix> [options]
+
+        Compulsory arguments:
+            -inw  <file>   Moving whole-head image
+            -inb  <file>   Moving brain image
+            -refb <file>   Fixed reference brain image
+
+        Optional arguments:
+            -xp <prefix>  Prefix for the registration outputs ("in_FLIRT-to_ref" if not specified)
+            -bs <suffix>  Suffix for the brain files ("in_IRbrain" & "in_IRbrain_mask" if not specified)
+            -dof <dof>    FLIRT degrees of freedom (6=rigid body, 7=scale, 12=affine{default}). Use dof 6 for intra-subject, 12 for inter-subject registration
+            -cost <cost>  FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,labeldiff,bbr}    (default is normmi)
+            -n <n>        n = the number of FLIRT iterations (>=2, default=2).
+            -m <method>   At each new iteration, either use:
+                            - the reference brain mask, m=ref (default)
+                            - the union of the reference and input brain masks, m=union (use if your input brain is too small)
+                            - the intersection of the reference and input brain masks, m=inter (use if your input brain is too big)
+                            - a mix between union & intersection, m=mix (give it a try!)
+            -refw <file>  Do a whole-head non-linear registration (using FNIRT) during last iteration (provide reference whole-head image)
+            -k            Will keep temporary files.
+            -p <p>        Prefix for running FSL functions (can be a path or just a prefix)
+
+
+
+
     Outputs:
 
         brain_file:
@@ -376,7 +422,8 @@ Will output a better brain mask of the in-file.
     input_spec = IterREGBETInputSpec
     output_spec = IterREGBETOutputSpec
 
-    _cmd = 'bash ../bash/IterREGBET.sh'
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/IterREGBET.sh'.format(package_directory)
 
     def _format_arg(name, spec, value):
         if name == 'n':
@@ -394,7 +441,7 @@ Will output a better brain mask of the in-file.
 
         outfile = self.inputs.xp + fname + self.inputs.bs
 
-        outputs["mask_file"] = os.path.abspath(outfile +  ext)
+        outputs["mask_file"] = os.path.join(path, outfile + ".nii.gz")
         return outputs
 
 
@@ -463,7 +510,8 @@ class CropVolume(CommandLine):
     input_spec = CropVolumeInputSpec
     output_spec = CropVolumeOutputSpec
 
-    _cmd = 'bash ../bash/CropVolume.sh'
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/CropVolume.sh'.format(package_directory)
 
     def _list_outputs(self):
 
@@ -472,12 +520,12 @@ class CropVolume(CommandLine):
 
         outputs = self._outputs().get()
 
-        path, fname, ext = split_f(self.inputs.t1_file)
+        path, fname, ext = split_f(self.inputs.i_file)
 
         outfile = fname + self.inputs.s
 
         if self.inputs.o:
             outfile = self.inputs.o + outfile
 
-        outputs["cropped_file"] = os.path.abspath(outfile +  ext)
+        outputs["cropped_file"] = os.path.join(path, outfile +  ".nii.gz")
         return outputs
