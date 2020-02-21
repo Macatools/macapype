@@ -187,10 +187,10 @@ RUN python3 setup.py develop
 #####################################################################################################
 
 ## pipeline regis
-#docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+#docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/workflows/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
 
 ### pipepline kepkee # takes ~ 5 hours to run
-# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/workflows/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
 
 ## test_denoise
-# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/test_denoise.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/workflows/test_denoise.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
