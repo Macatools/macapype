@@ -357,7 +357,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
     # how to assert minimal value in traits def? is now in _parse_args
     n = traits.Int(2, usedefault=True,
         desc='n = the number of FLIRT iterations (>=2, default=2).',
-        position=3, argstr="-n %d", mandatory=True)
+        argstr="-n %d", mandatory=True)
 
     m = traits.Enum(
         'ref', 'union', 'inter', 'mix',
@@ -393,6 +393,13 @@ class IterREGBETOutputSpec(TraitedSpec):
         exists=True,
         desc="masked brain from IterREGBET.sh")
 
+    transfo_file= File(
+            exists=True,
+            desc="transfo_file")
+
+    inv_transfo_file= File(
+            exists=True,
+            desc="inv_transfo_file")
 
 class IterREGBET(CommandLine):
     """
@@ -446,10 +453,11 @@ Will output a better brain mask of the in-file.
     package_directory = os.path.dirname(os.path.abspath(__file__))
     _cmd = 'bash {}/../bash/IterREGBET.sh'.format(package_directory)
 
-    def _format_arg(name, spec, value):
-        if name == 'n':
-            assert value >= 2, \
-                "Error, n {} should be higher than 2".format(value)
+    #def _format_arg(self,name, spec, value):
+        #if name == 'n':
+            #assert value >= 2, \
+                #"Error, n {} should be higher than 2".format(value)
+
 
     def _list_outputs(self):
 
@@ -458,11 +466,14 @@ Will output a better brain mask of the in-file.
 
         outputs = self._outputs().get()
 
-        path, fname, ext = split_f(self.inputs.t1_file)
+        path, fname, ext = split_f(self.inputs.inw_file)
 
-        outfile = self.inputs.xp + fname + self.inputs.bs
+        outfile = self.inputs.xp #+ fname + self.inputs.bs
 
-        outputs["mask_file"] = os.path.join(path, outfile + ".nii.gz")
+        #
+        outputs["mask_file"] = os.path.abspath(outfile + ".nii.gz")
+        outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
+        outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
         return outputs
 
 

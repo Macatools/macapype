@@ -1,5 +1,11 @@
 import os
 
+from macapype.utils.utils_tests import load_test_data
+
+nmt_dir = load_test_data("NMT_v1.2")
+nmt_ss_file = os.path.join(nmt_dir,"NMT_SS.nii.gz")
+
+
 from macapype.nodes.bash_regis import (T1xT2BET, CropVolume, IterREGBET,
                                        T1xT2BiasFieldCorrection)
 
@@ -13,6 +19,9 @@ t2_file = os.path.join(data_path,"sub-Apache","ses-01","anat",
 
 mask_file = os.path.join(data_path,"sub-Apache","ses-01","anat",
                        "sub-Apache_ses-01_T1w_mask.nii.gz")
+
+t1_brain_file = os.path.join(data_path,"sub-Apache","ses-01","anat",
+                       "sub-Apache_ses-01_T1w_SS.nii.gz")
 
 # necesaary for Regis use of FSL with .nii.gz by default
 import nipype.interfaces.fsl as fsl
@@ -31,8 +40,8 @@ def test_T1xT2BET():
     assert os.path.exists(val.t1_brain_file)
     assert os.path.exists(val.t2_brain_file)
 
-    os.remove(val.t1_brain_file)
-    os.remove(val.t2_brain_file)
+    #os.remove(val.t1_brain_file)
+    #os.remove(val.t2_brain_file)
 
 
 def test_T1xT2BET_mask():
@@ -68,16 +77,29 @@ def test_CropVolume():
 
     os.remove(val.cropped_file)
 
-#def test_IterREGBET():
-    #bet = IterREGBET()
+def test_IterREGBET():
 
-    #bet.inputs.t1_file=t1_file
-    #bet.inputs.t2_file=t2_file
+    reg_bet = IterREGBET()
 
-    #print(bet.cmdline)
-    #output_file = bet.run().outputs
-    #print(output_file)
+    reg_bet.inputs.inw_file=t1_file
+    reg_bet.inputs.inb_file=t1_brain_file
+    reg_bet.inputs.refb_file=nmt_ss_file
 
+    print(reg_bet)
+
+    val = reg_bet.run().outputs
+    print(val)
+
+    assert(val.mask_file)
+    assert(val.transfo_file)
+    assert(val.inv_transfo_file)
+
+
+    os.remove(val.mask_file)
+    os.remove(val.transfo_file)
+    os.remove(val.inv_transfo_file)
+
+test_IterREGBET()
 
 def test_T1xT2BiasFieldCorrection():
 
