@@ -169,7 +169,8 @@ echo $DIR
 # Files
 T1name=`extract_base_name $T1`
 T2name=`extract_base_name $T2`
-INpath=`extract_path $T1`
+#INpath=`extract_path $T1`
+INpath=$PWD/
 OUT_PREFIX1="${INpath}${T1name}${OUT_SUFFIX}"
 OUT_PREFIX2="${INpath}${T2name}${OUT_SUFFIX}"
 
