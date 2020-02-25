@@ -19,17 +19,17 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
     os = traits.String(
         "_BET", usedefault=True,
         desc="Suffix for the brain masked images (default is _BET)",
-        position=2, argstr="-os %s",mandatory=True)
+        argstr="-os %s",mandatory=True)
 
-    aT2 = traits.Bool(True, usedefault = True,
-        position=3, argstr="-aT2",
+    aT2 = traits.Bool(False, usedefault = True,
+        argstr="-aT2",
         desc="Will coregrister T2w to T1w using flirt. Output will have the\
             suffix provided. Will only work for spatially close images.",
         mandatory = False)
 
     # as -> opt_as, as is already a part of python keywords...
-    opt_as = traits.Bool(False, usedefault=True,
-        position=3, argstr="-as",
+    opt_as = traits.String("-in-T1w", usedefault=True,
+        argstr="-as %s",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
         mandatory = False)
@@ -37,7 +37,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
     n = traits.Int(1, usedefault=True,
         desc='n = the number of iterations BET will be run to find center of \
             gravity (n=1 if option -n is absent)',
-        position=3, argstr="-n %d", mandatory=True)
+        argstr="-n %d", mandatory=True)
 
     m = traits.Bool(False, usedefault=True,
         argstr="-m",
@@ -48,7 +48,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
     ms = traits.String(
         "_mask", usedefault=True,
         desc="Suffix for the mask (default is _mask)",
-        position=3, argstr="-ms %s",mandatory=True)
+        argstr="-ms %s",mandatory=True)
 
     c = traits.Int(
         desc='Will crop the inputs & outputs after brain extraction. c is the \
@@ -57,41 +57,41 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
             voxels in one dimension and c=10: the sides of the brain in this \
             dimension will be 20 voxels away from the borders of the resulting\
             crop box in this dimension).',
-        position=3, argstr="-c %d", mandatory=False)
+        argstr="-c %d", mandatory=False)
 
     cs = traits.String(
         "_cropped", usedefault=True,
         desc="Suffix for the cropped images (default is _cropped)",
-        position=3, argstr="-cs %s",mandatory=False)
+        argstr="-cs %s",mandatory=False)
 
     f = traits.Float(
         0.5, usedefault=True,
         desc='-f options of BET: fractional intensity threshold (0->1); \
             default=0.5; smaller values give larger brain outline estimates',
-        position=3, argstr="-f %f", mandatory=True)
+        argstr="-f %f", mandatory=True)
 
     g = traits.Float(
         0.0, usedefault=True, desc='-g options of BET:\
                   vertical gradient in fractional intensity threshold (-1->1);\
                   default=0; positive values give larger brain outline at\
                   bottom, smaller at top',
-        position=2, argstr="-g %f", mandatory=True)
+        argstr="-g %f", mandatory=True)
 
     cog = traits.ListInt(
         desc='For difficult cases, you can directly provide a center of \
             gravity. Only one iteration will be performed.',
-        position=3, argstr="-cog %d %d %d", mandatory=False)
+        argstr="-cog %d %d %d", mandatory=False)
 
 
     k = traits.Bool(False, usedefault=True,
-        position=3, argstr="-k",
+        argstr="-k",
         desc="Will keep temporary files",
         mandatory = True)
 
     p = traits.String(
         desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
-        position=3, argstr="-p %s")
+        argstr="-p %s")
 
 
 class T1xT2BETOutputSpec(TraitedSpec):
@@ -103,9 +103,17 @@ class T1xT2BETOutputSpec(TraitedSpec):
         exists=True,
         desc="extracted brain from T2")
 
+    t2_coreg_file = File(
+        desc="coreg T2 from T1")
+
     mask_file = File(
         desc="extracted mask from T1")
 
+    t1_cropped_file = File(
+        desc="extracted cropped brain from T1")
+
+    t2_cropped_file = File(
+        desc="extracted cropped brain from T2")
 
 class T1xT2BET(FSLCommand):
     """
@@ -137,23 +145,35 @@ class T1xT2BET(FSLCommand):
         t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
         t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-        t1_fname += self.inputs.os
-        t2_fname += self.inputs.os
 
         if self.inputs.c:
-            t1_fname += self.inputs.cs
-            t2_fname += self.inputs.cs
-
-        # !!!!warning, in Regis bash, only .nii.gz are handled
-        outputs["t1_brain_file"] = os.path.join(t1_path, t1_fname +  ".nii.gz")
-        outputs["t2_brain_file"] = os.path.join(t2_path, t2_fname +  ".nii.gz")
-
-        if self.inputs.m:
-
-            t1_fname += self.inputs.ms
 
             # !!!!warning, in Regis bash, only .nii.gz are handled
-            outputs["mask_file"] = os.path.join(t1_path, t1_fname +  ".nii.gz")
+            outputs["t1_cropped_file"] = os.path.join(t1_path, t1_fname + self.inputs.cs + ".nii.gz")
+
+            if self.inputs.aT2:
+                outputs["t2_cropped_file"] = os.path.join(t2_path, t2_fname + self.inputs.opt_as + self.inputs.cs + ".nii.gz")
+            else:
+                outputs["t2_cropped_file"] = os.path.join(t2_path, t2_fname + self.inputs.cs + ".nii.gz")
+
+            outputs["t1_brain_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
+            outputs["t2_brain_file"] = os.path.join(t2_path, t2_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
+
+            if self.inputs.m:
+                    # !!!!warning, in Regis bash, only .nii.gz are handled
+                    outputs["mask_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
+
+        else:
+
+            outputs["t1_brain_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + ".nii.gz")
+            outputs["t2_brain_file"] = os.path.join(t2_path, t2_fname + self.inputs.os + ".nii.gz")
+
+            if self.inputs.m:
+                # !!!!warning, in Regis bash, only .nii.gz are handled
+                outputs["mask_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + self.inputs.ms + ".nii.gz")
+
+        if self.inputs.aT2:
+            outputs["t2_coreg_file"] = os.path.join(t2_path, t2_fname + self.inputs.opt_as + ".nii.gz")
 
 
         return outputs
@@ -330,7 +350,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
 
     # optional
     xp = traits.String(
-        "in_FLIRT-to_ref", usedefault=True,
+        genfile = True,
         desc="Prefix for the registration outputs (\"in_FLIRT-to_ref\" if not specified)",
         position=3, argstr="-xp %s",mandatory=False)
 

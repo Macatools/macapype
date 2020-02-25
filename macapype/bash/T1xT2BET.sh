@@ -32,6 +32,8 @@ Optional arguments:
     -g <g>        -g options of BET:
                   vertical gradient in fractional intensity threshold (-1->1); default=0; positive values give larger brain outline at bottom, smaller at top
     -cog <x y z>  For difficult cases, you can directly provide a center of gravity. Only one iteration will be performed.
+    -A2           -A2 option of BET. Will be run during last iteration only:
+                  run bet2 and then betsurf to get additional skull and scalp surfaces
     -k            Will keep temporary files.
     -p <p>        Prefix for running FSL functions (can be a path or just a prefix)
     
@@ -54,6 +56,7 @@ NITER=1
 OMASK="No"
 BETF=0.5
 BETG=0
+BETA="No"
 KTMP="No"
 CROPPING="No"
 OUT_SUFFIX="_BET"
@@ -126,6 +129,10 @@ do
       exit 1
     fi
     shift 4
+    ;;
+    -a2 |-A2 )
+    BETA="Yes"
+    shift
     ;;
     -k |-K )
     KTMP="Yes"
@@ -224,6 +231,7 @@ cat <<REPORTPARAMETERS
  BET -f:             $BETF
  BET -g:             $BETG
  Initial COG:        $Icog
+ BET -A2:            $BETA
  Keep tmp files:     $KTMP
  FSL prefix:         $FSLPREFIX
 ======================================================================================
@@ -239,12 +247,12 @@ else
   declare -A TMP # temporary files
 fi
 
-TMP[T1mulT2]="${INpath}T1mulT2.nii.gz"
-TMP[T1mulT2_temp]="${INpath}T1mulT2_temp.nii.gz"
-TMP[T1mulT2_pow]="${INpath}T1mulT2_pow.nii.gz"
-TMP[T1mulT2_BET]="${INpath}T1mulT2_BET.nii.gz"
-TMP[T1mulT2_BET_mask]="${INpath}T1mulT2_BET_mask.nii.gz"
-TMP[T1mulT2_masked]="${INpath}T1mulT2_masked.nii.gz"
+TMP[T1mulT2]="${INpath}${T1name}_T1mulT2.nii.gz"
+TMP[T1mulT2_temp]="${INpath}${T1name}_T1mulT2_temp.nii.gz"
+TMP[T1mulT2_pow]="${INpath}${T1name}_T1mulT2_pow.nii.gz"
+TMP[T1mulT2_BET]="${INpath}${T1name}_T1mulT2_BET.nii.gz"
+TMP[T1mulT2_BET_mask]="${INpath}${T1name}_T1mulT2_BET_mask.nii.gz"
+TMP[T1mulT2_masked]="${INpath}${T1name}_T1mulT2_masked.nii.gz"
 
 
 
@@ -277,6 +285,13 @@ if [[ $NITER -gt 0 ]]; then
       cog=`"${FSLPREFIX}fslstats" ${TMP[T1mulT2_pow]} -C`
     fi
     echo "cog: $cog"
+    
+    if [[ $BETA == "Yes" && $i -eq $NITER ]]; then # - A2 option
+      echo "Running BET on T1w image with -A2 option..."
+      "${FSLPREFIX}bet" $T1 $OUT_PREFIX1 -c $cog -f $BETF -g $BETG -A2 $T2
+      echo "Doing last BET T1w x T2w image..."
+    fi
+    
     "${FSLPREFIX}bet" ${TMP[T1mulT2_temp]} ${TMP[T1mulT2_BET]} -m -c $cog -f $BETF -g $BETG
     mv ${TMP[T1mulT2_BET]} ${TMP[T1mulT2_temp]}
   done
@@ -301,10 +316,15 @@ fi
 if [[ -n "$CROP_P" ]]; then
   echo "Cropping..."
   SCRIPTpath=`extract_path $0`
+  if [[ -n "$FSLPREFIX" ]]; then
+    FPOPT="-p ${FSLPREFIX}"
+  fi
   if test -f "${SCRIPTpath}CropVolume.sh"; then # check if Cropping scripts exists
-    bash "${SCRIPTpath}CropVolume.sh" -i $T1 -i $T2 -i $OUT_PREFIX1 -i$OUT_PREFIX2 -b $OUT_PREFIX1 -c $CROP_P -s $CROP_SUFFIX -d -p $FSLPREFIX
+    echo "Calling ${SCRIPTpath}CropVolume.sh"
+
+    bash "${SCRIPTpath}CropVolume.sh" -i $T1 -i $T2 -i "$OUT_PREFIX1.nii.gz" -i "$OUT_PREFIX2.nii.gz" -b $OUT_PREFIX1 -c $CROP_P -s $CROP_SUFFIX -d $FPOPT
     if [[ $OMASK == "Yes" ]]; then
-      bash "${SCRIPTpath}CropVolume.sh" -i "${OUT_PREFIX1}${MASK_SUFFIX}" -b $OUT_PREFIX1 -c $CROP_P -s $CROP_SUFFIX -d -p $FSLPREFIX
+      bash "${SCRIPTpath}CropVolume.sh" -i "${OUT_PREFIX1}${MASK_SUFFIX}.nii.gz" -b $OUT_PREFIX1 -c $CROP_P -s $CROP_SUFFIX -d $FPOPT
       rm "${OUT_PREFIX1}${MASK_SUFFIX}.nii.gz"
     fi
   else # else do it here
