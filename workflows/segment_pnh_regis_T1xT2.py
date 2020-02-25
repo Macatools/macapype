@@ -65,7 +65,7 @@ from bids.layout import BIDSLayout
 from nipype.interfaces.io import BIDSDataGrabber
 
 # from macapype.pipelines.correct_bias import create_debias_N4_pipe
-# from macapype.nodes.correct_bias import interative_N4_debias
+from macapype.nodes.preproc import average_align
  
 # from macapype.nodes.denoise import nonlocal_denoise
 from macapype.nodes.bash_regis import T1xT2BET, T1xT2BiasFieldCorrection
@@ -74,7 +74,7 @@ from macapype.nodes.bash_regis import T1xT2BET, T1xT2BiasFieldCorrection
 # from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
 from macapype.utils.utils_tests import load_test_data
 
-from macapype.utils.misc import get_first_elem
+#from macapype.utils.misc import get_first_elem
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
@@ -94,7 +94,6 @@ def create_datasource(data_dir, sess):
         name='datasource'
     )
     datasource.inputs.base_directory = data_dir
-    #datasource.inputs.template = '%s/sub-%s_ses-01_%s.nii'
     datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_%s.nii'.format(sess, sess)
     datasource.inputs.template_args = dict(
         T1=[['subject_id', 'subject_id', "T1w"]],
@@ -113,8 +112,11 @@ def create_bids_datasource(data_dir):
 
     bids_datasource.inputs.base_dir = data_dir
 
-    bids_datasource.inputs.output_query = {'T1': {"datatype": "anat", "suffix": "T1w",
-                        "extensions": ["nii", ".nii.gz"]}}
+    bids_datasource.inputs.output_query = {
+        'T1': {"datatype": "anat", "suffix": "T1w", "extensions": ["nii",
+                                                                   ".nii.gz"]},
+        'T2': {"datatype": "anat", "suffix": "T2w", "extensions": ["nii",
+                                                                   ".nii.gz"]}}
 
     layout = BIDSLayout(data_dir)
     print (layout)
@@ -163,56 +165,6 @@ def create_segment_pnh_T1xT2(name="segment_pnh_subpipes"):
     seg_pipe.connect(bet, 't1_cropped_file', debias, 't1_file')
     seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
 
-    #denoise_T1 = pe.Node(
-      #niu.Function(input_names=["img_file"],
-                   #output_names=["denoised_img_file"],
-                   #function=nonlocal_denoise),
-      #name="denoise_T1"
-    #)
-    #seg_pipe.connect(bet, 'output_image', denoise_T1, 'img_file')
-
-    ## TODO: Attention , brain extraction should come in between !!!
-    #bet = pe.Node(fsl.BET(), name='bet')
-    #bet.inputs.frac = 0.7
-    ## TODO: specify center (depending of the subject)
-    ## bet.inputs.center = [,,]
-
-    ##seg_pipe.connect(debias_N4, 'output_image', bet, 'in_file') # without denoise
-    #seg_pipe.connect(denoise_T1,'denoised_img_file', bet, 'in_file')
-
-    ## Register template to anat (need also skullstripped anat)
-    ## use iterative flirt
-    #iterative_register_pipe = create_iterative_register_pipe(
-        #template_file=nmt_file,
-        #template_brain_file=nmt_ss_file,
-        #template_mask_file=nmt_mask_file,
-        #gm_prob_file=gm_prob_file,
-        #wm_prob_file=wm_prob_file,
-        #csf_prob_file=csf_prob_file,
-        #n_iter=1
-    #)
-
-    #seg_pipe.connect(
-        #bet, 'out_file',
-        #iterative_register_pipe, "inputnode.anat_file_BET"
-    #)
-    #seg_pipe.connect(
-        #debias_N4, 'output_image',
-        #iterative_register_pipe, 'inputnode.anat_file'
-    #)
-
-    ## Compute brain mask using old_segment of SPM and postprocessing on
-    ## tissues' masks
-    #extract_brain = create_old_segment_extraction_pipe()
-    #seg_pipe.connect(
-        #iterative_register_pipe, 'register.anat_file_brain',
-        #extract_brain, "inputnode.T1"
-    #)
-    #seg_pipe.connect(
-        #iterative_register_pipe, 'merge_3_files.list3files',
-        #extract_brain, "inputnode.seg_priors"
-    #)
-
     return seg_pipe
 
 
@@ -220,15 +172,6 @@ def create_segment_pnh_T1xT2(name="segment_pnh_subpipes"):
 def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir, 
                          nmt_fsl_dir):
     """ """
-    #nmt_file = op.join(nmt_dir, "NMT.nii.gz")
-    #nmt_ss_file = op.join(nmt_dir, "NMT_SS.nii.gz")
-    #nmt_mask_file = op.join(nmt_dir, 'masks', 'anatomical_masks',
-                            #'NMT_brainmask.nii.gz')
-
-    #gm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_1.nii.gz')
-    #wm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_2.nii.gz')
-    #csf_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_3.nii.gz')
-
     main_workflow = pe.Workflow(name="test_pipeline_regis_T1xT2")
     main_workflow.base_dir = process_dir
 
@@ -255,12 +198,10 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir,
     # segment_pnh
     print('adding segment_pnh')
     segment_pnh = create_segment_pnh_T1xT2()
-#        nmt_file, nmt_ss_file, nmt_mask_file, gm_prob_file, wm_prob_file,
-#        csf_prob_file)
 
     #main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
-    main_workflow.connect(datasource, ('T1', get_first_elem), segment_pnh, 'inputnode.T1')
-    main_workflow.connect(datasource, ('T2', get_first_elem), segment_pnh, 'inputnode.T2')
+    main_workflow.connect(datasource, ('T1', average_align), segment_pnh, 'inputnode.T1')
+    main_workflow.connect(datasource, ('T2', average_align), segment_pnh, 'inputnode.T2')
 
     return main_workflow
 
