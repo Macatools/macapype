@@ -88,10 +88,15 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         desc="Will keep temporary files",
         mandatory = True)
 
-    p = traits.String(
-        desc="Prefix for running FSL functions\
+    p = traits.String(desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
         argstr="-p %s")
+
+    #p = traits.String("", usedefault = True,
+        #desc="Prefix for running FSL functions\
+            #(can be a path or just a prefix)",
+        #argstr="-p %s")
+
 
 
 class T1xT2BETOutputSpec(TraitedSpec):
@@ -135,6 +140,12 @@ class T1xT2BET(FSLCommand):
     package_directory = os.path.dirname(os.path.abspath(__file__))
     _cmd = 'bash {}/../bash/T1xT2BET.sh'.format(package_directory)
 
+    #def _format_arg(self, name, spec, value):
+        #if name == 'p' and value == "":
+            #value = os.path.abspath("")
+
+        #return super(T1xT2BET, self)._format_arg(name, spec, value)
+
     def _list_outputs(self):
 
         import os
@@ -149,31 +160,31 @@ class T1xT2BET(FSLCommand):
         if self.inputs.c:
 
             # !!!!warning, in Regis bash, only .nii.gz are handled
-            outputs["t1_cropped_file"] = os.path.join(t1_path, t1_fname + self.inputs.cs + ".nii.gz")
+            outputs["t1_cropped_file"] = os.path.abspath( t1_fname + self.inputs.cs + ".nii.gz")
 
             if self.inputs.aT2:
-                outputs["t2_cropped_file"] = os.path.join(t2_path, t2_fname + self.inputs.opt_as + self.inputs.cs + ".nii.gz")
+                outputs["t2_cropped_file"] = os.path.abspath( t2_fname + self.inputs.opt_as + self.inputs.cs + ".nii.gz")
             else:
-                outputs["t2_cropped_file"] = os.path.join(t2_path, t2_fname + self.inputs.cs + ".nii.gz")
+                outputs["t2_cropped_file"] = os.path.abspath( t2_fname + self.inputs.cs + ".nii.gz")
 
-            outputs["t1_brain_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
-            outputs["t2_brain_file"] = os.path.join(t2_path, t2_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
+            outputs["t1_brain_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
+            outputs["t2_brain_file"] = os.path.abspath( t2_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
 
             if self.inputs.m:
                     # !!!!warning, in Regis bash, only .nii.gz are handled
-                    outputs["mask_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
+                    outputs["mask_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
 
         else:
 
-            outputs["t1_brain_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + ".nii.gz")
-            outputs["t2_brain_file"] = os.path.join(t2_path, t2_fname + self.inputs.os + ".nii.gz")
+            outputs["t1_brain_file"] = os.path.abspath( t1_fname + self.inputs.os + ".nii.gz")
+            outputs["t2_brain_file"] = os.path.abspath( t2_fname + self.inputs.os + ".nii.gz")
 
             if self.inputs.m:
                 # !!!!warning, in Regis bash, only .nii.gz are handled
-                outputs["mask_file"] = os.path.join(t1_path, t1_fname + self.inputs.os + self.inputs.ms + ".nii.gz")
+                outputs["mask_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.ms + ".nii.gz")
 
         if self.inputs.aT2:
-            outputs["t2_coreg_file"] = os.path.join(t2_path, t2_fname + self.inputs.opt_as + ".nii.gz")
+            outputs["t2_coreg_file"] = os.path.abspath( t2_fname + self.inputs.opt_as + ".nii.gz")
 
 
         return outputs
@@ -195,28 +206,28 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
     os = traits.String(
         "_debiased", usedefault=True,
         desc="Suffix for the bias field corrected images (default is \"_debiased\")",
-        position=2, argstr="-os %s",mandatory=False)
+         argstr="-os %s",mandatory=False)
 
-    aT2 = traits.Bool(True, usedefault = True,
-        position=3, argstr="-aT2",
+    aT2 = traits.Bool(False, usedefault = True,
+         argstr="-aT2",
         desc="Will coregrister T2w to T1w using flirt. Output will have the\
             suffix provided. Will only work for spatially close images.",
         mandatory = False)
 
     # as -> opt_as, as is already a part of python keywords...
     opt_as = traits.Bool(False, usedefault=True,
-        position=3, argstr="-as",
+         argstr="-as",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
         mandatory = False)
 
     s = traits.Int(4, usedefault=True,
         desc='size of gauss kernel in mm when performing mean filtering (default=4)',
-        position=3, argstr="-s %d", mandatory=False)
+         argstr="-s %d", mandatory=False)
 
     # exists = True ???
     b = traits.File(
-        position=3, argstr="-b %s",
+         argstr="-b %s",
         desc="Brain mask file. Will also output bias corrected brain files \
             with the format \"output_prefix_brain.nii.gz\"",
         mandatory = False)
@@ -226,36 +237,36 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
         desc='Will try to "smart" BET the anat files to get a brain mask: n =\
             the number of iterations BET will be run to find center of gravity\
             (default=0, will not BET if option -b has been specified).',
-        position=3, argstr="-bet %d", mandatory=False)
+         argstr="-bet %d", mandatory=False)
 
     bs = traits.String(
         "_BET", usedefault=True,
         desc="Suffix for the BET masked images (default is \"_BET\")",
-        position=3, argstr="-bs %s",mandatory=False)
+         argstr="-bs %s",mandatory=False)
 
     f = traits.Float(
         0.5, usedefault=True,
         desc='-f options of BET: fractional intensity threshold (0->1); \
             default=0.5; smaller values give larger brain outline estimates',
-        position=3, argstr="-f %f", mandatory=True)
+         argstr="-f %f", mandatory=True)
 
     g = traits.Float(
         0.0, usedefault=True, desc='-g options of BET:\
                   vertical gradient in fractional intensity threshold (-1->1);\
                   default=0; positive values give larger brain outline at\
                   bottom, smaller at top',
-        position=2, argstr="-g %f", mandatory=True)
+         argstr="-g %f", mandatory=True)
 
 
     k = traits.Bool(False, usedefault=True,
-        position=3, argstr="-k",
+         argstr="-k",
         desc="Will keep temporary files",
         mandatory = True)
 
     p = traits.String(
         desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
-        position=3, argstr="-p %s")
+         argstr="-p %s")
 
 
 class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
@@ -266,6 +277,10 @@ class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
     t2_debiased_file = File(
         exists=True,
         desc="debiased T2")
+
+    t2_coreg_file = File(
+        desc="T2 on T1")
+
 
 
 class T1xT2BiasFieldCorrection(CommandLine):
@@ -324,8 +339,11 @@ Optional arguments:
         t2_fname += self.inputs.os
 
         # !!!!warning, in Regis bash, only .nii.gz are handled
-        outputs["t1_debiased_file"] = os.path.join(t1_path, t1_fname +  ".nii.gz")
-        outputs["t2_debiased_file"] = os.path.join(t2_path, t2_fname +  ".nii.gz")
+        outputs["t1_debiased_file"] = os.path.abspath(t1_fname +  ".nii.gz")
+        outputs["t2_debiased_file"] = os.path.abspath(t2_fname +  ".nii.gz")
+
+        if self.inputs.aT2:
+            outputs["t2_coreg_file"] = os.path.abspath(t1_fname +  self.inputs.opt_as + ".nii.gz")
         return outputs
 
 

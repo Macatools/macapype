@@ -118,11 +118,19 @@ def test_T1xT2BET_noncropped_mask_cropping():
 
     print(val)
 
-    #assert os.path.exists(val.t1_brain_file)
-    #assert os.path.exists(val.t2_brain_file)
+    assert os.path.exists(val.t1_brain_file)
+    assert os.path.exists(val.t2_brain_file)
+    assert os.path.exists(val.t1_cropped_file)
+    assert os.path.exists(val.t2_cropped_file)
+    assert os.path.exists(val.t2_coreg_file)
+    assert os.path.exists(val.mask_file)
 
-    #os.remove(val.t1_brain_file)
-    #os.remove(val.t2_brain_file)
+    os.remove(val.t1_brain_file)
+    os.remove(val.t2_brain_file)
+    os.remove(val.t1_cropped_file)
+    os.remove(val.t2_cropped_file)
+    os.remove(val.t2_coreg_file)
+    os.remove(val.mask_file)
 
 test_T1xT2BET_noncropped_mask_cropping()
 
