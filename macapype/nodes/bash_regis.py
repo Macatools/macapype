@@ -597,5 +597,5 @@ class CropVolume(CommandLine):
         if self.inputs.o:
             outfile = self.inputs.o + outfile
 
-        outputs["cropped_file"] = os.path.join(path, outfile +  ".nii.gz")
+        outputs["cropped_file"] = os.path.abspath(outfile +  ".nii.gz")
         return outputs
