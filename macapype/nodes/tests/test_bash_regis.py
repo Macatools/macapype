@@ -34,25 +34,7 @@ t1_brain_file = os.path.join(data_path,
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-def test_T1xT2BET_noncropped():
-
-
-    bet = T1xT2BET()
-
-    bet.inputs.t1_file=non_cropped_t1_file
-    bet.inputs.t2_file=non_cropped_t2_file
-
-    print(bet.cmdline)
-
-    with pytest.raises(FileNotFoundError):
-
-        val = bet.run().outputs
-
-    #with pytest.raises(AssertionError):
-        #assert os.path.exists(val.t2_brain_file)
-
-
-#def test_T1xT2BET_noncropped():
+#def run_T1xT2BET_noncropped():
 
     #bet = T1xT2BET()
 
@@ -73,7 +55,7 @@ def test_T1xT2BET_noncropped():
     #os.remove(val.t2_coreg_file)
 
 
-#def test_T1xT2BET_noncropped_mask():
+#def run_T1xT2BET_noncropped_mask():
 
     #bet = T1xT2BET()
 
@@ -99,7 +81,7 @@ def test_T1xT2BET_noncropped():
     #os.remove(val.mask_file)
 
 
-#def test_T1xT2BET_noncropped_mask_cropping():
+#def run_T1xT2BET_noncropped_mask_cropping():
 
     #bet = T1xT2BET()
 
@@ -128,6 +110,20 @@ def test_T1xT2BET_noncropped():
     #os.remove(val.t2_cropped_file)
     #os.remove(val.t2_coreg_file)
     #os.remove(val.mask_file)
+
+def test_T1xT2BET_noncropped():
+
+
+    bet = T1xT2BET()
+
+    bet.inputs.t1_file=non_cropped_t1_file
+    bet.inputs.t2_file=non_cropped_t2_file
+
+    print(bet.cmdline)
+
+    with pytest.raises(FileNotFoundError):
+
+        val = bet.run().outputs
 
 def test_T1xT2BET():
 
@@ -217,4 +213,72 @@ def test_T1xT2BiasFieldCorrection():
     os.remove(val.t1_debiased_file)
     os.remove(val.t2_debiased_file)
 
+def test_T1xT2BiasFieldCorrection_bet():
 
+    debias = T1xT2BiasFieldCorrection()
+
+    debias.inputs.t1_file=t1_file
+    debias.inputs.t2_file=t2_file
+    debias.inputs.bet = True
+
+    print(debias.cmdline)
+    val = debias.run().outputs
+
+    assert os.path.exists(val.t1_debiased_file)
+    assert os.path.exists(val.t2_debiased_file)
+
+    assert os.path.exists(val.t1_debiased_brain_file)
+    assert os.path.exists(val.t2_debiased_brain_file)
+    assert os.path.exists(val.debiased_mask_file)
+
+    os.remove(val.t1_debiased_file)
+    os.remove(val.t2_debiased_file)
+
+    os.remove(val.t1_debiased_brain_file)
+    os.remove(val.t2_debiased_brain_file)
+
+    os.remove(val.debiased_mask_file)
+
+
+
+def test_T1xT2BiasFieldCorrection_noncropped():
+
+    debias = T1xT2BiasFieldCorrection()
+
+    debias.inputs.t1_file=non_cropped_t1_file
+    debias.inputs.t2_file=non_cropped_t2_file
+
+    print(debias.cmdline)
+    #val = debias.run().outputs
+    with pytest.raises(FileNotFoundError):
+
+        val = debias.run().outputs
+
+#def run_T1xT2BiasFieldCorrection_bet():
+
+    #debias = T1xT2BiasFieldCorrection()
+
+    #debias.inputs.t1_file=non_cropped_t1_file
+    #debias.inputs.t2_file=non_cropped_t2_file
+    #debias.inputs.aT2 = True
+    #debias.inputs.bet = True
+
+    #print(debias.cmdline)
+    #val = debias.run().outputs
+    #print(val)
+
+    #assert os.path.exists(val.t1_debiased_file)
+    #assert os.path.exists(val.t2_debiased_file)
+    #assert os.path.exists(val.t1_debiased_brain_file)
+    #assert os.path.exists(val.t2_debiased_brain_file)
+    #assert os.path.exists(val.t2_coreg_file)
+    #assert os.path.exists(val.debiased_mask_file)
+
+    #os.remove(val.t1_debiased_file)
+    #os.remove(val.t2_debiased_file)
+    #os.remove(val.t1_debiased_brain_file)
+    #os.remove(val.t2_debiased_brain_file)
+    #os.remove(val.t2_coreg_file)
+    #os.remove(val.debiased_mask_file)
+
+#run_T1xT2BiasFieldCorrection_bet()
