@@ -174,26 +174,26 @@ def test_CropVolume():
 
     os.remove(val.cropped_file)
 
-#def test_IterREGBET():
+def test_IterREGBET():
 
-    #reg_bet = IterREGBET()
+    reg_bet = IterREGBET()
 
-    #reg_bet.inputs.inw_file=t1_file
-    #reg_bet.inputs.inb_file=t1_brain_file
-    #reg_bet.inputs.refb_file=nmt_ss_file
+    reg_bet.inputs.inw_file=t1_file
+    reg_bet.inputs.inb_file=t1_brain_file
+    reg_bet.inputs.refb_file=nmt_ss_file
 
-    #print(reg_bet)
+    print(reg_bet)
 
-    #val = reg_bet.run().outputs
-    #print(val)
+    val = reg_bet.run().outputs
+    print(val)
 
-    #assert(val.mask_file)
-    #assert(val.transfo_file)
-    #assert(val.inv_transfo_file)
+    assert(val.mask_file)
+    assert(val.transfo_file)
+    assert(val.inv_transfo_file)
 
-    #os.remove(val.mask_file)
-    #os.remove(val.transfo_file)
-    #os.remove(val.inv_transfo_file)
+    os.remove(val.mask_file)
+    os.remove(val.transfo_file)
+    os.remove(val.inv_transfo_file)
 
 #test_IterREGBET()
 

@@ -1,6 +1,6 @@
 import os
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
-                                    TraitedSpec)
+                                    TraitedSpec, isdefined)
 from nipype.interfaces.fsl.base import (FSLCommand, FSLCommandInputSpec)
 from nipype.interfaces.base import traits, File
 
@@ -382,7 +382,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
 
 
     bs = traits.String(
-        "in_IRbrain", usedefault=True,
+        "_IRbrain", usedefault=True,
         desc="Suffix for the brain files (\"in_IRbrain\" & \"in_IRbrain_mask\"\
             if not specified)",
         position=3, argstr="-bs %s",mandatory=False)
@@ -435,9 +435,17 @@ class IterREGBETInputSpec(CommandLineInputSpec):
 
 
 class IterREGBETOutputSpec(TraitedSpec):
-    mask_file = File(
+    brain_file = File(
+        exists=True,
+        desc="brain from IterREGBET.sh")
+
+    brain_mask_file = File(
         exists=True,
         desc="masked brain from IterREGBET.sh")
+
+    warp_file = File(
+        exists=True,
+        desc="warped image from IterREGBET.sh")
 
     transfo_file= File(
             exists=True,
@@ -505,6 +513,25 @@ Will output a better brain mask of the in-file.
                 #"Error, n {} should be higher than 2".format(value)
 
 
+    def _gen_filename(self, name):
+        if name == "xp":
+            return self._gen_outfilename()
+        else:
+            return None
+
+    def _gen_outfilename(self):
+        from nipype.utils.filemanip import split_filename as split_f
+
+        _, in_brain, _ = split_f(self.inputs.inb_file)
+        _, ref, _ = split_f(self.inputs.refb_file)
+
+        if isdefined(self.inputs.xp):
+            outname = self.inputs.xp
+        else:
+            outname = in_brain + "_FLIRT-to_" + ref
+        return outname
+
+
     def _list_outputs(self):
 
         import os
@@ -514,10 +541,15 @@ Will output a better brain mask of the in-file.
 
         path, fname, ext = split_f(self.inputs.inw_file)
 
-        outfile = self.inputs.xp #+ fname + self.inputs.bs
+        outputs["brain_file"] = os.path.abspath(fname + self.inputs.bs + ".nii.gz")
+        outputs["brain_mask_file"] = os.path.abspath(fname + self.inputs.bs + "_mask.nii.gz")
 
-        #
-        outputs["mask_file"] = os.path.abspath(outfile + ".nii.gz")
+        if isdefined(self.inputs.xp):
+            outfile = self.inputs.xp
+        else:
+            outfile = self._gen_outfilename()
+
+        outputs["warp_file"] = os.path.abspath(outfile + ".nii.gz")
         outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
         outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
         return outputs

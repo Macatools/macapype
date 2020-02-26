@@ -166,7 +166,9 @@ echo $DIR
 # Files
 IN_BRAINname=`extract_base_name $IN_BRAIN`
 IN_WHOLEname=`extract_base_name $IN_WHOLE`
-INpath=`extract_path $IN_BRAIN`
+#INpath=`extract_path $IN_BRAIN`
+INpath=$PWD/
+
 REFname=`extract_base_name $REF_BRAIN`
 if [[ -z $OUT_PREFIX ]]; then
   OUT_PREFIX="${INpath}${IN_BRAINname}_FLIRT-to_${REFname}"
