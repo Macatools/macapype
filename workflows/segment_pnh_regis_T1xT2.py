@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-    PNH anatomical segmentation pipeline given by Regis Trapeau warpped in
+    PNH anatomical segmentation pipeline given by Regis Trapeau wrapped in
     Nipype.
     
     Description
@@ -12,16 +12,15 @@
     -data:
         Path to the BIDS directory that contain subjects' MRI data.
         
-    -resources:
-        Path to the directory that contain resources (FSL/ and NMN_v1.2/).
-        See 'Resources files' paragraph for further informations.
-        
     -out:
         Nipype's processing directory. 
         It's where all the outputs will be saved.
         
     -subjects:
         IDs list of subjects to process.
+
+    -ses
+        session (leave blank if None)
     
     Example
     ---------
@@ -39,8 +38,6 @@
     Requirements
     --------------
     This workflow use:
-        - ANTS
-        - SPM
         - FSL
     
 """
@@ -140,9 +137,6 @@ def create_bids_datasource(data_dir):
     return bids_datasource
 
 ###############################################################################
-#def create_segment_pnh_T1xT2(nmt_file, nmt_ss_file, nmt_mask_file,
-#                              gm_prob_file, wm_prob_file, csf_prob_file,
-#                              name="segment_pnh_subpipes"):
 def create_segment_pnh_T1xT2(name="segment_pnh_subpipes"):
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
@@ -167,6 +161,29 @@ def create_segment_pnh_T1xT2(name="segment_pnh_subpipes"):
 
     return seg_pipe
 
+def create_segment_pnh_T1xT2(name="segment_pnh_subpipes_debias"):
+    # creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1','T2']),
+        name='inputnode'
+    )
+
+    # brain extraction + cropped
+    bet = pe.Node(T1xT2BET(m = True, aT2 = True, c = 10), name='bet')
+
+    seg_pipe.connect(inputnode, 'T1', bet, 't1_file')
+    seg_pipe.connect(inputnode, 'T2', bet, 't2_file')
+
+    # N4 correction
+    debias = pe.Node(T1xT2BiasFieldCorrection(), name='debias')
+
+    seg_pipe.connect(bet, 't1_cropped_file', debias, 't1_file')
+    seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
+
+    return seg_pipe
 
 ###############################################################################
 def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir, 

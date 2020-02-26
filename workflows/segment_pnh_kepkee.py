@@ -1,3 +1,54 @@
+#!/usr/bin/env python3
+"""
+    PNH anatomical segmentation pipeline given by Kepkee Loh wrapped in
+    Nipype.
+
+    Description
+    --------------
+    TODO :/
+
+    Arguments
+    -----------
+    -data:
+        Path to the BIDS directory that contain subjects' MRI data.
+
+    -out:
+        Nipype's processing directory.
+        It's where all the outputs will be saved.
+
+    -subjects:
+        IDs list of subjects to process.
+
+    -ses
+        session (leave blank if None)
+
+    Example
+    ---------
+    python segment_pnh_regis.py -data [PATH_TO_BIDS] -out ../tests/ -subjects Elouk
+
+    Resources files
+    -----------------
+    Brain templates are required to run this segmentation pipeline. Please,
+    download the resources and specify the unzipped directory with the
+    '-resources' argument in the command line.
+    Resources are here:
+    # TODO: find a permanent place
+    https://cloud.int.univ-amu.fr/index.php/s/8bCJ5CWWPfHRyHs
+
+    Requirements
+    --------------
+    This workflow use:
+        - ANTS
+        - AFNI
+        - FSL
+
+"""
+
+# Authors : David Meunier (david.meunier@univ-amu.fr)
+#           Bastien Cagna (bastien.cagna@univ-amu.fr)
+#           Kepkee Loh (kepkee.loh@univ-amu.fr)
+#           Julien Sein (julien.sein@univ-amu.fr)
+
 import os
 import os.path as op
 
