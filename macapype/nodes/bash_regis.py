@@ -215,8 +215,7 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
         mandatory = False)
 
     # as -> opt_as, as is already a part of python keywords...
-    opt_as = traits.Bool(False, usedefault=True,
-         argstr="-as",
+    opt_as = traits.String("-in-T1w", usedefault=True, argstr="-as %s",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
         mandatory = False)
@@ -227,7 +226,7 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
 
     # exists = True ???
     b = traits.File(
-         argstr="-b %s",
+        argstr="-b %s",
         desc="Brain mask file. Will also output bias corrected brain files \
             with the format \"output_prefix_brain.nii.gz\"",
         mandatory = False)
@@ -281,7 +280,14 @@ class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
     t2_coreg_file = File(
         desc="T2 on T1")
 
+    t1_debiased_brain_file = File(
+        desc="debiased bet T1")
 
+    t2_debiased_brain_file = File(
+        desc="debiased bet T2")
+
+    debiased_mask_file = File(
+        desc="debiased bet mask")
 
 class T1xT2BiasFieldCorrection(CommandLine):
     """
@@ -335,15 +341,17 @@ Optional arguments:
         t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
         t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-        t1_fname += self.inputs.os
-        t2_fname += self.inputs.os
-
         # !!!!warning, in Regis bash, only .nii.gz are handled
-        outputs["t1_debiased_file"] = os.path.abspath(t1_fname +  ".nii.gz")
-        outputs["t2_debiased_file"] = os.path.abspath(t2_fname +  ".nii.gz")
+        outputs["t1_debiased_file"] = os.path.abspath(t1_fname + self.inputs.os + ".nii.gz")
+        outputs["t2_debiased_file"] = os.path.abspath(t2_fname + self.inputs.os + ".nii.gz")
 
         if self.inputs.aT2:
-            outputs["t2_coreg_file"] = os.path.abspath(t1_fname +  self.inputs.opt_as + ".nii.gz")
+            outputs["t2_coreg_file"] = os.path.abspath(t2_fname + self.inputs.opt_as + ".nii.gz")
+
+        if self.inputs.bet:
+            outputs["t1_debiased_brain_file"] = os.path.abspath(t1_fname + self.inputs.os + self.inputs.bs + ".nii.gz")
+            outputs["t2_debiased_brain_file"] = os.path.abspath(t2_fname + self.inputs.os + self.inputs.bs + ".nii.gz")
+            outputs["debiased_mask_file"] = os.path.abspath(t1_fname + self.inputs.os + self.inputs.bs + "_mask.nii.gz")
         return outputs
 
 
