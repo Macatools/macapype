@@ -68,16 +68,17 @@ from macapype.nodes.preproc import average_align
 from macapype.nodes.bash_regis import (T1xT2BET, T1xT2BiasFieldCorrection,
                                        IterREGBET)
 
-# from macapype.pipelines.register import create_iterative_register_pipe
-# from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
+from macapype.pipelines.register import create_iterative_register_pipe
+from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
 from macapype.utils.utils_tests import load_test_data
 
 #from macapype.utils.misc import get_first_elem
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-data_inia = "/hpc/crise/meunier.d/Data/Templates/inia19"
+data_inia = "/home/bastien/work/data/templates/inia19"
 inia_brain_file = op.join(data_inia,"inia19-t1-brain.nii")
+
 
 def create_infosource(subject_ids):
     infosource = pe.Node(
@@ -103,6 +104,7 @@ def create_datasource(data_dir, sess):
     datasource.inputs.sort_filelist = True
     
     return datasource
+
 
 def create_bids_datasource(data_dir):
 
@@ -165,17 +167,19 @@ def create_bids_datasource(data_dir):
 
     #return seg_pipe
 
-def create_segment_pnh_T1xT2(name="segment_pnh_subpipes_iterReg"):
-    # creating pipeline
+def create_segment_pnh_T1xT2(nmt_file, nmt_ss_file, nmt_mask_file,
+                             gm_prob_file, wm_prob_file, csf_prob_file,
+                             name="segment_pnh_subpipes_iterReg"):
+    # Creating pipeline
     seg_pipe = pe.Workflow(name=name)
 
-    # creating inputnode
+    # Creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['T1','T2']),
         name='inputnode'
     )
 
-    # brain extraction + cropped
+    # Brain extraction + cropped
     bet = pe.Node(T1xT2BET(m = True, aT2 = True, c = 10), name='bet')
 
     seg_pipe.connect(inputnode, 'T1', bet, 't1_file')
@@ -196,12 +200,53 @@ def create_segment_pnh_T1xT2(name="segment_pnh_subpipes_iterReg"):
     seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
     seg_pipe.connect(reg, 'brain_mask_file', debias, 'b')
 
+    # Register template to anat (need also skullstripped anat)
+    # use iterative flirt
+    iter_reg = create_iterative_register_pipe(
+        template_file=nmt_file,
+        template_brain_file=nmt_ss_file,
+        template_mask_file=nmt_mask_file,
+        gm_prob_file=gm_prob_file,
+        wm_prob_file=wm_prob_file,
+        csf_prob_file=csf_prob_file,
+        n_iter=1
+    )
+
+    seg_pipe.connect(
+        debias, 't1_cropped_file', iter_reg, "inputnode.anat_file_BET"
+    )
+    seg_pipe.connect(
+        debias, 't1_debiased_file', iter_reg, 'inputnode.anat_file'
+    )
+
+    # Compute brain mask using old_segment of SPM and postprocessing on
+    # tissues' masks
+    extract_brain = create_old_segment_extraction_pipe()
+    seg_pipe.connect(
+        debias, 't1_debiased_file',
+        extract_brain, "inputnode.T1"
+    )
+    seg_pipe.connect(
+        iter_reg, 'merge_3_files.list3files',
+        extract_brain, "inputnode.seg_priors"
+    )
+
     return seg_pipe
+
 
 ###############################################################################
 def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir, 
                          nmt_fsl_dir):
     """ """
+    nmt_file = op.join(nmt_dir, "NMT.nii.gz")
+    nmt_ss_file = op.join(nmt_dir, "NMT_SS.nii.gz")
+    nmt_mask_file = op.join(nmt_dir, 'masks', 'anatomical_masks',
+                            'NMT_brainmask.nii.gz')
+
+    gm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_1.nii.gz')
+    wm_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_2.nii.gz')
+    csf_prob_file = op.join(nmt_fsl_dir, 'NMT_SS_pve_3.nii.gz')
+
     main_workflow = pe.Workflow(name="test_pipeline_regis_T1xT2")
     main_workflow.base_dir = process_dir
 
