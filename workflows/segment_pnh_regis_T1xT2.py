@@ -76,7 +76,9 @@ from macapype.utils.utils_tests import load_test_data
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-data_inia = "/hpc/crise/meunier.d/Data/Templates/inia19"
+data_inia = load_test_data("inia19")
+
+#data_inia = "/hpc/crise/meunier.d/Data/Templates/inia19"
 inia_brain_file = op.join(data_inia,"inia19-t1-brain.nii")
 
 def create_infosource(subject_ids):
@@ -202,7 +204,7 @@ def create_segment_pnh_T1xT2(name="segment_pnh_subpipes_iterReg"):
 def create_main_workflow(data_dir, process_dir, subject_ids, sess, nmt_dir, 
                          nmt_fsl_dir):
     """ """
-    main_workflow = pe.Workflow(name="test_pipeline_regis_T1xT2")
+    main_workflow = pe.Workflow(name="test_pipeline_regis_T1xT2_owncloud")
     main_workflow.base_dir = process_dir
 
     # Infosource
