@@ -12,7 +12,8 @@ def load_test_data(name):
     data_dir = {
         "AtlasBREX": "xtffSJfiBqCQZWi", 
         "NMT_v1.2": "8LXLzFAE89x28Lp",
-        "NMT_FSL": "ajAtB7qgaPAmKyJ"
+        "NMT_FSL": "ajAtB7qgaPAmKyJ",
+        "inia19": "WZo9wZdreTMwfQA"
     }
 
     data_dirpath = op.join(op.expanduser("~"), "data")
@@ -40,10 +41,11 @@ def load_test_data(name):
     assert op.exists(data_zip),\
         "Error, data_zip = {} not found ".format(data_zip)
 
-    os.system("unzip -o {} -d {}".format(data_zip, data_dirpath))
+    data_path = op.join(data_dirpath, name)
+
+    os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
 
-    data_path = op.join(data_dirpath, name)
 
     assert op.exists(data_path)
 

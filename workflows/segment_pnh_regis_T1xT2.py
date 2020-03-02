@@ -68,8 +68,8 @@ from macapype.nodes.preproc import average_align
 from macapype.nodes.bash_regis import (T1xT2BET, T1xT2BiasFieldCorrection,
                                        IterREGBET)
 
-from macapype.pipelines.register import create_iterative_register_pipe
-from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
+# from macapype.pipelines.register import create_iterative_register_pipe
+# from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
 from macapype.utils.utils_tests import load_test_data
 
 #from macapype.utils.misc import get_first_elem
@@ -173,13 +173,13 @@ def create_segment_pnh_T1xT2(nmt_file, nmt_ss_file, nmt_mask_file,
     # Creating pipeline
     seg_pipe = pe.Workflow(name=name)
 
-    # Creating inputnode
+    # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['T1','T2']),
         name='inputnode'
     )
 
-    # Brain extraction + cropped
+    # brain extraction + cropped
     bet = pe.Node(T1xT2BET(m = True, aT2 = True, c = 10), name='bet')
 
     seg_pipe.connect(inputnode, 'T1', bet, 't1_file')
