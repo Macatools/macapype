@@ -13,7 +13,6 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.spm as spm
 
-
 from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty #BinaryFillHoles
 from ..nodes.extract_brain import AtlasBREX
 #from ..nodes.extract_brain import apply_atlasBREX
@@ -85,8 +84,9 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
     return brain_extraction_pipe
 
 
-def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
-    """ Extract brain using tissues masks outputed by SPM's old_segment function
+def create_old_segment_extraction_pipe(priors,
+                                       name="old_segment_exctraction_pipe"):
+    """ Extract brain using tissues masks output by SPM's old_segment function
     
     1 - Segment the T1 using given priors;
     2 - Threshold GM, WM and CSF maps;
@@ -95,32 +95,32 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     5 - Fill holes
 
     Inputs
-    ---------
+    ======
     T1: T1 file name
     seg_priors: list of file names
     
     Outputs
-    --------
+    =======
     
     """
     from nipype.interfaces import spm
 
-    # creating pipeline
+    # Creating pipeline
     be_pipe = pe.Workflow(name=name)
 
-    # creating inputnode
+    # Creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'seg_priors']),
+        niu.IdentityInterface(fields=['T1']),
         name='inputnode'
     )
-    
+
     # Segment in to 6 tissues
     segment = pe.Node(spm.Segment(), name="old_segment")
     segment.inputs.gm_output_type = [False,False,True]
     segment.inputs.wm_output_type = [False,False,True]
     segment.inputs.csf_output_type = [False,False,True]
+    segment.tissue_prob_maps = priors
     be_pipe.connect(inputnode, 'T1', segment, 'data')
-    be_pipe.connect(inputnode, 'seg_priors', segment, 'tissue_prob_maps')
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
@@ -186,4 +186,3 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
     
     return be_pipe
-

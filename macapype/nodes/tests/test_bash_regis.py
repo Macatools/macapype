@@ -1,38 +1,29 @@
 import os
 import pytest
+
 from macapype.utils.utils_tests import load_test_data
+from macapype.nodes.bash_regis import (T1xT2BET, CropVolume, IterREGBET,
+                                       T1xT2BiasFieldCorrection)
+
+# Necessary for Regis use of FSL with .nii.gz by default
+import nipype.interfaces.fsl as fsl
+
+
+fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 nmt_dir = load_test_data("NMT_v1.2")
 nmt_ss_file = os.path.join(nmt_dir,"NMT_SS.nii.gz")
 
-
-from macapype.nodes.bash_regis import (T1xT2BET, CropVolume, IterREGBET,
-                                       T1xT2BiasFieldCorrection)
-
 data_path = "/hpc/crise/meunier.d/Data/Primavoice/data_test"
+non_cropped_t1_file = os.path.join(
+    data_path, "non_cropped", "sub-Apache_ses-01_T1w.nii")
+non_cropped_t2_file = os.path.join(
+    data_path, "non_cropped","sub-Apache_ses-01_T2w.nii")
+t1_file = os.path.join(data_path, "sub-Apache_ses-01_T1w.nii")
+t2_file = os.path.join(data_path, "sub-Apache_ses-01_T2w.nii")
+mask_file = os.path.join(data_path, "sub-Apache_ses-01_T1w_mask.nii.gz")
+t1_brain_file = os.path.join(data_path, "sub-Apache_ses-01_T1w_SS.nii.gz")
 
-
-non_cropped_t1_file = os.path.join(data_path,
-                                   "non_cropped", "sub-Apache_ses-01_T1w.nii")
-
-non_cropped_t2_file = os.path.join(data_path,
-                                   "non_cropped","sub-Apache_ses-01_T2w.nii")
-
-t1_file = os.path.join(data_path,
-                       "sub-Apache_ses-01_T1w.nii")
-
-t2_file = os.path.join(data_path,
-                       "sub-Apache_ses-01_T2w.nii")
-
-mask_file = os.path.join(data_path,
-                       "sub-Apache_ses-01_T1w_mask.nii.gz")
-
-t1_brain_file = os.path.join(data_path,
-                       "sub-Apache_ses-01_T1w_SS.nii.gz")
-
-# necesaary for Regis use of FSL with .nii.gz by default
-import nipype.interfaces.fsl as fsl
-fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 #def run_T1xT2BET_noncropped():
 
@@ -111,9 +102,8 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
     #os.remove(val.t2_coreg_file)
     #os.remove(val.mask_file)
 
+
 def test_T1xT2BET_noncropped():
-
-
     bet = T1xT2BET()
 
     bet.inputs.t1_file=non_cropped_t1_file
@@ -125,8 +115,8 @@ def test_T1xT2BET_noncropped():
 
         val = bet.run().outputs
 
-def test_T1xT2BET():
 
+def test_T1xT2BET():
     bet = T1xT2BET()
 
     bet.inputs.t1_file=t1_file
@@ -143,7 +133,6 @@ def test_T1xT2BET():
 
 
 def test_T1xT2BET_mask():
-
     bet = T1xT2BET()
 
     bet.inputs.t1_file=t1_file
@@ -161,8 +150,8 @@ def test_T1xT2BET_mask():
     os.remove(val.t2_brain_file)
     os.remove(val.mask_file)
 
-def test_CropVolume():
 
+def test_CropVolume():
     crop = CropVolume()
 
     crop.inputs.i_file=t1_file
@@ -174,8 +163,8 @@ def test_CropVolume():
 
     os.remove(val.cropped_file)
 
-def test_IterREGBET():
 
+def test_IterREGBET():
     reg_bet = IterREGBET()
 
     reg_bet.inputs.inw_file=t1_file
@@ -197,8 +186,8 @@ def test_IterREGBET():
 
 #test_IterREGBET()
 
-def test_T1xT2BiasFieldCorrection():
 
+def test_T1xT2BiasFieldCorrection():
     debias = T1xT2BiasFieldCorrection()
 
     debias.inputs.t1_file=t1_file
@@ -213,8 +202,8 @@ def test_T1xT2BiasFieldCorrection():
     os.remove(val.t1_debiased_file)
     os.remove(val.t2_debiased_file)
 
-def test_T1xT2BiasFieldCorrection_bet():
 
+def test_T1xT2BiasFieldCorrection_bet():
     debias = T1xT2BiasFieldCorrection()
 
     debias.inputs.t1_file=t1_file
@@ -240,9 +229,7 @@ def test_T1xT2BiasFieldCorrection_bet():
     os.remove(val.debiased_mask_file)
 
 
-
 def test_T1xT2BiasFieldCorrection_noncropped():
-
     debias = T1xT2BiasFieldCorrection()
 
     debias.inputs.t1_file=non_cropped_t1_file

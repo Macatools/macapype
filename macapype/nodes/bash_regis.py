@@ -98,7 +98,6 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         #argstr="-p %s")
 
 
-
 class T1xT2BETOutputSpec(TraitedSpec):
     t1_brain_file = File(
         exists=True,
@@ -119,6 +118,7 @@ class T1xT2BETOutputSpec(TraitedSpec):
 
     t2_cropped_file = File(
         desc="extracted cropped brain from T2")
+
 
 class T1xT2BET(FSLCommand):
     """

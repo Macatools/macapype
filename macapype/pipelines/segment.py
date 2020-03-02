@@ -23,8 +23,7 @@ from .correct_bias import create_masked_correct_bias_pipe
 from .register import create_register_NMT_pipe
 
 
-def create_full_segment_pipe(sigma, nmt_dir,
-                             name="full_segment_pipe"):
+def create_full_segment_pipe(sigma, nmt_dir, name="full_segment_pipe"):
 
     # creating pipeline
     brain_segment_pipe = pe.Workflow(name=name)
@@ -131,7 +130,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                                seg_at, "brainmask_file")
 
-    #TODO ## was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
+    #TODO: was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
     segment_pipe.connect(inputnode, 'csf_prior_file', seg_at, "ex_prior1")
     segment_pipe.connect(inputnode, 'gm_prior_file', seg_at, "ex_prior2")
     segment_pipe.connect(inputnode, 'wm_prior_file', seg_at, "ex_prior3")
@@ -139,7 +138,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     return segment_pipe
 
 
-
+# TODO: remove it?
 # Previous version of Kepkee's pipeline
 # 04/2019 - NMT_align subj -> NMT, then Atropos, and alignement of result back in subject space
 """
