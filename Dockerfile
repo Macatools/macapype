@@ -172,7 +172,8 @@ RUN pip3 install nipype
 RUN pip3 install graphviz
 RUN apt-get -y install graphviz
 
-
+# with bids layout
+RUN pip3 install pybids
 
 ############################################# install macapype
 ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
