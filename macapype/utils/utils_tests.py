@@ -10,16 +10,16 @@ def load_test_data(name):
     """ Load test data, template and needed scripts """
 
     data_dir = {
-        "AtlasBREX": "xtffSJfiBqCQZWi", 
+        "AtlasBREX": "xtffSJfiBqCQZWi",
         "NMT_v1.2": "8LXLzFAE89x28Lp",
         "NMT_FSL": "ajAtB7qgaPAmKyJ"
     }
 
     data_dirpath = op.join(op.expanduser("~"), "data")
-    
+
     try:
         makedirs(data_dirpath)
-    except:
+    except OSError:
         print("data_dirpath {} already exists".format(data_dirpath))
 
     data_path = op.join(data_dirpath, name)
@@ -48,4 +48,3 @@ def load_test_data(name):
     assert op.exists(data_path)
 
     return data_path
-

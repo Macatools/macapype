@@ -3,6 +3,7 @@ from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File
 
+
 class T1xT2BETInputSpec(CommandLineInputSpec):
 
     t1_file = File(
@@ -18,36 +19,40 @@ class T1xT2BETInputSpec(CommandLineInputSpec):
     os = traits.String(
         "_BET", usedefault=True,
         desc="Suffix for the brain masked images (default is _BET)",
-        position=2, argstr="-os %s",mandatory=True)
+        position=2, argstr="-os %s", mandatory=True)
 
-    aT2 = traits.Bool(True, usedefault = True,
+    aT2 = traits.Bool(
+        True, usedefault=True,
         position=3, argstr="-aT2",
         desc="Will coregrister T2w to T1w using flirt. Output will have the\
             suffix provided. Will only work for spatially close images.",
-        mandatory = False)
+        mandatory=False)
 
     # as -> opt_as, as is already a part of python keywords...
-    opt_as = traits.Bool(False, usedefault=True,
+    opt_as = traits.Bool(
+        False, usedefault=True,
         position=3, argstr="-as",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
-        mandatory = False)
+        mandatory=False)
 
-    n = traits.Int(1, usedefault=True,
+    n = traits.Int(
+        1, usedefault=True,
         desc='n = the number of iterations BET will be run to find center of \
             gravity (n=1 if option -n is absent)',
         position=3, argstr="-n %d", mandatory=True)
 
-    m = traits.Bool(False, usedefault=True,
+    m = traits.Bool(
+        False, usedefault=True,
         position=3, argstr="-m",
         desc="Will output the BET mask at the format \
             output_prefixT1_mask.nii.gz)",
-        mandatory = True)
+        mandatory=True)
 
     ms = traits.String(
         "_mask", usedefault=True,
         desc="Suffix for the mask (default is _mask)",
-        position=3, argstr="-ms %s",mandatory=True)
+        position=3, argstr="-ms %s", mandatory=True)
 
     c = traits.Int(
         desc='Will crop the inputs & outputs after brain extraction. c is the \
@@ -61,7 +66,7 @@ class T1xT2BETInputSpec(CommandLineInputSpec):
     cs = traits.String(
         "_cropped", usedefault=True,
         desc="Suffix for the cropped images (default is _cropped)",
-        position=3, argstr="-cs %s",mandatory=False)
+        position=3, argstr="-cs %s", mandatory=False)
 
     f = traits.Float(
         0.5, usedefault=True,
@@ -81,11 +86,11 @@ class T1xT2BETInputSpec(CommandLineInputSpec):
             gravity. Only one iteration will be performed.',
         position=3, argstr="-cog %d %d %d", mandatory=False)
 
-
-    k = traits.Bool(False, usedefault=True,
+    k = traits.Bool(
+        False, usedefault=True,
         position=3, argstr="-k",
         desc="Will keep temporary files",
-        mandatory = True)
+        mandatory=True)
 
     p = traits.String(
         desc="Prefix for running FSL functions\
@@ -127,13 +132,10 @@ class T1xT2BET(CommandLine):
 
         path, fname, ext = split_f(self.inputs.t1_file)
 
-        outfile = fname
-
         fname = fname + self.inputs.os
 
         if self.inputs.c:
             fname = fname + self.inputs.cs
 
-        outputs["brain_file"] = os.path.abspath(fname +  ext)
+        outputs["brain_file"] = os.path.abspath(fname + ext)
         return outputs
-
