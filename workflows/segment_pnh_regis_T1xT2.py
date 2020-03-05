@@ -24,7 +24,7 @@
     
     Example
     ---------
-    python segment_pnh_regis.py -data [PATH_TO_BIDS] -out ../tests/ -subjects Elouk
+    python segment_pnh_regis_T1xT2.py -data /home/bastien/work/data/local_primavoice -out /home/bastien/work/projects/macapype/local_tests -template /home/bastien/work/data/templates/inia19/inia19-t1-brain.nii -priors /home/bastien/work/data/templates/inia19/inia19-prob_0.nii /home/bastien/work/data/templates/inia19/inia19-prob_1.nii /home/bastien/work/data/templates/inia19/inia19-prob_2.nii -ses 01 -sub Maga
     
     Resources files
     -----------------
@@ -68,6 +68,16 @@ from macapype.utils.utils_tests import load_test_data
 
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
+
+
+def gunzip(filename):
+    import subprocess
+
+    if filename[-3:] == ".gz":
+        subprocess.check_output("gunzip " + filename, shell=True)
+    else:
+        ValueError("Non GZip file given")
+    return filename[:-3]
 
 
 def format_spm_priors(priors, fname="merged_tissue_priors.nii",
@@ -216,7 +226,7 @@ def create_bids_datasource(data_dir):
     }
 
     layout = BIDSLayout(data_dir)
-    print (layout)
+    print(layout)
     print(layout.get_subjects())
     print(layout.get_sessions())
 
@@ -238,7 +248,7 @@ def create_bids_datasource(data_dir):
 
 
 def create_segment_pnh_T1xT2(brain_template, priors,
-                             name='segment_pnh_subpipes_iterReg'):
+                             name='T1xT2_segmentation_pipeline'):
     print(brain_template)
     print(priors)
     print("node name: ", name)
@@ -252,27 +262,28 @@ def create_segment_pnh_T1xT2(brain_template, priors,
         name='inputnode'
     )
 
-    # Brain extraction + cropping
+    # Brain extraction (unused) + Cropping
     bet = pe.Node(T1xT2BET(m=True, aT2=True, c=10), name='bet')
+    bet.n = 2
     seg_pipe.connect(inputnode, 'T1', bet, 't1_file')
     seg_pipe.connect(inputnode, 'T2', bet, 't2_file')
+
+    # Bias correction of cropped images
+    debias = pe.Node(T1xT2BiasFieldCorrection(), name='debias')
+    seg_pipe.connect(bet, 't1_cropped_file', debias, 't1_file')
+    seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
+    seg_pipe.connect(bet, 'mask_file', debias, 'b')
 
     # Iterative registration to the INIA19 template
     reg = pe.Node(IterREGBET(), name='reg')
     reg.inputs.refb_file = brain_template
-    seg_pipe.connect(bet, 't1_cropped_file', reg, 'inb_file')
-    seg_pipe.connect(bet, 't1_brain_file', reg, 'inw_file')
-
-    # Bias correction (N4)
-    debias = pe.Node(T1xT2BiasFieldCorrection(), name='debias')
-    seg_pipe.connect(bet, 't1_cropped_file', debias, 't1_file')
-    seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
-    seg_pipe.connect(reg, 'brain_mask_file', debias, 'b')
+    seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
+    seg_pipe.connect(debias, 't1_debiased_brain_file', reg, 'inb_file')
 
     # Compute brain mask using old_segment of SPM and postprocessing on
     # tissues' masks
     extract_brain = create_old_segment_extraction_pipe(priors)
-    seg_pipe.connect(debias, 't1_debiased_file', extract_brain, 'inputnode.T1')
+    seg_pipe.connect(reg, ('warp_file', gunzip), extract_brain, 'inputnode.T1')
 
     return seg_pipe
 
@@ -281,7 +292,7 @@ def create_segment_pnh_T1xT2(brain_template, priors,
 def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
                          acquisitions, template, priors):
     """ """
-    main_workflow = pe.Workflow(name="T1xT2_segmentation")
+    main_workflow = pe.Workflow(name="T1xT2_processing_workflow")
     main_workflow.base_dir = process_dir
 
     # # Infosource
@@ -352,13 +363,19 @@ if __name__ == '__main__':
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=False)
     parser.add_argument("-template", dest="template", type=str,
-                        help="Anatomical template")
+                        default=None, help="Anatomical template")
     parser.add_argument("-priors", dest="priors", type=str, nargs='+',
-                        help="Tissues probability maps")
+                        default=None, help="Tissues probability maps")
     args = parser.parse_args()
 
-    # nmt_dir = load_test_data("NMT_v1.2")
-    # nmt_fsl_dir = load_test_data("NMT_FSL")
+    if args.template is None and args.priors is None:
+        inia_dir = load_test_data("inia19")
+        args.template = op.join(inia_dir, "inia19-t1-brain.nii")
+        args.priors = [
+            op.join(inia_dir, "inia19-prob_1.nii"),
+            op.join(inia_dir, "inia19-prob_2.nii"),
+            op.join(inia_dir, "inia19-prob_0.nii")
+        ]
     
     main(
         data_path=args.data,
@@ -369,3 +386,4 @@ if __name__ == '__main__':
         template=args.template,
         priors=args.priors if len(args.priors) > 1 else args.priors[0]
     )
+
