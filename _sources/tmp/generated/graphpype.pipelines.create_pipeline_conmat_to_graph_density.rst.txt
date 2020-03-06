@@ -1,0 +1,6 @@
+graphpype.pipelines.create\_pipeline\_conmat\_to\_graph\_density
+================================================================
+
+.. currentmodule:: graphpype.pipelines
+
+.. autofunction:: create_pipeline_conmat_to_graph_density

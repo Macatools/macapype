@@ -1,0 +1,6 @@
+graphpype.utils\_stats.compute\_pairwise\_oneway\_ttest\_fdr
+============================================================
+
+.. currentmodule:: graphpype.utils_stats
+
+.. autofunction:: compute_pairwise_oneway_ttest_fdr

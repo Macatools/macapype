@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>graphpype.nodes.graph_stats &#8212; macapype 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../tutorial.html">Tutorial</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for graphpype.nodes.graph_stats</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Preparing, computing stats and permutations</span>
+<span class="sd">author:: David Meunier &lt;david_meunier_79@univ-amu.fr&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">iter</span>
+
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">BaseInterface</span><span class="p">,</span> \
+    <span class="n">BaseInterfaceInputSpec</span><span class="p">,</span> <span class="n">traits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">TraitedSpec</span><span class="p">,</span> <span class="n">isdefined</span>
+
+
+<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+
+<span class="kn">import</span> <span class="nn">graphpype.utils_stats</span> <span class="k">as</span> <span class="nn">stats</span>
+
+<span class="kn">from</span> <span class="nn">graphpype.utils_cor</span> <span class="kn">import</span> <span class="p">(</span><span class="n">return_corres_correl_mat</span><span class="p">,</span>
+                                 <span class="n">return_corres_correl_mat_labels</span><span class="p">)</span>
+
+
+<span class="c1"># StatsPairBinomial</span>
+
+
+<span class="k">class</span> <span class="nc">StatsPairBinomialInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">group_coclass_matrix_file1</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;file of group 1 coclass matrices in npy format&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">group_coclass_matrix_file2</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;file of group 2 coclass matrices in npy format&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">conf_interval_binom_fdr</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span>
+        <span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Alpha value used as FDR implementation&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">StatsPairBinomialOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">signif_signed_adj_fdr_mat_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;int matrix with corresponding codes to significance&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">StatsPairBinomial</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;      &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">StatsPairBinomialInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">StatsPairBinomialOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">group_coclass_matrix_file1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">group_coclass_matrix_file1</span>
+        <span class="n">group_coclass_matrix_file2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">group_coclass_matrix_file2</span>
+        <span class="n">conf_interval_binom_fdr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">conf_interval_binom_fdr</span>
+
+        <span class="c1"># loading group_coclass_matrix1</span>
+        <span class="n">group_coclass_matrix1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">group_coclass_matrix_file1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">group_coclass_matrix1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># loading group_coclass_matrix2</span>
+        <span class="n">group_coclass_matrix2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">group_coclass_matrix_file2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">group_coclass_matrix2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># check input matrices</span>
+        <span class="c1"># TODO checks are not done in compute_pairwise_binom_fdr already?</span>
+        <span class="n">Ix</span><span class="p">,</span> <span class="n">Jx</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">group_coclass_matrix1</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">Iy</span><span class="p">,</span> <span class="n">Jy</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">group_coclass_matrix2</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">assert</span> <span class="n">Ix</span> <span class="o">==</span> <span class="n">Iy</span>
+        <span class="k">assert</span> <span class="n">Jx</span> <span class="o">==</span> <span class="n">Jy</span>
+        <span class="k">assert</span> <span class="n">Ix</span> <span class="o">==</span> <span class="n">Jx</span>
+        <span class="k">assert</span> <span class="n">Iy</span> <span class="o">==</span> <span class="n">Jy</span>
+
+        <span class="n">signif_signed_adj_mat</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">compute_pairwise_binom_fdr</span><span class="p">(</span>
+            <span class="n">group_coclass_matrix1</span><span class="p">,</span> <span class="n">group_coclass_matrix2</span><span class="p">,</span>
+            <span class="n">conf_interval_binom_fdr</span><span class="p">)</span>
+
+        <span class="c1"># save pairwise signed stat file</span>
+        <span class="n">signif_signed_adj_fdr_mat_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="s1">&#39;signif_signed_adj_fdr_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">conf_interval_binom_fdr</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.npy&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">signif_signed_adj_fdr_mat_file</span><span class="p">,</span> <span class="n">signif_signed_adj_mat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;signif_signed_adj_fdr_mat_file&quot;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;signif_signed_adj_fdr_</span><span class="si">{}</span><span class="s1">.npy&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">conf_interval_binom_fdr</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="c1"># StatsPairTTest</span>
+
+
+<span class="k">class</span> <span class="nc">StatsPairTTestInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">group_cormat_file1</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;file of group 1 cormat matrices in npy format&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">group_cormat_file2</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;file of group 2 cormat matrices in npy format&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">t_test_thresh_fdr</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span>
+        <span class="mf">0.05</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Alpha value used as FDR implementation&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">paired</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Ttest is paired or not&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">StatsPairTTestOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">signif_signed_adj_fdr_mat_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;int matrix with corresponding codes to significance&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="StatsPairTTest"><a class="viewcode-back" href="../../../tmp/generated/graphpype.nodes.graph_stats.StatsPairTTest.html#graphpype.nodes.graph_stats.StatsPairTTest">[docs]</a><span class="k">class</span> <span class="nc">StatsPairTTest</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute ttest stats between 2 group of matrix</span>
+<span class="sd">    - matrix are arranged in group_cormat, with order (Nx,Ny,Nsubj).</span>
+<span class="sd">    Nx = Ny (each matricx is square)</span>
+<span class="sd">    - t_test_thresh_fdr is optional (default, 0.05)</span>
+<span class="sd">    - paired in indicate if ttest is pairde or not.</span>
+<span class="sd">    If paired, both group have the same number of samples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">StatsPairTTestInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">StatsPairTTestOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in plot_cormat&#39;</span><span class="p">)</span>
+
+        <span class="n">group_cormat_file1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">group_cormat_file1</span>
+        <span class="n">group_cormat_file2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">group_cormat_file2</span>
+        <span class="n">t_test_thresh_fdr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">t_test_thresh_fdr</span>
+
+        <span class="n">paired</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">paired</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;loading group_cormat1&quot;</span><span class="p">)</span>
+
+        <span class="n">group_cormat1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">group_cormat_file1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">group_cormat1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;loading group_cormat2&quot;</span><span class="p">)</span>
+
+        <span class="n">group_cormat2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">group_cormat_file2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">group_cormat2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;compute NBS stats&quot;</span><span class="p">)</span>
+
+        <span class="c1"># check input matrices</span>
+        <span class="n">Ix</span><span class="p">,</span> <span class="n">Jx</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">group_cormat1</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">Iy</span><span class="p">,</span> <span class="n">Jy</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">group_cormat2</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">assert</span> <span class="n">Ix</span> <span class="o">==</span> <span class="n">Iy</span>
+        <span class="k">assert</span> <span class="n">Jx</span> <span class="o">==</span> <span class="n">Jy</span>
+        <span class="k">assert</span> <span class="n">Ix</span> <span class="o">==</span> <span class="n">Jx</span>
+        <span class="k">assert</span> <span class="n">Iy</span> <span class="o">==</span> <span class="n">Jy</span>
+
+        <span class="c1"># TODO checks are not done in compute_pairwise_ttest_fdr already?</span>
+        <span class="n">signif_signed_adj_mat</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">compute_pairwise_ttest_fdr</span><span class="p">(</span>
+            <span class="n">group_cormat1</span><span class="p">,</span> <span class="n">group_cormat2</span><span class="p">,</span> <span class="n">t_test_thresh_fdr</span><span class="p">,</span> <span class="n">paired</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;save pairwise signed stat file&#39;</span><span class="p">)</span>
+
+        <span class="n">signif_signed_adj_fdr_mat_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="s1">&#39;signif_signed_adj_fdr_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">t_test_thresh_fdr</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.npy&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">signif_signed_adj_fdr_mat_file</span><span class="p">,</span> <span class="n">signif_signed_adj_mat</span><span class="p">)</span>
+
+        <span class="c1"># return signif_signed_adj_fdr_mat_file</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;signif_signed_adj_fdr_mat_file&quot;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;signif_signed_adj_fdr_</span><span class="si">{}</span><span class="s1">.npy&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">t_test_thresh_fdr</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+
+<span class="c1"># PrepareCormat</span>
+
+
+<span class="k">class</span> <span class="nc">PrepareCormatInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">cor_mat_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of all correlation matrice files (in npy format) for each </span><span class="se">\</span>
+<span class="s1">            subject&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">coords_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of all coordinates in numpy space files (in txt format) </span><span class="se">\</span>
+<span class="s1">            for each subject&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">xor</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;labels_files&#39;</span><span class="p">])</span>
+
+    <span class="n">labels_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of labels (in txt format) for each subject&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xor</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;coords_files&#39;</span><span class="p">])</span>
+
+    <span class="n">gm_mask_coords_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Coordinates in numpy space, corresponding to all possible nodes</span><span class="se">\</span>
+<span class="s1">            in the original space&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">xor</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gm_mask_labels_file&#39;</span><span class="p">])</span>
+
+    <span class="n">gm_mask_labels_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Labels for all possible nodes - in case coords are varying from</span><span class="se">\</span>
+<span class="s1">            one indiv to the other&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xor</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gm_mask_coords_file&#39;</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">PrepareCormatOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">group_cormat_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;all cormat matrices of the group in .npy (pickle format)&quot;</span><span class="p">)</span>
+
+    <span class="n">avg_cormat_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;average of cormat matrix of the group in .npy (pickle format)&quot;</span><span class="p">)</span>
+
+    <span class="n">group_vect_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;degree by nodes * indiv of the group in .npy (pickleformat)&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PrepareCormat"><a class="viewcode-back" href="../../../tmp/generated/graphpype.nodes.graph_stats.PrepareCormat.html#graphpype.nodes.graph_stats.PrepareCormat">[docs]</a><span class="k">class</span> <span class="nc">PrepareCormat</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average correlation matrices, within a common reference</span>
+<span class="sd">    (based on labels, or coordinates)</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        cor_mat_files:</span>
+<span class="sd">            type = List of File, (exists=True),</span>
+<span class="sd">            desc=&#39;list of all correlation matrice files (in npy format) for</span>
+<span class="sd">            each subject&#39;, mandatory=True</span>
+
+<span class="sd">        coords_files:</span>
+<span class="sd">            type = List of File, (exists=True),</span>
+<span class="sd">            desc=&#39;list of all coordinates in numpy space files</span>
+<span class="sd">            for each subject&#39;, mandatory=True, xor = [&#39;labels_files&#39;]</span>
+
+<span class="sd">        labels_files:</span>
+<span class="sd">             type = List of File,  (exists=True),</span>
+<span class="sd">            desc=&#39;list of labels (in txt format) for each subject&#39;,</span>
+<span class="sd">            mandatory=True, xor = [&#39;coords_files&#39;])</span>
+
+<span class="sd">        gm_mask_coords_file:</span>
+<span class="sd">            type = File(exists=True,</span>
+<span class="sd">            desc=&#39;Coordinates in numpy space, corresponding to all possible</span>
+<span class="sd">            nodes in the original space&#39;,</span>
+<span class="sd">            mandatory=False, xor = [&#39;gm_mask_labels_file&#39;])</span>
+
+<span class="sd">        gm_mask_labels_file :</span>
+<span class="sd">            type = File, (exists=True),</span>
+<span class="sd">            desc=&#39;Labels for all possible nodes - in case coords are varying</span>
+<span class="sd">            from one indiv to the other (source space for example)&#39;,</span>
+<span class="sd">            mandatory=False, xor = [&#39;gm_mask_coords_file&#39;])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">PrepareCormatInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">PrepareCormatOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_prep_coords_cormat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cor_mat_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cor_mat_files</span>
+        <span class="n">nb_cormats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">)</span>
+
+        <span class="n">coords_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">coords_files</span>
+        <span class="n">gm_mask_coords_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_mask_coords_file</span>
+
+        <span class="c1"># loading gm mask corres</span>
+        <span class="n">gm_mask_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">gm_mask_coords_file</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+        <span class="n">nb_nodes</span> <span class="o">=</span> <span class="n">gm_mask_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># defining return matrices</span>
+        <span class="n">sum_cormat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_nodes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">group_cormat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_cormats</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">group_vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_cormats</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">nb_cormats</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords_files</span><span class="p">),</span> \
+            <span class="p">(</span><span class="s2">&quot;Error, nb_cormats and coords_files are imcompatible </span><span class="si">{}</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">             </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nb_cormats</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords_files</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">index_file</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_cormats</span><span class="p">):</span>
+
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])</span>
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">coords_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])</span>
+
+            <span class="n">Z_cor_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">Z_cor_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span>
+                <span class="n">coords_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+            <span class="n">corres_cor_mat</span><span class="p">,</span> <span class="n">possible_edge_mat</span> <span class="o">=</span> \
+                <span class="n">return_corres_correl_mat</span><span class="p">(</span><span class="n">Z_cor_mat</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">gm_mask_coords</span><span class="p">)</span>
+
+            <span class="n">corres_cor_mat</span> <span class="o">=</span> <span class="n">corres_cor_mat</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">corres_cor_mat</span><span class="p">)</span>
+
+            <span class="n">sum_cormat</span> <span class="o">+=</span> <span class="n">corres_cor_mat</span>
+
+            <span class="n">group_cormat</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">corres_cor_mat</span>
+
+            <span class="n">group_vect</span><span class="p">[:,</span> <span class="n">index_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">corres_cor_mat</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sum_cormat</span><span class="p">,</span> <span class="n">group_cormat</span><span class="p">,</span> <span class="n">group_vect</span>
+
+    <span class="k">def</span> <span class="nf">_prep_labels_cormat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">cor_mat_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cor_mat_files</span>
+
+        <span class="n">nb_cormats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">)</span>
+
+        <span class="n">labels_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">labels_files</span>
+        <span class="n">gm_mask_labels_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_mask_labels_file</span>
+
+        <span class="c1"># loading gm mask labels</span>
+        <span class="n">gm_mask_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">gm_mask_labels_file</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+
+        <span class="n">nb_nodes</span> <span class="o">=</span> <span class="n">gm_mask_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># defining return matrices</span>
+        <span class="n">sum_cormat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_nodes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="n">group_cormat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_nodes</span><span class="p">,</span> <span class="n">nb_cormats</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="n">group_vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_nodes</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">nb_cormats</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_files</span><span class="p">),</span> \
+            <span class="p">(</span><span class="s2">&quot;Error, length of cor_mat_files, labels_files are imcompatible </span><span class="si">{}</span><span class="se">\</span>
+<span class="s2">             </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nb_cormats</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_files</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">index_file</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">)):</span>
+
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])</span>
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">labels_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])</span>
+
+            <span class="n">Z_cor_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])</span>
+
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span>
+                <span class="n">labels_files</span><span class="p">[</span><span class="n">index_file</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+
+            <span class="n">corres_cor_mat</span><span class="p">,</span> <span class="n">possible_edge_mat</span> <span class="o">=</span> \
+                <span class="n">return_corres_correl_mat_labels</span><span class="p">(</span><span class="n">Z_cor_mat</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span>
+                                                <span class="n">gm_mask_labels</span><span class="p">)</span>
+
+            <span class="n">corres_cor_mat</span> <span class="o">=</span> <span class="n">corres_cor_mat</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">corres_cor_mat</span><span class="p">)</span>
+
+            <span class="n">sum_cormat</span> <span class="o">+=</span> <span class="n">corres_cor_mat</span>
+
+            <span class="n">group_cormat</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">index_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">corres_cor_mat</span>
+
+            <span class="n">group_vect</span><span class="p">[:,</span> <span class="n">index_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">corres_cor_mat</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sum_cormat</span><span class="p">,</span> <span class="n">group_cormat</span><span class="p">,</span> <span class="n">group_vect</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">cor_mat_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cor_mat_files</span>
+
+        <span class="k">if</span> <span class="n">isdefined</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_mask_coords_file</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="n">isdefined</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">coords_files</span><span class="p">):</span>
+
+            <span class="n">sum_cormat</span><span class="p">,</span> <span class="n">group_cormat</span><span class="p">,</span> <span class="n">group_vect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prep_coords_cormat</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">isdefined</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_mask_labels_file</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="n">isdefined</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">labels_files</span><span class="p">):</span>
+
+            <span class="n">sum_cormat</span><span class="p">,</span> <span class="n">group_cormat</span><span class="p">,</span> <span class="n">group_vect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prep_labels_cormat</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, neither coords nor labels are defined properly&quot;</span><span class="p">)</span>
+
+        <span class="n">group_cormat_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;group_cormat.npy&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">group_cormat_file</span><span class="p">,</span> <span class="n">group_cormat</span><span class="p">)</span>
+
+        <span class="n">group_vect_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;group_vect.npy&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">group_vect_file</span><span class="p">,</span> <span class="n">group_vect</span><span class="p">)</span>
+
+        <span class="c1"># saving cor_mat matrix</span>
+        <span class="n">avg_cormat_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;avg_cormat.npy&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">avg_cormat</span> <span class="o">=</span> <span class="n">sum_cormat</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cor_mat_files</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">avg_cormat_file</span><span class="p">,</span> <span class="n">avg_cormat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;group_cormat_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;group_cormat.npy&#39;</span><span class="p">)</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;avg_cormat_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;avg_cormat.npy&#39;</span><span class="p">)</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;group_vect_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;group_vect.npy&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+<span class="c1"># SwapLists</span>
+
+
+<span class="k">class</span> <span class="nc">SwapListsInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">list_of_lists</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">))),</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of all correlation matrice files for each subject&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">unbalanced</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;value for seed&#39;</span><span class="p">,</span>
+                      <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SwapListsOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">permut_lists_of_lists</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">))),</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;swapped list of all correlation matrice files for each subject&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SwapLists"><a class="viewcode-back" href="../../../tmp/generated/graphpype.nodes.graph_stats.SwapLists.html#graphpype.nodes.graph_stats.SwapLists">[docs]</a><span class="k">class</span> <span class="nc">SwapLists</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exchange lists of files in a random fashion (based on seed value)</span>
+<span class="sd">    Typically, cor_mat, coords -&gt; 2, or Z_list, node_corres and labels -&gt; 3</span>
+
+<span class="sd">    If seed = -1, no swap is done (keep original values)</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        list_of_lists:</span>
+<span class="sd">            type = List of List of  List of Files,</span>
+<span class="sd">            exists=True,</span>
+<span class="sd">            desc=&#39;list of all correlation matrice files (in npy format) for</span>
+<span class="sd">            each subject&#39;,</span>
+<span class="sd">            mandatory=True</span>
+
+<span class="sd">        seed:</span>
+<span class="sd">            type = Int, default = -1, desc=&#39;value for seed&#39;, mandatory=True,</span>
+<span class="sd">            usedefault = True</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        permut_lists_of_lists:</span>
+<span class="sd">            type = List of  List of List of Files ,exists=True,</span>
+<span class="sd">            desc=&#39;swapped list of all correlation matrice files (in npy format)</span>
+<span class="sd">            for each subject&#39;, mandatory=True</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">SwapListsInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">SwapListsOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">list_of_lists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">list_of_lists</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">seed</span>
+        <span class="n">unbalanced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">unbalanced</span>
+
+        <span class="c1"># checking lists homogeneity</span>
+        <span class="k">if</span> <span class="n">unbalanced</span><span class="p">:</span>
+            <span class="n">nb_files_per_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">nb_files_per_list</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># number of elements tomix from (highest level)</span>
+        <span class="n">nb_set_to_shuffle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">)</span>
+
+        <span class="c1"># number of files per case to shuffle</span>
+        <span class="c1"># (typically cor_mat, coords -&gt; 2, or Z_list,</span>
+        <span class="c1"># node_corres and labels -&gt; 3)</span>
+
+        <span class="n">nb_args</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_set_to_shuffle</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">nb_args</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">nb_args</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">nb_args</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> \
+                    <span class="p">(</span><span class="s2">&quot;Error list length </span><span class="si">{}</span><span class="s2"> != than list </span><span class="si">{}</span><span class="s2"> length </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">nb_args</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span>
+
+            <span class="k">if</span> <span class="n">unbalanced</span><span class="p">:</span>
+                <span class="n">nb_files_per_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">nb_files_per_list</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">nb_files_per_list</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">nb_files_per_list</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> \
+                        <span class="p">(</span><span class="s2">&quot;Error list length </span><span class="si">{}</span><span class="s2"> != than list </span><span class="si">{}</span><span class="s2"> length </span><span class="se">\</span>
+<span class="s2">                            </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nb_files_per_list</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>
+                                       <span class="nb">len</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">nb_files_per_list</span><span class="p">)</span>
+
+        <span class="c1"># generating 0 or 1 for each subj:</span>
+
+        <span class="k">if</span> <span class="n">seed</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">permut_lists_of_lists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">list_of_lists</span>
+
+            <span class="k">return</span> <span class="n">runtime</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">unbalanced</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">prod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">nb_files_per_list</span><span class="p">))</span>
+
+            <span class="n">is_permut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                <span class="n">nb_set_to_shuffle</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">nb_files_per_list</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="n">is_permut</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">prod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+
+            <span class="c1"># print reduce(prod,nb_files_per_list,1)</span>
+
+            <span class="n">is_permut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                <span class="n">nb_set_to_shuffle</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">nb_files_per_list</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="n">is_permut</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;is_permut.txt&quot;</span><span class="p">),</span> <span class="n">is_permut</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># shuffling list</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">permut_lists_of_lists</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_args</span><span class="p">)]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_set_to_shuffle</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">unbalanced</span><span class="p">:</span>
+
+            <span class="n">merged_group_lists</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_args</span><span class="p">):</span>
+
+                <span class="n">merged_group_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_set_to_shuffle</span><span class="p">):</span>
+                    <span class="n">merged_group_list</span> <span class="o">=</span> <span class="n">merged_group_list</span> <span class="o">+</span> \
+                        <span class="n">list_of_lists</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+
+                <span class="n">merged_group_lists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged_group_list</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">index_file</span><span class="p">,</span> <span class="n">permut</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">is_permut</span><span class="p">):</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_args</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">permut_lists_of_lists</span><span class="p">[</span><span class="n">permut</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">merged_group_lists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">index_file</span><span class="p">])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">index_file</span><span class="p">,</span> <span class="n">permut</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">is_permut</span><span class="p">):</span>
+
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_set_to_shuffle</span><span class="p">):</span>
+
+                    <span class="n">shift</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="n">permut</span>
+                    <span class="n">rel_shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">%</span> <span class="n">nb_set_to_shuffle</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_args</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">permut_lists_of_lists</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">list_of_lists</span><span class="p">[</span><span class="n">rel_shift</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">index_file</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;permut_lists_of_lists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">permut_lists_of_lists</span>
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+
+<span class="c1"># ShuffleMatrix</span>
+
+
+<span class="k">class</span> <span class="nc">ShuffleMatrixInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">original_matrix_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;original matrix in npy format&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;value for seed&#39;</span><span class="p">,</span>
+                      <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ShuffleMatrixOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">shuffled_matrix_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;shuffled matrix in npy format&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ShuffleMatrix"><a class="viewcode-back" href="../../../tmp/generated/graphpype.nodes.graph_stats.ShuffleMatrix.html#graphpype.nodes.graph_stats.ShuffleMatrix">[docs]</a><span class="k">class</span> <span class="nc">ShuffleMatrix</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute randomisation of matrix, keeping the same distribution</span>
+
+<span class="sd">    If seed = -1, no shuffling is done (keep original values)</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        original_matrix_file:</span>
+<span class="sd">            type = File, exists=True, desc=&#39;original matrix in npy format&#39;,</span>
+<span class="sd">            mandatory=True</span>
+
+<span class="sd">        seed:</span>
+<span class="sd">            type = Int, default = -1, desc=&#39;value for seed&#39;, mandatory=True,</span>
+<span class="sd">            usedefault = True</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        shuffled_matrix_file:</span>
+
+<span class="sd">            type = File, exists=True, desc=&#39;shuffled matrix in npy format&#39;,</span>
+<span class="sd">            mandatory=True</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">ShuffleMatrixInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">ShuffleMatrixOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">original_matrix_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">original_matrix_file</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">seed</span>
+
+        <span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">original_matrix_file</span><span class="p">)</span>
+
+        <span class="n">orig_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">original_matrix_file</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">seed</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;keeping original matrix&quot;</span><span class="p">)</span>
+            <span class="n">shuf_mat</span> <span class="o">=</span> <span class="n">orig_mat</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;randomizing &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+            <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">orig_mat</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+            <span class="n">shuf_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">orig_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">orig_mat</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">iter</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">orig_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">bool_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">while</span> <span class="ow">not</span> <span class="n">bool_ok</span><span class="p">:</span>
+
+                    <span class="n">new_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                        <span class="n">low</span><span class="o">=</span><span class="n">orig_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">orig_mat</span><span class="p">[</span><span class="n">new_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]]):</span>
+
+                        <span class="n">shuf_mat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_mat</span><span class="p">[</span><span class="n">new_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+                        <span class="n">shuf_mat</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_mat</span><span class="p">[</span><span class="n">new_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+                        <span class="n">orig_mat</span><span class="p">[</span><span class="n">new_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                        <span class="n">orig_mat</span><span class="p">[</span><span class="n">new_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+                        <span class="n">bool_ok</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">shuffled_matrix_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;shuffled_matrix.npy&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">shuffled_matrix_file</span><span class="p">,</span> <span class="n">shuf_mat</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;shuffled_matrix_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="s2">&quot;shuffled_matrix.npy&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+
+<span class="c1"># ShuffleNetList</span>
+
+
+<span class="k">class</span> <span class="nc">ShuffleNetListInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">orig_net_list_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;original net list in txt format&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;value for seed&#39;</span><span class="p">,</span>
+                      <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ShuffleNetListOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">shuffled_net_list_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;shuffled net list in txt format&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ShuffleNetList</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract mean time series from a labelled mask in Nifti Format</span>
+<span class="sd">    where the voxels of interest have values 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">ShuffleNetListInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">ShuffleNetListOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">orig_net_list_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">orig_net_list_file</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">seed</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">orig_net_list_file</span><span class="p">)</span>
+        <span class="n">original_net_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">orig_net_list_file</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">seed</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;keeping original matrix&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;randomizing &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">original_net_list</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">original_net_list</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">shuffled_net_list_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;shuffled_net_list.txt&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">shuffled_net_list_file</span><span class="p">,</span> <span class="n">original_net_list</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> </span><span class="si">%d</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;shuffled_net_list_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="s2">&quot;shuffled_net_list.txt&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-03-06.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

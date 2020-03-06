@@ -1,0 +1,6 @@
+graphpype.utils\_stats.compute\_pairwise\_ttest\_fdr
+====================================================
+
+.. currentmodule:: graphpype.utils_stats
+
+.. autofunction:: compute_pairwise_ttest_fdr

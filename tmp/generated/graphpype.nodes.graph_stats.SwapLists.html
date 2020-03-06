@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>graphpype.nodes.graph_stats.SwapLists &#8212; macapype 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../tutorial.html">Tutorial</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">graphpype.nodes.graph_stats.SwapLists</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../../_sources/tmp/generated/graphpype.nodes.graph_stats.SwapLists.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="graphpype-nodes-graph-stats-swaplists">
+<h1>graphpype.nodes.graph_stats.SwapLists<a class="headerlink" href="#graphpype-nodes-graph-stats-swaplists" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="graphpype.nodes.graph_stats.SwapLists">
+<em class="property">class </em><code class="descclassname">graphpype.nodes.graph_stats.</code><code class="descname">SwapLists</code><span class="sig-paren">(</span><em>from_file=None</em>, <em>resource_monitor=None</em>, <em>ignore_exception=False</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/graphpype/nodes/graph_stats.html#SwapLists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#graphpype.nodes.graph_stats.SwapLists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exchange lists of files in a random fashion (based on seed value)
+Typically, cor_mat, coords -&gt; 2, or Z_list, node_corres and labels -&gt; 3</p>
+<p>If seed = -1, no swap is done (keep original values)</p>
+<p>Inputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>list_of_lists:</dt>
+<dd>type = List of List of  List of Files,
+exists=True,
+desc=’list of all correlation matrice files (in npy format) for
+each subject’,
+mandatory=True</dd>
+<dt>seed:</dt>
+<dd>type = Int, default = -1, desc=’value for seed’, mandatory=True,
+usedefault = True</dd>
+</dl>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>permut_lists_of_lists:</dt>
+<dd>type = List of  List of List of Files ,exists=True,
+desc=’swapped list of all correlation matrice files (in npy format)
+for each subject’, mandatory=True</dd>
+</dl>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt>
+<dd><p class="first last">Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt>
+<dd><p class="first last">Defines if the interface can reuse partial results after interruption.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt>
+<dd><p class="first last">interfaces should implement a version property</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
+<td>Collate expected outputs and apply output traits validation.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
+<td>Prints class help</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">SwapListsInputSpec</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
+<td>A convenient way to load pre-set inputs from a JSON file.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">SwapListsOutputSpec</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
+<td>Execute this interface.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
+<td>A convenient way to save current inputs to a JSON file.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="graphpype.nodes.graph_stats.SwapLists.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>from_file=None</em>, <em>resource_monitor=None</em>, <em>ignore_exception=False</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#graphpype.nodes.graph_stats.SwapLists.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses must implement __init__</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graphpype.nodes.graph_stats.SwapLists.__init__" title="graphpype.nodes.graph_stats.SwapLists.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([from_file,&nbsp;resource_monitor,&nbsp;…])</td>
+<td>Subclasses must implement __init__</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
+<td>Collate expected outputs and apply output traits validation.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
+<td>Prints class help</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
+<td>A convenient way to load pre-set inputs from a JSON file.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
+<td>Execute this interface.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
+<td>A convenient way to save current inputs to a JSON file.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></td>
+<td>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></td>
+<td>Defines if the interface can reuse partial results after interruption.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></td>
+<td>interfaces should implement a version property</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-03-06.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
