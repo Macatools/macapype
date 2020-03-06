@@ -1,6 +1,0 @@
-graphpype.utils\_stats.compute\_pairwise\_mannwhitney\_fdr
-==========================================================
-
-.. currentmodule:: graphpype.utils_stats
-
-.. autofunction:: compute_pairwise_mannwhitney_fdr

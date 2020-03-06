@@ -1,6 +1,0 @@
-graphpype.pipelines.create\_pipeline\_nii\_to\_conmat\_simple
-=============================================================
-
-.. currentmodule:: graphpype.pipelines
-
-.. autofunction:: create_pipeline_nii_to_conmat_simple

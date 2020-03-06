@@ -1,6 +1,0 @@
-graphpype.pipelines.create\_pipeline\_net\_list\_to\_graph
-==========================================================
-
-.. currentmodule:: graphpype.pipelines
-
-.. autofunction:: create_pipeline_net_list_to_graph

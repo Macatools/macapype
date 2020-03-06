@@ -1,6 +1,0 @@
-graphpype.pipelines.create\_pipeline\_conmat\_to\_graph\_threshold
-==================================================================
-
-.. currentmodule:: graphpype.pipelines
-
-.. autofunction:: create_pipeline_conmat_to_graph_threshold

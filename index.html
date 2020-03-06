@@ -69,18 +69,7 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Neuropycon</a></li>
-<li><a class="reference internal" href="#graphpype">graphpype</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#radatools">Radatools</a><ul>
-<li><a class="reference internal" href="#for-radatools-3-2">For radatools 3.2</a></li>
-<li><a class="reference internal" href="#for-radatools-4-0">For radatools 4.0</a></li>
-<li><a class="reference internal" href="#for-radatools-5-0">For radatools 5.0</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#graphpype">graphpype</a></li>
 </ul>
 </ul>
 </li>
@@ -125,8 +114,7 @@ a tool developed in fMRI field, which facilitates data analyses by wrapping many
 python framework.</p>
 <p>Neuropycon project includes two different packages:</p>
 <ul class="simple">
-<li><a href="https://neuropycon.github.io/ephypype/" target="_blank">ephypype</a> based on <a href="http://martinos.org/mne/stable/index.html" target="_blank">MNE python</a> includes pipelines for electrophysiology analysis</li>
-<li><a class="reference internal" href="#graphpype"><span class="std std-ref">graphpype</span></a> based on <a href="http://deim.urv.cat/~sergio.gomez/radatools.php" target="_blank">radatools</a> includes pipelines for graph theoretical analysis of neuroimaging data</li>
+<li><a href="#id4"><span class="problematic" id="id5">|ephypype|</span></a> based on <a href="#id6"><span class="problematic" id="id7">|MNE python|</span></a> includes pipelines for electrophysiology analysis</li>
 </ul>
 <p>Neuropycon provides a very common and fast framework to develop workflows for advanced analyses, in particular
 defines a set of different <strong>pipelines</strong> that can be used stand-alone or as <strong>lego</strong> of a bigger workflow:
@@ -147,61 +135,9 @@ as well as providing easy ways to implement function defined by the user.</p>
 </div>
 <div class="section" id="graphpype">
 <span id="id2"></span><h1>graphpype<a class="headerlink" href="#graphpype" title="Permalink to this headline">¶</a></h1>
-<p>Neuropycon project for graph analysis, can be used from ephypype and nipype.</p>
-<p>The graphpype package provides the following <strong>pipelines</strong>:</p>
 <ul class="simple">
-<li>the <span class="xref std std-ref">conmat_to_graph pipeline</span> runs the graph computation and graph-theoretical tools over connectivity matrices.</li>
-<li>the <span class="xref std std-ref">inv_ts_to_graph pipeline</span> runs the spectral connectivity and the graph computation over time series.</li>
-<li>the <span class="xref std std-ref">nii_to_graph</span> pipeline provide a script to compute connectivity matrices and graphs computations from prepocessed functional MRI.</li>
-<li>the <span class="xref std std-ref">inv_ts_to_bct_graph</span> pipeline provide example scripts to compute graph metrics (so far, KCore) using bctpy (Brain Connectivity Toolbox).</li>
+<li>the <a class="reference internal" href="auto_examples/plot_segment.html#plot-segment"><span class="std std-ref">plot_segment pipeline</span></a> runs the graph computation and graph-theoretical tools over connectivity matrices.</li>
 </ul>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>graphpype works with <strong>python3</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install https://api.github.com/repos/neuropycon/graphpype/zipball/master
-</pre></div>
-</div>
-<p>Or with pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install graphpype
-</pre></div>
-</div>
-<div class="section" id="radatools">
-<h3>Radatools<a class="headerlink" href="#radatools" title="Permalink to this headline">¶</a></h3>
-<p>You should add all the directories from radatools to the PATH env variable:</p>
-<ol class="arabic simple">
-<li>Download radatools sotware:</li>
-</ol>
-<p><a class="reference external" href="http://deim.urv.cat/~sergio.gomez/radatools.php#download">http://deim.urv.cat/~sergio.gomez/radatools.php#download</a></p>
-<ol class="arabic simple" start="2">
-<li>Download and extract the zip file</li>
-<li>Add following lines in your .bashrc:</li>
-</ol>
-<div class="section" id="for-radatools-3-2">
-<h4>For radatools 3.2<a class="headerlink" href="#for-radatools-3-2" title="Permalink to this headline">¶</a></h4>
-<p>RADA_PATH=/home/david/Tools/Software/radatools-3.2-linux32</p>
-<p>(replace /home/david/Tools/Software by your path to radatools)</p>
-<p>export PATH=$PATH:$RADA_PATH/01-Prepare_Network/</p>
-<p>export PATH=$PATH:$RADA_PATH/02-Find_Communities/</p>
-<p>export PATH=$PATH:$RADA_PATH/03-Reformat_Results</p>
-<p>export PATH=$PATH:$RADA_PATH/04-Other_Tools/</p>
-</div>
-<div class="section" id="for-radatools-4-0">
-<h4>For radatools 4.0<a class="headerlink" href="#for-radatools-4-0" title="Permalink to this headline">¶</a></h4>
-<p>RADA_PATH=/home/david/Tools/Software/radatools-4.0-linux64</p>
-<p>(replace /home/david/Tools/Software by your path to radatools)</p>
-<p>export PATH=$PATH:$RADA_PATH/Network_Tools</p>
-<p>export PATH=$PATH:$RADA_PATH/Network_Properties</p>
-<p>export PATH=$PATH:$RADA_PATH/Communities_Detection</p>
-<p>export PATH=$PATH:$RADA_PATH/Communities_Tools</p>
-</div>
-<div class="section" id="for-radatools-5-0">
-<h4>For radatools 5.0<a class="headerlink" href="#for-radatools-5-0" title="Permalink to this headline">¶</a></h4>
-<p>RADA_PATH=/home/david/Tools/Software/radatools-5.0-linux64</p>
-<p>(replace /home/david/Tools/Software by your path to radatools)</p>
-<p>export PATH=$PATH:$RADA_PATH/Network_Tools</p>
-</div>
-</div>
-</div>
 </div>
 
 

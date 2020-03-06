@@ -19,6 +19,6 @@ import nipype.interfaces.io as nio
 
 ###############################################################################
 # Check if data are available
-from graphpype.utils_tests import load_test_data
+from macapype.utils.utils_tests import load_test_data
 
-data_path = load_test_data("data_nii")
+data_path = load_test_data("AtlasBREX")
