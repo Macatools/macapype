@@ -323,10 +323,9 @@ def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
 
     return masked_correct_bias_pipe
 
+
 ###############################################################################
-
 def create_debias_N4_pipe(name="debias_N4_pipe"):
-
 
     # creating pipeline
     debias_N4_pipe = pe.Workflow(name=name)
@@ -336,12 +335,11 @@ def create_debias_N4_pipe(name="debias_N4_pipe"):
         niu.IdentityInterface(fields=['cropped_T1']),
         name='inputnode')
 
-
     # N4 correction
     norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
                              name='norm_intensity')
 
-    debias_N4_pipe.connect(inputnode,'cropped_T1',norm_intensity,'input_image')
+    debias_N4_pipe.connect(inputnode, 'cropped_T1',
+                           norm_intensity, 'input_image')
 
     return debias_N4_pipe
-
