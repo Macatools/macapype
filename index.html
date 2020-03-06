@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Neuropycon &#8212; macapype 0.0.0 documentation</title>
+    <title>Macapype &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -68,7 +68,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Neuropycon</a></li>
+<li><a class="reference internal" href="#">Macapype</a></li>
 <li><a class="reference internal" href="#graphpype">graphpype</a></li>
 </ul>
 </ul>
@@ -105,33 +105,12 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="neuropycon">
-<span id="id1"></span><h1>Neuropycon<a class="headerlink" href="#neuropycon" title="Permalink to this headline">¶</a></h1>
-<p>Neuropycon is an open-source multi-modal brain data analysis kit which provides <strong>Python-based
-pipelines</strong> for advanced multi-thread processing of fMRI, MEG and EEG data, with a focus on connectivity
-and graph analyses. Neuropycon is based on <a class="reference external" href="http://nipype.readthedocs.io/en/latest/#">Nipype</a>,
+  <div class="section" id="macapype">
+<span id="id1"></span><h1>Macapype<a class="headerlink" href="#macapype" title="Permalink to this headline">¶</a></h1>
+<p>Macapype is an open-source multi-modal brain data analysis kit which provides <strong>Python-based
+pipelines</strong> for advanced multi-thread processing of fMRI anat in PNH. Neuropycon is based on <a class="reference external" href="http://nipype.readthedocs.io/en/latest/#">Nipype</a>,
 a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common
 python framework.</p>
-<p>Neuropycon project includes two different packages:</p>
-<ul class="simple">
-<li><a href="#id4"><span class="problematic" id="id5">|ephypype|</span></a> based on <a href="#id6"><span class="problematic" id="id7">|MNE python|</span></a> includes pipelines for electrophysiology analysis</li>
-</ul>
-<p>Neuropycon provides a very common and fast framework to develop workflows for advanced analyses, in particular
-defines a set of different <strong>pipelines</strong> that can be used stand-alone or as <strong>lego</strong> of a bigger workflow:
-the input of a pipeline will be the output of another pipeline.</p>
-<p>For each possible workflow the <strong>input data</strong> can be specified in three different ways:</p>
-<ul class="simple">
-<li>raw MEG data in <strong>.fif</strong> and <strong>.ds</strong> format</li>
-<li>time series of connectivity matrices in <strong>.mat</strong> (Matlab) or <strong>.npy</strong> (Numpy) format</li>
-<li>connectivity matrices in <strong>.mat</strong> (Matlab) or <strong>.npy</strong> (Numpy) format</li>
-</ul>
-<div class="figure align-center" id="id3">
-<span id="lego"></span><a class="reference internal image-reference" href="_images/tiny_all_input_doors.png"><img alt="_images/tiny_all_input_doors.png" src="_images/tiny_all_input_doors.png" style="width: 50%;" /></a>
-<p class="caption"><span class="caption-text">Main inputs and subsequent pipeline steps</span></p>
-</div>
-<p>Each pipeline based on nipype engine is defined by <strong>nodes</strong> connected together,
-where each node maybe wrapping of existing software (as MNE-python modules or radatools functions)
-as well as providing easy ways to implement function defined by the user.</p>
 </div>
 <div class="section" id="graphpype">
 <span id="id2"></span><h1>graphpype<a class="headerlink" href="#graphpype" title="Permalink to this headline">¶</a></h1>
