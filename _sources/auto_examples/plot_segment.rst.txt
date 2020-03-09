@@ -57,7 +57,7 @@ Check if data are available
     data_dirpath /home/INT/meunier.d/data already exists
 
 
-**Total running time of the script:** ( 0 minutes  0.114 seconds)
+**Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment.py:

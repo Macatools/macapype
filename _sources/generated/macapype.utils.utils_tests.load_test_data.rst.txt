@@ -1,0 +1,6 @@
+macapype.utils.utils\_tests.load\_test\_data
+============================================
+
+.. currentmodule:: macapype.utils.utils_tests
+
+.. autofunction:: load_test_data
