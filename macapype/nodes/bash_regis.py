@@ -1,8 +1,9 @@
 import os
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
-                                    TraitedSpec)
+                                    TraitedSpec, isdefined)
 from nipype.interfaces.fsl.base import (FSLCommand, FSLCommandInputSpec)
 from nipype.interfaces.base import traits, File
+
 
 class T1xT2BETInputSpec(FSLCommandInputSpec):
 
@@ -25,16 +26,17 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         argstr="-aT2",
         desc="Will coregrister T2w to T1w using flirt. Output will have the\
             suffix provided. Will only work for spatially close images.",
-        mandatory = False)
+        mandatory=False)
 
     # as -> opt_as, as is already a part of python keywords...
     opt_as = traits.String("-in-T1w", usedefault=True,
         argstr="-as %s",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
-        mandatory = False)
+        mandatory=False)
 
-    n = traits.Int(1, usedefault=True,
+    n = traits.Int(
+        1, usedefault=True,
         desc='n = the number of iterations BET will be run to find center of \
             gravity (n=1 if option -n is absent)',
         argstr="-n %d", mandatory=True)
@@ -43,7 +45,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         argstr="-m",
         desc="Will output the BET mask at the format \
             output_prefixT1_mask.nii.gz)",
-        mandatory = True)
+        mandatory=True)
 
     ms = traits.String(
         "_mask", usedefault=True,
@@ -82,11 +84,10 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
             gravity. Only one iteration will be performed.',
         argstr="-cog %d %d %d", mandatory=False)
 
-
     k = traits.Bool(False, usedefault=True,
         argstr="-k",
         desc="Will keep temporary files",
-        mandatory = True)
+        mandatory=True)
 
     p = traits.String(desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
@@ -96,7 +97,6 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         #desc="Prefix for running FSL functions\
             #(can be a path or just a prefix)",
         #argstr="-p %s")
-
 
 
 class T1xT2BETOutputSpec(TraitedSpec):
@@ -119,6 +119,7 @@ class T1xT2BETOutputSpec(TraitedSpec):
 
     t2_cropped_file = File(
         desc="extracted cropped brain from T2")
+
 
 class T1xT2BET(FSLCommand):
     """
@@ -156,9 +157,7 @@ class T1xT2BET(FSLCommand):
         t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
         t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-
         if self.inputs.c:
-
             # !!!!warning, in Regis bash, only .nii.gz are handled
             outputs["t1_cropped_file"] = os.path.abspath( t1_fname + self.inputs.cs + ".nii.gz")
 
@@ -171,8 +170,8 @@ class T1xT2BET(FSLCommand):
             outputs["t2_brain_file"] = os.path.abspath( t2_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
 
             if self.inputs.m:
-                    # !!!!warning, in Regis bash, only .nii.gz are handled
-                    outputs["mask_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
+                # !!!!warning, in Regis bash, only .nii.gz are handled
+                outputs["mask_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
 
         else:
 
@@ -215,8 +214,7 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
         mandatory = False)
 
     # as -> opt_as, as is already a part of python keywords...
-    opt_as = traits.Bool(False, usedefault=True,
-         argstr="-as",
+    opt_as = traits.String("-in-T1w", usedefault=True, argstr="-as %s",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
         mandatory = False)
@@ -227,7 +225,7 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
 
     # exists = True ???
     b = traits.File(
-         argstr="-b %s",
+        argstr="-b %s",
         desc="Brain mask file. Will also output bias corrected brain files \
             with the format \"output_prefix_brain.nii.gz\"",
         mandatory = False)
@@ -281,7 +279,14 @@ class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
     t2_coreg_file = File(
         desc="T2 on T1")
 
+    t1_debiased_brain_file = File(
+        desc="debiased bet T1")
 
+    t2_debiased_brain_file = File(
+        desc="debiased bet T2")
+
+    debiased_mask_file = File(
+        desc="debiased bet mask")
 
 class T1xT2BiasFieldCorrection(CommandLine):
     """
@@ -335,15 +340,20 @@ Optional arguments:
         t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
         t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-        t1_fname += self.inputs.os
-        t2_fname += self.inputs.os
-
         # !!!!warning, in Regis bash, only .nii.gz are handled
-        outputs["t1_debiased_file"] = os.path.abspath(t1_fname +  ".nii.gz")
-        outputs["t2_debiased_file"] = os.path.abspath(t2_fname +  ".nii.gz")
+        outputs["t1_debiased_file"] = os.path.abspath(t1_fname + self.inputs.os + ".nii.gz")
+        outputs["t2_debiased_file"] = os.path.abspath(t2_fname + self.inputs.os + ".nii.gz")
 
         if self.inputs.aT2:
-            outputs["t2_coreg_file"] = os.path.abspath(t1_fname +  self.inputs.opt_as + ".nii.gz")
+            outputs["t2_coreg_file"] = os.path.abspath(t2_fname + self.inputs.opt_as + ".nii.gz")
+
+        if self.inputs.bet:
+            outputs["t1_debiased_brain_file"] = os.path.abspath(t1_fname + self.inputs.os + self.inputs.bs + ".nii.gz")
+            outputs["t2_debiased_brain_file"] = os.path.abspath(t2_fname + self.inputs.os + self.inputs.bs + ".nii.gz")
+            outputs["debiased_mask_file"] = os.path.abspath(t1_fname + self.inputs.os + self.inputs.bs + "_mask.nii.gz")
+        elif self.inputs.b:
+            outputs["t1_debiased_brain_file"] = os.path.abspath(t1_fname + self.inputs.os + "_brain.nii.gz")
+            outputs["t2_debiased_brain_file"] = os.path.abspath(t2_fname + self.inputs.os + "_brain.nii.gz")
         return outputs
 
 
@@ -372,9 +382,8 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         desc="Prefix for the registration outputs (\"in_FLIRT-to_ref\" if not specified)",
         position=3, argstr="-xp %s",mandatory=False)
 
-
     bs = traits.String(
-        "in_IRbrain", usedefault=True,
+        "_IRbrain", usedefault=True,
         desc="Suffix for the brain files (\"in_IRbrain\" & \"in_IRbrain_mask\"\
             if not specified)",
         position=3, argstr="-bs %s",mandatory=False)
@@ -427,9 +436,17 @@ class IterREGBETInputSpec(CommandLineInputSpec):
 
 
 class IterREGBETOutputSpec(TraitedSpec):
-    mask_file = File(
+    brain_file = File(
+        exists=True,
+        desc="brain from IterREGBET.sh")
+
+    brain_mask_file = File(
         exists=True,
         desc="masked brain from IterREGBET.sh")
+
+    warp_file = File(
+        exists=True,
+        desc="warped image from IterREGBET.sh")
 
     transfo_file= File(
             exists=True,
@@ -497,6 +514,25 @@ Will output a better brain mask of the in-file.
                 #"Error, n {} should be higher than 2".format(value)
 
 
+    def _gen_filename(self, name):
+        if name == "xp":
+            return self._gen_outfilename()
+        else:
+            return None
+
+    def _gen_outfilename(self):
+        from nipype.utils.filemanip import split_filename as split_f
+
+        _, in_brain, _ = split_f(self.inputs.inb_file)
+        _, ref, _ = split_f(self.inputs.refb_file)
+
+        if isdefined(self.inputs.xp):
+            outname = self.inputs.xp
+        else:
+            outname = in_brain + "_FLIRT-to_" + ref
+        return outname
+
+
     def _list_outputs(self):
 
         import os
@@ -506,12 +542,18 @@ Will output a better brain mask of the in-file.
 
         path, fname, ext = split_f(self.inputs.inw_file)
 
-        outfile = self.inputs.xp #+ fname + self.inputs.bs
+        outputs["brain_file"] = os.path.abspath(fname + self.inputs.bs + ".nii.gz")
+        outputs["brain_mask_file"] = os.path.abspath(fname + self.inputs.bs + "_mask.nii.gz")
 
-        #
-        outputs["mask_file"] = os.path.abspath(outfile + ".nii.gz")
+        if isdefined(self.inputs.xp):
+            outfile = self.inputs.xp
+        else:
+            outfile = self._gen_outfilename()
+
+        outputs["warp_file"] = os.path.abspath(outfile + ".nii.gz")
         outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
         outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
+        print(outputs)
         return outputs
 
 
@@ -597,5 +639,6 @@ class CropVolume(CommandLine):
         if self.inputs.o:
             outfile = self.inputs.o + outfile
 
-        outputs["cropped_file"] = os.path.join(path, outfile +  ".nii.gz")
+        outputs["cropped_file"] = os.path.abspath(outfile +  ".nii.gz")
         return outputs
+

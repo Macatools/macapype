@@ -56,3 +56,8 @@ $ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root
 $ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype  
 $ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/examples/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -cropped True  
 
+# docker pull
+
+Can also be downloaded directly from DockerHub repo:
+$ docker pull macatools/macapype
+$ docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macatools/macapype:latest python3 /root/packages/macapype/examples/segment_pnh_regis.py -data /data/macapype -out /data/macapype

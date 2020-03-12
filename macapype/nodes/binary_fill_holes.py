@@ -2,9 +2,9 @@ def apply_binary_fill_holes_dirty(in_file, size=3):
     from scipy.ndimage import binary_fill_holes
     import nibabel as nb
     import numpy as np
-    
+
     out_nii = in_file[:-4] + '_filled.nii'
-    
+
     nii_image = nb.load(in_file)
 
     struc = np.ones((size, size, size))
@@ -15,7 +15,7 @@ def apply_binary_fill_holes_dirty(in_file, size=3):
     out_image = nb.Nifti1Image(nii_data.astype(int), affine=nii_image._affine)
     nb.save(out_image, out_nii)
     return out_nii
-    
+
 
 # """
 #     Apply scipy's binary_fill_holes on 3D Nifti image

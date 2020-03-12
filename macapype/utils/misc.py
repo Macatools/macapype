@@ -36,7 +36,7 @@ def get_elem(list_elem, index_elem):
 
 def get_first_elem(elem):
 
-    print (elem)
+    print(elem)
     if isinstance(elem, list):
         print("OK, is list")
         assert len(elem) == 1, "Error, list should contain only one element"
