@@ -84,7 +84,10 @@ def create_old_segment_extraction_pipe(priors,
                                        name="old_segment_exctraction_pipe"):
     """ Extract brain using tissues masks output by SPM's old_segment function
     
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4fcffb573a51044fadeeb269129620d936272c5d
     1 - Segment the T1 using given priors;
     2 - Threshold GM, WM and CSF maps;
     3 - Compute union of those 3 tissues;
