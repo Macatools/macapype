@@ -26,16 +26,17 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         argstr="-aT2",
         desc="Will coregrister T2w to T1w using flirt. Output will have the\
             suffix provided. Will only work for spatially close images.",
-        mandatory = False)
+        mandatory=False)
 
     # as -> opt_as, as is already a part of python keywords...
     opt_as = traits.String("-in-T1w", usedefault=True,
         argstr="-as %s",
         desc="Suffix for T2w to T1w registration \
             (\"-in-T1w\" if not specified)",
-        mandatory = False)
+        mandatory=False)
 
-    n = traits.Int(1, usedefault=True,
+    n = traits.Int(
+        1, usedefault=True,
         desc='n = the number of iterations BET will be run to find center of \
             gravity (n=1 if option -n is absent)',
         argstr="-n %d", mandatory=True)
@@ -44,7 +45,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
         argstr="-m",
         desc="Will output the BET mask at the format \
             output_prefixT1_mask.nii.gz)",
-        mandatory = True)
+        mandatory=True)
 
     ms = traits.String(
         "_mask", usedefault=True,
@@ -83,11 +84,10 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
             gravity. Only one iteration will be performed.',
         argstr="-cog %d %d %d", mandatory=False)
 
-
     k = traits.Bool(False, usedefault=True,
         argstr="-k",
         desc="Will keep temporary files",
-        mandatory = True)
+        mandatory=True)
 
     p = traits.String(desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
@@ -157,9 +157,7 @@ class T1xT2BET(FSLCommand):
         t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
         t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
 
-
         if self.inputs.c:
-
             # !!!!warning, in Regis bash, only .nii.gz are handled
             outputs["t1_cropped_file"] = os.path.abspath( t1_fname + self.inputs.cs + ".nii.gz")
 
@@ -643,3 +641,4 @@ class CropVolume(CommandLine):
 
         outputs["cropped_file"] = os.path.abspath(outfile +  ".nii.gz")
         return outputs
+
