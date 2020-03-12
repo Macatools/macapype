@@ -4,8 +4,6 @@
 """
 import os.path as op
 
-from scipy.ndimage import binary_fill_holes
-
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -13,13 +11,12 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.spm as spm
 
-from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty #BinaryFillHoles
+from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty 
 from ..nodes.extract_brain import AtlasBREX
-#from ..nodes.extract_brain import apply_atlasBREX
 
 
 def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
-                                 f= 0.5, reg=1, w="10,10,10", msk="a,0,0",
+                                 f=0.5, reg=1, w="10,10,10", msk="a,0,0",
                                  name="brain_extraction_pipe"):
 
     # creating pipeline
@@ -31,13 +28,12 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
         name='inputnode')
 
     # atlas_brex
-    atlas_brex = pe.Node(AtlasBREX(),name='atlas_brex')
+    atlas_brex = pe.Node(AtlasBREX(), name='atlas_brex')
 
     brain_extraction_pipe.connect(inputnode, "restore_T1",
                                   atlas_brex, 't1_restored_file')
 
-    #script_atlas_BREX = op.join(atlasbrex_dir,"atlasBREX_fslfrioul.sh")
-    script_atlas_BREX = op.join(atlasbrex_dir,"atlasBREX.sh")
+    script_atlas_BREX = op.join(atlasbrex_dir, "atlasBREX.sh")
 
     atlas_brex.inputs.script_atlas_BREX = script_atlas_BREX
     atlas_brex.inputs.NMT_file = op.join(nmt_dir, "NMT.nii.gz")
@@ -98,14 +94,12 @@ def create_old_segment_extraction_pipe(priors,
     ======
     T1: T1 file name
     seg_priors: list of file names
-    
-    Outputs
-    =======
-    
-    """
-    from nipype.interfaces import spm
 
-    # Creating pipeline
+    Outputs
+    --------
+
+    """
+    # creating pipeline
     be_pipe = pe.Workflow(name=name)
 
     # Creating inputnode
@@ -128,13 +122,13 @@ def create_old_segment_extraction_pipe(priors,
         tmp_node = pe.Node(fsl.Threshold(), name="threshold_" + tissue)
         tmp_node.inputs.thresh = 0.05
         be_pipe.connect(
-            segment, 'native_' + tissue + '_image', 
+            segment, 'native_' + tissue + '_image',
             tmp_node, 'in_file'
         )
         thd_nodes[tissue] = tmp_node
 
     # Compute union of the 3 tissues
-    # Done with 2 fslmaths as it seems to hard to do it 
+    # Done with 2 fslmaths as it seems to hard to do it
     wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
     wmgm_union.inputs.operation = "add"
     be_pipe.connect(thd_nodes['gm'], 'out_file', wmgm_union, 'in_file')
@@ -143,8 +137,9 @@ def create_old_segment_extraction_pipe(priors,
     tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
     tissues_union.inputs.operation = "add"
     be_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    be_pipe.connect(thd_nodes['csf'], 'out_file', tissues_union, 'operand_file')
-    
+    be_pipe.connect(thd_nodes['csf'], 'out_file',
+                    tissues_union, 'operand_file')
+
     # Opening
     opening_shape = "sphere"
     opening_size = 2
@@ -166,7 +161,7 @@ def create_old_segment_extraction_pipe(priors,
     #
     # fill_holes_dil = pe.Node(fsl.BinaryMaths(), name="fill_holes_dil")
     # be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
-    
+
     # Temporary dirty version
     # FIXME: the clean version doesn't work
     fill_holes = pe.Node(
