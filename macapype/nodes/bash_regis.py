@@ -4,6 +4,7 @@ from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
 from nipype.interfaces.fsl.base import (FSLCommand, FSLCommandInputSpec)
 from nipype.interfaces.base import traits, File
 
+
 class T1xT2BETInputSpec(FSLCommandInputSpec):
 
     t1_file = File(
@@ -171,8 +172,8 @@ class T1xT2BET(FSLCommand):
             outputs["t2_brain_file"] = os.path.abspath( t2_fname + self.inputs.os + self.inputs.cs + ".nii.gz")
 
             if self.inputs.m:
-                    # !!!!warning, in Regis bash, only .nii.gz are handled
-                    outputs["mask_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
+                # !!!!warning, in Regis bash, only .nii.gz are handled
+                outputs["mask_file"] = os.path.abspath( t1_fname + self.inputs.os + self.inputs.ms + self.inputs.cs + ".nii.gz")
 
         else:
 
@@ -352,6 +353,9 @@ Optional arguments:
             outputs["t1_debiased_brain_file"] = os.path.abspath(t1_fname + self.inputs.os + self.inputs.bs + ".nii.gz")
             outputs["t2_debiased_brain_file"] = os.path.abspath(t2_fname + self.inputs.os + self.inputs.bs + ".nii.gz")
             outputs["debiased_mask_file"] = os.path.abspath(t1_fname + self.inputs.os + self.inputs.bs + "_mask.nii.gz")
+        elif self.inputs.b:
+            outputs["t1_debiased_brain_file"] = os.path.abspath(t1_fname + self.inputs.os + "_brain.nii.gz")
+            outputs["t2_debiased_brain_file"] = os.path.abspath(t2_fname + self.inputs.os + "_brain.nii.gz")
         return outputs
 
 
@@ -379,7 +383,6 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         genfile = True,
         desc="Prefix for the registration outputs (\"in_FLIRT-to_ref\" if not specified)",
         position=3, argstr="-xp %s",mandatory=False)
-
 
     bs = traits.String(
         "_IRbrain", usedefault=True,
@@ -552,6 +555,7 @@ Will output a better brain mask of the in-file.
         outputs["warp_file"] = os.path.abspath(outfile + ".nii.gz")
         outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
         outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
+        print(outputs)
         return outputs
 
 
