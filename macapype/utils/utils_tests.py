@@ -13,7 +13,8 @@ def load_test_data(name):
         "AtlasBREX": "xtffSJfiBqCQZWi",
         "NMT_v1.2": "8LXLzFAE89x28Lp",
         "NMT_FSL": "ajAtB7qgaPAmKyJ",
-        "inia19": "WZo9wZdreTMwfQA"
+        "inia19": "WZo9wZdreTMwfQA",
+        "data_test_macapype": "Fn8a57PpQWPacZR"
     }
 
     data_dirpath = op.join(op.expanduser("~"), "data")
@@ -45,7 +46,6 @@ def load_test_data(name):
 
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
-
 
     assert op.exists(data_path)
 
