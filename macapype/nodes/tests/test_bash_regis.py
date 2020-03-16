@@ -1,5 +1,8 @@
 
-pass
+
+def test_pass():
+    pass
+
 
 """
 import os
