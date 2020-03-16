@@ -83,11 +83,7 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
 def create_old_segment_extraction_pipe(priors,
                                        name="old_segment_exctraction_pipe"):
     """ Extract brain using tissues masks output by SPM's old_segment function
-    
-<<<<<<< HEAD
 
-=======
->>>>>>> 4fcffb573a51044fadeeb269129620d936272c5d
     1 - Segment the T1 using given priors;
     2 - Threshold GM, WM and CSF maps;
     3 - Compute union of those 3 tissues;
@@ -172,17 +168,16 @@ def create_old_segment_extraction_pipe(priors,
         niu.Function(input_names=["in_file"],
                      output_names=["out_file"],
                      function=apply_binary_fill_holes_dirty),
-        name="fill_holes"
-    )
+        name="fill_holes")
+
     be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
     fill_holes_dil = pe.Node(
         niu.Function(input_names=["in_file"],
                      output_names=["out_file"],
                      function=apply_binary_fill_holes_dirty),
-        name="fill_holes_dil"
-    )
-    be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
-    
-    return be_pipe
+        name="fill_holes_dil")
 
+    be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
+
+    return be_pipe

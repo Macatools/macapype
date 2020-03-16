@@ -114,4 +114,3 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     segment_pipe.connect(inputnode, 'wm_prior_file', seg_at, "ex_prior3")
 
     return segment_pipe
-

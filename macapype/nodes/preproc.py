@@ -52,4 +52,3 @@ def average_align(list_img):
         av_img_file = list_img
 
     return av_img_file
-
