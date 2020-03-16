@@ -108,7 +108,7 @@
 <h1>macapype.nodes.bash_regis.T1xT2BET<a class="headerlink" href="#macapype-nodes-bash-regis-t1xt2bet" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="macapype.nodes.bash_regis.T1xT2BET">
-<em class="property">class </em><code class="descclassname">macapype.nodes.bash_regis.</code><code class="descname">T1xT2BET</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/bash_regis.html#T1xT2BET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.bash_regis.T1xT2BET" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">macapype.nodes.bash_regis.</code><code class="descname">T1xT2BET</code><span class="sig-paren">(</span><em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/bash_regis.html#T1xT2BET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.bash_regis.T1xT2BET" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Description:</dt>
 <dd>Brain extraction using T1 and T2 images</dd>
@@ -176,7 +176,10 @@
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
 <td>A convenient way to save current inputs to a JSON file.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_output_type</span></code>(output_type)</td>
+<td>Set the default output type for FSL classes.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
 <td>Set the default terminal output for CommandLine Interfaces.</td>
 </tr>
 </tbody>
@@ -197,7 +200,7 @@
 </table>
 <dl class="method">
 <dt id="macapype.nodes.bash_regis.T1xT2BET.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.bash_regis.T1xT2BET.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.bash_regis.T1xT2BET.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subclasses must implement __init__</p>
 </dd></dl>
 
@@ -208,7 +211,7 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#macapype.nodes.bash_regis.T1xT2BET.__init__" title="macapype.nodes.bash_regis.T1xT2BET.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command,&nbsp;terminal_output])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#macapype.nodes.bash_regis.T1xT2BET.__init__" title="macapype.nodes.bash_regis.T1xT2BET.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(**inputs)</td>
 <td>Subclasses must implement __init__</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
@@ -229,10 +232,13 @@
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
 <td>A convenient way to save current inputs to a JSON file.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_output_type</span></code>(output_type)</td>
+<td>Set the default output type for FSL classes.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
 <td>Set the default terminal output for CommandLine Interfaces.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag,&nbsp;cmd])</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag,&nbsp;cmd])</td>
 <td></td>
 </tr>
 </tbody>
@@ -256,16 +262,19 @@
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></td>
 <td><cite>command</cite> plus any arguments (args) validates arguments and generates command line</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></td>
 <td>interfaces should implement a version property</td>
 </tr>
 </tbody>
@@ -286,7 +295,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-16.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

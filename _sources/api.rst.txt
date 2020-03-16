@@ -25,7 +25,6 @@ Nodes (:py:mod:`macapype.nodes.bash_regis`):
 
    T1xT2BET
 
-
 Utils (:py:mod:`macapype.utils.utils_tests`):
 
 .. currentmodule:: macapype.utils.utils_tests
@@ -34,5 +33,3 @@ Utils (:py:mod:`macapype.utils.utils_tests`):
    :toctree: generated/
 
    load_test_data
-
-

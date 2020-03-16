@@ -20,6 +20,7 @@ macapype.nodes.bash\_regis.T1xT2BET
       ~T1xT2BET.raise_exception
       ~T1xT2BET.run
       ~T1xT2BET.save_inputs_to_json
+      ~T1xT2BET.set_default_output_type
       ~T1xT2BET.set_default_terminal_output
       ~T1xT2BET.version_from_command
    
@@ -35,6 +36,7 @@ macapype.nodes.bash\_regis.T1xT2BET
       ~T1xT2BET.can_resume
       ~T1xT2BET.cmd
       ~T1xT2BET.cmdline
+      ~T1xT2BET.package_directory
       ~T1xT2BET.references_
       ~T1xT2BET.resource_monitor
       ~T1xT2BET.terminal_output

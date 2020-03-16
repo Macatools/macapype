@@ -111,23 +111,8 @@
 <span class="kn">from</span> <span class="nn">.register</span> <span class="kn">import</span> <span class="n">create_register_NMT_pipe</span>
 
 
-<div class="viewcode-block" id="create_full_segment_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_full_segment_pipe.html#macapype.pipelines.segment.create_full_segment_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pipe</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">nmt_dir</span><span class="p">,</span>
-                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pipe&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    create full segment pipe from cropped and flirt_averaged T1 and T2,</span>
-<span class="sd">    and brain mask</span>
+<div class="viewcode-block" id="create_full_segment_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_full_segment_pipe.html#macapype.pipelines.segment.create_full_segment_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pipe</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pipe&quot;</span><span class="p">):</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        sigma: (int) Parameter for denoising</span>
-<span class="sd">        nmt_dir: (path) directory to NTM template</span>
-<span class="sd">        name: (string) name of the pipeline (default = &quot;full_segment_pipe&quot;)</span>
-
-<span class="sd">    Inputs:</span>
-<span class="sd">        preproc_T1: File</span>
-<span class="sd">        preproc_T2: File</span>
-<span class="sd">        brain_mask: File</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># creating pipeline</span>
     <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -242,7 +227,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-16.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
