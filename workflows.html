@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Documentation &#8212; macapype 0.0.0 documentation</title>
+    <title>How to run workflows &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -43,7 +43,7 @@
           <ul class="nav navbar-nav">
             
                 <li><a href="auto_examples/index.html">Gallery</a></li>
-                <li><a href="#">API</a></li>
+                <li><a href="api.html">API</a></li>
                 <li><a href="tutorial.html">Tutorial</a></li>
                 <li><a href="install.html">Installation</a></li>
                 <li><a href="https://github.com/macatools/macapype">Github</a></li>
@@ -69,7 +69,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">API Documentation</a><ul>
+<li><a class="reference internal" href="#">How to run workflows</a><ul>
+<li><a class="reference internal" href="#following-the-bids-format">Following the BIDS format</a></li>
 </ul>
 </li>
 </ul>
@@ -83,7 +84,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/api.rst.txt"
+  <a href="_sources/workflows.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -107,44 +108,33 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="api-documentation">
-<span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Pipelines (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.segment</span></code>):</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.segment.create_full_segment_pipe.html#macapype.pipelines.segment.create_full_segment_pipe" title="macapype.pipelines.segment.create_full_segment_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pipe</span></code></a>(sigma,&nbsp;nmt_dir[,&nbsp;name])</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>Nodes (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.bash_regis</span></code>):</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BET.html#macapype.nodes.bash_regis.T1xT2BET" title="macapype.nodes.bash_regis.T1xT2BET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>(**inputs)</td>
-<td>Description:</td>
-</tr>
-</tbody>
-</table>
-<p>Utils (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.utils.utils_tests</span></code>):</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="macapype.utils.utils_tests.load_test_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_test_data</span></code></a>(name)</td>
-<td>Load test data, template and needed scripts</td>
-</tr>
-</tbody>
-</table>
+  <div class="section" id="how-to-run-workflows">
+<span id="workflows"></span><h1>How to run workflows<a class="headerlink" href="#how-to-run-workflows" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="following-the-bids-format">
+<h2>Following the BIDS format<a class="headerlink" href="#following-the-bids-format" title="Permalink to this headline">¶</a></h2>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -subjects Elouk -sess 01
+$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -subjects Elouk
+</pre></div>
+</div>
+<p>Will find the corresponding data if follows BIDS :</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test
+</pre></div>
+</div>
+<p>– Warning– cropped data should be used for more efficient processing
+– Warning– cropped data should also be saved as ‘T1w.nii’ instead of ‘T1wCropped.nii’</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_kepkee.py -data ~/Data_maca -out ./local_test -cropped True
+</pre></div>
+</div>
+<p>– Warning– cropped data should be used for more efficient processing
+– Warning– cropped T1 should also be saved as ‘T1w.nii’ instead of ‘T1wCropped.nii’
+– Warning– cropped T2 should also be saved as ‘T2w.nii’ instead of ‘T2wRegT1wCropped.nii’</p>
+<p>if already cropped, or no cropbox is provided:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python segment_pnh_kepkee.py -data ~/Data_maca -out ./local_test -subjects 032311 -ses ses-001
+</pre></div>
+</div>
+<p>Add the -crop_req if cropping is required, and .cropbox is provided</p>
+<p># TODO : follow the same syntax for datagrabber with pybids or not</p>
+</div>
 </div>
 
 

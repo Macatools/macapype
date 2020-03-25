@@ -45,6 +45,7 @@
                 <li><a href="auto_examples/index.html">Gallery</a></li>
                 <li><a href="api.html">API</a></li>
                 <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="install.html">Installation</a></li>
                 <li><a href="https://github.com/macatools/macapype">Github</a></li>
             
             
@@ -68,7 +69,12 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Macapype</a></li>
+<li><a class="reference internal" href="#">Macapype</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#docker">Docker</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -110,9 +116,21 @@
 pipelines</strong> for advanced multi-thread processing of fMRI anat in PNH. Neuropycon is based on <a class="reference external" href="http://nipype.readthedocs.io/en/latest/#">Nipype</a>,
 a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common
 python framework.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="install.html#install"><span class="std std-ref">Installation</span></a> for installation on your local system if you have adequate softwares (i.e. FSL, AFNI, Ants, SPM) running on your machine/clusters.
+Running subsequent workflows can be found <a class="reference internal" href="workflows.html#workflows"><span class="std std-ref">here</span></a></p>
+</div>
+<div class="section" id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+<p>A docker image is also available, explanation can be found <a class="reference internal" href="docker_install.html#docker-install"><span class="std std-ref">here</span></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>the <a class="reference internal" href="auto_examples/plot_segment.html#plot-segment"><span class="std std-ref">plot_segment pipeline</span></a> runs the graph computation and graph-theoretical tools over connectivity matrices.</li>
 </ul>
+</div>
 </div>
 
 
@@ -127,7 +145,7 @@ python framework.</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-16.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-25.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
