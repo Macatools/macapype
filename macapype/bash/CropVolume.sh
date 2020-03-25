@@ -134,7 +134,7 @@ else # if no prefix provided, create them
   for(( i=0; i<${#IN_FILES[@]}; i++ )); do
     INname=`extract_base_name ${IN_FILES[$i]}`
     INpath=`extract_path ${IN_FILES[$i]}`
-    OUT_PREFIXES[$i]="${INpath}${INname}${OUT_SUFFIX}"
+    OUT_PREFIXES[$i]="$PWD/${INname}${OUT_SUFFIX}"
   done
 fi
 
@@ -203,6 +203,7 @@ echo
 # Crop with fslroi
 for(( i=0; i<${#IN_FILES[@]}; i++ )); do
   echo "Cropping ${IN_FILES[$i]}..."
+  echo ${IN_FILES[$i]} ${OUT_PREFIXES[$i]}
   "${FSLPREFIX}fslroi" ${IN_FILES[$i]} ${OUT_PREFIXES[$i]} ${C_MIN[0]} ${C_SIZE[0]} ${C_MIN[1]} ${C_SIZE[1]} ${C_MIN[2]} ${C_SIZE[2]}
 done
 

@@ -20,7 +20,7 @@ Optional arguments:
                   Will only work for spatially close images.
     -as           Suffix for T2w to T1w registration ("-in-T1w" if not specified)
     -s <s>        size of gauss kernel in mm when performing mean filtering (default=4)
-    -b <mask>     Brain mask file. Will also output bias corrected brain files with the format "output_prefix_brain.nii.gz"
+    -b <mask>     Brain or brain mask file. Will also output bias corrected brain files with the format "output_prefix_brain.nii.gz"
     -bet <n>      Will try to "smart" BET the anat files to get a brain mask: n = the number of iterations BET will be run
                   to find center of gravity (default=0, will not BET if option -b has been specified).
                   Will also output bias corrected brain files and the BET mask
@@ -169,7 +169,8 @@ echo $DIR
 # Files
 T1name=`extract_base_name $T1`
 T2name=`extract_base_name $T2`
-INpath=`extract_path $T1`
+#INpath=`extract_path $T1`
+INpath=$PWD/
 OUT_PREFIX1="${INpath}${T1name}${OUT_SUFFIX}"
 OUT_PREFIX2="${INpath}${T2name}${OUT_SUFFIX}"
 
@@ -209,19 +210,19 @@ else
   declare -A TMP # temporary files
 fi
 
-TMP[T1mulT2]="${INpath}T1mulT2.nii.gz"
-TMP[T1mulT2_temp]="${INpath}T1mulT2_temp.nii.gz"
-TMP[T1mulT2_pow]="${INpath}T1mulT2_pow.nii.gz"
-TMP[T1mulT2_BET]="${INpath}T1mulT2_BET.nii.gz"
-TMP[T1mulT2_BET_mask]="${INpath}T1mulT2_BET_mask.nii.gz"
-TMP[T1mulT2_masked]="${INpath}T1mulT2_masked.nii.gz"
-TMP[T1mulT2_norm]="${INpath}T1mulT2_norm.nii.gz"
-TMP[T1mulT2_smooth]="${INpath}T1mulT2_smooth.nii.gz"
-TMP[T1mulT2_NM]="${INpath}T1mulT2_NM.nii.gz"
-TMP[T1mulT2_mod]="${INpath}T1mulT2_mod.nii.gz"
-TMP[T1mulT2_mod_mask]="${INpath}T1mulT2_mod_mask.nii.gz"
-TMP[bias_raw]="${INpath}bias_raw.nii.gz"
-TMP[OutputBiasField]="${INpath}OutputBiasField.nii.gz"
+TMP[T1mulT2]="${INpath}${T1name}_T1mulT2.nii.gz"
+TMP[T1mulT2_temp]="${INpath}${T1name}_T1mulT2_temp.nii.gz"
+TMP[T1mulT2_pow]="${INpath}${T1name}_T1mulT2_pow.nii.gz"
+TMP[T1mulT2_BET]="${INpath}${T1name}_T1mulT2_BET.nii.gz"
+TMP[T1mulT2_BET_mask]="${INpath}${T1name}_T1mulT2_BET_mask.nii.gz"
+TMP[T1mulT2_masked]="${INpath}${T1name}_T1mulT2_masked.nii.gz"
+TMP[T1mulT2_norm]="${INpath}${T1name}_T1mulT2_norm.nii.gz"
+TMP[T1mulT2_smooth]="${INpath}${T1name}_T1mulT2_smooth.nii.gz"
+TMP[T1mulT2_NM]="${INpath}${T1name}_T1mulT2_NM.nii.gz"
+TMP[T1mulT2_mod]="${INpath}${T1name}_T1mulT2_mod.nii.gz"
+TMP[T1mulT2_mod_mask]="${INpath}${T1name}_T1mulT2_mod_mask.nii.gz"
+TMP[bias_raw]="${INpath}${T1name}_bias_raw.nii.gz"
+TMP[OutputBiasField]="${INpath}${T1name}_OutputBiasField.nii.gz"
 
 
 

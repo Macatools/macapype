@@ -11,5 +11,6 @@ setup(
     author="David Meunier",
     description="Pipeline for anatomic processing for macaque",
     license='BSD 3',
-    install_requires=["nipype", "networkx>=2.0"]
+    install_requires=["nipype", "networkx>=2.0", "pybids"]
 )
+

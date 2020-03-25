@@ -11,8 +11,7 @@ from .correct_bias import create_masked_correct_bias_pipe
 from .register import create_register_NMT_pipe
 
 
-def create_full_segment_pipe(sigma, nmt_dir,
-                             name="full_segment_pipe"):
+def create_full_segment_pipe(sigma, nmt_dir, name="full_segment_pipe"):
 
     # creating pipeline
     brain_segment_pipe = pe.Workflow(name=name)

@@ -1,6 +1,6 @@
 
 
-# equivalent of flirt_average in FSL
+# Equivalent of flirt_average in FSL
 def average_align(list_img):
 
     import os

@@ -80,8 +80,9 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
     return brain_extraction_pipe
 
 
-def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
-    """ Extract brain using tissues masks outputed by SPM's old_segment function
+def create_old_segment_extraction_pipe(priors,
+                                       name="old_segment_exctraction_pipe"):
+    """ Extract brain using tissues masks output by SPM's old_segment function
 
     1 - Segment the T1 using given priors;
     2 - Threshold GM, WM and CSF maps;
@@ -90,7 +91,7 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     5 - Fill holes
 
     Inputs
-    ---------
+    ======
     T1: T1 file name
     seg_priors: list of file names
 
@@ -101,9 +102,9 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     # creating pipeline
     be_pipe = pe.Workflow(name=name)
 
-    # creating inputnode
+    # Creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'seg_priors']),
+        niu.IdentityInterface(fields=['T1']),
         name='inputnode'
     )
 
@@ -112,8 +113,8 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
     segment.inputs.gm_output_type = [False, False, True]
     segment.inputs.wm_output_type = [False, False, True]
     segment.inputs.csf_output_type = [False, False, True]
+    segment.tissue_prob_maps = priors
     be_pipe.connect(inputnode, 'T1', segment, 'data')
-    be_pipe.connect(inputnode, 'seg_priors', segment, 'tissue_prob_maps')
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
@@ -167,16 +168,16 @@ def create_old_segment_extraction_pipe(name="old_segment_exctraction_pipe"):
         niu.Function(input_names=["in_file"],
                      output_names=["out_file"],
                      function=apply_binary_fill_holes_dirty),
-        name="fill_holes"
-    )
+        name="fill_holes")
+
     be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
     fill_holes_dil = pe.Node(
         niu.Function(input_names=["in_file"],
                      output_names=["out_file"],
                      function=apply_binary_fill_holes_dirty),
-        name="fill_holes_dil"
-    )
+        name="fill_holes_dil")
+
     be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
 
     return be_pipe

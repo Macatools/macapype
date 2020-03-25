@@ -26,10 +26,10 @@ Optional arguments:
     -cost <cost>  FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,labeldiff,bbr}    (default is normmi)
     -n <n>        n = the number of FLIRT iterations (>=2, default=2).
     -m <method>   At each new iteration, either use:
-                    - the reference brain mask, m=ref (default)
-                    - the union of the reference and input brain masks, m=union (use if your input brain is too small)
-                    - the intersection of the reference and input brain masks, m=inter (use if your input brain is too big)
-                    - a mix between union & intersection, m=mix (give it a try!)
+                    - m=ref, the reference brain mask (default)
+                    - m=union, the union of the reference and input brain masks (use if your input brain is too small)
+                    - m=inter , the intersection of the reference and input brain masks (use if your input brain is too big)
+                    - m=mix, a mix between union & intersection (give it a try!)
     -refw <file>  Do a whole-head non-linear registration (using FNIRT) during last iteration (provide reference whole-head image)
     -k            Will keep temporary files.
     -p <p>        Prefix for running FSL functions (can be a path or just a prefix)
@@ -166,7 +166,9 @@ echo $DIR
 # Files
 IN_BRAINname=`extract_base_name $IN_BRAIN`
 IN_WHOLEname=`extract_base_name $IN_WHOLE`
-INpath=`extract_path $IN_BRAIN`
+#INpath=`extract_path $IN_BRAIN`
+INpath=$PWD/
+
 REFname=`extract_base_name $REF_BRAIN`
 if [[ -z $OUT_PREFIX ]]; then
   OUT_PREFIX="${INpath}${IN_BRAINname}_FLIRT-to_${REFname}"
@@ -207,7 +209,8 @@ cat <<REPORTPARAMETERS
  Brain moving image:        $IN_BRAIN
  Reference brain:           $REF_BRAIN
  Whole-head reference:      $REF_WHOLE
- Output prefix:             $OUT_PREFIX
+ Registration prefix:       $OUT_PREFIX
+ Output brain prefix:       $IN_OUT_BRAIN
  FLIRT DOF:                 $DOF
  FLIRT iterations:          $NITER
  Method:                    $METHOD
@@ -223,8 +226,10 @@ REPORTPARAMETERS
 # **************************
 if [[ "$OSTYPE" == "darwin" ]]; then # if macOSX
   declare -a TMP # temporary files
+  declare -a WARP # warp files
 else
   declare -A TMP # temporary files
+  declare -A WARP # warp files
 fi
 
 
@@ -275,7 +280,9 @@ for ((i = 1 ; i  <= $NITER ; i++)); do
   if [[ -n $REF_WHOLE ]] && [[ $i == $NITER ]]; then
     echo "FNIRT..."
     "${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} # compute warp
+    echo "Inverting warp..."
     "${FSLPREFIX}invwarp" -r $IN_WHOLE -w ${WARP[WH_WARP]} -o ${WARP[WH_INVWARP]}
+    echo "Applying inverse warp..."
     "${FSLPREFIX}applywarp" --ref=$IN_WHOLE --in=${TMP[REF_MASK]} --out=$IN_OUT_MASK --warp=${WARP[WH_INVWARP]} --interp=nn
   else
     "${FSLPREFIX}flirt" -in ${TMP[REF_MASK]} -ref $IN_WHOLE -out $IN_OUT_MASK -interp nearestneighbour -applyxfm -init $R2I_XFM # move brain mask to in_file
