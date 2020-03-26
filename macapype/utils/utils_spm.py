@@ -1,4 +1,5 @@
 import os
+import os.path as op
 
 import nipype.interfaces.spm as spm
 
