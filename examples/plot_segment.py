@@ -52,6 +52,4 @@ segment_pnh.base_dir = my_path
 segment_pnh.inputs.inputnode.T1 = T1_file
 segment_pnh.inputs.inputnode.T2 = T2_file
 
-val = segment_pnh.run().outputs
-
-print(val)
+segment_pnh.run()
