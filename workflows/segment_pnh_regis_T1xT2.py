@@ -62,13 +62,6 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.ants as ants
 import nipype.interfaces.fsl as fsl
 
-from macapype.nodes.preproc import average_align
-from macapype.nodes.bash_regis import T1xT2BET, T1xT2BiasFieldCorrection, \
-                                      IterREGBET
-from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
-from macapype.utils.utils_tests import load_test_data
-
-
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
@@ -236,47 +229,7 @@ def create_bids_datasource(data_dir):
 
     return bids_datasource
 
-
-def create_segment_pnh_T1xT2(brain_template, priors,
-                             name='T1xT2_segmentation_pipeline'):
-    print(brain_template)
-    print(priors)
-    print("node name: ", name)
-
-    # Creating pipeline
-    seg_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2']),
-        name='inputnode'
-    )
-
-    # Brain extraction (unused) + Cropping
-    bet = pe.Node(T1xT2BET(m=True, aT2=True, c=10), name='bet')
-    bet.n = 2
-    seg_pipe.connect(inputnode, 'T1', bet, 't1_file')
-    seg_pipe.connect(inputnode, 'T2', bet, 't2_file')
-
-    # Bias correction of cropped images
-    debias = pe.Node(T1xT2BiasFieldCorrection(), name='debias')
-    seg_pipe.connect(bet, 't1_cropped_file', debias, 't1_file')
-    seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
-    seg_pipe.connect(bet, 'mask_file', debias, 'b')
-
-    # Iterative registration to the INIA19 template
-    reg = pe.Node(IterREGBET(), name='reg')
-    reg.inputs.refb_file = brain_template
-    seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
-    seg_pipe.connect(debias, 't1_debiased_brain_file', reg, 'inb_file')
-
-    # Compute brain mask using old_segment of SPM and postprocessing on
-    # tissues' masks
-    extract_brain = create_old_segment_extraction_pipe(priors)
-    seg_pipe.connect(reg, ('warp_file', gunzip), extract_brain, 'inputnode.T1')
-
-    return seg_pipe
-
+from macapype.pipelines.segment import create_full_segment_pnh_T1xT2
 
 ###############################################################################
 def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
@@ -291,9 +244,9 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
     segment_pnh = create_segment_pnh_T1xT2(template, priors)
 
     main_workflow.connect(
-        datasource, ('T1', average_align), segment_pnh, 'inputnode.T1')
+        datasource, 'T1', segment_pnh, 'inputnode.T1')
     main_workflow.connect(
-        datasource, ('T2', average_align), segment_pnh, 'inputnode.T2')
+        datasource, 'T2', segment_pnh, 'inputnode.T2')
 
     return main_workflow
 
