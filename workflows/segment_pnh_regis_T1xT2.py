@@ -46,10 +46,6 @@
 #           Bastien Cagna (bastien.cagna@univ-amu.fr)
 #           Regis Trapeau (regis.trapeau@univ-amu.fr)
 
-import nilearn as ni
-import nilearn.image as nii
-
-import nibabel as nb
 import os
 import os.path as op
 import argparse

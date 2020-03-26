@@ -1,8 +1,12 @@
 import os
 import os.path as op
 
-import nipype.interfaces.spm as spm
+import nilearn as ni
+import nilearn.image as nii
 
+import nibabel as nb
+
+import nipype.interfaces.spm as spm
 from nipype.interfaces.matlab import get_matlab_command
 
 
