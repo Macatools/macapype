@@ -49,8 +49,8 @@ priors = [op.join(inia_dir, "inia19-prob_1.nii"),
 segment_pnh = create_full_segment_pnh_T1xT2(template, format_spm_priors(priors))
 segment_pnh.base_dir = my_path
 
-segment_pnh.inputnode.inputs.T1 = T1_file
-segment_pnh.inputnode.inputs.T2 = T2_file
+segment_pnh.inputs.inputnode.T1 = T1_file
+segment_pnh.inputs.inputnode.T2 = T2_file
 
 val = segment_pnh.run().outputs
 
