@@ -160,7 +160,7 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
 
 
 
-    if subjects is None
+    if subjects is None:
         subjects = layout.get_subjects()
 
     acqs = layout.get_acquistions() if acqs and len(acqs) == 0 else acqs
