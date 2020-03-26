@@ -22,7 +22,7 @@ import nipype.interfaces.io as nio
 # Load test data
 from macapype.utils.utils_tests import load_test_data
 
-from macapype.pipelines.full_segment import create_segment_pnh_T1xT2
+from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
 
 my_path = "/hpc/crise/meunier.d/"
 
@@ -45,7 +45,7 @@ priors = [op.join(inia_dir, "inia19-prob_1.nii"),
 
 
 # running workflow
-segment_pnh = create_segment_pnh_T1xT2(template, priors)
+segment_pnh = create_full_segment_pnh_T1xT2(template, priors)
 segment_pnh.base_dir = my_path
 
 segment_pnh.inputs.T1 = T1_file
