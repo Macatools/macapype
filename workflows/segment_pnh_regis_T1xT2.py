@@ -66,6 +66,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
 from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
+from macapype.utils.utils_tests import load_test_data
 
 def gunzip(filename):
     import subprocess
