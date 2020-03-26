@@ -251,7 +251,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.template is None and args.priors is None:
-        inia_dir = load_test_data(my_path, "inia19")
+        inia_dir = load_test_data("inia19", path_to=my_path)
         args.template = op.join(inia_dir, "inia19-t1-brain.nii")
         args.priors = [
             op.join(inia_dir, "inia19-prob_1.nii"),
