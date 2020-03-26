@@ -117,16 +117,6 @@ def format_spm_priors(priors, fname="merged_tissue_priors.nii",
     )
 
 
-def create_infosource(subject_ids):
-    infosource = pe.Node(
-        interface=niu.IdentityInterface(fields=['subject_id']),
-        name="infosource"
-    )
-    infosource.iterables = [('subject_id', subject_ids)]
-
-    return infosource
-
-
 def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
@@ -173,6 +163,18 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     bids_datasource.iterables = iterables
 
     return bids_datasource
+
+"""
+def create_infosource(subject_ids):
+    infosource = pe.Node(
+        interface=niu.IdentityInterface(fields=['subject_id']),
+        name="infosource"
+    )
+    infosource.iterables = [('subject_id', subject_ids)]
+
+    return infosource
+"""
+
 # def create_datasource(data_dir, sess):
 #     datasource = pe.Node(
 #         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1','T2']),
@@ -198,7 +200,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
     datasource = create_datasource(data_dir, subject_ids, sessions,
                                    acquisitions)
 
-    segment_pnh = create_segment_pnh_T1xT2(template, priors)
+    segment_pnh = create_full_segment_pnh_T1xT2(template, priors)
 
     main_workflow.connect(
         datasource, 'T1', segment_pnh, 'inputnode.T1')
