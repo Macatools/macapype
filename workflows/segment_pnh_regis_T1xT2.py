@@ -131,7 +131,7 @@ def create_infosource(subject_ids):
     return infosource
 
 
-def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
+def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -160,7 +160,7 @@ def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
 
 
 
-    if len(subjects) == 0:
+    if subjects is None
         subjects = layout.get_subjects()
 
     acqs = layout.get_acquistions() if acqs and len(acqs) == 0 else acqs
