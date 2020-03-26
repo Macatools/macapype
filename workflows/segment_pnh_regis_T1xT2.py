@@ -65,6 +65,8 @@ import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
+from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
+
 def gunzip(filename):
     import subprocess
 
@@ -184,52 +186,6 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
 #     datasource.inputs.sort_filelist = True
 #
 #     return datasource
-
-
-def create_bids_datasource(data_dir):
-
-    bids_datasource = pe.Node(
-        interface=nio.BIDSDataGrabber(),
-        name='bids_datasource'
-    )
-
-    bids_datasource.inputs.base_dir = data_dir
-
-    bids_datasource.inputs.output_query = {
-        'T1': {
-            "datatype": "anat",
-            "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
-        },
-        'T2': {
-            "datatype": "anat",
-            "suffix": "T2w",
-            "extensions": ["nii", ".nii.gz"]
-        }
-    }
-
-    layout = BIDSLayout(data_dir)
-    print(layout)
-    print(layout.get_subjects())
-    print(layout.get_sessions())
-
-    iterables = []
-    if len(layout.get_subjects()) == 1:
-         bids_datasource.inputs.subject = layout.get_subjects()[0]
-    else:
-        iterables.append(('subject', layout.get_subjects()[:2]))
-
-    if len(layout.get_sessions()) == 1:
-         bids_datasource.inputs.session = layout.get_sessions()[0]
-    else:
-        iterables.append(('session', layout.get_sessions()[:2]))
-
-    if len(iterables):
-        bids_datasource.iterables = iterables
-
-    return bids_datasource
-
-from macapype.pipelines.segment import create_full_segment_pnh_T1xT2
 
 ###############################################################################
 def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
