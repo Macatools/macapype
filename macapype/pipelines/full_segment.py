@@ -54,10 +54,10 @@ def create_full_segment_pnh_T1xT2(brain_template, priors,
     seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
     seg_pipe.connect(debias, 't1_debiased_brain_file', reg, 'inb_file')
 
-    # Compute brain mask using old_segment of SPM and postprocessing on
-    # tissues' masks
-    extract_brain = create_old_segment_extraction_pipe(priors)
-    seg_pipe.connect(reg, ('warp_file', gunzip), extract_brain, 'inputnode.T1')
+    ## Compute brain mask using old_segment of SPM and postprocessing on
+    ## tissues' masks
+    #extract_brain = create_old_segment_extraction_pipe(priors)
+    #seg_pipe.connect(reg, ('warp_file', gunzip), extract_brain, 'inputnode.T1')
 
     return seg_pipe
 
