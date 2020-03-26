@@ -17,6 +17,8 @@ from .correct_bias import create_masked_correct_bias_pipe
 from .register import create_register_NMT_pipe
 from .segment import create_segment_atropos_pipe
 
+from macapype.nodes.utils.misc import gunzip
+
 ###############################################################################
 # Regis
 def create_full_segment_pnh_T1xT2(brain_template, priors,
