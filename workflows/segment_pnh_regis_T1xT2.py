@@ -68,16 +68,6 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
 from macapype.utils.utils_tests import load_test_data
 
-def gunzip(filename):
-    import subprocess
-
-    if filename[-3:] == ".gz":
-        subprocess.check_output("gunzip " + filename, shell=True)
-    else:
-        ValueError("Non GZip file given")
-    return filename[:-3]
-
-
 def format_spm_priors(priors, fname="merged_tissue_priors.nii",
                       directory=None):
     """
