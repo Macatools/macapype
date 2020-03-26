@@ -24,14 +24,16 @@ from macapype.utils.utils_tests import load_test_data
 
 from ..worklfows.segment_pnh_regis_T1xT2 import create_segment_pnh_T1xT2
 
-data_path = load_test_data("data_test_macapype", path_to = "/hpc/crise/meunier.d/")
+my_path = "/hpc/crise/meunier.d/"
+
+data_path = load_test_data("data_test_macapype", path_to = my_path)
 
 # data file
 T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
 T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
 
 
-inia_dir = load_test_data("inia19", path_to = "/hpc/crise/meunier.d/")
+inia_dir = load_test_data("inia19", path_to = my_path)
 
 template = op.join(inia_dir, "inia19-t1-brain.nii")
 # priors
