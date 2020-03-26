@@ -153,18 +153,16 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     layout = BIDSLayout(data_dir)
 
     # Verbose
-    print("BIDS layaout:", layout)
+    print("BIDS layout:", layout)
     print("\t", layout.get_subjects())
     print("\t", layout.get_sessions())
-    print("\t", layout.get_acquisitions())
+
+    #print("\t", layout.get_acquisitions())
 
 
 
     if subjects is None:
         subjects = layout.get_subjects()
-
-    if acqs is None:
-        acqs = layout.get_acquistions()
 
     if sessions is None:
         sessions = layout.get_sessions()
@@ -172,27 +170,10 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     iterables = []
     iterables.append(('subject', subjects))
     iterables.append(('session', sessions))
-    if acqs:
+
+    if acqs in not None:
         iterables.append(('acquisition', acqs))
-    #    # Add iteration over subjects
-    #    if len(layout.get_subjects()) == 1:
-    #         bids_datasource.inputs.subject = layout.get_subjects()[0]
-    #    else:
-    #        iterables.append(('subject', layout.get_subjects()))
 
-    #    #  Add iteration over sessions
-    #    if len(layout.get_sessions()) == 1:
-    #         bids_datasource.inputs.session = layout.get_sessions()[0]
-    #    else:
-    #        iterables.append(('session', layout.get_sessions()))
-
-    #    #  Add iteration over acquisitions
-    #    if len(layout.get_acquisitions()) == 1:
-    #         bids_datasource.inputs.acquisitions = layout.get_acquisitions()[0]
-    #    else:
-    #        iterables.append(('acquisition', layout.get_acquisitions()))
-
-    #    if len(iterables) > 0:
     bids_datasource.iterables = iterables
 
     return bids_datasource
