@@ -20,7 +20,7 @@ def load_test_data(name, path_to = ""):
     if path_to == "":
         path_to = op.expanduser("~")
 
-    data_dirpath = op.join(data_dirpath, "data_macapype")
+    data_dirpath = op.join(path_to, "data_macapype")
 
     try:
         makedirs(data_dirpath)
