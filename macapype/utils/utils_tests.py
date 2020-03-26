@@ -30,6 +30,7 @@ def load_test_data(name, path_to = ""):
     data_path = op.join(data_dirpath, name)
 
     if op.exists(data_path):
+        print("{} Already exists, skipping download".format(data_path))
         return data_path
 
     data_zip = op.join(data_dirpath, "{}.zip".format(name))
