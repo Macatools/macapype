@@ -158,7 +158,11 @@ def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
     print("\t", layout.get_sessions())
     print("\t", layout.get_acquisitions())
 
-    subjects = layout.get_subjects() if len(subjects) == 0 else subjects
+
+
+    if len(subjects) == 0:
+        subjects = layout.get_subjects()
+
     acqs = layout.get_acquistions() if acqs and len(acqs) == 0 else acqs
     sessions = layout.get_sessions() if len(sessions) == 0 else sessions
 
