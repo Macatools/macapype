@@ -248,7 +248,7 @@ def create_segment_pnh_T1xT2(brain_template, priors,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2', 'priors']),
+        niu.IdentityInterface(fields=['T1','T2']),
         name='inputnode'
     )
 
@@ -285,18 +285,6 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
     main_workflow = pe.Workflow(name="T1xT2_processing_workflow")
     main_workflow.base_dir = process_dir
 
-    # # Infosource
-    # if subject_ids is None or sessions is None:
-    #     print('adding BIDS data source')
-    #     datasource = create_bids_datasource(data_dir)
-    # else:
-    #     print('adding info source and data source')
-    #     infosource = create_infosource(subject_ids)
-    #     # Data source
-    #     datasource = create_datasource(data_dir, sessions)
-    #     # connect
-    #     main_workflow.connect(
-    #         infosource, 'subject_id', datasource, 'subject_id')
     datasource = create_datasource(data_dir, subject_ids, sessions,
                                    acquisitions)
 
