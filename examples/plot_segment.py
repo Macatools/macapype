@@ -22,7 +22,7 @@ import nipype.interfaces.io as nio
 # Load test data
 from macapype.utils.utils_tests import load_test_data
 
-from ..worklfows.segment_pnh_regis_T1xT2 import create_segment_pnh_T1xT2
+from macapype.pipelines.full_segment import create_segment_pnh_T1xT2
 
 my_path = "/hpc/crise/meunier.d/"
 
