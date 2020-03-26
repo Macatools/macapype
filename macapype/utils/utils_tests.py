@@ -36,7 +36,8 @@ def load_test_data(name, path_to = ""):
 
     if not op.exists(data_zip):
 
-        print "Download {}".format(data_zip)
+        print("Download {}".format(data_zip))
+
         assert name in data_dir.keys(),\
             "Error, {} not found in data_dict".format(name)
         oc_path = "https://cloud.int.univ-amu.fr/index.php/s/{}/download"\
@@ -47,6 +48,7 @@ def load_test_data(name, path_to = ""):
     assert op.exists(data_zip),\
         "Error, data_zip = {} not found ".format(data_zip)
 
+    print("Unzip {} to {}".format(data_zip, data_path))
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
 
