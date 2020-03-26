@@ -171,7 +171,7 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     iterables.append(('subject', subjects))
     iterables.append(('session', sessions))
 
-    if acqs in not None:
+    if acqs is not None:
         iterables.append(('acquisition', acqs))
 
     bids_datasource.iterables = iterables
