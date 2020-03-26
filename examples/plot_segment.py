@@ -46,6 +46,7 @@ priors = [op.join(inia_dir, "inia19-prob_1.nii"),
 
 # running workflow
 segment_pnh = create_segment_pnh_T1xT2(template, priors)
+segment_pnh.base_dir = my_path
 
 segment_pnh.inputs.T1 = T1_file
 segment_pnh.inputs.T2 = T2_file

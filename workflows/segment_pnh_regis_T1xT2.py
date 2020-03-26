@@ -83,6 +83,8 @@ def format_spm_priors(priors, fname="merged_tissue_priors.nii",
     directory: str or None
         If None, the directory of the first file listed in prios is used.
     """
+    print("Formatting spm priors")
+
     if isinstance(priors, str):
         img = nb.load(priors)
         if len(img.shape) == 4 and 3 <= img.shape[3] <= 6:
@@ -103,6 +105,7 @@ def format_spm_priors(priors, fname="merged_tissue_priors.nii",
         new_img_f = op.join(directory, fname)
         print(new_img_f)
         nb.save(fmt_image, new_img_f)
+        print("Finished Formatting spm priors")
         return new_img_f
     raise ValueError(
         "Priors must be one or a list of paths to a Nifti images"
