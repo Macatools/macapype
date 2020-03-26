@@ -6,7 +6,7 @@ import os.path as op
 from os import makedirs
 
 
-def load_test_data(name):
+def load_test_data(name, path_to = ""):
     """ Load test data, template and needed scripts """
 
     data_dir = {
@@ -17,7 +17,10 @@ def load_test_data(name):
         "data_test_macapype": "Fn8a57PpQWPacZR"
     }
 
-    data_dirpath = op.join(op.expanduser("~"), "data")
+    if path_to == "":
+        path_to = op.expanduser("~")
+
+    data_dirpath = op.join(data_dirpath, "data_macapype")
 
     try:
         makedirs(data_dirpath)

@@ -21,4 +21,4 @@ import nipype.interfaces.io as nio
 # Check if data are available
 from macapype.utils.utils_tests import load_test_data
 
-data_path = load_test_data("AtlasBREX")
+data_path = load_test_data("data_test_macapype", path_to = "/hpc/crise/meunier.d/")
