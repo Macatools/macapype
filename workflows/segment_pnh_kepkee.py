@@ -75,7 +75,7 @@ from macapype.pipelines.denoise import create_denoised_pipe
 
 from macapype.pipelines.correct_bias import create_correct_bias_pipe
 from macapype.pipelines.extract_brain import create_brain_extraction_pipe
-from macapype.pipelines.segment import create_full_segment_pipe
+from macapype.pipelines.full_segment import create_full_segment_pipe
 
 from macapype.utils.misc import show_files
 from macapype.utils.utils_tests import load_test_data

@@ -28,12 +28,16 @@ def load_test_data(name, path_to = ""):
         print("data_dirpath {} already exists".format(data_dirpath))
 
     data_path = op.join(data_dirpath, name)
-    data_zip = op.join(data_dirpath, "{}.zip".format(name))
 
     if op.exists(data_path):
+        print("{} Already exists, skipping download".format(data_path))
         return data_path
 
+    data_zip = op.join(data_dirpath, "{}.zip".format(name))
+
     if not op.exists(data_zip):
+
+        print("Download {}".format(data_zip))
 
         assert name in data_dir.keys(),\
             "Error, {} not found in data_dict".format(name)
@@ -45,8 +49,7 @@ def load_test_data(name, path_to = ""):
     assert op.exists(data_zip),\
         "Error, data_zip = {} not found ".format(data_zip)
 
-    data_path = op.join(data_dirpath, name)
-
+    print("Unzip {} to {}".format(data_zip, data_path))
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
 
