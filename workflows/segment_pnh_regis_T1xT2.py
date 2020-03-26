@@ -47,6 +47,8 @@
 #           Regis Trapeau (regis.trapeau@univ-amu.fr)
 
 import nilearn as ni
+import nilearn.image as nii
+
 import nibabel as nb
 import os
 import os.path as op
@@ -108,7 +110,7 @@ def format_spm_priors(priors, fname="merged_tissue_priors.nii",
             if directory is None:
                 directory = op.split(f)[0]
             imgs.append(nb.load(f))
-        fmt_image = ni.image.concat_imgs(imgs)
+        fmt_image = nii.concat_imgs(imgs)
 
         new_img_f = op.join(directory, fname)
         print(new_img_f)
