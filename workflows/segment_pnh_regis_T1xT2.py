@@ -47,6 +47,8 @@
 #           Regis Trapeau (regis.trapeau@univ-amu.fr)
 
 import nilearn as ni
+import nilearn.image as nii
+
 import nibabel as nb
 import os
 import os.path as op
@@ -108,7 +110,7 @@ def format_spm_priors(priors, fname="merged_tissue_priors.nii",
             if directory is None:
                 directory = op.split(f)[0]
             imgs.append(nb.load(f))
-        fmt_image = ni.image.concat_imgs(imgs)
+        fmt_image = nii.concat_imgs(imgs)
 
         new_img_f = op.join(directory, fname)
         print(new_img_f)
@@ -129,7 +131,7 @@ def create_infosource(subject_ids):
     return infosource
 
 
-def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
+def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -151,39 +153,27 @@ def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
     layout = BIDSLayout(data_dir)
 
     # Verbose
-    print("BIDS layaout:", layout)
+    print("BIDS layout:", layout)
     print("\t", layout.get_subjects())
     print("\t", layout.get_sessions())
-    print("\t", layout.get_acquisitions())
 
-    subjects = layout.get_subjects() if len(subjects) == 0 else subjects
-    acqs = layout.get_acquistions() if acqs and len(acqs) == 0 else acqs
-    sessions = layout.get_sessions() if len(sessions) == 0 else sessions
+    #print("\t", layout.get_acquisitions())
+
+
+
+    if subjects is None:
+        subjects = layout.get_subjects()
+
+    if sessions is None:
+        sessions = layout.get_sessions()
 
     iterables = []
     iterables.append(('subject', subjects))
     iterables.append(('session', sessions))
-    if acqs:
+
+    if acqs is not None:
         iterables.append(('acquisition', acqs))
-    #    # Add iteration over subjects
-    #    if len(layout.get_subjects()) == 1:
-    #         bids_datasource.inputs.subject = layout.get_subjects()[0]
-    #    else:
-    #        iterables.append(('subject', layout.get_subjects()))
 
-    #    #  Add iteration over sessions
-    #    if len(layout.get_sessions()) == 1:
-    #         bids_datasource.inputs.session = layout.get_sessions()[0]
-    #    else:
-    #        iterables.append(('session', layout.get_sessions()))
-
-    #    #  Add iteration over acquisitions
-    #    if len(layout.get_acquisitions()) == 1:
-    #         bids_datasource.inputs.acquisitions = layout.get_acquisitions()[0]
-    #    else:
-    #        iterables.append(('acquisition', layout.get_acquisitions()))
-
-    #    if len(iterables) > 0:
     bids_datasource.iterables = iterables
 
     return bids_datasource
@@ -258,7 +248,7 @@ def create_segment_pnh_T1xT2(brain_template, priors,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2', 'priors']),
+        niu.IdentityInterface(fields=['T1','T2']),
         name='inputnode'
     )
 
@@ -295,18 +285,6 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
     main_workflow = pe.Workflow(name="T1xT2_processing_workflow")
     main_workflow.base_dir = process_dir
 
-    # # Infosource
-    # if subject_ids is None or sessions is None:
-    #     print('adding BIDS data source')
-    #     datasource = create_bids_datasource(data_dir)
-    # else:
-    #     print('adding info source and data source')
-    #     infosource = create_infosource(subject_ids)
-    #     # Data source
-    #     datasource = create_datasource(data_dir, sessions)
-    #     # connect
-    #     main_workflow.connect(
-    #         infosource, 'subject_id', datasource, 'subject_id')
     datasource = create_datasource(data_dir, subject_ids, sessions,
                                    acquisitions)
 
