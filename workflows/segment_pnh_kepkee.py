@@ -127,13 +127,13 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
 
 ###############################################################################
 
-def create_main_workflow(data_dir, process_dir, subject_ids, ses):
+def create_main_workflow(data_dir, process_dir, subjects, sessions):
 
     main_workflow = pe.Workflow(name= "test_pipeline_kepkee_crop")
     main_workflow.base_dir = process_dir
 
 
-    datasource = create_datasource(data_dir, subject_ids, sessions)
+    datasource = create_datasource(data_dir, subjects, sessions)
 
     ############################################## Preprocessing ################################
     ##### segment_pnh
@@ -169,8 +169,8 @@ if __name__ == '__main__':
     wf = create_main_workflow(
         data_dir=args.data,
         process_dir=args.out,
-        subject_ids=args.subjects,
-        ses=args.ses
+        subjects=args.subjects,
+        sessions=args.ses
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
