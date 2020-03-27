@@ -30,30 +30,30 @@ my_path = "/hpc/crise/meunier.d/"
 
 data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-# data file
-T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+## data file
+#T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+#T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
 
 
-inia_dir = load_test_data("inia19", path_to = my_path)
+#inia_dir = load_test_data("inia19", path_to = my_path)
 
-template = op.join(inia_dir, "inia19-t1-brain.nii")
-# priors
+#template = op.join(inia_dir, "inia19-t1-brain.nii")
+## priors
 
-priors = [op.join(inia_dir, "inia19-prob_1.nii"),
-          op.join(inia_dir, "inia19-prob_2.nii"),
-          op.join(inia_dir, "inia19-prob_0.nii")]
-# template
+#priors = [op.join(inia_dir, "inia19-prob_1.nii"),
+          #op.join(inia_dir, "inia19-prob_2.nii"),
+          #op.join(inia_dir, "inia19-prob_0.nii")]
+## template
 
 
-# running workflow
-segment_pnh = create_full_segment_pnh_T1xT2(template, format_spm_priors(priors))
-segment_pnh.base_dir = my_path
+## running workflow
+#segment_pnh = create_full_segment_pnh_T1xT2(template, format_spm_priors(priors))
+#segment_pnh.base_dir = my_path
 
-segment_pnh.inputs.inputnode.T1 = T1_file
-segment_pnh.inputs.inputnode.T2 = T2_file
+#segment_pnh.inputs.inputnode.T1 = T1_file
+#segment_pnh.inputs.inputnode.T2 = T2_file
 
-segment_pnh.run()
+#segment_pnh.run()
 
 
 ###############################################################################
@@ -101,3 +101,7 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 """
+
+###############################################################################
+# segmentation results
+

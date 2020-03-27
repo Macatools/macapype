@@ -10,7 +10,7 @@ from macapype.nodes.bash_regis import (T1xT2BET, T1xT2BiasFieldCorrection,
 
 from macapype.nodes.preproc import average_align
 
-from .extract_brain import create_old_segment_extraction_pipe
+from .segment import create_old_segment_extraction_pipe
 
 from .denoise import create_denoised_pipe
 from .correct_bias import create_masked_correct_bias_pipe
