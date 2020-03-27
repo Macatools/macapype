@@ -9,7 +9,6 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
-import nipype.interfaces.spm as spm
 
 from ..nodes.extract_brain import AtlasBREX
 
