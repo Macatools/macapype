@@ -47,7 +47,7 @@ class BinaryFillHolesInputSpec(CommandLineInputSpec):
         3, usedefault=True,
         desc='Size of the filling square',
         mandatory=True)
-    )
+
 
 class BinaryFillHolesOutputSpec(TraitedSpec):
 
