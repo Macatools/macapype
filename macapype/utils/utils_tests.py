@@ -20,6 +20,8 @@ def load_test_data(name, path_to = ""):
     if path_to == "":
         path_to = op.expanduser("~")
 
+    assert op.exists(path_to), "Breaking, {} do not exist".format(path_to)
+
     data_dirpath = op.join(path_to, "data_macapype")
 
     try:
