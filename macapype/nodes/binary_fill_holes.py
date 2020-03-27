@@ -104,7 +104,7 @@ class BinaryFillHoles(BaseInterface):
 
     def _list_outputs(self):
         outputs = self._outputs().get()
-        outputs["outfile"] = self.out_nii
+        outputs["out_file"] = self.out_nii
 
         return outputs
 
