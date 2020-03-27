@@ -26,7 +26,7 @@
     Apply scipy's binary_fill_holes on 3D Nifti image
 """
 
-from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
+from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File
 
@@ -36,7 +36,7 @@ import numpy as np
 import argparse
 
 
-class BinaryFillHolesInputSpec(CommandLineInputSpec):
+class BinaryFillHolesInputSpec(BaseInterfaceInputSpec):
 
     in_file = File(
         exists=True,
@@ -57,7 +57,7 @@ class BinaryFillHolesOutputSpec(TraitedSpec):
     )
 
 
-class BinaryFillHoles(CommandLine):
+class BinaryFillHoles(BaseInterface):
     """ Fill holes of the given 3D Nifti image slice by slice
 
     Inputs
