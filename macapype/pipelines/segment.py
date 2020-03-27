@@ -141,17 +141,10 @@ def create_old_segment_extraction_pipe(priors,
     # fill_holes_dil = pe.Node(fsl.BinaryMaths(), name="fill_holes_dil")
     # be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
 
-
-    fill_holes = pe.Node(
-        interface = BinaryFillHoles(),
-        name="fill_holes")
-
+    fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
     be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
-    fill_holes_dil = pe.Node(
-        interface = BinaryFillHoles(),
-        name="fill_holes_dil")
-
+    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
     be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
 
     return be_pipe
