@@ -140,7 +140,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions):
 
     print('segment_pnh_kepkee')
 
-    segment_pnh = create_full_segment_pnh_subpipes()
+    segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)
 
     main_workflow.connect(datasource,'T1',segment_pnh,'inputnode.T1')
     main_workflow.connect(datasource,'T2',segment_pnh,'inputnode.T2')

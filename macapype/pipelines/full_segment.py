@@ -131,7 +131,7 @@ def create_full_segment_from_mask_pipe(sigma, nmt_dir, name="full_segment_pipe")
     return brain_segment_pipe
 
 # first step for a mask (=extract brain?)
-def create_full_segment_pnh_subpipes(name= "segment_pnh_subpipes",
+def create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, name= "segment_pnh_subpipes",
                                 sigma = 2):
 
     # creating pipeline
