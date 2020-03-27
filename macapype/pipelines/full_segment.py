@@ -137,6 +137,12 @@ def create_full_segment_pnh_subpipes(name= "segment_pnh_subpipes",
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
 
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1','T2']),
+        name='inputnode'
+    )
+
     """
     new version (as it is now)
     - preproc (avg and align, crop is optional)
