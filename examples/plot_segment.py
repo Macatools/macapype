@@ -25,8 +25,8 @@ from macapype.utils.utils_tests import load_test_data
 from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
 from macapype.utils.utils_spm import format_spm_priors
 
-#my_path = "/hpc/crise/meunier.d/"
-my_path = "/home/INT/meunier.d/Data/Primavoice/"
+my_path = "/hpc/crise/meunier.d/"
+#my_path = "/home/INT/meunier.d/Data/Primavoice/"
 
 data_path = load_test_data("data_test_macapype", path_to = my_path)
 
