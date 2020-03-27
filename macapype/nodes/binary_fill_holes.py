@@ -87,7 +87,7 @@ class BinaryFillHoles(BaseInterface):
         size = self.inputs.size
 
         path, fname, ext = split_f(in_file)
-        self.out_nii = os.path.abspath(fname + '_filled.' + ext)
+        self.out_nii = os.path.abspath(fname + '_filled' + ext)
 
         nii_image = nb.load(in_file)
 
