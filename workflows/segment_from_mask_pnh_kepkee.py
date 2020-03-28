@@ -11,7 +11,7 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-from macapype.pipelines.segment import create_full_segment_pipe
+from macapype.pipelines.segment import create_full_segment_from_mask_pipe
 
 from macapype.utils.misc import show_files
 
@@ -128,7 +128,7 @@ def create_main_workflow(data_dir, process_dir, subject_ids, ses, crop_req):
 
     ################### full_segment
 
-    brain_segment_pipe = create_full_segment_pipe(sigma=2, nmt_dir = nmt_dir,
+    brain_segment_pipe = create_full_segment_from_mask_pipe(sigma=2, nmt_dir = nmt_dir,
         name="segment_from_mask")
 
     main_workflow.connect(datasource, "T1",brain_segment_pipe,'inputnode.preproc_T1')
