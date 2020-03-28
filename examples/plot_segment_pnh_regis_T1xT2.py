@@ -1,5 +1,5 @@
 """
-.. _plot_segment:
+.. _plot_segment_pnh_regis_T1xT2:
 
 ===================================
 Plot the results of a segmentation
@@ -25,7 +25,7 @@ from macapype.utils.utils_tests import load_test_data
 from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
 from macapype.utils.utils_spm import format_spm_priors
 
-#my_path = "/hpc/crise/meunier.d/"
+my_path = "/hpc/crise/meunier.d/"
 my_path = "/home/INT/meunier.d/Data/Primavoice/"
 
 data_path = load_test_data("data_test_macapype", path_to = my_path)
@@ -37,13 +37,14 @@ data_path = load_test_data("data_test_macapype", path_to = my_path)
 
 #inia_dir = load_test_data("inia19", path_to = my_path)
 
+## template
 #template = op.join(inia_dir, "inia19-t1-brain.nii")
+
 ## priors
 
 #priors = [op.join(inia_dir, "inia19-prob_1.nii"),
           #op.join(inia_dir, "inia19-prob_2.nii"),
           #op.join(inia_dir, "inia19-prob_0.nii")]
-## template
 
 
 ## running workflow
@@ -80,8 +81,8 @@ data_path = load_test_data("data_test_macapype", path_to = my_path)
 
 # Bet results
 
-data_path = "/home/INT/meunier.d/Data/Primavoice/T1xT2_segmentation_pipeline"
-bet_path = os.path.join(data_path, "bet")
+#data_path = "/home/INT/meunier.d/Data/Primavoice/T1xT2_segmentation_pipeline"
+#bet_path = os.path.join(data_path, "bet")
 
 """
 # multiple files
@@ -109,10 +110,10 @@ plt.show()
 # segmentation results
 ###############################################################################
 
-reg_T1_file = op.join(data_path,"reg", "sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain.nii")
+#reg_T1_file = op.join(data_path,"reg", "sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain.nii")
 
-# showing mask
-segment_path = os.path.join(data_path, "old_segment_extraction_pipe")
+## showing mask
+#segment_path = os.path.join(data_path, "old_segment_extraction_pipe")
 
 #filled_mask_file = os.path.join(segment_path, "fill_holes", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_ero_filled.nii.gz")
 
@@ -131,24 +132,20 @@ segment_path = os.path.join(data_path, "old_segment_extraction_pipe")
 #plt.show()
 
 # showing tissues
+#gm_file = os.path.join(segment_path, "threshold_gm", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+#wm_file = os.path.join(segment_path, "threshold_wm", "c2sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+#csf_file = os.path.join(segment_path, "threshold_csf", "c3sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
 
+##filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
 
+#output_img_overlay = os.path.join(data_path,"outfile_overlay.png")
+#cmd = "fsleyes render --outfile {} --size 800 600 {} {} {} {}".format(output_img_overlay, reg_T1_file, gm_file, wm_file, csf_file)
+#cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red {} -cm blue {} -cm green".format(output_img_overlay, reg_T1_file, gm_file, wm_file, csf_file)
+#os.system(cmd)
 
-
-gm_file = os.path.join(segment_path, "threshold_gm", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-wm_file = os.path.join(segment_path, "threshold_wm", "c2sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-csf_file = os.path.join(segment_path, "threshold_csf", "c3sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-
-#filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
-
-output_img_overlay = os.path.join(data_path,"outfile_overlay.png")
-cmd = "fsleyes render --outfile {} --size 800 600 {} {} {} {}".format(output_img_overlay, reg_T1_file, gm_file, wm_file, csf_file)
-cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red {} -cm blue {} -cm green".format(output_img_overlay, reg_T1_file, gm_file, wm_file, csf_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(output_img_overlay)
-plt.figure(figsize=(8, 8))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(output_img_overlay)
+#plt.figure(figsize=(8, 8))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
