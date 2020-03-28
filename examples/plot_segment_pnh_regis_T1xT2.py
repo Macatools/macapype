@@ -1,5 +1,5 @@
 """
-.. _plot_segment:
+.. _plot_segment_pnh_regis_T1xT2:
 
 ===================================
 Plot the results of a segmentation

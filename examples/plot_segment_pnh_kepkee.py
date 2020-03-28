@@ -1,5 +1,5 @@
 """
-.. _plot_segment:
+.. _plot_segment_pnh_kepkee:
 
 ===================================
 Plot the results of a segmentation
