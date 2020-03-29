@@ -184,7 +184,10 @@ class NMTSubjectAlign(CommandLine):
 
         outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
         outputs["warpinv_file"] = os.path.abspath(
-            fname + "_shft_WARPINV" + ext)
+            fname + "_shft_WARPINV.nii")
+
+        # outputs["warpinv_file"] = os.path.abspath(
+        #    fname + "_shft_WARPINV" + ext)
 
         outputs["transfo_file"] = os.path.abspath(
             fname + "_composite_linear_to_NMT.1D")
