@@ -6,14 +6,14 @@
 API Documentation
 =================
 
-Pipelines (:py:mod:`macapype.pipelines.segment`):
+Pipelines (:py:mod:`macapype.pipelines.full_segment`):
 
-.. currentmodule:: macapype.pipelines.segment
+.. currentmodule:: macapype.pipelines.full_segment
 
 .. autosummary::
    :toctree: generated/
 
-    create_full_segment_pipe
+    create_full_segment_pnh_subpipes
 
 
 Nodes (:py:mod:`macapype.nodes.bash_regis`):
