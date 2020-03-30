@@ -90,13 +90,13 @@ def wrap_antsAtroposN4_dirty(dimension, brain_file, brainmask_file,
     os.chdir(dest)
 
 
-    0/0
     print(dimension)
     print( shft_aff_fname+shft_aff_ext)
     print(bmask_fname+bmask_ext)
     print(numberOfClasses)
     print( template_file)
 
+    0/0
 
     out_pref = "segment_"
     bash_line = "bash antsAtroposN4.sh -d {} -a {} -x {} -c {} -p {} -o {\
