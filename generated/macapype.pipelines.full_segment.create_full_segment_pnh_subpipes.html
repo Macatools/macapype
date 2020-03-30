@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>macapype.pipelines.segment.create_full_segment_pipe &#8212; macapype 0.0.0 documentation</title>
+    <title>macapype.pipelines.full_segment.create_full_segment_pnh_subpipes &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -69,7 +69,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">macapype.pipelines.segment.create_full_segment_pipe</a></li>
+<li><a class="reference internal" href="#">macapype.pipelines.full_segment.create_full_segment_pnh_subpipes</a></li>
 </ul>
 </ul>
 </li>
@@ -81,7 +81,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/generated/macapype.pipelines.segment.create_full_segment_pipe.rst.txt"
+  <a href="../_sources/generated/macapype.pipelines.full_segment.create_full_segment_pnh_subpipes.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -105,12 +105,18 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="macapype-pipelines-segment-create-full-segment-pipe">
-<h1>macapype.pipelines.segment.create_full_segment_pipe<a class="headerlink" href="#macapype-pipelines-segment-create-full-segment-pipe" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="macapype-pipelines-full-segment-create-full-segment-pnh-subpipes">
+<h1>macapype.pipelines.full_segment.create_full_segment_pnh_subpipes<a class="headerlink" href="#macapype-pipelines-full-segment-create-full-segment-pnh-subpipes" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="macapype.pipelines.segment.create_full_segment_pipe">
-<code class="descclassname">macapype.pipelines.segment.</code><code class="descname">create_full_segment_pipe</code><span class="sig-paren">(</span><em>sigma</em>, <em>nmt_dir</em>, <em>name='full_segment_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/segment.html#create_full_segment_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.segment.create_full_segment_pipe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="macapype.pipelines.full_segment.create_full_segment_pnh_subpipes">
+<code class="descclassname">macapype.pipelines.full_segment.</code><code class="descname">create_full_segment_pnh_subpipes</code><span class="sig-paren">(</span><em>nmt_dir</em>, <em>atlasbrex_dir</em>, <em>name='segment_pnh_subpipes'</em>, <em>sigma=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_segment.html#create_full_segment_pnh_subpipes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_segment.create_full_segment_pnh_subpipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>new version (as it is now)
+- preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional)
+- correct_bias
+- denoise
+- extract_brain
+- segment from mask</p>
+</dd></dl>
 
 </div>
 
@@ -126,7 +132,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-25.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-30.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

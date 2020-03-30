@@ -127,8 +127,19 @@ Running subsequent workflows can be found <a class="reference internal" href="wo
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="auto_examples/plot_segment_pnh_regis_T1xT2.html#plot-segment-pnh-regis-t1xt2"><span class="std std-ref">plot_segment_pnh_regis_T1xT2 pipeline</span></a> runs the Regis pipeline, with:</p>
 <ul class="simple">
-<li>the <a class="reference internal" href="auto_examples/plot_segment.html#plot-segment"><span class="std std-ref">plot_segment pipeline</span></a> runs the graph computation and graph-theoretical tools over connectivity matrices.</li>
+<li><span class="xref std std-ref">T1xT2Bet</span>,</li>
+<li>T1xT2BiasFieldCorrection,</li>
+<li>IterREGBET,</li>
+<li>old_segment SPM based pipeline.</li>
+</ul>
+<p>The <a class="reference internal" href="auto_examples/plot_segment_pnh_kepkee.html#plot-segment-pnh-kepkee"><span class="std std-ref">plot_segment_pnh_kepkee pipeline</span></a> runs the Kepkee pipeline, with:</p>
+<ul class="simple">
+<li>T1xT2Bet (used for the cropping tool)</li>
+<li>debias pipeline (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)</li>
+<li>denoise pipe (from Ants non-local mean)</li>
+<li>brain extraction using Atlax-Brex</li>
 </ul>
 </div>
 </div>
@@ -145,7 +156,7 @@ Running subsequent workflows can be found <a class="reference internal" href="wo
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-25.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-30.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

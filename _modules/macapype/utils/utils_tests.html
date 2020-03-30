@@ -107,7 +107,7 @@
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span>
 
 
-<div class="viewcode-block" id="load_test_data"><a class="viewcode-back" href="../../../generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data">[docs]</a><span class="k">def</span> <span class="nf">load_test_data</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="load_test_data"><a class="viewcode-back" href="../../../generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data">[docs]</a><span class="k">def</span> <span class="nf">load_test_data</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path_to</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Load test data, template and needed scripts &quot;&quot;&quot;</span>
 
     <span class="n">data_dir</span> <span class="o">=</span> <span class="p">{</span>
@@ -118,7 +118,12 @@
         <span class="s2">&quot;data_test_macapype&quot;</span><span class="p">:</span> <span class="s2">&quot;Fn8a57PpQWPacZR&quot;</span>
     <span class="p">}</span>
 
-    <span class="n">data_dirpath</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;data_macapype&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path_to</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">path_to</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_to</span><span class="p">),</span> <span class="s2">&quot;Breaking, </span><span class="si">{}</span><span class="s2"> do not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_to</span><span class="p">)</span>
+
+    <span class="n">data_dirpath</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to</span><span class="p">,</span> <span class="s2">&quot;data_macapype&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">makedirs</span><span class="p">(</span><span class="n">data_dirpath</span><span class="p">)</span>
@@ -126,12 +131,16 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data_dirpath </span><span class="si">{}</span><span class="s2"> already exists&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dirpath</span><span class="p">))</span>
 
     <span class="n">data_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dirpath</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">data_zip</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dirpath</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.zip&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> Already exists, skipping download&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_path</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">data_path</span>
 
+    <span class="n">data_zip</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dirpath</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.zip&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_zip</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Download </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_zip</span><span class="p">))</span>
 
         <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_dir</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>\
             <span class="s2">&quot;Error, </span><span class="si">{}</span><span class="s2"> not found in data_dict&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -143,8 +152,7 @@
     <span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_zip</span><span class="p">),</span>\
         <span class="s2">&quot;Error, data_zip = </span><span class="si">{}</span><span class="s2"> not found &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_zip</span><span class="p">)</span>
 
-    <span class="n">data_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dirpath</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unzip </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_zip</span><span class="p">,</span> <span class="n">data_path</span><span class="p">))</span>
     <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;unzip -o </span><span class="si">{}</span><span class="s2"> -d </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_zip</span><span class="p">,</span> <span class="n">data_path</span><span class="p">))</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">data_zip</span><span class="p">)</span>
 
@@ -164,7 +172,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-25.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-30.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

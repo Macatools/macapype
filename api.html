@@ -109,15 +109,15 @@
       
   <div class="section" id="api-documentation">
 <span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Pipelines (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.segment</span></code>):</p>
+<p>Pipelines (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.full_segment</span></code>):</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.segment.create_full_segment_pipe.html#macapype.pipelines.segment.create_full_segment_pipe" title="macapype.pipelines.segment.create_full_segment_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pipe</span></code></a>(sigma,&nbsp;nmt_dir[,&nbsp;name])</td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_segment.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_segment.create_full_segment_pnh_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_subpipes</span></code></a>(nmt_dir,&nbsp;…)</td>
+<td>new version (as it is now) - preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional) - correct_bias - denoise - extract_brain - segment from mask</td>
 </tr>
 </tbody>
 </table>
@@ -140,7 +140,7 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="macapype.utils.utils_tests.load_test_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_test_data</span></code></a>(name)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="macapype.utils.utils_tests.load_test_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_test_data</span></code></a>(name[,&nbsp;path_to])</td>
 <td>Load test data, template and needed scripts</td>
 </tr>
 </tbody>
@@ -159,7 +159,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-25.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-30.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
