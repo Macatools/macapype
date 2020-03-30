@@ -29,7 +29,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
         name='inputnode')
 
     # Adding force deoblique before norm and atropos (special for cerimed file)
-    deoblique = pe.Node(afni.Refit(), name = "deoblique")
+    deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
 
     segment_pipe.connect(inputnode, "brain_file",
                          deoblique, "in_file")
