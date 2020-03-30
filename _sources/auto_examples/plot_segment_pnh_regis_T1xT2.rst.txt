@@ -36,11 +36,13 @@ Plot the results of a segmentation
 
 
 
+Load test data and run
+========================
+
+
 
 .. code-block:: python
 
-
-    # Load test data
 
     from macapype.utils.utils_tests import load_test_data
 
@@ -84,6 +86,7 @@ Plot the results of a segmentation
 
 
 Testing plot in local
+======================
 
 
 
@@ -222,7 +225,7 @@ segmentation results
 
 
 
-**Total running time of the script:** ( 0 minutes  19.142 seconds)
+**Total running time of the script:** ( 0 minutes  18.961 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_regis_T1xT2.py:

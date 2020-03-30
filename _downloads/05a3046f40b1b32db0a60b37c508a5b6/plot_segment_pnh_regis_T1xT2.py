@@ -19,8 +19,8 @@ from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
 ###############################################################################
-
-# Load test data
+# Load test data and run
+#========================
 
 from macapype.utils.utils_tests import load_test_data
 
@@ -59,6 +59,7 @@ from macapype.utils.utils_spm import format_spm_priors
 
 ###############################################################################
 # Testing plot in local
+#======================
 
 my_path = "/home/INT/meunier.d/Data/Primavoice/"
 

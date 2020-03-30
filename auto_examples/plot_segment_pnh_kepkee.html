@@ -70,7 +70,10 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plot the results of a segmentation</a><ul>
-<li><a class="reference internal" href="#brain-extraction-results">brain extraction results</a></li>
+<li><a class="reference internal" href="#brain-extraction-results">brain extraction results</a><ul>
+<li><a class="reference internal" href="#second-part-of-the-pipeline">Second part of the pipeline</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#segmentation-results">segmentation results</a></li>
 </ul>
 </li>
@@ -128,7 +131,7 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.io</span> <span class="k">as</span> <span class="nn">nio</span>
 </pre></div>
 </div>
-<p># Load test data</p>
+<p>## Load test data</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#from macapype.utils.utils_tests import load_test_data</span>
 <span class="c1">#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes</span>
 
@@ -180,7 +183,7 @@
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_001.png" />
 <div class="section" id="brain-extraction-results">
 <h2>brain extraction results<a class="headerlink" href="#brain-extraction-results" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1st part pipeline</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># At the end 1st part pipeline</span>
 
 <span class="n">mask_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;devel_atlas_brex&quot;</span><span class="p">,</span> <span class="s2">&quot;smooth_mask&quot;</span><span class="p">,</span>
@@ -200,66 +203,100 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_002.png" />
+<div class="section" id="second-part-of-the-pipeline">
+<h3>Second part of the pipeline<a class="headerlink" href="#second-part-of-the-pipeline" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#register template to subject</span>
+<span class="c1">#==============================</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="segmentation-results">
 <h2>segmentation results<a class="headerlink" href="#segmentation-results" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seg_pipe</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;segment_devel_NMT_sub_align&quot;</span><span class="p">)</span>
 
 <span class="c1">## showing mask</span>
+<span class="c1">#reg_T1_file = os.path.join(</span>
+<span class="c1">#    seg_pipe,&quot;register_NMT_pipe&quot;, &quot;norm_intensity/&quot;,</span>
+<span class="c1">#    &quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;)</span>
+
 <span class="n">reg_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">seg_pipe</span><span class="p">,</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;norm_intensity/&quot;</span><span class="p">,</span>
+    <span class="n">seg_pipe</span><span class="p">,</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;deoblique/&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
 
-<span class="c1">##filled_mask_file = os.path.join(segment_path, &quot;fill_holes_dil&quot;, &quot;c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz&quot;)</span>
+<span class="n">outfile_deoblique</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_deoblique.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">,</span> <span class="n">reg_T1_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
-<span class="c1">#outfile_reg_mask = os.path.join(wf_path,&quot;outfile_reg_mask.png&quot;)</span>
-<span class="c1">##cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}&quot;.format(outfile_reg_mask, mask_file, T1_file)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} {} -a 50&quot;.format(outfile_reg_mask, T1_file, filled_mask_file)</span>
-<span class="c1">#os.system(cmd)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(outfile_reg_mask)</span>
-<span class="c1">#plt.figure(figsize=(16, 16))</span>
+<span class="c1"># showing tissues</span>
+<span class="c1">#gm_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;seg_at&quot;, &quot;NMT_segmentation_GM_allineate.nii.gz&quot;)</span>
+<span class="c1">#wm_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;seg_at&quot;, &quot;NMT_segmentation_WM_allineate.nii.gz&quot;)</span>
+<span class="c1">#csf_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;seg_at&quot;, &quot;NMT_segmentation_CSF_allineate.nii.gz&quot;)</span>
+
+<span class="n">tissue_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_Segmentation.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">gm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors01.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">wm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors02.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">csf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors03.nii.gz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_003.png" />
+<p>gm as red
+outfile_seg_red = os.path.join(wf_path,”outfile_seg_red.png”)
+cmd = “fsleyes render –outfile {} –size 800 600 {} {} -cm red -a 10”.format(outfile_seg_red, reg_T1_file, gm_file)
+os.system(cmd)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
+<span class="c1">#img = plt.imread(outfile_seg_red)</span>
+<span class="c1">#plt.figure(figsize=(8, 8))</span>
 <span class="c1">#plt.imshow(img)</span>
 <span class="c1">#plt.axis(&#39;off&#39;)</span>
 <span class="c1">#plt.show()</span>
 
-<span class="c1"># showing tissues</span>
-<span class="n">gm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_GM_allineate.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">wm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_WM_allineate.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">csf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_CSF_allineate.nii.gz&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>gm as red</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">outfile_seg_red</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_seg_red.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -cm red&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_seg_red</span><span class="p">,</span> <span class="n">reg_T1_file</span><span class="p">,</span> <span class="n">gm_file</span><span class="p">)</span>
+<span class="n">outfile_deoblique</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_deoblique.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -dr 0 4 -cm random -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">,</span> <span class="n">reg_T1_file</span><span class="p">,</span> <span class="n">tissue_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_seg_red</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_003.png" />
-<p>all different colors</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">outfile_seg_col</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_seg_col.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -cm red -a 33 </span><span class="si">{}</span><span class="s2"> -cm blue -a 33 </span><span class="si">{}</span><span class="s2"> -cm green -a 33&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_seg_col</span><span class="p">,</span> <span class="n">reg_T1_file</span><span class="p">,</span> <span class="n">gm_file</span><span class="p">,</span> <span class="n">wm_file</span><span class="p">,</span> <span class="n">csf_file</span><span class="p">)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} {} -cm red&quot;.format(outfile_seg_col, reg_T1_file, gm_file)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_seg_col</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_004.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  18.178 seconds)</p>
+<p># all different colors</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#outfile_deoblique = os.path.join(wf_path,&quot;outfile_deoblique.png&quot;)</span>
+<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {}&quot;.format(outfile_deoblique, reg_T1_file)</span>
+<span class="c1">#os.system(cmd)</span>
+
+<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
+<span class="c1">#img = plt.imread(outfile_deoblique)</span>
+<span class="c1">#plt.figure(figsize=(8, 8))</span>
+<span class="c1">#plt.imshow(img)</span>
+<span class="c1">#plt.axis(&#39;off&#39;)</span>
+<span class="c1">#plt.show()</span>
+
+<span class="c1">#outfile_seg_col = os.path.join(wf_path,&quot;outfile_seg_col.png&quot;)</span>
+<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -cm red -a 10 {} -cm blue -a 10 {} -cm green -a 10&quot;.format(outfile_seg_col, gm_file, wm_file, csf_file)</span>
+<span class="c1">##cmd = &quot;fsleyes render --outfile {} --size 800 600 {} {} -cm red&quot;.format(outfile_seg_col, reg_T1_file, gm_file)</span>
+<span class="c1">#os.system(cmd)</span>
+
+<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
+<span class="c1">#img = plt.imread(outfile_seg_col)</span>
+<span class="c1">#plt.figure(figsize=(8, 8))</span>
+<span class="c1">#plt.imshow(img)</span>
+<span class="c1">#plt.axis(&#39;off&#39;)</span>
+<span class="c1">#plt.show()</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  17.472 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-kepkee-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/1bf9b70253d5a0db872c6ef37188f87b/plot_segment_pnh_kepkee.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_kepkee.py</span></code></a></div>

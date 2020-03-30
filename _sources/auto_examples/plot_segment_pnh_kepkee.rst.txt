@@ -36,7 +36,7 @@ Plot the results of a segmentation
 
 
 
-# Load test data
+## Load test data
 
 
 
@@ -119,7 +119,7 @@ brain extraction results
 .. code-block:: python
 
 
-    # 1st part pipeline
+    # At the end 1st part pipeline
 
     mask_file = os.path.join(
         wf_path, "devel_atlas_brex", "smooth_mask",
@@ -146,6 +146,25 @@ brain extraction results
 
 
 
+Second part of the pipeline
+#############################################################################
+
+
+
+.. code-block:: python
+
+
+    #register template to subject
+    #==============================
+
+
+
+
+
+
+
+
+
 segmentation results
 ==========================
 
@@ -157,51 +176,34 @@ segmentation results
     seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
 
     ## showing mask
+    #reg_T1_file = os.path.join(
+    #    seg_pipe,"register_NMT_pipe", "norm_intensity/",
+    #    "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+
     reg_T1_file = os.path.join(
-        seg_pipe,"register_NMT_pipe", "norm_intensity/",
+        seg_pipe,"segment_atropos_pipe", "deoblique/",
         "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
 
-    ##filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
-
-    #outfile_reg_mask = os.path.join(wf_path,"outfile_reg_mask.png")
-    ##cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(outfile_reg_mask, mask_file, T1_file)
-    #cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(outfile_reg_mask, T1_file, filled_mask_file)
-    #os.system(cmd)
-
-    #import matplotlib.pyplot as plt  # noqa
-    #img = plt.imread(outfile_reg_mask)
-    #plt.figure(figsize=(16, 16))
-    #plt.imshow(img)
-    #plt.axis('off')
-    #plt.show()
-
-    # showing tissues
-    gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_GM_allineate.nii.gz")
-    wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_WM_allineate.nii.gz")
-    csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_CSF_allineate.nii.gz")
-
-
-
-
-
-
-
-gm as red
-
-
-
-.. code-block:: python
-
-    outfile_seg_red = os.path.join(wf_path,"outfile_seg_red.png")
-    cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red".format(outfile_seg_red, reg_T1_file, gm_file)
+    outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
+    cmd = "fsleyes render --outfile {} --size 800 600 {}".format(outfile_deoblique, reg_T1_file)
     os.system(cmd)
 
     import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(outfile_seg_red)
-    plt.figure(figsize=(16, 16))
+    img = plt.imread(outfile_deoblique)
+    plt.figure(figsize=(8, 8))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
+
+    # showing tissues
+    #gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_GM_allineate.nii.gz")
+    #wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_WM_allineate.nii.gz")
+    #csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_CSF_allineate.nii.gz")
+
+    tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
+    gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors01.nii.gz")
+    wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors02.nii.gz")
+    csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors03.nii.gz")
 
 
 
@@ -212,24 +214,35 @@ gm as red
 
 
 
-all different colors
+gm as red
+outfile_seg_red = os.path.join(wf_path,"outfile_seg_red.png")
+cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red -a 10".format(outfile_seg_red, reg_T1_file, gm_file)
+os.system(cmd)
 
 
 
 .. code-block:: python
 
 
-    outfile_seg_col = os.path.join(wf_path,"outfile_seg_col.png")
-    cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red -a 33 {} -cm blue -a 33 {} -cm green -a 33".format(outfile_seg_col, reg_T1_file, gm_file, wm_file, csf_file)
-    #cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red".format(outfile_seg_col, reg_T1_file, gm_file)
+    #import matplotlib.pyplot as plt  # noqa
+    #img = plt.imread(outfile_seg_red)
+    #plt.figure(figsize=(8, 8))
+    #plt.imshow(img)
+    #plt.axis('off')
+    #plt.show()
+
+    outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
+    cmd = "fsleyes render --outfile {} --size 800 600 {} {} -dr 0 4 -cm random -a 30".format(outfile_deoblique, reg_T1_file, tissue_file)
     os.system(cmd)
 
     import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(outfile_seg_col)
-    plt.figure(figsize=(16, 16))
+    img = plt.imread(outfile_deoblique)
+    plt.figure(figsize=(8, 8))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
+
+
 
 
 
@@ -239,7 +252,44 @@ all different colors
 
 
 
-**Total running time of the script:** ( 0 minutes  18.178 seconds)
+# all different colors
+
+
+
+.. code-block:: python
+
+
+
+
+    #outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
+    #cmd = "fsleyes render --outfile {} --size 800 600 {}".format(outfile_deoblique, reg_T1_file)
+    #os.system(cmd)
+
+    #import matplotlib.pyplot as plt  # noqa
+    #img = plt.imread(outfile_deoblique)
+    #plt.figure(figsize=(8, 8))
+    #plt.imshow(img)
+    #plt.axis('off')
+    #plt.show()
+
+    #outfile_seg_col = os.path.join(wf_path,"outfile_seg_col.png")
+    #cmd = "fsleyes render --outfile {} --size 800 600 {} -cm red -a 10 {} -cm blue -a 10 {} -cm green -a 10".format(outfile_seg_col, gm_file, wm_file, csf_file)
+    ##cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red".format(outfile_seg_col, reg_T1_file, gm_file)
+    #os.system(cmd)
+
+    #import matplotlib.pyplot as plt  # noqa
+    #img = plt.imread(outfile_seg_col)
+    #plt.figure(figsize=(8, 8))
+    #plt.imshow(img)
+    #plt.axis('off')
+    #plt.show()
+
+
+
+
+
+
+**Total running time of the script:** ( 0 minutes  17.472 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_kepkee.py:
