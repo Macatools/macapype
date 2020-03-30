@@ -29,6 +29,11 @@ def wrap_antsAtroposN4(dimension, shft_aff_file, brainmask_file,
     # generating bash_line
     os.chdir(dest)
 
+    print (dimension, shft_aff_fname+shft_aff_ext, bmask_fname+bmask_ext,
+        numberOfClasses, template_file, out_pref)
+
+    0/0
+
     out_pref = "segment_"
     bash_line = "bash antsAtroposN4.sh -d {} -a {} -x {} -c {} -p {} -o {\
     }".format(
