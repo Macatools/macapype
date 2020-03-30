@@ -91,7 +91,7 @@ def wrap_antsAtroposN4_dirty(dimension, brain_file, brainmask_file,
 
 
     print(dimension)
-    print( shft_aff_fname+shft_aff_ext)
+    print( brain_fname+brain_ext)
     print(bmask_fname+bmask_ext)
     print(numberOfClasses)
     print( template_file)
