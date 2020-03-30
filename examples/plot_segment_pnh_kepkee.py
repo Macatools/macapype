@@ -19,9 +19,9 @@ from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
 ###############################################################################
-# Load test data
-from macapype.utils.utils_tests import load_test_data
+## Load test data
 
+from macapype.utils.utils_tests import load_test_data
 from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 my_path = "/hpc/crise/meunier.d/"
@@ -50,100 +50,111 @@ segment_pnh.run()
 
 
 ###############################################################################
-# plotting in local
+# Testing plot in local
 
 #my_path = "/home/INT/meunier.d/Data/Primavoice/"
+#wf_path = os.path.join(my_path, "segment_pnh_subpipes")
+
+#T1_file = op.join(wf_path, "preproc", "sub-Apache_ses-01_T1w_cropped.nii.gz")
+#assert os.path.exists(T1_file)
+
 ## displaying results
-#debiased_mask_file = os.path.join(
-    #my_path, "T1xT2_segmentation_pipeline", "bet",
-    #"sub-Apache_ses-01_T1w_BET_mask_cropped.nii.gz")
-
-#assert os.path.exists(debiased_mask_file)
-
-
-#output_img = os.path.join(my_path, "T1xT2_segmentation_pipeline","outfile.png")
-#cmd = "fsleyes render --outfile {} --size 800 600 {}".format(output_img, debiased_mask_file)
-#os.system(cmd)
-
-
-
-#output_img_3D = os.path.join(my_path, "T1xT2_segmentation_pipeline","outfile.png")
-#cmd = "fsleyes render --scene 3d --outfile {} --size 800 600 {}".format(output_img_3D, debiased_mask_file)
-#os.system(cmd)
-
-###############################################################################
-
-# Bet results
-
-data_path = "/home/INT/meunier.d/Data/Primavoice/T1xT2_segmentation_pipeline"
-bet_path = os.path.join(data_path, "bet")
-
-"""
-# multiple files
-
-T1_file = op.join(bet_path, "sub-Apache_ses-01_T1w_cropped.nii.gz")
-mask_file = op.join(bet_path, "sub-Apache_ses-01_T1w_BET_mask_cropped.nii.gz")
-
-output_img_overlay = os.path.join(my_path, "T1xT2_segmentation_pipeline","outfile_overlay.png")
-#cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(output_img_overlay, mask_file, T1_file)
-cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(output_img_overlay, T1_file, mask_file)
-os.system(cmd)
-
-
-
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(output_img_overlay)
-plt.figure(figsize=(8, 8))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
-"""
-
-###############################################################################
-# segmentation results
-###############################################################################
-
-reg_T1_file = op.join(data_path,"reg", "sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain.nii")
-
-# showing mask
-segment_path = os.path.join(data_path, "old_segment_extraction_pipe")
-
-#filled_mask_file = os.path.join(segment_path, "fill_holes", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_ero_filled.nii.gz")
-
-##filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
-
-#output_img_overlay = os.path.join(data_path,"outfile_overlay.png")
-##cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(output_img_overlay, mask_file, T1_file)
-#cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(output_img_overlay, reg_T1_file, filled_mask_file)
+#output_img = os.path.join(wf_path, "outfile.png")
+#cmd = "fsleyes render --outfile {} --size 800 600 {}".format(output_img, T1_file)
 #os.system(cmd)
 
 #import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(output_img_overlay)
-#plt.figure(figsize=(8, 8))
+#img = plt.imread(output_img)
+#plt.figure(figsize=(16, 16))
 #plt.imshow(img)
 #plt.axis('off')
 #plt.show()
 
-# showing tissues
+################################################################################
+## brain extraction results
+##==========================
+
+## At the end 1st part pipeline
+
+#mask_file = os.path.join(
+    #wf_path, "devel_atlas_brex", "smooth_mask",
+    #"sub-Apache_ses-01_T1w_cropped_maths_noise_corrected_brain_bin_bin.nii.gz")
+
+#output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
+##cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(output_img_overlay, mask_file, T1_file)
+#cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(output_img_overlay, T1_file, mask_file)
+#os.system(cmd)
+
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(output_img_overlay)
+#plt.figure(figsize=(16, 16))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
+
+###############################################################################
+# Second part of the pipeline
+###############################################################################
+#
+# register template to subject
+#==============================
 
 
 
+################################################################################
+## segmentation results
+##==========================
 
-gm_file = os.path.join(segment_path, "threshold_gm", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-wm_file = os.path.join(segment_path, "threshold_wm", "c2sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-csf_file = os.path.join(segment_path, "threshold_csf", "c3sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+#seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
 
-#filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
+### showing mask
+#reg_T1_file = os.path.join(
+    #seg_pipe,"register_NMT_pipe", "norm_intensity/",
+    #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
 
-output_img_overlay = os.path.join(data_path,"outfile_overlay.png")
-cmd = "fsleyes render --outfile {} --size 800 600 {} {} {} {}".format(output_img_overlay, reg_T1_file, gm_file, wm_file, csf_file)
-cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red {} -cm blue {} -cm green".format(output_img_overlay, reg_T1_file, gm_file, wm_file, csf_file)
-os.system(cmd)
+###filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
 
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(output_img_overlay)
-plt.figure(figsize=(8, 8))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
+##outfile_reg_mask = os.path.join(wf_path,"outfile_reg_mask.png")
+###cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(outfile_reg_mask, mask_file, T1_file)
+##cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(outfile_reg_mask, T1_file, filled_mask_file)
+##os.system(cmd)
+
+##import matplotlib.pyplot as plt  # noqa
+##img = plt.imread(outfile_reg_mask)
+##plt.figure(figsize=(16, 16))
+##plt.imshow(img)
+##plt.axis('off')
+##plt.show()
+
+## showing tissues
+#gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_GM_allineate.nii.gz")
+#wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_WM_allineate.nii.gz")
+#csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_CSF_allineate.nii.gz")
+
+################################################################################
+## gm as red
+#outfile_seg_red = os.path.join(wf_path,"outfile_seg_red.png")
+#cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red".format(outfile_seg_red, reg_T1_file, gm_file)
+#os.system(cmd)
+
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(outfile_seg_red)
+#plt.figure(figsize=(16, 16))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
+
+################################################################################
+## all different colors
+
+#outfile_seg_col = os.path.join(wf_path,"outfile_seg_col.png")
+#cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red -a 33 {} -cm blue -a 33 {} -cm green -a 33".format(outfile_seg_col, reg_T1_file, gm_file, wm_file, csf_file)
+##cmd = "fsleyes render --outfile {} --size 800 600 {} {} -cm red".format(outfile_seg_col, reg_T1_file, gm_file)
+#os.system(cmd)
+
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(outfile_seg_col)
+#plt.figure(figsize=(16, 16))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
