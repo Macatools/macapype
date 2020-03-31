@@ -19,8 +19,8 @@ from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
 ###############################################################################
-Running workflow
-==================
+#Running workflow
+#==================
 
 from macapype.utils.utils_tests import load_test_data
 from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
