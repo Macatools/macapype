@@ -104,7 +104,7 @@ class AtroposInputSpec(CommandLineInputSpec):
         position=5,  argstr="-o %s")
 
 
-class AtroposOutputSpec(CommandLine):
+class AtroposOutputSpec(TraitedSpec):
     segemented_file = File(
         exists=True, desc="segemented_file")
 
@@ -112,7 +112,7 @@ class AtroposOutputSpec(CommandLine):
         File(exists = True), desc="segmented indivual files")
 
 
-class Atropos(FSLCommand):
+class Atropos(CommandLine):
     """
     Description:
         Brain extraction using T1 and T2 images
