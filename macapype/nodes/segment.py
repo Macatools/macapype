@@ -106,7 +106,7 @@ class AtroposInputSpec(CommandLineInputSpec):
 
 class AtroposOutputSpec(TraitedSpec):
     segmented_file = File(
-        exists=True, desc="segemented_file")
+        exists=True, desc="segmented file with all tissues")
 
     segmented_files = traits.List(
         File(exists = True), desc="segmented indivual files")
@@ -167,12 +167,15 @@ class Atropos(CommandLine):
         outputs['segmented_file'] = os.path.abspath(
             self.inputs.out_pref + "SegmentedPosteriors.nii.gz")
 
-        seg_files = glob.glob(self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")))
+        seg_files = glob.glob(self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")
         print(seg_files)
+        assert len(seg_files) = len(self.inputs.priors), \
+            "Error, there should {} SegmentedPosteriors".format(
+                len(self.inputs.priors))
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in glob.glob(
-                self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")))]
+                self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")]
 
         return outputs
 
