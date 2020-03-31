@@ -215,10 +215,6 @@ plt.show()
 #==========================
 
 tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
-gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors01.nii.gz")
-wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors02.nii.gz")
-csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors03.nii.gz")
-
 segmentation = os.path.join(wf_path,"segmentation.png")
 cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, deoblique_T1_file, tissue_file)
 os.system(cmd)
@@ -229,3 +225,13 @@ plt.figure(figsize=(8, 8))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
+
+
+
+###############################################################################
+# segmentation results 2
+#==========================
+
+gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors01.nii.gz")
+wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors02.nii.gz")
+csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors03.nii.gz")
