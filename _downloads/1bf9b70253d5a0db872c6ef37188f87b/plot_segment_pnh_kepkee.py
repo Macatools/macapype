@@ -214,12 +214,6 @@ plt.show()
 # segmentation results
 #==========================
 
-# showing tissues with all different colors
-
-#gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_GM_allineate.nii.gz")
-#wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_WM_allineate.nii.gz")
-#csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "NMT_segmentation_CSF_allineate.nii.gz")
-
 tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
 gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors01.nii.gz")
 wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors02.nii.gz")
