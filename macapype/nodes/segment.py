@@ -105,10 +105,10 @@ class AtroposInputSpec(CommandLineInputSpec):
 
 
 class AtroposOutputSpec(TraitedSpec):
-    segemented_file = File(
+    segmented_file = File(
         exists=True, desc="segemented_file")
 
-    segemented_files = traits.List(
+    segmented_files = traits.List(
         File(exists = True), desc="segmented indivual files")
 
 
@@ -159,13 +159,20 @@ class Atropos(CommandLine):
     def _list_outputs(self):
 
         import os
-        from nipype.utils.filemanip import split_filename as split_f
+        import glob
+        #from nipype.utils.filemanip import split_filename as split_f
 
         outputs = self._outputs().get()
 
-        t1_path, t1_fname, ext = split_f(self.inputs.t1_file)
-        t2_path, t2_fname, ext = split_f(self.inputs.t2_file)
+        outputs['segmented_file'] = os.path.abspath(
+            self.inputs.out_pref + "SegmentedPosteriors.nii.gz")
 
+        seg_files = glob.glob(self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")))
+        print(seg_files)
+
+        outputs['segmented_files'] = [os.path.abspath(
+            seg_file) for seg_file in glob.glob(
+                self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")))]
 
         return outputs
 
