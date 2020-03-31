@@ -165,7 +165,7 @@ class Atropos(CommandLine):
         outputs = self._outputs().get()
 
         outputs['segmented_file'] = os.path.abspath(
-            self.inputs.out_pref + "SegmentationPosteriors.nii.gz")
+            self.inputs.out_pref + "Segmentation.nii.gz")
 
         seg_files = glob.glob(self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
         print(seg_files)
