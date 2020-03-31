@@ -143,7 +143,7 @@ class Atropos(CommandLine):
             if name == 'brain_file' or name == 'brainmask_file':
                 ## requires local copy
                 shutil.copy(value, cur_path)
-                new_value = os.path.split(value)[1]
+                value = os.path.split(value)[1]
 
                 #return spec.argstr%{"old":0, "standard":1, "new":2}[value]
             elif name == 'priors':
@@ -153,7 +153,8 @@ class Atropos(CommandLine):
                     shutil.copy(prior_file, cur_path)
                     new_value.append(os.path.split(prior_file)[1])
 
-            return super(Atropos, self)._format_arg(name, spec, new_value)
+                value = new_value
+            return super(Atropos, self)._format_arg(name, spec, value)
 
     def _list_outputs(self):
 
