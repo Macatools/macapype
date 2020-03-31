@@ -34,7 +34,7 @@ class AtroposN4InputSpec(CommandLineInputSpec):
         desc='priors',
         mandatory=True)
 
-    template_file = File(
+    template_file = traits.String(
         "tmp_%02d_allineate.nii.gz", usedefault = True,
         exists=True,
         desc='template_file',
