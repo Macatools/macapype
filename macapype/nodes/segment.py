@@ -169,7 +169,7 @@ class Atropos(CommandLine):
 
         seg_files = glob.glob(self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")
         print(seg_files)
-        assert len(seg_files) = len(self.inputs.priors), \
+        assert len(seg_files) == len(self.inputs.priors), \
             "Error, there should {} SegmentedPosteriors".format(
                 len(self.inputs.priors))
 
