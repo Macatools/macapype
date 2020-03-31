@@ -94,7 +94,7 @@ class AtroposInputSpec(CommandLineInputSpec):
         mandatory=True)
 
     template_file = File(
-        "tmp_%02d_allineate.nii.gz", usedefault = True
+        "tmp_%02d_allineate.nii.gz", usedefault = True,
         exists=True,
         desc='template_file',
         mandatory=True, position=4, argstr="-p %s")
