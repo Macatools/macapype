@@ -89,7 +89,7 @@ class AtroposInputSpec(CommandLineInputSpec):
         mandatory=True, position=3, argstr="-c %d")
 
     priors = traits.List(
-        File(exists = True)
+        File(exists = True),
         desc='priors',
         mandatory=True)
 
