@@ -99,9 +99,9 @@ class AtroposInputSpec(CommandLineInputSpec):
         desc='template_file',
         mandatory=True, position=4, argstr="-p %s")
 
-    out_pref = traits.String("segment_",true usedefault=True,
-        desc="output prefix",
-        mandatory=False, position = 5,  argstr="-o %s")
+    out_pref = traits.String(
+        "segment_", usedefault=True, desc="output prefix", mandatory=False,
+        position=5,  argstr="-o %s")
 
 
 class AtroposOutputSpec(CommandLine):
