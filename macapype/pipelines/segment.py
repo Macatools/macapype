@@ -51,7 +51,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     merge_3_elem = pe.Node(Function(
         input_names = ['elem1','elem2','elem3'],
         output_names = ['merged_list'],
-        function = merge_3_elem_to_list]))
+        function = merge_3_elem_to_list]), name = 'merge_3_elem')
 
     # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
     segment_pipe.connect(inputnode, 'csf_prior_file', merge_3_elem, "elem1")
