@@ -170,7 +170,8 @@ class Atropos(CommandLine):
 
 if __name__ == '__main__':
 
-    path_to = "/hpc/crise/meunier.d"
+    #path_to = "/hpc/crise/meunier.d"
+    path_to = "/hpc/crise/meunier.d/Data/Primavoice/test_pipeline_kepkee_crop"
 
     seg_path = os.path.join(path_to, "segment_pnh_subpipes", "segment_devel_NMT_sub_align")
 
