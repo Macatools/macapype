@@ -6,7 +6,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 import nipype.interfaces.afni as afni
 
-from ..nodes.segment import wrap_antsAtroposN4_dirty
+from ..nodes.segment import AtroposN4
 
 from .denoise import create_denoised_pipe
 from .correct_bias import create_masked_correct_bias_pipe
@@ -14,6 +14,11 @@ from .register import create_register_NMT_pipe
 
 # from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty
 from ..nodes.binary_fill_holes import BinaryFillHoles
+
+
+def merge_3_elem_to_list(elem1, elem2, elem3):
+    return [elem1, elem2, elem3]
+
 
 def create_segment_atropos_pipe(dimension, numberOfClasses,
                                 name="segment_atropos_pipe"):
@@ -42,13 +47,19 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
                          bin_norm_intensity, "in_file")
 
     # STEP 3: ants Atropos
+    ### merging priors as a list
+    merge_3_elem = pe.Node(Function(
+        input_names = ['elem1','elem2','elem3'],
+        output_names = ['merged_list'],
+        function = merge_3_elem_to_list]))
+
+    # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
+    segment_pipe.connect(inputnode, 'csf_prior_file', merge_3_elem, "elem1")
+    segment_pipe.connect(inputnode, 'gm_prior_file', merge_3_elem, "elem2")
+    segment_pipe.connect(inputnode, 'wm_prior_file', merge_3_elem, "elem3")
+
     # Atropos
-    seg_at = pe.Node(niu.Function(
-        input_names=["dimension", "brain_file", "brainmask_file",
-                     "numberOfClasses", "ex_prior1", "ex_prior2", "ex_prior3"],
-        output_names=["out_files", "seg_file", "seg_post1_file",
-                      "seg_post2_file", "seg_post3_file"],
-        function=wrap_antsAtroposN4_dirty), name='seg_at')
+    seg_at = pe.Node(AtroposN4(), name='seg_at')
 
     seg_at.inputs.dimension = dimension
     seg_at.inputs.numberOfClasses = numberOfClasses
@@ -57,11 +68,8 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
 
-    # TODO
-    # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
-    segment_pipe.connect(inputnode, 'csf_prior_file', seg_at, "ex_prior1")
-    segment_pipe.connect(inputnode, 'gm_prior_file', seg_at, "ex_prior2")
-    segment_pipe.connect(inputnode, 'wm_prior_file', seg_at, "ex_prior3")
+    segment_pipe.connect(merge_3_elem, 'merged_list',
+                         seg_at, "priors")
 
     return segment_pipe
 
