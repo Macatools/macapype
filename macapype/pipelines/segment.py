@@ -48,7 +48,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
 
     # STEP 3: ants Atropos
     ### merging priors as a list
-    merge_3_elem = pe.Node(Function(
+    merge_3_elem = pe.Node(niu.Function(
         input_names = ['elem1','elem2','elem3'],
         output_names = ['merged_list'],
         function = merge_3_elem_to_list), name = 'merge_3_elem')
