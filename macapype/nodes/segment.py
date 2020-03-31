@@ -182,9 +182,9 @@ if __name__ == '__main__':
         seg_path, "segment_atropos_pipe", "_session_01_subject_Apache", "bin_norm_intensity",
         "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected_bin.nii.gz")
 
-    priors = [os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_csf", "NMT_segmentation_CSF_allineate.nii.gz",
-              os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz",
-              os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz"]
+    priors = [os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_csf", "NMT_segmentation_CSF_allineate.nii.gz"),
+              os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz"),
+              os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz")]
 
     seg_at = Atropos()
 
