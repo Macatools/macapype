@@ -23,14 +23,16 @@ A docker image is also available, explanation can be found :ref:`here <docker_in
 Examples
 ********
 
-The :ref:`_plot_segment_pnh_regis_T1xT2 pipeline <_plot_segment_pnh_regis_T1xT2>` runs the Regis pipeline, with:
-* T1xT2Bet,
+The :ref:`plot_segment_pnh_regis_T1xT2 pipeline <plot_segment_pnh_regis_T1xT2>` runs the Regis pipeline, with:
+
+* :ref:`T1xT2Bet <T1xT2BET>`,
 * T1xT2BiasFieldCorrection,
 * IterREGBET,
 * old_segment SPM based pipeline.
 
 
-The :ref:`_plot_segment_pnh_kepkee pipeline <_plot_segment_pnh_kepkee>` runs the Kepkee pipeline, with
+The :ref:`plot_segment_pnh_kepkee pipeline <plot_segment_pnh_kepkee>` runs the Kepkee pipeline, with:
+
 * T1xT2Bet (used for the cropping tool)
 * debias pipeline (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)
 * denoise pipe (from Ants non-local mean)

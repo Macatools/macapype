@@ -134,6 +134,15 @@ def create_full_segment_from_mask_pipe(sigma, nmt_dir, name="full_segment_pipe")
 def create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, name= "segment_pnh_subpipes",
                                 sigma = 2):
 
+    """
+    new version (as it is now)
+    - preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional)
+    - correct_bias
+    - denoise
+    - extract_brain
+    - segment from mask
+    """
+
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
 
@@ -142,15 +151,6 @@ def create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, name= "segment_pnh_
         niu.IdentityInterface(fields=['T1','T2']),
         name='inputnode'
     )
-
-    """
-    new version (as it is now)
-    - preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional)
-    - correct_bias
-    - denoise
-    - extract_brain
-    - segment
-    """
 
     # Brain extraction (unused) + Cropping
     preproc = pe.Node(T1xT2BET(m=True, aT2=True, c=10), name='preproc')
