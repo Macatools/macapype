@@ -165,17 +165,17 @@ class Atropos(CommandLine):
         outputs = self._outputs().get()
 
         outputs['segmented_file'] = os.path.abspath(
-            self.inputs.out_pref + "SegmentedPosteriors.nii.gz")
+            self.inputs.out_pref + "SegmentationPosteriors.nii.gz")
 
-        seg_files = glob.glob(self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")
+        seg_files = glob.glob(self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
         print(seg_files)
         assert len(seg_files) == len(self.inputs.priors), \
-            "Error, there should {} SegmentedPosteriors".format(
+            "Error, there should {} SegmentationPosteriors".format(
                 len(self.inputs.priors))
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in glob.glob(
-                self.inputs.out_pref + "SegmentedPosteriors*.nii.gz")]
+                self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")]
 
         return outputs
 
