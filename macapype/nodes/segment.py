@@ -1,69 +1,10 @@
 
-#def wrap_antsAtroposN4_dirty(dimension, brain_file, brainmask_file,
-                             #numberOfClasses, ex_prior1, ex_prior2, ex_prior3):
-
-    #import os
-    #import shutil
-    #from nipype.utils.filemanip import split_filename as split_f
-
-    #_, prior_fname, prior_ext = split_f(ex_prior1)  # last element
-
-    ## copying file locally
-    #dest = os.path.abspath("")
-
-    #shutil.copy(ex_prior1, dest)
-    #shutil.copy(ex_prior2, dest)
-    #shutil.copy(ex_prior3, dest)
-
-    #shutil.copy(brain_file, dest)
-    #shutil.copy(brainmask_file, dest)
-
-    #_, bmask_fname, bmask_ext = split_f(brainmask_file)
-    #_, brain_fname, brain_ext = split_f(brain_file)
-
-    ## generating template_file
-    ## TODO should be used by default
-    #template_file = "tmp_%02d_allineate.nii.gz"
-
-    ## generating bash_line
-    #os.chdir(dest)
-
-
-    #print(dimension)
-    #print( brain_fname+brain_ext)
-    #print(bmask_fname+bmask_ext)
-    #print(numberOfClasses)
-    #print( template_file)
-
-    #out_pref = "segment_"
-    #bash_line = "bash antsAtroposN4.sh -d {} -a {} -x {} -c {} -p {} -o {}".format(#noqa
-        #dimension, brain_fname+brain_ext, bmask_fname+bmask_ext,
-        #numberOfClasses, template_file, out_pref)
-    #print("bash_line : "+bash_line)
-
-    #os.system(bash_line)
-
-    #seg_file = os.path.abspath(out_pref+"Segmentation"+prior_ext)
-    #seg_post1_file = os.path.abspath(
-        #out_pref+"SegmentationPosteriors01"+prior_ext)
-    #seg_post2_file = os.path.abspath(
-        #out_pref+"SegmentationPosteriors02"+prior_ext)
-    #seg_post3_file = os.path.abspath(
-        #out_pref+"SegmentationPosteriors03"+prior_ext)
-
-    #out_files = [seg_file, seg_post1_file, seg_post2_file, seg_post3_file]
-
-    ## TODO surely more robust way can be used
-    #return out_files, seg_file, seg_post1_file, seg_post2_file, seg_post3_file
-
 import os
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec, isdefined)
-#from nipype.interfaces.fsl.base import (FSLCommand, FSLCommandInputSpec)
 from nipype.interfaces.base import traits, File
 
-
-class AtroposInputSpec(CommandLineInputSpec):
+class AtroposN4InputSpec(CommandLineInputSpec):
 
     dimension = traits.Int(
         3, default=True, usedefault=True,
@@ -104,7 +45,7 @@ class AtroposInputSpec(CommandLineInputSpec):
         position=5,  argstr="-o %s")
 
 
-class AtroposOutputSpec(TraitedSpec):
+class AtroposN4OutputSpec(TraitedSpec):
     segmented_file = File(
         exists=True, desc="segmented file with all tissues")
 
@@ -112,7 +53,7 @@ class AtroposOutputSpec(TraitedSpec):
         File(exists = True), desc="segmented indivual files")
 
 
-class Atropos(CommandLine):
+class AtroposN4(CommandLine):
     """
     Description:
         Brain extraction using T1 and T2 images
@@ -123,11 +64,11 @@ class Atropos(CommandLine):
     Outputs:
 
         brain_file:
-            type = File, exists=True, desc="extracted brain from Atropos.sh"
+            type = File, exists=True, desc="extracted brain from AtroposN4.sh"
 
     """
-    input_spec = AtroposInputSpec
-    output_spec = AtroposOutputSpec
+    input_spec = AtroposN4InputSpec
+    output_spec = AtroposN4OutputSpec
 
     package_directory = os.path.dirname(os.path.abspath(__file__))
     _cmd = 'bash antsAtroposN4.sh'.format(package_directory)
@@ -154,7 +95,7 @@ class Atropos(CommandLine):
                     new_value.append(os.path.split(prior_file)[1])
 
                 value = new_value
-            return super(Atropos, self)._format_arg(name, spec, value)
+            return super(AtroposN4, self)._format_arg(name, spec, value)
 
     def _list_outputs(self):
 
@@ -198,7 +139,7 @@ if __name__ == '__main__':
               os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz"),
               os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz")]
 
-    seg_at = Atropos()
+    seg_at = AtroposN4()
 
     seg_at.inputs.brain_file = brain_file
     seg_at.inputs.brainmask_file = brainmask_file
