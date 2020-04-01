@@ -1,31 +1,3 @@
-#def apply_binary_fill_holes_dirty(in_file, size=3):
-    #from scipy.ndimage import binary_fill_holes
-    #import nibabel as nb
-    #import numpy as np
-    #import os
-
-    #from nipype.utils.filemanip import split_filename as split_f
-
-    #path, fname, ext = split_f(in_file)
-
-    #out_nii = os.path.abspath(fname + '_filled.' + ext)
-
-    #nii_image = nb.load(in_file)
-
-    #struc = np.ones((size, size, size))
-
-    #nii_data = nii_image.get_data()
-
-    #nii_data = binary_fill_holes(nii_data, struc)
-    #out_image = nb.Nifti1Image(nii_data.astype(int), affine=nii_image._affine)
-    #nb.save(out_image, out_nii)
-    #return out_nii
-
-
-"""
-    Apply scipy's binary_fill_holes on 3D Nifti image
-"""
-
 from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File
