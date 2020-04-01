@@ -184,7 +184,10 @@ class NMTSubjectAlign(CommandLine):
 
         outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
         outputs["warpinv_file"] = os.path.abspath(
-            fname + "_shft_WARPINV" + ext)
+            fname + "_shft_WARPINV.nii")
+
+        # outputs["warpinv_file"] = os.path.abspath(
+        #    fname + "_shft_WARPINV" + ext)
 
         outputs["transfo_file"] = os.path.abspath(
             fname + "_composite_linear_to_NMT.1D")
@@ -298,7 +301,7 @@ class NwarpApplyPriors(AFNICommandBase):
 
             value = new_value
 
-        if name == 'out_file':
+        elif name == 'out_file':
             for out_file in value[:3]:
                 print(out_file)
 
@@ -309,6 +312,8 @@ class NwarpApplyPriors(AFNICommandBase):
             for i in range(1, 4):
                 new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
             value = new_value
+
+        return super(NwarpApplyPriors, self)._format_arg(name, spec, value)
 
     def _list_outputs(self):
         outputs = self.output_spec().get()

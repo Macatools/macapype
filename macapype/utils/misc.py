@@ -44,3 +44,17 @@ def get_first_elem(elem):
     else:
         print("not a list")
         return elem
+
+
+def gunzip(filename):
+    import subprocess
+
+    if filename[-3:] == ".gz":
+        subprocess.check_output("gunzip " + filename, shell=True)
+    else:
+        ValueError("Non GZip file given")
+    return filename[:-3]
+
+
+def merge_3_elem_to_list(elem1, elem2, elem3):
+    return [elem1, elem2, elem3]
