@@ -1,7 +1,6 @@
 import os
 import os.path as op
 
-import nilearn as ni
 import nilearn.image as nii
 
 import nibabel as nb

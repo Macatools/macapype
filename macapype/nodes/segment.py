@@ -1,8 +1,8 @@
-
 import os
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
-                                    TraitedSpec, isdefined)
+                                    TraitedSpec)
 from nipype.interfaces.base import traits, File
+
 
 class AtroposN4InputSpec(CommandLineInputSpec):
 
@@ -17,7 +17,6 @@ class AtroposN4InputSpec(CommandLineInputSpec):
         desc='brain_file',
         mandatory=True, position=1, argstr="-a %s")
 
-
     brainmask_file = File(
         exists=True,
         desc='brain_file',
@@ -30,12 +29,12 @@ class AtroposN4InputSpec(CommandLineInputSpec):
         mandatory=True, position=3, argstr="-c %d")
 
     priors = traits.List(
-        File(exists = True),
+        File(exists=True),
         desc='priors',
         mandatory=True)
 
     template_file = traits.String(
-        "tmp_%02d_allineate.nii.gz", usedefault = True,
+        "tmp_%02d_allineate.nii.gz", usedefault=True,
         exists=True,
         desc='template_file',
         mandatory=True, position=4, argstr="-p %s")
@@ -50,13 +49,14 @@ class AtroposN4OutputSpec(TraitedSpec):
         exists=True, desc="segmented file with all tissues")
 
     segmented_files = traits.List(
-        File(exists = True), desc="segmented indivual files")
+        File(exists=True), desc="segmented indivual files")
 
 
 class AtroposN4(CommandLine):
     """
     Description:
-        Brain extraction using T1 and T2 images
+        Wrap of antsAtroposN4.sh
+        Requires PATH to ANTS Scripts added
 
 
     Inputs:
@@ -79,14 +79,12 @@ class AtroposN4(CommandLine):
 
             cur_path = os.path.abspath("")
 
-            #os.chdir(cur_path)
             # all the files have to be in local and
             if name == 'brain_file' or name == 'brainmask_file':
-                ## requires local copy
+                # requires local copy
                 shutil.copy(value, cur_path)
                 value = os.path.split(value)[1]
 
-                #return spec.argstr%{"old":0, "standard":1, "new":2}[value]
             elif name == 'priors':
                 new_value = []
 
@@ -101,43 +99,53 @@ class AtroposN4(CommandLine):
 
         import os
         import glob
-        #from nipype.utils.filemanip import split_filename as split_f
 
         outputs = self._outputs().get()
 
         outputs['segmented_file'] = os.path.abspath(
             self.inputs.out_pref + "Segmentation.nii.gz")
 
-        seg_files = glob.glob(self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
-        print(seg_files)
+        seg_files = glob.glob(
+            self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
+
         assert len(seg_files) == len(self.inputs.priors), \
             "Error, there should {} SegmentationPosteriors".format(
                 len(self.inputs.priors))
 
         outputs['segmented_files'] = [os.path.abspath(
-            seg_file) for seg_file in glob.glob(
-                self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")]
+            seg_file) for seg_file in seg_files]
 
         return outputs
 
-if __name__ == '__main__':
 
-    #path_to = "/hpc/crise/meunier.d"
+if __name__ == '__main__':
+    # path_to = "/hpc/crise/meunier.d"
     path_to = "/hpc/crise/meunier.d/Data/Primavoice/test_pipeline_kepkee_crop"
 
-    seg_path = os.path.join(path_to, "segment_pnh_subpipes", "segment_devel_NMT_sub_align")
+    seg_path = os.path.join(path_to, "segment_pnh_subpipes",
+                            "segment_devel_NMT_sub_align")
 
     brain_file = os.path.join(
-        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache", "deoblique",
-        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache",
+        "deoblique",
+        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_\
+            corrected.nii.gz")
 
     brainmask_file = os.path.join(
-        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache", "bin_norm_intensity",
-        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected_bin.nii.gz")
+        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache",
+        "bin_norm_intensity",
+        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_\
+            corrected_bin.nii.gz")
 
-    priors = [os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_csf", "NMT_segmentation_CSF_allineate.nii.gz"),
-              os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz"),
-              os.path.join(seg_path, "register_NMT_pipe", "_session_01_subject_Apache", "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz")]
+    priors = [os.path.join(
+        seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
+        "align_seg_csf", "NMT_segmentation_CSF_allineate.nii.gz"),
+              os.path.join(
+                  seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
+                  "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz"),
+              os.path.join(
+                  seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
+                  "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz")]
 
     seg_at = AtroposN4()
 

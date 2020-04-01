@@ -2,11 +2,8 @@
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
-import nipype.interfaces.fsl as fsl
-
-
 from macapype.nodes.bash_regis import (T1xT2BET, T1xT2BiasFieldCorrection,
-                                      IterREGBET)
+                                       IterREGBET)
 
 from macapype.nodes.preproc import average_align
 
@@ -19,17 +16,15 @@ from .correct_bias import (create_masked_correct_bias_pipe,
 
 from .register import create_register_NMT_pipe
 
-from .preproc import (create_average_align_crop_pipe,
-                      create_average_align_pipe)
-
 from .extract_brain import create_brain_extraction_pipe
 
-from macapype.utils.misc import (show_files, gunzip)
+from macapype.utils.misc import gunzip
+
 
 ###############################################################################
-# Regis
-def create_full_segment_pnh_T1xT2(brain_template, priors,
-                             name='T1xT2_segmentation_pipeline'):
+# Regis T1xT2 pipeline
+def create_full_segment_pnh_T1xT2(
+        brain_template, priors, name='T1xT2_segmentation_pipeline'):
     print(brain_template)
     print(priors)
     print("node name: ", name)
@@ -39,7 +34,7 @@ def create_full_segment_pnh_T1xT2(brain_template, priors,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2']),
+        niu.IdentityInterface(fields=['T1', 'T2']),
         name='inputnode'
     )
 
@@ -71,7 +66,8 @@ def create_full_segment_pnh_T1xT2(brain_template, priors,
 
 ###############################################################################
 # Kepkee
-def create_full_segment_from_mask_pipe(sigma, nmt_dir, name="full_segment_pipe"):
+def create_full_segment_from_mask_pipe(
+        sigma, nmt_dir, name="full_segment_pipe"):
 
     # creating pipeline
     brain_segment_pipe = pe.Workflow(name=name)
@@ -130,13 +126,14 @@ def create_full_segment_from_mask_pipe(sigma, nmt_dir, name="full_segment_pipe")
 
     return brain_segment_pipe
 
-# first step for a mask (=extract brain?)
-def create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, name= "segment_pnh_subpipes",
-                                sigma = 2):
+
+# first step for a mask and then call create_full_segment_from_mask_pipe
+def create_full_segment_pnh_subpipes(
+        nmt_dir, atlasbrex_dir, name="segment_pnh_subpipes", sigma=2):
 
     """
     new version (as it is now)
-    - preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional)
+    - preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional) # noqa
     - correct_bias
     - denoise
     - extract_brain
@@ -148,7 +145,7 @@ def create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, name= "segment_pnh_
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2']),
+        niu.IdentityInterface(fields=['T1', 'T2']),
         name='inputnode'
     )
 
@@ -158,35 +155,42 @@ def create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, name= "segment_pnh_
     seg_pipe.connect(inputnode, ('T1', average_align), preproc, 't1_file')
     seg_pipe.connect(inputnode, ('T2', average_align), preproc, 't2_file')
 
+    # Correct_bias_T1_T2
+    correct_bias_pipe = create_correct_bias_pipe(sigma=sigma)
 
-    #### Correct_bias_T1_T2
-    correct_bias_pipe = create_correct_bias_pipe(sigma = sigma)
+    seg_pipe.connect(preproc, 't1_cropped_file',
+                     correct_bias_pipe, 'inputnode.preproc_T1')
+    seg_pipe.connect(preproc, 't2_cropped_file',
+                     correct_bias_pipe, 'inputnode.preproc_T2')
 
-    seg_pipe.connect(preproc, 't1_cropped_file',correct_bias_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc, 't2_cropped_file', correct_bias_pipe,'inputnode.preproc_T2')
-
-
-    #### denoising
+    # denoising
     denoise_pipe = create_denoised_pipe()
 
-    seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file", denoise_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",denoise_pipe,'inputnode.preproc_T2')
+    seg_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
+                     denoise_pipe, 'inputnode.preproc_T1')
+    seg_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
+                     denoise_pipe, 'inputnode.preproc_T2')
 
-    ##### brain extraction
+    # brain extraction
     brain_extraction_pipe = create_brain_extraction_pipe(
-        atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir, name = "devel_atlas_brex")
+        atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir,
+        name="devel_atlas_brex")
 
-    seg_pipe.connect(denoise_pipe,'denoise_T1.output_image',brain_extraction_pipe,"inputnode.restore_T1")
-    seg_pipe.connect(denoise_pipe,'denoise_T2.output_image',brain_extraction_pipe,"inputnode.restore_T2")
+    seg_pipe.connect(denoise_pipe, 'denoise_T1.output_image',
+                     brain_extraction_pipe, "inputnode.restore_T1")
+    seg_pipe.connect(denoise_pipe, 'denoise_T2.output_image',
+                     brain_extraction_pipe, "inputnode.restore_T2")
 
-    #################### full_segment (restarting from the avg_align files,)
+    # full_segment (restarting from the avg_align files,)
     brain_segment_pipe = create_full_segment_from_mask_pipe(
         sigma=sigma, nmt_dir=nmt_dir, name="segment_devel_NMT_sub_align")
 
-    seg_pipe.connect(preproc, 't1_cropped_file',brain_segment_pipe,'inputnode.preproc_T1')
-    seg_pipe.connect(preproc, 't2_cropped_file', brain_segment_pipe,'inputnode.preproc_T2')
+    seg_pipe.connect(preproc, 't1_cropped_file',
+                     brain_segment_pipe, 'inputnode.preproc_T1')
+    seg_pipe.connect(preproc, 't2_cropped_file',
+                     brain_segment_pipe, 'inputnode.preproc_T2')
 
-    seg_pipe.connect(brain_extraction_pipe,"smooth_mask.out_file",brain_segment_pipe,"inputnode.brain_mask")
+    seg_pipe.connect(brain_extraction_pipe, "smooth_mask.out_file",
+                     brain_segment_pipe, "inputnode.brain_mask")
 
     return seg_pipe
-

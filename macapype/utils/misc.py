@@ -55,6 +55,6 @@ def gunzip(filename):
         ValueError("Non GZip file given")
     return filename[:-3]
 
+
 def merge_3_elem_to_list(elem1, elem2, elem3):
     return [elem1, elem2, elem3]
-

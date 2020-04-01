@@ -8,14 +8,11 @@ import nipype.interfaces.afni as afni
 
 from ..nodes.segment import AtroposN4
 
-from .denoise import create_denoised_pipe
-from .correct_bias import create_masked_correct_bias_pipe
-from .register import create_register_NMT_pipe
-
 # from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty
 from ..nodes.binary_fill_holes import BinaryFillHoles
 
 from ..utils.misc import get_elem, merge_3_elem_to_list
+
 
 def create_segment_atropos_pipe(dimension, numberOfClasses,
                                 name="segment_atropos_pipe"):
@@ -43,12 +40,11 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     segment_pipe.connect(deoblique, "out_file",
                          bin_norm_intensity, "in_file")
 
-    # STEP 3: ants Atropos
-    ### merging priors as a list
+    # merging priors as a list
     merge_3_elem = pe.Node(niu.Function(
-        input_names = ['elem1','elem2','elem3'],
-        output_names = ['merged_list'],
-        function = merge_3_elem_to_list), name = 'merge_3_elem')
+        input_names=['elem1', 'elem2', 'elem3'],
+        output_names=['merged_list'],
+        function=merge_3_elem_to_list), name='merge_3_elem')
 
     # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
     segment_pipe.connect(inputnode, 'csf_prior_file', merge_3_elem, "elem1")
@@ -68,16 +64,14 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     segment_pipe.connect(merge_3_elem, 'merged_list',
                          seg_at, "priors")
 
-
     # Threshold GM, WM and CSF
     thd_nodes = {}
-    for i,tissue in enumerate(['csf', 'gm', 'wm']):
+    for i, tissue in enumerate(['csf', 'gm', 'wm']):
         tmp_node = pe.Node(fsl.Threshold(), name="threshold_" + tissue)
         tmp_node.inputs.thresh = 0.05
-        segment_pipe.connect(
-            seg_at, ('segmented_files',get_elem,i),
-            tmp_node, 'in_file'
-        )
+        segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
+                             tmp_node, 'in_file')
+
         thd_nodes[tissue] = tmp_node
 
     return segment_pipe

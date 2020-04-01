@@ -1,11 +1,15 @@
+
+import os
+
+import nibabel as nb
+import numpy as np
+
 from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File
+from nipype.utils.filemanip import split_filename as split_f
 
 from scipy.ndimage import binary_fill_holes
-import nibabel as nb
-import numpy as np
-import argparse
 
 
 class BinaryFillHolesInputSpec(BaseInterfaceInputSpec):
@@ -48,13 +52,6 @@ class BinaryFillHoles(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from scipy.ndimage import binary_fill_holes
-        import nibabel as nb
-        import numpy as np
-        import os
-
-        from nipype.utils.filemanip import split_filename as split_f
-
         in_file = self.inputs.in_file
         size = self.inputs.size
 
@@ -79,22 +76,3 @@ class BinaryFillHoles(BaseInterface):
         outputs["out_file"] = self.out_nii
 
         return outputs
-
-# if __name__ == "__main__":
-#     # Command line parser
-#     parser = argparse.ArgumentParser(
-#         description="Apply scipy's binary_fill_holes on 3D Nifti image")
-#     parser.add_argument("-in", dest="in_image", type=str,
-#                         help="Image to process", required=True)
-#     parser.add_argument("-out", dest="out_image", type=str,
-#                         help="Out image", default=None)
-#     parser.add_argument("-size", dest="size", type=str,
-#                         help="Size of the structure (in voxels)", default=3)
-#     args = parser.parse_args()
-#
-#     # Default output filename
-#     if args.out_image is None:
-#         args.out_image = args.in_image[:-4] + "_filled.nii"
-#
-#     # Work
-#     apply_binary_fill_holes(args.in_image, args.out_image, args.size)

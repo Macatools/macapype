@@ -76,4 +76,3 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
     brain_extraction_pipe.connect(smooth_mask, 'out_file',
                                   mult_T2, 'in_file_b')
     return brain_extraction_pipe
-

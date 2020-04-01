@@ -6,7 +6,7 @@ import os.path as op
 from os import makedirs
 
 
-def load_test_data(name, path_to = ""):
+def load_test_data(name, path_to=""):
     """ Load test data, template and needed scripts """
 
     data_dir = {
