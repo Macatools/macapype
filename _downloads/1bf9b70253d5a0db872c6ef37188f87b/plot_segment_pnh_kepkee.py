@@ -18,12 +18,12 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
-################################################################################
-# Running workflow
+###############################################################################
+#Running workflow
 #==================
 
-#from macapype.utils.utils_tests import load_test_data
-#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
+from macapype.utils.utils_tests import load_test_data
+from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 #my_path = "/hpc/crise/meunier.d/"
 
@@ -49,9 +49,11 @@ import nipype.interfaces.io as nio
 #segment_pnh.write_graph(graph2use="colored")
 #segment_pnh.run()
 
-##############################################################################
-# Testing plot in local
-#=======================
+#exit()
+
+###############################################################################
+## Testing plot in local
+##=======================
 
 my_path = "/home/INT/meunier.d/Data/Primavoice/"
 wf_path = os.path.join(my_path, "segment_pnh_subpipes")
@@ -215,17 +217,36 @@ plt.show()
 #==========================
 
 tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
-gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors01.nii.gz")
-wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors02.nii.gz")
-csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors03.nii.gz")
-
-outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(outfile_deoblique, deoblique_T1_file, tissue_file)
+segmentation = os.path.join(wf_path,"segmentation.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, deoblique_T1_file, tissue_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_deoblique)
-plt.figure(figsize=(8, 8))
+img = plt.imread(segmentation)
+plt.figure(figsize=(16, 16))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
+
+
+
+###############################################################################
+# segmentation results by tissue
+#==========================
+
+csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
+gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")
+wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_wm", "segment_SegmentationPosteriors03_thresh.nii.gz")
+
+segmentation_sep = os.path.join(wf_path,"segmentation_sep.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30".format(segmentation_sep, deoblique_T1_file, gm_file, wm_file, csf_file)
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(segmentation_sep)
+plt.figure(figsize=(16, 16))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+
+

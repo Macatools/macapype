@@ -71,7 +71,6 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plot the results of a segmentation</a><ul>
 <li><a class="reference internal" href="#running-workflow">Running workflow</a></li>
-<li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
 <li><a class="reference internal" href="#correct-bias-results">Correct bias results</a></li>
 <li><a class="reference internal" href="#brain-extraction-results">Brain extraction results</a><ul>
 <li><a class="reference internal" href="#second-part-of-the-pipeline">Second part of the pipeline</a></li>
@@ -81,6 +80,7 @@
 <li><a class="reference internal" href="#register-template-to-subject">register template to subject</a></li>
 <li><a class="reference internal" href="#results-of-deoblique">results of deoblique</a></li>
 <li><a class="reference internal" href="#segmentation-results">segmentation results</a></li>
+<li><a class="reference internal" href="#segmentation-results-by-tissue">segmentation results by tissue</a></li>
 </ul>
 </li>
 </ul>
@@ -139,8 +139,8 @@
 </div>
 <div class="section" id="running-workflow">
 <h2>Running workflow<a class="headerlink" href="#running-workflow" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#from macapype.utils.utils_tests import load_test_data</span>
-<span class="c1">#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span>
+<span class="kn">from</span> <span class="nn">macapype.pipelines.full_segment</span> <span class="kn">import</span> <span class="n">create_full_segment_pnh_subpipes</span>
 
 <span class="c1">#my_path = &quot;/hpc/crise/meunier.d/&quot;</span>
 
@@ -165,11 +165,12 @@
 
 <span class="c1">#segment_pnh.write_graph(graph2use=&quot;colored&quot;)</span>
 <span class="c1">#segment_pnh.run()</span>
+
+<span class="c1">#exit()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="testing-plot-in-local">
-<h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
+<p># Testing plot in local
+#=======================</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
 <span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_path</span><span class="p">,</span> <span class="s2">&quot;segment_pnh_subpipes&quot;</span><span class="p">)</span>
 
@@ -336,24 +337,40 @@
 <div class="section" id="segmentation-results">
 <h2>segmentation results<a class="headerlink" href="#segmentation-results" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tissue_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_Segmentation.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">gm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors01.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">wm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors02.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">csf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors03.nii.gz&quot;</span><span class="p">)</span>
-
-<span class="n">outfile_deoblique</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_deoblique.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -dr 0 4 -cm random -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">,</span> <span class="n">tissue_file</span><span class="p">)</span>
+<span class="n">segmentation</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;segmentation.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -dr 0 4 -cm random -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">segmentation</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">,</span> <span class="n">tissue_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">segmentation</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_007.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  43.725 seconds)</p>
+</div>
+<div class="section" id="segmentation-results-by-tissue">
+<h2>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">csf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors01_thresh.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">gm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors02_thresh.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">wm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors03_thresh.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="n">segmentation_sep</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;segmentation_sep.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -cm red -a 30 </span><span class="si">{}</span><span class="s2"> -cm blue -a 30 </span><span class="si">{}</span><span class="s2"> -cm green -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">segmentation_sep</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">,</span> <span class="n">gm_file</span><span class="p">,</span> <span class="n">wm_file</span><span class="p">,</span> <span class="n">csf_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">segmentation_sep</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  45.281 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-kepkee-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/1bf9b70253d5a0db872c6ef37188f87b/plot_segment_pnh_kepkee.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_kepkee.py</span></code></a></div>
@@ -376,7 +393,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-03-31.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-01.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
