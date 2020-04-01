@@ -15,10 +15,7 @@ from .register import create_register_NMT_pipe
 # from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty
 from ..nodes.binary_fill_holes import BinaryFillHoles
 
-
-def merge_3_elem_to_list(elem1, elem2, elem3):
-    return [elem1, elem2, elem3]
-
+from ..utils.misc import get_elem, merge_3_elem_to_list
 
 def create_segment_atropos_pipe(dimension, numberOfClasses,
                                 name="segment_atropos_pipe"):
@@ -70,6 +67,18 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
 
     segment_pipe.connect(merge_3_elem, 'merged_list',
                          seg_at, "priors")
+
+
+    # Threshold GM, WM and CSF
+    thd_nodes = {}
+    for i,tissue in enumerate(['csf', 'gm', 'wm']):
+        tmp_node = pe.Node(fsl.Threshold(), name="threshold_" + tissue)
+        tmp_node.inputs.thresh = 0.05
+        segment_pipe.connect(
+            seg_at, ('segmented_files',get_elem,i),
+            tmp_node, 'in_file'
+        )
+        thd_nodes[tissue] = tmp_node
 
     return segment_pipe
 

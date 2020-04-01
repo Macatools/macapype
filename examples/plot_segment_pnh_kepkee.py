@@ -29,7 +29,7 @@ my_path = "/hpc/crise/meunier.d/"
 
 data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-## data file
+# data file
 T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
 T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
 
@@ -38,7 +38,7 @@ from macapype.utils.utils_tests import load_test_data
 nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
-## running workflow
+# running workflow
 segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)
 segment_pnh.base_dir = my_path
 
@@ -49,11 +49,9 @@ segment_pnh.inputs.inputnode.T2 = T2_file
 segment_pnh.write_graph(graph2use="colored")
 segment_pnh.run()
 
-exit()
-
-##############################################################################
-# Testing plot in local
-#=======================
+###############################################################################
+## Testing plot in local
+##=======================
 
 my_path = "/home/INT/meunier.d/Data/Primavoice/"
 wf_path = os.path.join(my_path, "segment_pnh_subpipes")
@@ -223,7 +221,7 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(segmentation)
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(16, 16))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
@@ -231,9 +229,22 @@ plt.show()
 
 
 ###############################################################################
-# segmentation results 2
+# segmentation results by tissue
 #==========================
 
-gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors01.nii.gz")
-wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors02.nii.gz")
-csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_SegmentationPosteriors03.nii.gz")
+csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
+gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")
+wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_wm", "segment_SegmentationPosteriors03_thresh.nii.gz")
+
+segmentation_sep = os.path.join(wf_path,"segmentation_sep.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30".format(segmentation_sep, deoblique_T1_file, gm_file, wm_file, csf_file)
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(segmentation_sep)
+plt.figure(figsize=(16, 16))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+
+
