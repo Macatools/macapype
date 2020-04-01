@@ -74,26 +74,26 @@ class AtroposN4(CommandLine):
     _cmd = 'bash antsAtroposN4.sh'.format(package_directory)
 
     def _format_arg(self, name, spec, value):
-            import os
-            import shutil
+        import os
+        import shutil
 
-            cur_path = os.path.abspath("")
+        cur_path = os.path.abspath("")
 
-            # all the files have to be in local and
-            if name == 'brain_file' or name == 'brainmask_file':
-                # requires local copy
-                shutil.copy(value, cur_path)
-                value = os.path.split(value)[1]
+        # all the files have to be in local and
+        if name == 'brain_file' or name == 'brainmask_file':
+            # requires local copy
+            shutil.copy(value, cur_path)
+            value = os.path.split(value)[1]
 
-            elif name == 'priors':
-                new_value = []
+        elif name == 'priors':
+            new_value = []
 
-                for prior_file in value:
-                    shutil.copy(prior_file, cur_path)
-                    new_value.append(os.path.split(prior_file)[1])
+            for prior_file in value:
+                shutil.copy(prior_file, cur_path)
+                new_value.append(os.path.split(prior_file)[1])
 
-                value = new_value
-            return super(AtroposN4, self)._format_arg(name, spec, value)
+            value = new_value
+        return super(AtroposN4, self)._format_arg(name, spec, value)
 
     def _list_outputs(self):
 
