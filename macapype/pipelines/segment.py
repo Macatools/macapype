@@ -74,7 +74,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     for i,tissue in enumerate(['csf', 'gm', 'wm']):
         tmp_node = pe.Node(fsl.Threshold(), name="threshold_" + tissue)
         tmp_node.inputs.thresh = 0.05
-        be_pipe.connect(
+        segment_pipe.connect(
             seg_at, ('segmented_files',get_elem,i),
             tmp_node, 'in_file'
         )
