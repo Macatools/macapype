@@ -71,7 +71,7 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
-    for i,tissue in enumerate['csf', 'gm', 'wm']:
+    for i,tissue in enumerate(['csf', 'gm', 'wm']):
         tmp_node = pe.Node(fsl.Threshold(), name="threshold_" + tissue)
         tmp_node.inputs.thresh = 0.05
         be_pipe.connect(
