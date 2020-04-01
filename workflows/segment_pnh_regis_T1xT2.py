@@ -46,8 +46,6 @@
 #           Bastien Cagna (bastien.cagna@univ-amu.fr)
 #           Regis Trapeau (regis.trapeau@univ-amu.fr)
 
-import nilearn as ni
-import nibabel as nb
 import os
 import os.path as op
 import argparse
@@ -60,76 +58,17 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.ants as ants
 import nipype.interfaces.fsl as fsl
 
-from macapype.nodes.preproc import average_align
-from macapype.nodes.bash_regis import T1xT2BET, T1xT2BiasFieldCorrection, \
-                                      IterREGBET
-from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
-from macapype.utils.utils_tests import load_test_data
-
-
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
-def gunzip(filename):
-    import subprocess
+from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
+from macapype.utils.utils_tests import load_test_data
+from macapype.utils.utils_spm import format_spm_priors
 
-    if filename[-3:] == ".gz":
-        subprocess.check_output("gunzip " + filename, shell=True)
-    else:
-        ValueError("Non GZip file given")
-    return filename[:-3]
+my_path = "/hpc/crise/meunier.d"
 
 
-def format_spm_priors(priors, fname="merged_tissue_priors.nii",
-                      directory=None):
-    """
-    Arguments
-    =========
-    priors: str or list
-
-    fname: str
-        Filename of the concatenated 4D Nifti image
-
-    directory: str or None
-        If None, the directory of the first file listed in prios is used.
-    """
-    if isinstance(priors, str):
-        img = nb.load(priors)
-        if len(img.shape) == 4 and 3 <= img.shape[3] <= 6:
-            return priors
-        else:
-            raise ValueError(
-                "Given Nifti is 3D while 4D expected or do not have between 3 "
-                "and 6 maps."
-            )
-    elif isinstance(priors, list):
-        imgs = []
-        for f in priors:
-            if directory is None:
-                directory = op.split(f)[0]
-            imgs.append(nb.load(f))
-        fmt_image = ni.image.concat_imgs(imgs)
-
-        new_img_f = op.join(directory, fname)
-        print(new_img_f)
-        nb.save(fmt_image, new_img_f)
-        return new_img_f
-    raise ValueError(
-        "Priors must be one or a list of paths to a Nifti images"
-    )
-
-
-def create_infosource(subject_ids):
-    infosource = pe.Node(
-        interface=niu.IdentityInterface(fields=['subject_id']),
-        name="infosource"
-    )
-    infosource.iterables = [('subject_id', subject_ids)]
-
-    return infosource
-
-
-def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
+def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -151,42 +90,42 @@ def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
     layout = BIDSLayout(data_dir)
 
     # Verbose
-    print("BIDS layaout:", layout)
+    print("BIDS layout:", layout)
     print("\t", layout.get_subjects())
     print("\t", layout.get_sessions())
-    print("\t", layout.get_acquisitions())
 
-    subjects = layout.get_subjects() if len(subjects) == 0 else subjects
-    acqs = layout.get_acquistions() if acqs and len(acqs) == 0 else acqs
-    sessions = layout.get_sessions() if len(sessions) == 0 else sessions
+    #print("\t", layout.get_acquisitions())
+
+
+
+    if subjects is None:
+        subjects = layout.get_subjects()
+
+    if sessions is None:
+        sessions = layout.get_sessions()
 
     iterables = []
     iterables.append(('subject', subjects))
     iterables.append(('session', sessions))
-    if acqs:
+
+    if acqs is not None:
         iterables.append(('acquisition', acqs))
-    #    # Add iteration over subjects
-    #    if len(layout.get_subjects()) == 1:
-    #         bids_datasource.inputs.subject = layout.get_subjects()[0]
-    #    else:
-    #        iterables.append(('subject', layout.get_subjects()))
 
-    #    #  Add iteration over sessions
-    #    if len(layout.get_sessions()) == 1:
-    #         bids_datasource.inputs.session = layout.get_sessions()[0]
-    #    else:
-    #        iterables.append(('session', layout.get_sessions()))
-
-    #    #  Add iteration over acquisitions
-    #    if len(layout.get_acquisitions()) == 1:
-    #         bids_datasource.inputs.acquisitions = layout.get_acquisitions()[0]
-    #    else:
-    #        iterables.append(('acquisition', layout.get_acquisitions()))
-
-    #    if len(iterables) > 0:
     bids_datasource.iterables = iterables
 
     return bids_datasource
+
+"""
+def create_infosource(subject_ids):
+    infosource = pe.Node(
+        interface=niu.IdentityInterface(fields=['subject_id']),
+        name="infosource"
+    )
+    infosource.iterables = [('subject_id', subject_ids)]
+
+    return infosource
+"""
+
 # def create_datasource(data_dir, sess):
 #     datasource = pe.Node(
 #         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1','T2']),
@@ -202,92 +141,6 @@ def create_datasource(data_dir, subjects=[], sessions=[], acqs=[]):
 #
 #     return datasource
 
-
-def create_bids_datasource(data_dir):
-
-    bids_datasource = pe.Node(
-        interface=nio.BIDSDataGrabber(),
-        name='bids_datasource'
-    )
-
-    bids_datasource.inputs.base_dir = data_dir
-
-    bids_datasource.inputs.output_query = {
-        'T1': {
-            "datatype": "anat",
-            "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
-        },
-        'T2': {
-            "datatype": "anat",
-            "suffix": "T2w",
-            "extensions": ["nii", ".nii.gz"]
-        }
-    }
-
-    layout = BIDSLayout(data_dir)
-    print(layout)
-    print(layout.get_subjects())
-    print(layout.get_sessions())
-
-    iterables = []
-    if len(layout.get_subjects()) == 1:
-         bids_datasource.inputs.subject = layout.get_subjects()[0]
-    else:
-        iterables.append(('subject', layout.get_subjects()[:2]))
-
-    if len(layout.get_sessions()) == 1:
-         bids_datasource.inputs.session = layout.get_sessions()[0]
-    else:
-        iterables.append(('session', layout.get_sessions()[:2]))
-
-    if len(iterables):
-        bids_datasource.iterables = iterables
-
-    return bids_datasource
-
-
-def create_segment_pnh_T1xT2(brain_template, priors,
-                             name='T1xT2_segmentation_pipeline'):
-    print(brain_template)
-    print(priors)
-    print("node name: ", name)
-
-    # Creating pipeline
-    seg_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1','T2', 'priors']),
-        name='inputnode'
-    )
-
-    # Brain extraction (unused) + Cropping
-    bet = pe.Node(T1xT2BET(m=True, aT2=True, c=10), name='bet')
-    bet.n = 2
-    seg_pipe.connect(inputnode, 'T1', bet, 't1_file')
-    seg_pipe.connect(inputnode, 'T2', bet, 't2_file')
-
-    # Bias correction of cropped images
-    debias = pe.Node(T1xT2BiasFieldCorrection(), name='debias')
-    seg_pipe.connect(bet, 't1_cropped_file', debias, 't1_file')
-    seg_pipe.connect(bet, 't2_cropped_file', debias, 't2_file')
-    seg_pipe.connect(bet, 'mask_file', debias, 'b')
-
-    # Iterative registration to the INIA19 template
-    reg = pe.Node(IterREGBET(), name='reg')
-    reg.inputs.refb_file = brain_template
-    seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
-    seg_pipe.connect(debias, 't1_debiased_brain_file', reg, 'inb_file')
-
-    # Compute brain mask using old_segment of SPM and postprocessing on
-    # tissues' masks
-    extract_brain = create_old_segment_extraction_pipe(priors)
-    seg_pipe.connect(reg, ('warp_file', gunzip), extract_brain, 'inputnode.T1')
-
-    return seg_pipe
-
-
 ###############################################################################
 def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
                          acquisitions, template, priors):
@@ -295,27 +148,15 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
     main_workflow = pe.Workflow(name="T1xT2_processing_workflow")
     main_workflow.base_dir = process_dir
 
-    # # Infosource
-    # if subject_ids is None or sessions is None:
-    #     print('adding BIDS data source')
-    #     datasource = create_bids_datasource(data_dir)
-    # else:
-    #     print('adding info source and data source')
-    #     infosource = create_infosource(subject_ids)
-    #     # Data source
-    #     datasource = create_datasource(data_dir, sessions)
-    #     # connect
-    #     main_workflow.connect(
-    #         infosource, 'subject_id', datasource, 'subject_id')
     datasource = create_datasource(data_dir, subject_ids, sessions,
                                    acquisitions)
 
-    segment_pnh = create_segment_pnh_T1xT2(template, priors)
+    segment_pnh = create_full_segment_pnh_T1xT2(template, priors)
 
     main_workflow.connect(
-        datasource, ('T1', average_align), segment_pnh, 'inputnode.T1')
+        datasource, 'T1', segment_pnh, 'inputnode.T1')
     main_workflow.connect(
-        datasource, ('T2', average_align), segment_pnh, 'inputnode.T2')
+        datasource, 'T2', segment_pnh, 'inputnode.T2')
 
     return main_workflow
 
@@ -369,7 +210,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.template is None and args.priors is None:
-        inia_dir = load_test_data("inia19")
+        inia_dir = load_test_data("inia19", path_to=my_path)
         args.template = op.join(inia_dir, "inia19-t1-brain.nii")
         args.priors = [
             op.join(inia_dir, "inia19-prob_1.nii"),

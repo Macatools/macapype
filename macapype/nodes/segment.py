@@ -1,104 +1,159 @@
+import os
+from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
+                                    TraitedSpec)
+from nipype.interfaces.base import traits, File
 
 
-def wrap_antsAtroposN4(dimension, shft_aff_file, brainmask_file,
-                       numberOfClasses, ex_prior):
+class AtroposN4InputSpec(CommandLineInputSpec):
 
-    import os
-    import shutil
-    from nipype.utils.filemanip import split_filename as split_f
+    dimension = traits.Int(
+        3, default=True, usedefault=True,
+        exists=True,
+        desc='Dimension',
+        mandatory=True, position=0, argstr="-d %d")
 
-    _, prior_fname, prior_ext = split_f(ex_prior[-1])  # last element
+    brain_file = File(
+        exists=True,
+        desc='brain_file',
+        mandatory=True, position=1, argstr="-a %s")
 
-    # copying file locally
-    dest = os.path.abspath("")
+    brainmask_file = File(
+        exists=True,
+        desc='brain_file',
+        mandatory=True, position=2, argstr="-x %s")
 
-    for prior_file in ex_prior[2:]:
-        print(prior_file)
-        shutil.copy(prior_file, dest)
+    numberOfClasses = traits.Int(
+        3, usedefault=True,
+        exists=True,
+        desc='numberOfClasses',
+        mandatory=True, position=3, argstr="-c %d")
 
-    shutil.copy(shft_aff_file, dest)
-    shutil.copy(brainmask_file, dest)
+    priors = traits.List(
+        File(exists=True),
+        desc='priors',
+        mandatory=True)
 
-    _, bmask_fname, bmask_ext = split_f(brainmask_file)
-    _, shft_aff_fname, shft_aff_ext = split_f(shft_aff_file)
+    template_file = traits.String(
+        "tmp_%02d_allineate.nii.gz", usedefault=True,
+        exists=True,
+        desc='template_file',
+        mandatory=True, position=4, argstr="-p %s")
 
-    # generating template_file
-    # TODO should be used by default
-    template_file = "tmp_%02d.nii.gz"
-
-    # generating bash_line
-    os.chdir(dest)
-
-    out_pref = "segment_"
-    bash_line = "bash antsAtroposN4.sh -d {} -a {} -x {} -c {} -p {} -o {\
-    }".format(
-        dimension, shft_aff_fname+shft_aff_ext, bmask_fname+bmask_ext,
-        numberOfClasses, template_file, out_pref)
-    print("bash_line : "+bash_line)
-
-    os.system(bash_line)
-
-    seg_file = os.path.abspath(out_pref+"Segmentation"+prior_ext)
-    seg_post1_file = os.path.abspath(
-        out_pref+"SegmentationPosteriors01"+prior_ext)
-    seg_post2_file = os.path.abspath(
-        out_pref+"SegmentationPosteriors02"+prior_ext)
-    seg_post3_file = os.path.abspath(
-        out_pref+"SegmentationPosteriors03"+prior_ext)
-
-    out_files = [seg_file, seg_post1_file, seg_post2_file, seg_post3_file]
-
-    # TODO surely more robust way can be used
-    return out_files, seg_file, seg_post1_file, seg_post2_file, seg_post3_file
+    out_pref = traits.String(
+        "segment_", usedefault=True, desc="output prefix", mandatory=False,
+        position=5,  argstr="-o %s")
 
 
-def wrap_antsAtroposN4_dirty(dimension, brain_file, brainmask_file,
-                             numberOfClasses, ex_prior1, ex_prior2, ex_prior3):
+class AtroposN4OutputSpec(TraitedSpec):
+    segmented_file = File(
+        exists=True, desc="segmented file with all tissues")
 
-    import os
-    import shutil
-    from nipype.utils.filemanip import split_filename as split_f
+    segmented_files = traits.List(
+        File(exists=True), desc="segmented indivual files")
 
-    _, prior_fname, prior_ext = split_f(ex_prior1)  # last element
 
-    # copying file locally
-    dest = os.path.abspath("")
+class AtroposN4(CommandLine):
+    """
+    Description:
+        Wrap of antsAtroposN4.sh
+        Requires PATH to ANTS Scripts added
 
-    shutil.copy(ex_prior1, dest)
-    shutil.copy(ex_prior2, dest)
-    shutil.copy(ex_prior3, dest)
 
-    shutil.copy(brain_file, dest)
-    shutil.copy(brainmask_file, dest)
+    Inputs:
 
-    _, bmask_fname, bmask_ext = split_f(brainmask_file)
-    _, brain_fname, brain_ext = split_f(brain_file)
+    Outputs:
 
-    # generating template_file
-    # TODO should be used by default
-    template_file = "tmp_%02d_allineate.nii.gz"
+        brain_file:
+            type = File, exists=True, desc="extracted brain from AtroposN4.sh"
 
-    # generating bash_line
-    os.chdir(dest)
+    """
+    input_spec = AtroposN4InputSpec
+    output_spec = AtroposN4OutputSpec
 
-    out_pref = "segment_"
-    bash_line = "bash antsAtroposN4.sh -d {} -a {} -x {} -c {} -p {} -o {\
-    }".format(
-        dimension, brain_fname+brain_ext, bmask_fname+bmask_ext,
-        numberOfClasses, template_file, out_pref)
-    print("bash_line : "+bash_line)
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash antsAtroposN4.sh'.format(package_directory)
 
-    os.system(bash_line)
+    def _format_arg(self, name, spec, value):
+        import os
+        import shutil
 
-    seg_file = os.path.abspath(out_pref+"Segmentation"+prior_ext)
-    seg_post1_file = os.path.abspath(
-        out_pref+"SegmentationPosteriors01"+prior_ext)
-    seg_post2_file = os.path.abspath(
-        out_pref+"SegmentationPosteriors02"+prior_ext)
-    seg_post3_file = os.path.abspath(
-        out_pref+"SegmentationPosteriors03"+prior_ext)
+        cur_path = os.path.abspath("")
 
-    out_files = [seg_file, seg_post1_file, seg_post2_file, seg_post3_file]
+        # all the files have to be in local and
+        if name == 'brain_file' or name == 'brainmask_file':
+            # requires local copy
+            shutil.copy(value, cur_path)
+            value = os.path.split(value)[1]
 
-    # TODO surely more robust way can be used
-    return out_files, seg_file, seg_post1_file, seg_post2_file, seg_post3_file
+        elif name == 'priors':
+            new_value = []
+
+            for prior_file in value:
+                shutil.copy(prior_file, cur_path)
+                new_value.append(os.path.split(prior_file)[1])
+
+            value = new_value
+        return super(AtroposN4, self)._format_arg(name, spec, value)
+
+    def _list_outputs(self):
+
+        import os
+        import glob
+
+        outputs = self._outputs().get()
+
+        outputs['segmented_file'] = os.path.abspath(
+            self.inputs.out_pref + "Segmentation.nii.gz")
+
+        seg_files = glob.glob(
+            self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
+
+        assert len(seg_files) == len(self.inputs.priors), \
+            "Error, there should {} SegmentationPosteriors".format(
+                len(self.inputs.priors))
+
+        outputs['segmented_files'] = [os.path.abspath(
+            seg_file) for seg_file in seg_files]
+
+        return outputs
+
+
+if __name__ == '__main__':
+    # path_to = "/hpc/crise/meunier.d"
+    path_to = "/hpc/crise/meunier.d/Data/Primavoice/test_pipeline_kepkee_crop"
+
+    seg_path = os.path.join(path_to, "segment_pnh_subpipes",
+                            "segment_devel_NMT_sub_align")
+
+    brain_file = os.path.join(
+        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache",
+        "deoblique",
+        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_\
+            corrected.nii.gz")
+
+    brainmask_file = os.path.join(
+        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache",
+        "bin_norm_intensity",
+        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_\
+            corrected_bin.nii.gz")
+
+    priors = [os.path.join(
+        seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
+        "align_seg_csf", "NMT_segmentation_CSF_allineate.nii.gz"),
+              os.path.join(
+                  seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
+                  "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz"),
+              os.path.join(
+                  seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
+                  "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz")]
+
+    seg_at = AtroposN4()
+
+    seg_at.inputs.brain_file = brain_file
+    seg_at.inputs.brainmask_file = brainmask_file
+
+    seg_at.inputs.priors = priors
+
+    val = seg_at.run().outputs
+
+    print(val)

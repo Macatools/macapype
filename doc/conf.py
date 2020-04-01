@@ -117,6 +117,7 @@ html_theme_options = {
         ("Gallery", "auto_examples/index"),
         ("API", "api"),
         ("Tutorial", "tutorial"),
+        ("Installation", "install"),
         ("Github", "https://github.com/macatools/macapype", True),
     ],
     'bootswatch_theme': "united"}
