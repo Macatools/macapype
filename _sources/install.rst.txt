@@ -95,3 +95,16 @@ from pypi
 #########
 
 #TODO
+
+Testing the install
+####################
+
+
+.. code:: bash
+
+    $ ipython
+
+
+.. code:: ipython
+
+    In [1]: import macapype
