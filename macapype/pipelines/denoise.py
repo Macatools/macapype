@@ -7,7 +7,7 @@ from nipype.interfaces.ants.segmentation import DenoiseImage
 
 # Preprocessing: Avg multiples images, align T2 to T1,
 # and crop/denoise in both order
-def create_denoised_pipe(name="denoised_pipe"):
+def create_denoised_pipe(params = {}, name="denoised_pipe"):
 
     # creating pipeline
     denoised_pipe = pe.Workflow(name=name)

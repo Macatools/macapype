@@ -7,7 +7,7 @@ import nipype.interfaces.ants as ants
 from macapype.utils.misc import print_val
 
 
-def create_correct_bias_pipe(sigma, name="correct_bias_pipe"):
+def create_correct_bias_pipe(params = {}, name="correct_bias_pipe"):
 
     # creating pipeline
     correct_bias_pipe = pe.Workflow(name=name)
@@ -42,12 +42,23 @@ def create_correct_bias_pipe(sigma, name="correct_bias_pipe"):
                               norm_mult, 'operand_value')
 
     # smooth
+    if "smooth" in params.keys():
+        sigma = params["smooth"]["sigma"]
+    else:
+        sigma = 2
+
     smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
     smooth.inputs.args = "-bin -s {}".format(sigma)
 
     correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
+    if "norm_smooth" in params.keys():
+        sigma = params["norm_smooth"]["sigma"]
+    else:
+        sigma = 2
+
+
     norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
     norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
 
@@ -139,7 +150,7 @@ def create_correct_bias_pipe(sigma, name="correct_bias_pipe"):
     return correct_bias_pipe
 
 
-def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
+def create_masked_correct_bias_pipe(params = {}, name="masked_correct_bias_pipe"):
 
     # creating pipeline
     masked_correct_bias_pipe = pe.Workflow(name=name)
@@ -186,6 +197,11 @@ def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
                                      norm_mult, 'operand_value')
 
     # smooth
+    if "smooth" in params.keys():
+        sigma = params["smooth"]["sigma"]
+    else:
+        sigma = 2
+
     smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
     smooth.inputs.args = "-bin -s {}".format(sigma)
 
@@ -193,6 +209,11 @@ def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
                                      smooth, 'in_file')
 
     # norm_smooth
+    if "norm_smooth" in params.keys():
+        sigma = params["norm_smooth"]["sigma"]
+    else:
+        sigma = 2
+
     norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
     norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
 

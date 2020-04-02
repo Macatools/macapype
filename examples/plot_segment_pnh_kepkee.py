@@ -49,6 +49,8 @@ segment_pnh.inputs.inputnode.T2 = T2_file
 segment_pnh.write_graph(graph2use="colored")
 segment_pnh.run()
 
+exit()
+
 ###############################################################################
 ## Testing plot in local
 ##=======================
@@ -57,7 +59,6 @@ my_path = "/home/INT/meunier.d/Data/Primavoice/"
 wf_path = os.path.join(my_path, "segment_pnh_subpipes")
 
 T1_file = op.join(wf_path, "preproc", "sub-Apache_ses-01_T1w_cropped.nii.gz")
-assert os.path.exists(T1_file)
 
 # displaying results
 outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
@@ -230,7 +231,7 @@ plt.show()
 
 ###############################################################################
 # segmentation results by tissue
-#==========================
+#================================
 
 csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
 gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")

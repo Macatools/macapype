@@ -1,0 +1,52 @@
+{
+    "bet":
+    {
+        "m": true,
+        "aT2": true,
+        "c": 10,
+        "n": 2,
+        "f": 0.0,
+        "g": 0.5
+    },
+    "debias":
+    {
+        "s": 4
+    },
+    "reg":
+    {
+        "n": 2,
+        "m": "mix",
+        "dof": 12
+    },
+    "create_old_segment_pipe":
+    {
+        "segment":
+        {
+            "gm_output_type": [false, false, true],
+            "wm_output_type": [false, false, true],
+            "csf_output_type": [false, false, true]
+        },
+        "threshold_gm":
+        {
+            "thresh": 0.05
+        },
+        "threshold_wm":
+        {
+            "thresh": 0.05
+        },
+        "threshold_csf":
+        {
+            "thresh": 0.05
+        },
+        "dilate_mask":
+        {
+            "opening_shape": "sphere",
+            "opening_size": 2
+        },
+        "erode_mask":
+        {
+            "opening_shape": "sphere",
+            "opening_size": 2
+        }
+    }
+}

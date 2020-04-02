@@ -13,8 +13,7 @@ import nipype.interfaces.afni as afni
 from ..nodes.extract_brain import AtlasBREX
 
 
-def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
-                                 f=0.5, reg=1, w="10,10,10", msk="a,0,0",
+def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir, params = {},
                                  name="brain_extraction_pipe"):
 
     # creating pipeline
@@ -26,6 +25,17 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir,
         name='inputnode')
 
     # atlas_brex
+    if "atlas_brex" in params.keys():
+        f=params["atlas_brex"]["f"]
+        reg=params["atlas_brex"]["reg"]
+        w=params["atlas_brex"]["w"]
+        msk=params["atlas_brex"]["msk"]
+    else:
+        f=0.5
+        reg=1
+        w=10,10,10
+        msk="a,0,0"
+
     atlas_brex = pe.Node(AtlasBREX(), name='atlas_brex')
 
     brain_extraction_pipe.connect(inputnode, "restore_T1",

@@ -125,7 +125,7 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
-def create_register_NMT_pipe(nmt_dir, name="register_NMT_pipe"):
+def create_register_NMT_pipe(nmt_dir, params = {}, name="register_NMT_pipe"):
 
     """
     Register template to anat with the script NMT_subject_align, and then apply
@@ -141,17 +141,32 @@ def create_register_NMT_pipe(nmt_dir, name="register_NMT_pipe"):
         name='inputnode')
 
     # N4 intensity normalization over brain
-    # maybe not necessary to be in the pipeline?
-    # seems to be used only here)
+    if "norm_intensity" in params.keys():
+        dimension = params["norm_intensity"]["dimension"]
+        bspline_fitting_distance = \
+            params["norm_intensity"]["bspline_fitting_distance"]
+
+        n_iterations = params["norm_intensity"]["n_iterations"]
+        convergence_threshold = params["norm_intensity"]["convergence_threshold"]
+        shrink_factor = params["norm_intensity"]["shrink_factor"]
+        args = params["norm_intensity"]["args"]
+
+    else:
+        dimension = 3
+        bspline_fitting_distance = 200
+        n_iterations = [50, 50, 40, 30]
+        convergence_threshold = 0.00000001
+        shrink_factor = 2
+        args = "r 0 --verbose 1"
 
     norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
                              name='norm_intensity')
-    norm_intensity.inputs.dimension = 3
-    norm_intensity.inputs.bspline_fitting_distance = 200
-    norm_intensity.inputs.n_iterations = [50, 50, 40, 30]
-    norm_intensity.inputs.convergence_threshold = 0.00000001
-    norm_intensity.inputs.shrink_factor = 2
-    norm_intensity.inputs.args = "r 0 --verbose 1"
+    norm_intensity.inputs.dimension = dimension
+    norm_intensity.inputs.bspline_fitting_distance = bspline_fitting_distance
+    norm_intensity.inputs.n_iterations = n_iterations
+    norm_intensity.inputs.convergence_threshold = convergence_threshold
+    norm_intensity.inputs.shrink_factor = shrink_factor
+    norm_intensity.inputs.args = args
 
     register_NMT_pipe.connect(inputnode, 'T1_file',
                               norm_intensity, "input_image")
@@ -167,6 +182,7 @@ def create_register_NMT_pipe(nmt_dir, name="register_NMT_pipe"):
     NMT_subject_align.inputs.script_file = os.path.join(
         nmt_dir, "NMT_subject_align.csh")
 
+    # align_masks
     # "overwrap" of NwarpApply, with specifying the outputs as wished
     p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
 
@@ -189,6 +205,20 @@ def create_register_NMT_pipe(nmt_dir, name="register_NMT_pipe"):
                               align_masks, 'master')
     register_NMT_pipe.connect(NMT_subject_align, 'warpinv_file',
                               align_masks, "warp")
+
+    # align_NMT
+    align_NMT = pe.Node(
+        afni.Allineate(), name="align_NMT", iterfield=['in_file'])
+    align_NMT.inputs.final_interpolation = "nearestneighbour"
+    align_NMT.inputs.overwrite = True
+    align_NMT.inputs.outputtype = "NIFTI_GZ"
+
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
+                            align_NMT, "in_file")  # -source
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                            align_NMT, "reference")  # -base
+    register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                            align_NMT, "in_matrix")  # -1Dmatrix_apply
 
     # seg_csf
     align_seg_csf = pe.Node(
