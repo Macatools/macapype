@@ -71,7 +71,7 @@ Not mandatory, but prefered:
     conda install ipython
 
 Install macapype package
-############
+#########################
 
 from github
 ^^^^^^^^^^^^
