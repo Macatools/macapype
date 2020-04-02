@@ -22,14 +22,14 @@ import nipype.interfaces.io as nio
 #Running workflow
 #==================
 
-from macapype.utils.utils_tests import load_test_data
-from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
+#from macapype.utils.utils_tests import load_test_data
+#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 #my_path = "/hpc/crise/meunier.d/"
 
 #data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-### data file
+## data file
 #T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
 #T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
 
@@ -38,7 +38,7 @@ from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 #nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 #atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
-### running workflow
+## running workflow
 #segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)
 #segment_pnh.base_dir = my_path
 
@@ -48,8 +48,6 @@ from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 #segment_pnh.write_graph(graph2use="colored")
 #segment_pnh.run()
-
-#exit()
 
 ###############################################################################
 ## Testing plot in local

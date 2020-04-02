@@ -76,6 +76,11 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#from-pypi">from pypi</a></li>
+<li><a class="reference internal" href="#dependancies">Dependancies</a><ul>
+<li><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
+<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -138,6 +143,57 @@ $ python setup.py develop --user
 <h2>from pypi<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h2>
 <p>#TODO</p>
 </div>
+<div class="section" id="dependancies">
+<h2>Dependancies<a class="headerlink" href="#dependancies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="external-software-dependancies">
+<h3>External software dependancies<a class="headerlink" href="#external-software-dependancies" title="Permalink to this headline">¶</a></h3>
+<p>Macapype relies heavily on other neuroimaging Softwares, predominentyly</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.fmrib.ox.ac.uk/fsl/index.html">FSL</a></li>
+<li><a class="reference external" href="http://stnava.github.io/ANTs/">ANTS</a></li>
+<li><a class="reference external" href="https://afni.nimh.nih.gov/">ÀFNI</a></li>
+<li><a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/">SPM</a></li>
+</ul>
+<p>(for frioul users, here is what should be added at the end of your bash_personal)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/hpc/soft/afni/afni/
+
+<span class="nb">export</span> <span class="nv">ANTSPATH</span><span class="o">=</span>/hpc/soft/ANTS/antsbin/bin
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$ANTSPATH</span>:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/hpc/soft/ANTS/ANTs/Scripts/
+
+<span class="c1">#FSLDIR=/hpc/soft/fsl/fsl_5.0.10/</span>
+<span class="nv">FSLDIR</span><span class="o">=</span>/hpc/soft/fsl/fsl_6.0.1/
+<span class="c1">#FSLDIR=/hpc/soft/fsl/fsl_5.0.11/</span>
+. <span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/etc/fslconf/fsl.sh
+<span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nb">export</span> FSLDIR PATH
+
+<span class="nv">FSLOUTPUTTYPE</span><span class="o">=</span>NIFTI_GZ
+<span class="nb">export</span> FSLOUTPUTTYPE
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-packages-dependancies">
+<h3>Python packages dependancies<a class="headerlink" href="#python-packages-dependancies" title="Permalink to this headline">¶</a></h3>
+<p>Macapype also relies on python packages.</p>
+<p>In case you have access to a conda environnment, here is the procedure to initialize your own environnment (called “macapype”, but can be called the name you prefer):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda init bash
+
+$ conda create -n macapype <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+
+$ conda activate macapype
+</pre></div>
+</div>
+<p>Now for the packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda install -c conda-forge nilearn
+
+$ conda install -c conda-forge nipype
+
+$ pip install pybids
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -152,7 +208,7 @@ $ python setup.py develop --user
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-01.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

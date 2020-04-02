@@ -139,14 +139,14 @@
 </div>
 <div class="section" id="running-workflow">
 <h2>Running workflow<a class="headerlink" href="#running-workflow" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span>
-<span class="kn">from</span> <span class="nn">macapype.pipelines.full_segment</span> <span class="kn">import</span> <span class="n">create_full_segment_pnh_subpipes</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#from macapype.utils.utils_tests import load_test_data</span>
+<span class="c1">#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes</span>
 
 <span class="c1">#my_path = &quot;/hpc/crise/meunier.d/&quot;</span>
 
 <span class="c1">#data_path = load_test_data(&quot;data_test_macapype&quot;, path_to = my_path)</span>
 
-<span class="c1">### data file</span>
+<span class="c1">## data file</span>
 <span class="c1">#T1_file = op.join(data_path, &quot;sub-Apache_ses-01_T1w.nii&quot;)</span>
 <span class="c1">#T2_file = op.join(data_path, &quot;sub-Apache_ses-01_T2w.nii&quot;)</span>
 
@@ -155,7 +155,7 @@
 <span class="c1">#nmt_dir = load_test_data(&#39;NMT_v1.2&#39;, path_to = my_path)</span>
 <span class="c1">#atlasbrex_dir = load_test_data(&#39;AtlasBREX&#39;, path_to = my_path)</span>
 
-<span class="c1">### running workflow</span>
+<span class="c1">## running workflow</span>
 <span class="c1">#segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)</span>
 <span class="c1">#segment_pnh.base_dir = my_path</span>
 
@@ -165,8 +165,6 @@
 
 <span class="c1">#segment_pnh.write_graph(graph2use=&quot;colored&quot;)</span>
 <span class="c1">#segment_pnh.run()</span>
-
-<span class="c1">#exit()</span>
 </pre></div>
 </div>
 <p># Testing plot in local
@@ -370,7 +368,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  45.281 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  46.491 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-kepkee-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/1bf9b70253d5a0db872c6ef37188f87b/plot_segment_pnh_kepkee.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_kepkee.py</span></code></a></div>
@@ -393,7 +391,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-01.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
