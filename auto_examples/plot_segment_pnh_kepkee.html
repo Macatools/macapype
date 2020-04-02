@@ -77,8 +77,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#debias-t1xt2-and-debias-n4">debias T1xT2 and debias N4</a></li>
-<li><a class="reference internal" href="#register-template-to-subject">register template to subject</a></li>
 <li><a class="reference internal" href="#results-of-deoblique">results of deoblique</a></li>
+<li><a class="reference internal" href="#register-template-to-subject">register template to subject</a></li>
 <li><a class="reference internal" href="#segmentation-results">segmentation results</a></li>
 <li><a class="reference internal" href="#segmentation-results-by-tissue">segmentation results by tissue</a></li>
 </ul>
@@ -165,6 +165,8 @@
 
 <span class="c1">#segment_pnh.write_graph(graph2use=&quot;colored&quot;)</span>
 <span class="c1">#segment_pnh.run()</span>
+
+<span class="c1">#exit()</span>
 </pre></div>
 </div>
 <p># Testing plot in local
@@ -173,7 +175,6 @@
 <span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_path</span><span class="p">,</span> <span class="s2">&quot;segment_pnh_subpipes&quot;</span><span class="p">)</span>
 
 <span class="n">T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;preproc&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped.nii.gz&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">T1_file</span><span class="p">)</span>
 
 <span class="c1"># displaying results</span>
 <span class="n">outfile_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;outfile_T1.png&quot;</span><span class="p">)</span>
@@ -287,26 +288,6 @@
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_004.png" />
 </div>
-<div class="section" id="register-template-to-subject">
-<h2>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reg_template_to_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_subject_align&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected_shft_aff.nii.gz&quot;</span><span class="p">)</span>
-
-<span class="n">reg_template_to_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;reg_template_to_T1_file.png&quot;</span><span class="p">)</span>
-
-
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reg_template_to_T1</span><span class="p">,</span> <span class="n">reg_template_to_T1_file</span><span class="p">,</span> <span class="n">N4_debias_T1_file</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">reg_template_to_T1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_005.png" />
-</div>
 <div class="section" id="results-of-deoblique">
 <h2>results of deoblique<a class="headerlink" href="#results-of-deoblique" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## showing mask</span>
@@ -330,7 +311,38 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_006.png" />
+<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_005.png" />
+</div>
+<div class="section" id="register-template-to-subject">
+<h2>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reg_template_mask_to_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;align_NMT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NMT_brainmask_prob_allineate.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="n">reg_template_mask_to_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;reg_template_mask_to_T1.png&quot;</span><span class="p">)</span>
+
+
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">reg_template_mask_to_T1</span><span class="p">,</span> <span class="n">reg_template_mask_to_T1_file</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">reg_template_to_T1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-pytb notranslate"><div class="highlight"><pre><span></span><span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;/home/INT/meunier.d/miniconda3/Packages/macapype/examples/plot_segment_pnh_kepkee.py&quot;</span>, line <span class="m">211</span>, in <span class="n">&lt;module&gt;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">reg_template_to_T1</span><span class="p">)</span>
+<span class="gr">NameError</span>: <span class="n">name &#39;reg_template_to_T1&#39; is not defined</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="segmentation-results">
 <h2>segmentation results<a class="headerlink" href="#segmentation-results" title="Permalink to this headline">¶</a></h2>
@@ -347,7 +359,6 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_007.png" />
 </div>
 <div class="section" id="segmentation-results-by-tissue">
 <h2>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h2>
@@ -367,8 +378,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  46.491 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  30.637 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-kepkee-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/1bf9b70253d5a0db872c6ef37188f87b/plot_segment_pnh_kepkee.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_kepkee.py</span></code></a></div>

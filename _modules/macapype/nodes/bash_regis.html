@@ -221,13 +221,69 @@
 <span class="sd">    Description:</span>
 <span class="sd">        Brain extraction using T1 and T2 images</span>
 
-
 <span class="sd">    Inputs:</span>
+<span class="sd">        t1_file</span>
+<span class="sd">            Whole-head T1w image</span>
+
+<span class="sd">        t2_file</span>
+<span class="sd">            Whole-head T2w image</span>
+
+<span class="sd">        os</span>
+<span class="sd">            Suffix for the brain masked images (default is _BET)</span>
+
+<span class="sd">        aT2</span>
+<span class="sd">            Will coregrister T2w to T1w using flirt. Output will have the\</span>
+<span class="sd">                suffix provided. Will only work for spatially close images.</span>
+
+<span class="sd">        opt_as</span>
+<span class="sd">            Suffix for T2w to T1w registration (\&quot;-in-T1w\&quot; if not specified)</span>
+
+<span class="sd">        n</span>
+<span class="sd">            n = the number of iterations BET will be run to find center of \</span>
+<span class="sd">                gravity (n=1 if option -n is absent)</span>
+
+<span class="sd">        m</span>
+<span class="sd">            Will output the BET mask at the format \</span>
+<span class="sd">                output_prefixT1_mask.nii.gz)</span>
+
+<span class="sd">        ms</span>
+<span class="sd">            Suffix for the mask (default is _mask)</span>
+
+<span class="sd">        c</span>
+<span class="sd">            Will crop the inputs &amp; outputs after brain extraction. c is the \</span>
+<span class="sd">            space between the brain and the limits of the crop box expressed \</span>
+<span class="sd">            in percentage of the brain size (eg. if the brain size is 200\</span>
+<span class="sd">            voxels in one dimension and c=10: the sides of the brain in this \</span>
+<span class="sd">            dimension will be 20 voxels away from the borders of the resulting\</span>
+<span class="sd">            crop box in this dimension)</span>
+
+<span class="sd">        cs</span>
+<span class="sd">            Suffix for the cropped images (default is _cropped)</span>
+
+<span class="sd">        f</span>
+<span class="sd">            -f options of BET: fractional intensity threshold (0-&gt;1); \</span>
+<span class="sd">            default=0.5; smaller values give larger brain outline estimates</span>
+
+<span class="sd">        g</span>
+<span class="sd">            &#39;-g options of BET: \</span>
+<span class="sd">            vertical gradient in fractional intensity threshold (-1-&gt;1);\</span>
+<span class="sd">            default=0; positive values give larger brain outline at\</span>
+<span class="sd">            bottom, smaller at top</span>
+
+<span class="sd">        cog</span>
+<span class="sd">            For difficult cases, you can directly provide a center of \</span>
+<span class="sd">            gravity. Only one iteration will be performed.</span>
+
+<span class="sd">        k</span>
+<span class="sd">            Will keep temporary files</span>
+
+<span class="sd">        p</span>
+<span class="sd">            Prefix for running FSL functions (can be a path or just a prefix)</span>
 
 <span class="sd">    Outputs:</span>
 
-<span class="sd">        brain_file:</span>
-<span class="sd">            type = File, exists=True, desc=&quot;extracted brain from T1xT2BET.sh&quot;</span>
+<span class="sd">        brain_file</span>
+<span class="sd">            extracted brain from T1xT2BET.sh</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">T1xT2BETInputSpec</span>
@@ -393,16 +449,85 @@
         <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;debiased bet mask&quot;</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">T1xT2BiasFieldCorrection</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
+<div class="viewcode-block" id="T1xT2BiasFieldCorrection"><a class="viewcode-back" href="../../../generated/macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.html#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection">[docs]</a><span class="k">class</span> <span class="nc">T1xT2BiasFieldCorrection</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
+
 <span class="sd">        Bias field correction using T1w &amp; T2w images.</span>
 <span class="sd">        Provides an attempt of brain extration if wanted.</span>
 
-
 <span class="sd">    Inputs:</span>
+<span class="sd">        t1_file</span>
+<span class="sd">            Whole-head T1w image</span>
+
+<span class="sd">        t2_file</span>
+<span class="sd">            Whole-head T2w image (use -aT2 if T2w image is not in the T1w space)</span>
+
+<span class="sd">        os</span>
+<span class="sd">            Suffix for the bias field corrected images (default is &quot;_debiased&quot;)</span>
+
+<span class="sd">        aT2</span>
+<span class="sd">            Will coregrister T2w to T1w using flirt. Output will have the\</span>
+<span class="sd">                suffix provided. Will only work for spatially close images.</span>
+
+<span class="sd">        opt_as</span>
+<span class="sd">            Suffix for T2w to T1w registration (&quot;-in-T1w&quot; if not specified)</span>
+
+<span class="sd">        s</span>
+<span class="sd">            size of gauss kernel in mm when performing mean filtering \</span>
+<span class="sd">                (default=4)argstr=&quot;-s %d&quot;, mandatory=False)</span>
+
+<span class="sd">        b</span>
+<span class="sd">            Brain mask file. Will also output bias corrected brain files \</span>
+<span class="sd">                with the format &quot;output_prefix_brain.nii.gz&quot;</span>
+
+<span class="sd">        bet</span>
+<span class="sd">            Will try to &quot;smart&quot; BET the anat files to get a brain mask: n =\</span>
+<span class="sd">                the number of iterations BET will be run to find center of gravity\</span>
+<span class="sd">                (default=0, will not BET if option -b has been specified).</span>
+
+<span class="sd">        bs</span>
+<span class="sd">            Suffix for the BET masked images (default is &quot;_BET&quot;)</span>
+
+<span class="sd">        f</span>
+<span class="sd">            -f options of BET: fractional intensity threshold (0-&gt;1); \</span>
+<span class="sd">                default=0.5; smaller values give larger brain outline estimates</span>
+
+<span class="sd">        g</span>
+<span class="sd">            -g options of BET:\</span>
+<span class="sd">                    vertical gradient in fractional intensity threshold (-1-&gt;1);\</span>
+<span class="sd">                    default=0; positive values give larger brain outline at\</span>
+<span class="sd">                    bottom, smaller at top</span>
+
+<span class="sd">        k</span>
+<span class="sd">            Will keep temporary files</span>
+
+<span class="sd">        p</span>
+<span class="sd">            Prefix for running FSL functions\</span>
+<span class="sd">                (can be a path or just a prefix)</span>
 
 <span class="sd">    Outputs:</span>
+
+<span class="sd">        t1_debiased_file</span>
+<span class="sd">            debiased T1</span>
+
+<span class="sd">        t2_debiased_file</span>
+<span class="sd">            debiased T2</span>
+
+<span class="sd">        t2_coreg_file</span>
+<span class="sd">            T2 on T1</span>
+
+<span class="sd">        t1_debiased_brain_file</span>
+<span class="sd">            debiased bet T1</span>
+
+<span class="sd">        t2_debiased_brain_file</span>
+<span class="sd">            debiased bet T2</span>
+
+<span class="sd">        debiased_mask_file</span>
+<span class="sd">            debiased bet mask</span>
+
+
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">T1xT2BiasFieldCorrectionInputSpec</span>
@@ -444,7 +569,7 @@
                 <span class="n">t1_fname</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">os</span> <span class="o">+</span> <span class="s2">&quot;_brain.nii.gz&quot;</span><span class="p">)</span>
             <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;t2_debiased_brain_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
                 <span class="n">t2_fname</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">os</span> <span class="o">+</span> <span class="s2">&quot;_brain.nii.gz&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">outputs</span>
+        <span class="k">return</span> <span class="n">outputs</span></div>
 
 
 <span class="c1"># IterREGBET</span>

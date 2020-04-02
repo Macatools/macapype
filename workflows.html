@@ -112,28 +112,15 @@
 <span id="workflows"></span><h1>How to run workflows<a class="headerlink" href="#how-to-run-workflows" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="following-the-bids-format">
 <h2>Following the BIDS format<a class="headerlink" href="#following-the-bids-format" title="Permalink to this headline">¶</a></h2>
+<p>To run the pipeline over a full BIDS dataset:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test
+</pre></div>
+</div>
+<p>To specify with subjects/sessions you want to run the pipeline on</p>
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -subjects Elouk -sess 01
 $ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -subjects Elouk
 </pre></div>
 </div>
-<p>Will find the corresponding data if follows BIDS :</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test
-</pre></div>
-</div>
-<p>– Warning– cropped data should be used for more efficient processing
-– Warning– cropped data should also be saved as ‘T1w.nii’ instead of ‘T1wCropped.nii’</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_kepkee.py -data ~/Data_maca -out ./local_test -cropped True
-</pre></div>
-</div>
-<p>– Warning– cropped data should be used for more efficient processing
-– Warning– cropped T1 should also be saved as ‘T1w.nii’ instead of ‘T1wCropped.nii’
-– Warning– cropped T2 should also be saved as ‘T2w.nii’ instead of ‘T2wRegT1wCropped.nii’</p>
-<p>if already cropped, or no cropbox is provided:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python segment_pnh_kepkee.py -data ~/Data_maca -out ./local_test -subjects 032311 -ses ses-001
-</pre></div>
-</div>
-<p>Add the -crop_req if cropping is required, and .cropbox is provided</p>
-<p># TODO : follow the same syntax for datagrabber with pybids or not</p>
 </div>
 </div>
 

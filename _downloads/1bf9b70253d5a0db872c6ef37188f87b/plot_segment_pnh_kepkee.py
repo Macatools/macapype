@@ -49,6 +49,8 @@ import nipype.interfaces.io as nio
 #segment_pnh.write_graph(graph2use="colored")
 #segment_pnh.run()
 
+#exit()
+
 ###############################################################################
 ## Testing plot in local
 ##=======================
@@ -57,7 +59,6 @@ my_path = "/home/INT/meunier.d/Data/Primavoice/"
 wf_path = os.path.join(my_path, "segment_pnh_subpipes")
 
 T1_file = op.join(wf_path, "preproc", "sub-Apache_ses-01_T1w_cropped.nii.gz")
-assert os.path.exists(T1_file)
 
 # displaying results
 outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
@@ -117,9 +118,9 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-###############################################################################
-#Second part of the pipeline
-###############################################################################
+##############################################################################
+# Second part of the pipeline
+##############################################################################
 
 seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
 
@@ -167,25 +168,6 @@ axs[2].axis('off')
 plt.show()
 
 ###############################################################################
-# register template to subject
-#==============================
-
-reg_template_to_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "NMT_subject_align", "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected_shft_aff.nii.gz")
-
-reg_template_to_T1 = os.path.join(wf_path,"reg_template_to_T1_file.png")
-
-
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(reg_template_to_T1, reg_template_to_T1_file, N4_debias_T1_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(reg_template_to_T1)
-plt.figure(figsize=(8, 8))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
-
-###############################################################################
 # results of deoblique
 #===========================
 
@@ -209,6 +191,30 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
+###############################################################################
+# register template to subject
+#==============================
+
+reg_template_mask_to_T1_file = os.path.join(
+    seg_pipe, "register_NMT_pipe", "align_NMT",
+    "NMT_brainmask_prob_allineate.nii.gz")
+
+reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
+
+
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
+    reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
+
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(reg_template_to_T1)
+plt.figure(figsize=(8, 8))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+
+exit()
 
 ###############################################################################
 # segmentation results
@@ -230,7 +236,7 @@ plt.show()
 
 ###############################################################################
 # segmentation results by tissue
-#==========================
+#================================
 
 csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
 gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")
