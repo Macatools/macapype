@@ -208,13 +208,11 @@ cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(reg_template_to_T1)
+img = plt.imread(reg_template_mask_to_T1)
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
-
-exit()
 
 ###############################################################################
 # segmentation results

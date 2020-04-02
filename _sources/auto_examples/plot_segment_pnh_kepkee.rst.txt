@@ -315,23 +315,17 @@ register template to subject
     os.system(cmd)
 
     import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(reg_template_to_T1)
+    img = plt.imread(reg_template_mask_to_T1)
     plt.figure(figsize=(8, 8))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
 
-    exit()
 
 
 
-
-.. code-block:: pytb
-
-    Traceback (most recent call last):
-      File "/home/INT/meunier.d/miniconda3/Packages/macapype/examples/plot_segment_pnh_kepkee.py", line 211, in <module>
-        img = plt.imread(reg_template_to_T1)
-    NameError: name 'reg_template_to_T1' is not defined
+.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_kepkee_006.png
+    :class: sphx-glr-single-img
 
 
 
@@ -355,6 +349,14 @@ segmentation results
     plt.imshow(img)
     plt.axis('off')
     plt.show()
+
+
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_kepkee_007.png
+    :class: sphx-glr-single-img
 
 
 
@@ -384,7 +386,15 @@ segmentation results by tissue
 
 
 
-**Total running time of the script:** ( 0 minutes  30.637 seconds)
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_kepkee_008.png
+    :class: sphx-glr-single-img
+
+
+
+
+**Total running time of the script:** ( 0 minutes  45.559 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_kepkee.py:
