@@ -1,5 +1,9 @@
 .. _install:
 
+**************
+How to install
+**************
+
 Dependancies
 #############
 
@@ -66,12 +70,11 @@ Not mandatory, but prefered:
 
     conda install ipython
 
-**************
-How to install
-**************
+Install macapype package
+############
 
 from github
-############
+^^^^^^^^^^^^
 
 Using git
 ---------
@@ -92,7 +95,7 @@ Using pip
     $ pip install git+https://github.com/Macatools/macapype
 
 from pypi
-#########
+^^^^^^^^^^
 
 #TODO
 
