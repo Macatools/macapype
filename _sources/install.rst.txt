@@ -1,35 +1,5 @@
 .. _install:
 
-**************
-How to install
-**************
-
-from github
-############
-
-Using git
----------
-
-.. code:: bash
-
-    $ git clone https://github.com/Macatools/macapype.git
-
-    $ cd macapype
-
-    $ python setup.py develop --user
-
-Using pip
----------
-
-.. code:: bash
-
-    $ pip install git+https://github.com/Macatools/macapype
-
-from pypi
-#########
-
-#TODO
-
 Dependancies
 #############
 
@@ -87,3 +57,41 @@ Now for the packages:
     $ conda install -c conda-forge nipype
 
     $ pip install pybids
+
+Not mandatory, but prefered:
+
+.. code-block:: bash
+
+    conda install -c conda-forge matplotlib
+
+    conda install ipython
+
+**************
+How to install
+**************
+
+from github
+############
+
+Using git
+---------
+
+.. code:: bash
+
+    $ git clone https://github.com/Macatools/macapype.git
+
+    $ cd macapype
+
+    $ python setup.py develop --user
+
+Using pip
+---------
+
+.. code:: bash
+
+    $ pip install git+https://github.com/Macatools/macapype
+
+from pypi
+#########
+
+#TODO

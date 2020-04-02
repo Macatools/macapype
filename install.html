@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>How to install &#8212; macapype 0.0.0 documentation</title>
+    <title>Dependancies &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -69,20 +69,20 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">How to install</a><ul>
+<li><a class="reference internal" href="#">Dependancies</a><ul>
+<li><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
+<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a><ul>
+<li><a class="reference internal" href="#how-to-install">How to install</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#from-github">from github</a><ul>
 <li><a class="reference internal" href="#using-git">Using git</a></li>
 <li><a class="reference internal" href="#using-pip">Using pip</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#from-pypi">from pypi</a></li>
-<li><a class="reference internal" href="#dependancies">Dependancies</a><ul>
-<li><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
-<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </ul>
 </li>
@@ -118,35 +118,10 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="how-to-install">
-<span id="install"></span><h1>How to install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="from-github">
-<h2>from github<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="using-git">
-<h3>Using git<a class="headerlink" href="#using-git" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/Macatools/macapype.git
-
-$ cd macapype
-
-$ python setup.py develop --user
-</pre></div>
-</div>
-</div>
-<div class="section" id="using-pip">
-<h3>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install git+https://github.com/Macatools/macapype
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="from-pypi">
-<h2>from pypi<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h2>
-<p>#TODO</p>
-</div>
-<div class="section" id="dependancies">
-<h2>Dependancies<a class="headerlink" href="#dependancies" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="dependancies">
+<span id="install"></span><h1>Dependancies<a class="headerlink" href="#dependancies" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="external-software-dependancies">
-<h3>External software dependancies<a class="headerlink" href="#external-software-dependancies" title="Permalink to this headline">¶</a></h3>
+<h2>External software dependancies<a class="headerlink" href="#external-software-dependancies" title="Permalink to this headline">¶</a></h2>
 <p>Macapype relies heavily on other neuroimaging Softwares, predominentyly</p>
 <ul class="simple">
 <li><a class="reference external" href="http://www.fmrib.ox.ac.uk/fsl/index.html">FSL</a></li>
@@ -174,7 +149,7 @@ $ python setup.py develop --user
 </div>
 </div>
 <div class="section" id="python-packages-dependancies">
-<h3>Python packages dependancies<a class="headerlink" href="#python-packages-dependancies" title="Permalink to this headline">¶</a></h3>
+<h2>Python packages dependancies<a class="headerlink" href="#python-packages-dependancies" title="Permalink to this headline">¶</a></h2>
 <p>Macapype also relies on python packages.</p>
 <p>In case you have access to a conda environnment, here is the procedure to initialize your own environnment (called “macapype”, but can be called the name you prefer):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda init bash
@@ -192,8 +167,39 @@ $ conda install -c conda-forge nipype
 $ pip install pybids
 </pre></div>
 </div>
+<p>Not mandatory, but prefered:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge matplotlib
+
+conda install ipython
+</pre></div>
+</div>
+<div class="section" id="how-to-install">
+<h3>How to install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
+</div>
+<div class="section" id="from-github">
+<h1>from github<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="using-git">
+<h2>Using git<a class="headerlink" href="#using-git" title="Permalink to this headline">¶</a></h2>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/Macatools/macapype.git
+
+$ cd macapype
+
+$ python setup.py develop --user
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-pip">
+<h2>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h2>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install git+https://github.com/Macatools/macapype
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="from-pypi">
+<h1>from pypi<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h1>
+<p>#TODO</p>
 </div>
 
 
