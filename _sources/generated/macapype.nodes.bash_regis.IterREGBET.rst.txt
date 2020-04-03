@@ -1,0 +1,44 @@
+macapype.nodes.bash\_regis.IterREGBET
+=====================================
+
+.. currentmodule:: macapype.nodes.bash_regis
+
+.. autoclass:: IterREGBET
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IterREGBET.__init__
+      ~IterREGBET.aggregate_outputs
+      ~IterREGBET.help
+      ~IterREGBET.load_inputs_from_json
+      ~IterREGBET.raise_exception
+      ~IterREGBET.run
+      ~IterREGBET.save_inputs_to_json
+      ~IterREGBET.set_default_terminal_output
+      ~IterREGBET.version_from_command
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IterREGBET.always_run
+      ~IterREGBET.can_resume
+      ~IterREGBET.cmd
+      ~IterREGBET.cmdline
+      ~IterREGBET.package_directory
+      ~IterREGBET.references_
+      ~IterREGBET.resource_monitor
+      ~IterREGBET.terminal_output
+      ~IterREGBET.version
+   
+   

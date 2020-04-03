@@ -25,6 +25,8 @@ Nodes (:py:mod:`macapype.nodes.bash_regis`):
 
    T1xT2BET
    T1xT2BiasFieldCorrection
+   IterREGBET
+   CropVolume
 
 Utils (:py:mod:`macapype.utils.utils_tests`):
 

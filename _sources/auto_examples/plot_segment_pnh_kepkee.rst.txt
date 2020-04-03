@@ -316,7 +316,7 @@ register template to subject
 
     import matplotlib.pyplot as plt  # noqa
     img = plt.imread(reg_template_mask_to_T1)
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(16, 16))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
@@ -394,7 +394,7 @@ segmentation results by tissue
 
 
 
-**Total running time of the script:** ( 0 minutes  45.559 seconds)
+**Total running time of the script:** ( 0 minutes  46.437 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_kepkee.py:

@@ -209,7 +209,7 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(reg_template_mask_to_T1)
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(16, 16))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
