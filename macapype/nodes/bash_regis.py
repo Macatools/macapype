@@ -501,13 +501,13 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         desc='FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,\
             labeldiff,bbr}    (default is normmi)',
         argstr='-cost %s',
-        usedefault=True, mandatory = True)
+        usedefault=True, mandatory = False)
 
     # how to assert minimal value in traits def? is now in _parse_args
     n = traits.Int(
         2, usedefault=True,
         desc='n = the number of FLIRT iterations (>=2, default=2).',
-        argstr="-n %d", mandatory=True)
+        argstr="-n %d", mandatory=False)
 
     m = traits.Enum(
         'ref', 'union', 'inter', 'mix',
@@ -519,7 +519,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
             (use if your input brain is too big)\
             - a mix between union & intersection, m=mix (give it a try!)',
         argstr='-m %s',
-        usedefault=True, mandatory = True)
+        usedefault=True, mandatory = False)
 
     refw_file = File(
         exists=True,
@@ -531,7 +531,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         False, usedefault=True,
         position=3, argstr="-k",
         desc="Will keep temporary files",
-        mandatory=True)
+        mandatory=False)
 
     p = traits.String(
         desc="Prefix for running FSL functions\

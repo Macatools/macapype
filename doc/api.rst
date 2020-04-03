@@ -15,6 +15,13 @@ Pipelines (:py:mod:`macapype.pipelines.full_segment`):
 
     create_full_segment_pnh_subpipes
 
+.. currentmodule:: macapype.pipelines.segment
+
+.. autosummary::
+   :toctree: generated/
+
+    create_old_segment_pipe
+
 
 Nodes (:py:mod:`macapype.nodes.bash_regis`):
 
@@ -24,6 +31,9 @@ Nodes (:py:mod:`macapype.nodes.bash_regis`):
    :toctree: generated/
 
    T1xT2BET
+   T1xT2BiasFieldCorrection
+   IterREGBET
+   CropVolume
 
 Utils (:py:mod:`macapype.utils.utils_tests`):
 

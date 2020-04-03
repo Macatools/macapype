@@ -22,34 +22,34 @@ import nipype.interfaces.io as nio
 #Running workflow
 #==================
 
-from macapype.utils.utils_tests import load_test_data
-from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
+#from macapype.utils.utils_tests import load_test_data
+#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
-my_path = "/hpc/crise/meunier.d/"
+#my_path = "/hpc/crise/meunier.d/"
 
-data_path = load_test_data("data_test_macapype", path_to = my_path)
+#data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-# data file
-T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+## data file
+#T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+#T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
 
-from macapype.utils.utils_tests import load_test_data
+#from macapype.utils.utils_tests import load_test_data
 
-nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
-atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
+#nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
+#atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
-# running workflow
-segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)
-segment_pnh.base_dir = my_path
+## running workflow
+#segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)
+#segment_pnh.base_dir = my_path
 
-segment_pnh.inputs.inputnode.T1 = T1_file
-segment_pnh.inputs.inputnode.T2 = T2_file
+#segment_pnh.inputs.inputnode.T1 = T1_file
+#segment_pnh.inputs.inputnode.T2 = T2_file
 
 
-segment_pnh.write_graph(graph2use="colored")
-segment_pnh.run()
+#segment_pnh.write_graph(graph2use="colored")
+#segment_pnh.run()
 
-exit()
+#exit()
 
 ###############################################################################
 ## Testing plot in local
@@ -118,9 +118,9 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-###############################################################################
-#Second part of the pipeline
-###############################################################################
+##############################################################################
+# Second part of the pipeline
+##############################################################################
 
 seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
 
@@ -168,25 +168,6 @@ axs[2].axis('off')
 plt.show()
 
 ###############################################################################
-# register template to subject
-#==============================
-
-reg_template_to_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "NMT_subject_align", "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected_shft_aff.nii.gz")
-
-reg_template_to_T1 = os.path.join(wf_path,"reg_template_to_T1_file.png")
-
-
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(reg_template_to_T1, reg_template_to_T1_file, N4_debias_T1_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(reg_template_to_T1)
-plt.figure(figsize=(8, 8))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
-
-###############################################################################
 # results of deoblique
 #===========================
 
@@ -210,6 +191,28 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
+###############################################################################
+# register template to subject
+#==============================
+
+reg_template_mask_to_T1_file = os.path.join(
+    seg_pipe, "register_NMT_pipe", "align_NMT",
+    "NMT_brainmask_prob_allineate.nii.gz")
+
+reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
+
+
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
+    reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
+
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(reg_template_mask_to_T1)
+plt.figure(figsize=(16, 16))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
 
 ###############################################################################
 # segmentation results

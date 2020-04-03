@@ -1,11 +1,83 @@
+:orphan:
+
 .. _install:
 
 **************
 How to install
 **************
 
+Dependancies
+#############
+
+External software dependancies
+-------------------------------
+
+Macapype relies heavily on other neuroimaging Softwares, predominentyly
+
+* `FSL <http://www.fmrib.ox.ac.uk/fsl/index.html>`_
+* `ANTS <http://stnava.github.io/ANTs/>`_
+* `AFNI <https://afni.nimh.nih.gov/>`_
+* `SPM <https://www.fil.ion.ucl.ac.uk/spm/>`_
+
+for frioul users, here is what should be added at the end of your .bash_personal
+ in /home/nom.p (only accessible from a node, i.e once you have type frioul_interactive)
+
+.. code-block:: bash
+
+    export PATH=$PATH:/hpc/soft/afni/afni/
+
+    export ANTSPATH=/hpc/soft/ANTS/antsbin/bin
+    export PATH=$ANTSPATH:$PATH
+    export PATH=$PATH:/hpc/soft/ANTS/ANTs/Scripts/
+
+    #FSLDIR=/hpc/soft/fsl/fsl_5.0.10/
+    FSLDIR=/hpc/soft/fsl/fsl_6.0.1/
+    #FSLDIR=/hpc/soft/fsl/fsl_5.0.11/
+    . ${FSLDIR}/etc/fslconf/fsl.sh
+    PATH=${FSLDIR}/bin:${PATH}
+    export FSLDIR PATH
+
+    FSLOUTPUTTYPE=NIFTI_GZ
+    export FSLOUTPUTTYPE
+
+Python packages dependancies
+-----------------------------
+
+Macapype also relies on python packages.
+
+In case you have access to a conda environnment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
+
+.. code-block:: bash
+
+    $ conda init bash
+
+    $ conda create -n macapype python=3.7
+
+    $ conda activate macapype
+
+Now for the packages:
+
+.. code-block:: bash
+
+    $ conda install -c conda-forge nilearn
+
+    $ conda install -c conda-forge nipype
+
+    $ pip install pybids
+
+Not mandatory, but prefered:
+
+.. code-block:: bash
+
+    conda install -c conda-forge matplotlib
+
+    conda install ipython
+
+Install macapype package
+#########################
+
 from github
-############
+^^^^^^^^^^^^
 
 Using git
 ---------
@@ -26,6 +98,18 @@ Using pip
     $ pip install git+https://github.com/Macatools/macapype
 
 from pypi
-#########
+^^^^^^^^^^
 
 #TODO
+
+Testing the install
+####################
+
+
+.. code:: bash
+
+    $ ipython
+
+.. code:: ipython
+
+    In [1]: import macapype

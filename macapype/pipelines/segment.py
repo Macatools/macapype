@@ -85,21 +85,33 @@ def create_segment_atropos_pipe(params = {},
 
 
 def create_old_segment_pipe(priors, params = {}, name="old_segment_pipe"):
-    """ Extract brain using tissues masks output by SPM's old_segment function
+    """
+    Description:
+        Extract brain using tissues masks output by SPM's old_segment function:
 
-    1 - Segment the T1 using given priors;
-    2 - Threshold GM, WM and CSF maps;
-    3 - Compute union of those 3 tissues;
-    4 - Apply morphological opening on the union mask
-    5 - Fill holes
+        - Segment the T1 using given priors;
+        - Threshold GM, WM and CSF maps;
+        - Compute union of those 3 tissues;
+        - Apply morphological opening on the union mask
+        - Fill holes
 
-    Inputs
-    ======
-    T1: T1 file name
-    seg_priors: list of file names
+    Inputs:
 
-    Outputs
-    --------
+        inputnode:
+            T1: T1 file name
+
+        arguments:
+            priors: list of file names
+
+            params: dictionary of node sub-parameters (from a json file)
+
+    Outputs:
+
+        fill_holes.out_file:
+                filled mask after erode
+
+        fill_holes_dil.out_file
+            filled mask after dilate
 
     """
     # creating pipeline

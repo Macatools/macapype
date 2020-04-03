@@ -25,11 +25,10 @@ Examples
 
 The :ref:`plot_segment_pnh_regis_T1xT2 pipeline <plot_segment_pnh_regis_T1xT2>` runs the Regis pipeline, with:
 
-* :ref:`T1xT2Bet <T1xT2BET>`,
-* T1xT2BiasFieldCorrection,
-* IterREGBET,
-* old_segment SPM based pipeline.
-
+* :class:`T1xT2Bet <macapype.nodes.bash_regis.T1xT2BET>`,
+* :class:`T1xT2BiasFieldCorrection <macapype.nodes.bash_regis.T1xT2BiasFieldCorrection>`,
+* :class:`IterREGBET <macapype.nodes.bash_regis.IterREGBET>`,
+* :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
 
 The :ref:`plot_segment_pnh_kepkee pipeline <plot_segment_pnh_kepkee>` runs the Kepkee pipeline, with:
 
