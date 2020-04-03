@@ -109,7 +109,7 @@ def create_main_workflow(data_path, main_path, subject_ids, sessions,
     priors = format_spm_priors(priors, directory=main_path)
 
     # main_workflow
-    main_workflow = pe.Workflow(name="T1xT2_processing_workflow_params")
+    main_workflow = pe.Workflow(name="T1xT2_processing_workflow_json")
     main_workflow.base_dir = main_path
 
     datasource = create_datasource(data_path, subject_ids, sessions,
