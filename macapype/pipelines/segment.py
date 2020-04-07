@@ -6,10 +6,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 import nipype.interfaces.afni as afni
 
-from ..nodes.segment import AtroposN4
-
-# from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty
-from ..nodes.binary_fill_holes import BinaryFillHoles
+from ..nodes.segment import AtroposN4, BinaryFillHoles
 
 from ..utils.misc import get_elem, merge_3_elem_to_list
 
@@ -86,8 +83,8 @@ def create_segment_atropos_pipe(params = {},
 
 def create_old_segment_pipe(priors, params = {}, name="old_segment_pipe"):
     """
-    Description:
-        Extract brain using tissues masks output by SPM's old_segment function:
+    Description: Extract brain using tissues masks output by SPM's old_segment\
+        function:
 
         - Segment the T1 using given priors;
         - Threshold GM, WM and CSF maps;
@@ -105,10 +102,12 @@ def create_old_segment_pipe(priors, params = {}, name="old_segment_pipe"):
 
             params: dictionary of node sub-parameters (from a json file)
 
+            name: pipeline name (default = "old_segment_pipe")
+
     Outputs:
 
         fill_holes.out_file:
-                filled mask after erode
+            filled mask after erode
 
         fill_holes_dil.out_file
             filled mask after dilate
