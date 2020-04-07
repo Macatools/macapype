@@ -11,9 +11,35 @@ from ..nodes.segment import AtroposN4, BinaryFillHoles
 from ..utils.misc import get_elem, merge_3_elem_to_list
 
 
-def create_segment_atropos_pipe(params = {},
-                                name="segment_atropos_pipe"):
+def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
+    """
+    Description: Segmentation with ANTS atropos script
 
+    Inputs:
+
+        inputnode:
+            brain_file: T1 image, after extraction and norm bin_norm_intensity
+
+            gm_prior_file: grey matter tissue intensity file
+
+            wm_prior_file: white matter tissue intensity file
+
+            csf_prior_file: csf tissue intensity file
+
+        arguments:
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "segment_atropos_pipe")
+
+    Outputs:
+
+        threshold_csf.out_file:
+            csf tissue intensity mask in subject space
+        threshold_gm.out_file:
+            grey matter tissue intensity mask in subject space
+        threshold_wm.out_file:
+            white matter tissue intensity mask in subject space
+    """
     # creating pipeline
     segment_pipe = pe.Workflow(name=name)
 
@@ -53,8 +79,8 @@ def create_segment_atropos_pipe(params = {},
         dimension = params["Atropos"]["dimension"]
         numberOfClasses = params["Atropos"]["numberOfClasses"]
     else:
-        dimension=3
-        numberOfClasses=3
+        dimension = 3
+        numberOfClasses = 3
 
     seg_at = pe.Node(AtroposN4(), name='seg_at')
 
@@ -81,9 +107,9 @@ def create_segment_atropos_pipe(params = {},
     return segment_pipe
 
 
-def create_old_segment_pipe(priors, params = {}, name="old_segment_pipe"):
+def create_old_segment_pipe(priors, params={}, name="old_segment_pipe"):
     """
-    Description: Extract brain using tissues masks output by SPM's old_segment\
+    Description: Extract brain using tissues masks output by SPM's old_segment
         function:
 
         - Segment the T1 using given priors;
@@ -169,7 +195,6 @@ def create_old_segment_pipe(priors, params = {}, name="old_segment_pipe"):
     be_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
     be_pipe.connect(thd_nodes['csf'], 'out_file',
                     tissues_union, 'operand_file')
-
 
     # Opening
     if "dilate_mask" in params.keys():

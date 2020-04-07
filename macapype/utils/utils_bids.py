@@ -1,9 +1,9 @@
-#import pybids
+
 from bids.layout import BIDSLayout
-from nipype.interfaces.io import BIDSDataGrabber
 
 import nipype.interfaces.io as nio
 import nipype.pipeline.engine as pe
+
 
 def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     """ Create a datasource node that have iterables following BIDS format """
@@ -30,10 +30,6 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     print("BIDS layout:", layout)
     print("\t", layout.get_subjects())
     print("\t", layout.get_sessions())
-
-    #print("\t", layout.get_acquisitions())
-
-
 
     if subjects is None:
         subjects = layout.get_subjects()

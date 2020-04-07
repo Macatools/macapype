@@ -7,8 +7,7 @@ from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
 from nipype.interfaces.base import traits, File
 
-from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec,
-                                    TraitedSpec)
+from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec)
 from nipype.utils.filemanip import split_filename as split_f
 
 from scipy.ndimage import binary_fill_holes
@@ -194,6 +193,7 @@ class AtroposN4(CommandLine):
             seg_file) for seg_file in seg_files]
 
         return outputs
+
 
 if __name__ == '__main__':
     # path_to = "/hpc/crise/meunier.d"

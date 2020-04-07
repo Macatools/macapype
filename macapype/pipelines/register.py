@@ -125,19 +125,40 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
-def create_register_NMT_pipe(nmt_dir, params = {}, name="register_NMT_pipe"):
+def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
+    """
+    Description: Register template to anat with the script NMT_subject_align,
+        and then apply it to tissues list_priors
 
+    Inputs:
+
+        inputnode:
+            T1: T1 file name
+
+        arguments:
+            nmt_dir: path to NMT template
+
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "register_NMT_pipe")
+
+    Outputs:
+
+        norm_intensity.output_image:
+            filled mask after erode
+        align_seg_csf.out_file:
+            csf template tissue in subject space
+        align_seg_gm.out_file:
+            grey matter template tissue in subject space
+        align_seg_wm.out_file:
+            white matter template tissue in subject space
     """
-    Register template to anat with the script NMT_subject_align, and then apply
-    it to tissues list_priors
-    ##TODO the wrap of both scripts could be done in a cleaner way with traits
-    (one is "done", still one to do)
-    """
+
     register_NMT_pipe = pe.Workflow(name=name)
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1_file']),
+        niu.IdentityInterface(fields=['T1']),
         name='inputnode')
 
     # N4 intensity normalization over brain
@@ -147,7 +168,8 @@ def create_register_NMT_pipe(nmt_dir, params = {}, name="register_NMT_pipe"):
             params["norm_intensity"]["bspline_fitting_distance"]
 
         n_iterations = params["norm_intensity"]["n_iterations"]
-        convergence_threshold = params["norm_intensity"]["convergence_threshold"]
+        convergence_threshold = \
+            params["norm_intensity"]["convergence_threshold"]
         shrink_factor = params["norm_intensity"]["shrink_factor"]
         args = params["norm_intensity"]["args"]
 
@@ -168,7 +190,7 @@ def create_register_NMT_pipe(nmt_dir, params = {}, name="register_NMT_pipe"):
     norm_intensity.inputs.shrink_factor = shrink_factor
     norm_intensity.inputs.args = args
 
-    register_NMT_pipe.connect(inputnode, 'T1_file',
+    register_NMT_pipe.connect(inputnode, 'T1',
                               norm_intensity, "input_image")
 
     # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
@@ -214,11 +236,11 @@ def create_register_NMT_pipe(nmt_dir, params = {}, name="register_NMT_pipe"):
     align_NMT.inputs.outputtype = "NIFTI_GZ"
 
     register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
-                            align_NMT, "in_file")  # -source
+                              align_NMT, "in_file")  # -source
     register_NMT_pipe.connect(norm_intensity, 'output_image',
-                            align_NMT, "reference")  # -base
+                              align_NMT, "reference")  # -base
     register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                            align_NMT, "in_matrix")  # -1Dmatrix_apply
+                              align_NMT, "in_matrix")  # -1Dmatrix_apply
 
     # seg_csf
     align_seg_csf = pe.Node(

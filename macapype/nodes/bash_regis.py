@@ -92,7 +92,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
     p = traits.String(
         desc="Prefix for running FSL functions\
               (can be a path or just a prefix)",
-        argstr="-p %s", mandatory = False)
+        argstr="-p %s", mandatory=False)
 
 
 class T1xT2BETOutputSpec(TraitedSpec):
@@ -133,25 +133,26 @@ class T1xT2BET(FSLCommand):
             os
                 Suffix for the brain masked images (default is _BET)
             aT2
-                Will coregrister T2w to T1w using flirt. Output will have the\
-                    suffix provided. Will only work for spatially close images.
+                Will coregrister T2w to T1w using flirt. Output will have the
+                suffix provided. Will only work for spatially close images.
             opt_as
-                Suffix for T2w to T1w registration (\"-in-T1w\" if not specified)
+                Suffix for T2w to T1w registration (\"-in-T1w\" if not
+                specified)
             n
-                n = the number of iterations BET will be run to find center of \
-                    gravity (n=1 if option -n is absent)
+                n = the number of iterations BET will be run to find center of
+                gravity (n=1 if option -n is absent)
             m
-                Will output the BET mask at the format \
-                    output_prefixT1_mask.nii.gz)
+                Will output the BET mask at the format
+                output_prefixT1_mask.nii.gz)
             ms
                 Suffix for the mask (default is _mask)
             c
-                Will crop the inputs & outputs after brain extraction. c is the \
-                space between the brain and the limits of the crop box expressed \
-                in percentage of the brain size (eg. if the brain size is 200\
-                voxels in one dimension and c=10: the sides of the brain in this \
-                dimension will be 20 voxels away from the borders of the resulting\
-                crop box in this dimension)
+                Will crop the inputs & outputs after brain extraction. c is the
+                space between the brain and the limits of the crop box
+                expressed in percentage of the brain size (eg. if the brain
+                size is 200 voxels in one dimension and c=10: the sides of the
+                brain in this dimension will be 20 voxels away from the borders
+                of the resulting crop box in this dimension)
             cs
                 Suffix for the cropped images (default is _cropped)
             f
@@ -168,7 +169,8 @@ class T1xT2BET(FSLCommand):
             k
                 Will keep temporary files
             p
-                Prefix for running FSL functions (can be a path or just a prefix)
+                Prefix for running FSL functions (can be a path or just a
+                prefix)
 
     Outputs:
 
@@ -325,7 +327,7 @@ class T1xT2BiasFieldCorrectionInputSpec(CommandLineInputSpec):
     p = traits.String(
         desc="Prefix for running FSL functions\
               (can be a path or just a prefix)",
-        argstr="-p %s", mandatory = False)
+        argstr="-p %s", mandatory=False)
 
 
 class T1xT2BiasFieldCorrectionOutputSpec(TraitedSpec):
@@ -362,12 +364,14 @@ class T1xT2BiasFieldCorrection(CommandLine):
             t1_file
                 Whole-head T1w image
             t2_file
-                Whole-head T2w image (use -aT2 if T2w image is not in the T1w space)
+                Whole-head T2w image (use -aT2 if T2w image is not in the T1w
+                space)
 
         Optional:
 
             os
-                Suffix for the bias field corrected images (default is "_debiased")
+                Suffix for the bias field corrected images (default is
+                "_debiased")
             aT2
                 Will coregrister T2w to T1w using flirt. Output will have the\
                     suffix provided. Will only work for spatially close images.
@@ -380,19 +384,21 @@ class T1xT2BiasFieldCorrection(CommandLine):
                 Brain mask file. Will also output bias corrected brain files \
                     with the format "output_prefix_brain.nii.gz"
             bet
-                Will try to "smart" BET the anat files to get a brain mask: n =\
-                    the number of iterations BET will be run to find center of gravity\
-                    (default=0, will not BET if option -b has been specified).
+                Will try to "smart" BET the anat files to get a brain mask:
+                n = the number of iterations BET will be run to find center of
+                gravity (default=0, will not BET if option -b has been
+                specified).
             bs
                 Suffix for the BET masked images (default is "_BET")
             f
                 -f options of BET: fractional intensity threshold (0->1); \
-                    default=0.5; smaller values give larger brain outline estimates
+                    default=0.5; smaller values give larger brain outline
+                    estimates
             g
                 -g options of BET:\
-                        vertical gradient in fractional intensity threshold (-1->1);\
-                        default=0; positive values give larger brain outline at\
-                        bottom, smaller at top
+                        vertical gradient in fractional intensity threshold
+                        (-1->1); default=0; positive values give larger brain
+                        outline at bottom, smaller at top
             k
                 Will keep temporary files
             p
@@ -493,7 +499,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
             12=affine (default)). Use dof 6 for intra-subject, 12 for \
             inter-subject registration',
         argstr='-dof %d',
-        usedefault=True, mandatory = True)
+        usedefault=True, mandatory=True)
 
     cost = traits.Enum(
         'normmi', 'leastsq', 'labeldiff', 'bbr', 'mutualinfo', 'corratio',
@@ -501,7 +507,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         desc='FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,\
             labeldiff,bbr}    (default is normmi)',
         argstr='-cost %s',
-        usedefault=True, mandatory = False)
+        usedefault=True, mandatory=False)
 
     # how to assert minimal value in traits def? is now in _parse_args
     n = traits.Int(
@@ -519,7 +525,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
             (use if your input brain is too big)\
             - a mix between union & intersection, m=mix (give it a try!)',
         argstr='-m %s',
-        usedefault=True, mandatory = False)
+        usedefault=True, mandatory=False)
 
     refw_file = File(
         exists=True,
@@ -611,7 +617,8 @@ class IterREGBET(CommandLine):
             k
                 Will keep temporary files
             p
-                Prefix for running FSL functions (can be a path or just a prefix)
+                Prefix for running FSL functions (can be a path or just a
+                prefix)
 
     Outputs:
 
@@ -726,9 +733,8 @@ class CropVolumeOutputSpec(TraitedSpec):
 
 class CropVolume(CommandLine):
     """
-    Description:
-        Crop image(s) based on a brain extraction. Multiple images can be \
-        cropped at once. Will crop each volume preceeded by the -i option
+    Description: Crop image(s) based on a brain extraction. Multiple images
+    can be cropped at once. Will crop each volume preceeded by the -i option
 
     Inputs:
 
@@ -742,20 +748,21 @@ class CropVolume(CommandLine):
         Optional:
 
             o
-                Prefix for the cropped image(s) (Must provide as many prefixes\
-                    as input images with -o, default is the base name of each input \
-                    image).
+                Prefix for the cropped image(s) (Must provide as many prefixes
+                    as input images with -o, default is the base name of each
+                    input image).
             s
                 Suffix for the cropped image(s) (default is "_cropped")
             c
                 c is the space between the brain and the limits of\
-                    the crop box expressed in percentage of the brain size (eg. if the\
-                    brain size is 200 voxels in one dimension and c=10: the sides of\
-                    the brain in this dimension will be 20 voxels away from the\
-                    borders of the resulting crop box in this dimension). \
-                    Default: c=10
+                    the crop box expressed in percentage of the brain size (eg.
+                    if the brain size is 200 voxels in one dimension and c=10:
+                    the sides of the brain in this dimension will be 20 voxels
+                    away from the  borders of the resulting crop box in this
+                    dimension). Default: c=10
             p
-                Prefix for running FSL functions (can be a path or just a prefix)
+                Prefix for running FSL functions (can be a path or just a
+                prefix)
 
     Outputs:
 

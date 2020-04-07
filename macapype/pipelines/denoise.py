@@ -5,9 +5,33 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
 
-# Preprocessing: Avg multiples images, align T2 to T1,
-# and crop/denoise in both order
-def create_denoised_pipe(params = {}, name="denoised_pipe"):
+def create_denoised_pipe(params={}, name="denoised_pipe"):
+    """
+    Description: Using Ants denoise on T1 and T2
+
+    Inputs:
+
+        inputnode:
+            preproc_T1: preprocessed T1 file name
+
+            preproc_T2: preprocessed T2 file name
+
+        arguments:
+            params: dictionary of node sub-parameters (from a json file)\
+                (Unused so far, could be used to specify DenoiseImage
+                parameters)
+
+            name: pipeline name (default = "denoised_pipe")
+
+    Outputs:
+
+        denoise_T1.out_file:
+            T1 after denoising
+
+        denoise_T2.out_file
+            T2 after denoising
+
+    """
 
     # creating pipeline
     denoised_pipe = pe.Workflow(name=name)
