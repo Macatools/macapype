@@ -4,20 +4,20 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>How to run workflows &#8212; macapype 0.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <title>macapype.pipelines.correct_bias.create_debias_N4_pipe &#8212; macapype 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -34,7 +34,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="../index.html">
           Macapype</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
       </div>
@@ -42,10 +42,10 @@
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
             
-                <li><a href="auto_examples/index.html">Gallery</a></li>
-                <li><a href="api.html">API</a></li>
-                <li><a href="tutorial.html">Tutorial</a></li>
-                <li><a href="install.html">Installation</a></li>
+                <li><a href="../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorial.html">Tutorial</a></li>
+                <li><a href="../install.html">Installation</a></li>
                 <li><a href="https://github.com/macatools/macapype">Github</a></li>
             
             
@@ -54,7 +54,7 @@
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
+     href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"></ul>
@@ -69,10 +69,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">How to run workflows</a><ul>
-<li><a class="reference internal" href="#following-the-bids-format">Following the BIDS format</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">macapype.pipelines.correct_bias.create_debias_N4_pipe</a></li>
 </ul>
 </ul>
 </li>
@@ -84,7 +81,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/workflows.rst.txt"
+  <a href="../_sources/generated/macapype.pipelines.correct_bias.create_debias_N4_pipe.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -92,7 +89,7 @@
 
           
             
-<form class="navbar-form navbar-right" action="search.html" method="get">
+<form class="navbar-form navbar-right" action="../search.html" method="get">
  <div class="form-group">
   <input type="text" name="q" class="form-control" placeholder="Search" />
  </div>
@@ -108,20 +105,14 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="how-to-run-workflows">
-<span id="workflows"></span><h1>How to run workflows<a class="headerlink" href="#how-to-run-workflows" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="following-the-bids-format">
-<h2>Following the BIDS format<a class="headerlink" href="#following-the-bids-format" title="Permalink to this headline">¶</a></h2>
-<p>To run the pipeline over a full BIDS dataset:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test
-</pre></div>
-</div>
-<p>To specify with subjects/sessions you want to run the pipeline on</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -subjects Elouk -sess 01
-$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -subjects Elouk
-</pre></div>
-</div>
-</div>
+  <div class="section" id="macapype-pipelines-correct-bias-create-debias-n4-pipe">
+<h1>macapype.pipelines.correct_bias.create_debias_N4_pipe<a class="headerlink" href="#macapype-pipelines-correct-bias-create-debias-n4-pipe" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="macapype.pipelines.correct_bias.create_debias_N4_pipe">
+<code class="descclassname">macapype.pipelines.correct_bias.</code><code class="descname">create_debias_N4_pipe</code><span class="sig-paren">(</span><em>name='debias_N4_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/correct_bias.html#create_debias_N4_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.correct_bias.create_debias_N4_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Only apply ants N4BiasFieldCorrection, check where is used?</p>
+</dd></dl>
+
 </div>
 
 

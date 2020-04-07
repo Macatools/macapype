@@ -1,0 +1,6 @@
+macapype.pipelines.denoise.create\_denoised\_pipe
+=================================================
+
+.. currentmodule:: macapype.pipelines.denoise
+
+.. autofunction:: create_denoised_pipe

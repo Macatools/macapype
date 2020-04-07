@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Overview: module code &#8212; macapype 0.0.0 documentation</title>
+    <title>macapype.pipelines.segment.create_segment_atropos_pipe &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -68,7 +68,10 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">macapype.pipelines.segment.create_segment_atropos_pipe</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -76,7 +79,11 @@
             
             
             
-              <li class="hidden-sm"></li>
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/generated/macapype.pipelines.segment.create_segment_atropos_pipe.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
             
           </ul>
 
@@ -98,18 +105,42 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="macapype/nodes/bash_regis.html">macapype.nodes.bash_regis</a></li>
-<li><a href="macapype/pipelines/correct_bias.html">macapype.pipelines.correct_bias</a></li>
-<li><a href="macapype/pipelines/denoise.html">macapype.pipelines.denoise</a></li>
-<li><a href="macapype/pipelines/extract_brain.html">macapype.pipelines.extract_brain</a></li>
-<li><a href="macapype/pipelines/full_segment.html">macapype.pipelines.full_segment</a></li>
-<li><a href="macapype/pipelines/register.html">macapype.pipelines.register</a></li>
-<li><a href="macapype/pipelines/segment.html">macapype.pipelines.segment</a></li>
-<li><a href="macapype/utils/utils_tests.html">macapype.utils.utils_tests</a></li>
-<li><a href="nipype/interfaces/base/core.html">nipype.interfaces.base.core</a></li>
-<li><a href="nipype/interfaces/fsl/base.html">nipype.interfaces.fsl.base</a></li>
-</ul>
+  <div class="section" id="macapype-pipelines-segment-create-segment-atropos-pipe">
+<h1>macapype.pipelines.segment.create_segment_atropos_pipe<a class="headerlink" href="#macapype-pipelines-segment-create-segment-atropos-pipe" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="macapype.pipelines.segment.create_segment_atropos_pipe">
+<code class="descclassname">macapype.pipelines.segment.</code><code class="descname">create_segment_atropos_pipe</code><span class="sig-paren">(</span><em>params={}</em>, <em>name='segment_atropos_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/segment.html#create_segment_atropos_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.segment.create_segment_atropos_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Segmentation with ANTS atropos script</p>
+<p>Inputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>inputnode:</dt>
+<dd><p class="first">brain_file: T1 image, after extraction and norm bin_norm_intensity</p>
+<p>gm_prior_file: grey matter tissue intensity file</p>
+<p>wm_prior_file: white matter tissue intensity file</p>
+<p class="last">csf_prior_file: csf tissue intensity file</p>
+</dd>
+<dt>arguments:</dt>
+<dd><p class="first">params: dictionary of node sub-parameters (from a json file)</p>
+<p class="last">name: pipeline name (default = “segment_atropos_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>threshold_csf.out_file:</dt>
+<dd>csf tissue intensity mask in subject space</dd>
+<dt>threshold_gm.out_file:</dt>
+<dd>grey matter tissue intensity mask in subject space</dd>
+<dt>threshold_wm.out_file:</dt>
+<dd>white matter tissue intensity mask in subject space</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
 
     </div>
       

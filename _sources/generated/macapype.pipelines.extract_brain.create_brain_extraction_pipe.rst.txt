@@ -1,0 +1,6 @@
+macapype.pipelines.extract\_brain.create\_brain\_extraction\_pipe
+=================================================================
+
+.. currentmodule:: macapype.pipelines.extract_brain
+
+.. autofunction:: create_brain_extraction_pipe

@@ -123,9 +123,41 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">create_full_segment_pnh_T1xT2</span><span class="p">(</span><span class="n">brain_template</span><span class="p">,</span> <span class="n">priors</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span>
+<div class="viewcode-block" id="create_full_segment_pnh_T1xT2"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2.html#macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pnh_T1xT2</span><span class="p">(</span><span class="n">brain_template</span><span class="p">,</span> <span class="n">priors</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span>
                                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;T1xT2_segmentation_pipeline&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Regis T1xT2 pipeline &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Description: Regis T1xT2 pipeline</span>
+
+<span class="sd">        - T1xT2BET brain extraction and crop -&gt; mask</span>
+<span class="sd">        - T1xT2BiasFieldCorrection using mask -&gt; better mask</span>
+<span class="sd">        - NMT align (after N4Debias)</span>
+<span class="sd">        - Atropos segment</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            T1: T1 file name</span>
+
+<span class="sd">            T2: T2 file name</span>
+
+<span class="sd">        arguments:</span>
+<span class="sd">            brain_template: template file</span>
+
+<span class="sd">            priors: list of template based segmented tissues</span>
+
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name: pipeline name (default = &quot;T1xT2_segmentation_pipeline&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+<span class="sd">            old_segment_pipe.thresh_gm.out_file:</span>
+<span class="sd">                segmented grey matter in template space</span>
+
+<span class="sd">            old_segment_pipe.thresh_wm.out_file:</span>
+<span class="sd">                segmented white matter in template space</span>
+
+<span class="sd">            old_segment_pipe.thresh_csf.out_file:</span>
+<span class="sd">                segmented csf in template space</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">brain_template</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">priors</span><span class="p">)</span>
@@ -199,16 +231,44 @@
     <span class="n">old_segment_pipe</span> <span class="o">=</span> <span class="n">create_old_segment_pipe</span><span class="p">(</span>
         <span class="n">priors</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">params_old_segment_pipe</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;warp_file&#39;</span><span class="p">,</span> <span class="n">gunzip</span><span class="p">),</span> <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.T1&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;warp_file&#39;</span><span class="p">,</span> <span class="n">gunzip</span><span class="p">),</span>
+                     <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.T1&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">seg_pipe</span>
+    <span class="k">return</span> <span class="n">seg_pipe</span></div>
 
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># Kepkee</span>
-<span class="k">def</span> <span class="nf">create_full_segment_from_mask_pipe</span><span class="p">(</span>
+<div class="viewcode-block" id="create_full_segment_from_mask_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_from_mask_pipe.html#macapype.pipelines.full_segment.create_full_segment_from_mask_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_from_mask_pipe</span><span class="p">(</span>
         <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Description: Segment T1 (using T2 for bias correction) and a previously</span>
+<span class="sd">        computed mask with NMT Atlas and atropos segment.</span>
 
+<span class="sd">        - denoise pipe</span>
+<span class="sd">        - debias pipe</span>
+<span class="sd">        - NMT align (after N4Debias)</span>
+<span class="sd">        - Atropos segment</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            preproc_T1: preprocessed T1 file name</span>
+
+<span class="sd">            preproc_T2: preprocessed T2 file name</span>
+
+<span class="sd">            brain_mask: a mask computed for the same T1/T2 images</span>
+
+
+<span class="sd">        arguments:</span>
+<span class="sd">            nmt_dir: directory to NMT atlas</span>
+
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name: pipeline name (default = &quot;full_segment_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># creating pipeline</span>
     <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -256,7 +316,7 @@
 
     <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
         <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s1">&#39;restore_mask_T1.out_file&#39;</span><span class="p">,</span>
-        <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.T1_file&quot;</span><span class="p">)</span>
+        <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.T1&quot;</span><span class="p">)</span>
 
     <span class="c1"># ants Atropos</span>
     <span class="k">if</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -279,22 +339,43 @@
     <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;align_seg_wm.out_file&#39;</span><span class="p">,</span>
                                <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.wm_prior_file&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">brain_segment_pipe</span>
+    <span class="k">return</span> <span class="n">brain_segment_pipe</span></div>
 
 
 <span class="c1"># first step for a mask and then call create_full_segment_from_mask_pipe</span>
 <div class="viewcode-block" id="create_full_segment_pnh_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_segment.create_full_segment_pnh_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pnh_subpipes</span><span class="p">(</span>
         <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">atlasbrex_dir</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_pnh_subpipes&quot;</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Segment T1 (using T2 for bias correction) .</span>
+
 <span class="sd">    new version (as it is now)</span>
 <span class="sd">    - preproc (avg and align on the fly, cropping from T1xT2BET, bet is optional) # noqa</span>
 <span class="sd">    - correct_bias</span>
 <span class="sd">    - denoise</span>
 <span class="sd">    - extract_brain</span>
-<span class="sd">    - segment from mask</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    - segment from mask (see create_full_segment_from_mask_pipe):</span>
 
+<span class="sd">        - denoise pipe</span>
+<span class="sd">        - debias pipe</span>
+<span class="sd">        - NMT align (after N4Debias)</span>
+<span class="sd">        - Atropos segment</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            preproc_T1: preprocessed T1 file name</span>
+<span class="sd">            preproc_T2: preprocessed T2 file name</span>
+<span class="sd">            brain_mask: a mask computed for the same T1/T2 images</span>
+
+
+<span class="sd">        arguments:</span>
+<span class="sd">            nmt_dir: directory to NMT atlas</span>
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+<span class="sd">            name: pipeline name (default = &quot;full_segment_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># creating pipeline</span>
     <span class="n">seg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -401,7 +482,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-03.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Overview: module code &#8212; macapype 0.0.0 documentation</title>
+    <title>macapype.pipelines.correct_bias.create_masked_correct_bias_pipe &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -68,7 +68,10 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">macapype.pipelines.correct_bias.create_masked_correct_bias_pipe</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -76,7 +79,11 @@
             
             
             
-              <li class="hidden-sm"></li>
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
             
           </ul>
 
@@ -98,18 +105,46 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="macapype/nodes/bash_regis.html">macapype.nodes.bash_regis</a></li>
-<li><a href="macapype/pipelines/correct_bias.html">macapype.pipelines.correct_bias</a></li>
-<li><a href="macapype/pipelines/denoise.html">macapype.pipelines.denoise</a></li>
-<li><a href="macapype/pipelines/extract_brain.html">macapype.pipelines.extract_brain</a></li>
-<li><a href="macapype/pipelines/full_segment.html">macapype.pipelines.full_segment</a></li>
-<li><a href="macapype/pipelines/register.html">macapype.pipelines.register</a></li>
-<li><a href="macapype/pipelines/segment.html">macapype.pipelines.segment</a></li>
-<li><a href="macapype/utils/utils_tests.html">macapype.utils.utils_tests</a></li>
-<li><a href="nipype/interfaces/base/core.html">nipype.interfaces.base.core</a></li>
-<li><a href="nipype/interfaces/fsl/base.html">nipype.interfaces.fsl.base</a></li>
-</ul>
+  <div class="section" id="macapype-pipelines-correct-bias-create-masked-correct-bias-pipe">
+<h1>macapype.pipelines.correct_bias.create_masked_correct_bias_pipe<a class="headerlink" href="#macapype-pipelines-correct-bias-create-masked-correct-bias-pipe" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe">
+<code class="descclassname">macapype.pipelines.correct_bias.</code><code class="descname">create_masked_correct_bias_pipe</code><span class="sig-paren">(</span><em>params={}</em>, <em>name='masked_correct_bias_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/correct_bias.html#create_masked_correct_bias_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Description: Correct bias using T1 and T2 images in a mask</dt>
+<dd>Same as bash_regis.T1xT2BiasFieldCorrection</dd>
+</dl>
+<p>Inputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>inputnode:</dt>
+<dd><p class="first">preproc_T1: preprocessed T1 file name</p>
+<p>preproc_T2: preprocessed T2 file name</p>
+<p class="last">brain_mask: brain mask where operation will be applied</p>
+</dd>
+<dt>arguments:</dt>
+<dd><p class="first">params: dictionary of node sub-parameters (from a json file)</p>
+<p class="last">name: pipeline name (default = “masked_correct_bias_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>restore_T1.out_file:</dt>
+<dd>T1 after bias correction</dd>
+<dt>restore_T2.out_file</dt>
+<dd>T2 after bias correction</dd>
+<dt>restore_mask_T1.out_file:</dt>
+<dd>Masked T1 after bias correction</dd>
+<dt>restore_mask_T2.out_file:</dt>
+<dd>Masked T2 after bias correction</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
 
     </div>
       

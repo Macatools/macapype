@@ -1,0 +1,6 @@
+macapype.pipelines.correct\_bias.create\_debias\_N4\_pipe
+=========================================================
+
+.. currentmodule:: macapype.pipelines.correct_bias
+
+.. autofunction:: create_debias_N4_pipe

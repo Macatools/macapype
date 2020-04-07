@@ -127,19 +127,30 @@ Running subsequent workflows can be found <a class="reference internal" href="wo
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="auto_examples/plot_segment_pnh_regis_T1xT2.html#plot-segment-pnh-regis-t1xt2"><span class="std std-ref">plot_segment_pnh_regis_T1xT2 pipeline</span></a> runs the Regis pipeline, with:</p>
+<p>The <a class="reference internal" href="auto_examples/plot_segment_pnh_regis_T1xT2.html#plot-segment-pnh-regis-t1xt2"><span class="std std-ref">plot_segment_pnh_regis_T1xT2 workflow</span></a> based on Regis’ <a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2.html#macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2" title="macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with the processing sequence:</p>
 <ul class="simple">
-<li><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BET.html#macapype.nodes.bash_regis.T1xT2BET" title="macapype.nodes.bash_regis.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2Bet</span></code></a>,</li>
-<li><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.html#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection" title="macapype.nodes.bash_regis.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>,</li>
-<li>IterREGBET,</li>
-<li>old_segment SPM based pipeline.</li>
+<li><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BET.html#macapype.nodes.bash_regis.T1xT2BET" title="macapype.nodes.bash_regis.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2Bet</span></code></a></li>
+<li><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.html#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection" title="macapype.nodes.bash_regis.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a></li>
+<li><a class="reference internal" href="generated/macapype.nodes.bash_regis.IterREGBET.html#macapype.nodes.bash_regis.IterREGBET" title="macapype.nodes.bash_regis.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></li>
+<li><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></li>
 </ul>
-<p>The <a class="reference internal" href="auto_examples/plot_segment_pnh_kepkee.html#plot-segment-pnh-kepkee"><span class="std std-ref">plot_segment_pnh_kepkee pipeline</span></a> runs the Kepkee pipeline, with:</p>
+<p>The <a class="reference internal" href="auto_examples/plot_segment_pnh_kepkee.html#plot-segment-pnh-kepkee"><span class="std std-ref">plot_segment_pnh_kepkee workflow</span></a> based on Kepkee’s <a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_segment.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_segment.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
 <ul class="simple">
-<li>T1xT2Bet (used for the cropping tool)</li>
-<li>debias pipeline (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)</li>
-<li>denoise pipe (from Ants non-local mean)</li>
-<li>brain extraction using Atlax-Brex</li>
+<li><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BET.html#macapype.nodes.bash_regis.T1xT2BET" title="macapype.nodes.bash_regis.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2Bet</span></code></a> (used for the cropping tool only)</li>
+<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">debias</span> <span class="pre">pipeline</span></code></a> (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)</li>
+<li><a class="reference internal" href="generated/macapype.pipelines.denoise.create_denoised_pipe.html#macapype.pipelines.denoise.create_denoised_pipe" title="macapype.pipelines.denoise.create_denoised_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">denoise</span> <span class="pre">pipeline</span></code></a> (from Ants non-local mean)</li>
+<li><a class="reference internal" href="generated/macapype.pipelines.extract_brain.create_brain_extraction_pipe.html#macapype.pipelines.extract_brain.create_brain_extraction_pipe" title="macapype.pipelines.extract_brain.create_brain_extraction_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">brain</span> <span class="pre">extraction</span> <span class="pre">pipeline</span></code></a> using Atlax-Brex</li>
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_from_mask_pipe.html#macapype.pipelines.full_segment.create_full_segment_from_mask_pipe" title="macapype.pipelines.full_segment.create_full_segment_from_mask_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">segment</span> <span class="pre">from</span> <span class="pre">mask</span></code></a> (starting from the mask, the following steps are computed):</dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="generated/macapype.pipelines.denoise.create_denoised_pipe.html#macapype.pipelines.denoise.create_denoised_pipe" title="macapype.pipelines.denoise.create_denoised_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">denoise</span> <span class="pre">pipeline</span></code></a></li>
+<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">masked</span> <span class="pre">debias</span> <span class="pre">pipeline</span></code></a></li>
+<li><a class="reference internal" href="generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe" title="macapype.pipelines.register.create_register_NMT_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">register</span> <span class="pre">pipeline</span></code></a> from template (NMT) to subject space</li>
+<li><a class="reference internal" href="generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe" title="macapype.pipelines.segment.create_segment_atropos_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">segmentation</span> <span class="pre">pipeline</span></code></a> in subject space with Atropos</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
 </div>
@@ -156,7 +167,7 @@ Running subsequent workflows can be found <a class="reference internal" href="wo
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-03.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>macapype.pipelines.correct_bias &#8212; macapype 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../tutorial.html">Tutorial</a></li>
+                <li><a href="../../../install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for macapype.pipelines.correct_bias</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+
+<span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.ants</span> <span class="k">as</span> <span class="nn">ants</span>
+
+<span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">print_val</span>
+
+
+<div class="viewcode-block" id="create_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Correct bias using T1 and T2 images</span>
+<span class="sd">        Same as bash_regis.T1xT2BiasFieldCorrection</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            preproc_T1: preprocessed T1 file name</span>
+<span class="sd">            preproc_T2: preprocessed T2 file name</span>
+
+<span class="sd">        arguments:</span>
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name: pipeline name (default = &quot;correct_bias_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        restore_T1.out_file:</span>
+<span class="sd">            T1 after bias correction</span>
+
+<span class="sd">        restore_T2.out_file</span>
+<span class="sd">            T2 after bias correction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># creating pipeline</span>
+    <span class="n">correct_bias_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># BinaryMaths</span>
+    <span class="n">mult_T1_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mult_T1_T2&#39;</span><span class="p">)</span>
+    <span class="n">mult_T1_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;mul&quot;</span>
+    <span class="n">mult_T1_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-abs -sqrt&quot;</span>
+    <span class="n">mult_T1_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                              <span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mean Brain Val</span>
+    <span class="n">meanbrainval</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ImageStats</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;meanbrainval&#39;</span><span class="p">)</span>
+    <span class="n">meanbrainval</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-M&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">meanbrainval</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># norm_mult</span>
+    <span class="n">norm_mult</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_mult&#39;</span><span class="p">)</span>
+    <span class="n">norm_mult</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">meanbrainval</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_stat&#39;</span><span class="p">,</span> <span class="n">print_val</span><span class="p">),</span>
+                              <span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;operand_value&#39;</span><span class="p">)</span>
+
+    <span class="c1"># smooth</span>
+    <span class="k">if</span> <span class="s2">&quot;smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">maths</span><span class="o">.</span><span class="n">MathsCommand</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth&#39;</span><span class="p">)</span>
+    <span class="n">smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-bin -s </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># norm_smooth</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+    <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
+    <span class="n">norm_smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-s </span><span class="si">{}</span><span class="s2"> -div </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
+
+    <span class="c1"># modulate</span>
+    <span class="n">modulate</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;modulate&#39;</span><span class="p">)</span>
+    <span class="n">modulate</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                              <span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                              <span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># std_modulate</span>
+    <span class="n">std_modulate</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ImageStats</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;std_modulate&#39;</span><span class="p">)</span>
+    <span class="n">std_modulate</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-S&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">std_modulate</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mean_modulate</span>
+    <span class="n">mean_modulate</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ImageStats</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mean_modulate&#39;</span><span class="p">)</span>
+    <span class="n">mean_modulate</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-M&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">mean_modulate</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># compute_lower_val</span>
+    <span class="k">def</span> <span class="nf">compute_lower_val</span><span class="p">(</span><span class="n">mean_val</span><span class="p">,</span> <span class="n">std_val</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mean_val</span> <span class="o">-</span> <span class="p">(</span><span class="n">std_val</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># compute_lower</span>
+    <span class="n">lower</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_val&#39;</span><span class="p">,</span> <span class="s1">&#39;std_val&#39;</span><span class="p">],</span>
+                                 <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lower_val&#39;</span><span class="p">],</span>
+                                 <span class="n">function</span><span class="o">=</span><span class="n">compute_lower_val</span><span class="p">),</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mean_modulate</span><span class="p">,</span> <span class="s1">&#39;out_stat&#39;</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="s1">&#39;mean_val&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">std_modulate</span><span class="p">,</span> <span class="s1">&#39;out_stat&#39;</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="s1">&#39;std_val&#39;</span><span class="p">)</span>
+
+    <span class="c1"># thresh_lower</span>
+    <span class="n">thresh_lower</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;thresh_lower&#39;</span><span class="p">)</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="s1">&#39;lower_val&#39;</span><span class="p">,</span> <span class="n">thresh_lower</span><span class="p">,</span> <span class="s1">&#39;thresh&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">thresh_lower</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mod_mask</span>
+    <span class="n">mod_mask</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">UnaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mod_mask&#39;</span><span class="p">)</span>
+    <span class="n">mod_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;bin&quot;</span>
+    <span class="n">mod_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-ero -mul 255&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thresh_lower</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">mod_mask</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># bias</span>
+    <span class="n">bias</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bias&#39;</span><span class="p">)</span>
+    <span class="n">bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-mas </span><span class="si">%s</span><span class="s2"> -dilall&quot;</span>
+    <span class="n">bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mod_mask</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
+
+    <span class="c1"># smooth_bias</span>
+    <span class="n">smooth_bias</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">IsotropicSmooth</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth_bias&#39;</span><span class="p">)</span>
+    <span class="n">smooth_bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># restore_T1</span>
+    <span class="n">restore_T1</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;restore_T1&#39;</span><span class="p">)</span>
+    <span class="n">restore_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+    <span class="n">restore_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                              <span class="n">restore_T1</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                              <span class="n">restore_T1</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># restore_T2</span>
+    <span class="n">restore_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;restore_T2&#39;</span><span class="p">)</span>
+    <span class="n">restore_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+    <span class="n">restore_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                              <span class="n">restore_T2</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                              <span class="n">restore_T2</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">correct_bias_pipe</span></div>
+
+
+<div class="viewcode-block" id="create_masked_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_masked_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{},</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Correct bias using T1 and T2 images in a mask</span>
+<span class="sd">        Same as bash_regis.T1xT2BiasFieldCorrection</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            preproc_T1: preprocessed T1 file name</span>
+
+<span class="sd">            preproc_T2: preprocessed T2 file name</span>
+
+<span class="sd">            brain_mask: brain mask where operation will be applied</span>
+
+<span class="sd">        arguments:</span>
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name: pipeline name (default = &quot;masked_correct_bias_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        restore_T1.out_file:</span>
+<span class="sd">            T1 after bias correction</span>
+
+<span class="sd">        restore_T2.out_file</span>
+<span class="sd">            T2 after bias correction</span>
+
+<span class="sd">        restore_mask_T1.out_file:</span>
+<span class="sd">            Masked T1 after bias correction</span>
+
+<span class="sd">        restore_mask_T2.out_file:</span>
+<span class="sd">            Masked T2 after bias correction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># creating pipeline</span>
+    <span class="n">masked_correct_bias_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;brain_mask&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># BinaryMaths</span>
+    <span class="n">mult_T1_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mult_T1_T2&#39;</span><span class="p">)</span>
+    <span class="n">mult_T1_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;mul&quot;</span>
+    <span class="n">mult_T1_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-abs -sqrt&quot;</span>
+    <span class="n">mult_T1_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                     <span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                                     <span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mask mult</span>
+    <span class="n">mask_mult</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyMask</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mask_mult&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">mask_mult</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span>
+                                     <span class="n">mask_mult</span><span class="p">,</span> <span class="s1">&#39;mask_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mean Brain Val</span>
+    <span class="n">meanbrainval</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ImageStats</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;meanbrainval&#39;</span><span class="p">)</span>
+    <span class="n">meanbrainval</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-M&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mult_T1_T2</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">meanbrainval</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># norm_mult</span>
+    <span class="n">norm_mult</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_mult&#39;</span><span class="p">)</span>
+    <span class="n">norm_mult</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mask_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">meanbrainval</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_stat&#39;</span><span class="p">,</span> <span class="n">print_val</span><span class="p">),</span>
+                                     <span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;operand_value&#39;</span><span class="p">)</span>
+
+    <span class="c1"># smooth</span>
+    <span class="k">if</span> <span class="s2">&quot;smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">maths</span><span class="o">.</span><span class="n">MathsCommand</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth&#39;</span><span class="p">)</span>
+    <span class="n">smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-bin -s </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># norm_smooth</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
+    <span class="n">norm_smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-s </span><span class="si">{}</span><span class="s2"> -div </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
+
+    <span class="c1"># modulate</span>
+    <span class="n">modulate</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;modulate&#39;</span><span class="p">)</span>
+    <span class="n">modulate</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># std_modulate</span>
+    <span class="n">std_modulate</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ImageStats</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;std_modulate&#39;</span><span class="p">)</span>
+    <span class="n">std_modulate</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-S&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">std_modulate</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mean_modulate</span>
+    <span class="n">mean_modulate</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ImageStats</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mean_modulate&#39;</span><span class="p">)</span>
+    <span class="n">mean_modulate</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-M&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">mean_modulate</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># function lower val</span>
+    <span class="k">def</span> <span class="nf">compute_lower_val</span><span class="p">(</span><span class="n">mean_val</span><span class="p">,</span> <span class="n">std_val</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mean_val</span> <span class="o">-</span> <span class="p">(</span><span class="n">std_val</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># compute_lower</span>
+    <span class="n">lower</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_val&#39;</span><span class="p">,</span> <span class="s1">&#39;std_val&#39;</span><span class="p">],</span>
+                                 <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lower_val&#39;</span><span class="p">],</span>
+                                 <span class="n">function</span><span class="o">=</span><span class="n">compute_lower_val</span><span class="p">),</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mean_modulate</span><span class="p">,</span> <span class="s1">&#39;out_stat&#39;</span><span class="p">,</span>
+                                     <span class="n">lower</span><span class="p">,</span> <span class="s1">&#39;mean_val&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">std_modulate</span><span class="p">,</span> <span class="s1">&#39;out_stat&#39;</span><span class="p">,</span>
+                                     <span class="n">lower</span><span class="p">,</span> <span class="s1">&#39;std_val&#39;</span><span class="p">)</span>
+
+    <span class="c1"># thresh_lower</span>
+    <span class="n">thresh_lower</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;thresh_lower&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="s1">&#39;lower_val&#39;</span><span class="p">,</span>
+                                     <span class="n">thresh_lower</span><span class="p">,</span> <span class="s1">&#39;thresh&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">modulate</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">thresh_lower</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mod_mask</span>
+    <span class="n">mod_mask</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">UnaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mod_mask&#39;</span><span class="p">)</span>
+    <span class="n">mod_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;bin&quot;</span>
+    <span class="n">mod_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-ero -mul 255&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thresh_lower</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">mod_mask</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ##tmp_bias</span>
+<span class="sd">    tmp_bias = pe.Node(fsl.MultiImageMaths(),name=&#39;tmp_bias&#39;)</span>
+<span class="sd">    tmp_bias.inputs.op_string = &quot;-mas %s&quot;</span>
+<span class="sd">    tmp_bias.inputs.output_datatype = &quot;float&quot;</span>
+
+<span class="sd">    masked_correct_bias_pipe.connect(norm_mult, &#39;out_file&#39;,</span>
+<span class="sd">                                     tmp_bias, &#39;in_file&#39;)</span>
+
+<span class="sd">    masked_correct_bias_pipe.connect(mod_mask, &#39;out_file&#39;,</span>
+<span class="sd">                                     tmp_bias, &#39;operand_files&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># bias</span>
+    <span class="n">bias</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bias&#39;</span><span class="p">)</span>
+    <span class="n">bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-mas </span><span class="si">%s</span><span class="s2"> -dilall&quot;</span>
+    <span class="n">bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mod_mask</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
+    <span class="c1"># smooth_bias</span>
+    <span class="n">smooth_bias</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">IsotropicSmooth</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth_bias&#39;</span><span class="p">)</span>
+    <span class="n">smooth_bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># restore_T1</span>
+    <span class="n">restore_T1</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;restore_T1&#39;</span><span class="p">)</span>
+    <span class="n">restore_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+    <span class="n">restore_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_T1</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_T1</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># restore_T2</span>
+    <span class="n">restore_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">BinaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;restore_T2&#39;</span><span class="p">)</span>
+    <span class="n">restore_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span>
+    <span class="n">restore_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_datatype</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_T2</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_T2</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># restore_mask_T1</span>
+    <span class="n">restore_mask_T1</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyMask</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;restore_mask_T1&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">restore_T1</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_mask_T1</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_mask_T1</span><span class="p">,</span> <span class="s1">&#39;mask_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># restore_mask_T2</span>
+    <span class="n">restore_mask_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyMask</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;restore_mask_T2&#39;</span><span class="p">)</span>
+
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">restore_T2</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_mask_T2</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span>
+                                     <span class="n">restore_mask_T2</span><span class="p">,</span> <span class="s1">&#39;mask_file&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">masked_correct_bias_pipe</span></div>
+
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="create_debias_N4_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_debias_N4_pipe.html#macapype.pipelines.correct_bias.create_debias_N4_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_debias_N4_pipe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;debias_N4_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Only apply ants N4BiasFieldCorrection, check where is used?</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># creating pipeline</span>
+    <span class="n">debias_N4_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cropped_T1&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># N4 correction</span>
+    <span class="n">norm_intensity</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
+                             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_intensity&#39;</span><span class="p">)</span>
+
+    <span class="n">debias_N4_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;cropped_T1&#39;</span><span class="p">,</span>
+                           <span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">debias_N4_pipe</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

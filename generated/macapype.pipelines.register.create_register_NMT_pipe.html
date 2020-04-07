@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Overview: module code &#8212; macapype 0.0.0 documentation</title>
+    <title>macapype.pipelines.register.create_register_NMT_pipe &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -68,7 +68,10 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">macapype.pipelines.register.create_register_NMT_pipe</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -76,7 +79,11 @@
             
             
             
-              <li class="hidden-sm"></li>
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/generated/macapype.pipelines.register.create_register_NMT_pipe.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
             
           </ul>
 
@@ -98,18 +105,44 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="macapype/nodes/bash_regis.html">macapype.nodes.bash_regis</a></li>
-<li><a href="macapype/pipelines/correct_bias.html">macapype.pipelines.correct_bias</a></li>
-<li><a href="macapype/pipelines/denoise.html">macapype.pipelines.denoise</a></li>
-<li><a href="macapype/pipelines/extract_brain.html">macapype.pipelines.extract_brain</a></li>
-<li><a href="macapype/pipelines/full_segment.html">macapype.pipelines.full_segment</a></li>
-<li><a href="macapype/pipelines/register.html">macapype.pipelines.register</a></li>
-<li><a href="macapype/pipelines/segment.html">macapype.pipelines.segment</a></li>
-<li><a href="macapype/utils/utils_tests.html">macapype.utils.utils_tests</a></li>
-<li><a href="nipype/interfaces/base/core.html">nipype.interfaces.base.core</a></li>
-<li><a href="nipype/interfaces/fsl/base.html">nipype.interfaces.fsl.base</a></li>
-</ul>
+  <div class="section" id="macapype-pipelines-register-create-register-nmt-pipe">
+<h1>macapype.pipelines.register.create_register_NMT_pipe<a class="headerlink" href="#macapype-pipelines-register-create-register-nmt-pipe" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="macapype.pipelines.register.create_register_NMT_pipe">
+<code class="descclassname">macapype.pipelines.register.</code><code class="descname">create_register_NMT_pipe</code><span class="sig-paren">(</span><em>nmt_dir</em>, <em>params={}</em>, <em>name='register_NMT_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/register.html#create_register_NMT_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.register.create_register_NMT_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Description: Register template to anat with the script NMT_subject_align,</dt>
+<dd>and then apply it to tissues list_priors</dd>
+</dl>
+<p>Inputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>inputnode:</dt>
+<dd>T1: T1 file name</dd>
+<dt>arguments:</dt>
+<dd><p class="first">nmt_dir: path to NMT template</p>
+<p>params: dictionary of node sub-parameters (from a json file)</p>
+<p class="last">name: pipeline name (default = “register_NMT_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>norm_intensity.output_image:</dt>
+<dd>filled mask after erode</dd>
+<dt>align_seg_csf.out_file:</dt>
+<dd>csf template tissue in subject space</dd>
+<dt>align_seg_gm.out_file:</dt>
+<dd>grey matter template tissue in subject space</dd>
+<dt>align_seg_wm.out_file:</dt>
+<dd>white matter template tissue in subject space</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
 
     </div>
       

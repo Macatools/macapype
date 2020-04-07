@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>macapype.pipelines.register &#8212; macapype 0.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../tutorial.html">Tutorial</a></li>
+                <li><a href="../../../install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for macapype.pipelines.register</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+
+<span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.afni</span> <span class="k">as</span> <span class="nn">afni</span>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.ants</span> <span class="k">as</span> <span class="nn">ants</span>
+
+<span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">get_elem</span>
+
+<span class="kn">from</span> <span class="nn">..nodes.register</span> <span class="kn">import</span> <span class="p">(</span><span class="n">interative_flirt</span><span class="p">,</span> <span class="n">NMTSubjectAlign</span><span class="p">,</span>
+                              <span class="n">NwarpApplyPriors</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">create_iterative_register_pipe</span><span class="p">(</span>
+        <span class="n">template_file</span><span class="p">,</span> <span class="n">template_brain_file</span><span class="p">,</span> <span class="n">template_mask_file</span><span class="p">,</span> <span class="n">gm_prob_file</span><span class="p">,</span>
+        <span class="n">wm_prob_file</span><span class="p">,</span> <span class="n">csf_prob_file</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Registration of template (NMT or other) according to Regis:</span>
+<span class="sd">    - The iterative FLIRT is between NMT_SS and subject&#39;s anat after a quick</span>
+<span class="sd">    skull-stripping but the anat is more and more refined to corresponds to the</span>
+<span class="sd">    brain</span>
+<span class="sd">    - there is also a FNIRT done once, for comparison of the quality of the</span>
+<span class="sd">    template on the subject&#39;s brain</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">register_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;anat_file_BET&#39;</span><span class="p">,</span> <span class="s1">&#39;anat_file&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># register node</span>
+    <span class="n">register</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;anat_file&quot;</span><span class="p">,</span> <span class="s2">&quot;anat_file_BET&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;template_brain_file&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;template_mask_file&quot;</span><span class="p">,</span> <span class="s1">&#39;n_iter&#39;</span><span class="p">],</span>
+                     <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;anat_file_brain&quot;</span><span class="p">,</span> <span class="s2">&quot;template_to_anat_file&quot;</span><span class="p">],</span>
+                     <span class="n">function</span><span class="o">=</span><span class="n">interative_flirt</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register&quot;</span><span class="p">)</span>
+
+    <span class="n">register</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">template_brain_file</span> <span class="o">=</span> <span class="n">template_brain_file</span>
+    <span class="n">register</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">template_mask_file</span> <span class="o">=</span> <span class="n">template_mask_file</span>
+    <span class="n">register</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
+
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;anat_file&#39;</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="s1">&#39;anat_file&#39;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;anat_file_BET&#39;</span><span class="p">,</span>
+                          <span class="n">register</span><span class="p">,</span> <span class="s2">&quot;anat_file_BET&quot;</span><span class="p">)</span>
+
+    <span class="c1"># apply transfo over the 3 tissues:</span>
+    <span class="c1"># gm</span>
+    <span class="n">register_gm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_gm&quot;</span><span class="p">)</span>
+
+    <span class="n">register_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">gm_prob_file</span>
+    <span class="n">register_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">apply_xfm</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">register_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">register_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="s2">&quot;NIFTI&quot;</span>  <span class="c1"># for SPM segment</span>
+
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;anat_file_brain&#39;</span><span class="p">,</span>
+                          <span class="n">register_gm</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;template_to_anat_file&#39;</span><span class="p">,</span>
+                          <span class="n">register_gm</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># wm</span>
+    <span class="n">register_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_wm&quot;</span><span class="p">)</span>
+
+    <span class="n">register_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">wm_prob_file</span>
+    <span class="n">register_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">apply_xfm</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">register_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">register_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="s2">&quot;NIFTI&quot;</span>  <span class="c1"># for SPM segment</span>
+
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;anat_file_brain&#39;</span><span class="p">,</span>
+                          <span class="n">register_wm</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;template_to_anat_file&#39;</span><span class="p">,</span>
+                          <span class="n">register_wm</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># csf</span>
+    <span class="n">register_csf</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_csf&quot;</span><span class="p">)</span>
+
+    <span class="n">register_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">csf_prob_file</span>
+    <span class="n">register_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">apply_xfm</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">register_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">register_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="s2">&quot;NIFTI&quot;</span>  <span class="c1"># for SPM segment</span>
+
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;anat_file_brain&#39;</span><span class="p">,</span>
+                          <span class="n">register_csf</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;template_to_anat_file&#39;</span><span class="p">,</span>
+                          <span class="n">register_csf</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">return_list</span><span class="p">(</span><span class="n">file1</span><span class="p">,</span> <span class="n">file2</span><span class="p">,</span> <span class="n">file3</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">file1</span><span class="p">,</span> <span class="n">file2</span><span class="p">,</span> <span class="n">file3</span><span class="p">]</span>
+
+    <span class="c1"># merge 3 outputs to a list (...)</span>
+    <span class="n">merge_3_files</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;file1&quot;</span><span class="p">,</span> <span class="s2">&quot;file2&quot;</span><span class="p">,</span> <span class="s2">&quot;file3&quot;</span><span class="p">],</span>
+                     <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;list3files&quot;</span><span class="p">],</span>
+                     <span class="n">function</span><span class="o">=</span><span class="n">return_list</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;merge_3_files&quot;</span><span class="p">)</span>
+
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_gm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">merge_3_files</span><span class="p">,</span> <span class="s2">&quot;file1&quot;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">merge_3_files</span><span class="p">,</span> <span class="s2">&quot;file2&quot;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_csf</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">merge_3_files</span><span class="p">,</span> <span class="s2">&quot;file3&quot;</span><span class="p">)</span>
+
+    <span class="c1"># same with non linear</span>
+    <span class="c1"># non linear register between anat and head</span>
+    <span class="c1"># (FNIRT work directly on head?</span>
+    <span class="c1"># I thought FLIRT was only skull-stripped brain, is it different? )</span>
+
+    <span class="n">nl_register</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">FNIRT</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nl_register&quot;</span><span class="p">)</span>
+    <span class="n">nl_register</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">template_file</span>
+
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;anat_file&#39;</span><span class="p">,</span> <span class="n">nl_register</span><span class="p">,</span> <span class="s1">&#39;ref_file&#39;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="s1">&#39;template_to_anat_file&#39;</span><span class="p">,</span>
+                          <span class="n">nl_register</span><span class="p">,</span> <span class="s1">&#39;affine_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># apply non linear warp to NMT_SS</span>
+    <span class="n">nl_apply</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyWarp</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nl_apply&quot;</span><span class="p">)</span>
+    <span class="n">nl_apply</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">template_brain_file</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;anat_file&#39;</span><span class="p">,</span> <span class="n">nl_apply</span><span class="p">,</span> <span class="s1">&#39;ref_file&#39;</span><span class="p">)</span>
+    <span class="n">register_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">nl_register</span><span class="p">,</span> <span class="s1">&#39;fieldcoeff_file&#39;</span><span class="p">,</span>
+                          <span class="n">nl_apply</span><span class="p">,</span> <span class="s1">&#39;field_file&#39;</span><span class="p">)</span>  <span class="c1"># iout from fnirt</span>
+
+    <span class="k">return</span> <span class="n">register_pipe</span>
+
+
+<div class="viewcode-block" id="create_register_NMT_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_register_NMT_pipe</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Register template to anat with the script NMT_subject_align,</span>
+<span class="sd">        and then apply it to tissues list_priors</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            T1: T1 file name</span>
+
+<span class="sd">        arguments:</span>
+<span class="sd">            nmt_dir: path to NMT template</span>
+
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name: pipeline name (default = &quot;register_NMT_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        norm_intensity.output_image:</span>
+<span class="sd">            filled mask after erode</span>
+<span class="sd">        align_seg_csf.out_file:</span>
+<span class="sd">            csf template tissue in subject space</span>
+<span class="sd">        align_seg_gm.out_file:</span>
+<span class="sd">            grey matter template tissue in subject space</span>
+<span class="sd">        align_seg_wm.out_file:</span>
+<span class="sd">            white matter template tissue in subject space</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">register_NMT_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;T1&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># N4 intensity normalization over brain</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;dimension&quot;</span><span class="p">]</span>
+        <span class="n">bspline_fitting_distance</span> <span class="o">=</span> \
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">]</span>
+
+        <span class="n">n_iterations</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;n_iterations&quot;</span><span class="p">]</span>
+        <span class="n">convergence_threshold</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;convergence_threshold&quot;</span><span class="p">]</span>
+        <span class="n">shrink_factor</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;shrink_factor&quot;</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">bspline_fitting_distance</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">n_iterations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
+        <span class="n">convergence_threshold</span> <span class="o">=</span> <span class="mf">0.00000001</span>
+        <span class="n">shrink_factor</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;r 0 --verbose 1&quot;</span>
+
+    <span class="n">norm_intensity</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
+                             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_intensity&#39;</span><span class="p">)</span>
+    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">dimension</span>
+    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">bspline_fitting_distance</span> <span class="o">=</span> <span class="n">bspline_fitting_distance</span>
+    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_iterations</span> <span class="o">=</span> <span class="n">n_iterations</span>
+    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">convergence_threshold</span> <span class="o">=</span> <span class="n">convergence_threshold</span>
+    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">shrink_factor</span> <span class="o">=</span> <span class="n">shrink_factor</span>
+    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span>
+                              <span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;input_image&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align subj to nmt (with NMT_subject_align, wrapped version with nodes)</span>
+    <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NMTSubjectAlign</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                              <span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s2">&quot;T1_file&quot;</span><span class="p">)</span>
+
+    <span class="n">NMT_subject_align</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_SS_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span>
+                                                        <span class="s2">&quot;NMT_SS.nii.gz&quot;</span><span class="p">)</span>
+    <span class="n">NMT_subject_align</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">nmt_dir</span><span class="p">,</span> <span class="s2">&quot;NMT_subject_align.csh&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_masks</span>
+    <span class="c1"># &quot;overwrap&quot; of NwarpApply, with specifying the outputs as wished</span>
+    <span class="n">p_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="s2">&quot;masks&quot;</span><span class="p">,</span> <span class="s2">&quot;probabilisitic_segmentation_masks&quot;</span><span class="p">)</span>
+
+    <span class="n">list_priors</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="s2">&quot;NMT.nii.gz&quot;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_dir</span><span class="p">,</span> <span class="s2">&quot;NMT_brainmask_prob.nii.gz&quot;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="s2">&quot;masks&quot;</span><span class="p">,</span> <span class="s2">&quot;anatomical_masks&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;NMT_brainmask.nii.gz&quot;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_dir</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_CSF.nii.gz&quot;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_dir</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_GM.nii.gz&quot;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p_dir</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_WM.nii.gz&quot;</span><span class="p">)]</span>
+
+    <span class="n">align_masks</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_masks&#39;</span><span class="p">)</span>
+    <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">list_priors</span>
+    <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">list_priors</span>
+    <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;NN&quot;</span>
+    <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-overwrite&quot;</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;shft_aff_file&#39;</span><span class="p">,</span>
+                              <span class="n">align_masks</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
+                              <span class="n">align_masks</span><span class="p">,</span> <span class="s2">&quot;warp&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_NMT</span>
+    <span class="n">align_NMT</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_NMT&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_NMT</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_NMT</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_NMT</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                            <span class="n">align_NMT</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                            <span class="n">align_NMT</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                            <span class="n">align_NMT</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+    <span class="c1"># seg_csf</span>
+    <span class="n">align_seg_csf</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_seg_csf&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_seg_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_seg_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_seg_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                              <span class="n">align_seg_csf</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                              <span class="n">align_seg_csf</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                              <span class="n">align_seg_csf</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+    <span class="c1"># seg_gm</span>
+    <span class="n">align_seg_gm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_seg_gm&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_seg_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_seg_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_seg_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                              <span class="n">align_seg_gm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                              <span class="n">align_seg_gm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                              <span class="n">align_seg_gm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+    <span class="c1"># seg_wm</span>
+    <span class="n">align_seg_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_seg_wm&quot;</span><span class="p">,</span>
+                           <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_seg_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_seg_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_seg_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                              <span class="n">align_seg_wm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                              <span class="n">align_seg_wm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                              <span class="n">align_seg_wm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+    <span class="k">return</span> <span class="n">register_NMT_pipe</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
