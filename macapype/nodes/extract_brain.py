@@ -60,7 +60,6 @@ class AtlasBREX(CommandLine):
     Description:
         Atlas based BrainExtraction
 
-
     Inputs:
 
         script_atlas_BREX:

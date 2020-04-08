@@ -23,17 +23,22 @@ A docker image is also available, explanation can be found :ref:`here <docker_in
 Examples
 ********
 
-The :ref:`plot_segment_pnh_regis_T1xT2 pipeline <plot_segment_pnh_regis_T1xT2>` runs the Regis pipeline, with:
+The :ref:`plot_segment_pnh_regis_T1xT2 workflow <plot_segment_pnh_regis_T1xT2>` based on Regis' :class:`full pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2>`, with the processing sequence:
 
-* :ref:`T1xT2Bet <T1xT2BET>`,
-* T1xT2BiasFieldCorrection,
-* IterREGBET,
-* old_segment SPM based pipeline.
+* :class:`T1xT2Bet <macapype.nodes.bash_regis.T1xT2BET>`
+* :class:`T1xT2BiasFieldCorrection <macapype.nodes.bash_regis.T1xT2BiasFieldCorrection>`
+* :class:`IterREGBET <macapype.nodes.bash_regis.IterREGBET>`
+* :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
 
 
-The :ref:`plot_segment_pnh_kepkee pipeline <plot_segment_pnh_kepkee>` runs the Kepkee pipeline, with:
+The :ref:`plot_segment_pnh_kepkee workflow <plot_segment_pnh_kepkee>` based on Kepkee's :class:`full pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_subpipes>`, with the processing sequence :
 
-* T1xT2Bet (used for the cropping tool)
-* debias pipeline (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)
-* denoise pipe (from Ants non-local mean)
-* brain extraction using Atlax-Brex
+* :class:`T1xT2Bet <macapype.nodes.bash_regis.T1xT2BET>` (used for the cropping tool only)
+* :class:`debias pipeline <macapype.pipelines.correct_bias.create_correct_bias_pipe>` (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)
+* :class:`denoise pipeline <macapype.pipelines.denoise.create_denoised_pipe>` (from Ants non-local mean)
+* :class:`brain extraction pipeline <macapype.pipelines.extract_brain.create_brain_extraction_pipe>` using Atlax-Brex
+* :class:`full segment from mask <macapype.pipelines.full_segment.create_full_segment_from_mask_pipe>` (starting from the mask, the following steps are computed):
+    - :class:`denoise pipeline <macapype.pipelines.denoise.create_denoised_pipe>`
+    - :class:`masked debias pipeline <macapype.pipelines.correct_bias.create_masked_correct_bias_pipe>`
+    - :class:`register pipeline <macapype.pipelines.register.create_register_NMT_pipe>` from template (NMT) to subject space
+    - :class:`segmentation pipeline <macapype.pipelines.segment.create_segment_atropos_pipe>` in subject space with Atropos

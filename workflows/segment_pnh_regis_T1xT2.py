@@ -49,109 +49,73 @@
 import os
 import os.path as op
 import argparse
+import json
+import pprint
 
-from bids.layout import BIDSLayout
-
-import nipype.interfaces.io as nio
-import nipype.interfaces.utility as niu
-import nipype.pipeline.engine as pe
-import nipype.interfaces.ants as ants
 import nipype.interfaces.fsl as fsl
-
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
+import nipype.pipeline.engine as pe
 
 from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
 from macapype.utils.utils_tests import load_test_data
 from macapype.utils.utils_spm import format_spm_priors
 
+from macapype.utils.utils_bids import create_datasource
+
 my_path = "/hpc/crise/meunier.d"
 
 
-def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
-    """ Create a datasource node that have iterables following BIDS format """
-    bids_datasource = pe.Node(
-        interface=nio.BIDSDataGrabber(),
-        name='bids_datasource'
-    )
-
-    bids_datasource.inputs.base_dir = data_dir
-    bids_datasource.inputs.output_query = {
-        'T1': {
-            "datatype": "anat", "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
-        },
-        'T2': {
-            "datatype": "anat", "suffix": "T2w",
-            "extensions": ["nii", ".nii.gz"]
-        }
-    }
-
-    layout = BIDSLayout(data_dir)
-
-    # Verbose
-    print("BIDS layout:", layout)
-    print("\t", layout.get_subjects())
-    print("\t", layout.get_sessions())
-
-    #print("\t", layout.get_acquisitions())
-
-
-
-    if subjects is None:
-        subjects = layout.get_subjects()
-
-    if sessions is None:
-        sessions = layout.get_sessions()
-
-    iterables = []
-    iterables.append(('subject', subjects))
-    iterables.append(('session', sessions))
-
-    if acqs is not None:
-        iterables.append(('acquisition', acqs))
-
-    bids_datasource.iterables = iterables
-
-    return bids_datasource
-
-"""
-def create_infosource(subject_ids):
-    infosource = pe.Node(
-        interface=niu.IdentityInterface(fields=['subject_id']),
-        name="infosource"
-    )
-    infosource.iterables = [('subject_id', subject_ids)]
-
-    return infosource
-"""
-
-# def create_datasource(data_dir, sess):
-#     datasource = pe.Node(
-#         interface=nio.DataGrabber(infields=['subject_id'], outfields=['T1','T2']),
-#         name='datasource'
-#     )
-#     datasource.inputs.base_directory = data_dir
-#     datasource.inputs.template = 'sub-%s/{}/anat/sub-%s_{}_%s.nii'.format(sess, sess)
-#     datasource.inputs.template_args = dict(
-#         T1=[['subject_id', 'subject_id', "T1w"]],
-#         T2=[['subject_id', 'subject_id', "T2w"]],
-#     )
-#     datasource.inputs.sort_filelist = True
-#
-#     return datasource
-
 ###############################################################################
-def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
-                         acquisitions, template, priors):
-    """ """
-    main_workflow = pe.Workflow(name="T1xT2_processing_workflow")
-    main_workflow.base_dir = process_dir
+def create_main_workflow(data_path, main_path, subject_ids, sessions,
+                         acquisitions, template, priors, params_file):
+    """
+    create_main_workflow
+    """
 
-    datasource = create_datasource(data_dir, subject_ids, sessions,
+    # formating args
+    data_path = op.abspath(data_path)
+
+    if not op.isdir(main_path):
+        os.makedirs(main_path)
+
+    # params
+    if params_file is not None:
+
+        assert os.path.exists(params_file), "Error with file {}".format(
+            params_file)
+
+        params = json.load(open(params_file))
+    else:
+        params = {}
+
+    print(params)
+    pprint.pprint(params)
+
+    # priors
+    if template is None and priors is None:
+        inia_dir = load_test_data("inia19", path_to=my_path)
+        template = op.join(inia_dir, "inia19-t1-brain.nii")
+        priors = [
+            op.join(inia_dir, "inia19-prob_1.nii"),
+            op.join(inia_dir, "inia19-prob_2.nii"),
+            op.join(inia_dir, "inia19-prob_0.nii")
+        ]
+
+    # case priors are one single file with 3 tissue merged
+    if len(priors) == 1:
+        priors = priors[0]
+
+    priors = format_spm_priors(priors, directory=main_path)
+
+    # main_workflow
+    main_workflow = pe.Workflow(name="T1xT2_processing_workflow_json")
+    main_workflow.base_dir = main_path
+
+    datasource = create_datasource(data_path, subject_ids, sessions,
                                    acquisitions)
 
-    segment_pnh = create_full_segment_pnh_T1xT2(template, priors)
+    segment_pnh = create_full_segment_pnh_T1xT2(template, priors, params)
 
     main_workflow.connect(
         datasource, 'T1', segment_pnh, 'inputnode.T1')
@@ -162,33 +126,6 @@ def create_main_workflow(data_dir, process_dir, subject_ids, sessions,
 
 
 ################################################################################
-def main(data_path, main_path, subjects, sessions, acquisitions,
-         template, priors):
-    data_path = op.abspath(data_path)
-
-    if not op.isdir(main_path):
-        os.makedirs(main_path)
-
-    # main_workflow
-    print("Initialising the pipeline...")
-    wf = create_main_workflow(
-        data_dir=data_path,
-        process_dir=main_path,
-        subject_ids=subjects,
-        sessions=sessions,
-        acquisitions=acquisitions,
-        template=template,
-        priors=format_spm_priors(priors, directory=main_path)
-    )
-    # wf.write_graph(graph2use="colored")
-    wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
-    print('The PNH segmentation pipeline is ready')
-    
-    print("Start to process")
-    wf.run()
-    # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
-
-
 if __name__ == '__main__':
     # Command line parser
     parser = argparse.ArgumentParser(
@@ -207,24 +144,27 @@ if __name__ == '__main__':
                         default=None, help="Anatomical template")
     parser.add_argument("-priors", dest="priors", type=str, nargs='+',
                         default=None, help="Tissues probability maps")
+    parser.add_argument("-params", dest="params_file", type=str,
+                        help="Parameters json file", required=False)
+
     args = parser.parse_args()
 
-    if args.template is None and args.priors is None:
-        inia_dir = load_test_data("inia19", path_to=my_path)
-        args.template = op.join(inia_dir, "inia19-t1-brain.nii")
-        args.priors = [
-            op.join(inia_dir, "inia19-prob_1.nii"),
-            op.join(inia_dir, "inia19-prob_2.nii"),
-            op.join(inia_dir, "inia19-prob_0.nii")
-        ]
-    
-    main(
+    # main_workflow
+    print("Initialising the pipeline...")
+    wf = create_main_workflow(
         data_path=args.data,
         main_path=args.out,
-        subjects=args.subjects,
+        subject_ids=args.subjects,
         sessions=args.ses,
         acquisitions=args.acq,
         template=args.template,
-        priors=args.priors if len(args.priors) > 1 else args.priors[0]
+        priors=args.priors,
+        params_file=args.params_file
     )
+    # wf.write_graph(graph2use="colored")
+    wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+    print('The PNH segmentation pipeline is ready')
 
+    print("Start to process")
+    wf.run()
+    # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})

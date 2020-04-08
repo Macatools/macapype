@@ -7,8 +7,30 @@ import nipype.interfaces.ants as ants
 from macapype.utils.misc import print_val
 
 
-def create_correct_bias_pipe(sigma, name="correct_bias_pipe"):
+def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
+    """
+    Description: Correct bias using T1 and T2 images
+        Same as bash_regis.T1xT2BiasFieldCorrection
 
+    Inputs:
+
+        inputnode:
+            preproc_T1: preprocessed T1 file name
+            preproc_T2: preprocessed T2 file name
+
+        arguments:
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "correct_bias_pipe")
+
+    Outputs:
+
+        restore_T1.out_file:
+            T1 after bias correction
+
+        restore_T2.out_file
+            T2 after bias correction
+    """
     # creating pipeline
     correct_bias_pipe = pe.Workflow(name=name)
 
@@ -42,12 +64,22 @@ def create_correct_bias_pipe(sigma, name="correct_bias_pipe"):
                               norm_mult, 'operand_value')
 
     # smooth
+    if "smooth" in params.keys():
+        sigma = params["smooth"]["sigma"]
+    else:
+        sigma = 2
+
     smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
     smooth.inputs.args = "-bin -s {}".format(sigma)
 
     correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
+    if "norm_smooth" in params.keys():
+        sigma = params["norm_smooth"]["sigma"]
+    else:
+        sigma = 2
+
     norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
     norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
 
@@ -139,7 +171,40 @@ def create_correct_bias_pipe(sigma, name="correct_bias_pipe"):
     return correct_bias_pipe
 
 
-def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
+def create_masked_correct_bias_pipe(params={},
+                                    name="masked_correct_bias_pipe"):
+    """
+    Description: Correct bias using T1 and T2 images in a mask
+        Same as bash_regis.T1xT2BiasFieldCorrection
+
+    Inputs:
+
+        inputnode:
+            preproc_T1: preprocessed T1 file name
+
+            preproc_T2: preprocessed T2 file name
+
+            brain_mask: brain mask where operation will be applied
+
+        arguments:
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "masked_correct_bias_pipe")
+
+    Outputs:
+
+        restore_T1.out_file:
+            T1 after bias correction
+
+        restore_T2.out_file
+            T2 after bias correction
+
+        restore_mask_T1.out_file:
+            Masked T1 after bias correction
+
+        restore_mask_T2.out_file:
+            Masked T2 after bias correction
+    """
 
     # creating pipeline
     masked_correct_bias_pipe = pe.Workflow(name=name)
@@ -186,6 +251,11 @@ def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
                                      norm_mult, 'operand_value')
 
     # smooth
+    if "smooth" in params.keys():
+        sigma = params["smooth"]["sigma"]
+    else:
+        sigma = 2
+
     smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
     smooth.inputs.args = "-bin -s {}".format(sigma)
 
@@ -193,6 +263,11 @@ def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
                                      smooth, 'in_file')
 
     # norm_smooth
+    if "norm_smooth" in params.keys():
+        sigma = params["norm_smooth"]["sigma"]
+    else:
+        sigma = 2
+
     norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
     norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
 
@@ -326,7 +401,9 @@ def create_masked_correct_bias_pipe(sigma, name="masked_correct_bias_pipe"):
 
 ###############################################################################
 def create_debias_N4_pipe(name="debias_N4_pipe"):
-
+    """
+    Description: Only apply ants N4BiasFieldCorrection, check where is used?
+    """
     # creating pipeline
     debias_N4_pipe = pe.Workflow(name=name)
 

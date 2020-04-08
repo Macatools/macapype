@@ -6,17 +6,40 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 import nipype.interfaces.afni as afni
 
-from ..nodes.segment import AtroposN4
-
-# from ..nodes.binary_fill_holes import apply_binary_fill_holes_dirty
-from ..nodes.binary_fill_holes import BinaryFillHoles
+from ..nodes.segment import AtroposN4, BinaryFillHoles
 
 from ..utils.misc import get_elem, merge_3_elem_to_list
 
 
-def create_segment_atropos_pipe(dimension, numberOfClasses,
-                                name="segment_atropos_pipe"):
+def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
+    """
+    Description: Segmentation with ANTS atropos script
 
+    Inputs:
+
+        inputnode:
+            brain_file: T1 image, after extraction and norm bin_norm_intensity
+
+            gm_prior_file: grey matter tissue intensity file
+
+            wm_prior_file: white matter tissue intensity file
+
+            csf_prior_file: csf tissue intensity file
+
+        arguments:
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "segment_atropos_pipe")
+
+    Outputs:
+
+        threshold_csf.out_file:
+            csf tissue intensity mask in subject space
+        threshold_gm.out_file:
+            grey matter tissue intensity mask in subject space
+        threshold_wm.out_file:
+            white matter tissue intensity mask in subject space
+    """
     # creating pipeline
     segment_pipe = pe.Workflow(name=name)
 
@@ -52,6 +75,13 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     segment_pipe.connect(inputnode, 'wm_prior_file', merge_3_elem, "elem3")
 
     # Atropos
+    if "Atropos" in params.keys():
+        dimension = params["Atropos"]["dimension"]
+        numberOfClasses = params["Atropos"]["numberOfClasses"]
+    else:
+        dimension = 3
+        numberOfClasses = 3
+
     seg_at = pe.Node(AtroposN4(), name='seg_at')
 
     seg_at.inputs.dimension = dimension
@@ -77,23 +107,36 @@ def create_segment_atropos_pipe(dimension, numberOfClasses,
     return segment_pipe
 
 
-def create_old_segment_extraction_pipe(priors,
-                                       name="old_segment_extraction_pipe"):
-    """ Extract brain using tissues masks output by SPM's old_segment function
+def create_old_segment_pipe(priors, params={}, name="old_segment_pipe"):
+    """
+    Description: Extract brain using tissues masks output by SPM's old_segment
+        function:
 
-    1 - Segment the T1 using given priors;
-    2 - Threshold GM, WM and CSF maps;
-    3 - Compute union of those 3 tissues;
-    4 - Apply morphological opening on the union mask
-    5 - Fill holes
+        - Segment the T1 using given priors;
+        - Threshold GM, WM and CSF maps;
+        - Compute union of those 3 tissues;
+        - Apply morphological opening on the union mask
+        - Fill holes
 
-    Inputs
-    ======
-    T1: T1 file name
-    seg_priors: list of file names
+    Inputs:
 
-    Outputs
-    --------
+        inputnode:
+            T1: T1 file name
+
+        arguments:
+            priors: list of file names
+
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "old_segment_pipe")
+
+    Outputs:
+
+        fill_holes.out_file:
+            filled mask after erode
+
+        fill_holes_dil.out_file
+            filled mask after dilate
 
     """
     # creating pipeline
@@ -106,18 +149,34 @@ def create_old_segment_extraction_pipe(priors,
     )
 
     # Segment in to 6 tissues
+    if "segment" in params.keys():
+        gm_output_type = params["segment"]["gm_output_type"]
+        wm_output_type = params["segment"]["wm_output_type"]
+        csf_output_type = params["segment"]["csf_output_type"]
+    else:
+        gm_output_type = [False, False, True]
+        wm_output_type = [False, False, True]
+        csf_output_type = [False, False, True]
+
     segment = pe.Node(spm.Segment(), name="old_segment")
-    segment.inputs.gm_output_type = [False, False, True]
-    segment.inputs.wm_output_type = [False, False, True]
-    segment.inputs.csf_output_type = [False, False, True]
+    segment.inputs.gm_output_type = gm_output_type
+    segment.inputs.wm_output_type = wm_output_type
+    segment.inputs.csf_output_type = csf_output_type
     segment.tissue_prob_maps = priors
     be_pipe.connect(inputnode, 'T1', segment, 'data')
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
     for tissue in ['gm', 'wm', 'csf']:
+
+        if "threshold_" + tissue in params.keys():
+            thresh = params["threshold_" + tissue]["thresh"]
+        else:
+            thresh = 0.05
+
         tmp_node = pe.Node(fsl.Threshold(), name="threshold_" + tissue)
-        tmp_node.inputs.thresh = 0.05
+        tmp_node.inputs.thresh = thresh
+
         be_pipe.connect(
             segment, 'native_' + tissue + '_image',
             tmp_node, 'in_file'
@@ -138,8 +197,14 @@ def create_old_segment_extraction_pipe(priors,
                     tissues_union, 'operand_file')
 
     # Opening
-    opening_shape = "sphere"
-    opening_size = 2
+    if "dilate_mask" in params.keys():
+        opening_shape = params["dilate_mask"]["opening_shape"]
+        opening_size = params["dilate_mask"]["opening_size"]
+
+    else:
+        opening_shape = "sphere"
+        opening_size = 2
+
     dilate_mask = pe.Node(fsl.DilateImage(), name="dilate_mask")
     # Arbitrary operation
     dilate_mask.inputs.operation = "mean"
@@ -147,21 +212,25 @@ def create_old_segment_extraction_pipe(priors,
     dilate_mask.inputs.kernel_size = opening_size
     be_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
 
+    # Eroding
+    if "erode_mask" in params.keys():
+        opening_shape = params["erode_mask"]["opening_shape"]
+        opening_size = params["erode_mask"]["opening_size"]
+
+    else:
+        opening_shape = "sphere"
+        opening_size = 2
+
     erode_mask = pe.Node(fsl.ErodeImage(), name="erode_mask")
     erode_mask.inputs.kernel_shape = opening_shape
     erode_mask.inputs.kernel_size = opening_size
     be_pipe.connect(dilate_mask, 'out_file', erode_mask, 'in_file')
 
-    # # Holes filling on open image
-    # fill_holes = pe.Node(fsl.BinaryMaths(), name="fill_holes")
-    # be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
-    #
-    # fill_holes_dil = pe.Node(fsl.BinaryMaths(), name="fill_holes_dil")
-    # be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
-
+    # fill holes of erode_mask
     fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
     be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
+    # fill holes of dilate_mask
     fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
     be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
 
