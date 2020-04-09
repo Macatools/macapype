@@ -125,7 +125,7 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
-def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
+def create_register_NMT_pipe(params_template, params={}, name="register_NMT_pipe"):
     """
     Description: Register template to anat with the script NMT_subject_align,
         and then apply it to tissues list_priors
@@ -136,7 +136,7 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
             T1: T1 file name
 
         arguments:
-            nmt_dir: path to NMT template
+            params_template: dictionary of info about template
 
             params: dictionary of node sub-parameters (from a json file)
 
@@ -166,7 +166,6 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
         dimension = params["norm_intensity"]["dimension"]
         bspline_fitting_distance = \
             params["norm_intensity"]["bspline_fitting_distance"]
-
         n_iterations = params["norm_intensity"]["n_iterations"]
         convergence_threshold = \
             params["norm_intensity"]["convergence_threshold"]
@@ -179,7 +178,7 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
         n_iterations = [50, 50, 40, 30]
         convergence_threshold = 0.00000001
         shrink_factor = 2
-        args = "r 0 --verbose 1"
+        args = "-r 0 --verbose 1"
 
     norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
                              name='norm_intensity')
@@ -199,23 +198,12 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               NMT_subject_align, "T1_file")
 
-    NMT_subject_align.inputs.NMT_SS_file = os.path.join(nmt_dir,
-                                                        "NMT_SS.nii.gz")
-    NMT_subject_align.inputs.script_file = os.path.join(
-        nmt_dir, "NMT_subject_align.csh")
+    NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
+
 
     # align_masks
     # "overwrap" of NwarpApply, with specifying the outputs as wished
-    p_dir = os.path.join(nmt_dir, "masks", "probabilisitic_segmentation_masks")
-
-    list_priors = [
-        os.path.join(nmt_dir, "NMT.nii.gz"),
-        os.path.join(p_dir, "NMT_brainmask_prob.nii.gz"),
-        os.path.join(nmt_dir, "masks", "anatomical_masks",
-                     "NMT_brainmask.nii.gz"),
-        os.path.join(p_dir, "NMT_segmentation_CSF.nii.gz"),
-        os.path.join(p_dir, "NMT_segmentation_GM.nii.gz"),
-        os.path.join(p_dir, "NMT_segmentation_WM.nii.gz")]
+    list_priors = [params_template["template_head"], params_template["template_csf"], params_template["template_gm"], params_template["template_wm"]]
 
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors
@@ -235,7 +223,7 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
     align_NMT.inputs.overwrite = True
     align_NMT.inputs.outputtype = "NIFTI_GZ"
 
-    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 0),
                               align_NMT, "in_file")  # -source
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               align_NMT, "reference")  # -base
@@ -249,7 +237,7 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
     align_seg_csf.inputs.overwrite = True
     align_seg_csf.inputs.outputtype = "NIFTI_GZ"
 
-    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 3),
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
                               align_seg_csf, "in_file")  # -source
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               align_seg_csf, "reference")  # -base
@@ -263,7 +251,7 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
     align_seg_gm.inputs.overwrite = True
     align_seg_gm.inputs.outputtype = "NIFTI_GZ"
 
-    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 4),
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 2),
                               align_seg_gm, "in_file")  # -source
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               align_seg_gm, "reference")  # -base
@@ -277,7 +265,7 @@ def create_register_NMT_pipe(nmt_dir, params={}, name="register_NMT_pipe"):
     align_seg_wm.inputs.overwrite = True
     align_seg_wm.inputs.outputtype = "NIFTI_GZ"
 
-    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 5),
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 3),
                               align_seg_wm, "in_file")  # -source
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               align_seg_wm, "reference")  # -base

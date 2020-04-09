@@ -13,7 +13,7 @@ import nipype.interfaces.afni as afni
 from ..nodes.extract_brain import AtlasBREX
 
 
-def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir, params={},
+def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex
@@ -26,9 +26,7 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir, params={},
             restore_T1: preprocessed (debiased/denoised)T2 file name
 
         arguments:
-            atlasbrex_dir: path to atlasbrex script
-
-            nmt_dir: path to NMT template
+            params_template: dictionary of info about template
 
             params: dictionary of node sub-parameters (from a json file)
 
@@ -53,28 +51,28 @@ def create_brain_extraction_pipe(atlasbrex_dir, nmt_dir, params={},
     if "atlas_brex" in params.keys():
         f = params["atlas_brex"]["f"]
         reg = params["atlas_brex"]["reg"]
-        w = params["atlas_brex"]["w"]
+        wrp = params["atlas_brex"]["wrp"]
         msk = params["atlas_brex"]["msk"]
+        #wrp = params["atlas_brex"]["wrp"]
     else:
         f = 0.5
         reg = 1
-        w = "10,10,10"
+        wrp = "10,10,10"
         msk = "a,0,0"
+        #wrp = "1"
 
     atlas_brex = pe.Node(AtlasBREX(), name='atlas_brex')
 
     brain_extraction_pipe.connect(inputnode, "restore_T1",
                                   atlas_brex, 't1_restored_file')
 
-    script_atlas_BREX = op.join(atlasbrex_dir, "atlasBREX.sh")
-
-    atlas_brex.inputs.script_atlas_BREX = script_atlas_BREX
-    atlas_brex.inputs.NMT_file = op.join(nmt_dir, "NMT.nii.gz")
-    atlas_brex.inputs.NMT_SS_file = op.join(nmt_dir, "NMT_SS.nii.gz")
+    atlas_brex.inputs.NMT_file = params_template["template_head"]
+    atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]
     atlas_brex.inputs.f = f
     atlas_brex.inputs.reg = reg
-    atlas_brex.inputs.w = w
+    atlas_brex.inputs.wrp = wrp
     atlas_brex.inputs.msk = msk
+    #atlas_brex.inputs.wrp = wrp
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')

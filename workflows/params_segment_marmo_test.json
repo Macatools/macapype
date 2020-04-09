@@ -1,11 +1,11 @@
 {
     "preproc_pipe":
     {
-        "crop_align":
+        "crop":
         {
-            "m": true,
+            "croplist": "88 175 88 239 284 127",
             "aT2": true,
-            "c": 10,
+            "c": 1,
             "n": 2
         }
     },
@@ -28,9 +28,9 @@
         "atlas_brex":
         {
             "f": 0.5,
-            "reg": 1,
-            "w": "10,10,10",
-            "msk": "a,0,0"
+            "reg": 2,
+            "msk": "a,0,0",
+            "wrp": "1"
         }
     },
     "brain_segment_pipe":
@@ -48,16 +48,15 @@
         },
         "register_NMT_pipe":
         {
-            "norm_internsity":
+            "norm_intensity":
             {
                 "dimension": 3,
                 "bspline_fitting_distance": 200,
                 "n_iterations": [50, 50, 40, 30],
                 "convergence_threshold": 0.00000001,
                 "shrink_factor": 2,
-                "args": "r 0 --verbose 1"
+                "args": "-r 0 --verbose 1"
             }
-
         },
         "segment_atropos_pipe":
         {

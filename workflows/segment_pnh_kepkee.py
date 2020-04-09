@@ -61,11 +61,6 @@ from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 from macapype.utils.utils_bids import create_datasource
 from macapype.utils.utils_tests import load_test_data
 
-my_path = "/hpc/crise/meunier.d"
-
-nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
-atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
-
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file):
@@ -94,6 +89,19 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
 
     print(params)
     pprint.pprint(params)
+
+    if "general" in params.key() and "my_path" in params["general"].keys():
+        my_path = params["general"]["my_path"]
+    else:
+        my_path = "/hpc/crise/meunier.d"
+
+    0/0
+    nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
+
+    params_template = _format_template(nmt_dir, 'NMT_v1.2')
+    print (params_template)
+
+    atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
     segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir, params)
 

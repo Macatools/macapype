@@ -8,10 +8,15 @@ from nipype.interfaces.base import traits, File
 # AtlasBREX
 class AtlasBREXInputSpec(CommandLineInputSpec):
 
-    script_atlas_BREX = File(
+    import os
+
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+
+    script_atlas_BREX = File('{}/../bash/atlasBREX.sh'.format(
+            package_directory), usedefault = True,
         exists=True,
         desc='atlasBREX script',
-        mandatory=True, position=0, argstr="%s")
+        mandatory=False, position=0, argstr="%s")
 
     NMT_SS_file = File(
         exists=True,
@@ -32,16 +37,16 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
         0.5, usedefault=True, desc='f', position=4, argstr="-f %f",
         mandatory=True)
 
+    wrp = traits.String(
+        "10,10,10", usedefault=True, desc="wrp", position=5, argstr="-wrp %s",
+        mandatory=True)
+
     reg = traits.Enum(
         1, 0, 2, 3, usedefault=True, desc="Method: 0 = FNIRT w/ bending, \
             1 (default) = FNIRT membrane-energy regularization, \
             2 = ANTs/SyN w/, \
             3 = w/o N4Bias",
-        position=5, argstr="-reg %d", mandatory=True)
-
-    w = traits.String(
-        "10,10,10", usedefault=True, desc="w", position=6, argstr="-w %s",
-        mandatory=True)
+        position=6, argstr="-reg %d", mandatory=True)
 
     msk = traits.String(
         "a,0,0", usedefault=True, desc="msk", position=7, argstr="-msk %s",
