@@ -270,6 +270,7 @@ def create_full_segment_pnh_subpipes(
 
         arguments:
             nmt_dir: directory to NMT atlas
+            atlasbrex_dir: path to atlasbrex script
             params: dictionary of node sub-parameters (from a json file)
             name: pipeline name (default = "full_segment_pipe")
 
