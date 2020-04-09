@@ -112,8 +112,7 @@
 <span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">merge_3_elem_to_list</span>
 
 
-<div class="viewcode-block" id="create_segment_atropos_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_segment_atropos_pipe</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{},</span>
-                                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_segment_atropos_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_segment_atropos_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Segmentation with ANTS atropos script</span>
 
@@ -181,8 +180,8 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">][</span><span class="s2">&quot;dimension&quot;</span><span class="p">]</span>
         <span class="n">numberOfClasses</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">][</span><span class="s2">&quot;numberOfClasses&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">dimension</span><span class="o">=</span><span class="mi">3</span>
-        <span class="n">numberOfClasses</span><span class="o">=</span><span class="mi">3</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">numberOfClasses</span> <span class="o">=</span> <span class="mi">3</span>
 
     <span class="n">seg_at</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">AtroposN4</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;seg_at&#39;</span><span class="p">)</span>
 
@@ -209,7 +208,7 @@
     <span class="k">return</span> <span class="n">segment_pipe</span></div>
 
 
-<div class="viewcode-block" id="create_old_segment_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_old_segment_pipe</span><span class="p">(</span><span class="n">priors</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_old_segment_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_old_segment_pipe</span><span class="p">(</span><span class="n">priors</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Extract brain using tissues masks output by SPM&#39;s old_segment</span>
 <span class="sd">        function:</span>
@@ -298,7 +297,6 @@
     <span class="n">be_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s1">&#39;csf&#39;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                     <span class="n">tissues_union</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
 
-
     <span class="c1"># Opening</span>
     <span class="k">if</span> <span class="s2">&quot;dilate_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">opening_shape</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_shape&quot;</span><span class="p">]</span>
@@ -351,7 +349,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -193,7 +193,7 @@
     <span class="n">p</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span>
         <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Prefix for running FSL functions</span><span class="se">\</span>
 <span class="s2">              (can be a path or just a prefix)&quot;</span><span class="p">,</span>
-        <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-p </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-p </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">T1xT2BETOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
@@ -234,25 +234,26 @@
 <span class="sd">            os</span>
 <span class="sd">                Suffix for the brain masked images (default is _BET)</span>
 <span class="sd">            aT2</span>
-<span class="sd">                Will coregrister T2w to T1w using flirt. Output will have the\</span>
-<span class="sd">                    suffix provided. Will only work for spatially close images.</span>
+<span class="sd">                Will coregrister T2w to T1w using flirt. Output will have the</span>
+<span class="sd">                suffix provided. Will only work for spatially close images.</span>
 <span class="sd">            opt_as</span>
-<span class="sd">                Suffix for T2w to T1w registration (\&quot;-in-T1w\&quot; if not specified)</span>
+<span class="sd">                Suffix for T2w to T1w registration (\&quot;-in-T1w\&quot; if not</span>
+<span class="sd">                specified)</span>
 <span class="sd">            n</span>
-<span class="sd">                n = the number of iterations BET will be run to find center of \</span>
-<span class="sd">                    gravity (n=1 if option -n is absent)</span>
+<span class="sd">                n = the number of iterations BET will be run to find center of</span>
+<span class="sd">                gravity (n=1 if option -n is absent)</span>
 <span class="sd">            m</span>
-<span class="sd">                Will output the BET mask at the format \</span>
-<span class="sd">                    output_prefixT1_mask.nii.gz)</span>
+<span class="sd">                Will output the BET mask at the format</span>
+<span class="sd">                output_prefixT1_mask.nii.gz)</span>
 <span class="sd">            ms</span>
 <span class="sd">                Suffix for the mask (default is _mask)</span>
 <span class="sd">            c</span>
-<span class="sd">                Will crop the inputs &amp; outputs after brain extraction. c is the \</span>
-<span class="sd">                space between the brain and the limits of the crop box expressed \</span>
-<span class="sd">                in percentage of the brain size (eg. if the brain size is 200\</span>
-<span class="sd">                voxels in one dimension and c=10: the sides of the brain in this \</span>
-<span class="sd">                dimension will be 20 voxels away from the borders of the resulting\</span>
-<span class="sd">                crop box in this dimension)</span>
+<span class="sd">                Will crop the inputs &amp; outputs after brain extraction. c is the</span>
+<span class="sd">                space between the brain and the limits of the crop box</span>
+<span class="sd">                expressed in percentage of the brain size (eg. if the brain</span>
+<span class="sd">                size is 200 voxels in one dimension and c=10: the sides of the</span>
+<span class="sd">                brain in this dimension will be 20 voxels away from the borders</span>
+<span class="sd">                of the resulting crop box in this dimension)</span>
 <span class="sd">            cs</span>
 <span class="sd">                Suffix for the cropped images (default is _cropped)</span>
 <span class="sd">            f</span>
@@ -269,7 +270,8 @@
 <span class="sd">            k</span>
 <span class="sd">                Will keep temporary files</span>
 <span class="sd">            p</span>
-<span class="sd">                Prefix for running FSL functions (can be a path or just a prefix)</span>
+<span class="sd">                Prefix for running FSL functions (can be a path or just a</span>
+<span class="sd">                prefix)</span>
 
 <span class="sd">    Outputs:</span>
 
@@ -426,7 +428,7 @@
     <span class="n">p</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span>
         <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Prefix for running FSL functions</span><span class="se">\</span>
 <span class="s2">              (can be a path or just a prefix)&quot;</span><span class="p">,</span>
-        <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-p </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-p </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">T1xT2BiasFieldCorrectionOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
@@ -463,12 +465,14 @@
 <span class="sd">            t1_file</span>
 <span class="sd">                Whole-head T1w image</span>
 <span class="sd">            t2_file</span>
-<span class="sd">                Whole-head T2w image (use -aT2 if T2w image is not in the T1w space)</span>
+<span class="sd">                Whole-head T2w image (use -aT2 if T2w image is not in the T1w</span>
+<span class="sd">                space)</span>
 
 <span class="sd">        Optional:</span>
 
 <span class="sd">            os</span>
-<span class="sd">                Suffix for the bias field corrected images (default is &quot;_debiased&quot;)</span>
+<span class="sd">                Suffix for the bias field corrected images (default is</span>
+<span class="sd">                &quot;_debiased&quot;)</span>
 <span class="sd">            aT2</span>
 <span class="sd">                Will coregrister T2w to T1w using flirt. Output will have the\</span>
 <span class="sd">                    suffix provided. Will only work for spatially close images.</span>
@@ -481,19 +485,21 @@
 <span class="sd">                Brain mask file. Will also output bias corrected brain files \</span>
 <span class="sd">                    with the format &quot;output_prefix_brain.nii.gz&quot;</span>
 <span class="sd">            bet</span>
-<span class="sd">                Will try to &quot;smart&quot; BET the anat files to get a brain mask: n =\</span>
-<span class="sd">                    the number of iterations BET will be run to find center of gravity\</span>
-<span class="sd">                    (default=0, will not BET if option -b has been specified).</span>
+<span class="sd">                Will try to &quot;smart&quot; BET the anat files to get a brain mask:</span>
+<span class="sd">                n = the number of iterations BET will be run to find center of</span>
+<span class="sd">                gravity (default=0, will not BET if option -b has been</span>
+<span class="sd">                specified).</span>
 <span class="sd">            bs</span>
 <span class="sd">                Suffix for the BET masked images (default is &quot;_BET&quot;)</span>
 <span class="sd">            f</span>
 <span class="sd">                -f options of BET: fractional intensity threshold (0-&gt;1); \</span>
-<span class="sd">                    default=0.5; smaller values give larger brain outline estimates</span>
+<span class="sd">                    default=0.5; smaller values give larger brain outline</span>
+<span class="sd">                    estimates</span>
 <span class="sd">            g</span>
 <span class="sd">                -g options of BET:\</span>
-<span class="sd">                        vertical gradient in fractional intensity threshold (-1-&gt;1);\</span>
-<span class="sd">                        default=0; positive values give larger brain outline at\</span>
-<span class="sd">                        bottom, smaller at top</span>
+<span class="sd">                        vertical gradient in fractional intensity threshold</span>
+<span class="sd">                        (-1-&gt;1); default=0; positive values give larger brain</span>
+<span class="sd">                        outline at bottom, smaller at top</span>
 <span class="sd">            k</span>
 <span class="sd">                Will keep temporary files</span>
 <span class="sd">            p</span>
@@ -594,7 +600,7 @@
 <span class="s1">            12=affine (default)). Use dof 6 for intra-subject, 12 for </span><span class="se">\</span>
 <span class="s1">            inter-subject registration&#39;</span><span class="p">,</span>
         <span class="n">argstr</span><span class="o">=</span><span class="s1">&#39;-dof </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">cost</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span>
         <span class="s1">&#39;normmi&#39;</span><span class="p">,</span> <span class="s1">&#39;leastsq&#39;</span><span class="p">,</span> <span class="s1">&#39;labeldiff&#39;</span><span class="p">,</span> <span class="s1">&#39;bbr&#39;</span><span class="p">,</span> <span class="s1">&#39;mutualinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;corratio&#39;</span><span class="p">,</span>
@@ -602,7 +608,7 @@
         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,</span><span class="se">\</span>
 <span class="s1">            labeldiff,bbr}    (default is normmi)&#39;</span><span class="p">,</span>
         <span class="n">argstr</span><span class="o">=</span><span class="s1">&#39;-cost </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># how to assert minimal value in traits def? is now in _parse_args</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
@@ -620,7 +626,7 @@
 <span class="s1">            (use if your input brain is too big)</span><span class="se">\</span>
 <span class="s1">            - a mix between union &amp; intersection, m=mix (give it a try!)&#39;</span><span class="p">,</span>
         <span class="n">argstr</span><span class="o">=</span><span class="s1">&#39;-m </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">refw_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
         <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -712,7 +718,8 @@
 <span class="sd">            k</span>
 <span class="sd">                Will keep temporary files</span>
 <span class="sd">            p</span>
-<span class="sd">                Prefix for running FSL functions (can be a path or just a prefix)</span>
+<span class="sd">                Prefix for running FSL functions (can be a path or just a</span>
+<span class="sd">                prefix)</span>
 
 <span class="sd">    Outputs:</span>
 
@@ -827,8 +834,8 @@
 
 <div class="viewcode-block" id="CropVolume"><a class="viewcode-back" href="../../../generated/macapype.nodes.bash_regis.CropVolume.html#macapype.nodes.bash_regis.CropVolume">[docs]</a><span class="k">class</span> <span class="nc">CropVolume</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Crop image(s) based on a brain extraction. Multiple images can be \</span>
-<span class="sd">        cropped at once. Will crop each volume preceeded by the -i option</span>
+<span class="sd">    Description: Crop image(s) based on a brain extraction. Multiple images</span>
+<span class="sd">    can be cropped at once. Will crop each volume preceeded by the -i option</span>
 
 <span class="sd">    Inputs:</span>
 
@@ -842,20 +849,21 @@
 <span class="sd">        Optional:</span>
 
 <span class="sd">            o</span>
-<span class="sd">                Prefix for the cropped image(s) (Must provide as many prefixes\</span>
-<span class="sd">                    as input images with -o, default is the base name of each input \</span>
-<span class="sd">                    image).</span>
+<span class="sd">                Prefix for the cropped image(s) (Must provide as many prefixes</span>
+<span class="sd">                    as input images with -o, default is the base name of each</span>
+<span class="sd">                    input image).</span>
 <span class="sd">            s</span>
 <span class="sd">                Suffix for the cropped image(s) (default is &quot;_cropped&quot;)</span>
 <span class="sd">            c</span>
 <span class="sd">                c is the space between the brain and the limits of\</span>
-<span class="sd">                    the crop box expressed in percentage of the brain size (eg. if the\</span>
-<span class="sd">                    brain size is 200 voxels in one dimension and c=10: the sides of\</span>
-<span class="sd">                    the brain in this dimension will be 20 voxels away from the\</span>
-<span class="sd">                    borders of the resulting crop box in this dimension). \</span>
-<span class="sd">                    Default: c=10</span>
+<span class="sd">                    the crop box expressed in percentage of the brain size (eg.</span>
+<span class="sd">                    if the brain size is 200 voxels in one dimension and c=10:</span>
+<span class="sd">                    the sides of the brain in this dimension will be 20 voxels</span>
+<span class="sd">                    away from the  borders of the resulting crop box in this</span>
+<span class="sd">                    dimension). Default: c=10</span>
 <span class="sd">            p</span>
-<span class="sd">                Prefix for running FSL functions (can be a path or just a prefix)</span>
+<span class="sd">                Prefix for running FSL functions (can be a path or just a</span>
+<span class="sd">                prefix)</span>
 
 <span class="sd">    Outputs:</span>
 
@@ -898,7 +906,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

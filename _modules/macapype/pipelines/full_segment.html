@@ -123,7 +123,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="create_full_segment_pnh_T1xT2"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2.html#macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pnh_T1xT2</span><span class="p">(</span><span class="n">brain_template</span><span class="p">,</span> <span class="n">priors</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span>
+<div class="viewcode-block" id="create_full_segment_pnh_T1xT2"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2.html#macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pnh_T1xT2</span><span class="p">(</span><span class="n">brain_template</span><span class="p">,</span> <span class="n">priors</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;T1xT2_segmentation_pipeline&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Description: Regis T1xT2 pipeline</span>
 
@@ -174,21 +174,21 @@
 
     <span class="c1"># Brain extraction + Cropping</span>
     <span class="k">if</span> <span class="s2">&quot;bet&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">m</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;m&quot;</span><span class="p">]</span>
-        <span class="n">aT2</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;aT2&quot;</span><span class="p">]</span>
-        <span class="n">c</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;c&quot;</span><span class="p">]</span>
-        <span class="n">n</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;n&quot;</span><span class="p">]</span>
-        <span class="n">f</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
-        <span class="n">g</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;g&quot;</span><span class="p">]</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;m&quot;</span><span class="p">]</span>
+        <span class="n">aT2</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;aT2&quot;</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;c&quot;</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;n&quot;</span><span class="p">]</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bet&quot;</span><span class="p">][</span><span class="s2">&quot;g&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">m</span><span class="o">=</span><span class="kc">True</span>
-        <span class="n">aT2</span><span class="o">=</span><span class="kc">True</span>
-        <span class="n">c</span><span class="o">=</span><span class="mi">10</span>
-        <span class="n">n</span><span class="o">=</span><span class="mi">2</span>
-        <span class="n">f</span><span class="o">=</span><span class="mf">0.0</span>
-        <span class="n">g</span><span class="o">=</span><span class="mf">0.5</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">aT2</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="mf">0.5</span>
 
-    <span class="n">bet</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">T1xT2BET</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">aT2</span><span class="o">=</span><span class="n">aT2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bet&#39;</span><span class="p">)</span>
+    <span class="n">bet</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">T1xT2BET</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">aT2</span><span class="o">=</span><span class="n">aT2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="n">g</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bet&#39;</span><span class="p">)</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="n">average_align</span><span class="p">),</span> <span class="n">bet</span><span class="p">,</span> <span class="s1">&#39;t1_file&#39;</span><span class="p">)</span>
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;T2&#39;</span><span class="p">,</span> <span class="n">average_align</span><span class="p">),</span> <span class="n">bet</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
@@ -212,7 +212,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;ref&quot;</span>
-        <span class="n">dof</span><span class="o">=</span> <span class="mi">12</span>
+        <span class="n">dof</span> <span class="o">=</span> <span class="mi">12</span>
 
     <span class="n">reg</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IterREGBET</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">dof</span><span class="o">=</span><span class="n">dof</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reg&#39;</span><span class="p">)</span>
     <span class="n">reg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refb_file</span> <span class="o">=</span> <span class="n">brain_template</span>
@@ -226,10 +226,10 @@
     <span class="k">if</span> <span class="s2">&quot;old_segment_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">params_old_segment_pipe</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">params_old_segment_pipe</span><span class="o">=</span><span class="p">{}</span>
+        <span class="n">params_old_segment_pipe</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">old_segment_pipe</span> <span class="o">=</span> <span class="n">create_old_segment_pipe</span><span class="p">(</span>
-        <span class="n">priors</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">params_old_segment_pipe</span><span class="p">)</span>
+        <span class="n">priors</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params_old_segment_pipe</span><span class="p">)</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;warp_file&#39;</span><span class="p">,</span> <span class="n">gunzip</span><span class="p">),</span>
                      <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.T1&#39;</span><span class="p">)</span>
@@ -240,7 +240,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1"># Kepkee</span>
 <div class="viewcode-block" id="create_full_segment_from_mask_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_from_mask_pipe.html#macapype.pipelines.full_segment.create_full_segment_from_mask_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_from_mask_pipe</span><span class="p">(</span>
-        <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pipe&quot;</span><span class="p">):</span>
+        <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Description: Segment T1 (using T2 for bias correction) and a previously</span>
 <span class="sd">        computed mask with NMT Atlas and atropos segment.</span>
 
@@ -344,7 +344,8 @@
 
 <span class="c1"># first step for a mask and then call create_full_segment_from_mask_pipe</span>
 <div class="viewcode-block" id="create_full_segment_pnh_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_segment.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_segment.create_full_segment_pnh_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pnh_subpipes</span><span class="p">(</span>
-        <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">atlasbrex_dir</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_pnh_subpipes&quot;</span><span class="p">):</span>
+        <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">atlasbrex_dir</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_pnh_subpipes&quot;</span><span class="p">,</span>
+        <span class="n">segment</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Segment T1 (using T2 for bias correction) .</span>
 
@@ -370,6 +371,7 @@
 
 <span class="sd">        arguments:</span>
 <span class="sd">            nmt_dir: directory to NMT atlas</span>
+<span class="sd">            atlasbrex_dir: path to atlasbrex script</span>
 <span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
 <span class="sd">            name: pipeline name (default = &quot;full_segment_pipe&quot;)</span>
 
@@ -386,28 +388,30 @@
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;preproc&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-         <span class="n">m</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;m&quot;</span><span class="p">]</span>
-         <span class="n">aT2</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;aT2&quot;</span><span class="p">]</span>
-         <span class="n">c</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;c&quot;</span><span class="p">]</span>
-         <span class="n">n</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;n&quot;</span><span class="p">]</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;m&quot;</span><span class="p">]</span>
+        <span class="n">aT2</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;aT2&quot;</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;c&quot;</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;preproc&quot;</span><span class="p">][</span><span class="s2">&quot;n&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">m</span><span class="o">=</span><span class="kc">True</span>
-        <span class="n">at2</span><span class="o">=</span><span class="kc">True</span>
-        <span class="n">c</span><span class="o">=</span><span class="mi">10</span>
-        <span class="n">n</span><span class="o">=</span><span class="mi">2</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">aT2</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
 
     <span class="c1"># Brain extraction (unused) + Cropping</span>
     <span class="n">preproc</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">T1xT2BET</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">aT2</span><span class="o">=</span><span class="n">aT2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;preproc&#39;</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="n">average_align</span><span class="p">),</span> <span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t1_file&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;T2&#39;</span><span class="p">,</span> <span class="n">average_align</span><span class="p">),</span> <span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
+    <span class="c1"># seg_pipe.connect(inputnode, (&#39;T1&#39;, average_align), preproc, &#39;t1_file&#39;)</span>
+    <span class="c1"># seg_pipe.connect(inputnode, (&#39;T2&#39;, average_align), preproc, &#39;t2_file&#39;)</span>
 
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t1_file&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">,</span> <span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># Correct_bias_T1_T2</span>
     <span class="k">if</span> <span class="s2">&quot;correct_bias_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">params_correct_bias_pipe</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">params_correct_bias_pipe</span><span class="o">=</span><span class="p">{}</span>
+        <span class="n">params_correct_bias_pipe</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">correct_bias_pipe</span> <span class="o">=</span> <span class="n">create_correct_bias_pipe</span><span class="p">(</span>
         <span class="n">params</span><span class="o">=</span><span class="n">params_correct_bias_pipe</span><span class="p">)</span>
@@ -417,12 +421,11 @@
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t2_cropped_file&#39;</span><span class="p">,</span>
                      <span class="n">correct_bias_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T2&#39;</span><span class="p">)</span>
 
-
     <span class="c1"># denoising</span>
     <span class="k">if</span> <span class="s2">&quot;denoised_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># so far, unused</span>
         <span class="n">params_denoised_pipe</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;denoised_pipe&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">params_denoised_pipe</span><span class="o">=</span><span class="p">{}</span>
+        <span class="n">params_denoised_pipe</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">denoise_pipe</span> <span class="o">=</span> <span class="n">create_denoised_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">params_denoised_pipe</span><span class="p">)</span>
 
@@ -436,12 +439,11 @@
         <span class="n">params_brain_extraction_pipe</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">]</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">params_brain_extraction_pipe</span><span class="o">=</span><span class="p">{}</span>
-
+        <span class="n">params_brain_extraction_pipe</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">brain_extraction_pipe</span> <span class="o">=</span> <span class="n">create_brain_extraction_pipe</span><span class="p">(</span>
         <span class="n">atlasbrex_dir</span><span class="o">=</span><span class="n">atlasbrex_dir</span><span class="p">,</span> <span class="n">nmt_dir</span><span class="o">=</span><span class="n">nmt_dir</span><span class="p">,</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">params_brain_extraction_pipe</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">params_brain_extraction_pipe</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;devel_atlas_brex&quot;</span><span class="p">)</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_pipe</span><span class="p">,</span> <span class="s1">&#39;denoise_T1.output_image&#39;</span><span class="p">,</span>
@@ -449,24 +451,25 @@
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_pipe</span><span class="p">,</span> <span class="s1">&#39;denoise_T2.output_image&#39;</span><span class="p">,</span>
                      <span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T2&quot;</span><span class="p">)</span>
 
-    <span class="c1"># full_segment (restarting from the avg_align files)</span>
-    <span class="k">if</span> <span class="s2">&quot;brain_segment_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">params_brain_segment_pipe</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">segment</span><span class="p">:</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">params_brain_segment_pipe</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># full_segment (restarting from the avg_align files)</span>
+        <span class="k">if</span> <span class="s2">&quot;brain_segment_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">params_brain_segment_pipe</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">]</span>
 
-    <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">create_full_segment_from_mask_pipe</span><span class="p">(</span>
-        <span class="n">nmt_dir</span><span class="o">=</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">params_brain_segment_pipe</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_devel_NMT_sub_align&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params_brain_segment_pipe</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t1_cropped_file&#39;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t2_cropped_file&#39;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T2&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">create_full_segment_from_mask_pipe</span><span class="p">(</span>
+            <span class="n">nmt_dir</span><span class="o">=</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params_brain_segment_pipe</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_devel_NMT_sub_align&quot;</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_mask&quot;</span><span class="p">)</span>
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t1_cropped_file&#39;</span><span class="p">,</span>
+                         <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc</span><span class="p">,</span> <span class="s1">&#39;t2_cropped_file&#39;</span><span class="p">,</span>
+                         <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T2&#39;</span><span class="p">)</span>
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
+                         <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_mask&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">seg_pipe</span></div>
 </pre></div>
@@ -482,7 +485,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

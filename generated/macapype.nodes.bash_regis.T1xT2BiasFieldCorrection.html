@@ -122,14 +122,16 @@
 <dt>t1_file</dt>
 <dd>Whole-head T1w image</dd>
 <dt>t2_file</dt>
-<dd>Whole-head T2w image (use -aT2 if T2w image is not in the T1w space)</dd>
+<dd>Whole-head T2w image (use -aT2 if T2w image is not in the T1w
+space)</dd>
 </dl>
 </div></blockquote>
 <p>Optional:</p>
 <blockquote>
 <div><dl class="docutils">
 <dt>os</dt>
-<dd>Suffix for the bias field corrected images (default is “_debiased”)</dd>
+<dd>Suffix for the bias field corrected images (default is
+“_debiased”)</dd>
 <dt>aT2</dt>
 <dd>Will coregrister T2w to T1w using flirt. Output will have the                    suffix provided. Will only work for spatially close images.</dd>
 <dt>opt_as</dt>
@@ -139,13 +141,25 @@
 <dt>b</dt>
 <dd>Brain mask file. Will also output bias corrected brain files                     with the format “output_prefix_brain.nii.gz”</dd>
 <dt>bet</dt>
-<dd>Will try to “smart” BET the anat files to get a brain mask: n =                    the number of iterations BET will be run to find center of gravity                    (default=0, will not BET if option -b has been specified).</dd>
+<dd>Will try to “smart” BET the anat files to get a brain mask:
+n = the number of iterations BET will be run to find center of
+gravity (default=0, will not BET if option -b has been
+specified).</dd>
 <dt>bs</dt>
 <dd>Suffix for the BET masked images (default is “_BET”)</dd>
 <dt>f</dt>
-<dd>-f options of BET: fractional intensity threshold (0-&gt;1);                     default=0.5; smaller values give larger brain outline estimates</dd>
+<dd><dl class="first last docutils">
+<dt>-f options of BET: fractional intensity threshold (0-&gt;1);                     default=0.5; smaller values give larger brain outline</dt>
+<dd>estimates</dd>
+</dl>
+</dd>
 <dt>g</dt>
-<dd>-g options of BET:                        vertical gradient in fractional intensity threshold (-1-&gt;1);                        default=0; positive values give larger brain outline at                        bottom, smaller at top</dd>
+<dd><dl class="first last docutils">
+<dt>-g options of BET:                        vertical gradient in fractional intensity threshold</dt>
+<dd>(-1-&gt;1); default=0; positive values give larger brain
+outline at bottom, smaller at top</dd>
+</dl>
+</dd>
 <dt>k</dt>
 <dd>Will keep temporary files</dd>
 <dt>p</dt>
@@ -338,7 +352,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

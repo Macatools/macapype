@@ -108,7 +108,7 @@
 <span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">print_val</span>
 
 
-<div class="viewcode-block" id="create_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Correct bias using T1 and T2 images</span>
 <span class="sd">        Same as bash_regis.T1xT2BiasFieldCorrection</span>
@@ -180,7 +180,6 @@
         <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
-
 
     <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
     <span class="n">norm_smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-s </span><span class="si">{}</span><span class="s2"> -div </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
@@ -273,7 +272,7 @@
     <span class="k">return</span> <span class="n">correct_bias_pipe</span></div>
 
 
-<div class="viewcode-block" id="create_masked_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_masked_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{},</span>
+<div class="viewcode-block" id="create_masked_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_masked_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                                     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Correct bias using T1 and T2 images in a mask</span>
@@ -535,7 +534,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

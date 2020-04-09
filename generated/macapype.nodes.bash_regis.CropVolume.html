@@ -110,7 +110,8 @@
 <dl class="class">
 <dt id="macapype.nodes.bash_regis.CropVolume">
 <em class="property">class </em><code class="descclassname">macapype.nodes.bash_regis.</code><code class="descname">CropVolume</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/bash_regis.html#CropVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.bash_regis.CropVolume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: Crop image(s) based on a brain extraction. Multiple images can be         cropped at once. Will crop each volume preceeded by the -i option</p>
+<dd><p>Description: Crop image(s) based on a brain extraction. Multiple images
+can be cropped at once. Will crop each volume preceeded by the -i option</p>
 <p>Inputs:</p>
 <blockquote>
 <div><p>Mandatory:</p>
@@ -126,13 +127,26 @@
 <blockquote>
 <div><dl class="docutils">
 <dt>o</dt>
-<dd>Prefix for the cropped image(s) (Must provide as many prefixes                    as input images with -o, default is the base name of each input                     image).</dd>
+<dd><dl class="first last docutils">
+<dt>Prefix for the cropped image(s) (Must provide as many prefixes</dt>
+<dd>as input images with -o, default is the base name of each
+input image).</dd>
+</dl>
+</dd>
 <dt>s</dt>
 <dd>Suffix for the cropped image(s) (default is “_cropped”)</dd>
 <dt>c</dt>
-<dd>c is the space between the brain and the limits of                    the crop box expressed in percentage of the brain size (eg. if the                    brain size is 200 voxels in one dimension and c=10: the sides of                    the brain in this dimension will be 20 voxels away from the                    borders of the resulting crop box in this dimension).                     Default: c=10</dd>
+<dd><dl class="first last docutils">
+<dt>c is the space between the brain and the limits of                    the crop box expressed in percentage of the brain size (eg.</dt>
+<dd>if the brain size is 200 voxels in one dimension and c=10:
+the sides of the brain in this dimension will be 20 voxels
+away from the  borders of the resulting crop box in this
+dimension). Default: c=10</dd>
+</dl>
+</dd>
 <dt>p</dt>
-<dd>Prefix for running FSL functions (can be a path or just a prefix)</dd>
+<dd>Prefix for running FSL functions (can be a path or just a
+prefix)</dd>
 </dl>
 </div></blockquote>
 </div></blockquote>
@@ -310,7 +324,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-07.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
