@@ -1,0 +1,37 @@
+{
+    "NMT_v1.2":
+    {
+        "template": "NMT.nii.gz",
+        "template_brain": "NMT_SS.nii.gz",
+
+        "template_gm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_GM.nii.gz",
+        "template_wm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_WM.nii.gz",
+        "template_csf": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz"
+    },
+    "inia19":
+    {
+        "template": "inia19-t1.nii",
+        "template_brain": "inia19-t1-brain.nii",
+
+        "template_gm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz",
+        "template_wm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz",
+        "template_csf": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz"
+    },
+    "The Marmoset MRI Standard Brain":
+    {
+        "template": "Template_head/Template_T1_head.nii",
+        "template_brain": "Template_brain/Template_T1_brain.nii",
+
+        "template_gm": "grey/grey.nii",
+        "template_wm": "white/white.nii",
+        "template_csf": "csf/csf.nii",
+    },
+    "marmotemplate":{
+        "template": "Template_T1.nii.gz",
+        "template_brain": "Template_T1_brain.nii.gz",
+
+        "template_gm": "gm_all.nii.gz",
+        "template_wm": "wm.nii.gz",
+        "template_csf": "csf.nii.gz",
+    }
+}

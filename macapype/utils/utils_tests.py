@@ -11,7 +11,7 @@ def load_test_data(name, path_to=""):
 
     data_dir = {
         "AtlasBREX": "xtffSJfiBqCQZWi",
-        "NMT_v1.2": "8LXLzFAE89x28Lp",
+        "NMT_v1.2": "QBTrmKNDrNs5E49",
         "NMT_FSL": "ajAtB7qgaPAmKyJ",
         "inia19": "WZo9wZdreTMwfQA",
         "data_test_macapype": "Fn8a57PpQWPacZR"
@@ -58,3 +58,25 @@ def load_test_data(name, path_to=""):
     assert op.exists(data_path)
 
     return data_path
+
+def format_template(data_path, template_name):
+
+    import json
+
+    json_template = op.join(os.path.dirname(os.path.abspath(__file__)),
+                            "templates.json")
+
+    template_path_dict = json.load(open(json_template))
+
+    assert template_name in template_path_dict.keys(), \
+        "Error, could not find template formating for {} in {}".format(
+            template_name, template_path_dict.keys())
+    template_dict = template_path_dict[template_name]
+    print ("Found template formating for {}:".format(template_name))
+    print (template_dict)
+
+    for key, value in template_dict.items():
+        template_dict[key] = op.join(data_path, value)
+
+    return template_dict
+
