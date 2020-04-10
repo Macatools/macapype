@@ -13,6 +13,9 @@ Plot the results of a segmentation
 import os
 import os.path as op
 
+import json
+import pprint
+
 import nipype.pipeline.engine as pe
 
 from nipype.interfaces.utility import IdentityInterface
@@ -26,17 +29,19 @@ from macapype.utils.utils_tests import load_test_data, format_template
 from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 
-#my_path = "/home/INT/meunier.d/Data/Primavoice/"
-my_path = "/hpc/crise/meunier.d/"
 
+package_directory = os.path.dirname(os.path.abspath(__file__))
+params_file = '{}/../workflows/params_segment_pnh_kepkee'.format(package_directory))
+params = json.load(open(params_file))
 
-#print(params)
-#pprint.pprint(params)
+print(params)
+pprint.pprint(params)
 
-#if "general" in params.key() and "my_path" in params["general"].keys():
-    #my_path = params["general"]["my_path"]
-#else:
-    #my_path = "/hpc/crise/meunier.d"
+if "general" in params.key() and "my_path" in params["general"].keys():
+    my_path = params["general"]["my_path"]
+else:
+    #my_path = "/home/INT/meunier.d/Data/Primavoice/"
+    my_path = "/hpc/crise/meunier.d/"
 
 nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 
@@ -56,7 +61,8 @@ nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
 # running workflow
-segment_pnh = create_full_segment_pnh_subpipes(atlasbrex_dir, params=params,
+segment_pnh = create_full_segment_pnh_subpipes(atlasbrex_dir,
+                                               params=params
                                                params_template=params_template,
                                                segment=False,
                                                name = "segment_pnh_subpipes_template")
