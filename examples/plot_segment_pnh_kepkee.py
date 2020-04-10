@@ -26,8 +26,8 @@ from macapype.utils.utils_tests import load_test_data, format_template
 from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 
-my_path = "/home/INT/meunier.d/Data/Primavoice/"
-#my_path = "/hpc/crise/meunier.d/"
+#my_path = "/home/INT/meunier.d/Data/Primavoice/"
+my_path = "/hpc/crise/meunier.d/"
 
 
 #print(params)
