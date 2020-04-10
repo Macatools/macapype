@@ -23,7 +23,7 @@ def read_cropbox(cropbox_file):
 
     return crop_list
 
-def create_preproc_pipe(params, name = "preproc_pipe")
+def create_preproc_pipe(params, name = "preproc_pipe"):
     """
     preprocessing:
     - av = checking if multiples T1 and T2 and if it is the case,
