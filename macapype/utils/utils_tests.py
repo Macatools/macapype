@@ -14,6 +14,7 @@ def load_test_data(name, path_to=""):
         "NMT_v1.2": "QBTrmKNDrNs5E49",
         "NMT_FSL": "ajAtB7qgaPAmKyJ",
         "inia19": "WZo9wZdreTMwfQA",
+        "marmotemplate": "5xzm7DJD9kB99gG",
         "data_test_macapype": "Fn8a57PpQWPacZR"
     }
 
