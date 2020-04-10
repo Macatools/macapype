@@ -56,9 +56,10 @@ nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
 # running workflow
-segment_pnh = create_full_segment_pnh_subpipes(name = "segment_pnh_subpipes_template", atlasbrex_dir, params=params,
+segment_pnh = create_full_segment_pnh_subpipes(atlasbrex_dir, params=params,
                                                params_template=params_template,
-                                               segment=False )
+                                               segment=False,
+                                               name = "segment_pnh_subpipes_template")
 segment_pnh.base_dir = my_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
