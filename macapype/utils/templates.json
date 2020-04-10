@@ -24,7 +24,7 @@
 
         "template_gm": "grey/grey.nii",
         "template_wm": "white/white.nii",
-        "template_csf": "csf/csf.nii",
+        "template_csf": "csf/csf.nii"
     },
     "marmotemplate":{
         "template": "Template_T1.nii.gz",
@@ -32,6 +32,6 @@
 
         "template_gm": "gm_all.nii.gz",
         "template_wm": "wm.nii.gz",
-        "template_csf": "csf.nii.gz",
+        "template_csf": "csf.nii.gz"
     }
 }
