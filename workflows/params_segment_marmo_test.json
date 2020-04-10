@@ -1,10 +1,13 @@
 {
-    "preproc":
+    "preproc_pipe":
     {
-        "m": true,
-        "aT2": true,
-        "c": 10,
-        "n": 2
+        "crop_align":
+        {
+            "m": true,
+            "aT2": true,
+            "c": 10,
+            "n": 2
+        }
     },
     "correct_bias_pipe":
     {
