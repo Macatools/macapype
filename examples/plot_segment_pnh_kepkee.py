@@ -31,7 +31,7 @@ from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
-params_file = '{}/../workflows/params_segment_pnh_kepkee'.format(package_directory)
+params_file = '{}/../workflows/params_segment_pnh_kepkee.json'.format(package_directory)
 params = json.load(open(params_file))
 
 print(params)
