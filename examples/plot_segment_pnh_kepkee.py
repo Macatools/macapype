@@ -22,34 +22,53 @@ import nipype.interfaces.io as nio
 #Running workflow
 #==================
 
-#from macapype.utils.utils_tests import load_test_data
-#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
+from macapype.utils.utils_tests import load_test_data, format_template
+from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
+
+my_path = "/home/INT/meunier.d/Data/Primavoice/"
 #my_path = "/hpc/crise/meunier.d/"
 
-#data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-## data file
-#T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-#T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+#print(params)
+#pprint.pprint(params)
 
-#from macapype.utils.utils_tests import load_test_data
+#if "general" in params.key() and "my_path" in params["general"].keys():
+    #my_path = params["general"]["my_path"]
+#else:
+    #my_path = "/hpc/crise/meunier.d"
 
-#nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
-#atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
+nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 
-## running workflow
-#segment_pnh = create_full_segment_pnh_subpipes(nmt_dir, atlasbrex_dir)
-#segment_pnh.base_dir = my_path
-
-#segment_pnh.inputs.inputnode.T1 = T1_file
-#segment_pnh.inputs.inputnode.T2 = T2_file
+params_template = format_template(nmt_dir, 'NMT_v1.2')
+print (params_template)
 
 
-#segment_pnh.write_graph(graph2use="colored")
-#segment_pnh.run()
+data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-#exit()
+# data file
+T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+
+from macapype.utils.utils_tests import load_test_data
+
+nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
+atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
+
+# running workflow
+segment_pnh = create_full_segment_pnh_subpipes(name = "segment_pnh_subpipes_template", atlasbrex_dir, params=params,
+                                               params_template=params_template,
+                                               segment=False )
+segment_pnh.base_dir = my_path
+
+segment_pnh.inputs.inputnode.T1 = T1_file
+segment_pnh.inputs.inputnode.T2 = T2_file
+
+
+segment_pnh.write_graph(graph2use="colored")
+segment_pnh.run()
+
+exit()
 
 ###############################################################################
 ## Testing plot in local
