@@ -54,7 +54,7 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
     # Brain extraction (unused) + Cropping
     align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n), name='crop')
 
-    preproc_pipe.connect(inputnode, 'T1', preproc, 't1_file')
+    preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
     preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
 
     return preproc_pipe
