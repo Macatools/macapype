@@ -37,7 +37,7 @@ params = json.load(open(params_file))
 print(params)
 pprint.pprint(params)
 
-if "general" in params.key() and "my_path" in params["general"].keys():
+if "general" in params.keys() and "my_path" in params["general"].keys():
     my_path = params["general"]["my_path"]
 else:
     #my_path = "/home/INT/meunier.d/Data/Primavoice/"
