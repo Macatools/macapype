@@ -7,6 +7,8 @@ from macapype.nodes.bash_regis import (T1xT2BET, T1xT2BiasFieldCorrection,
 
 from macapype.nodes.preproc import average_align
 
+from .preproc import create_preproc_pipe
+
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
 
