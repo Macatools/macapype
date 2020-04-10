@@ -23,6 +23,41 @@ def read_cropbox(cropbox_file):
 
     return crop_list
 
+def create_preproc_pipe(params, name = "preproc_pipe")
+    """
+    preprocessing:
+    - av = checking if multiples T1 and T2 and if it is the case,
+    coregister and average (~ flirt_average)
+    - coregister T2 on T1 with FLIRT
+    - crop using .cropbox file
+    """
+
+    # creating pipeline
+    preproc_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1', 'T2']),
+        name='inputnode'
+    )
+
+    if "align_crop" in params.keys():
+        aT2 = params["T1xT2BET"]["aT2"]
+        c = params["T1xT2BET"]["c"]
+        n = params["T1xT2BET"]["n"]
+    else:
+        aT2 = True
+        c = 10
+        n = 2
+
+    # Brain extraction (unused) + Cropping
+    align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n), name='crop')
+
+    preproc_pipe.connect(inputnode, 'T1', preproc, 't1_file')
+    preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
+
+    return preproc_pipe
+
 
 def create_average_align_crop_pipe(name='average_align_pipe'):
     """
