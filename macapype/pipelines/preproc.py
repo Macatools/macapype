@@ -5,6 +5,7 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 
 from ..nodes.preproc import average_align
+from ..nodes.bash_regis import T1xT2BET
 
 
 # on the fly
