@@ -48,14 +48,11 @@ nmt_dir = load_test_data('marmotemplate', path_to = my_path)
 params_template = format_template(nmt_dir, 'marmotemplate')
 print (params_template)
 
-0/0
-
-
 data_path = load_test_data("data_marmo_test", path_to = my_path)
 
 # data file
-T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+T1_file = op.join(data_path, "T1w_0p33mm_28.nii")
+T2_file = op.join(data_path, "T2w_0p4mm_32.nii")
 
 from macapype.utils.utils_tests import load_test_data
 
@@ -67,7 +64,7 @@ segment_pnh = create_full_segment_pnh_subpipes(atlasbrex_dir,
                                                params=params,
                                                params_template=params_template,
                                                segment=False,
-                                               name = "segment_pnh_subpipes_template")
+                                               name = "segment_marmo_test_template")
 segment_pnh.base_dir = my_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
