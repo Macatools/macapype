@@ -1,6 +1,9 @@
 {
     "preproc_pipe":
     {
+        "reorient":
+        {
+        },
         "crop_align":
         {
             "m": true,

@@ -286,25 +286,11 @@ def create_full_segment_pnh_subpipes(
         name='inputnode'
     )
 
-    if "preproc" in params.keys():
-        m = params["preproc"]["m"]
-        aT2 = params["preproc"]["aT2"]
-        c = params["preproc"]["c"]
-        n = params["preproc"]["n"]
-    else:
-        m = True
-        aT2 = True
-        c = 10
-        n = 2
+    if 'preproc_pipe' in params.keys():
+        preproc_pipe = create_preproc_pipe(params["preproc_pipe"])
 
-    # Brain extraction (unused) + Cropping
-    preproc = pe.Node(T1xT2BET(m=m, aT2=aT2, c=c, n=n), name='preproc')
-
-    # seg_pipe.connect(inputnode, ('T1', average_align), preproc, 't1_file')
-    # seg_pipe.connect(inputnode, ('T2', average_align), preproc, 't2_file')
-
-    seg_pipe.connect(inputnode, 'T1', preproc, 't1_file')
-    seg_pipe.connect(inputnode, 'T2', preproc, 't2_file')
+        seg_pipe.connect(inputnode, 'T1', preproc_pipe, 'inputnode.T1')
+        seg_pipe.connect(inputnode, 'T2', preproc_pipe, 'inputnode.T2')
 
     return seg_pipe
 
