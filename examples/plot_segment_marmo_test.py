@@ -57,9 +57,11 @@ T2_file = op.join(data_path, "T2w_0p4mm_32.nii")
 from macapype.utils.utils_tests import load_test_data
 
 nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
+atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
 # running workflow
-segment_pnh = create_full_segment_pnh_subpipes(params=params,
+segment_pnh = create_full_segment_pnh_subpipes(atlasbrex_dir,
+                                               params=params,
                                                params_template=params_template,
                                                segment=False,
                                                name = "segment_marmo_test_template")
