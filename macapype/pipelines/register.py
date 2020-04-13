@@ -204,7 +204,7 @@ def create_register_NMT_pipe(params_template, params={}, name="register_NMT_pipe
 
     # align_masks
     # "overwrap" of NwarpApply, with specifying the outputs as wished
-    list_priors = [params_template["template"], params_template["template_csf"], params_template["template_gm"], params_template["template_wm"]]
+    list_priors = [params_template["template_head"], params_template["template_csf"], params_template["template_gm"], params_template["template_wm"]]
 
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors
