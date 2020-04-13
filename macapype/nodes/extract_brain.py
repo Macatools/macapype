@@ -8,7 +8,7 @@ from nipype.interfaces.base import traits, File
 # AtlasBREX
 class AtlasBREXInputSpec(CommandLineInputSpec):
 
-
+    import os
     package_directory = os.path.dirname(os.path.abspath(__file__))
 
     script_atlas_BREX = File(
