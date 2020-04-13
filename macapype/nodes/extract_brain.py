@@ -37,24 +37,24 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
         0.5, usedefault=True, desc='f', position=4, argstr="-f %f",
         mandatory=True)
 
-    reg = traits.Enum(
-        1, 0, 2, 3, usedefault=True, desc="Method: 0 = FNIRT w/ bending, \
-            1 (default) = FNIRT membrane-energy regularization, \
-            2 = ANTs/SyN w/, \
-            3 = w/o N4Bias",
-        position=5, argstr="-reg %d", mandatory=True)
+    msk = traits.String(
+        "a,0,0", usedefault=True, desc="msk", position=5, argstr="-msk %s",
+        mandatory=True)
 
     w = traits.String(
         "10,10,10", usedefault=True, desc="w", position=6, argstr="-w %s",
         mandatory=True)
 
-    msk = traits.String(
-        "a,0,0", usedefault=True, desc="msk", position=7, argstr="-msk %s",
+    wrp = traits.Int(
+        1, usedefault=True, desc="wrp", position=7, argstr="-wrp %d",
         mandatory=True)
 
-    wrp = traits.Int(
-        1, usedefault=True, desc="wrp", position=8, argstr="-wrp %d",
-        mandatory=True)
+    reg = traits.Enum(
+        1, 0, 2, 3, usedefault=True, desc="Method: 0 = FNIRT w/ bending, \
+            1 (default) = FNIRT membrane-energy regularization, \
+            2 = ANTs/SyN w/, \
+            3 = w/o N4Bias",
+        position=8, argstr="-reg %d", mandatory=True)
 
 
 class AtlasBREXOutputSpec(TraitedSpec):
