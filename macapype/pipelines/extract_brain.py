@@ -74,6 +74,7 @@ def create_brain_extraction_pipe(params_template, params={},
     atlas_brex.inputs.reg = reg
     atlas_brex.inputs.w = w
     atlas_brex.inputs.msk = msk
+    atlas_brex.inputs.wrp = wrp
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')

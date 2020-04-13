@@ -52,6 +52,10 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
         "a,0,0", usedefault=True, desc="msk", position=7, argstr="-msk %s",
         mandatory=True)
 
+    wrp = traits.Int(
+        1, usedefault=True, desc="wrp", position=8, argstr="-wrp %d",
+        mandatory=True)
+
 
 class AtlasBREXOutputSpec(TraitedSpec):
 
@@ -102,6 +106,10 @@ class AtlasBREX(CommandLine):
         msk:
         type = String, default = "a,0,0", usedefault=True, desc="msk",
         position=7, argstr="-msk %s", mandatory=True)
+
+        wrp:
+        type = Int, default = 1, usedefault=True, desc="wrp",
+        position=8, argstr="-wrp %d", mandatory=True)
 
 
     Outputs:
