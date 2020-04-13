@@ -13,7 +13,7 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
 
     script_atlas_BREX = File(
         '{}/../bash/atlasBREX.sh'.format(package_directory),
-        usedefault = True
+        usedefault = True,
         exists=True,
         desc='atlasBREX script',
         mandatory=True, position=0, argstr="%s")
