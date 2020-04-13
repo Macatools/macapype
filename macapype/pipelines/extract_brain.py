@@ -55,11 +55,13 @@ def create_brain_extraction_pipe(params_template, params={},
         reg = params["atlas_brex"]["reg"]
         w = params["atlas_brex"]["w"]
         msk = params["atlas_brex"]["msk"]
+        wrp = params["atlas_brex"]["wrp"]
     else:
         f = 0.5
         reg = 1
         w = "10,10,10"
         msk = "a,0,0"
+        wrp = "1"
 
     atlas_brex = pe.Node(AtlasBREX(), name='atlas_brex')
 
