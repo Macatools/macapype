@@ -30,7 +30,8 @@
             "f": 0.5,
             "reg": 2,
             "msk": "a,0,0",
-            "wrp": 1
+            "wrp": 1,
+            "w": "10,10,10"
         }
     },
     "brain_segment_pipe":
