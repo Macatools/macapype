@@ -289,12 +289,14 @@ def create_full_segment_pnh_subpipes(
     )
 
     if 'preproc_pipe' in params.keys():
-        preproc_pipe = create_preproc_pipe(params["preproc_pipe"])
+        params_preproc_pipe = params["preproc_pipe"]
+    else:
+        params_preproc_pipe = {}
 
-        seg_pipe.connect(inputnode, 'T1', preproc_pipe, 'inputnode.T1')
-        seg_pipe.connect(inputnode, 'T2', preproc_pipe, 'inputnode.T2')
+    preproc_pipe = create_preproc_pipe(params_preproc_pipe)
 
-    return seg_pipe
+    seg_pipe.connect(inputnode, 'T1', preproc_pipe, 'inputnode.T1')
+    seg_pipe.connect(inputnode, 'T2', preproc_pipe, 'inputnode.T2')
 
     # Correct_bias_T1_T2
     if "correct_bias_pipe" in params.keys():
