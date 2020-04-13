@@ -53,13 +53,13 @@ def create_brain_extraction_pipe(atlasbrex_dir, params_template, params={},
     if "atlas_brex" in params.keys():
         f = params["atlas_brex"]["f"]
         reg = params["atlas_brex"]["reg"]
-        w = params["atlas_brex"]["w"]
+        wrp = params["atlas_brex"]["wrp"]
         msk = params["atlas_brex"]["msk"]
         #wrp = params["atlas_brex"]["wrp"]
     else:
         f = 0.5
         reg = 1
-        w = "10,10,10"
+        wrp = "10,10,10"
         msk = "a,0,0"
         #wrp = "1"
 
@@ -74,7 +74,7 @@ def create_brain_extraction_pipe(atlasbrex_dir, params_template, params={},
     atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]
     atlas_brex.inputs.f = f
     atlas_brex.inputs.reg = reg
-    atlas_brex.inputs.w = w
+    atlas_brex.inputs.wrp = wrp
     atlas_brex.inputs.msk = msk
     #atlas_brex.inputs.wrp = wrp
 
