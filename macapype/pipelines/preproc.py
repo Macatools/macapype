@@ -116,8 +116,6 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
 
         ### align avg T2 on avg T1
         align_T2_on_T1 = pe.Node(fsl.FLIRT(), name = "align_T2_on_T1")
-        preproc_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
-        preproc_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
         align_T2_on_T1.inputs.dof = 6
 
 
