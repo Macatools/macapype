@@ -5,7 +5,7 @@
         {
             "new_dims": "x z -y"
         },
-        "crop_align":
+        "align_crop":
         {
             "m": true,
             "aT2": true,
