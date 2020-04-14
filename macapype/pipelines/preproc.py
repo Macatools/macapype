@@ -52,16 +52,18 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         preproc_pipe.connect(inputnode, 'T2', reorient_T2, 'in_file')
 
     if "align_crop" in params.keys():
-        aT2 = params["T1xT2BET"]["aT2"]
-        c = params["T1xT2BET"]["c"]
-        n = params["T1xT2BET"]["n"]
+        aT2 = params["align_crop"]["aT2"]
+        c = params["align_crop"]["c"]
+        n = params["align_crop"]["n"]
+        n = params["align_crop"]["m"]
     else:
         aT2 = True
         c = 10
         n = 2
+        m = False
 
     # Brain extraction (unused) + Cropping
-    align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n), name='align_crop')
+    align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n, m=m), name='align_crop')
 
     if "reorient" in params.keys():
 

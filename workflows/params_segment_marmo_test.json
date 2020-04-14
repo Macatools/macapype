@@ -3,7 +3,7 @@
     {
         "crop_align":
         {
-            "m": true,
+            "m": false,
             "aT2": true,
             "c": 1,
             "n": 2
