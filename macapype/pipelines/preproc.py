@@ -35,7 +35,7 @@ def create_reorient_pipeline(name = "reorient_pipe"):
     """
 
     # creating pipeline
-    preproc_pipe = pe.Workflow(name=name)
+    reorient_pipe = pe.Workflow(name=name)
 
     # Creating input node
     inputnode = pe.Node(
@@ -51,6 +51,8 @@ def create_reorient_pipeline(name = "reorient_pipe"):
 
     reorient = pe.Node(FslOrient(main_option = "setqformcode", code  = 1), name = "reorient")
     reorient_pipe.connect(deorient, 'out_file', reorient, 'in_file')
+
+    return reorient_pipe
 
 
 def create_preproc_pipe(params, name = "preproc_pipe"):
