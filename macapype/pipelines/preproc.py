@@ -3,7 +3,7 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-from interfaces.freesurfer.preprocess import MRIConvert
+from nipype.interfaces.freesurfer.preprocess import MRIConvert
 
 from ..nodes.preproc import average_align
 from ..nodes.bash_regis import T1xT2BET
