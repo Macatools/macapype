@@ -45,13 +45,11 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
 
 
     if "reorient" in params.keys():
-        reorient = pe.Node(MRIConvert(sphinx = True), name = "reorient")
+        reorient_T1 = pe.Node(MRIConvert(sphinx = True), name = "reorient_T1")
+        preproc_pipe.connect(inputnode, 'T1', reorient_T1, 'in_file')
 
-
-        preproc_pipe.connect(inputnode, 'T1', reorient, 'in_file')
-        preproc_pipe.connect(inputnode, 'T2', reorient, 'in_file')
-
-
+        reorient_T2 = pe.Node(MRIConvert(sphinx = True), name = "reorient_T2")
+        preproc_pipe.connect(inputnode, 'T2', reorient_T2, 'in_file')
 
     if "align_crop" in params.keys():
         aT2 = params["T1xT2BET"]["aT2"]
@@ -67,8 +65,8 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
 
     if "reorient" in params.keys():
 
-        preproc_pipe.connect(reorient, 'out_file', align_crop, 't1_file')
-        preproc_pipe.connect(reorient, 'out_file', align_crop, 't2_file')
+        preproc_pipe.connect(reorient_T1, 'out_file', align_crop, 't1_file')
+        preproc_pipe.connect(reorient_T2, 'out_file', align_crop, 't2_file')
     else:
         preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
         preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
