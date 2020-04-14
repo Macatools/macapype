@@ -288,8 +288,10 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
     )
 
     if 'preproc_pipe' in params.keys():
+        print("preproc_pipe is in params")
         params_preproc_pipe = params["preproc_pipe"]
     else:
+        print("*** preproc_pipe NOT in params")
         params_preproc_pipe = {}
 
     preproc_pipe = create_preproc_pipe(params_preproc_pipe)

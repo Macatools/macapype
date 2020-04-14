@@ -52,11 +52,13 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         preproc_pipe.connect(inputnode, 'T2', reorient_T2, 'in_file')
 
     if "align_crop" in params.keys():
+        print('align_crop is in params')
         aT2 = params["align_crop"]["aT2"]
         c = params["align_crop"]["c"]
         n = params["align_crop"]["n"]
         m = params["align_crop"]["m"]
     else:
+        print('**** align_crop NOT in params')
         aT2 = True
         c = 10
         n = 2
