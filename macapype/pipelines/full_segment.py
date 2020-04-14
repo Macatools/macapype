@@ -297,6 +297,8 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
     seg_pipe.connect(inputnode, 'T1', preproc_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', preproc_pipe, 'inputnode.T2')
 
+    return seg_pipe
+
     # Correct_bias_T1_T2
     if "correct_bias_pipe" in params.keys():
         params_correct_bias_pipe = params["correct_bias_pipe"]

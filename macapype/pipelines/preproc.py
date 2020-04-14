@@ -3,6 +3,7 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
+from interfaces.freesurfer.preprocess import MRIConvert
 
 from ..nodes.preproc import average_align
 from ..nodes.bash_regis import T1xT2BET
@@ -42,6 +43,16 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         name='inputnode'
     )
 
+
+    if "reorient" in params.keys():
+        reorient = pe.Node(MRIConvert(sphinx = True), name = "reorient")
+
+
+        preproc_pipe.connect(inputnode, 'T1', reorient, 'in_file')
+        preproc_pipe.connect(inputnode, 'T2', reorient, 'in_file')
+
+
+
     if "align_crop" in params.keys():
         aT2 = params["T1xT2BET"]["aT2"]
         c = params["T1xT2BET"]["c"]
@@ -54,8 +65,13 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
     # Brain extraction (unused) + Cropping
     align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n), name='align_crop')
 
-    preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
-    preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
+    if "reorient" in params.keys():
+
+        preproc_pipe.connect(reorient, 'out_file', align_crop, 't1_file')
+        preproc_pipe.connect(reorient, 'out_file', align_crop, 't2_file')
+    else:
+        preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
+        preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
 
     return preproc_pipe
 
