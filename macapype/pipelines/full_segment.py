@@ -314,9 +314,9 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
         seg_pipe.connect(preproc_pipe, 'align_crop.t2_cropped_file',
                         correct_bias_pipe, 'inputnode.preproc_T2')
     elif "crop" in params['preproc_pipe'].keys():
-        seg_pipe.connect(preproc_pipe, 'crop_bb_T1.out_file',
+        seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',
                         correct_bias_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(preproc_pipe, 'crop_bb_T2.out_file',
+        seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',
                         correct_bias_pipe, 'inputnode.preproc_T2')
     return seg_pipe
 
