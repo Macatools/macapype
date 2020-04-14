@@ -1,9 +1,9 @@
 {
     "preproc_pipe":
     {
-        "align_crop":
+        "crop":
         {
-            "m": false,
+            "cropbox": "88 175 88 239 284 127",
             "aT2": true,
             "c": 1,
             "n": 2

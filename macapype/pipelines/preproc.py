@@ -90,30 +90,58 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         preproc_pipe.connect(inputnode, 'T2', reorient_T2_pipe, 'inputnode.image')
 
     if "align_crop" in params.keys():
+
         print('align_crop is in params')
         aT2 = params["align_crop"]["aT2"]
         c = params["align_crop"]["c"]
         n = params["align_crop"]["n"]
         m = params["align_crop"]["m"]
-    else:
-        print('**** align_crop NOT in params')
-        aT2 = True
-        c = 10
-        n = 2
-        m = False
 
-    print("aT2:",aT2,"c:",c,"n:",n,"m:",m)
 
-    # Brain extraction (unused) + Cropping
-    align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n, m=m), name='align_crop')
+        print("aT2:",aT2,"c:",c,"n:",n,"m:",m)
 
-    if "reorient" in params.keys():
+        # Brain extraction (unused) + Cropping
+        align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n, m=m), name='align_crop')
 
-        preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', align_crop, 't1_file')
-        preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file', align_crop, 't2_file')
-    else:
-        preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
-        preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
+        if "reorient" in params.keys():
+
+            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', align_crop, 't1_file')
+            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file', align_crop, 't2_file')
+        else:
+            preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
+            preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
+
+    else if "crop" in params.keys():
+        print('crop is in params')
+
+        ### align avg T2 on avg T1
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name = "align_T2_on_T1")
+        preproc_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
+        preproc_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
+        align_T2_on_T1.inputs.dof = 6
+
+
+        # cropping
+        # Crop bounding box for T1
+        crop_bb_T1 = pe.Node(fsl.ExtractROI(), name='crop_bb_T1')
+        crop_bb_T1.inputs.args = params["crop"]["croplist"]
+
+        # Crop bounding box for T2
+        crop_bb_T2 = pe.Node(fsl.ExtractROI(), name='crop_bb_T2')
+        crop_bb_T2.inputs.args = params["crop"]["croplist"]
+
+        if "reorient" in params.keys():
+            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', align_T2_on_T1, 'reference')
+            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file', align_T2_on_T1, 'in_file')
+
+            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', crop_bb_T1, 'in_file')
+        else:
+            preproc_pipe.connect(inputnode, 'T1', align_T2_on_T1, 'reference')
+            preproc_pipe.connect(inputnode, 'T2', align_T2_on_T1, 'in_file')
+
+            preproc_pipe.connect(inputnode, 'T1', crop_bb_T1, 'in_file')
+
+        preproc_pipe.connect(align_T2_on_T1, "out_file", crop_bb_T2, 'in_file')
 
     return preproc_pipe
 
