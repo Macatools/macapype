@@ -299,8 +299,6 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
     seg_pipe.connect(inputnode, 'T1', preproc_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', preproc_pipe, 'inputnode.T2')
 
-    return seg_pipe
-
     # Correct_bias_T1_T2
     if "correct_bias_pipe" in params.keys():
         params_correct_bias_pipe = params["correct_bias_pipe"]
@@ -310,10 +308,17 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
     correct_bias_pipe = create_correct_bias_pipe(
         params=params_correct_bias_pipe)
 
-    seg_pipe.connect(preproc_pipe, 'align_crop.t1_cropped_file',
-                     correct_bias_pipe, 'inputnode.preproc_T1')
-    seg_pipe.connect(preproc_pipe, 'align_crop.t2_cropped_file',
-                     correct_bias_pipe, 'inputnode.preproc_T2')
+    if "align_crop" in params['preproc_pipe'].keys():
+        seg_pipe.connect(preproc_pipe, 'align_crop.t1_cropped_file',
+                        correct_bias_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(preproc_pipe, 'align_crop.t2_cropped_file',
+                        correct_bias_pipe, 'inputnode.preproc_T2')
+    elif "crop" in params['preproc_pipe'].keys():
+        seg_pipe.connect(preproc_pipe, 'crop_bb_T1.out_file',
+                        correct_bias_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(preproc_pipe, 'crop_bb_T2.out_file',
+                        correct_bias_pipe, 'inputnode.preproc_T2')
+    return seg_pipe
 
     # denoising
     if "denoised_pipe" in params.keys():  # so far, unused
