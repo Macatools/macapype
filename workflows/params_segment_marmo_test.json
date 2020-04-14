@@ -1,7 +1,7 @@
 {
     "preproc_pipe":
     {
-        "crop_align":
+        "align_crop":
         {
             "m": false,
             "aT2": true,
