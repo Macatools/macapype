@@ -30,6 +30,7 @@ from macapype.utils.utils_tests import load_test_data, format_template
 from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 
+from macapype.utils.utils_tests import load_test_data
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 params_file = '{}/../workflows/params_segment_pnh_isabelle.json'.format(package_directory)
@@ -41,12 +42,11 @@ pprint.pprint(params)
 if "general" in params.keys() and "my_path" in params["general"].keys():
     my_path = params["general"]["my_path"]
 else:
-    #my_path = "/home/INT/meunier.d/Data/Primavoice/"
+    #my_path = "/home/INT/meunier.d/Data/"
     my_path = "/hpc/crise/meunier.d/"
     #my_path = "/hpc/neopto/USERS/racicot/data/"
 
 nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
-
 params_template = format_template(nmt_dir, 'NMT_v1.2')
 print (params_template)
 
@@ -57,9 +57,6 @@ data_path = load_test_data("data_test_macapype", path_to = my_path)
 T1_file = op.join(data_path, "sub-ziggy_T1w.nii")
 T2_file = op.join(data_path, "sub-ziggy_T2w.nii")
 
-from macapype.utils.utils_tests import load_test_data
-
-nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 atlasbrex_dir = load_test_data('AtlasBREX', path_to = my_path)
 
 # running workflow
@@ -72,7 +69,6 @@ segment_pnh.base_dir = my_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
 segment_pnh.inputs.inputnode.T2 = T2_file
-
 
 segment_pnh.write_graph(graph2use="colored")
 segment_pnh.run()
