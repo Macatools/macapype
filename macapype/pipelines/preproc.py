@@ -111,7 +111,7 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
             preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
             preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
 
-    else if "crop" in params.keys():
+    elif "crop" in params.keys():
         print('crop is in params')
 
         ### align avg T2 on avg T1
