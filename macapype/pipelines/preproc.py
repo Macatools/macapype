@@ -25,7 +25,7 @@ def read_cropbox(cropbox_file):
 
     return crop_list
 
-def create_reorient_pipeline(name = "reorient_pipe"):
+def create_reorient_pipeline(name = "reorient_pipe", new_dims = ("x","z","-y")):
 
     """
     By kepkee:
@@ -43,7 +43,7 @@ def create_reorient_pipeline(name = "reorient_pipe"):
         name='inputnode'
     )
 
-    swap_dim = pe.Node(fsl.SwapDimensions(new_dims = ("x","z","-y")), name = "swap_dim")
+    swap_dim = pe.Node(fsl.SwapDimensions(new_dims=new_dims), name = "swap_dim")
     reorient_pipe.connect(inputnode, 'image', swap_dim, 'in_file')
 
     deorient = pe.Node(FslOrient(main_option = "deleteorient"), name = "deorient")
@@ -75,13 +75,19 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
 
 
     if "reorient" in params.keys():
-        reorient_T1_pipe = create_reorient_pipeline(name = "reorient_T1_pipe")
+
+        if "new_dims" in params["reorient"].keys():
+            new_dims = tuple(params["reorient"]["new_dims"].split())
+        else:
+            new_dims = ("x","z","-y")
+
+        reorient_T1_pipe = create_reorient_pipeline(name = "reorient_T1_pipe",
+                                                    new_dims=new_dims)
         preproc_pipe.connect(inputnode, 'T1', reorient_T1_pipe, 'inputnode.image')
 
-        reorient_T2_pipe = create_reorient_pipeline(name = "reorient_T2_pipe")
+        reorient_T2_pipe = create_reorient_pipeline(name = "reorient_T2_pipe",
+                                                    new_dims=new_dims)
         preproc_pipe.connect(inputnode, 'T2', reorient_T2_pipe, 'inputnode.image')
-
-    return preproc_pipe
 
     if "align_crop" in params.keys():
         print('align_crop is in params')
@@ -103,8 +109,8 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
 
     if "reorient" in params.keys():
 
-        preproc_pipe.connect(reorient_T1_pipe, 'reorient.out_file', align_crop, 't1_file')
-        preproc_pipe.connect(reorient_T2_pipe, 'reorient.out_file', align_crop, 't2_file')
+        preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', align_crop, 't1_file')
+        preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file', align_crop, 't2_file')
     else:
         preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
         preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')

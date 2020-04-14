@@ -3,6 +3,7 @@
     {
         "reorient":
         {
+            "new_dims": "x z -y"
         },
         "crop_align":
         {
