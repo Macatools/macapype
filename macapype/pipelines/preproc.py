@@ -25,7 +25,7 @@ def read_cropbox(cropbox_file):
 
     return crop_list
 
-def create_reorient_pipeline(name = "reorient_pipe")
+def create_reorient_pipeline(name = "reorient_pipe"):
 
     """
     By kepkee:
