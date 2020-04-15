@@ -13,7 +13,7 @@ import nipype.interfaces.afni as afni
 from ..nodes.extract_brain import AtlasBREX
 
 
-def create_brain_extraction_pipe(atlasbrex_dir, params_template, params={},
+def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex
@@ -26,8 +26,6 @@ def create_brain_extraction_pipe(atlasbrex_dir, params_template, params={},
             restore_T1: preprocessed (debiased/denoised)T2 file name
 
         arguments:
-            atlasbrex_dir: path to atlasbrex script
-
             params_template: dictionary of info about template
 
             params: dictionary of node sub-parameters (from a json file)
@@ -67,8 +65,6 @@ def create_brain_extraction_pipe(atlasbrex_dir, params_template, params={},
 
     brain_extraction_pipe.connect(inputnode, "restore_T1",
                                   atlas_brex, 't1_restored_file')
-    atlas_brex.inputs.script_atlas_BREX = op.join(atlasbrex_dir,
-                                                  "atlasBREX.sh")
 
     atlas_brex.inputs.NMT_file = params_template["template_head"]
     atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]

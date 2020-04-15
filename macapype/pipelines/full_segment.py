@@ -244,7 +244,7 @@ def create_full_segment_from_mask_pipe(
 
 
 # first step for a mask and then call create_full_segment_from_mask_pipe
-def create_full_segment_pnh_subpipes(atlasbrex_dir,
+def create_full_segment_pnh_subpipes(
         params_template, params={}, name="segment_pnh_subpipes", segment=True):
     """
     Description: Segment T1 (using T2 for bias correction) .
@@ -270,8 +270,7 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
 
 
         arguments:
-            nmt_dir: directory to NMT atlas
-            atlasbrex_dir: path to atlasbrex script
+            params_template: dictionary atlas files
             params: dictionary of node sub-parameters (from a json file)
             name: pipeline name (default = "full_segment_pipe")
 
@@ -339,7 +338,7 @@ def create_full_segment_pnh_subpipes(atlasbrex_dir,
     else:
         params_brain_extraction_pipe = {}
 
-    brain_extraction_pipe = create_brain_extraction_pipe(atlasbrex_dir,
+    brain_extraction_pipe = create_brain_extraction_pipe(
         params_template=params_template,
         params=params_brain_extraction_pipe,
         name="devel_atlas_brex")

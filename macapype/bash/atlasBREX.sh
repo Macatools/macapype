@@ -7,10 +7,6 @@
 #Email: johannes.lohmeier@charite.de
 #Changed: 06.12.2018 (v1.1)
 
-export ANTSPATH=~/bin/ants/bin/
-export PATH=$ANTSPATH:$PATH
-
-
 #Number of threads for ANTs
 ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=32
  # controls multi-threading
