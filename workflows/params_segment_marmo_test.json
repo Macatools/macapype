@@ -28,9 +28,9 @@
         "atlas_brex":
         {
             "f": 0.5,
-            "reg": 1,
+            "reg": 2,
             "msk": "a,0,0",
-            "wrp": "10,10,10"
+            "wrp": "1"
         }
     },
     "brain_segment_pipe":
