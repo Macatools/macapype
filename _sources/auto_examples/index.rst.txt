@@ -18,6 +18,46 @@ Examples Gallery
 
 .. only:: html
 
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_marmo_test_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_segment_marmo_test.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_segment_marmo_test
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_pnh_isabelle_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_segment_pnh_isabelle.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_segment_pnh_isabelle
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+
+.. only:: html
+
     .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_pnh_kepkee_thumb.png
 
         :ref:`sphx_glr_auto_examples_plot_segment_pnh_kepkee.py`

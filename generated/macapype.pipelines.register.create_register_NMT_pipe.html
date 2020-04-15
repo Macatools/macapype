@@ -109,7 +109,7 @@
 <h1>macapype.pipelines.register.create_register_NMT_pipe<a class="headerlink" href="#macapype-pipelines-register-create-register-nmt-pipe" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="macapype.pipelines.register.create_register_NMT_pipe">
-<code class="descclassname">macapype.pipelines.register.</code><code class="descname">create_register_NMT_pipe</code><span class="sig-paren">(</span><em>nmt_dir</em>, <em>params={}</em>, <em>name='register_NMT_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/register.html#create_register_NMT_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.register.create_register_NMT_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">macapype.pipelines.register.</code><code class="descname">create_register_NMT_pipe</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='register_NMT_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/register.html#create_register_NMT_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.register.create_register_NMT_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Description: Register template to anat with the script NMT_subject_align,</dt>
 <dd>and then apply it to tissues list_priors</dd>
@@ -120,7 +120,7 @@
 <dt>inputnode:</dt>
 <dd>T1: T1 file name</dd>
 <dt>arguments:</dt>
-<dd><p class="first">nmt_dir: path to NMT template</p>
+<dd><p class="first">params_template: dictionary of info about template</p>
 <p>params: dictionary of node sub-parameters (from a json file)</p>
 <p class="last">name: pipeline name (default = “register_NMT_pipe”)</p>
 </dd>
@@ -155,7 +155,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-15.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

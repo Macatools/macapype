@@ -109,7 +109,7 @@
 <h1>macapype.pipelines.extract_brain.create_brain_extraction_pipe<a class="headerlink" href="#macapype-pipelines-extract-brain-create-brain-extraction-pipe" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="macapype.pipelines.extract_brain.create_brain_extraction_pipe">
-<code class="descclassname">macapype.pipelines.extract_brain.</code><code class="descname">create_brain_extraction_pipe</code><span class="sig-paren">(</span><em>atlasbrex_dir</em>, <em>nmt_dir</em>, <em>params={}</em>, <em>name='brain_extraction_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/extract_brain.html#create_brain_extraction_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.extract_brain.create_brain_extraction_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">macapype.pipelines.extract_brain.</code><code class="descname">create_brain_extraction_pipe</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='brain_extraction_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/extract_brain.html#create_brain_extraction_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.extract_brain.create_brain_extraction_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Extract T1 brain using AtlasBrex</p>
 <p>Inputs:</p>
 <blockquote>
@@ -119,8 +119,7 @@
 <p class="last">restore_T1: preprocessed (debiased/denoised)T2 file name</p>
 </dd>
 <dt>arguments:</dt>
-<dd><p class="first">atlasbrex_dir: path to atlasbrex script</p>
-<p>nmt_dir: path to NMT template</p>
+<dd><p class="first">params_template: dictionary of info about template</p>
 <p>params: dictionary of node sub-parameters (from a json file)</p>
 <p class="last">name: pipeline name (default = “brain_extraction_pipe”)</p>
 </dd>
@@ -149,7 +148,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-15.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -114,7 +114,7 @@
 <span class="kn">from</span> <span class="nn">..nodes.extract_brain</span> <span class="kn">import</span> <span class="n">AtlasBREX</span>
 
 
-<div class="viewcode-block" id="create_brain_extraction_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.extract_brain.create_brain_extraction_pipe.html#macapype.pipelines.extract_brain.create_brain_extraction_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_brain_extraction_pipe</span><span class="p">(</span><span class="n">atlasbrex_dir</span><span class="p">,</span> <span class="n">nmt_dir</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
+<div class="viewcode-block" id="create_brain_extraction_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.extract_brain.create_brain_extraction_pipe.html#macapype.pipelines.extract_brain.create_brain_extraction_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_brain_extraction_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                                  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Extract T1 brain using AtlasBrex</span>
@@ -127,9 +127,7 @@
 <span class="sd">            restore_T1: preprocessed (debiased/denoised)T2 file name</span>
 
 <span class="sd">        arguments:</span>
-<span class="sd">            atlasbrex_dir: path to atlasbrex script</span>
-
-<span class="sd">            nmt_dir: path to NMT template</span>
+<span class="sd">            params_template: dictionary of info about template</span>
 
 <span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
 
@@ -154,28 +152,28 @@
     <span class="k">if</span> <span class="s2">&quot;atlas_brex&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;atlas_brex&quot;</span><span class="p">][</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
         <span class="n">reg</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;atlas_brex&quot;</span><span class="p">][</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;atlas_brex&quot;</span><span class="p">][</span><span class="s2">&quot;w&quot;</span><span class="p">]</span>
+        <span class="n">wrp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;atlas_brex&quot;</span><span class="p">][</span><span class="s2">&quot;wrp&quot;</span><span class="p">]</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;atlas_brex&quot;</span><span class="p">][</span><span class="s2">&quot;msk&quot;</span><span class="p">]</span>
+        <span class="c1">#wrp = params[&quot;atlas_brex&quot;][&quot;wrp&quot;]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">f</span> <span class="o">=</span> <span class="mf">0.5</span>
         <span class="n">reg</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="s2">&quot;10,10,10&quot;</span>
+        <span class="n">wrp</span> <span class="o">=</span> <span class="s2">&quot;10,10,10&quot;</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="s2">&quot;a,0,0&quot;</span>
+        <span class="c1">#wrp = &quot;1&quot;</span>
 
     <span class="n">atlas_brex</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">AtlasBREX</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;atlas_brex&#39;</span><span class="p">)</span>
 
     <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;restore_T1&quot;</span><span class="p">,</span>
                                   <span class="n">atlas_brex</span><span class="p">,</span> <span class="s1">&#39;t1_restored_file&#39;</span><span class="p">)</span>
 
-    <span class="n">script_atlas_BREX</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">atlasbrex_dir</span><span class="p">,</span> <span class="s2">&quot;atlasBREX.sh&quot;</span><span class="p">)</span>
-
-    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script_atlas_BREX</span> <span class="o">=</span> <span class="n">script_atlas_BREX</span>
-    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="s2">&quot;NMT.nii.gz&quot;</span><span class="p">)</span>
-    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_SS_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nmt_dir</span><span class="p">,</span> <span class="s2">&quot;NMT_SS.nii.gz&quot;</span><span class="p">)</span>
+    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_head&quot;</span><span class="p">]</span>
+    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_SS_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_brain&quot;</span><span class="p">]</span>
     <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
     <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">reg</span> <span class="o">=</span> <span class="n">reg</span>
-    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">wrp</span> <span class="o">=</span> <span class="n">wrp</span>
     <span class="n">atlas_brex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">msk</span> <span class="o">=</span> <span class="n">msk</span>
+    <span class="c1">#atlas_brex.inputs.wrp = wrp</span>
 
     <span class="c1"># mask_brex</span>
     <span class="n">mask_brex</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">UnaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mask_brex&#39;</span><span class="p">)</span>
@@ -225,7 +223,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-15.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

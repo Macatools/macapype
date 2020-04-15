@@ -109,7 +109,7 @@
 <h1>macapype.pipelines.full_segment.create_full_segment_from_mask_pipe<a class="headerlink" href="#macapype-pipelines-full-segment-create-full-segment-from-mask-pipe" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="macapype.pipelines.full_segment.create_full_segment_from_mask_pipe">
-<code class="descclassname">macapype.pipelines.full_segment.</code><code class="descname">create_full_segment_from_mask_pipe</code><span class="sig-paren">(</span><em>nmt_dir</em>, <em>params={}</em>, <em>name='full_segment_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_segment.html#create_full_segment_from_mask_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_segment.create_full_segment_from_mask_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">macapype.pipelines.full_segment.</code><code class="descname">create_full_segment_from_mask_pipe</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='full_segment_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_segment.html#create_full_segment_from_mask_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_segment.create_full_segment_from_mask_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Description: Segment T1 (using T2 for bias correction) and a previously</dt>
 <dd><p class="first">computed mask with NMT Atlas and atropos segment.</p>
@@ -130,7 +130,7 @@
 <p class="last">brain_mask: a mask computed for the same T1/T2 images</p>
 </dd>
 <dt>arguments:</dt>
-<dd><p class="first">nmt_dir: directory to NMT atlas</p>
+<dd><p class="first">params_template: dictionary of info about template</p>
 <p>params: dictionary of node sub-parameters (from a json file)</p>
 <p class="last">name: pipeline name (default = “full_segment_pipe”)</p>
 </dd>
@@ -153,7 +153,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-15.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
