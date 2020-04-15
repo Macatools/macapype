@@ -61,7 +61,7 @@ nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
 # running workflow
 segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                params_template=params_template,
-                                               segment=False,
+                                               segment=True,
                                                name = "segment_marmo_test_template")
 segment_pnh.base_dir = my_path
 
