@@ -13,7 +13,7 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
     package_directory = os.path.dirname(os.path.abspath(__file__))
 
     script_atlas_BREX = File('{}/../bash/atlasBREX.sh'.format(
-            package_directory),
+            package_directory), usedefault = True,
         exists=True,
         desc='atlasBREX script',
         mandatory=False, position=0, argstr="%s")
