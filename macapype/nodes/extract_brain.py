@@ -16,7 +16,7 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
             package_directory),
         exists=True,
         desc='atlasBREX script',
-        mandatory=True, position=0, argstr="%s")
+        mandatory=False, position=0, argstr="%s")
 
     NMT_SS_file = File(
         exists=True,
