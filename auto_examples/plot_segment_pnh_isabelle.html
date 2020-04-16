@@ -70,10 +70,7 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plot the results of a segmentation</a><ul>
-<li><a class="reference internal" href="#debias-results">Debias results</a><ul>
-<li><a class="reference internal" href="#second-part-of-the-pipeline"># Second part of the pipeline</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#running-workflow">Running workflow</a></li>
 </ul>
 </li>
 </ul>
@@ -134,8 +131,8 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.io</span> <span class="k">as</span> <span class="nn">nio</span>
 </pre></div>
 </div>
-<p>#Running workflow
-#==================</p>
+<div class="section" id="running-workflow">
+<h2>Running workflow<a class="headerlink" href="#running-workflow" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#from macapype.utils.utils_tests import load_test_data, format_template</span>
 <span class="c1">#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes</span>
 
@@ -225,173 +222,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_isabelle_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_isabelle_001.png" />
-<div class="section" id="debias-results">
-<h2>Debias results<a class="headerlink" href="#debias-results" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#debiased_T1_file = op.join(wf_path, &quot;correct_bias_pipe&quot;, &quot;restore_T1&quot;,</span>
-                           <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_maths.nii.gz&quot;)</span>
-
-
-<span class="c1">#debiased_T1 = os.path.join(wf_path,&quot;reorient_T1.png&quot;)</span>
-
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {}&quot;.format(debiased_T1, debiased_T1_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#fig, axs = plt.subplots(2, 1, figsize=(24, 16))</span>
-<span class="c1">#axs[0].imshow(plt.imread(outfile_T1))</span>
-<span class="c1">#axs[0].axis(&#39;off&#39;)</span>
-
-<span class="c1">#axs[1].imshow(plt.imread(debiased_T1))</span>
-<span class="c1">#axs[1].axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<p># Brain extraction results
-#==========================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## At the end 1st part pipeline</span>
-<span class="c1">#mask_file = os.path.join(</span>
-    <span class="c1">#wf_path, &quot;devel_atlas_brex&quot;, &quot;smooth_mask&quot;,</span>
-    <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_maths_noise_corrected_brain_bin_bin.nii.gz&quot;)</span>
-
-<span class="c1">#output_img_overlay = os.path.join(wf_path,&quot;outfile_overlay.png&quot;)</span>
-<span class="c1">##cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}&quot;.format(output_img_overlay, mask_file, T1_file)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} {} -a 50&quot;.format(output_img_overlay, T1_file, mask_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(output_img_overlay)</span>
-<span class="c1">#plt.figure(figsize=(16, 16))</span>
-<span class="c1">#plt.imshow(img)</span>
-<span class="c1">#plt.axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<div class="section" id="second-part-of-the-pipeline">
-<h3># Second part of the pipeline<a class="headerlink" href="#second-part-of-the-pipeline" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#seg_pipe = op.join(wf_path, &quot;segment_devel_NMT_sub_align&quot;)</span>
-</pre></div>
-</div>
-<p># debias T1xT2 and debias N4
-#=============================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#denoised_T1_file = os.path.join(seg_pipe, &quot;denoised_pipe&quot;, &quot;denoise_T1&quot;,</span>
-                           <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected.nii.gz&quot;)</span>
-
-
-<span class="c1">#denoised_T1 = os.path.join(wf_path,&quot;denoised_T1.png&quot;)</span>
-
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} -cm Render3&quot;.format(denoised_T1, denoised_T1_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#debiased_mask_T1_file = os.path.join(seg_pipe, &quot;masked_correct_bias_pipe&quot;, &quot;restore_mask_T1&quot;,</span>
-                         <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked.nii.gz&quot;)</span>
-
-<span class="c1">#debiased_mask_T1 = os.path.join(wf_path,&quot;debiased_mask_T1.png&quot;)</span>
-
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} -cm Render3&quot;.format(debiased_mask_T1, debiased_mask_T1_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-
-<span class="c1">#N4_debias_T1_file = os.path.join(seg_pipe, &quot;register_NMT_pipe&quot;, &quot;norm_intensity&quot;,</span>
-                         <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;)</span>
-
-<span class="c1">#N4_debias_T1 = os.path.join(wf_path,&quot;N4_debias_T1.png&quot;)</span>
-
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} -cm Render3&quot;.format(N4_debias_T1, N4_debias_T1_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-
-<span class="c1">#fig, axs = plt.subplots(3, 1, figsize=(36, 16))</span>
-<span class="c1">#axs[0].imshow(plt.imread(denoised_T1))</span>
-<span class="c1">#axs[0].axis(&#39;off&#39;)</span>
-
-<span class="c1">#axs[1].imshow(plt.imread(debiased_mask_T1))</span>
-<span class="c1">#axs[1].axis(&#39;off&#39;)</span>
-
-<span class="c1">#axs[2].imshow(plt.imread(N4_debias_T1))</span>
-<span class="c1">#axs[2].axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<p># results of deoblique
-#===========================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### showing mask</span>
-<span class="c1">#T1_file = os.path.join(</span>
-   <span class="c1">#seg_pipe,&quot;register_NMT_pipe&quot;, &quot;norm_intensity/&quot;,</span>
-   <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;)</span>
-
-<span class="c1">#deoblique_T1_file = os.path.join(</span>
-    <span class="c1">#seg_pipe,&quot;segment_atropos_pipe&quot;, &quot;deoblique/&quot;,</span>
-    <span class="c1">#&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;)</span>
-
-<span class="c1">#outfile_deoblique = os.path.join(wf_path,&quot;outfile_deoblique.png&quot;)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50&quot;.format(outfile_deoblique, T1_file, deoblique_T1_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(outfile_deoblique)</span>
-<span class="c1">#plt.figure(figsize=(8, 8))</span>
-<span class="c1">#plt.imshow(img)</span>
-<span class="c1">#plt.axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<p># register template to subject
-#==============================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#reg_template_mask_to_T1_file = os.path.join(</span>
-    <span class="c1">#seg_pipe, &quot;register_NMT_pipe&quot;, &quot;align_NMT&quot;,</span>
-    <span class="c1">#&quot;NMT_brainmask_prob_allineate.nii.gz&quot;)</span>
-
-<span class="c1">#reg_template_mask_to_T1 = os.path.join(wf_path,&quot;reg_template_mask_to_T1.png&quot;)</span>
-
-
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} {} -a 50&quot;.format(</span>
-    <span class="c1">#reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)</span>
-
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(reg_template_mask_to_T1)</span>
-<span class="c1">#plt.figure(figsize=(16, 16))</span>
-<span class="c1">#plt.imshow(img)</span>
-<span class="c1">#plt.axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<p># segmentation results
-#==========================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#tissue_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;seg_at&quot;, &quot;segment_Segmentation.nii.gz&quot;)</span>
-<span class="c1">#segmentation = os.path.join(wf_path,&quot;segmentation.png&quot;)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30&quot;.format(segmentation, deoblique_T1_file, tissue_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(segmentation)</span>
-<span class="c1">#plt.figure(figsize=(16, 16))</span>
-<span class="c1">#plt.imshow(img)</span>
-<span class="c1">#plt.axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<p># segmentation results by tissue
-#================================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#csf_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;threshold_csf&quot;, &quot;segment_SegmentationPosteriors01_thresh.nii.gz&quot;)</span>
-<span class="c1">#gm_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;threshold_gm&quot;, &quot;segment_SegmentationPosteriors02_thresh.nii.gz&quot;)</span>
-<span class="c1">#wm_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;threshold_wm&quot;, &quot;segment_SegmentationPosteriors03_thresh.nii.gz&quot;)</span>
-
-<span class="c1">#segmentation_sep = os.path.join(wf_path,&quot;segmentation_sep.png&quot;)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30&quot;.format(segmentation_sep, deoblique_T1_file, gm_file, wm_file, csf_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(segmentation_sep)</span>
-<span class="c1">#plt.figure(figsize=(16, 16))</span>
-<span class="c1">#plt.imshow(img)</span>
-<span class="c1">#plt.axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  13.540 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  14.136 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-isabelle-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/05f3dcec3d5f513ed1aa8a9013bd110b/plot_segment_pnh_isabelle.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_isabelle.py</span></code></a></div>
@@ -399,7 +230,6 @@
 <a class="reference download internal" download="" href="../_downloads/34b582cd19fad27ed3d84f8acccfe65a/plot_segment_pnh_isabelle.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_segment_pnh_isabelle.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
 </div>
 </div>
 
@@ -415,7 +245,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-15.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-16.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -74,11 +74,11 @@ from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 #exit()
 
-###############################################################################
-## Testing plot in local
-##=======================
-my_path = "/home/INT/meunier.d/ownCloud-AMUBOX/Data_tmp/marmotest"
-#my_path = "/home/INT/meunier.d/Data/marmotest/"
+##############################################################################
+# Testing plot in local
+#=======================
+#my_path = "/home/INT/meunier.d/ownCloud-AMUBOX/Data_tmp/marmotest"
+my_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test/"
 wf_path = os.path.join(my_path, "segment_marmo_test_template")
 
 T1_file = op.join(wf_path, "preproc_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
@@ -145,74 +145,74 @@ plt.show()
 ## Second part of the pipeline
 ###############################################################################
 
-#seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
+seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
 
-################################################################################
-## debias T1xT2 and debias N4
-##=============================
+###############################################################################
+# debias T1xT2 and debias N4
+#=============================
 
-#denoised_T1_file = os.path.join(seg_pipe, "denoised_pipe", "denoise_T1",
-                           #"sub-Apache_ses-01_T1w_cropped_noise_corrected.nii.gz")
-
-
-#denoised_T1 = os.path.join(wf_path,"denoised_T1.png")
-
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(denoised_T1, denoised_T1_file)
-#os.system(cmd)
-
-#debiased_mask_T1_file = os.path.join(seg_pipe, "masked_correct_bias_pipe", "restore_mask_T1",
-                         #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked.nii.gz")
-
-#debiased_mask_T1 = os.path.join(wf_path,"debiased_mask_T1.png")
-
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(debiased_mask_T1, debiased_mask_T1_file)
-#os.system(cmd)
+denoised_T1_file = os.path.join(seg_pipe, "denoised_pipe", "denoise_T1",
+                           "T1w_0p33mm_28_roi_noise_corrected.nii.gz")
 
 
-#N4_debias_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "norm_intensity",
-                         #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+denoised_T1 = os.path.join(wf_path,"denoised_T1.png")
 
-#N4_debias_T1 = os.path.join(wf_path,"N4_debias_T1.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(denoised_T1, denoised_T1_file)
+os.system(cmd)
 
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(N4_debias_T1, N4_debias_T1_file)
-#os.system(cmd)
+debiased_mask_T1_file = os.path.join(seg_pipe, "masked_correct_bias_pipe", "restore_mask_T1",
+                         "T1w_0p33mm_28_roi_noise_corrected_maths_masked.nii.gz")
 
-#import matplotlib.pyplot as plt  # noqa
+debiased_mask_T1 = os.path.join(wf_path,"debiased_mask_T1.png")
 
-#fig, axs = plt.subplots(3, 1, figsize=(36, 16))
-#axs[0].imshow(plt.imread(denoised_T1))
-#axs[0].axis('off')
+cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(debiased_mask_T1, debiased_mask_T1_file)
+os.system(cmd)
 
-#axs[1].imshow(plt.imread(debiased_mask_T1))
-#axs[1].axis('off')
 
-#axs[2].imshow(plt.imread(N4_debias_T1))
-#axs[2].axis('off')
-#plt.show()
+N4_debias_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "norm_intensity",
+                         "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
 
-################################################################################
-## results of deoblique
-##===========================
+N4_debias_T1 = os.path.join(wf_path,"N4_debias_T1.png")
 
-### showing mask
-#T1_file = os.path.join(
-   #seg_pipe,"register_NMT_pipe", "norm_intensity/",
-   #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(N4_debias_T1, N4_debias_T1_file)
+os.system(cmd)
 
-#deoblique_T1_file = os.path.join(
-    #seg_pipe,"segment_atropos_pipe", "deoblique/",
-    #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+import matplotlib.pyplot as plt  # noqa
 
-#outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
-#os.system(cmd)
+fig, axs = plt.subplots(3, 1, figsize=(36, 16))
+axs[0].imshow(plt.imread(denoised_T1))
+axs[0].axis('off')
 
-#import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(outfile_deoblique)
-#plt.figure(figsize=(8, 8))
-#plt.imshow(img)
-#plt.axis('off')
-#plt.show()
+axs[1].imshow(plt.imread(debiased_mask_T1))
+axs[1].axis('off')
+
+axs[2].imshow(plt.imread(N4_debias_T1))
+axs[2].axis('off')
+plt.show()
+
+###############################################################################
+# results of deoblique
+#===========================
+
+## showing mask
+T1_file = os.path.join(
+   seg_pipe,"register_NMT_pipe", "norm_intensity/",
+   "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
+
+deoblique_T1_file = os.path.join(
+    seg_pipe,"segment_atropos_pipe", "deoblique/",
+    "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
+
+outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(outfile_deoblique)
+plt.figure(figsize=(8, 8))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
 
 ################################################################################
 ## register template to subject

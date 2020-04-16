@@ -102,15 +102,15 @@ Running workflow
 
 
 
-# Testing plot in local
-#=======================
+Testing plot in local
+=======================
+my_path = "/home/INT/meunier.d/ownCloud-AMUBOX/Data_tmp/marmotest"
 
 
 
 .. code-block:: python
 
-    my_path = "/home/INT/meunier.d/ownCloud-AMUBOX/Data_tmp/marmotest"
-    #my_path = "/home/INT/meunier.d/Data/marmotest/"
+    my_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test/"
     wf_path = os.path.join(my_path, "segment_marmo_test_template")
 
     T1_file = op.join(wf_path, "preproc_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
@@ -216,7 +216,7 @@ Brain extraction results
 .. code-block:: python
 
 
-    #seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
+    seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
 
 
 
@@ -224,89 +224,95 @@ Brain extraction results
 
 
 
-# debias T1xT2 and debias N4
-#=============================
-
-
-
-.. code-block:: python
-
-
-    #denoised_T1_file = os.path.join(seg_pipe, "denoised_pipe", "denoise_T1",
-                               #"sub-Apache_ses-01_T1w_cropped_noise_corrected.nii.gz")
-
-
-    #denoised_T1 = os.path.join(wf_path,"denoised_T1.png")
-
-    #cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(denoised_T1, denoised_T1_file)
-    #os.system(cmd)
-
-    #debiased_mask_T1_file = os.path.join(seg_pipe, "masked_correct_bias_pipe", "restore_mask_T1",
-                             #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked.nii.gz")
-
-    #debiased_mask_T1 = os.path.join(wf_path,"debiased_mask_T1.png")
-
-    #cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(debiased_mask_T1, debiased_mask_T1_file)
-    #os.system(cmd)
-
-
-    #N4_debias_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "norm_intensity",
-                             #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
-
-    #N4_debias_T1 = os.path.join(wf_path,"N4_debias_T1.png")
-
-    #cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(N4_debias_T1, N4_debias_T1_file)
-    #os.system(cmd)
-
-    #import matplotlib.pyplot as plt  # noqa
-
-    #fig, axs = plt.subplots(3, 1, figsize=(36, 16))
-    #axs[0].imshow(plt.imread(denoised_T1))
-    #axs[0].axis('off')
-
-    #axs[1].imshow(plt.imread(debiased_mask_T1))
-    #axs[1].axis('off')
-
-    #axs[2].imshow(plt.imread(N4_debias_T1))
-    #axs[2].axis('off')
-    #plt.show()
-
-
-
-
-
-
-
-# results of deoblique
-#===========================
+debias T1xT2 and debias N4
+=============================
 
 
 
 .. code-block:: python
 
 
-    ### showing mask
-    #T1_file = os.path.join(
-       #seg_pipe,"register_NMT_pipe", "norm_intensity/",
-       #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
-
-    #deoblique_T1_file = os.path.join(
-        #seg_pipe,"segment_atropos_pipe", "deoblique/",
-        #"sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
-
-    #outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-    #cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
-    #os.system(cmd)
-
-    #import matplotlib.pyplot as plt  # noqa
-    #img = plt.imread(outfile_deoblique)
-    #plt.figure(figsize=(8, 8))
-    #plt.imshow(img)
-    #plt.axis('off')
-    #plt.show()
+    denoised_T1_file = os.path.join(seg_pipe, "denoised_pipe", "denoise_T1",
+                               "T1w_0p33mm_28_roi_noise_corrected.nii.gz")
 
 
+    denoised_T1 = os.path.join(wf_path,"denoised_T1.png")
 
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(denoised_T1, denoised_T1_file)
+    os.system(cmd)
+
+    debiased_mask_T1_file = os.path.join(seg_pipe, "masked_correct_bias_pipe", "restore_mask_T1",
+                             "T1w_0p33mm_28_roi_noise_corrected_maths_masked.nii.gz")
+
+    debiased_mask_T1 = os.path.join(wf_path,"debiased_mask_T1.png")
+
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(debiased_mask_T1, debiased_mask_T1_file)
+    os.system(cmd)
+
+
+    N4_debias_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "norm_intensity",
+                             "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
+
+    N4_debias_T1 = os.path.join(wf_path,"N4_debias_T1.png")
+
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(N4_debias_T1, N4_debias_T1_file)
+    os.system(cmd)
+
+    import matplotlib.pyplot as plt  # noqa
+
+    fig, axs = plt.subplots(3, 1, figsize=(36, 16))
+    axs[0].imshow(plt.imread(denoised_T1))
+    axs[0].axis('off')
+
+    axs[1].imshow(plt.imread(debiased_mask_T1))
+    axs[1].axis('off')
+
+    axs[2].imshow(plt.imread(N4_debias_T1))
+    axs[2].axis('off')
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_004.png
+    :class: sphx-glr-single-img
+
+
+
+
+results of deoblique
+===========================
+
+
+
+.. code-block:: python
+
+
+    ## showing mask
+    T1_file = os.path.join(
+       seg_pipe,"register_NMT_pipe", "norm_intensity/",
+       "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
+
+    deoblique_T1_file = os.path.join(
+        seg_pipe,"segment_atropos_pipe", "deoblique/",
+        "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
+
+    outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
+    os.system(cmd)
+
+    import matplotlib.pyplot as plt  # noqa
+    img = plt.imread(outfile_deoblique)
+    plt.figure(figsize=(8, 8))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_005.png
+    :class: sphx-glr-single-img
 
 
 
@@ -402,7 +408,7 @@ Brain extraction results
 
 
 
-**Total running time of the script:** ( 0 minutes  14.792 seconds)
+**Total running time of the script:** ( 0 minutes  37.716 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_marmo_test.py:
