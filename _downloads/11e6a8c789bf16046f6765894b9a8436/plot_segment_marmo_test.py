@@ -214,44 +214,44 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-################################################################################
-## register template to subject
-##==============================
+###############################################################################
+# register template to subject
+#==============================
 
-#reg_template_mask_to_T1_file = os.path.join(
-    #seg_pipe, "register_NMT_pipe", "align_NMT",
-    #"NMT_brainmask_prob_allineate.nii.gz")
+reg_template_mask_to_T1_file = os.path.join(
+    seg_pipe, "register_NMT_pipe", "align_NMT",
+    "Template_T1_allineate.nii.gz")
 
-#reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
+reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
 
 
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
-    #reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
+    reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
 
-#os.system(cmd)
+os.system(cmd)
 
-#import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(reg_template_mask_to_T1)
-#plt.figure(figsize=(16, 16))
-#plt.imshow(img)
-#plt.axis('off')
-#plt.show()
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(reg_template_mask_to_T1)
+plt.figure(figsize=(16, 16))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
 
-################################################################################
-## segmentation results
-##==========================
+###############################################################################
+# segmentation results
+#==========================
 
-#tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
-#segmentation = os.path.join(wf_path,"segmentation.png")
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, deoblique_T1_file, tissue_file)
-#os.system(cmd)
+tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
+segmentation = os.path.join(wf_path,"segmentation.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, deoblique_T1_file, tissue_file)
+os.system(cmd)
 
-#import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(segmentation)
-#plt.figure(figsize=(16, 16))
-#plt.imshow(img)
-#plt.axis('off')
-#plt.show()
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(segmentation)
+plt.figure(figsize=(16, 16))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
 
 
 
