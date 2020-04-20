@@ -166,7 +166,6 @@ def create_register_NMT_pipe(params_template, params={}, name="register_NMT_pipe
         dimension = params["norm_intensity"]["dimension"]
         bspline_fitting_distance = \
             params["norm_intensity"]["bspline_fitting_distance"]
-
         n_iterations = params["norm_intensity"]["n_iterations"]
         convergence_threshold = \
             params["norm_intensity"]["convergence_threshold"]
@@ -179,7 +178,7 @@ def create_register_NMT_pipe(params_template, params={}, name="register_NMT_pipe
         n_iterations = [50, 50, 40, 30]
         convergence_threshold = 0.00000001
         shrink_factor = 2
-        args = "r 0 --verbose 1"
+        args = "-r 0 --verbose 1"
 
     norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
                              name='norm_intensity')

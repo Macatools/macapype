@@ -361,19 +361,18 @@ def create_full_segment_pnh_subpipes(
             params_template=params_template, params=params_brain_segment_pipe,
             name="segment_devel_NMT_sub_align")
 
+        if "align_crop" in params['preproc_pipe'].keys():
+            seg_pipe.connect(preproc_pipe, 'align_crop.t1_cropped_file',
+                            brain_segment_pipe, 'inputnode.preproc_T1')
+            seg_pipe.connect(preproc_pipe, 'align_crop.t2_cropped_file',
+                            brain_segment_pipe, 'inputnode.preproc_T2')
+        elif "crop" in params['preproc_pipe'].keys():
+            seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',
+                            brain_segment_pipe, 'inputnode.preproc_T1')
+            seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',
+                            brain_segment_pipe, 'inputnode.preproc_T2')
 
-    if "align_crop" in params['preproc_pipe'].keys():
-        seg_pipe.connect(preproc_pipe, 'align_crop.t1_cropped_file',
-                         brain_segment_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(preproc_pipe, 'align_crop.t2_cropped_file',
-                         brain_segment_pipe, 'inputnode.preproc_T2')
-    elif "crop" in params['preproc_pipe'].keys():
-        seg_pipe.connect(preproc_pipe, 'crop_bb_T1.roi_file',
-                         brain_segment_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(preproc_pipe, 'crop_bb_T2.roi_file',
-                         brain_segment_pipe, 'inputnode.preproc_T2')
-
-        seg_pipe.connect(brain_extraction_pipe, "smooth_mask.out_file",
-                         brain_segment_pipe, "inputnode.brain_mask")
+            seg_pipe.connect(brain_extraction_pipe, "smooth_mask.out_file",
+                            brain_segment_pipe, "inputnode.brain_mask")
 
     return seg_pipe
