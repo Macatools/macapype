@@ -14,7 +14,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data T1w and T2w">
 
 .. only:: html
 

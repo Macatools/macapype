@@ -9,9 +9,9 @@
 
 .. _plot_segment_marmo_test:
 
-===================================
-Plot the results of a segmentation
-===================================
+=================================================================
+Plot the results of a segmentation of marmoset data T1w and T2w
+=================================================================
 
 
 
@@ -104,28 +104,25 @@ Running workflow
 
 Testing plot in local
 =======================
-my_path = "/home/INT/meunier.d/ownCloud-AMUBOX/Data_tmp/marmotest"
 
 
 
 .. code-block:: python
 
+
     my_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test/"
     wf_path = os.path.join(my_path, "segment_marmo_test_template")
 
-    T1_file = op.join(wf_path, "preproc_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
 
-    # displaying results
-    outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(outfile_T1, T1_file)
-    os.system(cmd)
+    graph = os.path.join(wf_path, "graph.png")
 
     import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(outfile_T1)
-    plt.figure(figsize=(16, 16))
+    img = plt.imread(graph)
+    plt.figure(figsize=(36, 72))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
+
 
 
 
@@ -137,8 +134,48 @@ my_path = "/home/INT/meunier.d/ownCloud-AMUBOX/Data_tmp/marmotest"
 
 
 
-Correct bias results
+Preprocessing pipeline
 ==========================
+
+
+Cropping
+^^^^^^^^^^^
+
+
+
+.. code-block:: python
+
+
+    T1_file = op.join(wf_path, "preproc_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
+
+    # displaying results
+    outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
+    cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(outfile_T1, T1_file)
+    os.system(cmd)
+
+    import matplotlib.pyplot as plt  # noqa
+    img = plt.imread(outfile_T1)
+    plt.figure(figsize=(36, 12))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_002.png
+    :class: sphx-glr-single-img
+
+
+
+
+First part of the pipeline
+=============================
+
+
+Correct bias
+^^^^^^^^^^^^^^^
 
 
 
@@ -157,7 +194,7 @@ Correct bias results
     import matplotlib.pyplot as plt  # noqa
     img = plt.imread(outfile_T1)
 
-    fig, axs = plt.subplots(2, 1, figsize=(24, 16))
+    fig, axs = plt.subplots(2, 1, figsize=(36, 24))
     axs[0].imshow(plt.imread(outfile_T1))
     axs[0].axis('off')
 
@@ -168,14 +205,14 @@ Correct bias results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_002.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_003.png
     :class: sphx-glr-single-img
 
 
 
 
-Brain extraction results
-==========================
+Brain extraction
+^^^^^^^^^^^^^^^^^^
 
 
 
@@ -189,12 +226,12 @@ Brain extraction results
 
     output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
     #cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(output_img_overlay, mask_file, T1_file)
-    cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(output_img_overlay, T1_file, mask_file)
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(output_img_overlay, T1_file, mask_file)
     os.system(cmd)
 
     import matplotlib.pyplot as plt  # noqa
     img = plt.imread(output_img_overlay)
-    plt.figure(figsize=(16, 16))
+    plt.figure(figsize=(36, 12))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
@@ -202,14 +239,14 @@ Brain extraction results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_003.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_004.png
     :class: sphx-glr-single-img
 
 
 
 
-# Second part of the pipeline
-##############################################################################
+Second part of the pipeline
+===============================
 
 
 
@@ -225,7 +262,7 @@ Brain extraction results
 
 
 debias T1xT2 and debias N4
-=============================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
@@ -260,7 +297,7 @@ debias T1xT2 and debias N4
 
     import matplotlib.pyplot as plt  # noqa
 
-    fig, axs = plt.subplots(3, 1, figsize=(36, 16))
+    fig, axs = plt.subplots(3, 1, figsize=(36, 36))
     axs[0].imshow(plt.imread(denoised_T1))
     axs[0].axis('off')
 
@@ -274,14 +311,14 @@ debias T1xT2 and debias N4
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_004.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_005.png
     :class: sphx-glr-single-img
 
 
 
 
-results of deoblique
-===========================
+deoblique
+^^^^^^^^^^^^
 
 
 
@@ -298,48 +335,12 @@ results of deoblique
         "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
 
     outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm red -a 50 {} -cm blue -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
     os.system(cmd)
 
     import matplotlib.pyplot as plt  # noqa
     img = plt.imread(outfile_deoblique)
-    plt.figure(figsize=(8, 8))
-    plt.imshow(img)
-    plt.axis('off')
-    plt.show()
-
-
-
-
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_005.png
-    :class: sphx-glr-single-img
-
-
-
-
-register template to subject
-==============================
-
-
-
-.. code-block:: python
-
-
-    reg_template_mask_to_T1_file = os.path.join(
-        seg_pipe, "register_NMT_pipe", "align_NMT",
-        "Template_T1_allineate.nii.gz")
-
-    reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
-
-
-    cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
-        reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
-
-    os.system(cmd)
-
-    import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(reg_template_mask_to_T1)
-    plt.figure(figsize=(16, 16))
+    plt.figure(figsize=(36, 12))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
@@ -353,8 +354,44 @@ register template to subject
 
 
 
-segmentation results
-==========================
+register template to subject
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+.. code-block:: python
+
+
+    reg_template_mask_to_T1_file = os.path.join(
+        seg_pipe, "register_NMT_pipe", "align_NMT",
+        "Template_T1_allineate.nii.gz")
+
+    reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
+
+
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 50".format(
+        reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
+
+    os.system(cmd)
+
+    import matplotlib.pyplot as plt  # noqa
+    img = plt.imread(reg_template_mask_to_T1)
+    plt.figure(figsize=(36, 12))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_007.png
+    :class: sphx-glr-single-img
+
+
+
+
+segmentation
+^^^^^^^^^^^^^^
 
 
 
@@ -368,7 +405,39 @@ segmentation results
 
     import matplotlib.pyplot as plt  # noqa
     img = plt.imread(segmentation)
-    plt.figure(figsize=(16, 16))
+    plt.figure(figsize=(36, 12))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_008.png
+    :class: sphx-glr-single-img
+
+
+
+
+segmentation results by tissue
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+.. code-block:: python
+
+
+    csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
+    gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")
+    wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_wm", "segment_SegmentationPosteriors03_thresh.nii.gz")
+
+    segmentation_sep = os.path.join(wf_path,"segmentation_sep.png")
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30".format(segmentation_sep, deoblique_T1_file, gm_file, wm_file, csf_file)
+    os.system(cmd)
+
+    import matplotlib.pyplot as plt  # noqa
+    img = plt.imread(segmentation_sep)
+    plt.figure(figsize=(36, 12))
     plt.imshow(img)
     plt.axis('off')
     plt.show()
@@ -377,44 +446,13 @@ segmentation results
 
 
 
-
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_007.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_test_009.png
     :class: sphx-glr-single-img
 
 
 
 
-# segmentation results by tissue
-#================================
-
-
-
-.. code-block:: python
-
-
-    #csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
-    #gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")
-    #wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_wm", "segment_SegmentationPosteriors03_thresh.nii.gz")
-
-    #segmentation_sep = os.path.join(wf_path,"segmentation_sep.png")
-    #cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30".format(segmentation_sep, deoblique_T1_file, gm_file, wm_file, csf_file)
-    #os.system(cmd)
-
-    #import matplotlib.pyplot as plt  # noqa
-    #img = plt.imread(segmentation_sep)
-    #plt.figure(figsize=(16, 16))
-    #plt.imshow(img)
-    #plt.axis('off')
-    #plt.show()
-
-
-
-
-
-
-
-
-**Total running time of the script:** ( 0 minutes  43.521 seconds)
+**Total running time of the script:** ( 0 minutes  54.434 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_marmo_test.py:
