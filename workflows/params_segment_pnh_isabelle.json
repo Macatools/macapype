@@ -1,7 +1,11 @@
 {
     "preproc_pipe":
     {
-        "crop_align":
+        "reorient":
+        {
+            "new_dims": "x z -y"
+        },
+        "align_crop":
         {
             "m": true,
             "aT2": true,
