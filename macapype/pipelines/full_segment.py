@@ -139,7 +139,7 @@ def create_full_segment_pnh_T1xT2(brain_template, priors, params={},
 ###############################################################################
 # Kepkee
 def create_full_segment_from_mask_pipe(
-        nmt_dir, params={}, name="full_segment_pipe"):
+        nmt_dir, params={}, name="full_segment_from_mask_pipe"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
         computed mask with NMT Atlas and atropos segment.
 
@@ -341,8 +341,7 @@ def create_full_segment_pnh_subpipes(
 
     brain_extraction_pipe = create_brain_extraction_pipe(
         atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir,
-        params=params_brain_extraction_pipe,
-        name="devel_atlas_brex")
+        params=params_brain_extraction_pipe)
 
     seg_pipe.connect(denoise_pipe, 'denoise_T1.output_image',
                      brain_extraction_pipe, "inputnode.restore_T1")
@@ -359,8 +358,7 @@ def create_full_segment_pnh_subpipes(
             params_brain_segment_pipe = {}
 
         brain_segment_pipe = create_full_segment_from_mask_pipe(
-            nmt_dir=nmt_dir, params=params_brain_segment_pipe,
-            name="segment_devel_NMT_sub_align")
+            nmt_dir=nmt_dir, params=params_brain_segment_pipe)
 
         seg_pipe.connect(preproc, 't1_cropped_file',
                          brain_segment_pipe, 'inputnode.preproc_T1')
