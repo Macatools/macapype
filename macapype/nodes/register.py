@@ -89,20 +89,15 @@ def interative_flirt(anat_file, anat_file_BET, template_brain_file,
 # NMTSubjectAlign
 class NMTSubjectAlignInputSpec(CommandLineInputSpec):
 
-    script_file = File(
-        exists=True,
-        desc='NMT_subject_align script',
-        mandatory=True, position=0, argstr="%s")
-
     T1_file = File(
         exists=True,
         desc='Target file',
-        mandatory=True, position=1, argstr="%s")
+        mandatory=True, position=0, argstr="%s")
 
     NMT_SS_file = File(
         exists=True,
         desc='Align to T1',
-        mandatory=True, position=2, argstr="%s")
+        mandatory=True, position=1, argstr="%s")
 
 
 class NMTSubjectAlignOutputSpec(TraitedSpec):
@@ -131,12 +126,6 @@ class NMTSubjectAlign(CommandLine):
 
 
     Inputs:
-
-
-        script_file = File(
-            exists=True,
-            desc='NMT_subject_align script',
-            mandatory=True, position=0, argstr="%s")
 
         T1_file = File(
             exists=True,
@@ -172,7 +161,8 @@ class NMTSubjectAlign(CommandLine):
     input_spec = NMTSubjectAlignInputSpec
     output_spec = NMTSubjectAlignOutputSpec
 
-    _cmd = 'tcsh -x'
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'tcsh -x {}/../bash/NMT_subject_align.csh'.format(package_directory)
 
     def _list_outputs(self):
 
@@ -183,8 +173,12 @@ class NMTSubjectAlign(CommandLine):
         path, fname, ext = split_f(self.inputs.T1_file)
 
         outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
+
+        # TODO will require some checks
+        # outputs["warpinv_file"] = os.path.abspath(
+        # fname + "_shft_WARPINV.nii")
         outputs["warpinv_file"] = os.path.abspath(
-            fname + "_shft_WARPINV.nii")
+            fname + "_shft_WARPINV.nii.gz")
 
         # outputs["warpinv_file"] = os.path.abspath(
         #    fname + "_shft_WARPINV" + ext)

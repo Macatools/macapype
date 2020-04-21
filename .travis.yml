@@ -48,7 +48,7 @@ script:
 
     # Run test with coverage
     - if [[ "${TEST}" == "standard" ]]; then
-        py.test --cov;
+        py.test --cov macapype --ignore=examples/;
       fi;
 
     - flake8 --count macapype
