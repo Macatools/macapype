@@ -1,5 +1,3 @@
-import os
-
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -125,7 +123,8 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
-def create_register_NMT_pipe(params_template, params={}, name="register_NMT_pipe"):
+def create_register_NMT_pipe(params_template, params={},
+                             name="register_NMT_pipe"):
     """
     Description: Register template to anat with the script NMT_subject_align,
         and then apply it to tissues list_priors
@@ -200,10 +199,12 @@ def create_register_NMT_pipe(params_template, params={}, name="register_NMT_pipe
 
     NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
 
-
     # align_masks
     # "overwrap" of NwarpApply, with specifying the outputs as wished
-    list_priors = [params_template["template_head"], params_template["template_csf"], params_template["template_gm"], params_template["template_wm"]]
+    list_priors = [params_template["template_head"],
+                   params_template["template_csf"],
+                   params_template["template_gm"],
+                   params_template["template_wm"]]
 
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors

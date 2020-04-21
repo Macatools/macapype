@@ -7,30 +7,34 @@ from nipype.interfaces.fsl.base import FSLCommand, FSLCommandInputSpec
 from nipype.interfaces.base import TraitedSpec, File, traits
 import os
 
+
 class FslOrientInputSpec(FSLCommandInputSpec):
 
-       main_option = traits.Str(desc='main option', argstr='-%s', position=0,
-                                mandatory=True)
+    main_option = traits.Str(
+        desc='main option', argstr='-%s', position=0, mandatory=True)
 
-       code = traits.Int(argstr='%d', desc='code for setsformcode', position=1)
+    code = traits.Int(
+        argstr='%d', desc='code for setsformcode', position=1)
 
-       in_file = File(exists=True, desc='input file', argstr='%s', position=2,
-                      mandatory=True)
+    in_file = File(
+        exists=True, desc='input file', argstr='%s', position=2,
+        mandatory=True)
+
 
 class FslOrientOutputSpec(TraitedSpec):
 
-       out_file = File(desc = "out file", exists = True)
+    out_file = File(desc="out file", exists=True)
+
 
 class FslOrient(FSLCommand):
+    _cmd = 'fslorient'
+    input_spec = FslOrientInputSpec
+    output_spec = FslOrientOutputSpec
 
-       _cmd = 'fslorient'
-       input_spec = FslOrientInputSpec
-       output_spec = FslOrientOutputSpec
-
-       def _list_outputs(self):
-               outputs = self.output_spec().get()
-               outputs['out_file'] = os.path.abspath(self.inputs.in_file)
-               return outputs
+    def _list_outputs(self):
+        outputs = self.output_spec().get()
+        outputs['out_file'] = os.path.abspath(self.inputs.in_file)
+        return outputs
 
 
 ###############################################################################

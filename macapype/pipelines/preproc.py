@@ -3,7 +3,7 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-from nipype.interfaces.freesurfer.preprocess import MRIConvert
+# from nipype.interfaces.freesurfer.preprocess import MRIConvert
 
 from ..nodes.preproc import average_align, FslOrient
 from ..nodes.bash_regis import T1xT2BET
@@ -25,7 +25,9 @@ def read_cropbox(cropbox_file):
 
     return crop_list
 
-def create_reorient_pipeline(name = "reorient_pipe", new_dims = ("x","z","-y")):
+
+def create_reorient_pipeline(name="reorient_pipe",
+                             new_dims=("x", "z", "-y")):
 
     """
     By kepkee:
@@ -43,19 +45,22 @@ def create_reorient_pipeline(name = "reorient_pipe", new_dims = ("x","z","-y")):
         name='inputnode'
     )
 
-    swap_dim = pe.Node(fsl.SwapDimensions(new_dims=new_dims), name = "swap_dim")
+    swap_dim = pe.Node(fsl.SwapDimensions(new_dims=new_dims),
+                       name="swap_dim")
     reorient_pipe.connect(inputnode, 'image', swap_dim, 'in_file')
 
-    deorient = pe.Node(FslOrient(main_option = "deleteorient"), name = "deorient")
+    deorient = pe.Node(FslOrient(main_option="deleteorient"),
+                       name="deorient")
     reorient_pipe.connect(swap_dim, 'out_file', deorient, 'in_file')
 
-    reorient = pe.Node(FslOrient(main_option = "setqformcode", code  = 1), name = "reorient")
+    reorient = pe.Node(FslOrient(main_option="setqformcode", code=1),
+                       name="reorient")
     reorient_pipe.connect(deorient, 'out_file', reorient, 'in_file')
 
     return reorient_pipe
 
 
-def create_preproc_pipe(params, name = "preproc_pipe"):
+def create_preproc_pipe(params, name="preproc_pipe"):
     """
     preprocessing:
     - av = checking if multiples T1 and T2 and if it is the case,
@@ -73,21 +78,23 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         name='inputnode'
     )
 
-
     if "reorient" in params.keys():
 
         if "new_dims" in params["reorient"].keys():
             new_dims = tuple(params["reorient"]["new_dims"].split())
+
         else:
-            new_dims = ("x","z","-y")
+            new_dims = ("x", "z", "-y")
 
-        reorient_T1_pipe = create_reorient_pipeline(name = "reorient_T1_pipe",
+        reorient_T1_pipe = create_reorient_pipeline(name="reorient_T1_pipe",
                                                     new_dims=new_dims)
-        preproc_pipe.connect(inputnode, 'T1', reorient_T1_pipe, 'inputnode.image')
+        preproc_pipe.connect(inputnode, 'T1',
+                             reorient_T1_pipe, 'inputnode.image')
 
-        reorient_T2_pipe = create_reorient_pipeline(name = "reorient_T2_pipe",
+        reorient_T2_pipe = create_reorient_pipeline(name="reorient_T2_pipe",
                                                     new_dims=new_dims)
-        preproc_pipe.connect(inputnode, 'T2', reorient_T2_pipe, 'inputnode.image')
+        preproc_pipe.connect(inputnode, 'T2',
+                             reorient_T2_pipe, 'inputnode.image')
 
     if "align_crop" in params.keys():
 
@@ -97,16 +104,18 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         n = params["align_crop"]["n"]
         m = params["align_crop"]["m"]
 
-
-        print("aT2:",aT2,"c:",c,"n:",n,"m:",m)
+        print("aT2:", aT2, "c:", c, "n:", n, "m:", m)
 
         # Brain extraction (unused) + Cropping
-        align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n, m=m), name='align_crop')
+        align_crop = pe.Node(T1xT2BET(aT2=aT2, c=c, n=n, m=m),
+                             name='align_crop')
 
         if "reorient" in params.keys():
 
-            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', align_crop, 't1_file')
-            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file', align_crop, 't2_file')
+            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
+                                 align_crop, 't1_file')
+            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file',
+                                 align_crop, 't2_file')
         else:
             preproc_pipe.connect(inputnode, 'T1', align_crop, 't1_file')
             preproc_pipe.connect(inputnode, 'T2', align_crop, 't2_file')
@@ -114,10 +123,9 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
     elif "crop" in params.keys():
         print('crop is in params')
 
-        ### align avg T2 on avg T1
-        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name = "align_T2_on_T1")
+        # align avg T2 on avg T1
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
         align_T2_on_T1.inputs.dof = 6
-
 
         # cropping
         # Crop bounding box for T1
@@ -129,10 +137,13 @@ def create_preproc_pipe(params, name = "preproc_pipe"):
         crop_bb_T2.inputs.args = params["crop"]["croplist"]
 
         if "reorient" in params.keys():
-            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', align_T2_on_T1, 'reference')
-            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file', align_T2_on_T1, 'in_file')
+            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
+                                 align_T2_on_T1, 'reference')
+            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file',
+                                 align_T2_on_T1, 'in_file')
 
-            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file', crop_bb_T1, 'in_file')
+            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
+                                 crop_bb_T1, 'in_file')
         else:
             preproc_pipe.connect(inputnode, 'T1', align_T2_on_T1, 'reference')
             preproc_pipe.connect(inputnode, 'T2', align_T2_on_T1, 'in_file')

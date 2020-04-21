@@ -1,9 +1,7 @@
 """
-    TODO :p
+    Pipelines for brain extraction
 
 """
-import os.path as op
-
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -53,13 +51,13 @@ def create_brain_extraction_pipe(params_template, params={},
         reg = params["atlas_brex"]["reg"]
         wrp = params["atlas_brex"]["wrp"]
         msk = params["atlas_brex"]["msk"]
-        #wrp = params["atlas_brex"]["wrp"]
+        # wrp = params["atlas_brex"]["wrp"]
     else:
         f = 0.5
         reg = 1
         wrp = "10,10,10"
         msk = "a,0,0"
-        #wrp = "1"
+        # wrp = "1"
 
     atlas_brex = pe.Node(AtlasBREX(), name='atlas_brex')
 
@@ -72,7 +70,7 @@ def create_brain_extraction_pipe(params_template, params={},
     atlas_brex.inputs.reg = reg
     atlas_brex.inputs.wrp = wrp
     atlas_brex.inputs.msk = msk
-    #atlas_brex.inputs.wrp = wrp
+    # atlas_brex.inputs.wrp = wrp
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')

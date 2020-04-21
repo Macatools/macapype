@@ -60,6 +60,7 @@ def load_test_data(name, path_to=""):
 
     return data_path
 
+
 def format_template(data_path, template_name):
 
     import json
@@ -73,11 +74,10 @@ def format_template(data_path, template_name):
         "Error, could not find template formating for {} in {}".format(
             template_name, template_path_dict.keys())
     template_dict = template_path_dict[template_name]
-    print ("Found template formating for {}:".format(template_name))
-    print (template_dict)
+    print("Found template formating for {}:".format(template_name))
+    print(template_dict)
 
     for key, value in template_dict.items():
         template_dict[key] = op.join(data_path, value)
 
     return template_dict
-
