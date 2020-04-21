@@ -139,7 +139,7 @@ def create_full_segment_pnh_T1xT2(brain_template, priors, params={},
 ###############################################################################
 # Kepkee
 def create_full_segment_from_mask_pipe(
-        nmt_dir, params={}, name="full_segment_from_mask_pipe"):
+        params_template, params={}, name="full_segment_from_mask_pipe"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
         computed mask with NMT Atlas and atropos segment.
 
@@ -159,7 +159,7 @@ def create_full_segment_from_mask_pipe(
 
 
         arguments:
-            nmt_dir: directory to NMT atlas
+            params_template: dictionary of template files
 
             params: dictionary of node sub-parameters (from a json file)
 
@@ -211,7 +211,7 @@ def create_full_segment_from_mask_pipe(
         params_register_NMT_pipe = {}
 
     register_NMT_pipe = create_register_NMT_pipe(
-        nmt_dir=nmt_dir, params=params_register_NMT_pipe)
+        params_template=params_template, params=params_register_NMT_pipe)
 
     brain_segment_pipe.connect(
         masked_correct_bias_pipe, 'restore_mask_T1.out_file',
@@ -243,7 +243,7 @@ def create_full_segment_from_mask_pipe(
 
 # first step for a mask and then call create_full_segment_from_mask_pipe
 def create_full_segment_pnh_subpipes(
-        nmt_dir, atlasbrex_dir, params={}, name="segment_pnh_subpipes",
+        params_template, params={}, name="segment_pnh_subpipes",
         segment=True):
     """
     Description: Segment T1 (using T2 for bias correction) .
@@ -269,7 +269,7 @@ def create_full_segment_pnh_subpipes(
 
 
         arguments:
-            nmt_dir: directory to NMT atlas
+            params_template: dictionary of template files
             params: dictionary of node sub-parameters (from a json file)
             name: pipeline name (default = "full_segment_pipe")
 
@@ -340,7 +340,7 @@ def create_full_segment_pnh_subpipes(
         params_brain_extraction_pipe = {}
 
     brain_extraction_pipe = create_brain_extraction_pipe(
-        atlasbrex_dir=atlasbrex_dir, nmt_dir=nmt_dir,
+        params_template=params_template,
         params=params_brain_extraction_pipe)
 
     seg_pipe.connect(denoise_pipe, 'denoise_T1.output_image',
@@ -358,7 +358,8 @@ def create_full_segment_pnh_subpipes(
             params_brain_segment_pipe = {}
 
         brain_segment_pipe = create_full_segment_from_mask_pipe(
-            nmt_dir=nmt_dir, params=params_brain_segment_pipe)
+            params_template=params_template,
+            params=params_brain_segment_pipe)
 
         seg_pipe.connect(preproc, 't1_cropped_file',
                          brain_segment_pipe, 'inputnode.preproc_T1')
