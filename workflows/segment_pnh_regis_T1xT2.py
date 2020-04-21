@@ -58,8 +58,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 import nipype.pipeline.engine as pe
 
 from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
-from macapype.utils.utils_tests import load_test_data
-from macapype.utils.utils_spm import format_spm_priors
+from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.utils_bids import create_datasource
 
@@ -68,7 +67,7 @@ my_path = "/hpc/crise/meunier.d"
 
 ###############################################################################
 def create_main_workflow(data_path, main_path, subject_ids, sessions,
-                         acquisitions, template, priors, params_file):
+                         acquisitions, params_file):
     """
     create_main_workflow
     """
@@ -81,7 +80,6 @@ def create_main_workflow(data_path, main_path, subject_ids, sessions,
 
     # params
     if params_file is not None:
-
         assert os.path.exists(params_file), "Error with file {}".format(
             params_file)
 
@@ -92,30 +90,46 @@ def create_main_workflow(data_path, main_path, subject_ids, sessions,
     print(params)
     pprint.pprint(params)
 
-    # priors
-    if template is None and priors is None:
-        inia_dir = load_test_data("inia19", path_to=my_path)
-        template = op.join(inia_dir, "inia19-t1-brain.nii")
-        priors = [
-            op.join(inia_dir, "inia19-prob_1.nii"),
-            op.join(inia_dir, "inia19-prob_2.nii"),
-            op.join(inia_dir, "inia19-prob_0.nii")
-        ]
 
-    # case priors are one single file with 3 tissue merged
-    if len(priors) == 1:
-        priors = priors[0]
+    if "general" in params.keys() and "my_path" in params["general"].keys():
+        my_path = params["general"]["my_path"]
+    else:
+        my_path = "/hpc/crise/meunier.d"
 
-    priors = format_spm_priors(priors, directory=main_path)
+    if "general" in params.keys() and "template_name" in params["general"].keys():
+        template_name = params["general"]["template_name"]
+    else:
+        template_name = 'inia19'
+
+    nmt_dir = load_test_data(template_name, path_to = my_path)
+
+    params_template = format_template(nmt_dir, template_name)
+    print (params_template)
+
+    ## priors
+    #if template is None and priors is None:
+        #inia_dir = load_test_data("inia19", path_to=my_path)
+        #template = op.join(inia_dir, "inia19-t1-brain.nii")
+        #priors = [
+            #op.join(inia_dir, "inia19-prob_1.nii"),
+            #op.join(inia_dir, "inia19-prob_2.nii"),
+            #op.join(inia_dir, "inia19-prob_0.nii")
+        #]
+
+    ## case priors are one single file with 3 tissue merged
+    #if len(priors) == 1:
+        #priors = priors[0]
+
+    #priors = format_spm_priors(priors, directory=main_path)
 
     # main_workflow
-    main_workflow = pe.Workflow(name="T1xT2_processing_workflow_json")
+    main_workflow = pe.Workflow(name="T1xT2_processing_workflow_json_template")
     main_workflow.base_dir = main_path
 
     datasource = create_datasource(data_path, subject_ids, sessions,
                                    acquisitions)
 
-    segment_pnh = create_full_segment_pnh_T1xT2(template, priors, params)
+    segment_pnh = create_full_segment_pnh_T1xT2(params_template, params)
 
     main_workflow.connect(
         datasource, 'T1', segment_pnh, 'inputnode.T1')
@@ -140,10 +154,6 @@ if __name__ == '__main__':
                         help="Acquisitions ID")
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=False)
-    parser.add_argument("-template", dest="template", type=str,
-                        default=None, help="Anatomical template")
-    parser.add_argument("-priors", dest="priors", type=str, nargs='+',
-                        default=None, help="Tissues probability maps")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
 
@@ -155,10 +165,8 @@ if __name__ == '__main__':
         data_path=args.data,
         main_path=args.out,
         subject_ids=args.subjects,
-        sessions=args.ses,
         acquisitions=args.acq,
-        template=args.template,
-        priors=args.priors,
+        sessions=args.ses,
         params_file=args.params_file
     )
     # wf.write_graph(graph2use="colored")

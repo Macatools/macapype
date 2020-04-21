@@ -1,7 +1,11 @@
 {
+    "general":
+    {
+        "template_name": "NMT_v1.2"
+    },
     "preproc_pipe":
     {
-        "crop_align":
+        "bet_crop":
         {
             "m": true,
             "aT2": true,
@@ -29,9 +33,10 @@
         {
             "f": 0.5,
             "reg": 1,
-            "w": "10,10,10",
+            "wrp": "10,10,10",
             "msk": "a,0,0"
         }
+
     },
     "brain_segment_pipe":
     {
@@ -48,7 +53,7 @@
         },
         "register_NMT_pipe":
         {
-            "norm_internsity":
+            "norm_intersity":
             {
                 "dimension": 3,
                 "bspline_fitting_distance": 200,
@@ -57,7 +62,6 @@
                 "shrink_factor": 2,
                 "args": "r 0 --verbose 1"
             }
-
         },
         "segment_atropos_pipe":
         {
@@ -65,7 +69,20 @@
             {
                 "dimension": 3,
                 "numberOfClasses": 3
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
             }
         }
+
     }
 }

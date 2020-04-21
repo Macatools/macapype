@@ -86,6 +86,227 @@ def interative_flirt(anat_file, anat_file_BET, template_brain_file,
     return anat_file_brain, template_to_anat_file
 
 
+# IterREGBET
+class IterREGBETInputSpec(CommandLineInputSpec):
+
+    # mandatory
+    inw_file = File(
+        exists=True,
+        desc='Moving Whole-head image',
+        mandatory=True, position=0, argstr="-inw %s")
+
+    inb_file = File(
+        exists=True,
+        desc='Moving brain image',
+        mandatory=True, position=1, argstr="-inb %s")
+
+    refb_file = File(
+        exists=True,
+        desc='Fixed reference brain image',
+        mandatory=True, position=2, argstr="-refb %s")
+
+    # optional
+    xp = traits.String(
+        genfile=True,
+        desc="Prefix for the registration outputs (\"in_FLIRT-to_ref\" if not \
+            specified)",
+        position=3, argstr="-xp %s", mandatory=False)
+
+    bs = traits.String(
+        "_IRbrain", usedefault=True,
+        desc="Suffix for the brain files (\"in_IRbrain\" & \"in_IRbrain_mask\"\
+            if not specified)",
+        position=3, argstr="-bs %s", mandatory=False)
+
+    dof = traits.Enum(
+        12, 6, 7, desc='FLIRT degrees of freedom (6=rigid body, 7=scale, \
+            12=affine (default)). Use dof 6 for intra-subject, 12 for \
+            inter-subject registration',
+        argstr='-dof %d',
+        usedefault=True, mandatory=True)
+
+    cost = traits.Enum(
+        'normmi', 'leastsq', 'labeldiff', 'bbr', 'mutualinfo', 'corratio',
+        'normcorr',
+        desc='FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,\
+            labeldiff,bbr}    (default is normmi)',
+        argstr='-cost %s',
+        usedefault=True, mandatory=False)
+
+    # how to assert minimal value in traits def? is now in _parse_args
+    n = traits.Int(
+        2, usedefault=True,
+        desc='n = the number of FLIRT iterations (>=2, default=2).',
+        argstr="-n %d", mandatory=False)
+
+    m = traits.Enum(
+        'ref', 'union', 'inter', 'mix',
+        desc='At each new iteration, either use:\
+            - the reference brain mask, m=ref (default)\
+            - the union of the reference and input brain masks, \
+            m=union (use if your input brain is too small)\
+            - the intersection of the reference and input brain masks, m=inter\
+            (use if your input brain is too big)\
+            - a mix between union & intersection, m=mix (give it a try!)',
+        argstr='-m %s',
+        usedefault=True, mandatory=False)
+
+    refw_file = File(
+        exists=True,
+        desc='Do a whole-head non-linear registration (using FNIRT) during\
+            last iteration (provide reference whole-head image)',
+        mandatory=False, argstr="-refw %s")
+
+    k = traits.Bool(
+        False, usedefault=True,
+        position=3, argstr="-k",
+        desc="Will keep temporary files",
+        mandatory=False)
+
+    p = traits.String(
+        desc="Prefix for running FSL functions\
+            (can be a path or just a prefix)",
+        position=3, argstr="-p %s")
+
+
+class IterREGBETOutputSpec(TraitedSpec):
+    brain_file = File(
+        exists=True,
+        desc="brain from IterREGBET.sh")
+
+    brain_mask_file = File(
+        exists=True,
+        desc="masked brain from IterREGBET.sh")
+
+    warp_file = File(
+        exists=True,
+        desc="warped image from IterREGBET.sh")
+
+    transfo_file = File(
+            exists=True,
+            desc="transfo_file")
+
+    inv_transfo_file = File(
+            exists=True,
+            desc="inv_transfo_file")
+
+
+class IterREGBET(CommandLine):
+    """
+    Description: Iterative registration of the in-file to the ref file (
+    registered brain mask of the ref image is used at each iteration). To use
+    when the input brain mask is not optimal (eg. an output of FSL BET).
+    Will output a better brain mask of the in-file.
+
+    Inputs:
+
+        Mandatory:
+
+            inw_file
+                Moving Whole-head image
+            inb_file
+                Moving brain image
+            refb_file
+                Fixed reference brain image
+
+        Optional:
+
+            xp
+                Prefix for the registration outputs ("in_FLIRT-to_ref" if not
+                specified)
+            bs
+                Suffix for the brain files ("in_IRbrain" & "in_IRbrain_mask"
+                if not specified)
+            dof
+                FLIRT degrees of freedom (6=rigid body, 7=scale,
+                12=affine (default)). Use dof 6 for intra-subject, 12 for
+                inter-subject registration
+            cost
+                FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,\
+                labeldiff,bbr}    (default is normmi)
+            n
+                n = the number of FLIRT iterations (>=2, default=2)
+            m
+                At each new iteration, either use:
+
+                - the reference brain mask, m=ref (default)
+                - the union of the reference and input brain masks, m=union \
+                (use if your input brain is too small)
+                - the intersection of the reference and input brain masks, \
+                m=inter (use if your input brain is too big)
+                - a mix between union & intersection, m=mix (give it a try!)
+            refw_file
+                Do a whole-head non-linear registration (using FNIRT) during
+                last iteration (provide reference whole-head image)
+            k
+                Will keep temporary files
+            p
+                Prefix for running FSL functions (can be a path or just a
+                prefix)
+
+    Outputs:
+
+        brain_file
+            brain from IterREGBET.sh
+        brain_mask_file
+            masked brain from IterREGBET.sh
+        warp_file
+            warped image from IterREGBET.sh
+        transfo_file
+            transfo_file
+        inv_transfo_file
+            inv_transfo_file
+    """
+    input_spec = IterREGBETInputSpec
+    output_spec = IterREGBETOutputSpec
+
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/IterREGBET.sh'.format(package_directory)
+
+    def _gen_filename(self, name):
+        if name == "xp":
+            return self._gen_outfilename()
+        else:
+            return None
+
+    def _gen_outfilename(self):
+        from nipype.utils.filemanip import split_filename as split_f
+
+        _, in_brain, _ = split_f(self.inputs.inb_file)
+        _, ref, _ = split_f(self.inputs.refb_file)
+
+        if isdefined(self.inputs.xp):
+            outname = self.inputs.xp
+        else:
+            outname = in_brain + "_FLIRT-to_" + ref
+        return outname
+
+    def _list_outputs(self):
+
+        import os
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+
+        path, fname, ext = split_f(self.inputs.inw_file)
+
+        outputs["brain_file"] = os.path.abspath(
+            fname + self.inputs.bs + ".nii.gz")
+        outputs["brain_mask_file"] = os.path.abspath(
+            fname + self.inputs.bs + "_mask.nii.gz")
+
+        if isdefined(self.inputs.xp):
+            outfile = self.inputs.xp
+        else:
+            outfile = self._gen_outfilename()
+
+        outputs["warp_file"] = os.path.abspath(outfile + ".nii.gz")
+        outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
+        outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
+        print(outputs)
+        return outputs
+
+
 # NMTSubjectAlign
 class NMTSubjectAlignInputSpec(CommandLineInputSpec):
 

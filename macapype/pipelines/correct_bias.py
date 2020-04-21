@@ -64,23 +64,26 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
                               norm_mult, 'operand_value')
 
     # smooth
-    if "smooth" in params.keys():
+    smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
+    if "smooth" in params.keys() \
+            and "sigma" in params["smooth"].keys():
         sigma = params["smooth"]["sigma"]
     else:
         sigma = 2
 
-    smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
     smooth.inputs.args = "-bin -s {}".format(sigma)
 
     correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
-    if "norm_smooth" in params.keys():
+    norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
+
+    if "norm_smooth" in params.keys() \
+            and "sigma" in params["norm_smooth"].keys():
         sigma = params["norm_smooth"]["sigma"]
     else:
         sigma = 2
 
-    norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
     norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
 
     correct_bias_pipe.connect(norm_mult, 'out_file', norm_smooth, 'in_file')
@@ -251,24 +254,27 @@ def create_masked_correct_bias_pipe(params={},
                                      norm_mult, 'operand_value')
 
     # smooth
-    if "smooth" in params.keys():
+    smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
+    if "smooth" in params.keys() \
+            and "sigma" in params["smooth"].keys():
         sigma = params["smooth"]["sigma"]
     else:
         sigma = 2
 
-    smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
     smooth.inputs.args = "-bin -s {}".format(sigma)
 
     masked_correct_bias_pipe.connect(norm_mult, 'out_file',
                                      smooth, 'in_file')
 
     # norm_smooth
-    if "norm_smooth" in params.keys():
+    norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
+
+    if "norm_smooth" in params.keys() \
+            and "sigma" in params["norm_smooth"].keys():
         sigma = params["norm_smooth"]["sigma"]
     else:
         sigma = 2
 
-    norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
     norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
 
     masked_correct_bias_pipe.connect(norm_mult, 'out_file',

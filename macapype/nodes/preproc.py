@@ -2,12 +2,14 @@
 copied from https://stackoverrun.com/fr/q/6768689
 seems was never wrapped in nipype
 """
-
-from nipype.interfaces.fsl.base import FSLCommand, FSLCommandInputSpec
-from nipype.interfaces.base import TraitedSpec, File, traits
 import os
 
+from nipype.interfaces.fsl.base import FSLCommand, FSLCommandInputSpec
+from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
+                                    TraitedSpec, File, traits)
 
+
+# FslOrient
 class FslOrientInputSpec(FSLCommandInputSpec):
 
     main_option = traits.Str(
@@ -27,6 +29,10 @@ class FslOrientOutputSpec(TraitedSpec):
 
 
 class FslOrient(FSLCommand):
+    """
+    copied and adapted from https://stackoverrun.com/fr/q/6768689
+    seems was never wrapped in nipype
+    """
     _cmd = 'fslorient'
     input_spec = FslOrientInputSpec
     output_spec = FslOrientOutputSpec
@@ -34,6 +40,117 @@ class FslOrient(FSLCommand):
     def _list_outputs(self):
         outputs = self.output_spec().get()
         outputs['out_file'] = os.path.abspath(self.inputs.in_file)
+        return outputs
+
+
+# CropVolume
+class CropVolumeInputSpec(CommandLineInputSpec):
+
+    # mandatory
+    i_file = File(
+        exists=True,
+        desc='Volume to crop (you can specify as many -in as you want)',
+        mandatory=True, position=0, argstr="-i %s")
+
+    b_file = File(
+        exists=True,
+        desc='Brain image or brain mask, in the same space as the in-file(s)',
+        mandatory=True, position=1, argstr="-b %s")
+
+    # optional
+    o = traits.String(
+        desc="Prefix for the cropped image(s) (Must provide as many prefixes\
+            as input images with -o, default is the base name of each input \
+            image).",
+        argstr="-o %s", mandatory=False)
+
+    s = traits.String(
+        "_cropped", usedefault=True,
+        desc="Suffix for the cropped image(s) (default is \"_cropped\")",
+        argstr="-s %s", mandatory=False)
+
+    c = traits.Int(
+        10, usedefault=True,
+        desc='c is the space between the brain and the limits of\
+            the crop box expressed in percentage of the brain size (eg. if the\
+            brain size is 200 voxels in one dimension and c=10: the sides of\
+            the brain in this dimension will be 20 voxels away from the\
+            borders of the resulting crop box in this dimension). \
+            Default: c=10',
+        argstr="-c %d", mandatory=False)
+
+    p = traits.String(
+        desc="Prefix for running FSL functions\
+            (can be a path or just a prefix)",
+        argstr="-p %s", mandatory=False)
+
+
+class CropVolumeOutputSpec(TraitedSpec):
+    cropped_file = File(
+        exists=True,
+        desc="cropped image from CropVolume.sh")
+
+
+class CropVolume(CommandLine):
+    """
+    Description: Crop image(s) based on a brain extraction. Multiple images
+    can be cropped at once. Will crop each volume preceeded by the -i option
+
+    Inputs:
+
+        Mandatory:
+
+            i_file
+                Volume to crop (you can specify as many -in as you want)
+            b_file
+                Brain image or brain mask, in the same space as the in-file(s)
+
+        Optional:
+
+            o
+                Prefix for the cropped image(s) (Must provide as many prefixes
+                    as input images with -o, default is the base name of each
+                    input image).
+            s
+                Suffix for the cropped image(s) (default is "_cropped")
+            c
+                c is the space between the brain and the limits of\
+                    the crop box expressed in percentage of the brain size (eg.
+                    if the brain size is 200 voxels in one dimension and c=10:
+                    the sides of the brain in this dimension will be 20 voxels
+                    away from the  borders of the resulting crop box in this
+                    dimension). Default: c=10
+            p
+                Prefix for running FSL functions (can be a path or just a
+                prefix)
+
+    Outputs:
+
+        cropped_file:
+
+            cropped image from CropVolume.sh
+    """
+    input_spec = CropVolumeInputSpec
+    output_spec = CropVolumeOutputSpec
+
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/CropVolume.sh'.format(package_directory)
+
+    def _list_outputs(self):
+
+        import os
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+
+        path, fname, ext = split_f(self.inputs.i_file)
+
+        outfile = fname + self.inputs.s
+
+        if self.inputs.o:
+            outfile = self.inputs.o + outfile
+
+        outputs["cropped_file"] = os.path.abspath(outfile + ".nii.gz")
         return outputs
 
 

@@ -5,7 +5,7 @@
         {
             "new_dims": "x z -y"
         },
-        "align_crop":
+        "bet_crop":
         {
             "m": true,
             "aT2": true,
@@ -33,7 +33,7 @@
         {
             "f": 0.5,
             "reg": 1,
-            "w": "10,10,10",
+            "wrp": "10,10,10",
             "msk": "a,0,0"
         }
     },

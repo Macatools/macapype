@@ -27,15 +27,15 @@ An exemple of :ref:`reorientation <plot_segment_pnh_isabelle>`, starting from a 
 
 The :ref:`plot_segment_pnh_regis_T1xT2 workflow <plot_segment_pnh_regis_T1xT2>` based on Regis' :class:`full pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2>`, with the processing sequence:
 
-* :class:`T1xT2Bet <macapype.nodes.bash_regis.T1xT2BET>`
-* :class:`T1xT2BiasFieldCorrection <macapype.nodes.bash_regis.T1xT2BiasFieldCorrection>`
-* :class:`IterREGBET <macapype.nodes.bash_regis.IterREGBET>`
+* :class:`T1xT2Bet <macapype.nodes.extract_brain.T1xT2BET>`
+* :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`
+* :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
 * :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
 
 
 The :ref:`plot_segment_pnh_kepkee workflow <plot_segment_pnh_kepkee>` based on Kepkee's :class:`full pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_subpipes>`, with the processing sequence :
 
-* :class:`T1xT2Bet <macapype.nodes.bash_regis.T1xT2BET>` (used for the cropping tool only)
+* :class:`T1xT2Bet <macapype.nodes.extract_brain.T1xT2BET>` (used for the cropping tool only)
 * :class:`debias pipeline <macapype.pipelines.correct_bias.create_correct_bias_pipe>` (~ to T1xT2BiasFieldCorrection, but all steps are nipype nodes)
 * :class:`denoise pipeline <macapype.pipelines.denoise.create_denoised_pipe>` (from Ants non-local mean)
 * :class:`brain extraction pipeline <macapype.pipelines.extract_brain.create_brain_extraction_pipe>` using Atlax-Brex
