@@ -161,22 +161,40 @@ def create_register_NMT_pipe(params_template, params={},
         name='inputnode')
 
     # N4 intensity normalization over brain
-    if "norm_intensity" in params.keys():
+    if "norm_intensity" in params.keys() \
+            and "dimension" in params["norm_intensity"].keys():
         dimension = params["norm_intensity"]["dimension"]
-        bspline_fitting_distance = \
-            params["norm_intensity"]["bspline_fitting_distance"]
-        n_iterations = params["norm_intensity"]["n_iterations"]
-        convergence_threshold = \
-            params["norm_intensity"]["convergence_threshold"]
-        shrink_factor = params["norm_intensity"]["shrink_factor"]
-        args = params["norm_intensity"]["args"]
-
     else:
         dimension = 3
+
+    if "norm_intensity" in params.keys() \
+            and "bspline_fitting_distance" in params["norm_intensity"].keys():
+        bspline_fitting_distance = params["norm_intensity"]["bspline_fitting_distance"]  # noqa
+    else:
         bspline_fitting_distance = 200
+
+    if "norm_intensity" in params.keys() \
+            and "n_iterations" in params["norm_intensity"].keys():
+        n_iterations = params["norm_intensity"]["n_iterations"]
+    else:
         n_iterations = [50, 50, 40, 30]
+
+    if "norm_intensity" in params.keys() \
+            and "convergence_threshold" in params["norm_intensity"].keys():  # noqa
+        convergence_threshold = params["norm_intensity"]["convergence_threshold"]  # noqa
+    else:
         convergence_threshold = 0.00000001
+
+    if "norm_intensity" in params.keys() \
+            and "shrink_factor" in params["norm_intensity"].keys():
+        shrink_factor = params["norm_intensity"]["shrink_factor"]
+    else:
         shrink_factor = 2
+
+    if "norm_intensity" in params.keys() \
+            and "args" in params["norm_intensity"].keys():
+        args = params["norm_intensity"]["args"]
+    else:
         args = "-r 0 --verbose 1"
 
     norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),

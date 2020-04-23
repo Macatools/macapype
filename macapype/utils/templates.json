@@ -13,9 +13,9 @@
         "template_head": "inia19-t1.nii",
         "template_brain": "inia19-t1-brain.nii",
 
-        "template_gm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz",
-        "template_wm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz",
-        "template_csf": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz"
+        "template_gm": "inia19-prob_0.nii",
+        "template_wm": "inia19-prob_1.nii",
+        "template_csf": "inia19-prob_2.nii"
     },
     "The Marmoset MRI Standard Brain":
     {

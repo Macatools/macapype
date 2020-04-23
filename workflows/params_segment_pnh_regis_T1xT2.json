@@ -1,12 +1,19 @@
 {
-    "bet":
+    "general":
     {
-        "m": true,
-        "aT2": true,
-        "c": 10,
-        "n": 2,
-        "f": 0.0,
-        "g": 0.5
+        "template_name": "inia19"
+    },
+    "preproc_pipe":
+    {
+        "bet_crop":
+        {
+            "m": true,
+            "aT2": true,
+            "c": 10,
+            "n": 2,
+            "f": 0.0,
+            "g": 0.5
+        }
     },
     "debias":
     {
@@ -28,15 +35,15 @@
         },
         "threshold_gm":
         {
-            "thresh": 0.05
+            "thresh": 0.5
         },
         "threshold_wm":
         {
-            "thresh": 0.05
+            "thresh": 0.5
         },
         "threshold_csf":
         {
-            "thresh": 0.05
+            "thresh": 0.5
         },
         "dilate_mask":
         {

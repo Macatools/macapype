@@ -59,25 +59,21 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 
 from macapype.utils.utils_bids import create_datasource
-from macapype.utils.utils_tests import load_test_data
+from macapype.utils.utils_tests import load_test_data, format_template
 
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file):
 
-    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_json")
-    main_workflow.base_dir = process_dir
+    # formating args
+    data_dir = op.abspath(data_dir)
+
+    if not op.isdir(process_dir):
+        os.makedirs(process_dir)
 
 
-    datasource = create_datasource(data_dir, subjects, sessions)
-
-    ############################################## Preprocessing ################################
-    ##### segment_pnh
-
-    print('segment_pnh_kepkee')
+    # params
     print(params_file)
-
-
     if params_file is not None:
 
         assert os.path.exists(params_file), "Error with file {}".format(
@@ -90,15 +86,28 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
     print(params)
     pprint.pprint(params)
 
-    if "general" in params.key() and "my_path" in params["general"].keys():
+    if "general" in params.keys() and "my_path" in params["general"].keys():
         my_path = params["general"]["my_path"]
     else:
         my_path = "/hpc/crise/meunier.d"
 
-    nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
+    if "general" in params.keys() and "template_name" in params["general"].keys():
+        template_name = params["general"]["template_name"]
+    else:
+        template_name = 'NMT_v1.2'
 
-    params_template = _format_template(nmt_dir, 'NMT_v1.2')
+    # params_template
+    nmt_dir = load_test_data(template_name, path_to = my_path)
+
+    params_template = format_template(nmt_dir, template_name)
     print (params_template)
+
+    # main_workflow
+    main_workflow = pe.Workflow(name= "test_pipeline_kepkee_json_template")
+    main_workflow.base_dir = process_dir
+
+
+    datasource = create_datasource(data_dir, subjects, sessions)
 
     segment_pnh = create_full_segment_pnh_subpipes(
         params_template=params_template,

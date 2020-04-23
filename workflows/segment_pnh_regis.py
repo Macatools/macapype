@@ -64,9 +64,6 @@ from bids.layout import BIDSLayout
 
 from nipype.interfaces.io import BIDSDataGrabber
 
-# from macapype.pipelines.correct_bias import create_debias_N4_pipe
-# from macapype.nodes.correct_bias import interative_N4_debias
- 
 from macapype.nodes.denoise import nonlocal_denoise
 from macapype.pipelines.register import create_iterative_register_pipe
 from macapype.pipelines.extract_brain import create_old_segment_extraction_pipe
@@ -151,10 +148,6 @@ def create_segment_pnh_onlyT1(nmt_file, nmt_ss_file, nmt_mask_file,
         niu.IdentityInterface(fields=['T1']),
         name='inputnode'
     )
-
-    # Preprocessing (avg and align)
-    # debias_pipe = create_debias_N4_pipe()
-    # seg_pipe.connect(inputnode,'T1',debias_pipe,'inputnode.cropped_T1')
 
     # N4 correction
     debias_N4 = pe.Node(ants.N4BiasFieldCorrection(), name='debias_N4')
