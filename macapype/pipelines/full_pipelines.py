@@ -22,7 +22,8 @@ from macapype.utils.misc import gunzip
 
 ###############################################################################
 # Regis
-def create_brain_register_pipe(params_template, params={}, name="brain_register_pipe"):
+def create_brain_register_pipe(params_template, params={},
+                               name="brain_register_pipe"):
 
     # Creating pipeline
     brain_register_pipe = pe.Workflow(name=name)
@@ -41,16 +42,11 @@ def create_brain_register_pipe(params_template, params={}, name="brain_register_
 
     debias = pe.Node(T1xT2BiasFieldCorrection(s=s), name='debias')
 
-
-    brain_register_pipe.connect(inputnode, 'T1_cropped',
-                                debias, 't1_file')
-    brain_register_pipe.connect(inputnode, 'T2_cropped',
-                                debias, 't2_file')
-    brain_register_pipe.connect(inputnode, 'mask',
-                                debias, 'b')
+    brain_register_pipe.connect(inputnode, 'T1_cropped', debias, 't1_file')
+    brain_register_pipe.connect(inputnode, 'T2_cropped', debias, 't2_file')
+    brain_register_pipe.connect(inputnode, 'mask', debias, 'b')
 
     # Iterative registration to the INIA19 template
-
     reg = pe.Node(IterREGBET(), name='reg')
     reg.inputs.refb_file = params_template["template_brain"]
 
@@ -64,12 +60,14 @@ def create_brain_register_pipe(params_template, params={}, name="brain_register_
         reg.inputs.dof = params["reg"]["dof"]
 
     brain_register_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
-    brain_register_pipe.connect(debias, 't1_debiased_brain_file', reg, 'inb_file')
+    brain_register_pipe.connect(debias, 't1_debiased_brain_file',
+                                reg, 'inb_file')
 
     return brain_register_pipe
 
-def create_full_T1xT2_segment_pnh_subpipes(params_template, params={},
-                                  name='full_T1xT2_segment_pnh_subpipes'):
+
+def create_full_T1xT2_segment_pnh_subpipes(
+        params_template, params={}, name='full_T1xT2_segment_pnh_subpipes'):
     """ Description: Regis T1xT2 pipeline
 
         - T1xT2BET brain extraction and crop -> mask
@@ -122,11 +120,11 @@ def create_full_T1xT2_segment_pnh_subpipes(params_template, params={},
         print("*** data_preparation_pipe NOT in params")
         params_data_preparation_pipe = {}
 
-    data_preparation_pipe = create_data_preparation_pipe(params_data_preparation_pipe)
+    data_preparation_pipe = create_data_preparation_pipe(
+        params_data_preparation_pipe)
 
     seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
-
 
     if 'brain_register_pipe' in params.keys():
         print("brain_register_pipe is in params")
@@ -135,7 +133,8 @@ def create_full_T1xT2_segment_pnh_subpipes(params_template, params={},
         print("*** brain_register_pipe NOT in params")
         params_brain_register_pipe = {}
 
-    brain_register_pipe = create_brain_register_pipe(params_template,
+    brain_register_pipe = create_brain_register_pipe(
+        params_template,
         params=params_brain_register_pipe)
 
     seg_pipe.connect(data_preparation_pipe, 'bet_crop.t1_cropped_file',
@@ -164,7 +163,8 @@ def create_full_T1xT2_segment_pnh_subpipes(params_template, params={},
 ###############################################################################
 # Kepkee
 
-def create_brain_extraction_pipe(params_template, params={}, name="brain_extraction_pipe"):
+def create_brain_extraction_pipe(params_template, params={},
+                                 name="brain_extraction_pipe"):
     """
     Description:
 
@@ -196,7 +196,6 @@ def create_brain_extraction_pipe(params_template, params={}, name="brain_extract
         name='inputnode'
     )
 
-
     # Correct_bias_T1_T2
     if "correct_bias_pipe" in params.keys():
         params_correct_bias_pipe = params["correct_bias_pipe"]
@@ -207,9 +206,9 @@ def create_brain_extraction_pipe(params_template, params={}, name="brain_extract
         params=params_correct_bias_pipe)
 
     brain_extraction_pipe.connect(inputnode, 'preproc_T1',
-                     correct_bias_pipe, 'inputnode.preproc_T1')
+                                  correct_bias_pipe, 'inputnode.preproc_T1')
     brain_extraction_pipe.connect(inputnode, 'preproc_T2',
-                     correct_bias_pipe, 'inputnode.preproc_T2')
+                                  correct_bias_pipe, 'inputnode.preproc_T2')
 
     # brain extraction
     if "extract_pipe" in params.keys():  # so far, unused
@@ -223,9 +222,9 @@ def create_brain_extraction_pipe(params_template, params={}, name="brain_extract
         params=params_extract_pipe)
 
     brain_extraction_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
-                     extract_pipe, "inputnode.restore_T1")
+                                  extract_pipe, "inputnode.restore_T1")
     brain_extraction_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
-                     extract_pipe, "inputnode.restore_T2")
+                                  extract_pipe, "inputnode.restore_T2")
 
     return brain_extraction_pipe
 
@@ -373,7 +372,8 @@ def create_full_segment_pnh_subpipes(
         print("*** data_preparation_pipe NOT in params")
         params_data_preparation_pipe = {}
 
-    data_preparation_pipe = create_data_preparation_pipe(params_data_preparation_pipe)
+    data_preparation_pipe = create_data_preparation_pipe(
+        params_data_preparation_pipe)
 
     seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
@@ -389,7 +389,6 @@ def create_full_segment_pnh_subpipes(
     brain_extraction_pipe = create_brain_extraction_pipe(
         params=params_brain_extraction_pipe, params_template=params_template)
 
-
     seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
                      brain_extraction_pipe, 'inputnode.preproc_T1')
     seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
@@ -404,10 +403,11 @@ def create_full_segment_pnh_subpipes(
             params=params_brain_segment_pipe)
 
         seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
-                            brain_segment_pipe, 'inputnode.preproc_T1')
+                         brain_segment_pipe, 'inputnode.preproc_T1')
         seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
-                            brain_segment_pipe, 'inputnode.preproc_T2')
-        seg_pipe.connect(brain_extraction_pipe, "extract_pipe.smooth_mask.out_file",
+                         brain_segment_pipe, 'inputnode.preproc_T2')
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_pipe.smooth_mask.out_file",
                          brain_segment_pipe, "inputnode.brain_mask")
 
     return seg_pipe

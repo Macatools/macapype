@@ -57,7 +57,8 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 import nipype.pipeline.engine as pe
 
-from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
+from macapype.pipelines.full_pipelines import (
+    create_full_T1xT2_segment_pnh_subpipes)
 from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.utils_bids import create_datasource
@@ -129,7 +130,7 @@ def create_main_workflow(data_path, main_path, subject_ids, sessions,
     datasource = create_datasource(data_path, subject_ids, sessions,
                                    acquisitions)
 
-    segment_pnh = create_full_segment_pnh_T1xT2(params_template, params)
+    segment_pnh = create_full_T1xT2_segment_pnh_subpipes(params_template, params)
 
     main_workflow.connect(
         datasource, 'T1', segment_pnh, 'inputnode.T1')

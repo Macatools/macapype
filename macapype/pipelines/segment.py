@@ -3,7 +3,6 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
-import nipype.interfaces.afni as afni
 
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 

@@ -102,12 +102,12 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         reorient_T1_pipe = create_reorient_pipeline(name="reorient_T1_pipe",
                                                     new_dims=new_dims)
         data_preparation_pipe.connect(deoblique_T1, 'out_file',
-                             reorient_T1_pipe, 'inputnode.image')
+                                      reorient_T1_pipe, 'inputnode.image')
 
         reorient_T2_pipe = create_reorient_pipeline(name="reorient_T2_pipe",
                                                     new_dims=new_dims)
         data_preparation_pipe.connect(deoblique_T2, 'out_file',
-                             reorient_T2_pipe, 'inputnode.image')
+                                      reorient_T2_pipe, 'inputnode.image')
 
     if "bet_crop" in params.keys():
 
@@ -136,13 +136,17 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
 
         if "reorient" in params.keys():
 
-            data_preparation_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
-                                 bet_crop, 't1_file')
-            data_preparation_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file',
-                                 bet_crop, 't2_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(reorient_T2_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't2_file')
         else:
-            data_preparation_pipe.connect(deoblique_T1, 'out_file', bet_crop, 't1_file')
-            data_preparation_pipe.connect(deoblique_T2, 'out_file', bet_crop, 't2_file')
+            data_preparation_pipe.connect(deoblique_T1, 'out_file',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                          bet_crop, 't2_file')
 
     elif "crop" in params.keys():
         print('crop is in params')
@@ -164,21 +168,26 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         crop_bb_T2.inputs.args = params["crop"]["croplist"]
 
         if "reorient" in params.keys():
-            data_preparation_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
-                                 align_T2_on_T1, 'reference')
-            data_preparation_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file',
-                                 align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          align_T2_on_T1, 'reference')
+            data_preparation_pipe.connect(reorient_T2_pipe,
+                                          'swap_dim.out_file',
+                                          align_T2_on_T1, 'in_file')
 
-            data_preparation_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
-                                 crop_bb_T1, 'in_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          crop_bb_T1, 'in_file')
         else:
-            data_preparation_pipe.connect(deoblique_T1, 'out_file', align_T2_on_T1, 'reference')
-            data_preparation_pipe.connect(deoblique_T2, 'out_file', align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(deoblique_T1, 'out_file',
+                                          align_T2_on_T1, 'reference')
+            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                          align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                          crop_bb_T1, 'in_file')
 
-            data_preparation_pipe.connect(deoblique_T2, 'out_file', crop_bb_T1, 'in_file')
-
-        data_preparation_pipe.connect(align_T2_on_T1, "out_file", crop_bb_T2, 'in_file')
-
+        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                      crop_bb_T2, 'in_file')
 
     # denoise with Ants package
     denoise_T1 = pe.Node(interface=DenoiseImage(), name="denoise_T1")
@@ -186,15 +195,15 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
 
     if "bet_crop" in params.keys():
         data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                        denoise_T1, 'input_image')
+                                      denoise_T1, 'input_image')
         data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
-                        denoise_T2, 'input_image')
+                                      denoise_T2, 'input_image')
 
     elif "crop" in params.keys():
         data_preparation_pipe.connect(crop_bb_T1, "roi_file",
-                        denoise_T1, 'input_image')
+                                      denoise_T1, 'input_image')
         data_preparation_pipe.connect(crop_bb_T2, "roi_file",
-                        denoise_T2, 'input_image')
+                                      denoise_T2, 'input_image')
 
     return data_preparation_pipe
 
@@ -233,7 +242,8 @@ def create_average_align_crop_pipe(name='average_align_pipe'):
 
     # align avg T2 on avg T1
     align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-    data_preparation_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
+    data_preparation_pipe.connect(av_T1, 'avg_img',
+                                  align_T2_on_T1, 'reference')
     data_preparation_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
     align_T2_on_T1.inputs.dof = 6
 
@@ -242,7 +252,7 @@ def create_average_align_crop_pipe(name='average_align_pipe'):
     crop_bb_T1 = pe.Node(fsl.ExtractROI(), name='crop_bb_T1')
 
     data_preparation_pipe.connect(inputnode, ("T1cropbox", read_cropbox),
-                         crop_bb_T1, 'crop_list')
+                                  crop_bb_T1, 'crop_list')
 
     data_preparation_pipe.connect(av_T1, "avg_img", crop_bb_T1, 'in_file')
 
@@ -250,9 +260,10 @@ def create_average_align_crop_pipe(name='average_align_pipe'):
     crop_bb_T2 = pe.Node(fsl.ExtractROI(), name='crop_bb_T2')
 
     data_preparation_pipe.connect(inputnode, ("T2cropbox", read_cropbox),
-                         crop_bb_T2, 'crop_list')
+                                  crop_bb_T2, 'crop_list')
 
-    data_preparation_pipe.connect(align_T2_on_T1, "out_file", crop_bb_T2, 'in_file')
+    data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                  crop_bb_T2, 'in_file')
 
     return data_preparation_pipe
 
@@ -290,7 +301,8 @@ def create_average_align_pipe(name='average_align_pipe'):
 
     # align avg T2 on avg T1
     align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-    data_preparation_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
+    data_preparation_pipe.connect(av_T1, 'avg_img',
+                                  align_T2_on_T1, 'reference')
     data_preparation_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
     align_T2_on_T1.inputs.dof = 6
 

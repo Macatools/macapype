@@ -224,4 +224,3 @@ def read_cropbox(cropbox_file):
             crop_list.append(tuple(map(int, map(float, line.strip().split()))))
 
     return crop_list
-
