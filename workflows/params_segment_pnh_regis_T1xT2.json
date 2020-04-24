@@ -3,7 +3,7 @@
     {
         "template_name": "inia19"
     },
-    "brain_preproc_pipe":
+    "data_preparation_pipe":
     {
         "bet_crop":
         {

@@ -10,7 +10,6 @@ from .prepare import create_data_preparation_pipe
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
 
-from .denoise import create_denoised_pipe
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
 
@@ -212,19 +211,6 @@ def create_brain_extraction_pipe(params_template, params={}, name="brain_extract
     brain_extraction_pipe.connect(inputnode, 'preproc_T2',
                      correct_bias_pipe, 'inputnode.preproc_T2')
 
-    # denoising
-    if "denoised_pipe" in params.keys():  # so far, unused
-        params_denoised_pipe = params["denoised_pipe"]
-    else:
-        params_denoised_pipe = {}
-
-    denoise_pipe = create_denoised_pipe(params=params_denoised_pipe)
-
-    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
-                     denoise_pipe, 'inputnode.preproc_T1')
-    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
-                     denoise_pipe, 'inputnode.preproc_T2')
-
     # brain extraction
     if "extract_pipe" in params.keys():  # so far, unused
         params_extract_pipe = params["extract_pipe"]
@@ -236,9 +222,9 @@ def create_brain_extraction_pipe(params_template, params={}, name="brain_extract
         params_template=params_template,
         params=params_extract_pipe)
 
-    brain_extraction_pipe.connect(denoise_pipe, 'denoise_T1.output_image',
+    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
                      extract_pipe, "inputnode.restore_T1")
-    brain_extraction_pipe.connect(denoise_pipe, 'denoise_T2.output_image',
+    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
                      extract_pipe, "inputnode.restore_T2")
 
     return brain_extraction_pipe
@@ -281,13 +267,6 @@ def create_brain_segment_from_mask_pipe(
             fields=['preproc_T1', 'preproc_T2', 'brain_mask']),
         name='inputnode')
 
-    denoise_pipe = create_denoised_pipe()
-
-    brain_segment_pipe.connect(inputnode, 'preproc_T1',
-                               denoise_pipe, "inputnode.preproc_T1")
-    brain_segment_pipe.connect(inputnode, 'preproc_T2',
-                               denoise_pipe, "inputnode.preproc_T2")
-
     # correcting for bias T1/T2, but this time with a mask
     if "masked_correct_bias_pipe" in params.keys():
         params_masked_correct_bias_pipe = params["masked_correct_bias_pipe"]
@@ -298,10 +277,10 @@ def create_brain_segment_from_mask_pipe(
         params=params_masked_correct_bias_pipe)
 
     brain_segment_pipe.connect(
-        denoise_pipe, 'denoise_T1.output_image',
+        inputnode, 'preproc_T1',
         masked_correct_bias_pipe, "inputnode.preproc_T1")
     brain_segment_pipe.connect(
-        denoise_pipe, 'denoise_T2.output_image',
+        inputnode, 'preproc_T2',
         masked_correct_bias_pipe, "inputnode.preproc_T2")
 
     brain_segment_pipe.connect(
@@ -410,16 +389,11 @@ def create_full_segment_pnh_subpipes(
     brain_extraction_pipe = create_brain_extraction_pipe(
         params=params_brain_extraction_pipe, params_template=params_template)
 
-    if "bet_crop" in params['data_preparation_pipe'].keys():
-        seg_pipe.connect(data_preparation_pipe, 'bet_crop.t1_cropped_file',
-                         brain_extraction_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(data_preparation_pipe, 'bet_crop.t2_cropped_file',
-                         brain_extraction_pipe, 'inputnode.preproc_T2')
-    elif "crop" in params['data_preparation_pipe'].keys():
-        seg_pipe.connect(data_preparation_pipe, 'crop_bb_T1.roi_file',
-                         brain_extraction_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(data_preparation_pipe, 'crop_bb_T2.roi_file',
-                         brain_extraction_pipe, 'inputnode.preproc_T2')
+
+    seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+                     brain_extraction_pipe, 'inputnode.preproc_T1')
+    seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+                     brain_extraction_pipe, 'inputnode.preproc_T2')
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" in params.keys():
@@ -429,17 +403,10 @@ def create_full_segment_pnh_subpipes(
             params_template=params_template,
             params=params_brain_segment_pipe)
 
-        if "bet_crop" in params['data_preparation_pipe'].keys():
-            seg_pipe.connect(data_preparation_pipe, 'bet_crop.t1_cropped_file',
-                             brain_segment_pipe, 'inputnode.preproc_T1')
-            seg_pipe.connect(data_preparation_pipe, 'bet_crop.t2_cropped_file',
-                             brain_segment_pipe, 'inputnode.preproc_T2')
-        elif "crop" in params['data_preparation_pipe'].keys():
-            seg_pipe.connect(data_preparation_pipe, 'crop_bb_T1.roi_file',
-                             brain_segment_pipe, 'inputnode.preproc_T1')
-            seg_pipe.connect(data_preparation_pipe, 'crop_bb_T2.roi_file',
-                             brain_segment_pipe, 'inputnode.preproc_T2')
-
+        seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+                            brain_segment_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+                            brain_segment_pipe, 'inputnode.preproc_T2')
         seg_pipe.connect(brain_extraction_pipe, "extract_pipe.smooth_mask.out_file",
                          brain_segment_pipe, "inputnode.brain_mask")
 

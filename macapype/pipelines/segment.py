@@ -77,7 +77,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     if "Atropos" in params.keys() and "numberOfClasses" in params["Atropos"].keys():  # noqa
         seg_at.inputs.numberOfClasses = params["Atropos"]["numberOfClasses"]
 
-    segment_pipe.connect(deoblique, "out_file", seg_at, "brain_file")
+    segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
 

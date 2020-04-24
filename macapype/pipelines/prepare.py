@@ -3,6 +3,11 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
+import nipype.interfaces.afni as afni
+
+
+from nipype.interfaces.ants.segmentation import DenoiseImage
+
 # from nipype.interfaces.freesurfer.prepareess import MRIConvert
 
 from ..nodes.prepare import average_align, FslOrient, read_cropbox
@@ -80,17 +85,11 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
     data_preparation_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
 
     # Adding force deoblique (special for cerimed file)
-    deoblique_T1 = pe.Node(afni.Refit(deoblique=True), name="deoblique")
+    deoblique_T1 = pe.Node(afni.Refit(deoblique=True), name="deoblique_T1")
+    data_preparation_pipe.connect(av_T1, 'avg_img', deoblique_T1, "in_file")
 
-    segment_pipe.connect(av_T1, 'avg_img',,
-                         deoblique_T1, "in_file")
-
-    deoblique_T2 = pe.Node(afni.Refit(deoblique=True), name="deoblique")
-
-    segment_pipe.connect(av_T2, 'avg_img',,
-                         deoblique_T2, "in_file")
-
-
+    deoblique_T2 = pe.Node(afni.Refit(deoblique=True), name="deoblique_T2")
+    data_preparation_pipe.connect(av_T2, 'avg_img', deoblique_T2, "in_file")
 
     if "reorient" in params.keys():
 
@@ -179,6 +178,23 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
             data_preparation_pipe.connect(deoblique_T2, 'out_file', crop_bb_T1, 'in_file')
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file", crop_bb_T2, 'in_file')
+
+
+    # denoise with Ants package
+    denoise_T1 = pe.Node(interface=DenoiseImage(), name="denoise_T1")
+    denoise_T2 = pe.Node(interface=DenoiseImage(), name="denoise_T2")
+
+    if "bet_crop" in params.keys():
+        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                        denoise_T1, 'input_image')
+        data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
+                        denoise_T2, 'input_image')
+
+    elif "crop" in params.keys():
+        data_preparation_pipe.connect(crop_bb_T1, "roi_file",
+                        denoise_T1, 'input_image')
+        data_preparation_pipe.connect(crop_bb_T2, "roi_file",
+                        denoise_T2, 'input_image')
 
     return data_preparation_pipe
 
