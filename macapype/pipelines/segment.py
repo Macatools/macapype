@@ -3,7 +3,6 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
-import nipype.interfaces.afni as afni
 
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 
@@ -50,17 +49,11 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
                     "csf_prior_file"]),
         name='inputnode')
 
-    # Adding force deoblique before norm and atropos (special for cerimed file)
-    deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
-
-    segment_pipe.connect(inputnode, "brain_file",
-                         deoblique, "in_file")
-
     # bin_norm_intensity (a cheat from Kepkee if I understood well!)
     bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
     bin_norm_intensity.inputs.operation = "bin"
 
-    segment_pipe.connect(deoblique, "out_file",
+    segment_pipe.connect(inputnode, "brain_file",
                          bin_norm_intensity, "in_file")
 
     # merging priors as a list
@@ -83,7 +76,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     if "Atropos" in params.keys() and "numberOfClasses" in params["Atropos"].keys():  # noqa
         seg_at.inputs.numberOfClasses = params["Atropos"]["numberOfClasses"]
 
-    segment_pipe.connect(deoblique, "out_file", seg_at, "brain_file")
+    segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
 

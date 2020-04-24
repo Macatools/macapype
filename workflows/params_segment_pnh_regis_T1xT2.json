@@ -3,7 +3,7 @@
     {
         "template_name": "inia19"
     },
-    "preproc_pipe":
+    "data_preparation_pipe":
     {
         "bet_crop":
         {
@@ -15,17 +15,21 @@
             "g": 0.5
         }
     },
-    "debias":
+    "brain_register_pipe":
     {
-        "s": 4
-    },
-    "reg":
-    {
-        "n": 2,
-        "m": "mix",
-        "dof": 12
-    },
-    "create_old_segment_pipe":
+        "debias":
+        {
+            "s": 4
+        },
+        "reg":
+        {
+            "n": 2,
+            "m": "mix",
+            "dof": 12
+        }
+    }
+    ,
+    "old_segment_pipe":
     {
         "segment":
         {

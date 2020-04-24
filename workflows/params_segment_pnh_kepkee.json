@@ -3,7 +3,7 @@
     {
         "template_name": "NMT_v1.2"
     },
-    "preproc_pipe":
+    "data_preparation_pipe":
     {
         "bet_crop":
         {
@@ -13,30 +13,30 @@
             "n": 2
         }
     },
-    "correct_bias_pipe":
-    {
-        "smooth":
-        {
-            "sigma": 2
-        },
-        "norm_smooth":
-        {
-            "sigma": 2
-        }
-    },
-    "denoised_pipe":
-    {
-    },
     "brain_extraction_pipe":
     {
-        "atlas_brex":
+        "correct_bias_pipe":
         {
-            "f": 0.5,
-            "reg": 1,
-            "wrp": "10,10,10",
-            "msk": "a,0,0"
-        }
+            "smooth":
+            {
+                "sigma": 2
+            },
+            "norm_smooth":
+            {
+                "sigma": 2
+            }
+        },
+        "extract_pipe":
+        {
+            "atlas_brex":
+            {
+                "f": 0.5,
+                "reg": 1,
+                "wrp": "10,10,10",
+                "msk": "a,0,0"
+            }
 
+        }
     },
     "brain_segment_pipe":
     {
@@ -60,7 +60,7 @@
                 "n_iterations": [50, 50, 40, 30],
                 "convergence_threshold": 0.00000001,
                 "shrink_factor": 2,
-                "args": "r 0 --verbose 1"
+                "args": "-r 0 --verbose 1"
             }
         },
         "segment_atropos_pipe":

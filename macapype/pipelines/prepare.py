@@ -3,9 +3,14 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-# from nipype.interfaces.freesurfer.preprocess import MRIConvert
+import nipype.interfaces.afni as afni
 
-from ..nodes.preproc import average_align, FslOrient
+
+from nipype.interfaces.ants.segmentation import DenoiseImage
+
+# from nipype.interfaces.freesurfer.prepareess import MRIConvert
+
+from ..nodes.prepare import average_align, FslOrient, read_cropbox
 
 from ..nodes.extract_brain import T1xT2BET
 
@@ -44,9 +49,9 @@ def create_reorient_pipeline(name="reorient_pipe",
     return reorient_pipe
 
 
-def create_preproc_pipe(params, name="preproc_pipe"):
+def create_data_preparation_pipe(params, name="data_preparation_pipe"):
     """
-    preprocessing:
+    prepare:
     - av = checking if multiples T1 and T2 and if it is the case,
     coregister and average (~ flirt_average)
     - coregister T2 on T1 with FLIRT
@@ -54,7 +59,7 @@ def create_preproc_pipe(params, name="preproc_pipe"):
     """
 
     # creating pipeline
-    preproc_pipe = pe.Workflow(name=name)
+    data_preparation_pipe = pe.Workflow(name=name)
 
     # Creating input node
     inputnode = pe.Node(
@@ -69,7 +74,7 @@ def create_preproc_pipe(params, name="preproc_pipe"):
                      function=average_align),
         name="av_T1")
 
-    preproc_pipe.connect(inputnode, 'T1', av_T1, 'list_img')
+    data_preparation_pipe.connect(inputnode, 'T1', av_T1, 'list_img')
 
     # avererge if multiple T2
     av_T2 = pe.Node(niu.Function(
@@ -77,7 +82,14 @@ def create_preproc_pipe(params, name="preproc_pipe"):
         output_names=['avg_img'],
         function=average_align), name="av_T2")
 
-    preproc_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
+    data_preparation_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
+
+    # Adding force deoblique (special for cerimed file)
+    deoblique_T1 = pe.Node(afni.Refit(deoblique=True), name="deoblique_T1")
+    data_preparation_pipe.connect(av_T1, 'avg_img', deoblique_T1, "in_file")
+
+    deoblique_T2 = pe.Node(afni.Refit(deoblique=True), name="deoblique_T2")
+    data_preparation_pipe.connect(av_T2, 'avg_img', deoblique_T2, "in_file")
 
     if "reorient" in params.keys():
 
@@ -89,13 +101,13 @@ def create_preproc_pipe(params, name="preproc_pipe"):
 
         reorient_T1_pipe = create_reorient_pipeline(name="reorient_T1_pipe",
                                                     new_dims=new_dims)
-        preproc_pipe.connect(av_T1, 'avg_img',
-                             reorient_T1_pipe, 'inputnode.image')
+        data_preparation_pipe.connect(deoblique_T1, 'out_file',
+                                      reorient_T1_pipe, 'inputnode.image')
 
         reorient_T2_pipe = create_reorient_pipeline(name="reorient_T2_pipe",
                                                     new_dims=new_dims)
-        preproc_pipe.connect(av_T2, 'avg_img',
-                             reorient_T2_pipe, 'inputnode.image')
+        data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                      reorient_T2_pipe, 'inputnode.image')
 
     if "bet_crop" in params.keys():
 
@@ -124,13 +136,17 @@ def create_preproc_pipe(params, name="preproc_pipe"):
 
         if "reorient" in params.keys():
 
-            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
-                                 bet_crop, 't1_file')
-            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file',
-                                 bet_crop, 't2_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(reorient_T2_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't2_file')
         else:
-            preproc_pipe.connect(av_T1, 'avg_img', bet_crop, 't1_file')
-            preproc_pipe.connect(av_T2, 'avg_img', bet_crop, 't2_file')
+            data_preparation_pipe.connect(deoblique_T1, 'out_file',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                          bet_crop, 't2_file')
 
     elif "crop" in params.keys():
         print('crop is in params')
@@ -152,47 +168,52 @@ def create_preproc_pipe(params, name="preproc_pipe"):
         crop_bb_T2.inputs.args = params["crop"]["croplist"]
 
         if "reorient" in params.keys():
-            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
-                                 align_T2_on_T1, 'reference')
-            preproc_pipe.connect(reorient_T2_pipe, 'swap_dim.out_file',
-                                 align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          align_T2_on_T1, 'reference')
+            data_preparation_pipe.connect(reorient_T2_pipe,
+                                          'swap_dim.out_file',
+                                          align_T2_on_T1, 'in_file')
 
-            preproc_pipe.connect(reorient_T1_pipe, 'swap_dim.out_file',
-                                 crop_bb_T1, 'in_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          crop_bb_T1, 'in_file')
         else:
-            preproc_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
-            preproc_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(deoblique_T1, 'out_file',
+                                          align_T2_on_T1, 'reference')
+            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                          align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+                                          crop_bb_T1, 'in_file')
 
-            preproc_pipe.connect(av_T1, 'avg_img', crop_bb_T1, 'in_file')
+        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                      crop_bb_T2, 'in_file')
 
-        preproc_pipe.connect(align_T2_on_T1, "out_file", crop_bb_T2, 'in_file')
+    # denoise with Ants package
+    denoise_T1 = pe.Node(interface=DenoiseImage(), name="denoise_T1")
+    denoise_T2 = pe.Node(interface=DenoiseImage(), name="denoise_T2")
 
-    return preproc_pipe
+    if "bet_crop" in params.keys():
+        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                      denoise_T1, 'input_image')
+        data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
+                                      denoise_T2, 'input_image')
+
+    elif "crop" in params.keys():
+        data_preparation_pipe.connect(crop_bb_T1, "roi_file",
+                                      denoise_T1, 'input_image')
+        data_preparation_pipe.connect(crop_bb_T2, "roi_file",
+                                      denoise_T2, 'input_image')
+
+    return data_preparation_pipe
 
 
 ###############################################################################
 # Old version of align_crop
 
-# on the fly
-def read_cropbox(cropbox_file):
-
-    import os.path as op
-
-    assert op.exists(cropbox_file), \
-        "Error {} do not exists".format(cropbox_file)
-
-    with open(cropbox_file) as f:
-        crop_list = []
-        for line in f.readlines():
-            print(line.strip().split())
-            crop_list.append(tuple(map(int, map(float, line.strip().split()))))
-
-    return crop_list
-
-
 def create_average_align_crop_pipe(name='average_align_pipe'):
     """
-    preprocessing:
+    prepare:
     - av = checking if multiples T1 and T2 and if it is the case,
     coregister and average (~ flirt_average)
     - coregister T2 on T1 with FLIRT
@@ -200,7 +221,7 @@ def create_average_align_crop_pipe(name='average_align_pipe'):
     """
 
     # creating pipeline
-    preproc_pipe = pe.Workflow(name=name)
+    data_preparation_pipe = pe.Workflow(name=name)
 
     # creating inputnode
     inputnode = pe.Node(
@@ -211,50 +232,52 @@ def create_average_align_crop_pipe(name='average_align_pipe'):
                                  output_names=['avg_img'],
                                  function=average_align), name="av_T1")
 
-    preproc_pipe.connect(inputnode, 'T1', av_T1, 'list_img')
+    data_preparation_pipe.connect(inputnode, 'T1', av_T1, 'list_img')
 
     av_T2 = pe.Node(niu.Function(input_names=['list_img'],
                                  output_names=['avg_img'],
                                  function=average_align), name="av_T2")
 
-    preproc_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
+    data_preparation_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
 
     # align avg T2 on avg T1
     align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-    preproc_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
-    preproc_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
+    data_preparation_pipe.connect(av_T1, 'avg_img',
+                                  align_T2_on_T1, 'reference')
+    data_preparation_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
     align_T2_on_T1.inputs.dof = 6
 
     # cropping
     # Crop bounding box for T1
     crop_bb_T1 = pe.Node(fsl.ExtractROI(), name='crop_bb_T1')
 
-    preproc_pipe.connect(inputnode, ("T1cropbox", read_cropbox),
-                         crop_bb_T1, 'crop_list')
+    data_preparation_pipe.connect(inputnode, ("T1cropbox", read_cropbox),
+                                  crop_bb_T1, 'crop_list')
 
-    preproc_pipe.connect(av_T1, "avg_img", crop_bb_T1, 'in_file')
+    data_preparation_pipe.connect(av_T1, "avg_img", crop_bb_T1, 'in_file')
 
     # Crop bounding box for T2
     crop_bb_T2 = pe.Node(fsl.ExtractROI(), name='crop_bb_T2')
 
-    preproc_pipe.connect(inputnode, ("T2cropbox", read_cropbox),
-                         crop_bb_T2, 'crop_list')
+    data_preparation_pipe.connect(inputnode, ("T2cropbox", read_cropbox),
+                                  crop_bb_T2, 'crop_list')
 
-    preproc_pipe.connect(align_T2_on_T1, "out_file", crop_bb_T2, 'in_file')
+    data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                  crop_bb_T2, 'in_file')
 
-    return preproc_pipe
+    return data_preparation_pipe
 
 
 def create_average_align_pipe(name='average_align_pipe'):
     """
-    preprocessing:
+    prepareessing:
     - av = checking if multiples T1 and T2 and if it is the case,
     coregister and average (~ flirt_average)
     - coregister T2 on T1 with FLIRT
     """
 
     # creating pipeline
-    preproc_pipe = pe.Workflow(name=name)
+    data_preparation_pipe = pe.Workflow(name=name)
 
     # creating inputnode
     inputnode = pe.Node(
@@ -267,19 +290,20 @@ def create_average_align_pipe(name='average_align_pipe'):
                      function=average_align),
         name="av_T1")
 
-    preproc_pipe.connect(inputnode, 'T1', av_T1, 'list_img')
+    data_preparation_pipe.connect(inputnode, 'T1', av_T1, 'list_img')
 
     av_T2 = pe.Node(niu.Function(
         input_names=['list_img'],
         output_names=['avg_img'],
         function=average_align), name="av_T2")
 
-    preproc_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
+    data_preparation_pipe.connect(inputnode, 'T2', av_T2, 'list_img')
 
     # align avg T2 on avg T1
     align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-    preproc_pipe.connect(av_T1, 'avg_img', align_T2_on_T1, 'reference')
-    preproc_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
+    data_preparation_pipe.connect(av_T1, 'avg_img',
+                                  align_T2_on_T1, 'reference')
+    data_preparation_pipe.connect(av_T2, 'avg_img', align_T2_on_T1, 'in_file')
     align_T2_on_T1.inputs.dof = 6
 
-    return preproc_pipe
+    return data_preparation_pipe
