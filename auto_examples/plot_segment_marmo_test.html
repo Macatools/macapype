@@ -151,9 +151,7 @@
 <div class="section" id="running-workflow">
 <h2>Running workflow<a class="headerlink" href="#running-workflow" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span><span class="p">,</span> <span class="n">format_template</span>
-<span class="kn">from</span> <span class="nn">macapype.pipelines.full_segment</span> <span class="kn">import</span> <span class="n">create_full_segment_pnh_subpipes</span>
-
-
+<span class="kn">from</span> <span class="nn">macapype.pipelines.full_pipelines</span> <span class="kn">import</span> <span class="n">create_full_segment_pnh_subpipes</span>
 
 <span class="c1">#package_directory = os.path.dirname(os.path.abspath(__file__))</span>
 <span class="c1">#params_file = &#39;{}/../workflows/params_segment_marmo_test.json&#39;.format(package_directory)</span>
@@ -162,18 +160,23 @@
 <span class="c1">#print(params)</span>
 <span class="c1">#pprint.pprint(params)</span>
 
-<span class="c1">#if &quot;general&quot; in params.keys() and &quot;my_path&quot; in params[&quot;general&quot;].keys():</span>
-    <span class="c1">#my_path = params[&quot;general&quot;][&quot;my_path&quot;]</span>
+<span class="c1">#if &quot;general&quot; in params.keys() and &quot;data_path&quot; in params[&quot;general&quot;].keys():</span>
+    <span class="c1">#data_path = params[&quot;general&quot;][&quot;data_path&quot;]</span>
 <span class="c1">#else:</span>
-    <span class="c1">##my_path = &quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
-    <span class="c1">#my_path = &quot;/hpc/crise/meunier.d/&quot;</span>
+    <span class="c1">#data_path = &quot;/home/INT/meunier.d/Data/Marmopype/marmo_test&quot;</span>
+    <span class="c1">##data_path = &quot;/hpc/crise/meunier.d/&quot;</span>
 
-<span class="c1">#nmt_dir = load_test_data(&#39;marmotemplate&#39;, path_to = my_path)</span>
+<span class="c1">#if &quot;general&quot; in params.keys() and &quot;template_name&quot; in params[&quot;general&quot;].keys():</span>
+    <span class="c1">#template_name = params[&quot;general&quot;][&quot;template_name&quot;]</span>
+<span class="c1">#else:</span>
+    <span class="c1">#template_name = &#39;inia19&#39;</span>
 
-<span class="c1">#params_template = format_template(nmt_dir, &#39;marmotemplate&#39;)</span>
+<span class="c1">#template_dir = load_test_data(template_name)</span>
+<span class="c1">#params_template = format_template(template_dir, template_name)</span>
 <span class="c1">#print (params_template)</span>
 
-<span class="c1">#data_path = load_test_data(&quot;data_marmo_test&quot;, path_to = my_path)</span>
+<span class="c1">## TODO</span>
+<span class="c1">##data_path = load_test_data(&quot;data_test_marmopype&quot;, path_to = data_path)</span>
 
 <span class="c1">## data file</span>
 <span class="c1">#T1_file = op.join(data_path, &quot;T1w_0p33mm_28.nii&quot;)</span>
@@ -181,21 +184,18 @@
 
 <span class="c1">#from macapype.utils.utils_tests import load_test_data</span>
 
-<span class="c1">#nmt_dir = load_test_data(&#39;NMT_v1.2&#39;, path_to = my_path)</span>
-
 <span class="c1">## running workflow</span>
 <span class="c1">#segment_pnh = create_full_segment_pnh_subpipes(params=params,</span>
                                                <span class="c1">#params_template=params_template,</span>
-                                               <span class="c1">#segment=True,</span>
                                                <span class="c1">#name = &quot;segment_marmo_test_template&quot;)</span>
-<span class="c1">#segment_pnh.base_dir = my_path</span>
+<span class="c1">#segment_pnh.base_dir = data_path</span>
 
 <span class="c1">#segment_pnh.inputs.inputnode.T1 = T1_file</span>
 <span class="c1">#segment_pnh.inputs.inputnode.T2 = T2_file</span>
 
 
 <span class="c1">#segment_pnh.write_graph(graph2use=&quot;colored&quot;)</span>
-<span class="c1">#segment_pnh.run()</span>
+<span class="c1">##segment_pnh.run()</span>
 
 <span class="c1">#exit()</span>
 </pre></div>
@@ -203,9 +203,8 @@
 </div>
 <div class="section" id="testing-plot-in-local">
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Marmopype/marmo_test/&quot;</span>
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_path</span><span class="p">,</span> <span class="s2">&quot;segment_marmo_test_template&quot;</span><span class="p">)</span>
-
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Marmopype/marmo_test/&quot;</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;segment_marmo_test_template&quot;</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
 
@@ -425,7 +424,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_marmo_test_009.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_009.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  54.434 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  50.718 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-marmo-test-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/11e6a8c789bf16046f6765894b9a8436/plot_segment_marmo_test.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_marmo_test.py</span></code></a></div>
@@ -449,7 +448,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

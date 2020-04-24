@@ -1,6 +1,0 @@
-macapype.pipelines.full\_segment.create\_full\_segment\_pnh\_T1xT2
-==================================================================
-
-.. currentmodule:: macapype.pipelines.full_segment
-
-.. autofunction:: create_full_segment_pnh_T1xT2

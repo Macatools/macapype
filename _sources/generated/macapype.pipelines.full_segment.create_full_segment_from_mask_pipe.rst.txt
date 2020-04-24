@@ -1,6 +1,0 @@
-macapype.pipelines.full\_segment.create\_full\_segment\_from\_mask\_pipe
-========================================================================
-
-.. currentmodule:: macapype.pipelines.full_segment
-
-.. autofunction:: create_full_segment_from_mask_pipe

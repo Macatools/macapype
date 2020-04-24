@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>macapype.nodes.bash_regis.T1xT2BiasFieldCorrection &#8212; macapype 0.0.0 documentation</title>
+    <title>macapype.nodes.register.IterREGBET &#8212; macapype 0.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -69,7 +69,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">macapype.nodes.bash_regis.T1xT2BiasFieldCorrection</a></li>
+<li><a class="reference internal" href="#">macapype.nodes.register.IterREGBET</a></li>
 </ul>
 </ul>
 </li>
@@ -81,7 +81,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/generated/macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.rst.txt"
+  <a href="../_sources/generated/macapype.nodes.register.IterREGBET.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -105,83 +105,78 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="macapype-nodes-bash-regis-t1xt2biasfieldcorrection">
-<h1>macapype.nodes.bash_regis.T1xT2BiasFieldCorrection<a class="headerlink" href="#macapype-nodes-bash-regis-t1xt2biasfieldcorrection" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="macapype-nodes-register-iterregbet">
+<h1>macapype.nodes.register.IterREGBET<a class="headerlink" href="#macapype-nodes-register-iterregbet" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="macapype.nodes.bash_regis.T1xT2BiasFieldCorrection">
-<em class="property">class </em><code class="descclassname">macapype.nodes.bash_regis.</code><code class="descname">T1xT2BiasFieldCorrection</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/bash_regis.html#T1xT2BiasFieldCorrection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Description:  Bias field correction using T1w &amp; T2w images.</dt>
-<dd>Provides an attempt of brain extration if wanted.</dd>
-</dl>
+<dt id="macapype.nodes.register.IterREGBET">
+<em class="property">class </em><code class="descclassname">macapype.nodes.register.</code><code class="descname">IterREGBET</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/register.html#IterREGBET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.register.IterREGBET" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Iterative registration of the in-file to the ref file (
+registered brain mask of the ref image is used at each iteration). To use
+when the input brain mask is not optimal (eg. an output of FSL BET).
+Will output a better brain mask of the in-file.</p>
 <p>Inputs:</p>
 <blockquote>
 <div><p>Mandatory:</p>
 <blockquote>
 <div><dl class="docutils">
-<dt>t1_file</dt>
-<dd>Whole-head T1w image</dd>
-<dt>t2_file</dt>
-<dd>Whole-head T2w image (use -aT2 if T2w image is not in the T1w
-space)</dd>
+<dt>inw_file</dt>
+<dd>Moving Whole-head image</dd>
+<dt>inb_file</dt>
+<dd>Moving brain image</dd>
+<dt>refb_file</dt>
+<dd>Fixed reference brain image</dd>
 </dl>
 </div></blockquote>
 <p>Optional:</p>
 <blockquote>
 <div><dl class="docutils">
-<dt>os</dt>
-<dd>Suffix for the bias field corrected images (default is
-“_debiased”)</dd>
-<dt>aT2</dt>
-<dd>Will coregrister T2w to T1w using flirt. Output will have the                    suffix provided. Will only work for spatially close images.</dd>
-<dt>opt_as</dt>
-<dd>Suffix for T2w to T1w registration (“-in-T1w” if not specified)</dd>
-<dt>s</dt>
-<dd>size of gauss kernel in mm when performing mean filtering                     (default=4)argstr=”-s %d”, mandatory=False)</dd>
-<dt>b</dt>
-<dd>Brain mask file. Will also output bias corrected brain files                     with the format “output_prefix_brain.nii.gz”</dd>
-<dt>bet</dt>
-<dd>Will try to “smart” BET the anat files to get a brain mask:
-n = the number of iterations BET will be run to find center of
-gravity (default=0, will not BET if option -b has been
-specified).</dd>
+<dt>xp</dt>
+<dd>Prefix for the registration outputs (“in_FLIRT-to_ref” if not
+specified)</dd>
 <dt>bs</dt>
-<dd>Suffix for the BET masked images (default is “_BET”)</dd>
-<dt>f</dt>
-<dd><dl class="first last docutils">
-<dt>-f options of BET: fractional intensity threshold (0-&gt;1);                     default=0.5; smaller values give larger brain outline</dt>
-<dd>estimates</dd>
-</dl>
+<dd>Suffix for the brain files (“in_IRbrain” &amp; “in_IRbrain_mask”
+if not specified)</dd>
+<dt>dof</dt>
+<dd>FLIRT degrees of freedom (6=rigid body, 7=scale,
+12=affine (default)). Use dof 6 for intra-subject, 12 for
+inter-subject registration</dd>
+<dt>cost</dt>
+<dd>FLIRT cost {mutualinfo,corratio,normcorr,normmi,leastsq,                labeldiff,bbr}    (default is normmi)</dd>
+<dt>n</dt>
+<dd>n = the number of FLIRT iterations (&gt;=2, default=2)</dd>
+<dt>m</dt>
+<dd><p class="first">At each new iteration, either use:</p>
+<ul class="last simple">
+<li>the reference brain mask, m=ref (default)</li>
+<li>the union of the reference and input brain masks, m=union                 (use if your input brain is too small)</li>
+<li>the intersection of the reference and input brain masks,                 m=inter (use if your input brain is too big)</li>
+<li>a mix between union &amp; intersection, m=mix (give it a try!)</li>
+</ul>
 </dd>
-<dt>g</dt>
-<dd><dl class="first last docutils">
-<dt>-g options of BET:                        vertical gradient in fractional intensity threshold</dt>
-<dd>(-1-&gt;1); default=0; positive values give larger brain
-outline at bottom, smaller at top</dd>
-</dl>
-</dd>
+<dt>refw_file</dt>
+<dd>Do a whole-head non-linear registration (using FNIRT) during
+last iteration (provide reference whole-head image)</dd>
 <dt>k</dt>
 <dd>Will keep temporary files</dd>
 <dt>p</dt>
-<dd>Prefix for running FSL functions                    (can be a path or just a prefix)</dd>
+<dd>Prefix for running FSL functions (can be a path or just a
+prefix)</dd>
 </dl>
 </div></blockquote>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
 <div><dl class="docutils">
-<dt>t1_debiased_file</dt>
-<dd>debiased T1</dd>
-<dt>t2_debiased_file</dt>
-<dd>debiased T2</dd>
-<dt>t2_coreg_file</dt>
-<dd>T2 on T1</dd>
-<dt>t1_debiased_brain_file</dt>
-<dd>debiased bet T1</dd>
-<dt>t2_debiased_brain_file</dt>
-<dd>debiased bet T2</dd>
-<dt>debiased_mask_file</dt>
-<dd>debiased bet mask</dd>
+<dt>brain_file</dt>
+<dd>brain from IterREGBET.sh</dd>
+<dt>brain_mask_file</dt>
+<dd>masked brain from IterREGBET.sh</dd>
+<dt>warp_file</dt>
+<dd>warped image from IterREGBET.sh</dd>
+<dt>transfo_file</dt>
+<dd>transfo_file</dd>
+<dt>inv_transfo_file</dt>
+<dd>inv_transfo_file</dd>
 </dl>
 </div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -225,13 +220,13 @@ outline at bottom, smaller at top</dd>
 <td>Prints class help</td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></td>
-<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrectionInputSpec</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBETInputSpec</span></code></td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
 <td>A convenient way to load pre-set inputs from a JSON file.</td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></td>
-<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrectionOutputSpec</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBETOutputSpec</span></code></td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
 <td>Execute this interface.</td>
@@ -250,17 +245,20 @@ outline at bottom, smaller at top</dd>
 <col width="29%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><strong>raise_exception</strong></td>
+<tr class="row-odd"><td><strong>load_inputs_from_dict</strong></td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td><strong>version_from_command</strong></td>
+<tr class="row-even"><td><strong>raise_exception</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>version_from_command</strong></td>
 <td>&#160;</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="macapype.nodes.register.IterREGBET.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.register.IterREGBET.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subclasses must implement __init__</p>
 </dd></dl>
 
@@ -271,7 +269,7 @@ outline at bottom, smaller at top</dd>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.__init__" title="macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command,&nbsp;terminal_output])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#macapype.nodes.register.IterREGBET.__init__" title="macapype.nodes.register.IterREGBET.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command,&nbsp;terminal_output])</td>
 <td>Subclasses must implement __init__</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
@@ -280,22 +278,25 @@ outline at bottom, smaller at top</dd>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
 <td>Prints class help</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
-<td>A convenient way to load pre-set inputs from a JSON file.</td>
-</tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_dict</span></code>(from_dict,&nbsp;overwrite)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
+<td>A convenient way to load pre-set inputs from a JSON file.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
 <td>Execute this interface.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
 <td>A convenient way to save current inputs to a JSON file.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
 <td>Set the default terminal output for CommandLine Interfaces.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag,&nbsp;cmd])</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag,&nbsp;cmd])</td>
 <td></td>
 </tr>
 </tbody>
@@ -352,7 +353,7 @@ outline at bottom, smaller at top</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -134,50 +134,66 @@
 </div>
 <div class="section" id="load-test-data-and-run">
 <h2>Load test data and run<a class="headerlink" href="#load-test-data-and-run" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span><span class="p">,</span> <span class="n">format_template</span>
 
-<span class="kn">from</span> <span class="nn">macapype.pipelines.full_segment</span> <span class="kn">import</span> <span class="n">create_full_segment_pnh_T1xT2</span>
+<span class="kn">from</span> <span class="nn">macapype.pipelines.full_pipelines</span> <span class="kn">import</span> <span class="n">create_full_T1xT2_segment_pnh_subpipes</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">macapype.utils.utils_spm</span> <span class="kn">import</span> <span class="n">format_spm_priors</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">pprint</span>
 
 <span class="c1"># data file</span>
 
-<span class="c1">#my_path = &quot;/hpc/crise/meunier.d/&quot;</span>
-<span class="c1">#data_path = load_test_data(&quot;data_test_macapype&quot;, path_to = my_path)</span>
 
+<span class="c1">#package_directory = os.path.dirname(os.path.abspath(__file__))</span>
+<span class="c1">#params_file = &#39;{}/../workflows/params_segment_pnh_regis_T1xT2.json&#39;.format(package_directory)</span>
+<span class="c1">#params = json.load(open(params_file))</span>
+
+<span class="c1">#print(params)</span>
+<span class="c1">#pprint.pprint(params)</span>
+
+<span class="c1">#if &quot;general&quot; in params.keys() and &quot;data_path&quot; in params[&quot;general&quot;].keys():</span>
+    <span class="c1">#data_path = params[&quot;general&quot;][&quot;data_path&quot;]</span>
+<span class="c1">#else:</span>
+    <span class="c1">#data_path = &quot;/home/INT/meunier.d/Data/&quot;</span>
+    <span class="c1">##data_path = &quot;/hpc/crise/meunier.d/&quot;</span>
+    <span class="c1">##data_path = &quot;/hpc/neopto/USERS/racicot/data/&quot;</span>
+
+
+<span class="c1">#if &quot;general&quot; in params.keys() and &quot;template_name&quot; in params[&quot;general&quot;].keys():</span>
+    <span class="c1">#template_name = params[&quot;general&quot;][&quot;template_name&quot;]</span>
+<span class="c1">#else:</span>
+    <span class="c1">#template_name = &#39;inia19&#39;</span>
+
+<span class="c1">#nmt_dir = load_test_data(template_name, path_to = data_path)</span>
+<span class="c1">#params_template = format_template(nmt_dir, template_name)</span>
+<span class="c1">#print (params_template)</span>
+
+<span class="c1">##data_path = load_test_data(&quot;data_test_macapype&quot;, path_to = data_path)</span>
+
+<span class="c1">## data file</span>
 <span class="c1">#T1_file = op.join(data_path, &quot;sub-Apache_ses-01_T1w.nii&quot;)</span>
 <span class="c1">#T2_file = op.join(data_path, &quot;sub-Apache_ses-01_T2w.nii&quot;)</span>
 
-
-<span class="c1">#inia_dir = load_test_data(&quot;inia19&quot;, path_to = my_path)</span>
-
-<span class="c1">## template</span>
-<span class="c1">#template = op.join(inia_dir, &quot;inia19-t1-brain.nii&quot;)</span>
-
-<span class="c1">## priors</span>
-
-<span class="c1">#priors = [op.join(inia_dir, &quot;inia19-prob_1.nii&quot;),</span>
-          <span class="c1">#op.join(inia_dir, &quot;inia19-prob_2.nii&quot;),</span>
-          <span class="c1">#op.join(inia_dir, &quot;inia19-prob_0.nii&quot;)]</span>
-
-
 <span class="c1">## running workflow</span>
-<span class="c1">#segment_pnh = create_full_segment_pnh_T1xT2(template, format_spm_priors(priors))</span>
-<span class="c1">#segment_pnh.base_dir = my_path</span>
+<span class="c1">#segment_pnh = create_full_T1xT2_segment_pnh_subpipes(</span>
+    <span class="c1">#params=params, params_template=params_template)</span>
+<span class="c1">#segment_pnh.base_dir = data_path</span>
 
 <span class="c1">#segment_pnh.inputs.inputnode.T1 = T1_file</span>
 <span class="c1">#segment_pnh.inputs.inputnode.T2 = T2_file</span>
 
 <span class="c1">#segment_pnh.write_graph(graph2use=&quot;colored&quot;)</span>
-<span class="c1">#segment_pnh.run()</span>
+<span class="c1">##segment_pnh.run()</span>
+
+<span class="c1">#exit()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="testing-plot-in-local">
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
 
 <span class="c1"># displaying results</span>
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_path</span><span class="p">,</span> <span class="s2">&quot;T1xT2_segmentation_pipeline&quot;</span><span class="p">)</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;T1xT2_segmentation_pipeline&quot;</span><span class="p">)</span>
 <span class="n">bet_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;bet&quot;</span><span class="p">)</span>
 
 <span class="n">T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bet_path</span><span class="p">,</span> <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped.nii.gz&quot;</span><span class="p">)</span>
@@ -287,7 +303,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_005.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  24.266 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  25.153 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-regis-t1xt2-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/05a3046f40b1b32db0a60b37c508a5b6/plot_segment_pnh_regis_T1xT2.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_regis_T1xT2.py</span></code></a></div>
@@ -310,7 +326,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -132,10 +132,11 @@
 
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">logging</span>
 <span class="kn">from</span> <span class="nn">...utils.filemanip</span> <span class="kn">import</span> <span class="n">fname_presuffix</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">traits</span><span class="p">,</span> <span class="n">isdefined</span><span class="p">,</span> <span class="n">CommandLine</span><span class="p">,</span> <span class="n">CommandLineInputSpec</span><span class="p">,</span> <span class="n">PackageInfo</span>
+<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">traits</span><span class="p">,</span> <span class="n">isdefined</span><span class="p">,</span> <span class="n">CommandLine</span><span class="p">,</span> <span class="n">CommandLineInputSpec</span><span class="p">,</span>
+                    <span class="n">PackageInfo</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">...external.due</span> <span class="kn">import</span> <span class="n">BibTeX</span>
 
-<span class="n">IFLOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;nipype.interface&quot;</span><span class="p">)</span>
+<span class="n">IFLOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;nipype.interface&#39;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Info</span><span class="p">(</span><span class="n">PackageInfo</span><span class="p">):</span>
@@ -156,14 +157,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ftypes</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;NIFTI&quot;</span><span class="p">:</span> <span class="s2">&quot;.nii&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;NIFTI_PAIR&quot;</span><span class="p">:</span> <span class="s2">&quot;.img&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;NIFTI_GZ&quot;</span><span class="p">:</span> <span class="s2">&quot;.nii.gz&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;NIFTI_PAIR_GZ&quot;</span><span class="p">:</span> <span class="s2">&quot;.img.gz&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;NIFTI&#39;</span><span class="p">:</span> <span class="s1">&#39;.nii&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NIFTI_PAIR&#39;</span><span class="p">:</span> <span class="s1">&#39;.img&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NIFTI_GZ&#39;</span><span class="p">:</span> <span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NIFTI_PAIR_GZ&#39;</span><span class="p">:</span> <span class="s1">&#39;.img.gz&#39;</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FSLDIR&quot;</span><span class="p">):</span>
-        <span class="n">version_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FSLDIR&quot;</span><span class="p">),</span> <span class="s2">&quot;etc&quot;</span><span class="p">,</span> <span class="s2">&quot;fslversion&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;FSLDIR&#39;</span><span class="p">):</span>
+        <span class="n">version_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;FSLDIR&#39;</span><span class="p">),</span> <span class="s1">&#39;etc&#39;</span><span class="p">,</span> <span class="s1">&#39;fslversion&#39;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_version</span><span class="p">(</span><span class="n">raw_info</span><span class="p">):</span>
@@ -187,7 +188,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ftypes</span><span class="p">[</span><span class="n">output_type</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Invalid FSLOUTPUTTYPE: &quot;</span><span class="p">,</span> <span class="n">output_type</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Invalid FSLOUTPUTTYPE: &#39;</span><span class="p">,</span> <span class="n">output_type</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
@@ -203,30 +204,28 @@
 <span class="sd">            Represents the current environment setting of FSLOUTPUTTYPE</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;FSLOUTPUTTYPE&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FSLOUTPUTTYPE&#39;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">IFLOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;FSLOUTPUTTYPE environment variable is not set. &quot;</span>
-                <span class="s2">&quot;Setting FSLOUTPUTTYPE=NIFTI&quot;</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="s2">&quot;NIFTI&quot;</span>
+            <span class="n">IFLOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;FSLOUTPUTTYPE environment variable is not set. &#39;</span>
+                             <span class="s1">&#39;Setting FSLOUTPUTTYPE=NIFTI&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;NIFTI&#39;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">standard_image</span><span class="p">(</span><span class="n">img_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Grab an image from the standard location.</span>
+        <span class="sd">&#39;&#39;&#39;Grab an image from the standard location.</span>
 
 <span class="sd">        Returns a list of standard images if called without arguments.</span>
 
-<span class="sd">        Could be made more fancy to allow for more relocatability&quot;&quot;&quot;</span>
+<span class="sd">        Could be made more fancy to allow for more relocatability&#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">fsldir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;FSLDIR&quot;</span><span class="p">]</span>
+            <span class="n">fsldir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FSLDIR&#39;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;FSL environment variables not set&quot;</span><span class="p">)</span>
-        <span class="n">stdpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsldir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;standard&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;FSL environment variables not set&#39;</span><span class="p">)</span>
+        <span class="n">stdpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsldir</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;standard&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">img_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span>
-                <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">stdpath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stdpath</span><span class="p">,</span> <span class="s2">&quot;*nii*&quot;</span><span class="p">))</span>
+                <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">stdpath</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stdpath</span><span class="p">,</span> <span class="s1">&#39;*nii*&#39;</span><span class="p">))</span>
             <span class="p">]</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stdpath</span><span class="p">,</span> <span class="n">img_name</span><span class="p">)</span>
 
@@ -242,8 +241,8 @@
 <span class="sd">    -------</span>
 <span class="sd">    fsl.ExtractRoi(tmin=42, tsize=1, output_type=&#39;NIFTI&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">output_type</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="s2">&quot;NIFTI&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">Info</span><span class="o">.</span><span class="n">ftypes</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;FSL output type&quot;</span><span class="p">)</span>
+    <span class="n">output_type</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span>
+        <span class="s1">&#39;NIFTI&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">Info</span><span class="o">.</span><span class="n">ftypes</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;FSL output type&#39;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">FSLCommand</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
@@ -254,26 +253,23 @@
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">FSLCommandInputSpec</span>
     <span class="n">_output_type</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">references_</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;entry&quot;</span><span class="p">:</span> <span class="n">BibTeX</span><span class="p">(</span>
-                <span class="s2">&quot;@article{JenkinsonBeckmannBehrensWoolrichSmith2012,&quot;</span>
-                <span class="s2">&quot;author={M. Jenkinson, C.F. Beckmann, T.E. Behrens, &quot;</span>
-                <span class="s2">&quot;M.W. Woolrich, and S.M. Smith},&quot;</span>
-                <span class="s2">&quot;title=</span><span class="si">{FSL}</span><span class="s2">,&quot;</span>
-                <span class="s2">&quot;journal=</span><span class="si">{NeuroImage}</span><span class="s2">,&quot;</span>
-                <span class="s2">&quot;volume=</span><span class="si">{62}</span><span class="s2">,&quot;</span>
-                <span class="s2">&quot;pages={782-790},&quot;</span>
-                <span class="s2">&quot;year=</span><span class="si">{2012}</span><span class="s2">,&quot;</span>
-                <span class="s2">&quot;}&quot;</span>
-            <span class="p">),</span>
-            <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;implementation&quot;</span><span class="p">],</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
+    <span class="n">references_</span> <span class="o">=</span> <span class="p">[{</span>
+        <span class="s1">&#39;entry&#39;</span><span class="p">:</span>
+        <span class="n">BibTeX</span><span class="p">(</span><span class="s1">&#39;@article{JenkinsonBeckmannBehrensWoolrichSmith2012,&#39;</span>
+               <span class="s1">&#39;author={M. Jenkinson, C.F. Beckmann, T.E. Behrens, &#39;</span>
+               <span class="s1">&#39;M.W. Woolrich, and S.M. Smith},&#39;</span>
+               <span class="s1">&#39;title=</span><span class="si">{FSL}</span><span class="s1">,&#39;</span>
+               <span class="s1">&#39;journal=</span><span class="si">{NeuroImage}</span><span class="s1">,&#39;</span>
+               <span class="s1">&#39;volume=</span><span class="si">{62}</span><span class="s1">,&#39;</span>
+               <span class="s1">&#39;pages={782-790},&#39;</span>
+               <span class="s1">&#39;year=</span><span class="si">{2012}</span><span class="s1">,&#39;</span>
+               <span class="s1">&#39;}&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;implementation&#39;</span><span class="p">],</span>
+    <span class="p">}]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FSLCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_update</span><span class="p">,</span> <span class="s2">&quot;output_type&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_update</span><span class="p">,</span> <span class="s1">&#39;output_type&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_output_type</span> <span class="o">=</span> <span class="n">Info</span><span class="o">.</span><span class="n">output_type</span><span class="p">()</span>
@@ -285,7 +281,7 @@
 
     <span class="k">def</span> <span class="nf">_output_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;FSLOUTPUTTYPE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;FSLOUTPUTTYPE&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span><span class="p">})</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">set_default_output_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">output_type</span><span class="p">):</span>
@@ -300,13 +296,18 @@
         <span class="k">if</span> <span class="n">output_type</span> <span class="ow">in</span> <span class="n">Info</span><span class="o">.</span><span class="n">ftypes</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_output_type</span> <span class="o">=</span> <span class="n">output_type</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Invalid FSL output_type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">output_type</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Invalid FSL output_type: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_type</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Info</span><span class="o">.</span><span class="n">version</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_gen_fname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">change_ext</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_gen_fname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                   <span class="n">basename</span><span class="p">,</span>
+                   <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">change_ext</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">ext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate a filename based on the given parameters.</span>
 
 <span class="sd">        The filename will take the form: cwd/basename&lt;suffix&gt;&lt;ext&gt;.</span>
@@ -332,9 +333,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">basename</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Unable to generate filename for command </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span>
-            <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;basename is not set!&quot;</span>
+        <span class="k">if</span> <span class="n">basename</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Unable to generate filename for command </span><span class="si">%s</span><span class="s1">. &#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;basename is not set!&#39;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -342,12 +343,13 @@
             <span class="n">ext</span> <span class="o">=</span> <span class="n">Info</span><span class="o">.</span><span class="n">output_type_to_ext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">change_ext</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">suffix</span><span class="p">:</span>
-                <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">suffix</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">suffix</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">suffix</span> <span class="o">=</span> <span class="n">ext</span>
         <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">fname</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span><span class="n">basename</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">use_ext</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">newpath</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+            <span class="n">basename</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">use_ext</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">newpath</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fname</span>
 
     <span class="k">def</span> <span class="nf">_overload_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -375,10 +377,8 @@
 
 <span class="k">def</span> <span class="nf">no_fsl_course_data</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;check if fsl_course data is present&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span>
-        <span class="s2">&quot;FSL_COURSE_DATA&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
-        <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;FSL_COURSE_DATA&quot;</span><span class="p">]))</span>
-    <span class="p">)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;FSL_COURSE_DATA&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FSL_COURSE_DATA&#39;</span><span class="p">])))</span>
 </pre></div>
 
     </div>
@@ -392,7 +392,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -109,7 +109,7 @@
 <h1>macapype.pipelines.segment.create_old_segment_pipe<a class="headerlink" href="#macapype-pipelines-segment-create-old-segment-pipe" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="macapype.pipelines.segment.create_old_segment_pipe">
-<code class="descclassname">macapype.pipelines.segment.</code><code class="descname">create_old_segment_pipe</code><span class="sig-paren">(</span><em>priors</em>, <em>params={}</em>, <em>name='old_segment_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/segment.html#create_old_segment_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.segment.create_old_segment_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">macapype.pipelines.segment.</code><code class="descname">create_old_segment_pipe</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='old_segment_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/segment.html#create_old_segment_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.segment.create_old_segment_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Description: Extract brain using tissues masks output by SPM’s old_segment</dt>
 <dd><p class="first">function:</p>
@@ -141,6 +141,8 @@
 <dd>filled mask after erode</dd>
 <dt>fill_holes_dil.out_file</dt>
 <dd>filled mask after dilate</dd>
+<dt>threshold_gm, threshold_wm, threshold_csf.out_file:</dt>
+<dd>resp grey matter, white matter, and csf after thresholding</dd>
 </dl>
 </div></blockquote>
 </dd></dl>
@@ -159,7 +161,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

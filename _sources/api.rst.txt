@@ -75,16 +75,43 @@ Full segment (:py:mod:`macapype.pipelines.full_segment`):
 Nodes
 ^^^^^^
 
-Bash Regis (:py:mod:`macapype.nodes.bash_regis`):
+Extract brain (:py:mod:`macapype.nodes.extract_brain`):
 
-.. currentmodule:: macapype.nodes.bash_regis
+.. currentmodule:: macapype.nodes.extract_brain
 
 .. autosummary::
    :toctree: generated/
 
    T1xT2BET
+
+
+Correct bias (:py:mod:`macapype.nodes.correct_bias`):
+
+.. currentmodule:: macapype.nodes.correct_bias
+
+.. autosummary::
+   :toctree: generated/
+
    T1xT2BiasFieldCorrection
+
+
+Register (:py:mod:`macapype.nodes.register`):
+
+.. currentmodule:: macapype.nodes.register
+
+.. autosummary::
+   :toctree: generated/
+
    IterREGBET
+
+
+Preproc (:py:mod:`macapype.nodes.preproc`):
+
+.. currentmodule:: macapype.nodes.preproc
+
+.. autosummary::
+   :toctree: generated/
+
    CropVolume
 
 Utils

@@ -21,12 +21,12 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
-################################################################################
-##Running workflow
-##==================
+###############################################################################
+#Running workflow
+#==================
 
 #from macapype.utils.utils_tests import load_test_data, format_template
-#from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
+#from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes
 
 
 #from macapype.utils.utils_tests import load_test_data
@@ -38,19 +38,25 @@ import nipype.interfaces.io as nio
 #print(params)
 #pprint.pprint(params)
 
-#if "general" in params.keys() and "my_path" in params["general"].keys():
-    #my_path = params["general"]["my_path"]
+#if "general" in params.keys() and "data_path" in params["general"].keys():
+    #data_path = params["general"]["data_path"]
 #else:
-    ##my_path = "/home/INT/meunier.d/Data/"
-    #my_path = "/hpc/crise/meunier.d/"
-    ##my_path = "/hpc/neopto/USERS/racicot/data/"
+    #data_path = "/home/INT/meunier.d/Data/"
+    ##data_path = "/hpc/crise/meunier.d/"
+    ##data_path = "/hpc/neopto/USERS/racicot/data/"
 
-#nmt_dir = load_test_data('NMT_v1.2', path_to = my_path)
-#params_template = format_template(nmt_dir, 'NMT_v1.2')
+
+
+#if "general" in params.keys() and "template_name" in params["general"].keys():
+    #template_name = params["general"]["template_name"]
+#else:
+    #template_name = 'NMT_v1.2'
+
+#template_dir = load_test_data(template_name)
+#params_template = format_template(template_dir, template_name)
 #print (params_template)
 
-
-#data_path = load_test_data("data_test_macapype", path_to = my_path)
+##data_path = load_test_data("data_test_macapype", path_to = data_path)
 
 ## data file
 #T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
@@ -59,15 +65,14 @@ import nipype.interfaces.io as nio
 ## running workflow
 #segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                #params_template=params_template,
-                                               #segment=False,
-                                               #name = "segment_pnh_subpipes_ziggy")
-#segment_pnh.base_dir = my_path
+                                               #name = "full_segment_pnh_subpipes_apache")
+#segment_pnh.base_dir = data_path
 
 #segment_pnh.inputs.inputnode.T1 = T1_file
 #segment_pnh.inputs.inputnode.T2 = T2_file
 
 #segment_pnh.write_graph(graph2use="colored")
-#segment_pnh.run()
+##segment_pnh.run()
 
 #exit()
 
@@ -75,8 +80,8 @@ import nipype.interfaces.io as nio
 ## Testing plot in local
 ##=======================
 
-my_path = "/home/INT/meunier.d/Data/Primavoice/"
-wf_path = os.path.join(my_path, "segment_pnh_subpipes")
+data_path = "/home/INT/meunier.d/Data/Primavoice/"
+wf_path = os.path.join(data_path, "segment_pnh_subpipes")
 
 T1_file = op.join(wf_path, "preproc", "sub-Apache_ses-01_T1w_cropped.nii.gz")
 

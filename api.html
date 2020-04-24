@@ -73,7 +73,9 @@
 <li><a class="reference internal" href="#pipelines">Pipelines</a><ul>
 </ul>
 </li>
-<li><a class="reference internal" href="#nodes">Nodes</a></li>
+<li><a class="reference internal" href="#nodes">Nodes</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#utils">Utils</a></li>
 </ul>
 </li>
@@ -123,8 +125,8 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.denoise.create_denoised_pipe.html#macapype.pipelines.denoise.create_denoised_pipe" title="macapype.pipelines.denoise.create_denoised_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_denoised_pipe</span></code></a>([params,&nbsp;name])</td>
-<td>Description: Using Ants denoise on T1 and T2</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_denoised_pipe</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -165,8 +167,8 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.extract_brain.create_brain_extraction_pipe.html#macapype.pipelines.extract_brain.create_brain_extraction_pipe" title="macapype.pipelines.extract_brain.create_brain_extraction_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></a>(params_template)</td>
-<td>Description: Extract T1 brain using AtlasBrex</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -177,7 +179,7 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_old_segment_pipe</span></code></a>(priors[,&nbsp;params,&nbsp;name])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_old_segment_pipe</span></code></a>(params_template[,&nbsp;…])</td>
 <td>Description: Extract brain using tissues masks output by SPM’s old_segment</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe" title="macapype.pipelines.segment.create_segment_atropos_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_segment_atropos_pipe</span></code></a>([params,&nbsp;name])</td>
@@ -192,38 +194,65 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2.html#macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2" title="macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_T1xT2</span></code></a>(…[,&nbsp;params,&nbsp;…])</td>
-<td>Description: Regis T1xT2 pipeline</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_T1xT2</span></code></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_from_mask_pipe.html#macapype.pipelines.full_segment.create_full_segment_from_mask_pipe" title="macapype.pipelines.full_segment.create_full_segment_from_mask_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_from_mask_pipe</span></code></a>(…[,&nbsp;…])</td>
-<td>Description: Segment T1 (using T2 for bias correction) and a previously</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_from_mask_pipe</span></code></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_segment.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_segment.create_full_segment_pnh_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_subpipes</span></code></a>(params_template)</td>
-<td>Description: Segment T1 (using T2 for bias correction) .</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_subpipes</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="nodes">
 <h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h2>
-<p>Bash Regis (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.bash_regis</span></code>):</p>
+<p>Extract brain (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.extract_brain</span></code>):</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BET.html#macapype.nodes.bash_regis.T1xT2BET" title="macapype.nodes.bash_regis.T1xT2BET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>(**inputs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>(**inputs)</td>
 <td>Description: Brain extraction using T1 and T2 images</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/macapype.nodes.bash_regis.T1xT2BiasFieldCorrection.html#macapype.nodes.bash_regis.T1xT2BiasFieldCorrection" title="macapype.nodes.bash_regis.T1xT2BiasFieldCorrection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>([command,&nbsp;…])</td>
+</tbody>
+</table>
+<p>Correct bias (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.correct_bias</span></code>):</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>([command,&nbsp;…])</td>
 <td>Description:  Bias field correction using T1w &amp; T2w images.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.bash_regis.IterREGBET.html#macapype.nodes.bash_regis.IterREGBET" title="macapype.nodes.bash_regis.IterREGBET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IterREGBET</span></code></a>([command,&nbsp;terminal_output])</td>
+</tbody>
+</table>
+<p>Register (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.register</span></code>):</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IterREGBET</span></code></a>([command,&nbsp;terminal_output])</td>
 <td>Description: Iterative registration of the in-file to the ref file ( registered brain mask of the ref image is used at each iteration).</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/macapype.nodes.bash_regis.CropVolume.html#macapype.nodes.bash_regis.CropVolume" title="macapype.nodes.bash_regis.CropVolume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropVolume</span></code></a>([command,&nbsp;terminal_output])</td>
-<td>Description: Crop image(s) based on a brain extraction.</td>
+</tbody>
+</table>
+<p>Preproc (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.preproc</span></code>):</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropVolume</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -257,7 +286,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

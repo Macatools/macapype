@@ -99,17 +99,16 @@
     <div class="col-md-12 content">
       
   <h1>Source code for macapype.pipelines.segment</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
+<span></span><span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 
 <span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
 <span class="kn">import</span> <span class="nn">nipype.interfaces.spm</span> <span class="k">as</span> <span class="nn">spm</span>
-<span class="kn">import</span> <span class="nn">nipype.interfaces.afni</span> <span class="k">as</span> <span class="nn">afni</span>
 
 <span class="kn">from</span> <span class="nn">..nodes.segment</span> <span class="kn">import</span> <span class="n">AtroposN4</span><span class="p">,</span> <span class="n">BinaryFillHoles</span>
 
 <span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">merge_3_elem_to_list</span>
+<span class="kn">from</span> <span class="nn">..utils.utils_spm</span> <span class="kn">import</span> <span class="n">format_spm_priors</span>
 
 
 <div class="viewcode-block" id="create_segment_atropos_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_segment_atropos_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">):</span>
@@ -151,17 +150,11 @@
                     <span class="s2">&quot;csf_prior_file&quot;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Adding force deoblique before norm and atropos (special for cerimed file)</span>
-    <span class="n">deoblique</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">afni</span><span class="o">.</span><span class="n">Refit</span><span class="p">(</span><span class="n">deoblique</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;deoblique&quot;</span><span class="p">)</span>
-
-    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span>
-                         <span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
-
     <span class="c1"># bin_norm_intensity (a cheat from Kepkee if I understood well!)</span>
     <span class="n">bin_norm_intensity</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">UnaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;bin_norm_intensity&quot;</span><span class="p">)</span>
     <span class="n">bin_norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;bin&quot;</span>
 
-    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;out_file&quot;</span><span class="p">,</span>
+    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span>
                          <span class="n">bin_norm_intensity</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
 
     <span class="c1"># merging priors as a list</span>
@@ -176,19 +169,15 @@
     <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;wm_prior_file&#39;</span><span class="p">,</span> <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem3&quot;</span><span class="p">)</span>
 
     <span class="c1"># Atropos</span>
-    <span class="k">if</span> <span class="s2">&quot;Atropos&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">dimension</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">][</span><span class="s2">&quot;dimension&quot;</span><span class="p">]</span>
-        <span class="n">numberOfClasses</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">][</span><span class="s2">&quot;numberOfClasses&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
-        <span class="n">numberOfClasses</span> <span class="o">=</span> <span class="mi">3</span>
-
     <span class="n">seg_at</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">AtroposN4</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;seg_at&#39;</span><span class="p">)</span>
 
-    <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">dimension</span>
-    <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">numberOfClasses</span> <span class="o">=</span> <span class="n">numberOfClasses</span>
+    <span class="k">if</span> <span class="s2">&quot;Atropos&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;dimension&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">][</span><span class="s2">&quot;dimension&quot;</span><span class="p">]</span>
 
-    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;out_file&quot;</span><span class="p">,</span> <span class="n">seg_at</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;Atropos&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;numberOfClasses&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># noqa</span>
+        <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">numberOfClasses</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Atropos&quot;</span><span class="p">][</span><span class="s2">&quot;numberOfClasses&quot;</span><span class="p">]</span>
+
+    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span> <span class="n">seg_at</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">)</span>
     <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bin_norm_intensity</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                          <span class="n">seg_at</span><span class="p">,</span> <span class="s2">&quot;brainmask_file&quot;</span><span class="p">)</span>
 
@@ -199,7 +188,13 @@
     <span class="n">thd_nodes</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;csf&#39;</span><span class="p">,</span> <span class="s1">&#39;gm&#39;</span><span class="p">,</span> <span class="s1">&#39;wm&#39;</span><span class="p">]):</span>
         <span class="n">tmp_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
-        <span class="n">tmp_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.05</span>
+
+        <span class="k">if</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+                <span class="ow">and</span> <span class="s2">&quot;thresh&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">tmp_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">][</span><span class="s2">&quot;thresh&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.05</span>
+
         <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">seg_at</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span>
                              <span class="n">tmp_node</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
@@ -208,7 +203,8 @@
     <span class="k">return</span> <span class="n">segment_pipe</span></div>
 
 
-<div class="viewcode-block" id="create_old_segment_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_old_segment_pipe</span><span class="p">(</span><span class="n">priors</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_old_segment_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_old_segment_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Extract brain using tissues masks output by SPM&#39;s old_segment</span>
 <span class="sd">        function:</span>
@@ -239,6 +235,9 @@
 <span class="sd">        fill_holes_dil.out_file</span>
 <span class="sd">            filled mask after dilate</span>
 
+<span class="sd">        threshold_gm, threshold_wm, threshold_csf.out_file:</span>
+<span class="sd">            resp grey matter, white matter, and csf after thresholding</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># creating pipeline</span>
     <span class="n">be_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -250,33 +249,43 @@
     <span class="p">)</span>
 
     <span class="c1"># Segment in to 6 tissues</span>
-    <span class="k">if</span> <span class="s2">&quot;segment&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">gm_output_type</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">][</span><span class="s2">&quot;gm_output_type&quot;</span><span class="p">]</span>
-        <span class="n">wm_output_type</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">][</span><span class="s2">&quot;wm_output_type&quot;</span><span class="p">]</span>
-        <span class="n">csf_output_type</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">][</span><span class="s2">&quot;csf_output_type&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">gm_output_type</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
-        <span class="n">wm_output_type</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
-        <span class="n">csf_output_type</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
-
     <span class="n">segment</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">spm</span><span class="o">.</span><span class="n">Segment</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;old_segment&quot;</span><span class="p">)</span>
-    <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_output_type</span> <span class="o">=</span> <span class="n">gm_output_type</span>
-    <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">wm_output_type</span> <span class="o">=</span> <span class="n">wm_output_type</span>
-    <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">csf_output_type</span> <span class="o">=</span> <span class="n">csf_output_type</span>
-    <span class="n">segment</span><span class="o">.</span><span class="n">tissue_prob_maps</span> <span class="o">=</span> <span class="n">priors</span>
+
+    <span class="k">if</span> <span class="s2">&quot;segment&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;gm_output_type&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_output_type</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">][</span><span class="s2">&quot;gm_output_type&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gm_output_type</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;segment&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;wm_output_type&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">wm_output_type</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">][</span><span class="s2">&quot;wm_output_type&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">wm_output_type</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;segment&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;csf_output_type&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">csf_output_type</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">][</span><span class="s2">&quot;csf_output_type&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">csf_output_type</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+
+    <span class="n">segment</span><span class="o">.</span><span class="n">tissue_prob_maps</span> <span class="o">=</span> <span class="n">format_spm_priors</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_gm&quot;</span><span class="p">],</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_wm&quot;</span><span class="p">],</span>
+         <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_csf&quot;</span><span class="p">]])</span>
+
     <span class="n">be_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
     <span class="c1"># Threshold GM, WM and CSF</span>
     <span class="n">thd_nodes</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gm&#39;</span><span class="p">,</span> <span class="s1">&#39;wm&#39;</span><span class="p">,</span> <span class="s1">&#39;csf&#39;</span><span class="p">]:</span>
 
-        <span class="k">if</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">thresh</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">][</span><span class="s2">&quot;thresh&quot;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.05</span>
-
         <span class="n">tmp_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
-        <span class="n">tmp_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">thresh</span>
+
+        <span class="k">if</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+                <span class="ow">and</span> <span class="s2">&quot;thresh&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">tmp_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">][</span><span class="s2">&quot;thresh&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.05</span>
 
         <span class="n">be_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;native_&#39;</span> <span class="o">+</span> <span class="n">tissue</span> <span class="o">+</span> <span class="s1">&#39;_image&#39;</span><span class="p">,</span>
@@ -298,34 +307,37 @@
                     <span class="n">tissues_union</span><span class="p">,</span> <span class="s1">&#39;operand_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># Opening</span>
-    <span class="k">if</span> <span class="s2">&quot;dilate_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">opening_shape</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_shape&quot;</span><span class="p">]</span>
-        <span class="n">opening_size</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_size&quot;</span><span class="p">]</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">opening_shape</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
-        <span class="n">opening_size</span> <span class="o">=</span> <span class="mi">2</span>
-
     <span class="n">dilate_mask</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">DilateImage</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">)</span>
-    <span class="c1"># Arbitrary operation</span>
-    <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
-    <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_shape</span> <span class="o">=</span> <span class="n">opening_shape</span>
-    <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">=</span> <span class="n">opening_size</span>
+    <span class="k">if</span> <span class="s2">&quot;dilate_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;opening_shape&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_shape</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_shape&quot;</span><span class="p">]</span>  <span class="c1"># noqa</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_shape</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;dilate_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;opening_size&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilate_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_size&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">dilate_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>  <span class="c1"># Arbitrary operation</span>
     <span class="n">be_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">tissues_union</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">dilate_mask</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Eroding</span>
-    <span class="k">if</span> <span class="s2">&quot;erode_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">opening_shape</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_shape&quot;</span><span class="p">]</span>
-        <span class="n">opening_size</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_size&quot;</span><span class="p">]</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">opening_shape</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
-        <span class="n">opening_size</span> <span class="o">=</span> <span class="mi">2</span>
-
+    <span class="c1"># Eroding mask</span>
     <span class="n">erode_mask</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ErodeImage</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">)</span>
-    <span class="n">erode_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_shape</span> <span class="o">=</span> <span class="n">opening_shape</span>
-    <span class="n">erode_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">=</span> <span class="n">opening_size</span>
-    <span class="n">be_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dilate_mask</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">erode_mask</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;erode_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;opening_shape&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">erode_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_shape</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_shape&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">erode_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_shape</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;erode_mask&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="s2">&quot;opening_size&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">erode_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;erode_mask&quot;</span><span class="p">][</span><span class="s2">&quot;opening_size&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">erode_mask</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">be_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">tissues_union</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">erode_mask</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># fill holes of erode_mask</span>
     <span class="n">fill_holes</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">BinaryFillHoles</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fill_holes&quot;</span><span class="p">)</span>
@@ -349,7 +361,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

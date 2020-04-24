@@ -1,7 +1,7 @@
-macapype.nodes.bash\_regis.IterREGBET
-=====================================
+macapype.nodes.register.IterREGBET
+==================================
 
-.. currentmodule:: macapype.nodes.bash_regis
+.. currentmodule:: macapype.nodes.register
 
 .. autoclass:: IterREGBET
 
@@ -16,6 +16,7 @@ macapype.nodes.bash\_regis.IterREGBET
       ~IterREGBET.__init__
       ~IterREGBET.aggregate_outputs
       ~IterREGBET.help
+      ~IterREGBET.load_inputs_from_dict
       ~IterREGBET.load_inputs_from_json
       ~IterREGBET.raise_exception
       ~IterREGBET.run

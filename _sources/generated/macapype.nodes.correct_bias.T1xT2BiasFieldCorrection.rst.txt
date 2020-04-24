@@ -1,7 +1,7 @@
-macapype.nodes.bash\_regis.T1xT2BiasFieldCorrection
-===================================================
+macapype.nodes.correct\_bias.T1xT2BiasFieldCorrection
+=====================================================
 
-.. currentmodule:: macapype.nodes.bash_regis
+.. currentmodule:: macapype.nodes.correct_bias
 
 .. autoclass:: T1xT2BiasFieldCorrection
 
@@ -16,6 +16,7 @@ macapype.nodes.bash\_regis.T1xT2BiasFieldCorrection
       ~T1xT2BiasFieldCorrection.__init__
       ~T1xT2BiasFieldCorrection.aggregate_outputs
       ~T1xT2BiasFieldCorrection.help
+      ~T1xT2BiasFieldCorrection.load_inputs_from_dict
       ~T1xT2BiasFieldCorrection.load_inputs_from_json
       ~T1xT2BiasFieldCorrection.raise_exception
       ~T1xT2BiasFieldCorrection.run

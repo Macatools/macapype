@@ -125,28 +125,39 @@ $ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -sub
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -params params.json
 </pre></div>
 </div>
-<p>Here is an example of the params.json corresponding to <a class="reference internal" href="generated/macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2.html#macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2" title="macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2"><code class="xref py py-class docutils literal notranslate"><span class="pre">segment_pnh_regis_T1xT2</span> <span class="pre">pipeline</span></code></a>:</p>
+<p>Here is an example of the params.json corresponding to <code class="xref py py-class docutils literal notranslate"><span class="pre">segment_pnh_regis_T1xT2</span> <span class="pre">pipeline</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;bet&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;general&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
-        <span class="s2">&quot;aT2&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
-        <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="s2">&quot;template_name&quot;</span><span class="p">:</span> <span class="s2">&quot;inia19&quot;</span>
     <span class="p">},</span>
-    <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">4</span>
+        <span class="s2">&quot;bet_crop&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+            <span class="s2">&quot;aT2&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;brain_register_pipe&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;mix&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;create_old_segment_pipe&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">4</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;mix&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">,</span>
+    <span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">:</span>
     <span class="p">{</span>
         <span class="s2">&quot;segment&quot;</span><span class="p">:</span>
         <span class="p">{</span>
@@ -156,15 +167,15 @@ $ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -sub
         <span class="p">},</span>
         <span class="s2">&quot;threshold_gm&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.05</span>
+            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
         <span class="p">},</span>
         <span class="s2">&quot;threshold_wm&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.05</span>
+            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
         <span class="p">},</span>
         <span class="s2">&quot;threshold_csf&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.05</span>
+            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
         <span class="p">},</span>
         <span class="s2">&quot;dilate_mask&quot;</span><span class="p">:</span>
         <span class="p">{</span>
@@ -195,7 +206,7 @@ $ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -sub
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
