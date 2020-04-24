@@ -62,7 +62,6 @@ import nipype.interfaces.io as nio
 ## running workflow
 #segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                #params_template=params_template,
-                                               #segment=False,
                                                #name = "segment_pnh_subpipes_ziggy")
 #segment_pnh.base_dir = my_path
 

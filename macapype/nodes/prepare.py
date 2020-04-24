@@ -207,3 +207,21 @@ def average_align(list_img):
         av_img_file = list_img
 
     return av_img_file
+
+
+# on the fly
+def read_cropbox(cropbox_file):
+
+    import os.path as op
+
+    assert op.exists(cropbox_file), \
+        "Error {} do not exists".format(cropbox_file)
+
+    with open(cropbox_file) as f:
+        crop_list = []
+        for line in f.readlines():
+            print(line.strip().split())
+            crop_list.append(tuple(map(int, map(float, line.strip().split()))))
+
+    return crop_list
+

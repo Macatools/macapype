@@ -22,41 +22,57 @@ import nipype.interfaces.io as nio
 # Load test data and run
 #========================
 
-from macapype.utils.utils_tests import load_test_data
+from macapype.utils.utils_tests import load_test_data, format_template
 
-from macapype.pipelines.full_segment import create_full_segment_pnh_T1xT2
+from macapype.pipelines.full_pipelines import create_full_T1xT2_segment_pnh_subpipes  # noqa
 from macapype.utils.utils_spm import format_spm_priors
+import json, pprint
 
 # data file
 
-#my_path = "/hpc/crise/meunier.d/"
-#data_path = load_test_data("data_test_macapype", path_to = my_path)
 
-#T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-#T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+package_directory = os.path.dirname(os.path.abspath(__file__))
+params_file = '{}/../workflows/params_segment_pnh_regis_T1xT2.json'.format(package_directory)
+params = json.load(open(params_file))
 
+print(params)
+pprint.pprint(params)
 
-#inia_dir = load_test_data("inia19", path_to = my_path)
-
-## template
-#template = op.join(inia_dir, "inia19-t1-brain.nii")
-
-## priors
-
-#priors = [op.join(inia_dir, "inia19-prob_1.nii"),
-          #op.join(inia_dir, "inia19-prob_2.nii"),
-          #op.join(inia_dir, "inia19-prob_0.nii")]
+if "general" in params.keys() and "my_path" in params["general"].keys():
+    my_path = params["general"]["my_path"]
+else:
+    my_path = "/home/INT/meunier.d/Data/"
+    #my_path = "/hpc/crise/meunier.d/"
+    #my_path = "/hpc/neopto/USERS/racicot/data/"
 
 
-## running workflow
-#segment_pnh = create_full_segment_pnh_T1xT2(template, format_spm_priors(priors))
-#segment_pnh.base_dir = my_path
+if "general" in params.keys() and "template_name" in params["general"].keys():
+    template_name = params["general"]["template_name"]
+else:
+    template_name = 'inia19'
 
-#segment_pnh.inputs.inputnode.T1 = T1_file
-#segment_pnh.inputs.inputnode.T2 = T2_file
+nmt_dir = load_test_data(template_name, path_to = my_path)
+params_template = format_template(nmt_dir, template_name)
+print (params_template)
 
-#segment_pnh.write_graph(graph2use="colored")
+data_path = load_test_data("data_test_macapype", path_to = my_path)
+
+# data file
+T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+
+# running workflow
+segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
+    params=params, params_template=params_template)
+segment_pnh.base_dir = my_path
+
+segment_pnh.inputs.inputnode.T1 = T1_file
+segment_pnh.inputs.inputnode.T2 = T2_file
+
+segment_pnh.write_graph(graph2use="colored")
 #segment_pnh.run()
+
+exit()
 
 ###############################################################################
 # Testing plot in local

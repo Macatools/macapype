@@ -61,7 +61,6 @@ from macapype.pipelines.full_segment import create_full_segment_pnh_subpipes
 ## running workflow
 #segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                #params_template=params_template,
-                                               #segment=True,
                                                #name = "segment_marmo_test_template")
 #segment_pnh.base_dir = my_path
 

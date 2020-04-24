@@ -50,17 +50,11 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
                     "csf_prior_file"]),
         name='inputnode')
 
-    # Adding force deoblique before norm and atropos (special for cerimed file)
-    deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
-
-    segment_pipe.connect(inputnode, "brain_file",
-                         deoblique, "in_file")
-
     # bin_norm_intensity (a cheat from Kepkee if I understood well!)
     bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
     bin_norm_intensity.inputs.operation = "bin"
 
-    segment_pipe.connect(deoblique, "out_file",
+    segment_pipe.connect(inputnode, "brain_file",
                          bin_norm_intensity, "in_file")
 
     # merging priors as a list
