@@ -327,17 +327,21 @@ class NMTSubjectAlignOutputSpec(TraitedSpec):
         exists=True,
         desc="shft_aff")
 
+    warp_file = File(
+        exists=True,
+        desc="shft_WARP.nii.gz")
+
     warpinv_file = File(
         exists=True,
-        desc="shft_WARPINV")
+        desc="shft_WARPINV.nii.gz")
 
     transfo_file = File(
         exists=True,
-        desc="composite_linear_to_NMT")
+        desc="composite_linear_to_NMT.1D")
 
     inv_transfo_file = File(
         exists=True,
-        desc="_composite_linear_to_NMT_inv")
+        desc="_composite_linear_to_NMT_inv.1D")
 
 
 class NMTSubjectAlign(CommandLine):
@@ -364,6 +368,10 @@ class NMTSubjectAlign(CommandLine):
         shft_aff_file = File(
             exists=True,
             desc="shft_aff")
+
+        warp_file = File(
+            exists=True,
+            desc="shft_WARP")
 
         warpinv_file = File(
             exists=True,
@@ -400,6 +408,9 @@ class NMTSubjectAlign(CommandLine):
         # fname + "_shft_WARPINV.nii")
         outputs["warpinv_file"] = os.path.abspath(
             fname + "_shft_WARPINV.nii.gz")
+
+        outputs["warp_file"] = os.path.abspath(
+            fname + "_shft_WARP.nii.gz")
 
         # outputs["warpinv_file"] = os.path.abspath(
         #    fname + "_shft_WARPINV" + ext)
