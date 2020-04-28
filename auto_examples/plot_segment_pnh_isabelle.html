@@ -69,10 +69,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Plot the results of a segmentation</a><ul>
-<li><a class="reference internal" href="#running-workflow">Running workflow</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Plot the results of a segmentation</a></li>
 </ul>
 </ul>
 </li>
@@ -121,68 +118,6 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
-
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">pprint</span>
-
-<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
-
-<span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <span class="n">IdentityInterface</span>
-<span class="kn">import</span> <span class="nn">nipype.interfaces.io</span> <span class="k">as</span> <span class="nn">nio</span>
-</pre></div>
-</div>
-<div class="section" id="running-workflow">
-<h2>Running workflow<a class="headerlink" href="#running-workflow" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span><span class="p">,</span> <span class="n">format_template</span>
-<span class="kn">from</span> <span class="nn">macapype.pipelines.full_pipelines</span> <span class="kn">import</span> <span class="n">create_full_segment_pnh_subpipes</span>
-
-
-<span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span>
-
-<span class="c1">#package_directory = os.path.dirname(os.path.abspath(__file__))</span>
-<span class="c1">#params_file = &#39;{}/../workflows/params_segment_pnh_isabelle.json&#39;.format(package_directory)</span>
-<span class="c1">#params = json.load(open(params_file))</span>
-
-<span class="c1">#print(params)</span>
-<span class="c1">#pprint.pprint(params)</span>
-
-<span class="c1">#if &quot;general&quot; in params.keys() and &quot;data_path&quot; in params[&quot;general&quot;].keys():</span>
-    <span class="c1">#data_path = params[&quot;general&quot;][&quot;data_path&quot;]</span>
-<span class="c1">#else:</span>
-    <span class="c1">#data_path = &quot;/home/INT/meunier.d/ownCloud/Data_tmp/isabelle&quot;</span>
-    <span class="c1">##data_path = &quot;/hpc/crise/meunier.d/&quot;</span>
-    <span class="c1">##data_path = &quot;/hpc/neopto/USERS/racicot/data/&quot;</span>
-
-
-<span class="c1">#if &quot;general&quot; in params.keys() and &quot;template_name&quot; in params[&quot;general&quot;].keys():</span>
-    <span class="c1">#template_name = params[&quot;general&quot;][&quot;template_name&quot;]</span>
-<span class="c1">#else:</span>
-    <span class="c1">#template_name = &#39;NMT_v1.2&#39;</span>
-
-<span class="c1">#template_dir = load_test_data(template_name)</span>
-<span class="c1">#params_template = format_template(template_dir, template_name)</span>
-<span class="c1">#print (params_template)</span>
-
-
-<span class="c1">##data_path = load_test_data(&quot;data_test_macapype&quot;, path_to = my_path)</span>
-
-<span class="c1">## data file</span>
-<span class="c1">#T1_file = op.join(data_path, &quot;sub-ziggy_T1w.nii&quot;)</span>
-<span class="c1">#T2_file = op.join(data_path, &quot;sub-ziggy_T2w.nii&quot;)</span>
-
-<span class="c1">## running workflow</span>
-<span class="c1">#segment_pnh = create_full_segment_pnh_subpipes(params=params,</span>
-                                               <span class="c1">#params_template=params_template,</span>
-                                               <span class="c1">#name = &quot;segment_pnh_subpipes_ziggy&quot;)</span>
-<span class="c1">#segment_pnh.base_dir = data_path</span>
-
-<span class="c1">#segment_pnh.inputs.inputnode.T1 = T1_file</span>
-<span class="c1">#segment_pnh.inputs.inputnode.T2 = T2_file</span>
-
-<span class="c1">#segment_pnh.write_graph(graph2use=&quot;colored&quot;)</span>
-<span class="c1">##segment_pnh.run()</span>
-
-<span class="c1">#exit()</span>
 </pre></div>
 </div>
 <p># Reorient and cropping
@@ -225,7 +160,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_isabelle_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_isabelle_001.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  14.252 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  13.993 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-isabelle-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/05f3dcec3d5f513ed1aa8a9013bd110b/plot_segment_pnh_isabelle.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_isabelle.py</span></code></a></div>
@@ -233,7 +168,6 @@
 <a class="reference download internal" download="" href="../_downloads/34b582cd19fad27ed3d84f8acccfe65a/plot_segment_pnh_isabelle.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_segment_pnh_isabelle.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
 </div>
 
 
@@ -248,7 +182,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

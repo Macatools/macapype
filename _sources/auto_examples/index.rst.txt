@@ -14,6 +14,26 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_bet_pnh_regis_T1xT2_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_bet_pnh_regis_T1xT2.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_bet_pnh_regis_T1xT2
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data T1w and T2w">
 
 .. only:: html

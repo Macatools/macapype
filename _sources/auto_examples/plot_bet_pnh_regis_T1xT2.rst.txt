@@ -1,10 +1,10 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_auto_examples_plot_segment_pnh_regis_T1xT2.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_auto_examples_plot_bet_pnh_regis_T1xT2.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_auto_examples_plot_segment_pnh_regis_T1xT2.py:
+.. _sphx_glr_auto_examples_plot_bet_pnh_regis_T1xT2.py:
 
 
 .. _plot_segment_pnh_regis_T1xT2:
@@ -48,6 +48,9 @@ Testing plot in local
 
     # displaying results
     wf_path = os.path.join(data_path, "test_T1xT2_segmentation_pipeline")
+
+    #bet_path = os.path.join(wf_path, "bet")
+    bet_path = os.path.join(wf_path, "preproc_pipe", "bet_crop")
     bet_path = os.path.join(wf_path, "data_preparation_pipe", "bet_crop")
 
     T1_file = op.join(bet_path, "sub-Apache_ses-01_T1w_cropped.nii.gz")
@@ -106,7 +109,7 @@ brain extraction results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png
+.. image:: /auto_examples/images/sphx_glr_plot_bet_pnh_regis_T1xT2_001.png
     :class: sphx-glr-single-img
 
 
@@ -156,7 +159,7 @@ Correct bias results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_regis_T1xT2_002.png
+.. image:: /auto_examples/images/sphx_glr_plot_bet_pnh_regis_T1xT2_002.png
     :class: sphx-glr-single-img
 
 
@@ -196,7 +199,7 @@ registration results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_regis_T1xT2_003.png
+.. image:: /auto_examples/images/sphx_glr_plot_bet_pnh_regis_T1xT2_003.png
     :class: sphx-glr-single-img
 
 
@@ -233,16 +236,16 @@ segmentation results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_regis_T1xT2_004.png
+.. image:: /auto_examples/images/sphx_glr_plot_bet_pnh_regis_T1xT2_004.png
     :class: sphx-glr-single-img
 
 
 
 
-**Total running time of the script:** ( 0 minutes  20.739 seconds)
+**Total running time of the script:** ( 0 minutes  20.809 seconds)
 
 
-.. _sphx_glr_download_auto_examples_plot_segment_pnh_regis_T1xT2.py:
+.. _sphx_glr_download_auto_examples_plot_bet_pnh_regis_T1xT2.py:
 
 
 .. only :: html
@@ -254,13 +257,13 @@ segmentation results
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: plot_segment_pnh_regis_T1xT2.py <plot_segment_pnh_regis_T1xT2.py>`
+     :download:`Download Python source code: plot_bet_pnh_regis_T1xT2.py <plot_bet_pnh_regis_T1xT2.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: plot_segment_pnh_regis_T1xT2.ipynb <plot_segment_pnh_regis_T1xT2.ipynb>`
+     :download:`Download Jupyter notebook: plot_bet_pnh_regis_T1xT2.ipynb <plot_bet_pnh_regis_T1xT2.ipynb>`
 
 
 .. only:: html

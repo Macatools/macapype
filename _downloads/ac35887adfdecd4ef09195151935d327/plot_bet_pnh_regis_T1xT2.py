@@ -26,6 +26,9 @@ data_path = "/home/INT/meunier.d/Data/Primavoice/"
 
 # displaying results
 wf_path = os.path.join(data_path, "test_T1xT2_segmentation_pipeline")
+
+#bet_path = os.path.join(wf_path, "bet")
+bet_path = os.path.join(wf_path, "preproc_pipe", "bet_crop")
 bet_path = os.path.join(wf_path, "data_preparation_pipe", "bet_crop")
 
 T1_file = op.join(bet_path, "sub-Apache_ses-01_T1w_cropped.nii.gz")

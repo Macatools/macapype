@@ -143,20 +143,16 @@ $ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -sub
             <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;brain_register_pipe&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">4</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;mix&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="p">,</span>
+        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">4</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;mix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
+    <span class="p">},</span>
     <span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">:</span>
     <span class="p">{</span>
         <span class="s2">&quot;segment&quot;</span><span class="p">:</span>
@@ -206,7 +202,7 @@ $ python workflows/segment_pnh_regis.py -data ~/Data_maca -out ./local_test -sub
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-24.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

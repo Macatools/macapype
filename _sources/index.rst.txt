@@ -45,5 +45,5 @@ The :ref:`plot_segment_pnh_kepkee workflow <plot_segment_pnh_kepkee>` based on K
     - :class:`register pipeline <macapype.pipelines.register.create_register_NMT_pipe>` from template (NMT) to subject space
     - :class:`segmentation pipeline <macapype.pipelines.segment.create_segment_atropos_pipe>` in subject space with Atropos
 
-The same Kepkee's :class:`full pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_subpipes>`, used on marmouset data (:ref:`link to example <plot_segment_marmo_test>`). The automated cropping did not work, hence manual cropping was used. AtlasBREX parameters were modified accordingly.
+The same :class:`full pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_subpipes>`, used on marmouset data (:ref:`link to example <plot_segment_marmo_test>`). The automated cropping did not work, hence manual cropping was used
 
