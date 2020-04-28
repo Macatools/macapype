@@ -105,9 +105,9 @@ Register (:py:mod:`macapype.nodes.register`):
    IterREGBET
 
 
-Preproc (:py:mod:`macapype.nodes.preproc`):
+Preproc (:py:mod:`macapype.nodes.prepare`):
 
-.. currentmodule:: macapype.nodes.preproc
+.. currentmodule:: macapype.nodes.prepare
 
 .. autosummary::
    :toctree: generated/

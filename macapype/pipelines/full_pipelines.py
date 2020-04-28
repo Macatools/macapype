@@ -6,7 +6,6 @@ from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
 from .prepare import create_data_preparation_pipe
-
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
 
@@ -22,58 +21,19 @@ from macapype.utils.misc import gunzip
 
 ###############################################################################
 # Regis
-def create_brain_register_pipe(params_template, params={},
-                               name="brain_register_pipe"):
-
-    # Creating pipeline
-    brain_register_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1_cropped', 'T2_cropped', "mask"]),
-        name='inputnode'
-    )
-
-    # Bias correction of cropped images
-    if "debias" in params.keys():
-        s = params["debias"]["s"]
-    else:
-        s = 4
-
-    debias = pe.Node(T1xT2BiasFieldCorrection(s=s), name='debias')
-
-    brain_register_pipe.connect(inputnode, 'T1_cropped', debias, 't1_file')
-    brain_register_pipe.connect(inputnode, 'T2_cropped', debias, 't2_file')
-    brain_register_pipe.connect(inputnode, 'mask', debias, 'b')
-
-    # Iterative registration to the INIA19 template
-    reg = pe.Node(IterREGBET(), name='reg')
-    reg.inputs.refb_file = params_template["template_brain"]
-
-    if "reg" in params.keys() and "n" in params["reg"].keys():
-        reg.inputs.n = params["reg"]["n"]
-
-    if "reg" in params.keys() and "m" in params["reg"].keys():
-        reg.inputs.m = params["reg"]["m"]
-
-    if "reg" in params.keys() and "dof" in params["reg"].keys():
-        reg.inputs.dof = params["reg"]["dof"]
-
-    brain_register_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
-    brain_register_pipe.connect(debias, 't1_debiased_brain_file',
-                                reg, 'inb_file')
-
-    return brain_register_pipe
-
-
 def create_full_T1xT2_segment_pnh_subpipes(
         params_template, params={}, name='full_T1xT2_segment_pnh_subpipes'):
     """ Description: Regis T1xT2 pipeline
 
-        - T1xT2BET brain extraction and crop -> mask
-        - T1xT2BiasFieldCorrection using mask -> better mask
-        - NMT align (after N4Debias)
-        - Atropos segment
+        - data_preparation_pipe:
+            - avg_align
+            - deoblique,
+            - reorient if needed
+            - bet_crop (brain extraction and crop) -> mask
+            - denoise
+        - T1xT2BiasFieldCorrection using mask -> debias
+        - IterREGBET -> registration to template file
+        - old_segment_pipe
 
     Inputs:
 
@@ -126,23 +86,37 @@ def create_full_T1xT2_segment_pnh_subpipes(
     seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
 
-    if 'brain_register_pipe' in params.keys():
-        print("brain_register_pipe is in params")
-        params_brain_register_pipe = params["brain_register_pipe"]
+    # Bias correction of cropped images
+    if "debias" in params.keys():
+        s = params["debias"]["s"]
     else:
-        print("*** brain_register_pipe NOT in params")
-        params_brain_register_pipe = {}
+        s = 4
 
-    brain_register_pipe = create_brain_register_pipe(
-        params_template,
-        params=params_brain_register_pipe)
+    debias = pe.Node(T1xT2BiasFieldCorrection(s=s), name='debias')
 
-    seg_pipe.connect(data_preparation_pipe, 'bet_crop.t1_cropped_file',
-                     brain_register_pipe, 'inputnode.T1_cropped')
-    seg_pipe.connect(data_preparation_pipe, 'bet_crop.t2_cropped_file',
-                     brain_register_pipe, 'inputnode.T2_cropped')
+    seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+                     debias, 't1_file')
+    seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+                     debias, 't2_file')
     seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
-                     brain_register_pipe, 'inputnode.mask')
+                     debias, 'b')
+
+    # Iterative registration to the INIA19 template
+    reg = pe.Node(IterREGBET(), name='reg')
+    reg.inputs.refb_file = params_template["template_brain"]
+
+    if "reg" in params.keys() and "n" in params["reg"].keys():
+        reg.inputs.n = params["reg"]["n"]
+
+    if "reg" in params.keys() and "m" in params["reg"].keys():
+        reg.inputs.m = params["reg"]["m"]
+
+    if "reg" in params.keys() and "dof" in params["reg"].keys():
+        reg.inputs.dof = params["reg"]["dof"]
+
+    seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
+    seg_pipe.connect(debias, 't1_debiased_brain_file',
+                     reg, 'inb_file')
 
     # Compute brain mask using old_segment of SPM and postprocessing on
     # tissues' masks
@@ -154,7 +128,7 @@ def create_full_T1xT2_segment_pnh_subpipes(
     old_segment_pipe = create_old_segment_pipe(
         params_template, params=params_old_segment_pipe)
 
-    seg_pipe.connect(brain_register_pipe, ('reg.warp_file', gunzip),
+    seg_pipe.connect(reg, ('warp_file', gunzip),
                      old_segment_pipe, 'inputnode.T1')
 
     return seg_pipe
@@ -162,7 +136,6 @@ def create_full_T1xT2_segment_pnh_subpipes(
 
 ###############################################################################
 # Kepkee
-
 def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """

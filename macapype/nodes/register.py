@@ -303,7 +303,6 @@ class IterREGBET(CommandLine):
         outputs["warp_file"] = os.path.abspath(outfile + ".nii.gz")
         outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
         outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
-        print(outputs)
         return outputs
 
 

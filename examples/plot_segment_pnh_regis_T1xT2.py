@@ -19,81 +19,46 @@ from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
 ###############################################################################
-# Load test data and run
-#========================
-
-from macapype.utils.utils_tests import load_test_data, format_template
-
-from macapype.pipelines.full_pipelines import create_full_T1xT2_segment_pnh_subpipes  # noqa
-from macapype.utils.utils_spm import format_spm_priors
-import json, pprint
-
-# data file
-
-
-package_directory = os.path.dirname(os.path.abspath(__file__))
-params_file = '{}/../workflows/params_segment_pnh_regis_T1xT2.json'.format(package_directory)
-params = json.load(open(params_file))
-
-print(params)
-pprint.pprint(params)
-
-if "general" in params.keys() and "data_path" in params["general"].keys():
-    data_path = params["general"]["data_path"]
-else:
-    data_path = "/home/INT/meunier.d/Data/"
-    #data_path = "/hpc/crise/meunier.d/"
-    #data_path = "/hpc/neopto/USERS/racicot/data/"
-
-
-if "general" in params.keys() and "template_name" in params["general"].keys():
-    template_name = params["general"]["template_name"]
-else:
-    template_name = 'inia19'
-
-nmt_dir = load_test_data(template_name, path_to = data_path)
-params_template = format_template(nmt_dir, template_name)
-print (params_template)
-
-#data_path = load_test_data("data_test_macapype", path_to = data_path)
-
-# data file
-T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
-
-# running workflow
-segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
-    params=params, params_template=params_template)
-segment_pnh.base_dir = data_path
-
-segment_pnh.inputs.inputnode.T1 = T1_file
-segment_pnh.inputs.inputnode.T2 = T2_file
-
-segment_pnh.write_graph(graph2use="colored")
-#segment_pnh.run()
-
-exit()
-
-###############################################################################
 # Testing plot in local
 #======================
 
 data_path = "/home/INT/meunier.d/Data/Primavoice/"
 
 # displaying results
-wf_path = os.path.join(data_path, "T1xT2_segmentation_pipeline")
-bet_path = os.path.join(wf_path, "bet")
+wf_path = os.path.join(data_path, "test_T1xT2_segmentation_pipeline")
+bet_path = os.path.join(wf_path, "data_preparation_pipe", "bet_crop")
 
 T1_file = op.join(bet_path, "sub-Apache_ses-01_T1w_cropped.nii.gz")
+print(T1_file)
 assert os.path.exists(T1_file)
 
-outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(outfile_T1, T1_file)
+#outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
+#cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(outfile_T1, T1_file)
+#os.system(cmd)
+
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(outfile_T1)
+#plt.figure(figsize=(16, 16))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
+
+
+###############################################################################
+# brain extraction results
+#==========================
+
+bet_mask_file = op.join(bet_path, "sub-Apache_ses-01_T1w_BET_mask_cropped.nii.gz")
+
+assert os.path.exists(bet_mask_file)
+
+output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm blue -a 50".format(output_img_overlay, T1_file, bet_mask_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_T1)
-plt.figure(figsize=(16, 16))
+img = plt.imread(output_img_overlay)
+plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
@@ -103,41 +68,35 @@ plt.show()
 # Correct bias results
 #==========================
 
-debiased_T1_file = op.join(wf_path, "debias",
-                           "sub-Apache_ses-01_T1w_cropped_debiased.nii.gz")
+# Comparing Bet results (only if bet is set for T1xT2BiasFieldCorrection)
+#debias_path = op.join(wf_path, "debias")
+#outfile_debias_mask = os.path.join(wf_path,"outfile_debias_mask.png")
+#debias_mask_file = op.join(debias_path, "sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_BET_mask.nii.gz")
+#assert os.path.exists(debias_mask_file)
+#cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 33 {} -cm blue -a 33".format(outfile_debias_mask, T1_file, bet_mask_file, debias_mask_file)
+#os.system(cmd)
 
 
-debiased_T1 = os.path.join(wf_path,"debiased_T1.png")
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(outfile_debias_mask)
+#plt.figure(figsize=(36, 12))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
 
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(debiased_T1, debiased_T1_file)
+
+
+
+debiased_brain_file = op.join(wf_path, "debias",
+                           "sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain.nii.gz")
+
+debiased_T1_brain = os.path.join(wf_path,"debiased_T1_brain.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 50 ".format(debiased_T1_brain, T1_file, debiased_brain_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_T1)
-
-fig, axs = plt.subplots(2, 1, figsize=(24, 16))
-axs[0].imshow(plt.imread(outfile_T1))
-axs[0].axis('off')
-
-axs[1].imshow(plt.imread(debiased_T1))
-axs[1].axis('off')
-plt.show()
-
-###############################################################################
-# brain extraction results
-#==========================
-
-mask_file = op.join(bet_path, "sub-Apache_ses-01_T1w_BET_mask_cropped.nii.gz")
-
-# Bet results
-output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(output_img_overlay, T1_file, mask_file)
-os.system(cmd)
-
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(output_img_overlay)
-plt.figure(figsize=(16, 16))
+img = plt.imread(debiased_T1_brain)
+plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
@@ -146,12 +105,14 @@ plt.show()
 #registration results
 #=====================
 
-reg_T1_file = op.join(wf_path,"reg", "sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain.nii")
+reg_T1_file = op.join(wf_path,"reg", "sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain_FLIRT-to_inia19-t1-brain.nii")
+assert os.path.exists(reg_T1_file)
 
 # showing mask
-segment_path = os.path.join(wf_path, "old_segment_extraction_pipe")
+segment_path = os.path.join(wf_path, "old_segment_pipe")
 
-filled_mask_file = os.path.join(segment_path, "fill_holes", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_ero_filled.nii.gz")
+filled_mask_file = os.path.join(segment_path, "fill_holes", "c1sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_ero_filled.nii.gz")
+assert os.path.exists(filled_mask_file)
 
 #filled_mask_file = os.path.join(segment_path, "fill_holes_dil", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh_maths_maths_dil_filled.nii.gz")
 
@@ -161,18 +122,23 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(outfile_seg_mask)
-plt.figure(figsize=(16, 16))
+plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
+
 
 ###############################################################################
 #segmentation results
 #=====================
 
-gm_file = os.path.join(segment_path, "threshold_gm", "c1sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-wm_file = os.path.join(segment_path, "threshold_wm", "c2sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
-csf_file = os.path.join(segment_path, "threshold_csf", "c3sub-Apache_ses-01_T1w_cropped_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+gm_file = os.path.join(segment_path, "threshold_gm", "c1sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+wm_file = os.path.join(segment_path, "threshold_wm", "c2sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+csf_file = os.path.join(segment_path, "threshold_csf", "c3sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain_FLIRT-to_inia19-t1-brain_thresh.nii.gz")
+
+assert os.path.exists(gm_file)
+assert os.path.exists(wm_file)
+assert os.path.exists(csf_file)
 
 outfile_seg_col = os.path.join(wf_path,"outfile_seg_col.png")
 cmd = "fsleyes render --outfile {} --size 1800 600 {} {} {} {}".format(outfile_seg_col, reg_T1_file, gm_file, wm_file, csf_file)
@@ -185,3 +151,4 @@ plt.figure(figsize=(16, 16))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
+
