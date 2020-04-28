@@ -183,7 +183,7 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
                                           align_T2_on_T1, 'reference')
             data_preparation_pipe.connect(deoblique_T2, 'out_file',
                                           align_T2_on_T1, 'in_file')
-            data_preparation_pipe.connect(deoblique_T2, 'out_file',
+            data_preparation_pipe.connect(deoblique_T1, 'out_file',
                                           crop_bb_T1, 'in_file')
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file",
