@@ -128,12 +128,6 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         if "n" in params["bet_crop"].keys():
             bet_crop.inputs.n = params["bet_crop"]["n"]
 
-        if "f" in params["bet_crop"].keys():
-            bet_crop.inputs.f = params["bet_crop"]["f"]
-
-        if "g" in params["bet_crop"].keys():
-            bet_crop.inputs.g = params["bet_crop"]["g"]
-
         if "reorient" in params.keys():
 
             data_preparation_pipe.connect(reorient_T1_pipe,

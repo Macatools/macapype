@@ -15,20 +15,16 @@
             "g": 0.5
         }
     },
-    "brain_register_pipe":
+    "debias":
     {
-        "debias":
-        {
-            "s": 4
-        },
-        "reg":
-        {
-            "n": 2,
-            "m": "mix",
-            "dof": 12
-        }
-    }
-    ,
+        "s": 4
+    },
+    "reg":
+    {
+        "n": 2,
+        "m": "mix",
+        "dof": 12
+    },
     "old_segment_pipe":
     {
         "segment":
