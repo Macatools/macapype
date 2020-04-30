@@ -148,7 +148,7 @@ def create_old_segment_pipe(params_template, params={},
     if "segment" in params.keys():
         segment.load_inputs_from_dict(params["segment"])
 
-    segment.tissue_prob_maps = format_spm_priors(
+    segment.inputs.tissue_prob_maps = format_spm_priors(
         [params_template["template_gm"], params_template["template_wm"],
          params_template["template_csf"]])
 
