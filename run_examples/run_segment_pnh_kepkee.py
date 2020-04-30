@@ -53,7 +53,7 @@ T2_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T2w.nii")
 # running workflow
 segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                params_template=params_template,
-                                               name = "full_segment_pnh_subpipes_apache")
+                                               name = "test_NodeParams_KK")
 segment_pnh.base_dir = data_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
