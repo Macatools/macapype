@@ -61,7 +61,7 @@
         },
         "register_NMT_pipe":
         {
-            "norm_intersity":
+            "norm_intensity":
             {
                 "dimension": 3,
                 "bspline_fitting_distance": 200,
