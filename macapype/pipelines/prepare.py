@@ -5,7 +5,6 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 
-from ..utils.utils_nodes import NodeParams
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
@@ -115,8 +114,19 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         print('bet_crop is in params')
 
         # Brain extraction (unused) + Cropping
-        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
-                              name='bet_crop')
+        bet_crop = pe.Node(T1xT2BET(), name='bet_crop')
+
+        if "m" in params["bet_crop"].keys():
+            bet_crop.inputs.m = params["bet_crop"]["m"]
+
+        if "aT2" in params["bet_crop"].keys():
+            bet_crop.inputs.aT2 = params["bet_crop"]["aT2"]
+
+        if "c" in params["bet_crop"].keys():
+            bet_crop.inputs.c = params["bet_crop"]["c"]
+
+        if "n" in params["bet_crop"].keys():
+            bet_crop.inputs.n = params["bet_crop"]["n"]
 
         if "reorient" in params.keys():
 

@@ -47,13 +47,13 @@
         },
         "dilate_mask":
         {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
+            "opening_shape": "sphere",
+            "opening_size": 2
         },
         "erode_mask":
         {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
+            "opening_shape": "sphere",
+            "opening_size": 2
         }
     }
 }
