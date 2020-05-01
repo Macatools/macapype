@@ -7,7 +7,7 @@ import nipype.interfaces.spm as spm
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 
 from ..utils.misc import get_elem, merge_3_elem_to_list
-from ..utils.utils_spm import format_spm_priors
+from ..utils.utils_nodes import NodeParams
 
 
 def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
@@ -148,29 +148,15 @@ def create_old_segment_pipe(params_template, params={},
     )
 
     # Segment in to 6 tissues
-    segment = pe.Node(spm.Segment(), name="old_segment")
 
-    if "segment" in params.keys() \
-            and "gm_output_type" in params["segment"].keys():
-        segment.inputs.gm_output_type = params["segment"]["gm_output_type"]
-    else:
-        segment.inputs.gm_output_type = [False, False, True]
+    segment = NodeParams(spm.Segment(), name="old_segment")
 
-    if "segment" in params.keys() \
-            and "wm_output_type" in params["segment"].keys():
-        segment.inputs.wm_output_type = params["segment"]["wm_output_type"]
-    else:
-        segment.inputs.wm_output_type = [False, False, True]
+    if "segment" in params.keys():
+        segment.load_inputs_from_dict(params["segment"])
 
-    if "segment" in params.keys() \
-            and "csf_output_type" in params["segment"].keys():
-        segment.inputs.csf_output_type = params["segment"]["csf_output_type"]
-    else:
-        segment.inputs.csf_output_type = [False, False, True]
-
-    segment.tissue_prob_maps = format_spm_priors(
-        [params_template["template_gm"], params_template["template_wm"],
-         params_template["template_csf"]])
+    segment.inputs.tissue_prob_maps = [params_template["template_gm"],
+                                       params_template["template_wm"],
+                                       params_template["template_csf"]]
 
     be_pipe.connect(inputnode, 'T1', segment, 'data')
 
