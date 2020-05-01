@@ -2,8 +2,6 @@
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
-from ..utils.utils_nodes import NodeParams
-
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
@@ -89,8 +87,12 @@ def create_full_T1xT2_segment_pnh_subpipes(
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
 
     # Bias correction of cropped images
-    debias = NodeParams(T1xT2BiasFieldCorrection(), name='debias')
-    debias.load_inputs_from_dict(params["debias"])
+    if "debias" in params.keys():
+        s = params["debias"]["s"]
+    else:
+        s = 4
+
+    debias = pe.Node(T1xT2BiasFieldCorrection(s=s), name='debias')
 
     seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
                      debias, 't1_file')
@@ -100,9 +102,17 @@ def create_full_T1xT2_segment_pnh_subpipes(
                      debias, 'b')
 
     # Iterative registration to the INIA19 template
-    reg = NodeParams(IterREGBET(), name='reg')
+    reg = pe.Node(IterREGBET(), name='reg')
     reg.inputs.refb_file = params_template["template_brain"]
-    reg.load_inputs_from_dict(params["reg"])
+
+    if "reg" in params.keys() and "n" in params["reg"].keys():
+        reg.inputs.n = params["reg"]["n"]
+
+    if "reg" in params.keys() and "m" in params["reg"].keys():
+        reg.inputs.m = params["reg"]["m"]
+
+    if "reg" in params.keys() and "dof" in params["reg"].keys():
+        reg.inputs.dof = params["reg"]["dof"]
 
     seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
     seg_pipe.connect(debias, 't1_debiased_brain_file',

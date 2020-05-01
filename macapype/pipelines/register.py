@@ -6,7 +6,6 @@ import nipype.interfaces.afni as afni
 import nipype.interfaces.ants as ants
 
 from ..utils.misc import get_elem
-from ..utils.utils_nodes import NodeParams
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NwarpApplyPriors)
@@ -23,10 +22,6 @@ def create_iterative_register_pipe(
     - there is also a FNIRT done once, for comparison of the quality of the
     template on the subject's brain
 
-    Not used anymore: corresponds to the IterREGBET provided by Regis in bash
-    and wrapped node IterREGBET in nodes/register.py
-
-    #TODO: test if gives the same results as IterREGBET
     """
     register_pipe = pe.Workflow(name=name)
 
@@ -166,10 +161,50 @@ def create_register_NMT_pipe(params_template, params={},
         name='inputnode')
 
     # N4 intensity normalization over brain
-    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                name='norm_intensity')
-    if "norm_intensity" in params.keys():
-        norm_intensity.load_inputs_from_dict(params["norm_intensity"])
+    if "norm_intensity" in params.keys() \
+            and "dimension" in params["norm_intensity"].keys():
+        dimension = params["norm_intensity"]["dimension"]
+    else:
+        dimension = 3
+
+    if "norm_intensity" in params.keys() \
+            and "bspline_fitting_distance" in params["norm_intensity"].keys():
+        bspline_fitting_distance = params["norm_intensity"]["bspline_fitting_distance"]  # noqa
+    else:
+        bspline_fitting_distance = 200
+
+    if "norm_intensity" in params.keys() \
+            and "n_iterations" in params["norm_intensity"].keys():
+        n_iterations = params["norm_intensity"]["n_iterations"]
+    else:
+        n_iterations = [50, 50, 40, 30]
+
+    if "norm_intensity" in params.keys() \
+            and "convergence_threshold" in params["norm_intensity"].keys():  # noqa
+        convergence_threshold = params["norm_intensity"]["convergence_threshold"]  # noqa
+    else:
+        convergence_threshold = 0.00000001
+
+    if "norm_intensity" in params.keys() \
+            and "shrink_factor" in params["norm_intensity"].keys():
+        shrink_factor = params["norm_intensity"]["shrink_factor"]
+    else:
+        shrink_factor = 2
+
+    if "norm_intensity" in params.keys() \
+            and "args" in params["norm_intensity"].keys():
+        args = params["norm_intensity"]["args"]
+    else:
+        args = "-r 0 --verbose 1"
+
+    norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
+                             name='norm_intensity')
+    norm_intensity.inputs.dimension = dimension
+    norm_intensity.inputs.bspline_fitting_distance = bspline_fitting_distance
+    norm_intensity.inputs.n_iterations = n_iterations
+    norm_intensity.inputs.convergence_threshold = convergence_threshold
+    norm_intensity.inputs.shrink_factor = shrink_factor
+    norm_intensity.inputs.args = args
 
     register_NMT_pipe.connect(inputnode, 'T1',
                               norm_intensity, "input_image")

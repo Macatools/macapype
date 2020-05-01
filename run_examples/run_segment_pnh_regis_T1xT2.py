@@ -1,12 +1,22 @@
 """
-run_segment_pnh_regis_T1xT2.py
+.. _plot_segment_pnh_regis_T1xT2:
+
+===================================
+Plot the results of a segmentation
+===================================
 """
 
 # Authors: David Meunier <david_meunier_79@hotmail.fr>
-# License: BSD (3-clause)
 
+# License: BSD (3-clause)
+# sphinx_gallery_thumbnail_number = 2
 import os
 import os.path as op
+
+import nipype.pipeline.engine as pe
+
+from nipype.interfaces.utility import IdentityInterface
+import nipype.interfaces.io as nio
 
 ###############################################################################
 # Load test data and run
@@ -55,7 +65,7 @@ T2_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T2w.nii")
 # running workflow
 segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
     params=params, params_template=params_template,
-    name="test_NodeParams" )
+    name="test_T1xT2_segmentation_pipeline" )
 segment_pnh.base_dir = data_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
