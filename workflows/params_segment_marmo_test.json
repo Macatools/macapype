@@ -19,9 +19,13 @@
         {
             "smooth":
             {
-                "sigma": 2
+                "args": "-bin -s 2"
             },
             "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
             {
                 "sigma": 2
             }
@@ -43,9 +47,13 @@
         {
             "smooth":
             {
-                "sigma": 2
+                "args": "-bin -s 2"
             },
             "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
             {
                 "sigma": 2
             }
@@ -68,6 +76,18 @@
             {
                 "dimension": 3,
                 "numberOfClasses": 3
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
             }
         }
     }

@@ -36,6 +36,7 @@ else:
     #data_path = "/hpc/crise/meunier.d/"
     #data_path = "/hpc/neopto/USERS/racicot/data/"
 
+main_path = "/hpc/crise/meunier.d/"
 
 if "general" in params.keys() and "template_name" in params["general"].keys():
     template_name = params["general"]["template_name"]
@@ -55,8 +56,8 @@ T2_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T2w.nii")
 # running workflow
 segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
     params=params, params_template=params_template,
-    name="test_NodeParams" )
-segment_pnh.base_dir = data_path
+    name="test_NodeParams_T1xT2" )
+segment_pnh.base_dir = main_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
 segment_pnh.inputs.inputnode.T2 = T2_file
