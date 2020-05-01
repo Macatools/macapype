@@ -22,7 +22,7 @@
     "reg":
     {
         "n": 2,
-        "m": "mix",
+        "m": "ref",
         "dof": 12
     },
     "old_segment_pipe":
