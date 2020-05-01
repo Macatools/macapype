@@ -7,7 +7,6 @@ import nipype.interfaces.spm as spm
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 
 from ..utils.misc import get_elem, merge_3_elem_to_list
-from ..utils.utils_spm import format_spm_priors
 from ..utils.utils_nodes import NodeParams
 
 
@@ -151,10 +150,6 @@ def create_old_segment_pipe(params_template, params={},
     segment.inputs.tissue_prob_maps = [params_template["template_gm"],
                                        params_template["template_wm"],
                                        params_template["template_csf"]]
-
-    #segment.inputs.tissue_prob_maps = format_spm_priors(
-        #[params_template["template_gm"], params_template["template_wm"],
-         #params_template["template_csf"]])
 
     be_pipe.connect(inputnode, 'T1', segment, 'data')
 
