@@ -4,7 +4,8 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.ants as ants
 
-from macapype.utils.misc import print_val
+from ..utils.misc import print_val
+from ..utils.utils_nodes import NodeParams
 
 
 def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
@@ -64,27 +65,17 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
                               norm_mult, 'operand_value')
 
     # smooth
-    smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
-    if "smooth" in params.keys() \
-            and "sigma" in params["smooth"].keys():
-        sigma = params["smooth"]["sigma"]
-    else:
-        sigma = 2
-
-    smooth.inputs.args = "-bin -s {}".format(sigma)
+    smooth = NodeParams(fsl.maths.MathsCommand(), name='smooth')
+    if "smooth" in params.keys():
+        smooth.load_inputs_from_dict(params["smooth"])
 
     correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
-    norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
+    norm_smooth = NodeParams(fsl.MultiImageMaths(), name='norm_smooth')
 
-    if "norm_smooth" in params.keys() \
-            and "sigma" in params["norm_smooth"].keys():
-        sigma = params["norm_smooth"]["sigma"]
-    else:
-        sigma = 2
-
-    norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
+    if "norm_smooth" in params.keys():
+        norm_smooth.load_inputs_from_dict(params["norm_smooth"])
 
     correct_bias_pipe.connect(norm_mult, 'out_file', norm_smooth, 'in_file')
     correct_bias_pipe.connect(smooth, 'out_file', norm_smooth, 'operand_files')
@@ -146,8 +137,9 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
     correct_bias_pipe.connect(mod_mask, 'out_file', bias, 'operand_files')
 
     # smooth_bias
-    smooth_bias = pe.Node(fsl.IsotropicSmooth(), name='smooth_bias')
-    smooth_bias.inputs.sigma = sigma
+    smooth_bias = NodeParams(fsl.IsotropicSmooth(), name='smooth_bias')
+    if "smooth_bias" in params.keys():
+        smooth_bias.load_inputs_from_dict(params["smooth_bias"])
 
     correct_bias_pipe.connect(bias, 'out_file', smooth_bias, 'in_file')
 
@@ -254,28 +246,17 @@ def create_masked_correct_bias_pipe(params={},
                                      norm_mult, 'operand_value')
 
     # smooth
-    smooth = pe.Node(fsl.maths.MathsCommand(), name='smooth')
-    if "smooth" in params.keys() \
-            and "sigma" in params["smooth"].keys():
-        sigma = params["smooth"]["sigma"]
-    else:
-        sigma = 2
+    smooth = NodeParams(fsl.maths.MathsCommand(), name='smooth')
+    if "smooth" in params.keys():
+        smooth.load_inputs_from_dict(params["smooth"])
 
-    smooth.inputs.args = "-bin -s {}".format(sigma)
-
-    masked_correct_bias_pipe.connect(norm_mult, 'out_file',
-                                     smooth, 'in_file')
+    masked_correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
-    norm_smooth = pe.Node(fsl.MultiImageMaths(), name='norm_smooth')
+    norm_smooth = NodeParams(fsl.MultiImageMaths(), name='norm_smooth')
 
-    if "norm_smooth" in params.keys() \
-            and "sigma" in params["norm_smooth"].keys():
-        sigma = params["norm_smooth"]["sigma"]
-    else:
-        sigma = 2
-
-    norm_smooth.inputs.op_string = "-s {} -div %s".format(sigma)
+    if "norm_smooth" in params.keys():
+        norm_smooth.load_inputs_from_dict(params["norm_smooth"])
 
     masked_correct_bias_pipe.connect(norm_mult, 'out_file',
                                      norm_smooth, 'in_file')
@@ -359,9 +340,11 @@ def create_masked_correct_bias_pipe(params={},
 
     masked_correct_bias_pipe.connect(mod_mask, 'out_file',
                                      bias, 'operand_files')
+
     # smooth_bias
-    smooth_bias = pe.Node(fsl.IsotropicSmooth(), name='smooth_bias')
-    smooth_bias.inputs.sigma = sigma
+    smooth_bias = NodeParams(fsl.IsotropicSmooth(), name='smooth_bias')
+    if "smooth_bias" in params.keys():
+        smooth_bias.load_inputs_from_dict(params["smooth_bias"])
 
     masked_correct_bias_pipe.connect(bias, 'out_file',
                                      smooth_bias, 'in_file')
