@@ -118,18 +118,6 @@
 <span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="pipelines">
 <h2>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h2>
-<p>Denoising (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.denoise</span></code>):</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_denoised_pipe</span></code></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 <p>Correct bias (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.correct_bias</span></code>):</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -167,8 +155,8 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.extract_brain.create_extract_pipe.html#macapype.pipelines.extract_brain.create_extract_pipe" title="macapype.pipelines.extract_brain.create_extract_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_extract_pipe</span></code></a>(params_template[,&nbsp;…])</td>
+<td>Description: Extract T1 brain using AtlasBrex</td>
 </tr>
 </tbody>
 </table>
@@ -187,20 +175,20 @@
 </tr>
 </tbody>
 </table>
-<p>Full segment (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.full_segment</span></code>):</p>
+<p>Full segment (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.full_pipelines</span></code>):</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_T1xT2</span></code></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_pipelines_pnh_T1xT2</span></code></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_from_mask_pipe</span></code></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_pipelines_from_mask_pipe</span></code></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_subpipes</span></code></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_pipelines_pnh_subpipes</span></code></td>
 <td></td>
 </tr>
 </tbody>
@@ -251,7 +239,7 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropVolume</span></code>([command,&nbsp;terminal_output])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.nodes.prepare.CropVolume.html#macapype.nodes.prepare.CropVolume" title="macapype.nodes.prepare.CropVolume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropVolume</span></code></a>([command,&nbsp;terminal_output])</td>
 <td>Description: Crop image(s) based on a brain extraction.</td>
 </tr>
 </tbody>
@@ -286,7 +274,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -9,15 +9,6 @@ API Documentation
 Pipelines
 ^^^^^^^^^^
 
-Denoising (:py:mod:`macapype.pipelines.denoise`):
-
-.. currentmodule:: macapype.pipelines.denoise
-
-.. autosummary::
-   :toctree: generated/
-
-    create_denoised_pipe
-
 Correct bias (:py:mod:`macapype.pipelines.correct_bias`):
 
 .. currentmodule:: macapype.pipelines.correct_bias
@@ -46,7 +37,7 @@ Brain extraction (:py:mod:`macapype.pipelines.extract_brain`):
 .. autosummary::
    :toctree: generated/
 
-    create_brain_extraction_pipe
+    create_extract_pipe
 
 
 Segment (:py:mod:`macapype.pipelines.segment`):
@@ -60,16 +51,16 @@ Segment (:py:mod:`macapype.pipelines.segment`):
     create_segment_atropos_pipe
 
 
-Full segment (:py:mod:`macapype.pipelines.full_segment`):
+Full segment (:py:mod:`macapype.pipelines.full_pipelines`):
 
-.. currentmodule:: macapype.pipelines.full_segment
+.. currentmodule:: macapype.pipelines.full_pipelines
 
 .. autosummary::
    :toctree: generated/
 
-    create_full_segment_pnh_T1xT2
-    create_full_segment_from_mask_pipe
-    create_full_segment_pnh_subpipes
+    create_full_pipelines_pnh_T1xT2
+    create_full_pipelines_from_mask_pipe
+    create_full_pipelines_pnh_subpipes
 
 
 Nodes

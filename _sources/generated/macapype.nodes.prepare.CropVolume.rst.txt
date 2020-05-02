@@ -1,0 +1,45 @@
+macapype.nodes.prepare.CropVolume
+=================================
+
+.. currentmodule:: macapype.nodes.prepare
+
+.. autoclass:: CropVolume
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CropVolume.__init__
+      ~CropVolume.aggregate_outputs
+      ~CropVolume.help
+      ~CropVolume.load_inputs_from_dict
+      ~CropVolume.load_inputs_from_json
+      ~CropVolume.raise_exception
+      ~CropVolume.run
+      ~CropVolume.save_inputs_to_json
+      ~CropVolume.set_default_terminal_output
+      ~CropVolume.version_from_command
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CropVolume.always_run
+      ~CropVolume.can_resume
+      ~CropVolume.cmd
+      ~CropVolume.cmdline
+      ~CropVolume.package_directory
+      ~CropVolume.references_
+      ~CropVolume.resource_monitor
+      ~CropVolume.terminal_output
+      ~CropVolume.version
+   
+   

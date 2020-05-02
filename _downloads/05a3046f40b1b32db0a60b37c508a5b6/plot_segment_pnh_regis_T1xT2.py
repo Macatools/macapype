@@ -25,7 +25,26 @@ import nipype.interfaces.io as nio
 data_path = "/home/INT/meunier.d/Data/Primavoice/"
 
 # displaying results
-wf_path = os.path.join(data_path, "test_T1xT2_segmentation_pipeline")
+wf_path = os.path.join(data_path, "test_NodeParams_T1xT2")
+
+graph = os.path.join(wf_path, "graph.png")
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(graph)
+plt.figure(figsize=(36, 72))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+
+
+##############################################################################
+# Data preparation
+##############################################################################
+
+###############################################################################
+# Cropping
+#===========================
+
 bet_path = os.path.join(wf_path, "data_preparation_pipe", "bet_crop")
 
 T1_file = op.join(bet_path, "sub-Apache_ses-01_T1w_cropped.nii.gz")
@@ -147,7 +166,7 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(outfile_seg_col)
-plt.figure(figsize=(16, 16))
+plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()

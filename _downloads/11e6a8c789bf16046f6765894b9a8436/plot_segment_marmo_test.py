@@ -20,8 +20,8 @@ import pprint
 # Testing plot in local
 #=======================
 
-data_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test/"
-wf_path = os.path.join(data_path, "segment_marmo_test_template")
+data_path = "/home/INT/meunier.d/Data/Marmopype/"
+wf_path = os.path.join(data_path, "test_NodeParams_marmo")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -32,41 +32,61 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-###############################################################################
-# Preprocessing pipeline
-#==========================
 
+##############################################################################
+# Data preparation
+##############################################################################
 
 ###############################################################################
 # Cropping
-#^^^^^^^^^^^
+#===========================
 
-T1_file = op.join(wf_path, "preproc_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
+cropped_T1_file = op.join(wf_path, "data_preparation_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
 
 # displaying results
-outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(outfile_T1, T1_file)
+cropped_T1 = os.path.join(wf_path, "cropped_T1.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1, cropped_T1_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_T1)
+img = plt.imread(cropped_T1)
+plt.figure(figsize=(36, 12))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+
+###############################################################################
+# results of deoblique
+#===========================
+
+## after deoblique
+deoblique_T1_file = os.path.join(
+    wf_path, "data_preparation_pipe", "deoblique_T1",
+    "T1w_0p33mm_28.nii")
+
+outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, cropped_T1_file, deoblique_T1_file)
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(outfile_deoblique)
 plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
 
 
-###############################################################################
-# First part of the pipeline
-#=============================
+
+##############################################################################
+# First part of the pipeline: brain extraction
+##############################################################################
 
 ###############################################################################
-# Correct bias
-#^^^^^^^^^^^^^^^
+# Correct bias results
+#==========================
 
-debiased_T1_file = op.join(wf_path, "correct_bias_pipe", "restore_T1",
-                           "T1w_0p33mm_28_roi_maths.nii.gz")
-
+debiased_T1_file = op.join(wf_path, "brain_extraction_pipe", "correct_bias_pipe", "restore_T1",
+                           "T1w_0p33mm_28_roi_noise_corrected_maths.nii.gz")
 
 debiased_T1 = os.path.join(wf_path,"debiased_T1.png")
 
@@ -74,10 +94,8 @@ cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(debiased_T1, debia
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_T1)
-
 fig, axs = plt.subplots(2, 1, figsize=(36, 24))
-axs[0].imshow(plt.imread(outfile_T1))
+axs[0].imshow(plt.imread(cropped_T1))
 axs[0].axis('off')
 
 axs[1].imshow(plt.imread(debiased_T1))
@@ -85,37 +103,37 @@ axs[1].axis('off')
 plt.show()
 
 ###############################################################################
-# Brain extraction
-#^^^^^^^^^^^^^^^^^^
+# Brain extraction results
+#==========================
 
 # At the end 1st part pipeline
 mask_file = os.path.join(
-    wf_path, "devel_atlas_brex", "smooth_mask",
-    "T1w_0p33mm_28_roi_maths_noise_corrected_brain_bin_bin.nii.gz")
+    wf_path, "brain_extraction_pipe", "extract_pipe", "smooth_mask",
+    "T1w_0p33mm_28_roi_noise_corrected_maths_brain_bin_bin.nii.gz")
 
 output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
 #cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(output_img_overlay, mask_file, T1_file)
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(output_img_overlay, T1_file, mask_file)
+cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(output_img_overlay, cropped_T1_file, mask_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(output_img_overlay)
-plt.figure(figsize=(36, 12))
+plt.figure(figsize=(36 , 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-###############################################################################
-# Second part of the pipeline
-#===============================
+##############################################################################
+# Second part of the pipeline: segmentation
+##############################################################################
 
-seg_pipe = op.join(wf_path, "segment_devel_NMT_sub_align")
+seg_pipe = op.join(wf_path, "brain_segment_from_mask_pipe")
 
 ###############################################################################
 # debias T1xT2 and debias N4
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#=============================
 
-denoised_T1_file = os.path.join(seg_pipe, "denoised_pipe", "denoise_T1",
+denoised_T1_file = os.path.join(wf_path, "data_preparation_pipe", "denoise_T1",
                            "T1w_0p33mm_28_roi_noise_corrected.nii.gz")
 
 
@@ -143,7 +161,7 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 
-fig, axs = plt.subplots(3, 1, figsize=(36, 36))
+fig, axs = plt.subplots(3, 1, figsize=(36, 12))
 axs[0].imshow(plt.imread(denoised_T1))
 axs[0].axis('off')
 
@@ -155,32 +173,8 @@ axs[2].axis('off')
 plt.show()
 
 ###############################################################################
-# deoblique
-#^^^^^^^^^^^^
-
-## showing mask
-T1_file = os.path.join(
-   seg_pipe,"register_NMT_pipe", "norm_intensity/",
-   "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
-
-deoblique_T1_file = os.path.join(
-    seg_pipe,"segment_atropos_pipe", "deoblique/",
-    "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
-
-outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm red -a 50 {} -cm blue -a 50".format(outfile_deoblique, T1_file, deoblique_T1_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_deoblique)
-plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
-
-###############################################################################
 # register template to subject
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#==============================
 
 reg_template_mask_to_T1_file = os.path.join(
     seg_pipe, "register_NMT_pipe", "align_NMT",
@@ -189,51 +183,52 @@ reg_template_mask_to_T1_file = os.path.join(
 reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
 
 
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 50".format(
-    reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50 -cm blue".format(
+    reg_template_mask_to_T1, reg_template_mask_to_T1_file, debiased_mask_T1_file)
 
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(reg_template_mask_to_T1)
-plt.figure(figsize=(36, 12))
+plt.figure(figsize=(36 , 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-###############################################################################
-# segmentation
-#^^^^^^^^^^^^^^
+################################################################################
+## segmentation results
+##==========================
 
-tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
-segmentation = os.path.join(wf_path,"segmentation.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, deoblique_T1_file, tissue_file)
-os.system(cmd)
+#tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
+#segmentation = os.path.join(wf_path,"segmentation.png")
+#cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, debiased_mask_T1_file, tissue_file)
+#os.system(cmd)
 
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(segmentation)
-plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
+#import matplotlib.pyplot as plt  # noqa
+#img = plt.imread(segmentation)
+#plt.figure(figsize=(36 , 12))
+#plt.imshow(img)
+#plt.axis('off')
+#plt.show()
+
+
 
 ###############################################################################
 # segmentation results by tissue
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#================================
 
 csf_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_csf", "segment_SegmentationPosteriors01_thresh.nii.gz")
 gm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_gm", "segment_SegmentationPosteriors02_thresh.nii.gz")
 wm_file = os.path.join(seg_pipe, "segment_atropos_pipe", "threshold_wm", "segment_SegmentationPosteriors03_thresh.nii.gz")
 
 segmentation_sep = os.path.join(wf_path,"segmentation_sep.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30".format(segmentation_sep, deoblique_T1_file, gm_file, wm_file, csf_file)
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 30 {} -cm blue -a 30 {} -cm green -a 30".format(segmentation_sep, debiased_mask_T1_file, gm_file, wm_file, csf_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(segmentation_sep)
-plt.figure(figsize=(36, 12))
+plt.figure(figsize=(36 , 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
-
 

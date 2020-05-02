@@ -427,17 +427,21 @@
         <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;shft_aff&quot;</span><span class="p">)</span>
 
+    <span class="n">warp_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;shft_WARP.nii.gz&quot;</span><span class="p">)</span>
+
     <span class="n">warpinv_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
         <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;shft_WARPINV&quot;</span><span class="p">)</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;shft_WARPINV.nii.gz&quot;</span><span class="p">)</span>
 
     <span class="n">transfo_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
         <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;composite_linear_to_NMT&quot;</span><span class="p">)</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;composite_linear_to_NMT.1D&quot;</span><span class="p">)</span>
 
     <span class="n">inv_transfo_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
         <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;_composite_linear_to_NMT_inv&quot;</span><span class="p">)</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;_composite_linear_to_NMT_inv.1D&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">NMTSubjectAlign</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
@@ -464,6 +468,10 @@
 <span class="sd">        shft_aff_file = File(</span>
 <span class="sd">            exists=True,</span>
 <span class="sd">            desc=&quot;shft_aff&quot;)</span>
+
+<span class="sd">        warp_file = File(</span>
+<span class="sd">            exists=True,</span>
+<span class="sd">            desc=&quot;shft_WARP&quot;)</span>
 
 <span class="sd">        warpinv_file = File(</span>
 <span class="sd">            exists=True,</span>
@@ -500,6 +508,9 @@
         <span class="c1"># fname + &quot;_shft_WARPINV.nii&quot;)</span>
         <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;warpinv_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
             <span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;_shft_WARPINV.nii.gz&quot;</span><span class="p">)</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;warp_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;_shft_WARP.nii.gz&quot;</span><span class="p">)</span>
 
         <span class="c1"># outputs[&quot;warpinv_file&quot;] = os.path.abspath(</span>
         <span class="c1">#    fname + &quot;_shft_WARPINV&quot; + ext)</span>
@@ -655,7 +666,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

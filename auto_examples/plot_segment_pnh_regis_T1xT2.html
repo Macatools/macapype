@@ -70,7 +70,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plot the results of a segmentation</a><ul>
-<li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
+<li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a><ul>
+<li><a class="reference internal" href="#data-preparation">Data preparation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cropping">Cropping</a></li>
 <li><a class="reference internal" href="#brain-extraction-results">brain extraction results</a></li>
 <li><a class="reference internal" href="#correct-bias-results">Correct bias results</a></li>
 <li><a class="reference internal" href="#registration-results">registration results</a></li>
@@ -136,8 +140,26 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
 
 <span class="c1"># displaying results</span>
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_T1xT2_segmentation_pipeline&quot;</span><span class="p">)</span>
-<span class="n">bet_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;bet_crop&quot;</span><span class="p">)</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_T1xT2&quot;</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png" />
+<div class="section" id="data-preparation">
+<h3>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="cropping">
+<h2>Cropping<a class="headerlink" href="#cropping" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bet_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;bet_crop&quot;</span><span class="p">)</span>
 
 <span class="n">T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bet_path</span><span class="p">,</span> <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped.nii.gz&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">T1_file</span><span class="p">)</span>
@@ -156,7 +178,7 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/INT/meunier.d/Data/Primavoice/test_T1xT2_segmentation_pipeline/data_preparation_pipe/bet_crop/sub-Apache_ses-01_T1w_cropped.nii.gz
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/INT/meunier.d/Data/Primavoice/test_NodeParams_T1xT2/data_preparation_pipe/bet_crop/sub-Apache_ses-01_T1w_cropped.nii.gz
 </pre></div>
 </div>
 </div>
@@ -178,7 +200,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png" />
+<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_002.png" />
 </div>
 <div class="section" id="correct-bias-results">
 <h2>Correct bias results<a class="headerlink" href="#correct-bias-results" title="Permalink to this headline">¶</a></h2>
@@ -216,7 +238,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_002.png" />
+<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_003.png" />
 </div>
 <div class="section" id="registration-results">
 <h2>registration results<a class="headerlink" href="#registration-results" title="Permalink to this headline">¶</a></h2>
@@ -243,7 +265,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_003.png" />
+<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_004.png" />
 </div>
 <div class="section" id="segmentation-results">
 <h2>segmentation results<a class="headerlink" href="#segmentation-results" title="Permalink to this headline">¶</a></h2>
@@ -262,14 +284,14 @@
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_seg_col</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_004.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  20.739 seconds)</p>
+<img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_005.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  23.568 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-regis-t1xt2-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/05a3046f40b1b32db0a60b37c508a5b6/plot_segment_pnh_regis_T1xT2.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_regis_T1xT2.py</span></code></a></div>
@@ -292,7 +314,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

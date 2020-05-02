@@ -105,7 +105,8 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
 <span class="kn">import</span> <span class="nn">nipype.interfaces.ants</span> <span class="k">as</span> <span class="nn">ants</span>
 
-<span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">print_val</span>
+<span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">print_val</span>
+<span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span>
 
 
 <div class="viewcode-block" id="create_correct_bias_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_correct_bias_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">):</span>
@@ -165,27 +166,17 @@
                               <span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;operand_value&#39;</span><span class="p">)</span>
 
     <span class="c1"># smooth</span>
-    <span class="n">smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">maths</span><span class="o">.</span><span class="n">MathsCommand</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;sigma&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="n">smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-bin -s </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">smooth</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">maths</span><span class="o">.</span><span class="n">MathsCommand</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">smooth</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">])</span>
 
     <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># norm_smooth</span>
-    <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
+    <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;norm_smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;sigma&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="n">norm_smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-s </span><span class="si">{}</span><span class="s2"> -div </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">norm_smooth</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">])</span>
 
     <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
     <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
@@ -247,8 +238,9 @@
     <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mod_mask</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
 
     <span class="c1"># smooth_bias</span>
-    <span class="n">smooth_bias</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">IsotropicSmooth</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth_bias&#39;</span><span class="p">)</span>
-    <span class="n">smooth_bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+    <span class="n">smooth_bias</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">IsotropicSmooth</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth_bias&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;smooth_bias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">smooth_bias</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth_bias&quot;</span><span class="p">])</span>
 
     <span class="n">correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
@@ -355,28 +347,17 @@
                                      <span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;operand_value&#39;</span><span class="p">)</span>
 
     <span class="c1"># smooth</span>
-    <span class="n">smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">maths</span><span class="o">.</span><span class="n">MathsCommand</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;sigma&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">smooth</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">maths</span><span class="o">.</span><span class="n">MathsCommand</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">smooth</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth&quot;</span><span class="p">])</span>
 
-    <span class="n">smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-bin -s </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
-
-    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
-                                     <span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># norm_smooth</span>
-    <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
+    <span class="n">norm_smooth</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">MultiImageMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_smooth&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;norm_smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;sigma&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">][</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="n">norm_smooth</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">op_string</span> <span class="o">=</span> <span class="s2">&quot;-s </span><span class="si">{}</span><span class="s2"> -div </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_smooth&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">norm_smooth</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_smooth&quot;</span><span class="p">])</span>
 
     <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_mult</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                      <span class="n">norm_smooth</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
@@ -460,9 +441,11 @@
 
     <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">mod_mask</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                      <span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;operand_files&#39;</span><span class="p">)</span>
+
     <span class="c1"># smooth_bias</span>
-    <span class="n">smooth_bias</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">IsotropicSmooth</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth_bias&#39;</span><span class="p">)</span>
-    <span class="n">smooth_bias</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+    <span class="n">smooth_bias</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">IsotropicSmooth</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smooth_bias&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;smooth_bias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">smooth_bias</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;smooth_bias&quot;</span><span class="p">])</span>
 
     <span class="n">masked_correct_bias_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bias</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                      <span class="n">smooth_bias</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
@@ -540,7 +523,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

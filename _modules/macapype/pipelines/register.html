@@ -107,6 +107,7 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.ants</span> <span class="k">as</span> <span class="nn">ants</span>
 
 <span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">get_elem</span>
+<span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span>
 
 <span class="kn">from</span> <span class="nn">..nodes.register</span> <span class="kn">import</span> <span class="p">(</span><span class="n">interative_flirt</span><span class="p">,</span> <span class="n">NMTSubjectAlign</span><span class="p">,</span>
                               <span class="n">NwarpApplyPriors</span><span class="p">)</span>
@@ -123,6 +124,10 @@
 <span class="sd">    - there is also a FNIRT done once, for comparison of the quality of the</span>
 <span class="sd">    template on the subject&#39;s brain</span>
 
+<span class="sd">    Not used anymore: corresponds to the IterREGBET provided by Regis in bash</span>
+<span class="sd">    and wrapped node IterREGBET in nodes/register.py</span>
+
+<span class="sd">    #TODO: test if gives the same results as IterREGBET</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">register_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -262,50 +267,10 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># N4 intensity normalization over brain</span>
-    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;dimension&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">dimension</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;dimension&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
-
-    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;bspline_fitting_distance&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">bspline_fitting_distance</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">]</span>  <span class="c1"># noqa</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">bspline_fitting_distance</span> <span class="o">=</span> <span class="mi">200</span>
-
-    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;n_iterations&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">n_iterations</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;n_iterations&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">n_iterations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;convergence_threshold&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># noqa</span>
-        <span class="n">convergence_threshold</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;convergence_threshold&quot;</span><span class="p">]</span>  <span class="c1"># noqa</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">convergence_threshold</span> <span class="o">=</span> <span class="mf">0.00000001</span>
-
-    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;shrink_factor&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">shrink_factor</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;shrink_factor&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">shrink_factor</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-            <span class="ow">and</span> <span class="s2">&quot;args&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-r 0 --verbose 1&quot;</span>
-
-    <span class="n">norm_intensity</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
-                             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_intensity&#39;</span><span class="p">)</span>
-    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="n">dimension</span>
-    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">bspline_fitting_distance</span> <span class="o">=</span> <span class="n">bspline_fitting_distance</span>
-    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_iterations</span> <span class="o">=</span> <span class="n">n_iterations</span>
-    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">convergence_threshold</span> <span class="o">=</span> <span class="n">convergence_threshold</span>
-    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">shrink_factor</span> <span class="o">=</span> <span class="n">shrink_factor</span>
-    <span class="n">norm_intensity</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="n">norm_intensity</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_intensity&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">norm_intensity</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;norm_intensity&quot;</span><span class="p">])</span>
 
     <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span>
                               <span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;input_image&quot;</span><span class="p">)</span>
@@ -406,7 +371,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

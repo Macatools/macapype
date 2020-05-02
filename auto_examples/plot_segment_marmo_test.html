@@ -70,24 +70,23 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plot the results of a segmentation of marmoset data T1w and T2w</a><ul>
-<li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
-<li><a class="reference internal" href="#preprocessing-pipeline">Preprocessing pipeline</a><ul>
+<li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a><ul>
+<li><a class="reference internal" href="#data-preparation">Data preparation</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#cropping">Cropping</a></li>
+<li><a class="reference internal" href="#results-of-deoblique">results of deoblique</a><ul>
+<li><a class="reference internal" href="#first-part-of-the-pipeline-brain-extraction">First part of the pipeline: brain extraction</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#first-part-of-the-pipeline">First part of the pipeline</a><ul>
-<li><a class="reference internal" href="#correct-bias">Correct bias</a></li>
-<li><a class="reference internal" href="#brain-extraction">Brain extraction</a></li>
+<li><a class="reference internal" href="#correct-bias-results">Correct bias results</a></li>
+<li><a class="reference internal" href="#brain-extraction-results">Brain extraction results</a><ul>
+<li><a class="reference internal" href="#second-part-of-the-pipeline-segmentation">Second part of the pipeline: segmentation</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#second-part-of-the-pipeline">Second part of the pipeline</a><ul>
 <li><a class="reference internal" href="#debias-t1xt2-and-debias-n4">debias T1xT2 and debias N4</a></li>
-<li><a class="reference internal" href="#deoblique">deoblique</a></li>
 <li><a class="reference internal" href="#register-template-to-subject">register template to subject</a></li>
-<li><a class="reference internal" href="#segmentation">segmentation</a></li>
 <li><a class="reference internal" href="#segmentation-results-by-tissue">segmentation results by tissue</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -144,8 +143,8 @@
 </div>
 <div class="section" id="testing-plot-in-local">
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Marmopype/marmo_test/&quot;</span>
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;segment_marmo_test_template&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Marmopype/&quot;</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_marmo&quot;</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
 
@@ -158,20 +157,21 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_marmo_test_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_001.png" />
+<div class="section" id="data-preparation">
+<h3>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="preprocessing-pipeline">
-<h2>Preprocessing pipeline<a class="headerlink" href="#preprocessing-pipeline" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="cropping">
-<h3>Cropping<a class="headerlink" href="#cropping" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;preproc_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;crop_bb_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;T1w_0p33mm_28_roi.nii.gz&quot;</span><span class="p">)</span>
+<h2>Cropping<a class="headerlink" href="#cropping" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cropped_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;crop_bb_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;T1w_0p33mm_28_roi.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="c1"># displaying results</span>
-<span class="n">outfile_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;outfile_T1.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_T1</span><span class="p">,</span> <span class="n">T1_file</span><span class="p">)</span>
+<span class="n">cropped_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;cropped_T1.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_T1</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
@@ -180,14 +180,34 @@
 </div>
 <img alt="../_images/sphx_glr_plot_segment_marmo_test_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_002.png" />
 </div>
-</div>
-<div class="section" id="first-part-of-the-pipeline">
-<h2>First part of the pipeline<a class="headerlink" href="#first-part-of-the-pipeline" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="correct-bias">
-<h3>Correct bias<a class="headerlink" href="#correct-bias" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">debiased_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_T1&quot;</span><span class="p">,</span>
-                           <span class="s2">&quot;T1w_0p33mm_28_roi_maths.nii.gz&quot;</span><span class="p">)</span>
+<div class="section" id="results-of-deoblique">
+<h2>results of deoblique<a class="headerlink" href="#results-of-deoblique" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## after deoblique</span>
+<span class="n">deoblique_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;deoblique_T1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;T1w_0p33mm_28.nii&quot;</span><span class="p">)</span>
 
+<span class="n">outfile_deoblique</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_deoblique.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> -a 50 </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_segment_marmo_test_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_003.png" />
+<div class="section" id="first-part-of-the-pipeline-brain-extraction">
+<h3>First part of the pipeline: brain extraction<a class="headerlink" href="#first-part-of-the-pipeline-brain-extraction" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="correct-bias-results">
+<h2>Correct bias results<a class="headerlink" href="#correct-bias-results" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">debiased_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_T1&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected_maths.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">debiased_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;debiased_T1.png&quot;</span><span class="p">)</span>
 
@@ -195,10 +215,8 @@
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_T1</span><span class="p">)</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">))</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">debiased_T1</span><span class="p">))</span>
@@ -206,39 +224,39 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_test_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_003.png" />
+<img alt="../_images/sphx_glr_plot_segment_marmo_test_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_004.png" />
 </div>
-<div class="section" id="brain-extraction">
-<h3>Brain extraction<a class="headerlink" href="#brain-extraction" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="brain-extraction-results">
+<h2>Brain extraction results<a class="headerlink" href="#brain-extraction-results" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># At the end 1st part pipeline</span>
 <span class="n">mask_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;devel_atlas_brex&quot;</span><span class="p">,</span> <span class="s2">&quot;smooth_mask&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;T1w_0p33mm_28_roi_maths_noise_corrected_brain_bin_bin.nii.gz&quot;</span><span class="p">)</span>
+    <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;smooth_mask&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected_maths_brain_bin_bin.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">output_img_overlay</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_overlay.png&quot;</span><span class="p">)</span>
 <span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}&quot;.format(output_img_overlay, mask_file, T1_file)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">,</span> <span class="n">T1_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span> <span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_test_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_004.png" />
-</div>
-</div>
-<div class="section" id="second-part-of-the-pipeline">
-<h2>Second part of the pipeline<a class="headerlink" href="#second-part-of-the-pipeline" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seg_pipe</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;segment_devel_NMT_sub_align&quot;</span><span class="p">)</span>
+<img alt="../_images/sphx_glr_plot_segment_marmo_test_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_005.png" />
+<div class="section" id="second-part-of-the-pipeline-segmentation">
+<h3>Second part of the pipeline: segmentation<a class="headerlink" href="#second-part-of-the-pipeline-segmentation" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seg_pipe</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;brain_segment_from_mask_pipe&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
 <div class="section" id="debias-t1xt2-and-debias-n4">
-<h3>debias T1xT2 and debias N4<a class="headerlink" href="#debias-t1xt2-and-debias-n4" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">denoised_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;denoised_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;denoise_T1&quot;</span><span class="p">,</span>
+<h2>debias T1xT2 and debias N4<a class="headerlink" href="#debias-t1xt2-and-debias-n4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">denoised_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;denoise_T1&quot;</span><span class="p">,</span>
                            <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
 
 
@@ -266,7 +284,7 @@
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">36</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoised_T1</span><span class="p">))</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
@@ -278,35 +296,10 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_test_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_005.png" />
-</div>
-<div class="section" id="deoblique">
-<h3>deoblique<a class="headerlink" href="#deoblique" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## showing mask</span>
-<span class="n">T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-   <span class="n">seg_pipe</span><span class="p">,</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;norm_intensity/&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
-
-<span class="n">deoblique_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">seg_pipe</span><span class="p">,</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;deoblique/&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
-
-<span class="n">outfile_deoblique</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_deoblique.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> -cm red -a 50 </span><span class="si">{}</span><span class="s2"> -cm blue -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">,</span> <span class="n">T1_file</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
 <img alt="../_images/sphx_glr_plot_segment_marmo_test_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_006.png" />
 </div>
 <div class="section" id="register-template-to-subject">
-<h3>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h3>
+<h2>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reg_template_mask_to_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;align_NMT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Template_T1_allineate.nii.gz&quot;</span><span class="p">)</span>
@@ -314,58 +307,56 @@
 <span class="n">reg_template_mask_to_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;reg_template_mask_to_T1.png&quot;</span><span class="p">)</span>
 
 
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -cm red -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-    <span class="n">reg_template_mask_to_T1</span><span class="p">,</span> <span class="n">reg_template_mask_to_T1_file</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50 -cm blue&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">reg_template_mask_to_T1</span><span class="p">,</span> <span class="n">reg_template_mask_to_T1_file</span><span class="p">,</span> <span class="n">debiased_mask_T1_file</span><span class="p">)</span>
 
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">reg_template_mask_to_T1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span> <span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_marmo_test_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_007.png" />
+<p># segmentation results
+#==========================</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#tissue_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;seg_at&quot;, &quot;segment_Segmentation.nii.gz&quot;)</span>
+<span class="c1">#segmentation = os.path.join(wf_path,&quot;segmentation.png&quot;)</span>
+<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30&quot;.format(segmentation, debiased_mask_T1_file, tissue_file)</span>
+<span class="c1">#os.system(cmd)</span>
+
+<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
+<span class="c1">#img = plt.imread(segmentation)</span>
+<span class="c1">#plt.figure(figsize=(36 , 12))</span>
+<span class="c1">#plt.imshow(img)</span>
+<span class="c1">#plt.axis(&#39;off&#39;)</span>
+<span class="c1">#plt.show()</span>
+</pre></div>
 </div>
-<div class="section" id="segmentation">
-<h3>segmentation<a class="headerlink" href="#segmentation" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tissue_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_at&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_Segmentation.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">segmentation</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;segmentation.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -dr 0 4 -cm random -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">segmentation</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">,</span> <span class="n">tissue_file</span><span class="p">)</span>
+</div>
+<div class="section" id="segmentation-results-by-tissue">
+<h2>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">csf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors01_thresh.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">gm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors02_thresh.nii.gz&quot;</span><span class="p">)</span>
+<span class="n">wm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors03_thresh.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="n">segmentation_sep</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;segmentation_sep.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -cm red -a 30 </span><span class="si">{}</span><span class="s2"> -cm blue -a 30 </span><span class="si">{}</span><span class="s2"> -cm green -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">segmentation_sep</span><span class="p">,</span> <span class="n">debiased_mask_T1_file</span><span class="p">,</span> <span class="n">gm_file</span><span class="p">,</span> <span class="n">wm_file</span><span class="p">,</span> <span class="n">csf_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">segmentation</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">segmentation_sep</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span> <span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_marmo_test_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_008.png" />
-</div>
-<div class="section" id="segmentation-results-by-tissue">
-<h3>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">csf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors01_thresh.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">gm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors02_thresh.nii.gz&quot;</span><span class="p">)</span>
-<span class="n">wm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span> <span class="s2">&quot;segment_SegmentationPosteriors03_thresh.nii.gz&quot;</span><span class="p">)</span>
-
-<span class="n">segmentation_sep</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;segmentation_sep.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -cm red -a 30 </span><span class="si">{}</span><span class="s2"> -cm blue -a 30 </span><span class="si">{}</span><span class="s2"> -cm green -a 30&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">segmentation_sep</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">,</span> <span class="n">gm_file</span><span class="p">,</span> <span class="n">wm_file</span><span class="p">,</span> <span class="n">csf_file</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">segmentation_sep</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_test_009.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_test_009.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  51.311 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  53.367 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-marmo-test-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/11e6a8c789bf16046f6765894b9a8436/plot_segment_marmo_test.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_marmo_test.py</span></code></a></div>
@@ -373,7 +364,6 @@
 <a class="reference download internal" download="" href="../_downloads/23c7ec35ddf00eadfba705910a83cf3d/plot_segment_marmo_test.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_segment_marmo_test.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
 </div>
 </div>
 
@@ -389,7 +379,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-04-29.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
