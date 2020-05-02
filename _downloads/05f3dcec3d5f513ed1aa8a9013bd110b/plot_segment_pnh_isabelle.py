@@ -1,9 +1,9 @@
 """
 .. _plot_segment_pnh_isabelle:
 
-===================================
-Plot the results of a segmentation
-===================================
+==============================================================================
+Plot the results of a segmentation with ANTS-based pipeline in sphinx position
+==============================================================================
 """
 
 # Authors: David Meunier <david_meunier_79@hotmail.fr>
@@ -14,9 +14,9 @@ Plot the results of a segmentation
 import os
 import os.path as op
 
-###############################################################################
+##############################################################################
 # Testing plot in local
-#=======================
+##############################################################################
 
 my_path = "/home/INT/meunier.d/ownCloud/Data_tmp/isabelle/"
 wf_path = os.path.join(my_path, "test_NodeParams_ziggy")

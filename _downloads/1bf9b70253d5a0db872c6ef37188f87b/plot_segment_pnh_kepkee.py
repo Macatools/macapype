@@ -1,9 +1,9 @@
 """
 .. _plot_segment_pnh_kepkee:
 
-===================================
-Plot the results of a segmentation
-===================================
+============================================================
+Plot the results of a segmentation with ANTS-based pipeline
+============================================================
 """
 
 # Authors: David Meunier <david_meunier_79@hotmail.fr>
@@ -16,9 +16,10 @@ import os.path as op
 import json
 import pprint
 
-###############################################################################
-## Testing plot in local
-##=======================
+
+##############################################################################
+# Testing plot in local
+##############################################################################
 
 data_path = "/home/INT/meunier.d/Data/Primavoice/"
 wf_path = os.path.join(data_path, "test_NodeParams_KK")
@@ -54,6 +55,7 @@ plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
+
 ###############################################################################
 # results of deoblique
 #===========================

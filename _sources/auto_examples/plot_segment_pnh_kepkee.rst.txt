@@ -9,9 +9,9 @@
 
 .. _plot_segment_pnh_kepkee:
 
-===================================
-Plot the results of a segmentation
-===================================
+============================================================
+Plot the results of a segmentation with ANTS-based pipeline
+============================================================
 
 
 
@@ -34,8 +34,9 @@ Plot the results of a segmentation
 
 
 
-# Testing plot in local
-#=======================
+
+Testing plot in local
+#############################################################################
 
 
 
@@ -89,6 +90,7 @@ results of cropping
     plt.imshow(img)
     plt.axis('off')
     plt.show()
+
 
 
 
@@ -372,7 +374,7 @@ segmentation results by tissue
 
 
 
-**Total running time of the script:** ( 0 minutes  49.580 seconds)
+**Total running time of the script:** ( 0 minutes  52.975 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_kepkee.py:

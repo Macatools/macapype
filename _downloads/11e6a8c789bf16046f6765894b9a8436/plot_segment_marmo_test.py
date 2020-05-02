@@ -1,9 +1,9 @@
 """
 .. _plot_segment_marmo_test:
 
-=================================================================
-Plot the results of a segmentation of marmoset data T1w and T2w
-=================================================================
+===============================================================================
+Plot the results of a segmentation of marmoset data with ANTS-based pipeline
+===============================================================================
 """
 
 # Authors: David Meunier <david_meunier_79@hotmail.fr>
@@ -16,9 +16,9 @@ import os.path as op
 import json
 import pprint
 
-###############################################################################
+##############################################################################
 # Testing plot in local
-#=======================
+##############################################################################
 
 data_path = "/home/INT/meunier.d/Data/Marmopype/"
 wf_path = os.path.join(data_path, "test_NodeParams_marmo")

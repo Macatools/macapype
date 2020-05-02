@@ -2,7 +2,7 @@
 .. _plot_segment_pnh_regis_T1xT2:
 
 ===================================
-Plot the results of a segmentation
+Plot the results of a segmentation with SPM-based pipeline T1xT2
 ===================================
 """
 
@@ -10,6 +10,7 @@ Plot the results of a segmentation
 
 # License: BSD (3-clause)
 # sphinx_gallery_thumbnail_number = 2
+
 import os
 import os.path as op
 
@@ -18,9 +19,9 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
-###############################################################################
+##############################################################################
 # Testing plot in local
-#======================
+##############################################################################
 
 data_path = "/home/INT/meunier.d/Data/Primavoice/"
 

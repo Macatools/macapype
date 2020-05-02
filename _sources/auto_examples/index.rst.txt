@@ -14,7 +14,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data T1w and T2w">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data with ANTS">
 
 .. only:: html
 
@@ -34,7 +34,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
 
 .. only:: html
 
@@ -54,7 +54,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
 
 .. only:: html
 
@@ -74,7 +74,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with SPM">
 
 .. only:: html
 
