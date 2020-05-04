@@ -34,6 +34,7 @@ else:
     #data_path = "/hpc/crise/meunier.d/"
     #data_path = "/hpc/neopto/USERS/racicot/data/"
 
+main_path = "/hpc/crise/meunier.d/"
 
 if "general" in params.keys() and "template_name" in params["general"].keys():
     template_name = params["general"]["template_name"]
@@ -45,7 +46,7 @@ params_template = format_template(template_dir, template_name)
 print (params_template)
 
 
-#data_path = load_test_data("data_test_macapype", path_to = my_path)
+data_path = load_test_data("data_test_macapype_ziggy")
 
 # data file
 T1_file = op.join(data_path, "sub-ziggy_T1w.nii")
@@ -54,13 +55,13 @@ T2_file = op.join(data_path, "sub-ziggy_T2w.nii")
 # running workflow
 segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                params_template=params_template,
-                                               name = "segment_pnh_subpipes_ziggy")
-segment_pnh.base_dir = data_path
+                                               name = "test_NodeParams_ziggy")
+segment_pnh.base_dir = main_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
 segment_pnh.inputs.inputnode.T2 = T2_file
 
 segment_pnh.write_graph(graph2use="colored")
-#segment_pnh.run()
+segment_pnh.run()
 
 exit()
