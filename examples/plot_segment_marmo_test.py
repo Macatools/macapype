@@ -16,11 +16,14 @@ import os.path as op
 import json
 import pprint
 
+from macapype.utils.utils_tests import load_test_data
+
 ##############################################################################
 # Testing plot in local
 ##############################################################################
 
-data_path = "/home/INT/meunier.d/Data/Marmopype/"
+data_path = load_test_data("data_test_marmo")
+
 wf_path = os.path.join(data_path, "test_NodeParams_marmo")
 
 graph = os.path.join(wf_path, "graph.png")

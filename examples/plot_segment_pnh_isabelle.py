@@ -14,14 +14,16 @@ Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 import os
 import os.path as op
 
+
+from macapype.utils.utils_tests import load_test_data
+
 ##############################################################################
 # Testing plot in local
 ##############################################################################
 
-my_path = "/home/INT/meunier.d/ownCloud/Data_tmp/isabelle/"
-wf_path = os.path.join(my_path, "test_NodeParams_ziggy")
+data_path = load_test_data("data_test_macapype_ziggy")
 
-
+wf_path = os.path.join(data_path, "test_NodeParams_ziggy")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -42,7 +44,7 @@ plt.show()
 ##==========================
 
 
-orig_T1_file = op.join(my_path, "sub-ziggy_T1w.nii")
+orig_T1_file = op.join(data_path, "sub-ziggy_T1w.nii")
 
 reoriented_T1_file = op.join(wf_path, "data_preparation_pipe", "reorient_T1_pipe", "swap_dim", "sub-ziggy_T1w_newdims.nii.gz")
 

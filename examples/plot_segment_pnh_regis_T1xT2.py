@@ -19,11 +19,13 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
+from macapype.utils.utils_tests import load_test_data
+
 ##############################################################################
 # Testing plot in local
 ##############################################################################
 
-data_path = "/home/INT/meunier.d/Data/Primavoice/"
+data_path = load_test_data("data_test_macapype")
 
 # displaying results
 wf_path = os.path.join(data_path, "test_NodeParams_T1xT2")

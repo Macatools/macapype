@@ -23,12 +23,12 @@ params = json.load(open(params_file))
 print(params)
 pprint.pprint(params)
 
-if "general" in params.keys() and "data_path" in params["general"].keys():
-    data_path = params["general"]["data_path"]
-else:
-    data_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test"
+#if "general" in params.keys() and "data_path" in params["general"].keys():
+    #data_path = params["general"]["data_path"]
+#else:
+    #data_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test"
 
-main_path = "/hpc/crise/meunier.d/"
+#main_path = "/hpc/crise/meunier.d/"
 
 if "general" in params.keys() and "template_name" in params["general"].keys():
     template_name = params["general"]["template_name"]
@@ -52,7 +52,7 @@ from macapype.utils.utils_tests import load_test_data
 segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                params_template=params_template,
                                                name = "test_NodeParams_marmo")
-segment_pnh.base_dir = main_path
+segment_pnh.base_dir = data_path
 
 segment_pnh.inputs.inputnode.T1 = T1_file
 segment_pnh.inputs.inputnode.T2 = T2_file
@@ -60,5 +60,3 @@ segment_pnh.inputs.inputnode.T2 = T2_file
 
 segment_pnh.write_graph(graph2use="colored")
 segment_pnh.run()
-
-exit()
