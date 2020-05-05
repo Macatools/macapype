@@ -6,7 +6,7 @@ from macapype.utils.utils_tests import load_test_data
 
 from macapype.utils.utils_nodes import NodeParams
 
-data_path = load_test_data("data_test_macapype")
+data_path = load_test_data("data_test_pnh")
 
 T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
 T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")

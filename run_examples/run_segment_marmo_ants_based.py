@@ -17,7 +17,7 @@ from macapype.utils.utils_tests import load_test_data, format_template
 from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
-params_file = '{}/../workflows/params_segment_marmo_test.json'.format(package_directory)
+params_file = '{}/../workflows/params_segment_marmo_ants_based.json'.format(package_directory)
 params = json.load(open(params_file))
 
 print(params)

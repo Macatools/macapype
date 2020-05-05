@@ -22,7 +22,7 @@ import json, pprint
 
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
-params_file = '{}/../workflows/params_segment_pnh_regis_T1xT2.json'.format(package_directory)
+params_file = '{}/../workflows/params_segment_pnh_spm_based.json'.format(package_directory)
 params = json.load(open(params_file))
 
 print(params)
@@ -37,7 +37,7 @@ template_dir = load_test_data(template_name)
 params_template = format_template(template_dir, template_name)
 print (params_template)
 
-data_path = load_test_data("data_test_macapype")
+data_path = load_test_data("data_test_pnh")
 
 # data file
 T1_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T1w.nii")
