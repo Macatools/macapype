@@ -1,9 +1,9 @@
 """
 .. _plot_segment_pnh_regis_T1xT2:
 
-===================================
+===================================================================
 Plot the results of a segmentation with SPM-based pipeline T1xT2
-===================================
+===================================================================
 """
 
 # Authors: David Meunier <david_meunier_79@hotmail.fr>

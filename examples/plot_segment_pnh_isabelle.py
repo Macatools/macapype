@@ -214,24 +214,6 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-################################################################################
-## segmentation results
-##==========================
-
-#tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
-#segmentation = os.path.join(wf_path,"segmentation.png")
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, debiased_mask_T1_file, tissue_file)
-#os.system(cmd)
-
-#import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(segmentation)
-#plt.figure(figsize=(36, 12))
-#plt.imshow(img)
-#plt.axis('off')
-#plt.show()
-
-
-
 ###############################################################################
 # segmentation results by tissue
 #================================
