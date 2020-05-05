@@ -22,10 +22,10 @@ from macapype.utils.misc import gunzip
 
 
 ###############################################################################
-# Regis
+# SPM based segmentation (from: Régis Trapeau)
 def create_full_T1xT2_segment_pnh_subpipes(
         params_template, params={}, name='full_T1xT2_segment_pnh_subpipes'):
-    """ Description: Regis T1xT2 pipeline
+    """ Description: SPM based segmentation pipeline from T1w and T2w images
 
         - data_preparation_pipe:
             - avg_align
@@ -41,7 +41,6 @@ def create_full_T1xT2_segment_pnh_subpipes(
 
         inputnode:
             T1: T1 file name
-
             T2: T2 file name
 
         arguments:
@@ -125,11 +124,10 @@ def create_full_T1xT2_segment_pnh_subpipes(
 
 
 ###############################################################################
-# Kepkee
+# ANTS based segmentation (from: Kepkee Loh)
 def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
-    """
-    Description:
+    """ Description: ANTS based segmentation pipeline using T1w and T2w images
 
 
     - correct_bias
@@ -289,8 +287,7 @@ def create_brain_segment_from_mask_pipe(
 # first step for a mask and then call create_full_segment_from_mask_pipe
 def create_full_segment_pnh_subpipes(
         params_template, params={}, name="full_segment_pnh_subpipes"):
-    """
-    Description: Segment T1 (using T2 for bias correction) .
+    """Description: Segment T1 (using T2 for bias correction) .
 
     new version (as it is now)
     - brain preproc (avg and align, reorient of specified cropping from T1xT2BET, bet is optional) # noqa
