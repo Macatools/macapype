@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-    PNH anatomical segmentation pipeline given by Regis Trapeau wrapped in
-    Nipype.
+    Non humain primates anatomical segmentation pipeline based ANTS
+
+    Adapted in Nipype from an original pipelin of Kepkee Loh wrapped.
     
     Description
     --------------
@@ -24,7 +25,7 @@
     
     Example
     ---------
-    python segment_pnh_regis_T1xT2.py -data /home/bastien/work/data/local_primavoice -out /home/bastien/work/projects/macapype/local_tests -template /home/bastien/work/data/templates/inia19/inia19-t1-brain.nii -priors /home/bastien/work/data/templates/inia19/inia19-prob_0.nii /home/bastien/work/data/templates/inia19/inia19-prob_1.nii /home/bastien/work/data/templates/inia19/inia19-prob_2.nii -ses 01 -sub Maga
+    python segment_pnh_regis_T1xT2.py -data [PATH_TO_BIDS] -out ../local_test/ -ses 01 -sub Maga
     
     Resources files
     -----------------
@@ -39,6 +40,11 @@
     --------------
     This workflow use:
         - FSL
+        - SPM
+
+    Notes
+    -----
+    If you do not use Matlab, remeber that you can use the standalone version of SPM.
     
 """
 
@@ -167,4 +173,4 @@ if __name__ == '__main__':
 
     print("Start to process")
     wf.run()
-    # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+
