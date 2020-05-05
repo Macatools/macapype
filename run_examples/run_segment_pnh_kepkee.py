@@ -26,25 +26,16 @@ params = json.load(open(params_file))
 print(params)
 pprint.pprint(params)
 
-if "general" in params.keys() and "data_path" in params["general"].keys():
-    data_path = params["general"]["data_path"]
-else:
-    #data_path = "/home/INT/meunier.d/Data/"
-    data_path = "/hpc/crise/meunier.d/Data/Primavoice/"
-    #data_path = "/hpc/crise/meunier.d/"
-    #data_path = "/hpc/neopto/USERS/racicot/data/"
-
-
 if "general" in params.keys() and "template_name" in params["general"].keys():
     template_name = params["general"]["template_name"]
 else:
-    template_name = 'inia19'
+    template_name = 'NMT_v1.2'
 
 template_dir = load_test_data(template_name)
 params_template = format_template(template_dir, template_name)
 print (params_template)
 
-data_path = load_test_data("data_test_macapype", path_to = data_path)
+data_path = load_test_data("data_test_macapype")
 
 # data file
 T1_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T1w.nii")

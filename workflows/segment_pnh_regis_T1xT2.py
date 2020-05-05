@@ -63,9 +63,6 @@ from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.utils_bids import create_datasource
 
-my_path = "/hpc/crise/meunier.d"
-
-
 ###############################################################################
 def create_main_workflow(data_path, main_path, subject_ids, sessions,
                          acquisitions, params_file):
@@ -91,18 +88,12 @@ def create_main_workflow(data_path, main_path, subject_ids, sessions,
     print(params)
     pprint.pprint(params)
 
-
-    if "general" in params.keys() and "my_path" in params["general"].keys():
-        my_path = params["general"]["my_path"]
-    else:
-        my_path = "/hpc/crise/meunier.d"
-
     if "general" in params.keys() and "template_name" in params["general"].keys():
         template_name = params["general"]["template_name"]
     else:
         template_name = 'inia19'
 
-    nmt_dir = load_test_data(template_name, path_to = my_path)
+    nmt_dir = load_test_data(template_name)
 
     params_template = format_template(nmt_dir, template_name)
     print (params_template)

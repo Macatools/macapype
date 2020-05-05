@@ -16,14 +16,15 @@ import os.path as op
 import json
 import pprint
 
+from macapype.utils.utils_tests import load_test_data
 
 ##############################################################################
 # Testing plot in local
 ##############################################################################
 
-data_path = "/home/INT/meunier.d/Data/Primavoice/"
-wf_path = os.path.join(data_path, "test_NodeParams_KK")
+data_path = load_test_data("data_test_macapype")
 
+wf_path = os.path.join(data_path, "test_NodeParams_KK")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -210,8 +211,6 @@ plt.show()
 #plt.axis('off')
 #plt.show()
 
-
-
 ###############################################################################
 # segmentation results by tissue
 #================================
@@ -230,5 +229,3 @@ plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
-
-

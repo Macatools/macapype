@@ -16,7 +16,8 @@ def load_test_data(name, path_to=""):
         "inia19": "WZo9wZdreTMwfQA",
         "marmotemplate": "5xzm7DJD9kB99gG",
         "data_test_macapype": "Fn8a57PpQWPacZR",
-        "data_test_marmo": "TODO"
+        "data_test_macapype_ziggy": "cHmcwaDpgtAGGPj",
+        "data_test_marmo": "pW4nQr46QSzSysg"
     }
 
     if path_to == "":
