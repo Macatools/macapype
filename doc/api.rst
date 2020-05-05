@@ -9,6 +9,17 @@ API Documentation
 Pipelines
 ^^^^^^^^^^
 
+Data preparation (:py:mod:`macapype.pipelines.prepare`):
+
+.. currentmodule:: macapype.pipelines.prepare
+
+.. autosummary::
+   :toctree: generated/
+
+    create_data_preparation_pipe
+    create_reorient_pipeline
+
+
 Correct bias (:py:mod:`macapype.pipelines.correct_bias`):
 
 .. currentmodule:: macapype.pipelines.correct_bias
@@ -51,16 +62,17 @@ Segment (:py:mod:`macapype.pipelines.segment`):
     create_segment_atropos_pipe
 
 
-Full segment (:py:mod:`macapype.pipelines.full_pipelines`):
+Full pipeline (:py:mod:`macapype.pipelines.full_pipelines`):
 
 .. currentmodule:: macapype.pipelines.full_pipelines
 
 .. autosummary::
    :toctree: generated/
 
-    create_full_pipelines_pnh_T1xT2
-    create_full_pipelines_from_mask_pipe
-    create_full_pipelines_pnh_subpipes
+    create_brain_extraction_pipe
+    create_full_T1xT2_segment_pnh_subpipes
+    create_brain_segment_from_mask_pipe
+    create_full_segment_pnh_subpipes
 
 
 Nodes
