@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-    PNH anatomical segmentation pipeline given by Kepkee Loh wrapped in
-    Nipype.
+    Non humain primates anatomical segmentation pipeline based ANTS
+
+    Adapted in Nipype from an original pipelin of Kepkee Loh wrapped.
 
     Description
     --------------
@@ -27,7 +28,7 @@
 
     Example
     ---------
-    python segment_pnh_kepkee.py -data [PATH_TO_BIDS] -out ../tests/ -subjects Elouk
+    python segment_pnh_kepkee.py -data [PATH_TO_BIDS] -out ../local_tests/ -subjects Elouk
 
     Requirements
     --------------
@@ -152,4 +153,4 @@ if __name__ == '__main__':
 
     print("Start to process")
     wf.run()
-    # wf.run(plugin='MultiProc', plugin_args={'n_procs' : 2})
+
