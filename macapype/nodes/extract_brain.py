@@ -298,6 +298,10 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
         "a,0,0", usedefault=True, desc="msk", position=7, argstr="-msk %s",
         mandatory=True)
 
+    dil = traits.Float(desc="dil", argstr="-dil %f")
+
+    nrm = traits.Enum(1, 2, desc="nrm", argstr="-nrm %d")
+
 
 class AtlasBREXOutputSpec(TraitedSpec):
 
