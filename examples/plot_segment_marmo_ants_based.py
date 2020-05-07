@@ -1,5 +1,5 @@
 """
-.. _plot_segment_marmo_test:
+.. _plot_segment_marmo_ants_based:
 
 ===============================================================================
 Plot the results of a segmentation of marmoset data with ANTS-based pipeline

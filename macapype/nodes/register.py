@@ -527,7 +527,7 @@ class NwarpApplyPriors(AFNICommandBase):
             value = new_value
 
         elif name == 'out_file':
-            for out_file in value[:3]:
+            for out_file in value[:1]:
                 print(out_file)
 
                 path, fname, ext = split_f(out_file)

@@ -115,7 +115,7 @@ endif
 # using dset as dset2 input and the base as dset1
 # (the base and source are treated differently
 # by align_epi_anats resampling and by 3dAllineate)
-align_epi_anat.py -dset2 $dset -dset1 $base -overwrite -dset2to1 \
+align_epi_anat.py -dset2 $dset -dset1 $base -overwrite -dset2to1 -cost lpa -rigid_body \
     -giant_move -suffix _al2std -dset1_strip None -dset2_strip None
 #
 3dAFNItoNIFTI -prefix ${dsetprefix}_al2std.nii.gz ${dsetprefix}_al2std+orig
