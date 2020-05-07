@@ -1,0 +1,6 @@
+macapype.pipelines.prepare.create\_reorient\_pipeline
+=====================================================
+
+.. currentmodule:: macapype.pipelines.prepare
+
+.. autofunction:: create_reorient_pipeline

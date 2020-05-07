@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Documentation &#8212; macapype 0.0.0 documentation</title>
+    <title>API Documentation &#8212; macapype 0.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -118,6 +118,21 @@
 <span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="pipelines">
 <h2>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h2>
+<p>Data preparation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.prepare</span></code>):</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_data_preparation_pipe</span></code></a>(params[,&nbsp;name])</td>
+<td>prepare: - av = checking if multiples T1 and T2 and if it is the case, coregister and average (~ flirt_average) - coregister T2 on T1 with FLIRT - crop using .cropbox file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.prepare.create_reorient_pipeline.html#macapype.pipelines.prepare.create_reorient_pipeline" title="macapype.pipelines.prepare.create_reorient_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_reorient_pipeline</span></code></a>([name,&nbsp;new_dims])</td>
+<td>By kepkee: fslswapdim image_bad x z -y image_good fslorient -deleteorient image_good.nii.gz; fslorient -setqformcode 1 image_good.nii.gz</td>
+</tr>
+</tbody>
+</table>
 <p>Correct bias (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.correct_bias</span></code>):</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -175,21 +190,24 @@
 </tr>
 </tbody>
 </table>
-<p>Full segment (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.full_pipelines</span></code>):</p>
+<p>Full pipeline (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.full_pipelines</span></code>):</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_pipelines_pnh_T1xT2</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></a>(params_template)</td>
+<td>Description: ANTS based segmentation pipeline using T1w and T2w images</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_pipelines_from_mask_pipe</span></code></td>
-<td></td>
+<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_T1xT2_segment_pnh_subpipes</span></code></a>(…)</td>
+<td>Description: SPM based segmentation pipeline from T1w and T2w images</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_pipelines_pnh_subpipes</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_segment_from_mask_pipe</span></code></a>(…[,&nbsp;…])</td>
+<td>Description: Segment T1 (using T2 for bias correction) and a previously</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_segment_pnh_subpipes</span></code></a>(params_template)</td>
+<td>Description: Segment T1 (using T2 for bias correction) .</td>
 </tr>
 </tbody>
 </table>
@@ -274,7 +292,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-07.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

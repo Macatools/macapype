@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Plot the results of a segmentation with SPM-based pipeline T1xT2 &#8212; macapype 0.0.0 documentation</title>
+    <title>Plot the results of a segmentation with SPM-based pipeline T1xT2 &#8212; macapype 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -134,11 +134,13 @@
 
 <span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <span class="n">IdentityInterface</span>
 <span class="kn">import</span> <span class="nn">nipype.interfaces.io</span> <span class="k">as</span> <span class="nn">nio</span>
+
+<span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a>
 </pre></div>
 </div>
 <div class="section" id="testing-plot-in-local">
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a><span class="p">(</span><span class="s2">&quot;data_test_macapype&quot;</span><span class="p">)</span>
 
 <span class="c1"># displaying results</span>
 <span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_T1xT2&quot;</span><span class="p">)</span>
@@ -154,6 +156,11 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>data_dirpath /home/INT/meunier.d/data_macapype already exists
+/home/INT/meunier.d/data_macapype/data_test_macapype Already exists, skipping download
+</pre></div>
+</div>
 </div>
 <div class="section" id="data-preparation">
 <h2>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
@@ -178,7 +185,7 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/INT/meunier.d/Data/Primavoice/test_NodeParams_T1xT2/data_preparation_pipe/bet_crop/sub-Apache_ses-01_T1w_cropped.nii.gz
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/INT/meunier.d/data_macapype/data_test_macapype/test_NodeParams_T1xT2/data_preparation_pipe/bet_crop/sub-Apache_ses-01_T1w_cropped.nii.gz
 </pre></div>
 </div>
 </div>
@@ -291,7 +298,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_regis_T1xT2_005.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  26.782 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  20.585 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-regis-t1xt2-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/05a3046f40b1b32db0a60b37c508a5b6/plot_segment_pnh_regis_T1xT2.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_regis_T1xT2.py</span></code></a></div>
@@ -315,7 +322,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-07.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

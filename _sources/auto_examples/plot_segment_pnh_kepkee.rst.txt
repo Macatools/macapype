@@ -28,6 +28,7 @@ Plot the results of a segmentation with ANTS-based pipeline
     import json
     import pprint
 
+    from macapype.utils.utils_tests import load_test_data
 
 
 
@@ -43,9 +44,9 @@ Testing plot in local
 .. code-block:: python
 
 
-    data_path = "/home/INT/meunier.d/Data/Primavoice/"
-    wf_path = os.path.join(data_path, "test_NodeParams_KK")
+    data_path = load_test_data("data_test_macapype")
 
+    wf_path = os.path.join(data_path, "test_NodeParams_KK")
 
     graph = os.path.join(wf_path, "graph.png")
 
@@ -63,6 +64,14 @@ Testing plot in local
     :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    data_dirpath /home/INT/meunier.d/data_macapype already exists
+    /home/INT/meunier.d/data_macapype/data_test_macapype Already exists, skipping download
 
 
 Data preparation
@@ -313,34 +322,6 @@ register template to subject
 
 
 
-# segmentation results
-#==========================
-
-
-
-.. code-block:: python
-
-
-    #tissue_file = os.path.join(seg_pipe, "segment_atropos_pipe", "seg_at", "segment_Segmentation.nii.gz")
-    #segmentation = os.path.join(wf_path,"segmentation.png")
-    #cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30".format(segmentation, debiased_mask_T1_file, tissue_file)
-    #os.system(cmd)
-
-    #import matplotlib.pyplot as plt  # noqa
-    #img = plt.imread(segmentation)
-    #plt.figure(figsize=(36, 12))
-    #plt.imshow(img)
-    #plt.axis('off')
-    #plt.show()
-
-
-
-
-
-
-
-
-
 segmentation results by tissue
 ================================
 
@@ -366,15 +347,13 @@ segmentation results by tissue
 
 
 
-
-
 .. image:: /auto_examples/images/sphx_glr_plot_segment_pnh_kepkee_008.png
     :class: sphx-glr-single-img
 
 
 
 
-**Total running time of the script:** ( 0 minutes  52.975 seconds)
+**Total running time of the script:** ( 0 minutes  43.759 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_kepkee.py:

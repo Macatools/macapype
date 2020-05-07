@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Plot the results of a segmentation with ANTS-based pipeline &#8212; macapype 0.0.0 documentation</title>
+    <title>Plot the results of a segmentation with ANTS-based pipeline &#8212; macapype 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -139,13 +139,15 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
+
+<span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a>
 </pre></div>
 </div>
 <div class="section" id="testing-plot-in-local">
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/Data/Primavoice/&quot;</span>
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_KK&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a><span class="p">(</span><span class="s2">&quot;data_test_macapype&quot;</span><span class="p">)</span>
 
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_KK&quot;</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
 
@@ -158,6 +160,11 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>data_dirpath /home/INT/meunier.d/data_macapype already exists
+/home/INT/meunier.d/data_macapype/data_test_macapype Already exists, skipping download
+</pre></div>
+</div>
 </div>
 <div class="section" id="data-preparation">
 <h2>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
@@ -321,21 +328,6 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_007.png" />
-<p># segmentation results
-#==========================</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#tissue_file = os.path.join(seg_pipe, &quot;segment_atropos_pipe&quot;, &quot;seg_at&quot;, &quot;segment_Segmentation.nii.gz&quot;)</span>
-<span class="c1">#segmentation = os.path.join(wf_path,&quot;segmentation.png&quot;)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 1800 600 {} {} -dr 0 4 -cm random -a 30&quot;.format(segmentation, debiased_mask_T1_file, tissue_file)</span>
-<span class="c1">#os.system(cmd)</span>
-
-<span class="c1">#import matplotlib.pyplot as plt  # noqa</span>
-<span class="c1">#img = plt.imread(segmentation)</span>
-<span class="c1">#plt.figure(figsize=(36, 12))</span>
-<span class="c1">#plt.imshow(img)</span>
-<span class="c1">#plt.axis(&#39;off&#39;)</span>
-<span class="c1">#plt.show()</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="segmentation-results-by-tissue">
 <h3>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h3>
@@ -356,7 +348,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_kepkee_008.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  52.975 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  43.759 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-kepkee-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/1bf9b70253d5a0db872c6ef37188f87b/plot_segment_pnh_kepkee.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_kepkee.py</span></code></a></div>
@@ -380,7 +372,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-02.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-07.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

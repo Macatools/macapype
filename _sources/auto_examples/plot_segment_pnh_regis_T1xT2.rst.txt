@@ -9,9 +9,9 @@
 
 .. _plot_segment_pnh_regis_T1xT2:
 
-===================================
+===================================================================
 Plot the results of a segmentation with SPM-based pipeline T1xT2
-===================================
+===================================================================
 
 
 
@@ -31,6 +31,8 @@ Plot the results of a segmentation with SPM-based pipeline T1xT2
     from nipype.interfaces.utility import IdentityInterface
     import nipype.interfaces.io as nio
 
+    from macapype.utils.utils_tests import load_test_data
+
 
 
 
@@ -45,7 +47,7 @@ Testing plot in local
 .. code-block:: python
 
 
-    data_path = "/home/INT/meunier.d/Data/Primavoice/"
+    data_path = load_test_data("data_test_macapype")
 
     # displaying results
     wf_path = os.path.join(data_path, "test_NodeParams_T1xT2")
@@ -67,6 +69,14 @@ Testing plot in local
     :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    data_dirpath /home/INT/meunier.d/data_macapype already exists
+    /home/INT/meunier.d/data_macapype/data_test_macapype Already exists, skipping download
 
 
 Data preparation
@@ -109,7 +119,7 @@ Cropping
 
  .. code-block:: none
 
-    /home/INT/meunier.d/Data/Primavoice/test_NodeParams_T1xT2/data_preparation_pipe/bet_crop/sub-Apache_ses-01_T1w_cropped.nii.gz
+    /home/INT/meunier.d/data_macapype/data_test_macapype/test_NodeParams_T1xT2/data_preparation_pipe/bet_crop/sub-Apache_ses-01_T1w_cropped.nii.gz
 
 
 brain extraction results
@@ -272,7 +282,7 @@ segmentation results
 
 
 
-**Total running time of the script:** ( 0 minutes  26.782 seconds)
+**Total running time of the script:** ( 0 minutes  20.585 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_pnh_regis_T1xT2.py:
