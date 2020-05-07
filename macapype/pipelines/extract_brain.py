@@ -10,6 +10,8 @@ import nipype.interfaces.afni as afni
 
 from ..nodes.extract_brain import AtlasBREX
 
+from ..utils.utils_nodes import NodeParams
+
 
 def create_extract_pipe(params_template, params={}, name="extract_pipe"):
     """
@@ -45,31 +47,15 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
         name='inputnode')
 
     # atlas_brex
-    if "atlas_brex" in params.keys():
-        f = params["atlas_brex"]["f"]
-        reg = params["atlas_brex"]["reg"]
-        wrp = params["atlas_brex"]["wrp"]
-        msk = params["atlas_brex"]["msk"]
-        # wrp = params["atlas_brex"]["wrp"]
-    else:
-        f = 0.5
-        reg = 1
-        wrp = "10,10,10"
-        msk = "a,0,0"
-        # wrp = "1"
-
-    atlas_brex = pe.Node(AtlasBREX(), name='atlas_brex')
+    atlas_brex = NodeParams(AtlasBREX(), name='atlas_brex')
 
     extract_pipe.connect(inputnode, "restore_T1",
                          atlas_brex, 't1_restored_file')
 
     atlas_brex.inputs.NMT_file = params_template["template_head"]
     atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]
-    atlas_brex.inputs.f = f
-    atlas_brex.inputs.reg = reg
-    atlas_brex.inputs.wrp = wrp
-    atlas_brex.inputs.msk = msk
-    # atlas_brex.inputs.wrp = wrp
+
+    atlas_brex.load_inputs_from_dict(params["atlas_brex"])
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
