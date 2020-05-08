@@ -24,7 +24,7 @@ from macapype.utils.utils_tests import load_test_data
 
 data_path = load_test_data("data_test_pnh")
 
-wf_path = os.path.join(data_path, "test_NodeParams_KK")
+wf_path = os.path.join(data_path, "test_NodeParams_KK_test")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -53,26 +53,6 @@ os.system(cmd)
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(cropped_T1)
 plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
-
-###############################################################################
-# results of deoblique
-#===========================
-
-## after deoblique
-deoblique_T1_file = os.path.join(
-    wf_path, "data_preparation_pipe", "deoblique_T1",
-    "sub-Apache_ses-01_T1w.nii")
-
-outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, cropped_T1_file, deoblique_T1_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_deoblique)
-plt.figure(figsize=(8, 8))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
@@ -176,15 +156,18 @@ plt.show()
 # register template to subject
 #==============================
 
+deoblique_T1_file = os.path.join(
+     seg_pipe, "register_NMT_pipe",  "deoblique",
+    "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+
 reg_template_mask_to_T1_file = os.path.join(
     seg_pipe, "register_NMT_pipe", "align_NMT",
     "NMT_allineate.nii.gz")
 
 reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
 
-
 cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
-    reg_template_mask_to_T1, reg_template_mask_to_T1_file, debiased_mask_T1_file)
+    reg_template_mask_to_T1, deoblique_T1_file, reg_template_mask_to_T1_file)
 
 os.system(cmd)
 
