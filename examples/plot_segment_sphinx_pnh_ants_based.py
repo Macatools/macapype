@@ -23,7 +23,7 @@ from macapype.utils.utils_tests import load_test_data
 
 data_path = load_test_data("data_test_sphinx_pnh")
 
-wf_path = os.path.join(data_path, "test_NodeParams_ziggy")
+wf_path = os.path.join(data_path, "test_NodeParams_sphinx")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -74,26 +74,6 @@ axs[1].axis('off')
 
 axs[2].imshow(plt.imread(cropped_T1))
 axs[2].axis('off')
-plt.show()
-
-###############################################################################
-# results of deoblique
-#===========================
-
-## after deoblique
-deoblique_T1_file = os.path.join(
-    wf_path, "data_preparation_pipe", "deoblique_T1",
-    "sub-ziggy_T1w.nii")
-
-outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, orig_T1_file, deoblique_T1_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_deoblique)
-plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
 plt.show()
 
 ##############################################################################
@@ -190,6 +170,34 @@ axs[1].axis('off')
 axs[2].imshow(plt.imread(N4_debias_T1))
 axs[2].axis('off')
 plt.show()
+
+###############################################################################
+# register template to subject
+#==============================
+
+deoblique_T1_file = os.path.join(
+     seg_pipe, "register_NMT_pipe",  "deoblique",
+    "sub-ziggy_T1w_newdims_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+
+reg_template_mask_to_T1_file = os.path.join(
+    seg_pipe, "register_NMT_pipe", "align_NMT",
+    "NMT_allineate.nii.gz")
+
+reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
+
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
+    reg_template_mask_to_T1, deoblique_T1_file, reg_template_mask_to_T1_file)
+
+os.system(cmd)
+
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(reg_template_mask_to_T1)
+plt.figure(figsize=(36, 12))
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+
+
 
 ###############################################################################
 # register template to subject

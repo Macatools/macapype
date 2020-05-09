@@ -15,7 +15,7 @@ def load_test_data(name, path_to=""):
         "inia19": "WZo9wZdreTMwfQA",
         "marmotemplate": "5xzm7DJD9kB99gG",
         "data_test_pnh": "DitTrBwGSGiyKPf",
-        "data_test_sphinx_pnh": "RqpkGDH5yTbQBfc",
+        "data_test_sphinx_pnh": "kaYWXmZ9CyiJBtW",
         "data_test_marmo": "pW4nQr46QSzSysg"
     }
 
