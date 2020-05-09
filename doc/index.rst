@@ -23,7 +23,7 @@ A docker image is also available, explanation can be found :ref:`here <docker_in
 Examples
 ********
 
-The :ref:`plot_segment_pnh_regis_T1xT2 workflow <plot_segment_pnh_regis_T1xT2>` based on Regis' :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_pipelines_pnh_T1xT2>`, with the processing sequence:
+:ref:`Segmentation of PNH test dataset <plot_segment_pnh_spm_based>` processed with SPM-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_T1xT2>`, with the processing sequence:
 
 * :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
 * :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`
@@ -31,25 +31,25 @@ The :ref:`plot_segment_pnh_regis_T1xT2 workflow <plot_segment_pnh_regis_T1xT2>` 
 * :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
 
 
-The :ref:`plot_segment_pnh_kepkee workflow <plot_segment_pnh_kepkee>` based on Kepkee's :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_pipelines_pnh_subpipes>`, with the processing sequence :
+:ref:`Segmentation of PNH test dataset <plot_segment_pnh_ants_based>` processed with ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`, with the processing sequence :
 
 * :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
     - Averaging multiple files from same nature
-    - deoblique
     - possibly :class:`reorientation pipeline <macapype.pipelines.prepare.create_reorient_pipeline>`
-    - cropping (using :class:`T1xT2BET <macapype.nodes.extract_brain.T1xT2BET` for cropping tool, or fslroi specifying cropbox)
+    - cropping (using :class:`T1xT2BET <macapype.nodes.extract_brain.T1xT2BET>` for cropping tool, or fslroi specifying cropbox)
     - denoising from Ants non-local mean
-* :class:`brain extraction pipeline <macapype.pipelines.extract_brain.create_brain_extraction_pipe>`
+
+* :class:`Brain extraction pipeline <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`
     - :class:`debias pipeline <macapype.pipelines.correct_bias.create_correct_bias_pipe>` (similar to :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`, but all steps are nipype nodes)
     - :class:`extract brain pipeline <macapype.pipelines.correct_bias.create_correct_bias_pipe>` (using Atlax-Brex)
 
-* :class:`full segment from mask <macapype.pipelines.full_pipelines.create_full_pipelines_from_mask_pipe>` (starting from the mask, the following steps are computed):
+* :class:`Brain segment from mask <macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe>` :
     - :class:`masked debias pipeline <macapype.pipelines.correct_bias.create_masked_correct_bias_pipe>`
     - :class:`register pipeline <macapype.pipelines.register.create_register_NMT_pipe>` from template (NMT) to subject space
     - :class:`segmentation pipeline <macapype.pipelines.segment.create_segment_atropos_pipe>` in subject space with Atropos
 
 
-An exemple of :ref:`reorientation <plot_segment_pnh_isabelle>`, starting from a sphinx position, with Kepkee's :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_pipelines_pnh_subpipes>`.
+:ref:`Segmentation of PNH test dataset with reorientation <plot_segment_sphinx_pnh_ants_based>`, starting from a sphinx position, processed with ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`.
 
-The same Kepkee's :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_pipelines_pnh_subpipes>`, used on marmouset data (:ref:`link to example <plot_segment_marmo_test>`). The automated cropping did not work, hence manual cropping was used.
+:ref:`Segmentation of marmoset test dataset <plot_segment_marmo_ants_based>`, processed using same ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`. The automated cropping did not work, hence manual cropping was used, cropbox has to be specified manually.
 

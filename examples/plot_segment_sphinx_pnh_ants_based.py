@@ -1,12 +1,12 @@
 """
-.. _plot_segment_pnh_isabelle:
+.. _plot_segment_sphinx_pnh_ants_based:
 
 ==============================================================================
 Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 ==============================================================================
 """
 
-# Authors: David Meunier <david_meunier_79@hotmail.fr>
+# Authors: David Meunier, Bastien Cagna
 
 # License: BSD (3-clause)
 # sphinx_gallery_thumbnail_number = 2

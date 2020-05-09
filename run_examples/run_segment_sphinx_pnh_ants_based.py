@@ -32,11 +32,16 @@ if "general" in params.keys() and "template_name" in params["general"].keys():
 else:
     template_name = 'NMT_v1.2'
 
+if "general" in params.keys() and "my_path" in params["general"].keys():
+    my_path = params["general"]["my_path"]
+else:
+    my_path = ''
+
 template_dir = load_test_data(template_name)
 params_template = format_template(template_dir, template_name)
 print (params_template)
 
-data_path = load_test_data("data_test_sphinx_pnh")
+data_path = load_test_data("data_test_sphinx_pnh", my_path)
 
 # data file
 T1_file = op.join(data_path, "sub-ziggy_T1w.nii")

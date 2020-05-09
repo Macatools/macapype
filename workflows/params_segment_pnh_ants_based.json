@@ -1,6 +1,7 @@
 {
     "general":
     {
+        "my_path": "/hpc/crise/meunier.d",
         "template_name": "NMT_v1.2"
     },
     "data_preparation_pipe":

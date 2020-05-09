@@ -174,10 +174,14 @@ def create_register_NMT_pipe(params_template, params={},
     register_NMT_pipe.connect(inputnode, 'T1',
                               norm_intensity, "input_image")
 
+    deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                              deoblique, "in_file")
+
     # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
     NMT_subject_align = pe.Node(NMTSubjectAlign(), name='NMT_subject_align')
 
-    register_NMT_pipe.connect(norm_intensity, 'output_image',
+    register_NMT_pipe.connect(deoblique, 'out_file',
                               NMT_subject_align, "T1_file")
 
     NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]

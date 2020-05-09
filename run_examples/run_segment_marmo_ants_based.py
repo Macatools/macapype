@@ -23,24 +23,21 @@ params = json.load(open(params_file))
 print(params)
 pprint.pprint(params)
 
-#if "general" in params.keys() and "data_path" in params["general"].keys():
-    #data_path = params["general"]["data_path"]
-#else:
-    #data_path = "/home/INT/meunier.d/Data/Marmopype/marmo_test"
-
-#main_path = "/hpc/crise/meunier.d/"
-
 if "general" in params.keys() and "template_name" in params["general"].keys():
     template_name = params["general"]["template_name"]
 else:
     template_name = 'inia19'
 
+if "general" in params.keys() and "my_path" in params["general"].keys():
+    my_path = params["general"]["my_path"]
+else:
+    my_path = ''
+
 template_dir = load_test_data(template_name)
 params_template = format_template(template_dir, template_name)
 print (params_template)
 
-# TODO
-data_path = load_test_data("data_test_marmo")
+data_path = load_test_data("data_test_marmo", my_path)
 
 # data file
 T1_file = op.join(data_path, "T1w_0p33mm_28.nii")
