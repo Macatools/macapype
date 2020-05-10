@@ -58,28 +58,6 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-###############################################################################
-# results of deoblique
-#===========================
-
-## after deoblique
-deoblique_T1_file = os.path.join(
-    wf_path, "data_preparation_pipe", "deoblique_T1",
-    "T1w_0p33mm_28.nii")
-
-outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, cropped_T1_file, deoblique_T1_file)
-os.system(cmd)
-
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(outfile_deoblique)
-plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
-plt.show()
-
-
-
 ##############################################################################
 # First part of the pipeline: brain extraction
 ##############################################################################
@@ -175,9 +153,14 @@ axs[2].imshow(plt.imread(N4_debias_T1))
 axs[2].axis('off')
 plt.show()
 
+
 ###############################################################################
 # register template to subject
 #==============================
+
+deoblique_T1_file = os.path.join(
+     seg_pipe, "register_NMT_pipe",  "deoblique",
+    "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
 
 reg_template_mask_to_T1_file = os.path.join(
     seg_pipe, "register_NMT_pipe", "align_NMT",
@@ -187,7 +170,7 @@ reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
 
 
 cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50 -cm blue".format(
-    reg_template_mask_to_T1, reg_template_mask_to_T1_file, debiased_mask_T1_file)
+    reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
 
 os.system(cmd)
 

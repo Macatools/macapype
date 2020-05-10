@@ -45,7 +45,7 @@ Testing plot in local
 
     data_path = load_test_data("data_test_sphinx_pnh")
 
-    wf_path = os.path.join(data_path, "test_NodeParams_ziggy")
+    wf_path = os.path.join(data_path, "test_NodeParams_sphinx")
 
     graph = os.path.join(wf_path, "graph.png")
 
@@ -127,39 +127,6 @@ Data preparation
 
 
 
-results of deoblique
-===========================
-
-
-
-.. code-block:: python
-
-
-    ## after deoblique
-    deoblique_T1_file = os.path.join(
-        wf_path, "data_preparation_pipe", "deoblique_T1",
-        "sub-ziggy_T1w.nii")
-
-    outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, orig_T1_file, deoblique_T1_file)
-    os.system(cmd)
-
-    import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(outfile_deoblique)
-    plt.figure(figsize=(36, 12))
-    plt.imshow(img)
-    plt.axis('off')
-    plt.show()
-
-
-
-
-.. image:: /auto_examples/images/sphx_glr_plot_segment_sphinx_pnh_ants_based_003.png
-    :class: sphx-glr-single-img
-
-
-
-
 First part of the pipeline: brain extraction
 #############################################################################
 
@@ -192,7 +159,7 @@ Correct bias results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_sphinx_pnh_ants_based_004.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_sphinx_pnh_ants_based_003.png
     :class: sphx-glr-single-img
 
 
@@ -226,7 +193,7 @@ Brain extraction results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_sphinx_pnh_ants_based_005.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_sphinx_pnh_ants_based_004.png
     :class: sphx-glr-single-img
 
 
@@ -294,6 +261,47 @@ debias T1xT2 and debias N4
     axs[2].imshow(plt.imread(N4_debias_T1))
     axs[2].axis('off')
     plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_sphinx_pnh_ants_based_005.png
+    :class: sphx-glr-single-img
+
+
+
+
+register template to subject
+==============================
+
+
+
+.. code-block:: python
+
+
+    deoblique_T1_file = os.path.join(
+         seg_pipe, "register_NMT_pipe",  "deoblique",
+        "sub-ziggy_T1w_newdims_cropped_noise_corrected_maths_masked_corrected.nii.gz")
+
+    reg_template_mask_to_T1_file = os.path.join(
+        seg_pipe, "register_NMT_pipe", "align_NMT",
+        "NMT_allineate.nii.gz")
+
+    reg_template_mask_to_T1 = os.path.join(wf_path,"reg_template_mask_to_T1.png")
+
+    cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(
+        reg_template_mask_to_T1, deoblique_T1_file, reg_template_mask_to_T1_file)
+
+    os.system(cmd)
+
+    import matplotlib.pyplot as plt  # noqa
+    img = plt.imread(reg_template_mask_to_T1)
+    plt.figure(figsize=(36, 12))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+
+
 
 
 
@@ -373,7 +381,7 @@ segmentation results by tissue
 
 
 
-**Total running time of the script:** ( 0 minutes  53.851 seconds)
+**Total running time of the script:** ( 0 minutes  58.881 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_sphinx_pnh_ants_based.py:

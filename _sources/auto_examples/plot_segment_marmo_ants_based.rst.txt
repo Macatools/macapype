@@ -110,41 +110,6 @@ Cropping
 
 
 
-results of deoblique
-===========================
-
-
-
-.. code-block:: python
-
-
-    ## after deoblique
-    deoblique_T1_file = os.path.join(
-        wf_path, "data_preparation_pipe", "deoblique_T1",
-        "T1w_0p33mm_28.nii")
-
-    outfile_deoblique = os.path.join(wf_path,"outfile_deoblique.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {} -a 50 {} -a 50".format(outfile_deoblique, cropped_T1_file, deoblique_T1_file)
-    os.system(cmd)
-
-    import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(outfile_deoblique)
-    plt.figure(figsize=(36, 12))
-    plt.imshow(img)
-    plt.axis('off')
-    plt.show()
-
-
-
-
-
-
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_003.png
-    :class: sphx-glr-single-img
-
-
-
-
 First part of the pipeline: brain extraction
 #############################################################################
 
@@ -177,7 +142,7 @@ Correct bias results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_004.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_003.png
     :class: sphx-glr-single-img
 
 
@@ -211,7 +176,7 @@ Brain extraction results
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_005.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_004.png
     :class: sphx-glr-single-img
 
 
@@ -283,7 +248,8 @@ debias T1xT2 and debias N4
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_006.png
+
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_005.png
     :class: sphx-glr-single-img
 
 
@@ -297,6 +263,10 @@ register template to subject
 .. code-block:: python
 
 
+    deoblique_T1_file = os.path.join(
+         seg_pipe, "register_NMT_pipe",  "deoblique",
+        "T1w_0p33mm_28_roi_noise_corrected_maths_masked_corrected.nii.gz")
+
     reg_template_mask_to_T1_file = os.path.join(
         seg_pipe, "register_NMT_pipe", "align_NMT",
         "Template_T1_allineate.nii.gz")
@@ -305,7 +275,7 @@ register template to subject
 
 
     cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50 -cm blue".format(
-        reg_template_mask_to_T1, reg_template_mask_to_T1_file, debiased_mask_T1_file)
+        reg_template_mask_to_T1, reg_template_mask_to_T1_file, deoblique_T1_file)
 
     os.system(cmd)
 
@@ -319,7 +289,7 @@ register template to subject
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_007.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_006.png
     :class: sphx-glr-single-img
 
 
@@ -351,13 +321,13 @@ segmentation results by tissue
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_008.png
+.. image:: /auto_examples/images/sphx_glr_plot_segment_marmo_ants_based_007.png
     :class: sphx-glr-single-img
 
 
 
 
-**Total running time of the script:** ( 0 minutes  56.699 seconds)
+**Total running time of the script:** ( 0 minutes  45.012 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_marmo_ants_based.py:

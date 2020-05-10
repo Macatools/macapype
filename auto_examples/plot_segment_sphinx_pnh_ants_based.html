@@ -71,10 +71,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plot the results of a segmentation with ANTS-based pipeline in sphinx position</a><ul>
 <li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
-<li><a class="reference internal" href="#data-preparation">Data preparation</a><ul>
-<li><a class="reference internal" href="#results-of-deoblique">results of deoblique</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#data-preparation">Data preparation</a></li>
 <li><a class="reference internal" href="#first-part-of-the-pipeline-brain-extraction">First part of the pipeline: brain extraction</a><ul>
 <li><a class="reference internal" href="#correct-bias-results">Correct bias results</a></li>
 <li><a class="reference internal" href="#brain-extraction-results">Brain extraction results</a></li>
@@ -83,6 +80,7 @@
 <li><a class="reference internal" href="#second-part-of-the-pipeline-segmentation">Second part of the pipeline: segmentation</a><ul>
 <li><a class="reference internal" href="#debias-t1xt2-and-debias-n4">debias T1xT2 and debias N4</a></li>
 <li><a class="reference internal" href="#register-template-to-subject">register template to subject</a></li>
+<li><a class="reference internal" href="#id1">register template to subject</a></li>
 <li><a class="reference internal" href="#segmentation-results-by-tissue">segmentation results by tissue</a></li>
 </ul>
 </li>
@@ -145,7 +143,7 @@
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a><span class="p">(</span><span class="s2">&quot;data_test_sphinx_pnh&quot;</span><span class="p">)</span>
 
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_ziggy&quot;</span><span class="p">)</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_sphinx&quot;</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
 
@@ -202,27 +200,6 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_002.png" />
-<div class="section" id="results-of-deoblique">
-<h3>results of deoblique<a class="headerlink" href="#results-of-deoblique" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## after deoblique</span>
-<span class="n">deoblique_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;deoblique_T1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sub-ziggy_T1w.nii&quot;</span><span class="p">)</span>
-
-<span class="n">outfile_deoblique</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_deoblique.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> -a 50 </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">,</span> <span class="n">orig_T1_file</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">outfile_deoblique</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_003.png" />
-</div>
 </div>
 <div class="section" id="first-part-of-the-pipeline-brain-extraction">
 <h2>First part of the pipeline: brain extraction<a class="headerlink" href="#first-part-of-the-pipeline-brain-extraction" title="Permalink to this headline">¶</a></h2>
@@ -246,7 +223,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_004.png" />
+<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_003.png" />
 </div>
 <div class="section" id="brain-extraction-results">
 <h3>Brain extraction results<a class="headerlink" href="#brain-extraction-results" title="Permalink to this headline">¶</a></h3>
@@ -268,7 +245,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_005.png" />
+<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_004.png" />
 </div>
 </div>
 <div class="section" id="second-part-of-the-pipeline-segmentation">
@@ -318,10 +295,37 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_006.png" />
+<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_005.png" />
 </div>
 <div class="section" id="register-template-to-subject">
 <h3>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deoblique_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+     <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span>  <span class="s2">&quot;deoblique&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sub-ziggy_T1w_newdims_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="n">reg_template_mask_to_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;align_NMT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NMT_allineate.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="n">reg_template_mask_to_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;reg_template_mask_to_T1.png&quot;</span><span class="p">)</span>
+
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">reg_template_mask_to_T1</span><span class="p">,</span> <span class="n">deoblique_T1_file</span><span class="p">,</span> <span class="n">reg_template_mask_to_T1_file</span><span class="p">)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">reg_template_mask_to_T1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_006.png" />
+</div>
+<div class="section" id="id1">
+<h3>register template to subject<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reg_template_mask_to_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;align_NMT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NMT_allineate.nii.gz&quot;</span><span class="p">)</span>
@@ -363,7 +367,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_sphinx_pnh_ants_based_008.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  53.851 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  58.881 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-sphinx-pnh-ants-based-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/98bec06d0d9e9a66a20fa7d781a3db0f/plot_segment_sphinx_pnh_ants_based.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_sphinx_pnh_ants_based.py</span></code></a></div>
@@ -387,7 +391,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-09.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-10.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
