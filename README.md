@@ -1,3 +1,16 @@
+# Install
+To use it:
+```shell
+pip install macapype
+```
+
+To develop:
+```shell
+git clone https://github.com/Macatools/macapype.git
+cd macapype
+python setup.py develop
+```
+
 # Documentation
 
 https://macatools.github.io/macapype/
