@@ -18,6 +18,7 @@
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to install" href="install.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -57,7 +58,14 @@
      href="#">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"></ul>
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
+</ul>
+</ul>
 </li>
               
                 <li class="dropdown">
@@ -71,8 +79,10 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Macapype</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#tutorial">Tutorial</a></li>
 <li><a class="reference internal" href="#docker">Docker</a></li>
 <li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#table-of-contents">Table of contents</a></li>
 </ul>
 </li>
 </ul>
@@ -121,54 +131,51 @@ python framework.</p>
 <p>See <a class="reference internal" href="install.html#install"><span class="std std-ref">Installation</span></a> for installation on your local system if you have adequate softwares (i.e. FSL, AFNI, Ants, SPM) running on your machine/clusters.
 Running subsequent workflows can be found <a class="reference internal" href="workflows.html#workflows"><span class="std std-ref">here</span></a></p>
 </div>
+<div class="section" id="tutorial">
+<h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<p>Explanations on how to modify the processing can be found <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">here</span></a></p>
+</div>
 <div class="section" id="docker">
 <h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
-<p>A docker image is also available, explanation can be found <a class="reference internal" href="docker_install.html#docker-install"><span class="std std-ref">here</span></a></p>
+<p>A Dockerfile, and adocker image are also available, explanations can be found <a class="reference internal" href="docker_install.html#docker-install"><span class="std std-ref">here</span></a></p>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="auto_examples/plot_segment_pnh_spm_based.html#plot-segment-pnh-spm-based"><span class="std std-ref">Segmentation of PNH test dataset</span></a> processed with SPM-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>, with the processing sequence:</p>
-<ul class="simple">
-<li><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></li>
+<p>Several examples can be found <a class="reference internal" href="examples.html#examples"><span class="std std-ref">here</span></a></p>
+</div>
+<div class="section" id="table-of-contents">
+<h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependancies">Dependancies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#install-macapype-package">Install macapype package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
 </ul>
-<p><a class="reference internal" href="auto_examples/plot_segment_pnh_ants_based_nmt_align.html#plot-segment-pnh-ants-based"><span class="std std-ref">Segmentation of PNH test dataset</span></a> processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a></dt>
-<dd><ul class="first last">
-<li>Averaging multiple files from same nature</li>
-<li>possibly <a class="reference internal" href="generated/macapype.pipelines.prepare.create_reorient_pipeline.html#macapype.pipelines.prepare.create_reorient_pipeline" title="macapype.pipelines.prepare.create_reorient_pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">reorientation</span> <span class="pre">pipeline</span></code></a></li>
-<li>cropping (using <a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a> for cropping tool, or fslroi specifying cropbox)</li>
-<li>denoising from Ants non-local mean</li>
-</ul>
-</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">extraction</span> <span class="pre">pipeline</span></code></a></dt>
-<dd><ul class="first last">
-<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">debias</span> <span class="pre">pipeline</span></code></a> (similar to <a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>, but all steps are nipype nodes)</li>
-<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">extract</span> <span class="pre">brain</span> <span class="pre">pipeline</span></code></a> (using Atlax-Brex)</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">segment</span> <span class="pre">from</span> <span class="pre">mask</span></code></a> :</dt>
-<dd><ul class="first last">
-<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">masked</span> <span class="pre">debias</span> <span class="pre">pipeline</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe" title="macapype.pipelines.register.create_register_NMT_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">register</span> <span class="pre">pipeline</span></code></a> from template (NMT) to subject space</li>
-<li><a class="reference internal" href="generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe" title="macapype.pipelines.segment.create_segment_atropos_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">segmentation</span> <span class="pre">pipeline</span></code></a> in subject space with Atropos</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#following-the-bids-format">Following the BIDS format</a></li>
 </ul>
-</dd>
-</dl>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#spm-based-pipelines">SPM-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+</ul>
 </li>
 </ul>
-<p><a class="reference internal" href="auto_examples/plot_segment_sphinx_pnh_ants_based.html#plot-segment-sphinx-pnh-ants-based"><span class="std std-ref">Segmentation of PNH test dataset with reorientation</span></a>, starting from a sphinx position, processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>.</p>
-<p><a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">Segmentation of marmoset test dataset</span></a>, processed using same ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>. The automated cropping did not work, hence manual cropping was used, cropbox has to be specified manually.</p>
+</div>
 </div>
 </div>
 
@@ -184,7 +191,7 @@ Running subsequent workflows can be found <a class="reference internal" href="wo
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-11.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
