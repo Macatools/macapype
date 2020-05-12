@@ -148,7 +148,7 @@ class AtroposN4(CommandLine):
     output_spec = AtroposN4OutputSpec
 
     package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'bash antsAtroposN4.sh'.format(package_directory)
+    _cmd = 'bash {}/../bash/antsAtroposN4.sh'.format(package_directory)
 
     def _format_arg(self, name, spec, value):
         import os
