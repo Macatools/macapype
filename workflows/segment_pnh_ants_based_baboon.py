@@ -57,10 +57,11 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes
+from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes_baboon
 
 from macapype.utils.utils_bids import create_datasource
 from macapype.utils.utils_tests import load_test_data, format_template
+
 
 ###############################################################################
 
@@ -119,7 +120,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
 
     datasource = create_datasource(data_dir, subjects, sessions)
 
-    segment_pnh = create_full_segment_pnh_subpipes(
+    segment_pnh = create_full_segment_pnh_subpipes_baboon(
         params_template=params_template,
         params=params)
 
@@ -162,5 +163,5 @@ if __name__ == '__main__':
     print('The PNH segmentation pipeline is ready')
 
     print("Start to process")
-    wf.run()
+    wf.run(plugin='MultiProc')
 

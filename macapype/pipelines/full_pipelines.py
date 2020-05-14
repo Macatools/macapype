@@ -8,6 +8,7 @@ from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
 from .prepare import create_data_preparation_pipe
+from .prepare import create_data_preparation_baboon_pipe
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
 
@@ -366,6 +367,95 @@ def create_full_segment_pnh_subpipes(
                          brain_segment_pipe, 'inputnode.preproc_T1')
         seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
                          brain_segment_pipe, 'inputnode.preproc_T2')
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_pipe.smooth_mask.out_file",
+                         brain_segment_pipe, "inputnode.brain_mask")
+
+    return seg_pipe
+
+# same as create_full_segment_pnh_subpipes but edited for baboon
+def create_full_segment_pnh_subpipes_baboon(
+        params_template, params={}, name="full_segment_pnh_subpipes_baboon"):
+    """Description: Segment T1 (using T2 for bias correction) .
+
+    new version (as it is now)
+    - brain data prep (denoise+N4 first,avg and align,optional reorient, crop, alignt2toT1) # noqa
+    - brain extraction (see create_brain_extraction_pipe):
+        - correct_bias
+        - denoise
+        - extract_brain
+    - brain segment from mask (see create_brain_segment_from_mask_pipe):
+        - denoise pipe
+        - debias pipe
+        - NMT align (after N4Debias)
+        - Atropos segment
+
+    Inputs:
+
+        inputnode:
+            preproc_T1: preprocessed T1 file name
+            preproc_T2: preprocessed T2 file name
+
+        arguments:
+            params_template: dictionary of template files
+            params: dictionary of node sub-parameters (from a json file)
+            name: pipeline name (default = "full_segment_pipe")
+
+    Outputs:
+
+    """
+    # creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1', 'T2']),
+        name='inputnode'
+    )
+
+    # preprocessing
+    if 'data_preparation_pipe' in params.keys():
+        print("data_preparation_pipe is in params")
+        params_data_preparation_pipe = params["data_preparation_pipe"]
+    else:
+        print("*** data_preparation_pipe NOT in params")
+        params_data_preparation_pipe = {}
+
+    data_preparation_baboon_pipe = create_data_preparation_baboon_pipe(
+        params_data_preparation_pipe)
+
+    seg_pipe.connect(inputnode, 'T1', data_preparation_baboon_pipe, 'inputnode.T1')
+    seg_pipe.connect(inputnode, 'T2', data_preparation_baboon_pipe, 'inputnode.T2')
+
+    # full extract brain pipeline (correct_bias, denoising, extract brain)
+    if 'brain_extraction_pipe' in params.keys():
+        print("brain_extraction_pipe is in params")
+        params_brain_extraction_pipe = params["brain_extraction_pipe"]
+    else:
+        print("*** brain_extraction_pipe NOT in params")
+        params_brain_extraction_pipe = {}
+
+    brain_extraction_pipe = create_brain_extraction_pipe(
+        params=params_brain_extraction_pipe, params_template=params_template)
+
+    seg_pipe.connect(data_preparation_baboon_pipe, 'norm_intensity_T1.output_image',
+                     brain_extraction_pipe, 'inputnode.preproc_T1') #input image from N4biascorrected, cropped T1 image.
+    seg_pipe.connect(data_preparation_baboon_pipe, 'align_T2_on_T1.out_file', 
+                     brain_extraction_pipe, 'inputnode.preproc_T2') #input image from N4biascorrected, cropped T2 aligned to T1 image.
+
+
+    # full_segment (restarting from the avg_align files)
+    if "brain_segment_pipe" in params.keys():
+        params_brain_segment_pipe = params["brain_segment_pipe"]
+
+        brain_segment_pipe = create_brain_segment_from_mask_pipe(
+            params_template=params_template,
+            params=params_brain_segment_pipe)
+
+        seg_pipe.connect(data_preparation_baboon_pipe, 'norm_intensity_T1.output_image',
+                         brain_segment_pipe, 'inputnode.preproc_T1') #input image from N4biascorrected, cropped T1 image.
+        seg_pipe.connect(data_preparation_baboon_pipe, 'align_T2_on_T1.out_file', 
+                     brain_segment_pipe, 'inputnode.preproc_T2') #input image from N4biascorrected, cropped T2 aligned to T1 image.
         seg_pipe.connect(brain_extraction_pipe,
                          "extract_pipe.smooth_mask.out_file",
                          brain_segment_pipe, "inputnode.brain_mask")
