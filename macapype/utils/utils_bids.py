@@ -21,6 +21,10 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
         'T2': {
             "datatype": "anat", "suffix": "T2w",
             "extensions": ["nii", ".nii.gz"]
+        },
+        'json_file': {
+            "datatype": "anat", "suffix": "T1w",
+            "extensions": [".json"]
         }
     }
 
