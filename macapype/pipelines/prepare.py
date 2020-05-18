@@ -276,16 +276,16 @@ def create_multi_data_preparation_pipe(params, name="data_preparation_pipe"):
         crop_bb_T1.load_inputs_from_dict(params["crop"])
 
         data_preparation_pipe.connect(
-            inputnode, ('indiv_params', parse_key, ("crop", "args")),
-            crop_bb_T1, 'args')
+            inputnode, ('indiv_params', parse_key, "crop"),
+            crop_bb_T1, 'indiv_params')
 
         # Crop bounding box for T2
         crop_bb_T2 = NodeParams(fsl.ExtractROI(), name='crop_bb_T2')
         crop_bb_T2.load_inputs_from_dict(params["crop"])
 
         data_preparation_pipe.connect(
-            inputnode, ('indiv_params', parse_key, ("crop", "args")),
-            crop_bb_T2, 'args')
+            inputnode, ('indiv_params', parse_key, "crop"),
+            crop_bb_T2, 'indiv_params')
 
         # Crop bounding box for T2
         if "reorient" in params.keys():

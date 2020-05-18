@@ -87,6 +87,6 @@ def parse_key(params, key):
             params = _parse_key(params, cur_key)
 
     else:
-        params = _parse_key(params, cur_key)
+        params = _parse_key(params, key)
 
     return params

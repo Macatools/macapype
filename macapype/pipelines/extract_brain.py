@@ -135,17 +135,8 @@ def create_multi_extract_pipe(params_template, params={}, name="extract_pipe"):
     atlas_brex.load_inputs_from_dict(params["atlas_brex"])
 
     extract_pipe.connect(
-        inputnode, ("indiv_params", parse_key, ("atlas_brex", "f")),
-        atlas_brex, 'f')
-    extract_pipe.connect(
-        inputnode, ("indiv_params", parse_key, ("atlas_brex", "reg")),
-        atlas_brex, 'reg')
-    extract_pipe.connect(
-        inputnode, ("indiv_params", parse_key, ("atlas_brex", "msk")),
-        atlas_brex, 'msk')
-    extract_pipe.connect(
-        inputnode, ("indiv_params", parse_key, ("atlas_brex", "wrp")),
-        atlas_brex, 'wrp')
+        inputnode, ("indiv_params", parse_key, ("atlas_brex")),
+        atlas_brex, 'indiv_params')
 
     # mask_brex
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
