@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 import nipype.interfaces.ants as ants
 
-from ..utils.misc import get_elem
+from ..utils.misc import get_elem, parse_key
 from ..utils.utils_nodes import NodeParams
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
@@ -173,6 +173,148 @@ def create_register_NMT_pipe(params_template, params={},
 
     register_NMT_pipe.connect(inputnode, 'T1',
                               norm_intensity, "input_image")
+
+    deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                              deoblique, "in_file")
+
+    # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
+    NMT_subject_align = pe.Node(NMTSubjectAlign(), name='NMT_subject_align')
+
+    register_NMT_pipe.connect(deoblique, 'out_file',
+                              NMT_subject_align, "T1_file")
+
+    NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
+
+    # align_masks
+    # "overwrap" of NwarpApply, with specifying the outputs as wished
+    list_priors = [params_template["template_head"],
+                   params_template["template_csf"],
+                   params_template["template_gm"],
+                   params_template["template_wm"]]
+
+    align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
+    align_masks.inputs.in_file = list_priors
+    align_masks.inputs.out_file = list_priors
+    align_masks.inputs.interp = "NN"
+    align_masks.inputs.args = "-overwrite"
+
+    register_NMT_pipe.connect(NMT_subject_align, 'shft_aff_file',
+                              align_masks, 'master')
+    register_NMT_pipe.connect(NMT_subject_align, 'warpinv_file',
+                              align_masks, "warp")
+
+    # align_NMT
+    align_NMT = pe.Node(
+        afni.Allineate(), name="align_NMT", iterfield=['in_file'])
+    align_NMT.inputs.final_interpolation = "nearestneighbour"
+    align_NMT.inputs.overwrite = True
+    align_NMT.inputs.outputtype = "NIFTI_GZ"
+
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 0),
+                              align_NMT, "in_file")  # -source
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                              align_NMT, "reference")  # -base
+    register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                              align_NMT, "in_matrix")  # -1Dmatrix_apply
+
+    # seg_csf
+    align_seg_csf = pe.Node(
+        afni.Allineate(), name="align_seg_csf", iterfield=['in_file'])
+    align_seg_csf.inputs.final_interpolation = "nearestneighbour"
+    align_seg_csf.inputs.overwrite = True
+    align_seg_csf.inputs.outputtype = "NIFTI_GZ"
+
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
+                              align_seg_csf, "in_file")  # -source
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                              align_seg_csf, "reference")  # -base
+    register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                              align_seg_csf, "in_matrix")  # -1Dmatrix_apply
+
+    # seg_gm
+    align_seg_gm = pe.Node(
+        afni.Allineate(), name="align_seg_gm", iterfield=['in_file'])
+    align_seg_gm.inputs.final_interpolation = "nearestneighbour"
+    align_seg_gm.inputs.overwrite = True
+    align_seg_gm.inputs.outputtype = "NIFTI_GZ"
+
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 2),
+                              align_seg_gm, "in_file")  # -source
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                              align_seg_gm, "reference")  # -base
+    register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                              align_seg_gm, "in_matrix")  # -1Dmatrix_apply
+
+    # seg_wm
+    align_seg_wm = pe.Node(afni.Allineate(), name="align_seg_wm",
+                           iterfield=['in_file'])
+    align_seg_wm.inputs.final_interpolation = "nearestneighbour"
+    align_seg_wm.inputs.overwrite = True
+    align_seg_wm.inputs.outputtype = "NIFTI_GZ"
+
+    register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 3),
+                              align_seg_wm, "in_file")  # -source
+    register_NMT_pipe.connect(norm_intensity, 'output_image',
+                              align_seg_wm, "reference")  # -base
+    register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                              align_seg_wm, "in_matrix")  # -1Dmatrix_apply
+
+    return register_NMT_pipe
+
+
+###############################################################################
+# multi / indiv_params
+###############################################################################
+def create_multi_register_NMT_pipe(params_template, params={},
+                                   name="register_NMT_pipe"):
+    """
+    Description: Register template to anat with the script NMT_subject_align,
+        and then apply it to tissues list_priors
+
+    Inputs:
+
+        inputnode:
+            T1: T1 file name
+
+        arguments:
+            params_template: dictionary of info about template
+
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "register_NMT_pipe")
+
+    Outputs:
+
+        norm_intensity.output_image:
+            filled mask after erode
+        align_seg_csf.out_file:
+            csf template tissue in subject space
+        align_seg_gm.out_file:
+            grey matter template tissue in subject space
+        align_seg_wm.out_file:
+            white matter template tissue in subject space
+    """
+
+    register_NMT_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1', 'indiv_params']),
+        name='inputnode')
+
+    # N4 intensity normalization over brain
+    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                name='norm_intensity')
+    if "norm_intensity" in params.keys():
+        norm_intensity.load_inputs_from_dict(params["norm_intensity"])
+
+    register_NMT_pipe.connect(inputnode, 'T1',
+                              norm_intensity, "input_image")
+
+    register_NMT_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "norm_intensity"),
+        norm_intensity, "indiv_params")
 
     deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
     register_NMT_pipe.connect(norm_intensity, 'output_image',

@@ -58,9 +58,9 @@ import nipype.interfaces.utility as niu
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-from macapype.pipelines.multi_full_pipelines import create_full_segment_multi_pnh_subpipes
+from macapype.pipelines.full_pipelines import create_full_segment_multi_pnh_subpipes
 
-from macapype.utils.utils_bids import create_datasource
+from macapype.utils.utils_bids import create_datasource_multi_params
 from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.misc import show_files, get_first_elem, get_dict_from_json
@@ -87,9 +87,24 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
     else:
         params = {}
 
+
     print(params)
     pprint.pprint(params)
 
+    # multi_params
+    multi_params_file = op.join(data_dir, "multi_params.json")
+
+    print(multi_params_file)
+    if multi_params_file is not None:
+
+        assert os.path.exists(multi_params_file), "Error with file {}".format(
+            multi_params_file)
+
+        multi_params = json.load(open(multi_params_file))
+    else:
+        multi_params = {}
+
+    # params_template
     if "general" in params.keys() and "my_path" in params["general"].keys():
         my_path = params["general"]["my_path"]
     else:
@@ -100,24 +115,24 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
     else:
         template_name = 'NMT_v1.2'
 
-    # params_template
     nmt_dir = load_test_data(template_name, path_to = my_path)
     params_template = format_template(nmt_dir, template_name)
     print (params_template)
 
     # main_workflow
-    main_workflow = pe.Workflow(name= "test_pipeline_ants_multi")
+    main_workflow = pe.Workflow(name= "test_pipeline_ants_multi_params")
     main_workflow.base_dir = process_dir
 
+    datasource = create_datasource_multi_params(data_dir,
+                                                multi_params,
+                                                subjects, sessions)
 
-    datasource = create_datasource(data_dir, subjects, sessions)
+    #convert_json = pe.Node(
+        #interface = niu.Function(inputnames = ["json_file"],output_names = ["params"],
+                                 #function = get_dict_from_json),
+        #name = "convert_json")
 
-    convert_json = pe.Node(
-        interface = niu.Function(inputnames = ["json_file"],output_names = ["params"],
-                                 function = get_dict_from_json),
-        name = "convert_json")
-
-    main_workflow.connect(datasource, ("json_file",get_first_elem), convert_json,'json_file')
+    #main_workflow.connect(datasource, ("json_file",get_first_elem), convert_json,'json_file')
 
     segment_pnh = create_full_segment_multi_pnh_subpipes(
         params_template=params_template,
@@ -126,7 +141,8 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
     main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.T2')
 
-    main_workflow.connect(convert_json, 'params', segment_pnh,'inputnode.indiv_params')
+    main_workflow.connect(datasource, "indiv_params",
+                          segment_pnh,'inputnode.indiv_params')
 
 
     return main_workflow
@@ -162,7 +178,7 @@ if __name__ == '__main__':
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
-    print('The PNH segmentation pipeline is ready')
-    print("Start to process")
+    #print('The PNH segmentation pipeline is ready')
+    #print("Start to process")
     wf.run()
 
