@@ -90,7 +90,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
     if "general" in params.keys() and "my_path" in params["general"].keys():
         my_path = params["general"]["my_path"]
     else:
-        my_path = "/hpc/crise/meunier.d"
+        my_path = ""
 
     if "general" in params.keys() and "template_name" in params["general"].keys():
         template_name = params["general"]["template_name"]
