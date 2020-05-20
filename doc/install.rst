@@ -12,7 +12,7 @@ Dependancies
 External software dependancies
 -------------------------------
 
-Macapype relies heavily on other neuroimaging Softwares, predominentyly
+Macapype relies heavily on other neuroimaging Softwares, predominentyly:
 
 * `FSL <http://www.fmrib.ox.ac.uk/fsl/index.html>`_
 * `ANTS <http://stnava.github.io/ANTs/>`_
@@ -25,18 +25,15 @@ for frioul users, here is what should be added at the end of your .bash_personal
 .. code-block:: bash
 
     export PATH=$PATH:/hpc/soft/afni/afni/
-
     export ANTSPATH=/hpc/soft/ANTS/antsbin/bin
     export PATH=$ANTSPATH:$PATH
     export PATH=$PATH:/hpc/soft/ANTS/ANTs/Scripts/
-
     #FSLDIR=/hpc/soft/fsl/fsl_5.0.10/
     FSLDIR=/hpc/soft/fsl/fsl_6.0.1/
     #FSLDIR=/hpc/soft/fsl/fsl_5.0.11/
     . ${FSLDIR}/etc/fslconf/fsl.sh
     PATH=${FSLDIR}/bin:${PATH}
     export FSLDIR PATH
-
     FSLOUTPUTTYPE=NIFTI_GZ
     export FSLOUTPUTTYPE
 
@@ -50,9 +47,7 @@ In case you have access to a conda environnment, here is the procedure to initia
 .. code-block:: bash
 
     $ conda init bash
-
     $ conda create -n macapype python=3.7
-
     $ conda activate macapype
 
 Now for the packages:
@@ -60,9 +55,7 @@ Now for the packages:
 .. code-block:: bash
 
     $ conda install -c conda-forge nilearn
-
     $ conda install -c conda-forge nipype
-
     $ pip install pybids
 
 Not mandatory, but prefered:
@@ -70,7 +63,6 @@ Not mandatory, but prefered:
 .. code-block:: bash
 
     conda install -c conda-forge matplotlib
-
     conda install ipython
 
 Install macapype package
@@ -85,9 +77,7 @@ Using git
 .. code:: bash
 
     $ git clone https://github.com/Macatools/macapype.git
-
     $ cd macapype
-
     $ python setup.py develop --user
 
 Using pip
@@ -100,7 +90,9 @@ Using pip
 from pypi
 ^^^^^^^^^^
 
-#TODO
+.. code:: bash
+
+    $ pip install macapype
 
 Testing the install
 ####################
