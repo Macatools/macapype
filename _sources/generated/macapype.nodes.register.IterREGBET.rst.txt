@@ -16,7 +16,6 @@ macapype.nodes.register.IterREGBET
       ~IterREGBET.__init__
       ~IterREGBET.aggregate_outputs
       ~IterREGBET.help
-      ~IterREGBET.load_inputs_from_dict
       ~IterREGBET.load_inputs_from_json
       ~IterREGBET.raise_exception
       ~IterREGBET.run

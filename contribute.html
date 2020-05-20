@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>How to contribute to the sources of the project &#8212; macapype 0.1.1 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Pipeline examples" href="examples.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="auto_examples/index.html">Gallery</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">How to contribute to the sources of the project</a><ul>
+<li><a class="reference internal" href="#install-a-dev-version">Install a dev version</a></li>
+<li><a class="reference internal" href="#pull-request">Pull Request</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/contribute.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="how-to-contribute-to-the-sources-of-the-project">
+<span id="contribute"></span><h1>How to contribute to the sources of the project<a class="headerlink" href="#how-to-contribute-to-the-sources-of-the-project" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-a-dev-version">
+<h2>Install a dev version<a class="headerlink" href="#install-a-dev-version" title="Permalink to this headline">¶</a></h2>
+<p>The best way to contribute to the development of the source code is to:</p>
+<ol class="arabic simple">
+<li>Fork the official Macatools repo of macapype on your github account</li>
+<li>Clone your forked repo in local and make it the installed package</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/my_github_account/macapype.git
+<span class="nb">cd</span> macapype
+python setup develop
+</pre></div>
+</div>
+<p>(or, if you do not have root access:)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python setup develop --user
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li>Add the official Macatools repository (or remote) under the name “upstream”:</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add upstream https://github.com/Macatools/macapype.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li>Make a new branch, corresponding to your modified feature:</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout -b my_new_feature
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li>Do the modifications, test them on provided examples. All the intermediate modifications are commited/pushed to your branch, in your remote:</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git commit -a -m<span class="s2">&quot;My modifications&quot;</span>
+git push origin my_new_feature
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li>Once your are satisfied with modifications in your local remote on my_new_feature branch, create a pull request (PR) to merge your branch with the official Macatools repo (see below)</li>
+</ol>
+</div>
+<div class="section" id="pull-request">
+<h2>Pull Request<a class="headerlink" href="#pull-request" title="Permalink to this headline">¶</a></h2>
+<p>Some indications on how to create a PR:</p>
+<ol class="arabic simple">
+<li>The title of the PR should be as informative as possible about the modifications that have been done to the project (as it will be used in the forthcoming changelog). Adding some prefixes can also be useful (from the nipype documentation, but seems standard):</li>
+</ol>
+<ul class="simple">
+<li>[ENH] for enhancements</li>
+<li>[FIX] for bug fixes</li>
+<li>[TST] for new or updated tests</li>
+<li>[DOC] for new or updated documentation</li>
+<li>[STY] for stylistic changes</li>
+<li>[REF] for refactoring existing code</li>
+</ul>
+<ol class="arabic simple" start="2">
+<li>It is also good practice to reduce as few as possible the number of commit messages. One standard way to do it is to use the rebase command, that allows to have a linear commit history. However, rebase can be tricky sometimes, in particular if several contributors have worked on a pull request. It is sometimes necessary (and nothing to be ashamed of!) to make a temporary copy, stat from a fresh version, and commit all your changes at once after creating a new branch. Here the typical way of rebasing your code:</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git fetch uptream
+git rebase -i upstream/master
+</pre></div>
+</div>
+<p>Here, all your commits will appear in a list. Normally you should keep (i.e. “pick” or “p”) the oldest one (i.e. the one at the top of the list) and “fixup” (or “f”) all remaining commits. If you are not satisfied of the commit message of the first commit, you can use “reword” (or “r”) to reword the commit message that will be kept. You then will be asked to force-push your rebased version</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git push -f origin my_new_feature
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li>Once you are happy with all the previous steps, you can add a [MRG] for specifying that your branch is now ready to be merged, and create the PR (normally github automatically propose to create a PR when a new branch have been detected). Typically the PR should be from my_github_account:my_new_feature to macatools:master</li>
+<li>A PR requires both automated checking and  “manual” reviewing. The automated checking corresponds to the automated checks, mostly unit tests and coverage. The manual reviewing is not mandatory, but highly recommended, as it is good practice that the merging is done by someone different than the person requesting the PR.</li>
+<li>Once the PR is merged, you may delete the branch directly on your remote (i.e. your github account) as proposed by github. It is also good practice to delete the branch of local copy, and get the latest version in your master branch. Hence your local copy is similar to what you would have if you just cloned the newest master version of upstream.</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout master
+git pull upstream master
+git branch -D my_new_feature
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

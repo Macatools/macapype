@@ -58,11 +58,13 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../install.html">How to install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../docker_install.html">docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
 </li>
@@ -134,25 +136,33 @@
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">logging</span><span class="p">,</span> <span class="n">LooseVersion</span>
 <span class="kn">from</span> <span class="nn">...utils.provenance</span> <span class="kn">import</span> <span class="n">write_provenance</span>
 <span class="kn">from</span> <span class="nn">...utils.misc</span> <span class="kn">import</span> <span class="n">str2bool</span><span class="p">,</span> <span class="n">rgetcwd</span>
-<span class="kn">from</span> <span class="nn">...utils.filemanip</span> <span class="kn">import</span> <span class="p">(</span><span class="n">split_filename</span><span class="p">,</span> <span class="n">which</span><span class="p">,</span> <span class="n">get_dependencies</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span><span class="p">,</span> <span class="n">which</span><span class="p">,</span> <span class="n">get_dependencies</span>
 <span class="kn">from</span> <span class="nn">...utils.subprocess</span> <span class="kn">import</span> <span class="n">run_command</span>
 
 <span class="kn">from</span> <span class="nn">...external.due</span> <span class="kn">import</span> <span class="n">due</span>
 
 <span class="kn">from</span> <span class="nn">.traits_extension</span> <span class="kn">import</span> <span class="n">traits</span><span class="p">,</span> <span class="n">isdefined</span>
-<span class="kn">from</span> <span class="nn">.specs</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">,</span> <span class="n">CommandLineInputSpec</span><span class="p">,</span>
-                    <span class="n">StdOutCommandLineInputSpec</span><span class="p">,</span> <span class="n">MpiCommandLineInputSpec</span><span class="p">,</span>
-                    <span class="n">get_filecopy_info</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.support</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Bunch</span><span class="p">,</span> <span class="n">InterfaceResult</span><span class="p">,</span> <span class="n">NipypeInterfaceError</span><span class="p">,</span>
-                      <span class="n">format_help</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.specs</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseInterfaceInputSpec</span><span class="p">,</span>
+    <span class="n">CommandLineInputSpec</span><span class="p">,</span>
+    <span class="n">StdOutCommandLineInputSpec</span><span class="p">,</span>
+    <span class="n">MpiCommandLineInputSpec</span><span class="p">,</span>
+    <span class="n">get_filecopy_info</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.support</span> <span class="kn">import</span> <span class="n">Bunch</span><span class="p">,</span> <span class="n">InterfaceResult</span><span class="p">,</span> <span class="n">NipypeInterfaceError</span><span class="p">,</span> <span class="n">format_help</span>
 
-<span class="n">iflogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;nipype.interface&#39;</span><span class="p">)</span>
+<span class="n">iflogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;nipype.interface&quot;</span><span class="p">)</span>
 
 <span class="n">VALID_TERMINAL_OUTPUT</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="s1">&#39;allatonce&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;file_split&#39;</span><span class="p">,</span> <span class="s1">&#39;file_stdout&#39;</span><span class="p">,</span> <span class="s1">&#39;file_stderr&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;none&#39;</span>
+    <span class="s2">&quot;stream&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;allatonce&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_split&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_stdout&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_stderr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;none&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="n">__docformat__</span> <span class="o">=</span> <span class="s1">&#39;restructuredtext&#39;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s2">&quot;restructuredtext&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">Interface</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -221,16 +231,14 @@
 <span class="sd">        Necessary for pipeline operation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s1">&#39;_get_filecopy_info member of Interface was deprecated &#39;</span>
-            <span class="s1">&#39;in nipype-1.1.6 and will be removed in 1.2.0&#39;</span><span class="p">)</span>
+            <span class="s2">&quot;_get_filecopy_info member of Interface was deprecated &quot;</span>
+            <span class="s2">&quot;in nipype-1.1.6 and will be removed in 1.2.0&quot;</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">get_filecopy_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">BaseInterface</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implements common interface functionality.</span>
-
-<span class="sd">    Implements</span>
-<span class="sd">    ----------</span>
+    <span class="sd">&quot;&quot;&quot;Implement common interface functionality.</span>
 
 <span class="sd">    * Initializes inputs/outputs from input_spec/output_spec</span>
 <span class="sd">    * Provides help based on input_spec and output_spec</span>
@@ -243,20 +251,22 @@
 
 <span class="sd">    This class cannot be instantiated.</span>
 
-
-<span class="sd">    Relevant Interface attributes</span>
-<span class="sd">    -----------------------------</span>
-
-<span class="sd">    ``input_spec`` points to the traited class for the inputs</span>
-<span class="sd">    ``output_spec`` points to the traited class for the outputs</span>
-<span class="sd">    ``_redirect_x`` should be set to ``True`` when the interface requires</span>
-<span class="sd">      connecting to a ``$DISPLAY`` (default is ``False``).</span>
-<span class="sd">    ``resource_monitor`` if ``False`` prevents resource-monitoring this</span>
-<span class="sd">      interface, if ``True`` monitoring will be enabled IFF the general</span>
-<span class="sd">      Nipype config is set on (``resource_monitor = true``).</span>
-
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_spec: :obj:`nipype.interfaces.base.specs.TraitedSpec`</span>
+<span class="sd">        points to the traited class for the inputs</span>
+<span class="sd">    output_spec: :obj:`nipype.interfaces.base.specs.TraitedSpec`</span>
+<span class="sd">        points to the traited class for the outputs</span>
+<span class="sd">    _redirect_x: bool</span>
+<span class="sd">        should be set to ``True`` when the interface requires</span>
+<span class="sd">        connecting to a ``$DISPLAY`` (default is ``False``).</span>
+<span class="sd">    resource_monitor: bool</span>
+<span class="sd">        If ``False``, prevents resource-monitoring this interface</span>
+<span class="sd">        If ``True`` monitoring will be enabled IFF the general</span>
+<span class="sd">        Nipype config is set on (``resource_monitor = true``).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">BaseInterfaceInputSpec</span>
     <span class="n">_version</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_additional_metadata</span> <span class="o">=</span> <span class="p">[]</span>
@@ -265,16 +275,20 @@
     <span class="n">resource_monitor</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Enabled for this interface IFF enabled in the config</span>
     <span class="n">_etelemetry_version_data</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource_monitor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ignore_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;execution&#39;</span><span class="p">,</span> <span class="s1">&#39;check_version&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource_monitor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;execution&quot;</span><span class="p">,</span> <span class="s2">&quot;check_version&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="s2">&quot;NIPYPE_NO_ET&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
+        <span class="p">):</span>
             <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">check_latest_version</span>
+
             <span class="k">if</span> <span class="n">BaseInterface</span><span class="o">.</span><span class="n">_etelemetry_version_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">BaseInterface</span><span class="o">.</span><span class="n">_etelemetry_version_data</span> <span class="o">=</span> <span class="n">check_latest_version</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_spec</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s1">&#39;No input_spec in class: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No input_spec in class: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_spec</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore_exception</span> <span class="o">=</span> <span class="n">ignore_exception</span>
@@ -284,12 +298,6 @@
 
         <span class="k">if</span> <span class="n">from_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_inputs_from_json</span><span class="p">(</span><span class="n">from_file</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">from_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">from_dict</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -308,34 +316,42 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">requires</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="ow">not</span> <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
-                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">requires</span>
+                <span class="ow">not</span> <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">requires</span>
             <span class="p">]</span>
             <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="n">isdefined</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">fmt</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires values for inputs </span><span class="si">%s</span><span class="s2"> because &#39;</span><span class="si">%s</span><span class="s2">&#39; is set. &quot;</span>
-                           <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span><span class="p">)</span>
+                    <span class="n">fmt</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires values for inputs </span><span class="si">%s</span><span class="s2"> because &#39;</span><span class="si">%s</span><span class="s2">&#39; is set. &quot;</span>
+                        <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">fmt</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires a value for input </span><span class="si">%s</span><span class="s2"> because &#39;</span><span class="si">%s</span><span class="s2">&#39; is set. &quot;</span>
-                           <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span><span class="p">)</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="n">fmt</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                             <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">req</span> <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">requires</span><span class="p">),</span>
-                             <span class="n">name</span><span class="p">,</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                    <span class="n">fmt</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires a value for input </span><span class="si">%s</span><span class="s2"> because &#39;</span><span class="si">%s</span><span class="s2">&#39; is set. &quot;</span>
+                        <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span>
+                    <span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">fmt</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">req</span> <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">requires</span><span class="p">),</span>
+                    <span class="n">name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_xor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if mutually exclusive inputs are satisfied</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">xor</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">xor</span>
-            <span class="p">]</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">xor</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">isdefined</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires a value for one of the inputs &#39;</span><span class="si">%s</span><span class="s2">&#39;. &quot;</span>
-                       <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span> <span class="o">%</span>
-                       <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">xor</span><span class="p">),</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires a value for one of the inputs &#39;</span><span class="si">%s</span><span class="s2">&#39;. &quot;</span>
+                    <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">xor</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_mandatory_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -345,15 +361,17 @@
             <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_xor</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">isdefined</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">xor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires a value for input &#39;</span><span class="si">%s</span><span class="s2">&#39;. &quot;</span>
-                       <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span> <span class="o">%</span>
-                       <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> requires a value for input &#39;</span><span class="si">%s</span><span class="s2">&#39;. &quot;</span>
+                    <span class="s2">&quot;For a list of required inputs, see </span><span class="si">%s</span><span class="s2">.help()&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">isdefined</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_check_requires</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="n">mandatory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transient</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="n">mandatory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transient</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_requires</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_check_version_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_object</span><span class="p">,</span> <span class="n">raise_exception</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -367,16 +385,16 @@
         <span class="k">if</span> <span class="n">names</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
             <span class="n">version</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-                <span class="n">min_ver</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">trait_object</span><span class="o">.</span><span class="n">traits</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">min_ver</span><span class="p">))</span>
+                <span class="n">min_ver</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">trait_object</span><span class="o">.</span><span class="n">traits</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">min_ver</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">min_ver</span> <span class="o">&gt;</span> <span class="n">version</span><span class="p">:</span>
                     <span class="n">unavailable_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">trait_object</span><span class="p">,</span> <span class="n">name</span><span class="p">)):</span>
                         <span class="k">continue</span>
                     <span class="k">if</span> <span class="n">raise_exception</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                            <span class="s1">&#39;Trait </span><span class="si">%s</span><span class="s1"> (</span><span class="si">%s</span><span class="s1">) (version </span><span class="si">%s</span><span class="s1"> &lt; required </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span>
-                            <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">min_ver</span><span class="p">))</span>
+                            <span class="s2">&quot;Trait </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) (version </span><span class="si">%s</span><span class="s2"> &lt; required </span><span class="si">%s</span><span class="s2">)&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">min_ver</span><span class="p">)</span>
+                        <span class="p">)</span>
 
         <span class="c1"># check maximum version</span>
         <span class="n">check</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_ver</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
@@ -384,16 +402,16 @@
         <span class="k">if</span> <span class="n">names</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
             <span class="n">version</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-                <span class="n">max_ver</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">trait_object</span><span class="o">.</span><span class="n">traits</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">max_ver</span><span class="p">))</span>
+                <span class="n">max_ver</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">trait_object</span><span class="o">.</span><span class="n">traits</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">max_ver</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">max_ver</span> <span class="o">&lt;</span> <span class="n">version</span><span class="p">:</span>
                     <span class="n">unavailable_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">trait_object</span><span class="p">,</span> <span class="n">name</span><span class="p">)):</span>
                         <span class="k">continue</span>
                     <span class="k">if</span> <span class="n">raise_exception</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                            <span class="s1">&#39;Trait </span><span class="si">%s</span><span class="s1"> (</span><span class="si">%s</span><span class="s1">) (version </span><span class="si">%s</span><span class="s1"> &gt; required </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span>
-                            <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">max_ver</span><span class="p">))</span>
+                            <span class="s2">&quot;Trait </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) (version </span><span class="si">%s</span><span class="s2"> &gt; required </span><span class="si">%s</span><span class="s2">)&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">max_ver</span><span class="p">)</span>
+                        <span class="p">)</span>
         <span class="k">return</span> <span class="n">unavailable_traits</span>
 
     <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
@@ -405,7 +423,7 @@
         <span class="sd">&quot;&quot;&quot; Add the interface references to the duecredit citations</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">references_</span><span class="p">:</span>
-            <span class="n">r</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
+            <span class="n">r</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
             <span class="n">due</span><span class="o">.</span><span class="n">cite</span><span class="p">(</span><span class="o">**</span><span class="n">r</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_exception</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
@@ -416,14 +434,15 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-
 <span class="sd">        cwd : specify a folder where the interface should be run</span>
 <span class="sd">        inputs : allows the interface settings to be updated</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        results :  an InterfaceResult object containing a copy of the instance</span>
-<span class="sd">        that was executed, provenance information and, if successful, results</span>
+<span class="sd">        results :  :obj:`nipype.interfaces.base.support.InterfaceResult`</span>
+<span class="sd">            A copy of the instance that was executed, provenance information and,</span>
+<span class="sd">            if successful, results</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">...utils.profiler</span> <span class="kn">import</span> <span class="n">ResourceMonitor</span>
 
@@ -447,10 +466,11 @@
 
         <span class="c1"># initialize provenance tracking</span>
         <span class="n">store_provenance</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution&#39;</span><span class="p">,</span> <span class="s1">&#39;write_provenance&#39;</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">))</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;execution&quot;</span><span class="p">,</span> <span class="s2">&quot;write_provenance&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redirect_x</span><span class="p">:</span>
-            <span class="n">env</span><span class="p">[</span><span class="s1">&#39;DISPLAY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_display</span><span class="p">()</span>
+            <span class="n">env</span><span class="p">[</span><span class="s2">&quot;DISPLAY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_display</span><span class="p">()</span>
 
         <span class="n">runtime</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
             <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span>
@@ -462,17 +482,19 @@
             <span class="n">endTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">platform</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">platform</span><span class="p">(),</span>
             <span class="n">hostname</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">(),</span>
-            <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+            <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">runtime_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">dictcopy</span><span class="p">())</span>
 
         <span class="n">mon_sp</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">enable_rm</span><span class="p">:</span>
-            <span class="n">mon_freq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution&#39;</span><span class="p">,</span> <span class="s1">&#39;resource_monitor_frequency&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">mon_freq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;execution&quot;</span><span class="p">,</span> <span class="s2">&quot;resource_monitor_frequency&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
             <span class="n">proc_pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
             <span class="n">iflogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s1">&#39;Creating a ResourceMonitor on a </span><span class="si">%s</span><span class="s1"> interface, PID=</span><span class="si">%d</span><span class="s1">.&#39;</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">proc_pid</span><span class="p">)</span>
+                <span class="s2">&quot;Creating a ResourceMonitor on a </span><span class="si">%s</span><span class="s2"> interface, PID=</span><span class="si">%d</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">proc_pid</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">mon_sp</span> <span class="o">=</span> <span class="n">ResourceMonitor</span><span class="p">(</span><span class="n">proc_pid</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">mon_freq</span><span class="p">)</span>
             <span class="n">mon_sp</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
@@ -487,38 +509,37 @@
             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_outputs</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">traceback</span>
+
             <span class="c1"># Retrieve the maximum info fast</span>
             <span class="n">runtime</span><span class="o">.</span><span class="n">traceback</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
             <span class="c1"># Gather up the exception arguments and append nipype info.</span>
-            <span class="n">exc_args</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">()</span>
+            <span class="n">exc_args</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">()</span>
             <span class="n">exc_args</span> <span class="o">+=</span> <span class="p">(</span>
-                <span class="s1">&#39;An exception of type </span><span class="si">%s</span><span class="s1"> occurred while running interface </span><span class="si">%s</span><span class="s1">.&#39;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logging&#39;</span><span class="p">,</span> <span class="s1">&#39;interface_level&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;info&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span>
-                <span class="n">exc_args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;Inputs: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">),</span> <span class="p">)</span>
+                <span class="s2">&quot;An exception of type </span><span class="si">%s</span><span class="s2"> occurred while running interface </span><span class="si">%s</span><span class="s2">.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logging&quot;</span><span class="p">,</span> <span class="s2">&quot;interface_level&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span>
+                <span class="n">exc_args</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot;Inputs: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">),)</span>
 
-            <span class="n">runtime</span><span class="o">.</span><span class="n">traceback_args</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">exc_args</span><span class="p">]),</span> <span class="p">)</span>
+            <span class="n">runtime</span><span class="o">.</span><span class="n">traceback_args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">exc_args</span><span class="p">]),)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_exception</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">runtime</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">runtime_attrs</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">dictcopy</span><span class="p">()):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> interface failed to return valid &quot;</span>
-                                   <span class="s2">&quot;runtime object&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                       <span class="n">interface</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> interface failed to return valid &quot;</span>
+                    <span class="s2">&quot;runtime object&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="p">)</span>
             <span class="c1"># This needs to be done always</span>
             <span class="n">runtime</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
             <span class="n">timediff</span> <span class="o">=</span> <span class="n">parseutc</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">endTime</span><span class="p">)</span> <span class="o">-</span> <span class="n">parseutc</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span>
-            <span class="n">runtime</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">timediff</span><span class="o">.</span><span class="n">days</span> <span class="o">*</span> <span class="mi">86400</span> <span class="o">+</span> <span class="n">timediff</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span>
-                                <span class="n">timediff</span><span class="o">.</span><span class="n">microseconds</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">)</span>
+            <span class="n">runtime</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">timediff</span><span class="o">.</span><span class="n">days</span> <span class="o">*</span> <span class="mi">86400</span> <span class="o">+</span> <span class="n">timediff</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span> <span class="n">timediff</span><span class="o">.</span><span class="n">microseconds</span> <span class="o">/</span> <span class="mf">1e6</span>
+            <span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">InterfaceResult</span><span class="p">(</span>
-                <span class="n">interface</span><span class="p">,</span>
-                <span class="n">runtime</span><span class="p">,</span>
-                <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
-                <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
-                <span class="n">provenance</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">interface</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span> <span class="n">provenance</span><span class="o">=</span><span class="kc">None</span>
+            <span class="p">)</span>
 
             <span class="c1"># Add provenance (if required)</span>
             <span class="k">if</span> <span class="n">store_provenance</span><span class="p">:</span>
@@ -528,23 +549,24 @@
             <span class="c1"># Make sure runtime profiler is shut down</span>
             <span class="k">if</span> <span class="n">enable_rm</span><span class="p">:</span>
                 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
                 <span class="n">mon_sp</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
                 <span class="n">runtime</span><span class="o">.</span><span class="n">mem_peak_gb</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">runtime</span><span class="o">.</span><span class="n">cpu_percent</span> <span class="o">=</span> <span class="kc">None</span>
 
                 <span class="c1"># Read .prof file in and set runtime values</span>
-                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mon_sp</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mon_sp</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
                     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
                     <span class="n">runtime</span><span class="o">.</span><span class="n">mem_peak_gb</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1024</span>
                     <span class="n">runtime</span><span class="o">.</span><span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
                     <span class="n">runtime</span><span class="o">.</span><span class="n">prof_dict</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">vals</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-                        <span class="s1">&#39;cpus&#39;</span><span class="p">:</span> <span class="n">vals</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-                        <span class="s1">&#39;rss_GiB&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">vals</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-                        <span class="s1">&#39;vms_GiB&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">vals</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">vals</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                        <span class="s2">&quot;cpus&quot;</span><span class="p">:</span> <span class="n">vals</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                        <span class="s2">&quot;rss_GiB&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">vals</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                        <span class="s2">&quot;vms_GiB&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">vals</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
                     <span class="p">}</span>
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">syscwd</span><span class="p">)</span>
 
@@ -575,18 +597,23 @@
             <span class="n">na_names</span> <span class="o">=</span> <span class="n">aggregate_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">_na_outputs</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">na_names</span><span class="p">:</span>
                 <span class="c1"># XXX Change to TypeError in Nipype 2.0</span>
-                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2">Output trait(s) </span><span class="si">%s</span><span class="s2"> not available in version </span><span class="si">%s</span><span class="s2"> of interface </span><span class="si">%s</span><span class="s2">.</span><span class="se">\</span>
-<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">na_names</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                    <span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">Output trait(s) %s not available in version %s of interface %s.\</span>
+<span class="sd">&quot;&quot;&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">na_names</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">aggregate_names</span><span class="p">:</span>  <span class="c1"># Final aggregation</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">predicted_outputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s1">&#39;an existing&#39;</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">):</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No such file or directory &#39;</span><span class="si">%s</span><span class="s2">&#39; for output &#39;</span><span class="si">%s</span><span class="s2">&#39; of a </span><span class="si">%s</span><span class="s2"> interface&quot;</span> <span class="o">%</span> \
-                        <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;an existing&quot;</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">):</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;No such file or directory &#39;</span><span class="si">%s</span><span class="s2">&#39; for output &#39;</span><span class="si">%s</span><span class="s2">&#39; of a </span><span class="si">%s</span><span class="s2"> interface&quot;</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                    <span class="p">)</span>
                     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">error</span>
         <span class="k">return</span> <span class="n">outputs</span>
@@ -594,9 +621,10 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution&#39;</span><span class="p">,</span> <span class="s1">&#39;stop_on_unknown_version&#39;</span><span class="p">)):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Interface </span><span class="si">%s</span><span class="s1"> has no version information&#39;</span> <span class="o">%</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;execution&quot;</span><span class="p">,</span> <span class="s2">&quot;stop_on_unknown_version&quot;</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Interface </span><span class="si">%s</span><span class="s2"> has no version information&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
 
     <span class="k">def</span> <span class="nf">load_inputs_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -607,26 +635,22 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhandle</span><span class="p">:</span>
             <span class="n">inputs_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fhandle</span><span class="p">)</span>
 
-        <span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">inputs_dict</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">load_inputs_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_dict</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
-
         <span class="n">def_inputs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
             <span class="n">def_inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">get_traitsfree</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-        <span class="n">new_inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">from_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">def_inputs</span><span class="p">))</span>
+        <span class="n">new_inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">inputs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">def_inputs</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">new_inputs</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">from_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">inputs_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">save_inputs_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A convenient way to save current inputs to a JSON file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">get_traitsfree</span><span class="p">()</span>
-        <span class="n">iflogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;saving inputs </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhandle</span><span class="p">:</span>
+        <span class="n">iflogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;saving inputs </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhandle</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">fhandle</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_pre_run_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
@@ -665,7 +689,6 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-
 <span class="sd">    &gt;&gt;&gt; from nipype.interfaces.base import (</span>
 <span class="sd">    ...     SimpleInterface, BaseInterfaceInputSpec, TraitedSpec)</span>
 
@@ -690,11 +713,13 @@
 <span class="sd">    &gt;&gt;&gt; dbl.inputs.x = 2</span>
 <span class="sd">    &gt;&gt;&gt; dbl.run().outputs.doubled</span>
 <span class="sd">    4.0</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource_monitor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SimpleInterface</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">from_file</span><span class="o">=</span><span class="n">from_file</span><span class="p">,</span> <span class="n">resource_monitor</span><span class="o">=</span><span class="n">resource_monitor</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">from_file</span><span class="o">=</span><span class="n">from_file</span><span class="p">,</span> <span class="n">resource_monitor</span><span class="o">=</span><span class="n">resource_monitor</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -707,13 +732,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-
-<span class="sd">    command : string</span>
+<span class="sd">    command : str</span>
 <span class="sd">        define base immutable `command` you wish to run</span>
-
-<span class="sd">    args : string, optional</span>
+<span class="sd">    args : str, optional</span>
 <span class="sd">        optional arguments passed to base `command`</span>
-
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -724,7 +746,7 @@
 <span class="sd">    &gt;&gt;&gt; cli.cmdline</span>
 <span class="sd">    &#39;ls -al&#39;</span>
 
-<span class="sd">    # Use get_traitsfree() to check all inputs set</span>
+<span class="sd">    &gt;&gt;&gt; # Use get_traitsfree() to check all inputs set</span>
 <span class="sd">    &gt;&gt;&gt; pprint.pprint(cli.inputs.get_traitsfree())  # doctest:</span>
 <span class="sd">    {&#39;args&#39;: &#39;-al&#39;,</span>
 <span class="sd">     &#39;environ&#39;: {&#39;DISPLAY&#39;: &#39;:1&#39;}}</span>
@@ -735,11 +757,12 @@
 <span class="sd">    &#39;11c37f97649cd61627f4afe5136af8c0&#39;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">CommandLineInputSpec</span>
-    <span class="n">_cmd_prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">_cmd_prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">_cmd</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_version</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_terminal_output</span> <span class="o">=</span> <span class="s1">&#39;stream&#39;</span>
+    <span class="n">_terminal_output</span> <span class="o">=</span> <span class="s2">&quot;stream&quot;</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">set_default_terminal_output</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">output_type</span><span class="p">):</span>
@@ -754,18 +777,16 @@
         <span class="k">if</span> <span class="n">output_type</span> <span class="ow">in</span> <span class="n">VALID_TERMINAL_OUTPUT</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_terminal_output</span> <span class="o">=</span> <span class="n">output_type</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-                <span class="s1">&#39;Invalid terminal output_type: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_type</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Invalid terminal output_type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">output_type</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">terminal_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_environ</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Set command. Input argument takes precedence</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cmd</span> <span class="o">=</span> <span class="n">command</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_cmd&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cmd</span> <span class="o">=</span> <span class="n">command</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_cmd&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Store dependencies in runtime object</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ldd</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution&#39;</span><span class="p">,</span> <span class="s1">&#39;get_linked_libs&#39;</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ldd</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;execution&quot;</span><span class="p">,</span> <span class="s2">&quot;get_linked_libs&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing command&quot;</span><span class="p">)</span>
@@ -778,8 +799,9 @@
         <span class="sd">&quot;&quot;&quot;sets base command, immutable&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmd</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                <span class="s1">&#39;CommandLineInterface should wrap an executable, but &#39;</span>
-                <span class="s1">&#39;none has been set.&#39;</span><span class="p">)</span>
+                <span class="s2">&quot;CommandLineInterface should wrap an executable, but &quot;</span>
+                <span class="s2">&quot;none has been set.&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmd</span>
 
     <span class="nd">@property</span>
@@ -788,7 +810,7 @@
 <span class="sd">        validates arguments and generates command line&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_mandatory_inputs</span><span class="p">()</span>
         <span class="n">allargs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cmd_prefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_inputs</span><span class="p">()</span>
-        <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allargs</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">terminal_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -799,23 +821,26 @@
         <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VALID_TERMINAL_OUTPUT</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="s1">&#39;Setting invalid value &quot;</span><span class="si">%s</span><span class="s1">&quot; for terminal_output. Valid values are &#39;</span>
-                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span>
-                         <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">v</span>
-                                    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">VALID_TERMINAL_OUTPUT</span><span class="p">])))</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">VALID_TERMINAL_OUTPUT</span><span class="p">]))</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_terminal_output</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="nf">raise_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-            <span class="p">(</span><span class="s1">&#39;Command:</span><span class="se">\n</span><span class="si">{cmdline}</span><span class="se">\n</span><span class="s1">Standard output:</span><span class="se">\n</span><span class="si">{stdout}</span><span class="se">\n</span><span class="s1">&#39;</span>
-             <span class="s1">&#39;Standard error:</span><span class="se">\n</span><span class="si">{stderr}</span><span class="se">\n</span><span class="s1">Return code: </span><span class="si">{returncode}</span><span class="s1">&#39;</span>
-             <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">runtime</span><span class="o">.</span><span class="n">dictcopy</span><span class="p">()))</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Command:</span><span class="se">\n</span><span class="si">{cmdline}</span><span class="se">\n</span><span class="s2">Standard output:</span><span class="se">\n</span><span class="si">{stdout}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;Standard error:</span><span class="se">\n</span><span class="si">{stderr}</span><span class="se">\n</span><span class="s2">Return code: </span><span class="si">{returncode}</span><span class="s2">&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">runtime</span><span class="o">.</span><span class="n">dictcopy</span><span class="p">())</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_environ</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="s1">&#39;environ&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="s2">&quot;environ&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
-    <span class="k">def</span> <span class="nf">version_from_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;version_from_command member of CommandLine was &#39;</span>
-                         <span class="s1">&#39;Deprecated in nipype-1.0.0 and deleted in 1.1.0&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">version_from_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;version_from_command member of CommandLine was &quot;</span>
+            <span class="s2">&quot;Deprecated in nipype-1.0.0 and deleted in 1.1.0&quot;</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -824,7 +849,7 @@
             <span class="n">out_environ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_environ</span><span class="p">()</span>
             <span class="n">env</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">out_environ</span><span class="p">)</span>
             <span class="n">proc</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
-                <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">cmd</span><span class="p">,</span> <span class="n">flag</span><span class="p">)),</span>
+                <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">cmd</span><span class="p">,</span> <span class="n">flag</span><span class="p">)),</span>
                 <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
                 <span class="n">stdout</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
@@ -833,7 +858,7 @@
             <span class="n">o</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">o</span>
 
-    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">correct_return_codes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">)):</span>
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">correct_return_codes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,)):</span>
         <span class="sd">&quot;&quot;&quot;Execute command via subprocess</span>
 
 <span class="sd">        Parameters</span>
@@ -842,7 +867,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        runtime : updated runtime information</span>
+<span class="sd">        runtime :</span>
+<span class="sd">            updated runtime information</span>
 <span class="sd">            adds stdout, stderr, merged, cmdline, dependencies, command_path</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -861,16 +887,18 @@
         <span class="k">if</span> <span class="n">cmd_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
                 <span class="s1">&#39;No command &quot;</span><span class="si">%s</span><span class="s1">&quot; found on host </span><span class="si">%s</span><span class="s1">. Please check that the &#39;</span>
-                <span class="s1">&#39;corresponding package is installed.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">executable_name</span><span class="p">,</span>
-                                                         <span class="n">runtime</span><span class="o">.</span><span class="n">hostname</span><span class="p">))</span>
+                <span class="s2">&quot;corresponding package is installed.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">executable_name</span><span class="p">,</span> <span class="n">runtime</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="n">runtime</span><span class="o">.</span><span class="n">command_path</span> <span class="o">=</span> <span class="n">cmd_path</span>
-        <span class="n">runtime</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="p">(</span><span class="n">get_dependencies</span><span class="p">(</span><span class="n">executable_name</span><span class="p">,</span>
-                                                 <span class="n">runtime</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ldd</span> <span class="k">else</span> <span class="s1">&#39;&lt;skipped&gt;&#39;</span><span class="p">)</span>
+        <span class="n">runtime</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">get_dependencies</span><span class="p">(</span><span class="n">executable_name</span><span class="p">,</span> <span class="n">runtime</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ldd</span>
+            <span class="k">else</span> <span class="s2">&quot;&lt;skipped&gt;&quot;</span>
+        <span class="p">)</span>
         <span class="n">runtime</span> <span class="o">=</span> <span class="n">run_command</span><span class="p">(</span><span class="n">runtime</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">terminal_output</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">runtime</span><span class="o">.</span><span class="n">returncode</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
-                <span class="n">runtime</span><span class="o">.</span><span class="n">returncode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">correct_return_codes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">runtime</span><span class="o">.</span><span class="n">returncode</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">runtime</span><span class="o">.</span><span class="n">returncode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">correct_return_codes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">raise_exception</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">runtime</span>
@@ -881,15 +909,15 @@
 <span class="sd">        Formats a trait containing argstr metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">argstr</span> <span class="o">=</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">argstr</span>
-        <span class="n">iflogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">iflogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;%&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argstr</span><span class="p">:</span>
             <span class="c1"># Boolean options have no format string. Just append options if True.</span>
             <span class="k">return</span> <span class="n">argstr</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="c1"># traits.Either turns into traits.TraitCompound and does not have any</span>
         <span class="c1"># inner_traits</span>
-        <span class="k">elif</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">)</span> \
-            <span class="ow">or</span> <span class="p">(</span><span class="n">trait_spec</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">TraitCompound</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">trait_spec</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">TraitCompound</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="p">):</span>
             <span class="c1"># This is a bit simple-minded at present, and should be</span>
             <span class="c1"># construed as the default. If more sophisticated behavior</span>
             <span class="c1"># is needed, it can be accomplished with metadata (e.g.</span>
@@ -899,13 +927,13 @@
             <span class="c1"># Depending on whether we stick with traitlets, and whether or</span>
             <span class="c1"># not we beef up traitlets.List, we may want to put some</span>
             <span class="c1"># type-checking code here as well</span>
-            <span class="n">sep</span> <span class="o">=</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">sep</span> <span class="k">if</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">sep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39; &#39;</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">sep</span> <span class="k">if</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">sep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span>
 
-            <span class="k">if</span> <span class="n">argstr</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;...&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">argstr</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">):</span>
                 <span class="c1"># repeatable option</span>
                 <span class="c1"># --id %d... will expand to</span>
                 <span class="c1"># --id 1 --id 2 --id 3 etc.,.</span>
-                <span class="n">argstr</span> <span class="o">=</span> <span class="n">argstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">argstr</span> <span class="o">=</span> <span class="n">argstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">argstr</span> <span class="o">%</span> <span class="n">elt</span> <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">value</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">argstr</span> <span class="o">%</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">elt</span><span class="p">)</span> <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span>
@@ -925,13 +953,16 @@
                 <span class="k">return</span> <span class="n">retval</span>
 
             <span class="c1"># Do not generate filename when excluded by other inputs</span>
-            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
-                   <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">xor</span> <span class="ow">or</span> <span class="p">()):</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">xor</span> <span class="ow">or</span> <span class="p">()</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="n">retval</span>
 
             <span class="c1"># Do not generate filename when required fields are missing</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
-                       <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">requires</span> <span class="ow">or</span> <span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">requires</span> <span class="ow">or</span> <span class="p">()</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="n">retval</span>
 
             <span class="k">if</span> <span class="n">isdefined</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">retval</span><span class="p">:</span>
@@ -944,15 +975,14 @@
             <span class="n">ns</span> <span class="o">=</span> <span class="n">trait_spec</span><span class="o">.</span><span class="n">name_source</span>
             <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ns</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s1">&#39;Only one name_source per trait is allowed&#39;</span><span class="p">)</span>
+                    <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Only one name_source per trait is allowed&quot;</span><span class="p">)</span>
                 <span class="n">ns</span> <span class="o">=</span> <span class="n">ns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ns</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;name_source of </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1"> trait should be an input trait &#39;</span>
-                    <span class="s1">&#39;name, but a type </span><span class="si">{}</span><span class="s1"> object was found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ns</span><span class="p">)))</span>
+                    <span class="s2">&quot;name_source of &#39;</span><span class="si">{}</span><span class="s2">&#39; trait should be an input trait &quot;</span>
+                    <span class="s2">&quot;name, but a type </span><span class="si">{}</span><span class="s2"> object was found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ns</span><span class="p">))</span>
+                <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">ns</span><span class="p">)):</span>
                 <span class="n">name_source</span> <span class="o">=</span> <span class="n">ns</span>
@@ -967,8 +997,7 @@
                     <span class="n">base</span> <span class="o">=</span> <span class="n">source</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">NipypeInterfaceError</span><span class="p">(</span>
-                        <span class="s1">&#39;Mutually pointing name_sources&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">NipypeInterfaceError</span><span class="p">(</span><span class="s2">&quot;Mutually pointing name_sources&quot;</span><span class="p">)</span>
 
                 <span class="n">chain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filename_from_source</span><span class="p">(</span><span class="n">ns</span><span class="p">,</span> <span class="n">chain</span><span class="p">)</span>
@@ -1056,7 +1085,7 @@
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">StdOutCommandLineInputSpec</span>
 
     <span class="k">def</span> <span class="nf">_gen_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gen_outfilename</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;out_file&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gen_outfilename</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;out_file&quot;</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_gen_outfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -1078,7 +1107,9 @@
 <span class="sd">    &gt;&gt;&gt; mpi_cli.inputs.n_procs = 8</span>
 <span class="sd">    &gt;&gt;&gt; mpi_cli.cmdline</span>
 <span class="sd">    &#39;mpiexec -n 8 my_mpi_prog -v&#39;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">MpiCommandLineInputSpec</span>
 
     <span class="nd">@property</span>
@@ -1086,11 +1117,11 @@
         <span class="sd">&quot;&quot;&quot;Adds &#39;mpiexec&#39; to begining of command&quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">use_mpi</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;mpiexec&#39;</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mpiexec&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_procs</span><span class="p">:</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-n </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_procs</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-n </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_procs</span><span class="p">)</span>
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">MpiCommandLine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">cmdline</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">SEMLikeCommandLine</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
@@ -1110,10 +1141,8 @@
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="n">corresponding_input</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">isdefined</span><span class="p">(</span><span class="n">corresponding_input</span><span class="p">):</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">corresponding_input</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
-                        <span class="ow">and</span> <span class="n">corresponding_input</span><span class="p">):</span>
-                    <span class="n">outputs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> \
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_outputs_filenames</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">corresponding_input</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">corresponding_input</span><span class="p">:</span>
+                    <span class="n">outputs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_outputs_filenames</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">corresponding_input</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                         <span class="n">outputs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -1141,18 +1170,23 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">LibraryBaseInterface</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">check_import</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">pkgutil</span>
+
             <span class="n">failed_imports</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pkg</span><span class="p">,)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imports</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">find_loader</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">failed_imports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">failed_imports</span><span class="p">:</span>
-                <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Unable to import </span><span class="si">%s</span><span class="s1">; </span><span class="si">%s</span><span class="s1"> interface may fail to &#39;</span>
-                                 <span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="n">failed_imports</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="n">iflogger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Unable to import </span><span class="si">%s</span><span class="s2">; </span><span class="si">%s</span><span class="s2"> interface may fail to &quot;</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span>
+                    <span class="n">failed_imports</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">importlib</span>
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pkg</span><span class="p">)</span><span class="o">.</span><span class="n">__version__</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
@@ -1173,14 +1207,15 @@
                     <span class="n">clout</span> <span class="o">=</span> <span class="n">CommandLine</span><span class="p">(</span>
                         <span class="n">command</span><span class="o">=</span><span class="n">klass</span><span class="o">.</span><span class="n">version_cmd</span><span class="p">,</span>
                         <span class="n">resource_monitor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">terminal_output</span><span class="o">=</span><span class="s1">&#39;allatonce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+                        <span class="n">terminal_output</span><span class="o">=</span><span class="s2">&quot;allatonce&quot;</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">None</span>
 
                 <span class="n">raw_info</span> <span class="o">=</span> <span class="n">clout</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">stdout</span>
             <span class="k">elif</span> <span class="n">klass</span><span class="o">.</span><span class="n">version_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">klass</span><span class="o">.</span><span class="n">version_file</span><span class="p">,</span> <span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fobj</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">klass</span><span class="o">.</span><span class="n">version_file</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fobj</span><span class="p">:</span>
                         <span class="n">raw_info</span> <span class="o">=</span> <span class="n">fobj</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">None</span>
@@ -1207,7 +1242,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-12.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-20.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

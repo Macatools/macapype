@@ -16,7 +16,6 @@ macapype.nodes.prepare.CropVolume
       ~CropVolume.__init__
       ~CropVolume.aggregate_outputs
       ~CropVolume.help
-      ~CropVolume.load_inputs_from_dict
       ~CropVolume.load_inputs_from_json
       ~CropVolume.raise_exception
       ~CropVolume.run

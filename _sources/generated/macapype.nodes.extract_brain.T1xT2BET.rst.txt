@@ -16,7 +16,6 @@ macapype.nodes.extract\_brain.T1xT2BET
       ~T1xT2BET.__init__
       ~T1xT2BET.aggregate_outputs
       ~T1xT2BET.help
-      ~T1xT2BET.load_inputs_from_dict
       ~T1xT2BET.load_inputs_from_json
       ~T1xT2BET.raise_exception
       ~T1xT2BET.run
