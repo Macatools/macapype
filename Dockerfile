@@ -183,15 +183,35 @@ WORKDIR /root/packages/macapype
 RUN git checkout master
 RUN python3 setup.py develop
 
+RUN echo $(which python)
+RUN echo $(which python3)
+
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/bin/pip3 /usr/bin/pip
+#
+# RUN \
+#    echo 'alias python="/usr/bin/python3"' >> /root/.bashrc && \
+#    echo 'alias pip="/usr/bin/pip3"' >> /root/.bashrc
+#
+# RUN /bin/bash -c "source /root/.bashrc"
+
+RUN echo $(which python)
+RUN echo $(which python3)
+
+RUN echo $(python --version)
 #####################################################################################################
 ############################################ extra (exemple of a line to launch) ####################
 #####################################################################################################
 
-## pipeline regis
-#docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/workflows/segment_pnh_kepkee.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+# using docker image on DockerHub
+# docker pull macatools/macapype:latest
 
-### pipepline kepkee # takes ~ 5 hours to run
-# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/workflows/segment_pnh_regis.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+# docker run -ti -v /home/INT/meunier.d/Data/Data-Hackaton/Data_CIRMf_INT/PRIME-DE/site-amu:/data/macapype macatools/macapype:latest python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
 
-## test_denoise
-# docker run -ti -v ~/Data_maca/Primavoice:/data/macapype macapype python3 /root/packages/macapype/workflows/test_denoise.py -data /data/macapype -out /data/macapype -subjects Apache -sess ses-01
+# Building your image from the Dockerfile
+# docker built -t macapype_docker
+
+# docker run -ti -v /home/INT/meunier.d/Data/Data-Hackaton/Data_CIRMf_INT/PRIME-DE/site-amu:/data/macapype macapype_docker python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
+
+
+
