@@ -170,7 +170,7 @@ def create_register_NMT_pipe(params_template, params={},
 
     # N4 intensity normalization over brain
     norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                params = parse_key(params, "norm_intensity")
+                                params = parse_key(params, "norm_intensity"),
                                 name='norm_intensity')
 
     register_NMT_pipe.connect(inputnode, 'T1',

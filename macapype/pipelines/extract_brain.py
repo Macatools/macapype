@@ -47,15 +47,15 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
         name='inputnode')
 
     # atlas_brex
-    atlas_brex = NodeParams(AtlasBREX(), name='atlas_brex')
+    atlas_brex = NodeParams(AtlasBREX(),
+                            parse_key(params, "atlas_brex"),
+                            name='atlas_brex')
 
     extract_pipe.connect(inputnode, "restore_T1",
                          atlas_brex, 't1_restored_file')
 
     atlas_brex.inputs.NMT_file = params_template["template_head"]
     atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]
-
-    atlas_brex.load_inputs_from_dict(params["atlas_brex"])
 
     extract_pipe.connect(
             inputnode, ("indiv_params", parse_key, "atlas_brex"),

@@ -186,7 +186,7 @@ def create_old_segment_pipe(params_template, params={},
 
     # Eroding mask
     erode_mask = NodeParams(fsl.ErodeImage(),
-                            parse_key(params, "erode_mask")
+                            parse_key(params, "erode_mask"),
                             name="erode_mask")
 
     be_pipe.connect(tissues_union, 'out_file', erode_mask, 'in_file')

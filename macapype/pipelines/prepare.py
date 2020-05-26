@@ -176,8 +176,9 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
     elif "bet_crop" in params.keys():
         print('bet_crop is in params')
 
-        bet_crop = NodeParams(T1xT2BET(), params=parse_key(params, "bet_crop"),
-                            name='bet_crop')
+        bet_crop = NodeParams(T1xT2BET(),
+                              params=parse_key(params, "bet_crop"),
+                              name='bet_crop')
 
         # Brain extraction (unused) + Cropping
         if "reorient" in params.keys():
