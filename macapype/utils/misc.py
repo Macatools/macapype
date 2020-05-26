@@ -1,8 +1,7 @@
 # on the fly function for checking what is passed in "connect"
 # should end up in ~ nipype.utils.misc
 
-from nipype.interface.base import isdefined
-
+from nipype.interfaces.base import isdefined
 
 def show_files(files):
     print(files)
