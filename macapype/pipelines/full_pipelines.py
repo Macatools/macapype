@@ -315,38 +315,38 @@ def create_full_segment_pnh_subpipes(
     seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
 
-    seg_pipe.connect(inputnode, 'indiv_params',
+    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "data_preparation"),
                      data_preparation_pipe, 'inputnode.indiv_params')
 
-    # full extract brain pipeline (correct_bias, denoising, extract brain)
-    brain_extraction_pipe = create_brain_extraction_pipe(
-        params=parse_key(params, "brain_extraction_pipe"),
-        params_template=params_template)
+    ## full extract brain pipeline (correct_bias, denoising, extract brain)
+    #brain_extraction_pipe = create_brain_extraction_pipe(
+        #params=parse_key(params, "brain_extraction_pipe"),
+        #params_template=params_template)
 
-    seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
-                     brain_extraction_pipe, 'inputnode.preproc_T1')
-    seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
-                     brain_extraction_pipe, 'inputnode.preproc_T2')
-    seg_pipe.connect(inputnode, 'indiv_params',
-                     brain_extraction_pipe, 'inputnode.indiv_params')
+    #seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+                     #brain_extraction_pipe, 'inputnode.preproc_T1')
+    #seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+                     #brain_extraction_pipe, 'inputnode.preproc_T2')
+    #seg_pipe.connect(inputnode, 'indiv_params',
+                     #brain_extraction_pipe, 'inputnode.indiv_params')
 
-    # full_segment (restarting from the avg_align files)
-    if "brain_segment_pipe" in params.keys():
-        params_brain_segment_pipe = params["brain_segment_pipe"]
+    ## full_segment (restarting from the avg_align files)
+    #if "brain_segment_pipe" in params.keys():
+        #params_brain_segment_pipe = params["brain_segment_pipe"]
 
-        brain_segment_pipe = create_brain_segment_from_mask_pipe(
-            params_template=params_template,
-            params=params_brain_segment_pipe)
+        #brain_segment_pipe = create_brain_segment_from_mask_pipe(
+            #params_template=params_template,
+            #params=params_brain_segment_pipe)
 
-        seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
-                         brain_segment_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
-                         brain_segment_pipe, 'inputnode.preproc_T2')
-        seg_pipe.connect(brain_extraction_pipe,
-                         "extract_pipe.smooth_mask.out_file",
-                         brain_segment_pipe, "inputnode.brain_mask")
+        #seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+                         #brain_segment_pipe, 'inputnode.preproc_T1')
+        #seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+                         #brain_segment_pipe, 'inputnode.preproc_T2')
+        #seg_pipe.connect(brain_extraction_pipe,
+                         #"extract_pipe.smooth_mask.out_file",
+                         #brain_segment_pipe, "inputnode.brain_mask")
 
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         brain_segment_pipe, 'inputnode.indiv_params')
+        #seg_pipe.connect(inputnode, 'indiv_params',
+                         #brain_segment_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
