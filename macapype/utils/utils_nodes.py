@@ -1,5 +1,6 @@
 from nipype.pipeline.engine import Node
 from nipype.interfaces.io import BIDSDataGrabber
+from nipype.interfaces.base import isdefined
 
 from .misc import parse_key
 
