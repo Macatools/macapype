@@ -73,9 +73,9 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
 
 def output_exists(node, output_name):
     print (node.outputs)
-    def_outputs = list(node.outputs.keys())
+    #def_outputs = list(node.outputs.keys())
     def_outputs = list(node.outputs.get_traitsfree().keys())
-
+    print (def_outputs)
     if output_name in def_outputs:
 
         print("found {} in {}".format(output_name, node))
