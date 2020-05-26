@@ -238,7 +238,7 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         data_preparation_pipe.connect(av_T2, 'avg_img',
                                       reorient_T2_pipe, 'inputnode.image')
 
-
+    print(output_exists(inputnode, 'indiv_params'))
     print(output_key_exists(inputnode, 'indiv_params', "crop"))
     0/0
 
