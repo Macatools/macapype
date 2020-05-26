@@ -130,93 +130,93 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
                                       reorient_T2_pipe, 'inputnode.image')
 
     # Align T2 -> T1 and crop (if specified)
-    if output_key_exists(inputnode, 'indiv_params', "crop"):
-        print('crop is in params')
+    #if output_key_exists(inputnode, 'indiv_params', "crop"):
+    print('crop is in params')
 
-        # align avg T2 on avg T1
-        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-        align_T2_on_T1.inputs.dof = 6
+    # align avg T2 on avg T1
+    align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+    align_T2_on_T1.inputs.dof = 6
 
-        # cropping
-        # Crop bounding box for T1
-        crop_bb_T1 = NodeParams(fsl.ExtractROI(), name='crop_bb_T1')
+    # cropping
+    # Crop bounding box for T1
+    crop_bb_T1 = NodeParams(fsl.ExtractROI(), name='crop_bb_T1')
 
-        data_preparation_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "crop"),
-            crop_bb_T1, 'indiv_params')
+    data_preparation_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "crop"),
+        crop_bb_T1, 'indiv_params')
 
-        # Crop bounding box for T2
-        crop_bb_T2 = NodeParams(fsl.ExtractROI(), name='crop_bb_T2')
+    # Crop bounding box for T2
+    crop_bb_T2 = NodeParams(fsl.ExtractROI(), name='crop_bb_T2')
 
-        data_preparation_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "crop"),
-            crop_bb_T2, 'indiv_params')
+    data_preparation_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "crop"),
+        crop_bb_T2, 'indiv_params')
 
-        # Crop bounding box for T2
-        if "reorient" in params.keys():
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'swap_dim.out_file',
-                                          align_T2_on_T1, 'reference')
-            data_preparation_pipe.connect(reorient_T2_pipe,
-                                          'swap_dim.out_file',
-                                          align_T2_on_T1, 'in_file')
+    # Crop bounding box for T2
+    if "reorient" in params.keys():
+        data_preparation_pipe.connect(reorient_T1_pipe,
+                                        'swap_dim.out_file',
+                                        align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(reorient_T2_pipe,
+                                        'swap_dim.out_file',
+                                        align_T2_on_T1, 'in_file')
 
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'swap_dim.out_file',
-                                          crop_bb_T1, 'in_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          align_T2_on_T1, 'reference')
-            data_preparation_pipe.connect(av_T2, 'avg_img',
-                                          align_T2_on_T1, 'in_file')
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          crop_bb_T1, 'in_file')
-
-        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                      crop_bb_T2, 'in_file')
-    elif "bet_crop" in params.keys():
-        print('bet_crop is in params')
-
-        # Align, Brain extraction + Cropping
-        bet_crop = NodeParams(T1xT2BET(),
-                              params=parse_key(params, "bet_crop"),
-                              name='bet_crop')
-
-        if "reorient" in params.keys():
-
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'swap_dim.out_file',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(reorient_T2_pipe,
-                                          'swap_dim.out_file',
-                                          bet_crop, 't2_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(av_T2, 'avg_img',
-                                          bet_crop, 't2_file')
+        data_preparation_pipe.connect(reorient_T1_pipe,
+                                        'swap_dim.out_file',
+                                        crop_bb_T1, 'in_file')
     else:
-        print("No bet_crop parameters, or no individual cropping were found, \
-            align T1 and T2 is performed")
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                        align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                        align_T2_on_T1, 'in_file')
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                        crop_bb_T1, 'in_file')
 
-        # align avg T2 on avg T1
-        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-        align_T2_on_T1.inputs.dof = 6
+    data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                    crop_bb_T2, 'in_file')
+    #elif "bet_crop" in params.keys():
+        #print('bet_crop is in params')
+
+        ## Align, Brain extraction + Cropping
+        #bet_crop = NodeParams(T1xT2BET(),
+                              #params=parse_key(params, "bet_crop"),
+                              #name='bet_crop')
+
+        #if "reorient" in params.keys():
+
+            #data_preparation_pipe.connect(reorient_T1_pipe,
+                                          #'swap_dim.out_file',
+                                          #bet_crop, 't1_file')
+            #data_preparation_pipe.connect(reorient_T2_pipe,
+                                          #'swap_dim.out_file',
+                                          #bet_crop, 't2_file')
+        #else:
+            #data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          #bet_crop, 't1_file')
+            #data_preparation_pipe.connect(av_T2, 'avg_img',
+                                          #bet_crop, 't2_file')
+    #else:
+        #print("No bet_crop parameters, or no individual cropping were found, \
+            #align T1 and T2 is performed")
+
+        ## align avg T2 on avg T1
+        #align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+        #align_T2_on_T1.inputs.dof = 6
 
 
-        if "reorient" in params.keys():
+        #if "reorient" in params.keys():
 
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'swap_dim.out_file',
-                                          align_T2_on_T1, 'reference')
-            data_preparation_pipe.connect(reorient_T2_pipe,
-                                          'swap_dim.out_file',
-                                          align_T2_on_T1, 'in_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          align_T2_on_T1, 'reference')
-            data_preparation_pipe.connect(av_T2, 'avg_img',
-                                          align_T2_on_T1, 'in_file')
+            #data_preparation_pipe.connect(reorient_T1_pipe,
+                                          #'swap_dim.out_file',
+                                          #align_T2_on_T1, 'reference')
+            #data_preparation_pipe.connect(reorient_T2_pipe,
+                                          #'swap_dim.out_file',
+                                          #align_T2_on_T1, 'in_file')
+        #else:
+            #data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          #align_T2_on_T1, 'reference')
+            #data_preparation_pipe.connect(av_T2, 'avg_img',
+                                          #align_T2_on_T1, 'in_file')
 
     # denoise with Ants package
     denoise_T1 = pe.Node(interface=DenoiseImage(), name="denoise_T1")
