@@ -126,69 +126,70 @@ def create_full_T1xT2_segment_pnh_subpipes(
 
 ###############################################################################
 # ANTS based segmentation (from: Kepkee Loh)
-def create_brain_extraction_pipe(params_template, params={},
-                                 name="brain_extraction_pipe"):
-    """ Description: ANTS based segmentation pipeline using T1w and T2w images
+
+#def create_brain_extraction_pipe(params_template, params={},
+                                 #name="brain_extraction_pipe"):
+    #""" Description: ANTS based segmentation pipeline using T1w and T2w images
 
 
-    - correct_bias
-    - denoise
-    - extract_brain
-    Inputs:
+    #- correct_bias
+    #- denoise
+    #- extract_brain
+    #Inputs:
 
-        inputnode:
-            preproc_T1: preprocessed T1 file name
-            preproc_T2: preprocessed T2 file name
+        #inputnode:
+            #preproc_T1: preprocessed T1 file name
+            #preproc_T2: preprocessed T2 file name
 
 
-        arguments:
-            params_template: dictionary of template files
-            params: dictionary of node sub-parameters (from a json file)
-            name: pipeline name (default = "full_segment_pipe")
+        #arguments:
+            #params_template: dictionary of template files
+            #params: dictionary of node sub-parameters (from a json file)
+            #name: pipeline name (default = "full_segment_pipe")
 
-    Outputs:
+    #Outputs:
 
-    """
-    # creating pipeline
-    brain_extraction_pipe = pe.Workflow(name=name)
+    #"""
+    ## creating pipeline
+    #brain_extraction_pipe = pe.Workflow(name=name)
 
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
-        name='inputnode'
-    )
+    ## Creating input node
+    #inputnode = pe.Node(
+        #niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
+        #name='inputnode'
+    #)
 
-    # Correct_bias_T1_T2
-    if "correct_bias_pipe" in params.keys():
-        params_correct_bias_pipe = params["correct_bias_pipe"]
-    else:
-        params_correct_bias_pipe = {}
+    ## Correct_bias_T1_T2
+    #if "correct_bias_pipe" in params.keys():
+        #params_correct_bias_pipe = params["correct_bias_pipe"]
+    #else:
+        #params_correct_bias_pipe = {}
 
-    correct_bias_pipe = create_correct_bias_pipe(
-        params=params_correct_bias_pipe)
+    #correct_bias_pipe = create_correct_bias_pipe(
+        #params=params_correct_bias_pipe)
 
-    brain_extraction_pipe.connect(inputnode, 'preproc_T1',
-                                  correct_bias_pipe, 'inputnode.preproc_T1')
-    brain_extraction_pipe.connect(inputnode, 'preproc_T2',
-                                  correct_bias_pipe, 'inputnode.preproc_T2')
+    #brain_extraction_pipe.connect(inputnode, 'preproc_T1',
+                                  #correct_bias_pipe, 'inputnode.preproc_T1')
+    #brain_extraction_pipe.connect(inputnode, 'preproc_T2',
+                                  #correct_bias_pipe, 'inputnode.preproc_T2')
 
-    # brain extraction
-    if "extract_pipe" in params.keys():  # so far, unused
-        params_extract_pipe = params["extract_pipe"]
+    ## brain extraction
+    #if "extract_pipe" in params.keys():  # so far, unused
+        #params_extract_pipe = params["extract_pipe"]
 
-    else:
-        params_extract_pipe = {}
+    #else:
+        #params_extract_pipe = {}
 
-    extract_pipe = create_extract_pipe(
-        params_template=params_template,
-        params=params_extract_pipe)
+    #extract_pipe = create_extract_pipe(
+        #params_template=params_template,
+        #params=params_extract_pipe)
 
-    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
-                                  extract_pipe, "inputnode.restore_T1")
-    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
-                                  extract_pipe, "inputnode.restore_T2")
+    #brain_extraction_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
+                                  #extract_pipe, "inputnode.restore_T1")
+    #brain_extraction_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
+                                  #extract_pipe, "inputnode.restore_T2")
 
-    return brain_extraction_pipe
+    #return brain_extraction_pipe
 
 
 def create_brain_segment_from_mask_pipe(
@@ -430,7 +431,7 @@ def create_brain_extraction_pipe(params_template, params={},
     else:
         params_extract_pipe = {}
 
-    extract_pipe = create_multi_extract_pipe(
+    extract_pipe = create_extract_pipe(
         params_template=params_template,
         params=params_extract_pipe)
 
@@ -598,24 +599,24 @@ def create_full_segment_pnh_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
-    ## full extract brain pipeline (correct_bias, denoising, extract brain)
-    #if 'brain_extraction_pipe' in params.keys():
-        #print("brain_extraction_pipe is in params")
-        #params_brain_extraction_pipe = params["brain_extraction_pipe"]
-    #else:
-        #print("*** brain_extraction_pipe NOT in params")
-        #params_brain_extraction_pipe = {}
+    # full extract brain pipeline (correct_bias, denoising, extract brain)
+    if 'brain_extraction_pipe' in params.keys():
+        print("brain_extraction_pipe is in params")
+        params_brain_extraction_pipe = params["brain_extraction_pipe"]
+    else:
+        print("*** brain_extraction_pipe NOT in params")
+        params_brain_extraction_pipe = {}
 
-    #brain_extraction_pipe = create_brain_multi_extraction_pipe(
-        #params=params_brain_extraction_pipe, params_template=params_template)
+    brain_extraction_pipe = create_brain_extraction_pipe(
+        params=params_brain_extraction_pipe, params_template=params_template)
 
-    #seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
-                     #brain_extraction_pipe, 'inputnode.preproc_T1')
-    #seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
-                     #brain_extraction_pipe, 'inputnode.preproc_T2')
+    seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+                     brain_extraction_pipe, 'inputnode.preproc_T1')
+    seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+                     brain_extraction_pipe, 'inputnode.preproc_T2')
 
-    #seg_pipe.connect(inputnode, 'indiv_params',
-                     #brain_extraction_pipe, 'inputnode.indiv_params')
+    seg_pipe.connect(inputnode, 'indiv_params',
+                     brain_extraction_pipe, 'inputnode.indiv_params')
 
     ## full_segment (restarting from the avg_align files)
     #if "brain_segment_pipe" in params.keys():
