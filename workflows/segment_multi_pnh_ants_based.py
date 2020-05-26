@@ -126,9 +126,6 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
 
     datasource = create_datasource(data_dir, multi_params, subjects, sessions)
 
-    main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
-    main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.T2')
-
     if multi_params:
         segment_pnh = create_full_segment_multi_pnh_subpipes(
             params_template=params_template,
@@ -141,7 +138,8 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
             params_template=params_template,
             params=params)
 
-
+    main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
+    main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.T2')
 
     return main_workflow
 
