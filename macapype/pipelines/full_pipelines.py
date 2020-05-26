@@ -405,13 +405,6 @@ def create_full_segment_pnh_subpipes(
     )
 
     # preprocessing
-    if 'data_preparation_pipe' in params.keys():
-        print("data_preparation_pipe is in params")
-        params_data_preparation_pipe =
-    else:
-        print("*** data_preparation_pipe NOT in params")
-        params_data_preparation_pipe = {}
-
     data_preparation_pipe = create_data_preparation_pipe(
         params=parse_key(params, "data_preparation_pipe"))
 
