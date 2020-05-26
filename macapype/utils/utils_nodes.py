@@ -87,6 +87,9 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
                 "ses-" + getattr(self.inputs, "session"))
         outputs["indiv_params"] = parse_key(self._params, keys)
 
+        print("*********** {}".format( parse_key(self._params, keys)))
+        0/0
+
         return outputs
 
     def _list_outputs(self):
