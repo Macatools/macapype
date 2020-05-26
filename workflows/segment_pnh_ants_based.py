@@ -90,8 +90,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
         params = {}
 
 
-    print(params)
-    pprint.pprint(params)
+    print("Params": params)
 
     # multi_params
     multi_params = {}
@@ -130,7 +129,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
         params=params)
 
     def print_dict(cur_dict):
-        print("Le dict params: ", cur_dict)
+        print("************* Le dict params: ", cur_dict)
         return cur_dict
 
     if multi_params:
