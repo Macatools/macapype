@@ -56,19 +56,3 @@ def gunzip(filename):
 
 def merge_3_elem_to_list(elem1, elem2, elem3):
     return [elem1, elem2, elem3]
-
-
-#def get_dict_from_json(json_file):
-
-    #import os
-    #import json
-
-    #print(json_file)
-
-    #assert os.path.exists(json_file), "Error with file {}".format(json_file)
-    #params = json.load(open(json_file))
-
-    #assert "macapype" in params.keys(),\
-        #"Error, json should contain 'macapype' field"
-
-    #return params["macapype"]
