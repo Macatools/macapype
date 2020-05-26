@@ -74,9 +74,13 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
 def output_exists(node, output_name):
     return hasattr(node.outputs,output_name):
 
-def output_key_exists(node, output_name, key):
+def output_key_exists(node, output_name, keys):
     if (output_exists(node, output_name)):
         val = getattr(node, output_name)
 
-        if key in val.keys():
-            print("Found {} in {}".format(key, val.keys()))
+        if parse_key(val, keys):
+            print("Found {} in {}".format(keys, val.keys()))
+            return True
+        else:
+            print("Not Found {} in {}".format(keys, val.keys()))
+            return False
