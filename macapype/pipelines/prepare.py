@@ -4,7 +4,7 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 
-from ..utils.utils_nodes import NodeParams
+from ..utils.utils_nodes import NodeParams, output_key_exists
 from ..utils.misc import parse_key
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
@@ -237,6 +237,10 @@ def create_multi_data_preparation_pipe(params, name="data_preparation_pipe"):
                                                     new_dims=new_dims)
         data_preparation_pipe.connect(av_T2, 'avg_img',
                                       reorient_T2_pipe, 'inputnode.image')
+
+
+    print(output_key_exists(inputnode, 'indiv_params', "crop"))
+    0/0
 
     if "bet_crop" in params.keys():
 
