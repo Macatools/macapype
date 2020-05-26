@@ -99,7 +99,7 @@ def output_key_exists(node, output_name, keys):
 
     if hasattr(node.outputs,output_name):
         params = getattr(node.outputs, output_name)
-        val =  parse_key(params, keys)
+        val = parse_key(params, keys)
         return(val)
     else:
         print("Not Found {} in {}".format(output_name, node.name))
