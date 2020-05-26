@@ -7,7 +7,7 @@ import nipype.interfaces.spm as spm
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 
 from ..utils.misc import get_elem, merge_3_elem_to_list
-from ..utils.utils_nodes import NodeParams
+from ..utils.utils_nodes import NodeParams, parse_key
 
 
 def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
@@ -68,25 +68,22 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     segment_pipe.connect(inputnode, 'wm_prior_file', merge_3_elem, "elem3")
 
     # Atropos
-    seg_at = NodeParams(AtroposN4(), name='seg_at')
-
-    if "Atropos" in params.keys():
-        seg_at.load_inputs_from_dict(params["Atropos"])
+    seg_at = NodeParams(AtroposN4(),
+                        params=parse_key(params, "Atropos"),
+                        name='seg_at')
 
     segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
-
     segment_pipe.connect(merge_3_elem, 'merged_list',
                          seg_at, "priors")
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
     for i, tissue in enumerate(['csf', 'gm', 'wm']):
-        tmp_node = NodeParams(fsl.Threshold(), name="threshold_" + tissue)
-
-        if "threshold_" + tissue in params.keys():
-            tmp_node.load_inputs_from_dict(params["threshold_" + tissue])
+        tmp_node = NodeParams(fsl.Threshold(),
+                              parse_key(params, "threshold_" + tissue),
+                              name="threshold_" + tissue)
 
         segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
                              tmp_node, 'in_file')
@@ -142,10 +139,9 @@ def create_old_segment_pipe(params_template, params={},
     )
 
     # Segment in to 6 tissues
-    segment = NodeParams(spm.Segment(), name="old_segment")
-
-    if "segment" in params.keys():
-        segment.load_inputs_from_dict(params["segment"])
+    segment = NodeParams(spm.Segment(),
+                         parse_key(params, "segment")
+                         name="old_segment")
 
     segment.inputs.tissue_prob_maps = [params_template["template_gm"],
                                        params_template["template_wm"],
@@ -157,10 +153,9 @@ def create_old_segment_pipe(params_template, params={},
     thd_nodes = {}
     for tissue in ['gm', 'wm', 'csf']:
 
-        tmp_node = NodeParams(fsl.Threshold(), name="threshold_" + tissue)
-
-        if "threshold_" + tissue in params.keys():
-            tmp_node.load_inputs_from_dict(params["threshold_" + tissue])
+        tmp_node = NodeParams(fsl.Threshold(),
+                              parse_key(params, "threshold_" + tissue)
+                              name="threshold_" + tissue)
 
         be_pipe.connect(
             segment, 'native_' + tissue + '_image',
@@ -182,18 +177,17 @@ def create_old_segment_pipe(params_template, params={},
                     tissues_union, 'operand_file')
 
     # Opening
-    dilate_mask = NodeParams(fsl.DilateImage(), name="dilate_mask")
-    if "dilate_mask" in params.keys():
-        dilate_mask.load_inputs_from_dict(params["dilate_mask"])
+    dilate_mask = NodeParams(fsl.DilateImage(),
+                             parse_key(params, "dilate_mask")
+                             name="dilate_mask")
 
     dilate_mask.inputs.operation = "mean"  # Arbitrary operation
     be_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
 
     # Eroding mask
-    erode_mask = NodeParams(fsl.ErodeImage(), name="erode_mask")
-
-    if "erode_mask" in params.keys():
-        erode_mask.load_inputs_from_dict(params["erode_mask"])
+    erode_mask = NodeParams(fsl.ErodeImage(),
+                            parse_key(params, "erode_mask")
+                            name="erode_mask")
 
     be_pipe.connect(tissues_union, 'out_file', erode_mask, 'in_file')
 

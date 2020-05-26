@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.ants as ants
 
 from ..utils.misc import print_val
-from ..utils.utils_nodes import NodeParams
+from ..utils.utils_nodes import NodeParams, parse_key
 
 
 def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
@@ -65,17 +65,16 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
                               norm_mult, 'operand_value')
 
     # smooth
-    smooth = NodeParams(fsl.maths.MathsCommand(), name='smooth')
-    if "smooth" in params.keys():
-        smooth.load_inputs_from_dict(params["smooth"])
+    smooth = NodeParams(fsl.maths.MathsCommand(),
+                        params=parse_key(params, "smooth")
+                        name='smooth')
 
     correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
-    norm_smooth = NodeParams(fsl.MultiImageMaths(), name='norm_smooth')
-
-    if "norm_smooth" in params.keys():
-        norm_smooth.load_inputs_from_dict(params["norm_smooth"])
+    norm_smooth = NodeParams(fsl.MultiImageMaths(),
+                             params=parse_key(params, "norm_smooth"),
+                             name='norm_smooth')
 
     correct_bias_pipe.connect(norm_mult, 'out_file', norm_smooth, 'in_file')
     correct_bias_pipe.connect(smooth, 'out_file', norm_smooth, 'operand_files')
@@ -137,9 +136,9 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
     correct_bias_pipe.connect(mod_mask, 'out_file', bias, 'operand_files')
 
     # smooth_bias
-    smooth_bias = NodeParams(fsl.IsotropicSmooth(), name='smooth_bias')
-    if "smooth_bias" in params.keys():
-        smooth_bias.load_inputs_from_dict(params["smooth_bias"])
+    smooth_bias = NodeParams(fsl.IsotropicSmooth(),
+                             params=parse_key(params, "smooth_bias"),
+                             name='smooth_bias')
 
     correct_bias_pipe.connect(bias, 'out_file', smooth_bias, 'in_file')
 
@@ -246,17 +245,16 @@ def create_masked_correct_bias_pipe(params={},
                                      norm_mult, 'operand_value')
 
     # smooth
-    smooth = NodeParams(fsl.maths.MathsCommand(), name='smooth')
-    if "smooth" in params.keys():
-        smooth.load_inputs_from_dict(params["smooth"])
+    smooth = NodeParams(fsl.maths.MathsCommand(),
+                        params=parse_key(params, "smooth"),
+                        name='smooth')
 
     masked_correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
 
     # norm_smooth
-    norm_smooth = NodeParams(fsl.MultiImageMaths(), name='norm_smooth')
-
-    if "norm_smooth" in params.keys():
-        norm_smooth.load_inputs_from_dict(params["norm_smooth"])
+    norm_smooth = NodeParams(fsl.MultiImageMaths(),
+                             parse_key(params, "norm_smooth")
+                             name='norm_smooth')
 
     masked_correct_bias_pipe.connect(norm_mult, 'out_file',
                                      norm_smooth, 'in_file')
@@ -342,9 +340,9 @@ def create_masked_correct_bias_pipe(params={},
                                      bias, 'operand_files')
 
     # smooth_bias
-    smooth_bias = NodeParams(fsl.IsotropicSmooth(), name='smooth_bias')
-    if "smooth_bias" in params.keys():
-        smooth_bias.load_inputs_from_dict(params["smooth_bias"])
+    smooth_bias = NodeParams(fsl.IsotropicSmooth(),
+                             params=parse_key(params, "smooth_bias"),
+                             name='smooth_bias')
 
     masked_correct_bias_pipe.connect(bias, 'out_file',
                                      smooth_bias, 'in_file')
@@ -386,26 +384,3 @@ def create_masked_correct_bias_pipe(params={},
                                      restore_mask_T2, 'mask_file')
 
     return masked_correct_bias_pipe
-
-
-###############################################################################
-def create_debias_N4_pipe(name="debias_N4_pipe"):
-    """
-    Description: Only apply ants N4BiasFieldCorrection, check where is used?
-    """
-    # creating pipeline
-    debias_N4_pipe = pe.Workflow(name=name)
-
-    # creating inputnode
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['cropped_T1']),
-        name='inputnode')
-
-    # N4 correction
-    norm_intensity = pe.Node(ants.N4BiasFieldCorrection(),
-                             name='norm_intensity')
-
-    debias_N4_pipe.connect(inputnode, 'cropped_T1',
-                           norm_intensity, 'input_image')
-
-    return debias_N4_pipe
