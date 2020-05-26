@@ -241,9 +241,6 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
     if "crop" in params.keys() and output_key_exists(inputnode, 'indiv_params', "crop"):
         print('crop is in params')
 
-        # assert "croplist" in params["crop"].keys(), \
-        #    "Error, croplist is not specified for crop node, breaking"
-
         # align avg T2 on avg T1
         align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
         align_T2_on_T1.inputs.dof = 6
@@ -287,7 +284,7 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                       crop_bb_T2, 'in_file')
-    else
+    else:
 
         # Brain extraction (unused) + Cropping
         if "bet_crop" in params.keys():
