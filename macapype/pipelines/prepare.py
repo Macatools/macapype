@@ -334,11 +334,13 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
                                       denoise_T1, 'input_image')
         data_preparation_pipe.connect(crop_bb_T2, "roi_file",
                                       denoise_T2, 'input_image')
-    elif "bet_crop" in params.keys()::
+
+    elif "bet_crop" in params.keys():
         data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
                                       denoise_T1, 'input_image')
         data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
                                       denoise_T2, 'input_image')
+
     else:
         data_preparation_pipe.connect(av_T1, 'avg_img',
                                       denoise_T1, 'input_image')
