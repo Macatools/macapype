@@ -542,7 +542,7 @@ def create_multi_brain_segment_from_mask_pipe(
     return brain_segment_pipe
 
 
-def create_full_segment_multi_pnh_subpipes(
+def create_full_segment_pnh_subpipes(
         params_template, params={}, name="full_segment_pnh_subpipes"):
     """Description: Segment T1 (using T2 for bias correction) .
 
