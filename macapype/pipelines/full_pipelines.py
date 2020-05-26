@@ -2,7 +2,7 @@
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
-from ..utils.utils_nodes import NodeParams, output_exists
+from ..utils.utils_nodes import NodeParams
 
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
