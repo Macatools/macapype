@@ -129,8 +129,12 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
         params_template=params_template,
         params=params)
 
+    def print_dict(cur_dict):
+        print(cur_dict)
+        return cur_dict
+
     if multi_params:
-        main_workflow.connect(datasource, ("indiv_params", print),
+        main_workflow.connect(datasource, ("indiv_params", print_dict),
                             segment_pnh,'inputnode.indiv_params')
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
