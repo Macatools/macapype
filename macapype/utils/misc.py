@@ -1,8 +1,6 @@
 # on the fly function for checking what is passed in "connect"
 # should end up in ~ nipype.utils.misc
 
-from nipype.interfaces.base import isdefined
-
 def show_files(files):
     print(files)
     return files
@@ -77,6 +75,8 @@ def get_dict_from_json(json_file):
 
 
 def parse_key(params, key):
+
+    from nipype.interfaces.base import isdefined
 
     def _parse_key(params, cur_key):
         if  cur_key in params.keys():
