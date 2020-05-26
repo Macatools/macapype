@@ -130,7 +130,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
         params=params)
 
     if multi_params:
-        main_workflow.connect(datasource, "indiv_params",
+        main_workflow.connect(datasource, ("indiv_params", print),
                             segment_pnh,'inputnode.indiv_params')
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
