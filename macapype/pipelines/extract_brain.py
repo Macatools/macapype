@@ -10,8 +10,7 @@ import nipype.interfaces.afni as afni
 
 from ..nodes.extract_brain import AtlasBREX
 
-from ..utils.utils_nodes import NodeParams # , output_key_exists
-from ..utils.misc import parse_key
+from ..utils.utils_nodes import NodeParams, parse_key
 
 
 #def create_extract_pipe(params_template, params={}, name="extract_pipe"):
