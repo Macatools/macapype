@@ -129,6 +129,7 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         data_preparation_pipe.connect(av_T2, 'avg_img',
                                       reorient_T2_pipe, 'inputnode.image')
 
+    # Align T2 -> T1 and crop (if specified)
     if output_key_exists(inputnode, 'indiv_params', "crop"):
         print('crop is in params')
 
@@ -176,11 +177,11 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
     elif "bet_crop" in params.keys():
         print('bet_crop is in params')
 
+        # Align, Brain extraction + Cropping
         bet_crop = NodeParams(T1xT2BET(),
                               params=parse_key(params, "bet_crop"),
                               name='bet_crop')
 
-        # Brain extraction (unused) + Cropping
         if "reorient" in params.keys():
 
             data_preparation_pipe.connect(reorient_T1_pipe,
