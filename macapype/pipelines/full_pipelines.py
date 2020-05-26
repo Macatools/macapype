@@ -595,9 +595,8 @@ def create_full_segment_pnh_subpipes(
     seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
 
-    if output_exists(inputnode, 'indiv_params'):
-        seg_pipe.connect(inputnode, 'indiv_params',
-                        data_preparation_pipe, 'inputnode.indiv_params')
+    seg_pipe.connect(inputnode, 'indiv_params',
+                     data_preparation_pipe, 'inputnode.indiv_params')
 
     ## full extract brain pipeline (correct_bias, denoising, extract brain)
     #if 'brain_extraction_pipe' in params.keys():
