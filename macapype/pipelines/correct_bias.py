@@ -66,7 +66,7 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
 
     # smooth
     smooth = NodeParams(fsl.maths.MathsCommand(),
-                        params=parse_key(params, "smooth")
+                        params=parse_key(params, "smooth"),
                         name='smooth')
 
     correct_bias_pipe.connect(norm_mult, 'out_file', smooth, 'in_file')
@@ -253,7 +253,7 @@ def create_masked_correct_bias_pipe(params={},
 
     # norm_smooth
     norm_smooth = NodeParams(fsl.MultiImageMaths(),
-                             parse_key(params, "norm_smooth")
+                             parse_key(params, "norm_smooth"),
                              name='norm_smooth')
 
     masked_correct_bias_pipe.connect(norm_mult, 'out_file',
