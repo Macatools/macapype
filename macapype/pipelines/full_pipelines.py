@@ -17,7 +17,7 @@ from .correct_bias import (create_masked_correct_bias_pipe,
 
 from .register import create_register_NMT_pipe, create_multi_register_NMT_pipe
 
-from .extract_brain import create_extract_pipe, create_multi_extract_pipe
+from .extract_brain import create_extract_pipe
 
 from macapype.utils.misc import gunzip
 
