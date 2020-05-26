@@ -1,6 +1,8 @@
 # on the fly function for checking what is passed in "connect"
 # should end up in ~ nipype.utils.misc
 
+from nipype.interface.base import isdefined
+
 
 def show_files(files):
     print(files)
@@ -84,11 +86,16 @@ def parse_key(params, key):
             "Error, key {} was not found in {}".format(key, params.keys())
             return {}
 
-    if isinstance(key, tuple):
-        for cur_key in key:
-            params = _parse_key(params, cur_key)
+    if isdefined(params):
+        if isinstance(key, tuple):
+            for cur_key in key:
+                params = _parse_key(params, cur_key)
+
+        else:
+            params = _parse_key(params, key)
+
+        return params
 
     else:
-        params = _parse_key(params, key)
+        return {}
 
-    return params

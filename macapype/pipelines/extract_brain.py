@@ -10,7 +10,7 @@ import nipype.interfaces.afni as afni
 
 from ..nodes.extract_brain import AtlasBREX
 
-from ..utils.utils_nodes import NodeParams, output_key_exists
+from ..utils.utils_nodes import NodeParams # , output_key_exists
 from ..utils.misc import parse_key
 
 
@@ -134,8 +134,7 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
 
     atlas_brex.load_inputs_from_dict(params["atlas_brex"])
 
-    if output_key_exists(inputnode, 'indiv_params', "atlas_brex"):
-        extract_pipe.connect(
+    extract_pipe.connect(
             inputnode, ("indiv_params", parse_key, "atlas_brex"),
             atlas_brex, 'indiv_params')
 
