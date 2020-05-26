@@ -70,3 +70,8 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
         outputs = self._set_indiv_params(outputs)
 
         return outputs
+
+def output_exists(node,"output"):
+    print (node.outputs)
+
+    0/0

@@ -58,7 +58,9 @@ import nipype.interfaces.utility as niu
 import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
-from macapype.pipelines.full_pipelines import create_full_segment_multi_pnh_subpipes
+from macapype.pipelines.full_pipelines \
+    import (create_full_segment_multi_pnh_subpipes,
+            create_full_segment_pnh_subpipes)
 
 from macapype.utils.utils_bids import create_datasource_multi_params
 from macapype.utils.utils_tests import load_test_data, format_template
@@ -67,7 +69,8 @@ from macapype.utils.misc import show_files, get_first_elem, get_dict_from_json
 
 ###############################################################################
 
-def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file):
+def create_main_workflow(data_dir, process_dir, subjects, sessions,
+                         params_file, multi_params_file):
 
     # formating args
     data_dir = op.abspath(data_dir)
@@ -92,17 +95,17 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
     pprint.pprint(params)
 
     # multi_params
-    multi_params_file = op.join(data_dir, "multi_params.json")
+    multi_params = {}
 
-    print(multi_params_file)
-    if multi_params_file is not None:
+    if multi_params_file is None:
 
-        assert os.path.exists(multi_params_file), "Error with file {}".format(
-            multi_params_file)
+        multi_params_file = op.join(data_dir, "multi_params.json")
+
+    if os.path.exists(multi_params_file):
 
         multi_params = json.load(open(multi_params_file))
-    else:
-        multi_params = {}
+
+    print("Multi-params:", multi_params)
 
     # params_template
     if "general" in params.keys() and "my_path" in params["general"].keys():
@@ -117,32 +120,29 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions, params_file)
 
     nmt_dir = load_test_data(template_name, path_to = my_path)
     params_template = format_template(nmt_dir, template_name)
-    print (params_template)
+    print ("params_template:", params_template)
 
     # main_workflow
     main_workflow = pe.Workflow(name= "test_pipeline_ants_multi_params")
     main_workflow.base_dir = process_dir
 
-    datasource = create_datasource_multi_params(data_dir,
-                                                multi_params,
-                                                subjects, sessions)
-
-    #convert_json = pe.Node(
-        #interface = niu.Function(inputnames = ["json_file"],output_names = ["params"],
-                                 #function = get_dict_from_json),
-        #name = "convert_json")
-
-    #main_workflow.connect(datasource, ("json_file",get_first_elem), convert_json,'json_file')
-
-    segment_pnh = create_full_segment_multi_pnh_subpipes(
-        params_template=params_template,
-        params=params)
+    datasource = create_datasource(data_dir, multi_params, subjects, sessions)
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
     main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.T2')
 
-    main_workflow.connect(datasource, "indiv_params",
-                          segment_pnh,'inputnode.indiv_params')
+    if multi_params:
+        segment_pnh = create_full_segment_multi_pnh_subpipes(
+            params_template=params_template,
+            params=params)
+
+        main_workflow.connect(datasource, "indiv_params",
+                            segment_pnh,'inputnode.indiv_params')
+    else:
+        segment_pnh = create_full_segment_pnh_subpipes(
+            params_template=params_template,
+            params=params)
+
 
 
     return main_workflow
@@ -163,6 +163,8 @@ if __name__ == '__main__':
                         help="Subjects' ID", required=False)
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
+    parser.add_argument("-multi_params", dest="multi_params_file", type=str,
+                        help="Multiple Parameters json file", required=False)
 
 
     args = parser.parse_args()
@@ -175,6 +177,7 @@ if __name__ == '__main__':
         subjects=args.subjects,
         sessions=args.ses,
         params_file=args.params_file
+        multi_params_file=args.multi_params_file
     )
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
