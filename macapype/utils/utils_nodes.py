@@ -1,6 +1,5 @@
 from nipype.pipeline.engine import Node
 from nipype.interfaces.io import BIDSDataGrabber
-from nipype.interfaces.base import traits
 
 from .misc import parse_key
 
@@ -81,7 +80,7 @@ def output_key_exists(node, output_name, keys):
     if output_exists(node, output_name):
         val = getattr(node.outputs, output_name)
 
-        print (traits.isdefined(val))
+        print (isdefined(val))
         if traits.isdefined(val) and parse_key(val, keys):
             print("Found {} in {}".format(keys, val.keys()))
             return True
