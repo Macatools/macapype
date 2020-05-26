@@ -178,7 +178,7 @@ def create_old_segment_pipe(params_template, params={},
 
     # Opening
     dilate_mask = NodeParams(fsl.DilateImage(),
-                             parse_key(params, "dilate_mask")
+                             parse_key(params, "dilate_mask"),
                              name="dilate_mask")
 
     dilate_mask.inputs.operation = "mean"  # Arbitrary operation
