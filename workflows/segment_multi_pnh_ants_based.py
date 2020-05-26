@@ -62,7 +62,7 @@ from macapype.pipelines.full_pipelines \
     import (create_full_segment_multi_pnh_subpipes,
             create_full_segment_pnh_subpipes)
 
-from macapype.utils.utils_bids import create_datasource_multi_params
+from macapype.utils.utils_bids import create_datasource
 from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.misc import show_files, get_first_elem, get_dict_from_json
