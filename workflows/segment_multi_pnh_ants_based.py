@@ -59,8 +59,7 @@ import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines \
-    import (create_full_segment_multi_pnh_subpipes,
-            create_full_segment_pnh_subpipes)
+    import create_full_segment_pnh_subpipes
 
 from macapype.utils.utils_bids import create_datasource
 from macapype.utils.utils_tests import load_test_data, format_template
