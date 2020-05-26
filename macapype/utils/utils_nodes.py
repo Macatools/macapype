@@ -76,10 +76,8 @@ def output_exists(node, output_name):
 
 def output_key_exists(node, output_name, keys):
 
-    print(output_exists(node, output_name))
-
     if output_exists(node, output_name):
-        val = getattr(node, output_name)
+        val = getattr(node.outputs, output_name)
 
         if parse_key(val, keys):
             print("Found {} in {}".format(keys, val.keys()))
