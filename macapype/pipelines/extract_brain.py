@@ -48,7 +48,7 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
 
     # atlas_brex
     atlas_brex = NodeParams(AtlasBREX(),
-                            parse_key(params, "atlas_brex"),
+                            params=parse_key(params, "atlas_brex"),
                             name='atlas_brex')
 
     extract_pipe.connect(inputnode, "restore_T1",
