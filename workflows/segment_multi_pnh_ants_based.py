@@ -98,11 +98,9 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
     multi_params = {}
 
     if multi_params_file is None:
-
         multi_params_file = op.join(data_dir, "multi_params.json")
 
     if os.path.exists(multi_params_file):
-
         multi_params = json.load(open(multi_params_file))
 
     print("Multi-params:", multi_params)
@@ -176,9 +174,9 @@ if __name__ == '__main__':
         process_dir=args.out,
         subjects=args.subjects,
         sessions=args.ses,
-        params_file=args.params_file
-        multi_params_file=args.multi_params_file
-    )
+        params_file=args.params_file,
+        multi_params_file=args.multi_params_file)
+
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
     #print('The PNH segmentation pipeline is ready')
