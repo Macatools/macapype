@@ -77,7 +77,6 @@ def output_exists(node, output_name):
     return hasattr(node.outputs,output_name)
 
 def output_key_exists(node, output_name, keys):
-
     if output_exists(node, output_name):
         val = getattr(node.outputs, output_name)
 

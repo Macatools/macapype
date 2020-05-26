@@ -238,33 +238,7 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
         data_preparation_pipe.connect(av_T2, 'avg_img',
                                       reorient_T2_pipe, 'inputnode.image')
 
-    print(output_exists(inputnode, 'indiv_params'))
-    print(output_key_exists(inputnode, 'indiv_params', "crop"))
-    0/0
-
-    if "bet_crop" in params.keys():
-
-        print('bet_crop is in params')
-
-        # Brain extraction (unused) + Cropping
-        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
-                              name='bet_crop')
-
-        if "reorient" in params.keys():
-
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'swap_dim.out_file',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(reorient_T2_pipe,
-                                          'swap_dim.out_file',
-                                          bet_crop, 't2_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(av_T2, 'avg_img',
-                                          bet_crop, 't2_file')
-
-    elif "crop" in params.keys():
+    if "crop" in params.keys() and output_key_exists(inputnode, 'indiv_params', "crop"):
         print('crop is in params')
 
         # assert "croplist" in params["crop"].keys(), \
@@ -313,6 +287,30 @@ def create_data_preparation_pipe(params, name="data_preparation_pipe"):
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                       crop_bb_T2, 'in_file')
+    else
+
+        # Brain extraction (unused) + Cropping
+        if "bet_crop" in params.keys():
+            print('bet_crop is in params')
+
+            bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
+                                name='bet_crop')
+        else:
+            bet_crop = pe.Node(T1xT2BET(), name='bet_crop')
+
+        if "reorient" in params.keys():
+
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(reorient_T2_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't2_file')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(av_T2, 'avg_img',
+                                          bet_crop, 't2_file')
 
     # denoise with Ants package
     denoise_T1 = pe.Node(interface=DenoiseImage(), name="denoise_T1")
