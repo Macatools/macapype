@@ -154,7 +154,7 @@ def create_old_segment_pipe(params_template, params={},
     for tissue in ['gm', 'wm', 'csf']:
 
         tmp_node = NodeParams(fsl.Threshold(),
-                              parse_key(params, "threshold_" + tissue)
+                              parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
         be_pipe.connect(
