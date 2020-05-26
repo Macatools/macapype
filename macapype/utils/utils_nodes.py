@@ -82,10 +82,9 @@ def output_key_exists(node, output_name, keys):
         val = getattr(node.outputs, output_name)
 
         print (traits.isdefined(val))
-        if traits.isdefined(val):
-        if parse_key(val, keys):
+        if traits.isdefined(val) and parse_key(val, keys):
             print("Found {} in {}".format(keys, val.keys()))
             return True
         else:
-            print("Not Found {} in {}".format(keys, val.keys()))
+            print("Not Found {} in {}".format(keys, val))
             return False
