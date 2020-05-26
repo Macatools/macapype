@@ -90,7 +90,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
         params = {}
 
 
-    print("Params": params)
+    print("Params:", params)
 
     # multi_params
     multi_params = {}
