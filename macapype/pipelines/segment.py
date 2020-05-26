@@ -140,7 +140,7 @@ def create_old_segment_pipe(params_template, params={},
 
     # Segment in to 6 tissues
     segment = NodeParams(spm.Segment(),
-                         parse_key(params, "segment")
+                         params=parse_key(params, "segment"),
                          name="old_segment")
 
     segment.inputs.tissue_prob_maps = [params_template["template_gm"],
