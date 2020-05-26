@@ -82,7 +82,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     thd_nodes = {}
     for i, tissue in enumerate(['csf', 'gm', 'wm']):
         tmp_node = NodeParams(fsl.Threshold(),
-                              parse_key(params, "threshold_" + tissue),
+                              params=parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
         segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
@@ -154,7 +154,7 @@ def create_old_segment_pipe(params_template, params={},
     for tissue in ['gm', 'wm', 'csf']:
 
         tmp_node = NodeParams(fsl.Threshold(),
-                              parse_key(params, "threshold_" + tissue),
+                              params=parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
         be_pipe.connect(
@@ -178,7 +178,7 @@ def create_old_segment_pipe(params_template, params={},
 
     # Opening
     dilate_mask = NodeParams(fsl.DilateImage(),
-                             parse_key(params, "dilate_mask"),
+                             params=parse_key(params, "dilate_mask"),
                              name="dilate_mask")
 
     dilate_mask.inputs.operation = "mean"  # Arbitrary operation
@@ -186,7 +186,7 @@ def create_old_segment_pipe(params_template, params={},
 
     # Eroding mask
     erode_mask = NodeParams(fsl.ErodeImage(),
-                            parse_key(params, "erode_mask"),
+                            params=parse_key(params, "erode_mask"),
                             name="erode_mask")
 
     be_pipe.connect(tissues_union, 'out_file', erode_mask, 'in_file')
