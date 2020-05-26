@@ -598,7 +598,6 @@ def create_full_segment_multi_pnh_subpipes(
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
 
     if output_exists(inputnode, 'indiv_params'):
-
         seg_pipe.connect(inputnode, 'indiv_params',
                         data_preparation_pipe, 'inputnode.indiv_params')
 
