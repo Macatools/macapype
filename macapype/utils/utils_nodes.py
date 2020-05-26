@@ -1,8 +1,30 @@
 from nipype.pipeline.engine import Node
 from nipype.interfaces.io import BIDSDataGrabber
-from nipype.interfaces.base import isdefined
 
-from .misc import parse_key
+
+def parse_key(params, key):
+
+    from nipype.interfaces.base import isdefined
+
+    def _parse_key(params, cur_key):
+        if  cur_key in params.keys():
+            return params[cur_key]
+        else:
+            "Error, key {} was not found in {}".format(key, params.keys())
+            return {}
+
+    if isdefined(params):
+        if isinstance(key, tuple):
+            for cur_key in key:
+                params = _parse_key(params, cur_key)
+
+        else:
+            params = _parse_key(params, key)
+
+        return params
+
+    else:
+        return {}
 
 
 class NodeParams(Node):
@@ -73,17 +95,11 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
 
         return outputs
 
-def output_exists(node, output_name):
-    return hasattr(node.outputs,output_name)
-
 def output_key_exists(node, output_name, keys):
-    if output_exists(node, output_name):
-        val = getattr(node.outputs, output_name)
 
-        print (isdefined(val))
-        if isdefined(val) and parse_key(val, keys):
-            print("Found {} in {}".format(keys, val.keys()))
-            return True
-        else:
-            print("Not Found {} in {}".format(keys, val))
-            return False
+    if hasattr(node.outputs,output_name):
+        val = getattr(node.outputs, output_name)
+        return(parse_key(val, keys)
+    else:
+        print("Not Found {} in {}".format(output_name, node.name))
+        return False
