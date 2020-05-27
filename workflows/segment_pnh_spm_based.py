@@ -82,7 +82,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
 ################################################################################
-def create_main_workflow(data_path, out_path, subject_ids, sessions,
+def create_main_workflow(data_path, out_path, subjects, sessions,
                          acquisitions, params_file):
     """ Set up the segmentatiopn pipeline based on SPM 
     
@@ -98,7 +98,7 @@ def create_main_workflow(data_path, out_path, subject_ids, sessions,
     params_file: path to a JSON file
         JSON file that specify some parameters of the pipeline.
 
-    subjects_ids: list of str
+    subjects: list of str
         Subject's IDs to match to BIDS specification (sub-[SUB1], sub-[SUB2]...)
 
     sessions: list of str (optional)
@@ -195,7 +195,7 @@ def main():
     wf = create_main_workflow(
         data_path=args.data,
         main_path=args.out,
-        subject_ids=args.subjects,
+        subjects=args.subjects,
         acquisitions=args.acq,
         sessions=args.ses,
         params_file=args.params_file
