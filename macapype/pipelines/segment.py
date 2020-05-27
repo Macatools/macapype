@@ -134,7 +134,7 @@ def create_old_segment_pipe(params_template, params={},
 
     # Creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1']),
+        niu.IdentityInterface(fields=['T1', 'indiv_params']),
         name='inputnode'
     )
 
@@ -157,10 +157,13 @@ def create_old_segment_pipe(params_template, params={},
                               params=parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
+        be_pipe.connect(segment, 'native_' + tissue + '_image',
+                        tmp_node, 'in_file')
+
         be_pipe.connect(
-            segment, 'native_' + tissue + '_image',
-            tmp_node, 'in_file'
-        )
+            inputnode, ('indiv_params', parse_key, "threshold_" + tissue),
+            tmp_node, "indiv_params")
+
         thd_nodes[tissue] = tmp_node
 
     # Compute union of the 3 tissues

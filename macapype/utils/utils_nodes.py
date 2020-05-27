@@ -4,7 +4,8 @@ from .misc import parse_key
 
 
 def node_output_exists(node, output_name):
-    return hasattr(node.outputs,output_name)
+    return hasattr(node.outputs, output_name)
+
 
 class NodeParams(Node):
 

@@ -2,7 +2,6 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-import nipype.interfaces.ants as ants
 
 from ..utils.misc import print_val
 from ..utils.utils_nodes import NodeParams, parse_key

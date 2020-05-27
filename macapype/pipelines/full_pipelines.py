@@ -44,6 +44,9 @@ def create_full_T1xT2_segment_pnh_subpipes(
             T1: T1 file name
             T2: T2 file name
 
+            indiv_params (opt): dict with individuals parameters for some nodes
+
+
         arguments:
             params_template: dict of template files containing brain_template
             and priors (list of template based segmented tissues)
@@ -70,27 +73,24 @@ def create_full_T1xT2_segment_pnh_subpipes(
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'T2']),
+        niu.IdentityInterface(fields=['T1', 'T2', 'indiv_params']),
         name='inputnode'
     )
 
-    # average_align, T1xT2BET
-    if 'data_preparation_pipe' in params.keys():
-        print("data_preparation_pipe is in params")
-        params_data_preparation_pipe = params["data_preparation_pipe"]
-    else:
-        print("*** data_preparation_pipe NOT in params")
-        params_data_preparation_pipe = {}
-
+    # preprocessing
     data_preparation_pipe = create_data_preparation_pipe(
-        params_data_preparation_pipe)
+        params=parse_key(params, "data_preparation_pipe"))
 
     seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
     seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
 
+    seg_pipe.connect(inputnode, 'indiv_params',
+                     data_preparation_pipe, 'inputnode.indiv_params')
+
     # Bias correction of cropped images
-    debias = NodeParams(T1xT2BiasFieldCorrection(), name='debias')
-    debias.load_inputs_from_dict(params["debias"])
+    debias = NodeParams(T1xT2BiasFieldCorrection(),
+                        params=parse_key(params, "debias"),
+                        name='debias')
 
     seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
                      debias, 't1_file')
@@ -98,15 +98,24 @@ def create_full_T1xT2_segment_pnh_subpipes(
                      debias, 't2_file')
     seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
                      debias, 'b')
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "debias"),
+        debias, 'indiv_params')
 
     # Iterative registration to the INIA19 template
-    reg = NodeParams(IterREGBET(), name='reg')
+    reg = NodeParams(IterREGBET(),
+                     params=parse_key(params, "reg"),
+                     name='reg')
+
     reg.inputs.refb_file = params_template["template_brain"]
-    reg.load_inputs_from_dict(params["reg"])
 
     seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
     seg_pipe.connect(debias, 't1_debiased_brain_file',
                      reg, 'inb_file')
+
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "reg"),
+        reg, 'indiv_params')
 
     # Compute brain mask using old_segment of SPM and postprocessing on
     # tissues' masks
@@ -121,14 +130,18 @@ def create_full_T1xT2_segment_pnh_subpipes(
     seg_pipe.connect(reg, ('warp_file', gunzip),
                      old_segment_pipe, 'inputnode.T1')
 
+    seg_pipe.connect(
+        inputnode, 'indiv_params',
+        old_segment_pipe, 'inputnode.indiv_params')
+
     return seg_pipe
 
 
 ###############################################################################
-# ANTS based segmentation (from: Kepkee Loh)
+# ANTS based segmentation (from Kepkee Loh / Julien Sein)
 # same as before, but with indiv_params
 def create_brain_extraction_pipe(params_template, params={},
-                                       name="brain_extraction_pipe"):
+                                 name="brain_extraction_pipe"):
     """ Description: ANTS based segmentation pipeline using T1w and T2w images
 
 

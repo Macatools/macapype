@@ -11,7 +11,7 @@ from nipype.interfaces.ants.segmentation import DenoiseImage
 
 # from nipype.interfaces.freesurfer.prepareess import MRIConvert
 
-from ..nodes.prepare import average_align, FslOrient, read_cropbox
+from ..nodes.prepare import average_align, FslOrient
 
 from ..nodes.extract_brain import T1xT2BET
 
@@ -48,6 +48,7 @@ def create_reorient_pipeline(name="reorient_pipe",
     reorient_pipe.connect(deorient, 'out_file', reorient, 'in_file')
 
     return reorient_pipe
+
 
 def create_data_preparation_pipe(params, name="data_preparation_pipe"):
     """

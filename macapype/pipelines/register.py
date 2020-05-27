@@ -127,11 +127,12 @@ def create_iterative_register_pipe(
 
     return register_pipe
 
+
 ###############################################################################
 # multi / indiv_params
 ###############################################################################
 def create_register_NMT_pipe(params_template, params={},
-                                   name="register_NMT_pipe"):
+                             name="register_NMT_pipe"):
     """
     Description: Register template to anat with the script NMT_subject_align,
         and then apply it to tissues list_priors
@@ -170,7 +171,7 @@ def create_register_NMT_pipe(params_template, params={},
 
     # N4 intensity normalization over brain
     norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                params = parse_key(params, "norm_intensity"),
+                                params=parse_key(params, "norm_intensity"),
                                 name='norm_intensity')
 
     register_NMT_pipe.connect(inputnode, 'T1',

@@ -12,6 +12,7 @@ from ..nodes.extract_brain import AtlasBREX
 
 from ..utils.utils_nodes import NodeParams, parse_key
 
+
 def create_extract_pipe(params_template, params={}, name="extract_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex

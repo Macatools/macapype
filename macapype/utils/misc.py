@@ -59,17 +59,12 @@ def merge_3_elem_to_list(elem1, elem2, elem3):
     return [elem1, elem2, elem3]
 
 
-
 def parse_key(params, key):
 
     from nipype.interfaces.base import isdefined
 
-    print("Parse key:")
-    print (params)
-    print (key)
-
     def _parse_key(params, cur_key):
-        if  cur_key in params.keys():
+        if cur_key in params.keys():
             return params[cur_key]
         else:
             "Error, key {} was not found in {}".format(key, params.keys())
@@ -79,13 +74,10 @@ def parse_key(params, key):
         if isinstance(key, tuple):
             for cur_key in key:
                 params = _parse_key(params, cur_key)
-
         else:
             params = _parse_key(params, key)
 
-        print(params)
         return params
 
     else:
-        print({})
         return {}

@@ -7,7 +7,8 @@ import nipype.pipeline.engine as pe
 from .utils_nodes import BIDSDataGrabberParams
 
 
-def create_datasource(data_dir, subjects=None, sessions=None, acquisitions=None):
+def create_datasource(data_dir, subjects=None, sessions=None,
+                      acquisitions=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
