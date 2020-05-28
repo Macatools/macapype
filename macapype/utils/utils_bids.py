@@ -7,7 +7,8 @@ import nipype.pipeline.engine as pe
 from .utils_nodes import BIDSDataGrabberParams
 
 
-def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
+def create_datasource(data_dir, subjects=None, sessions=None,
+                      acquisitions=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -23,10 +24,6 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
         'T2': {
             "datatype": "anat", "suffix": "T2w",
             "extensions": ["nii", ".nii.gz"]
-        },
-        'json_file': {
-            "datatype": "anat", "suffix": "T1w",
-            "extensions": [".json"]
         }
     }
 
@@ -47,8 +44,8 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
     iterables.append(('subject', subjects))
     iterables.append(('session', sessions))
 
-    if acqs is not None:
-        iterables.append(('acquisition', acqs))
+    if acquisitions is not None:
+        iterables.append(('acquisition', acquisitions))
 
     bids_datasource.iterables = iterables
 
@@ -56,7 +53,7 @@ def create_datasource(data_dir, subjects=None, sessions=None, acqs=None):
 
 
 def create_datasource_multi_params(data_dir, multi_params, subjects=None,
-                                   sessions=None, acqs=None):
+                                   sessions=None, acquisitions=None):
     """ Create a datasource node that have iterables following BIDS format,
     including a multi_params file"""
 
@@ -94,8 +91,8 @@ def create_datasource_multi_params(data_dir, multi_params, subjects=None,
     iterables.append(('subject', subjects))
     iterables.append(('session', sessions))
 
-    if acqs is not None:
-        iterables.append(('acquisition', acqs))
+    if acquisitions is not None:
+        iterables.append(('acquisition', acquisitions))
 
     bids_datasource.iterables = iterables
 
