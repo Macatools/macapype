@@ -86,6 +86,7 @@
 <li><a class="reference internal" href="#the-old-fashioned-way">the “old fashioned” way:</a></li>
 <li><a class="reference internal" href="#the-semi-dirty-way">the “semi-dirty” way</a></li>
 <li><a class="reference internal" href="#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li><a class="reference internal" href="#new-indiv-params">New: indiv_params</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
@@ -156,12 +157,12 @@ Some example files are given in the workflow directory</p>
 <div class="section" id="the-old-fashioned-way">
 <h3>the “old fashioned” way:<a class="headerlink" href="#the-old-fashioned-way" title="Permalink to this headline">¶</a></h3>
 <p>forcing a node input to a value</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span> <span class="o">=</span> <span class="n">MyInterface</span><span class="p">(),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">MyInterface</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
 <span class="n">my_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">my_val</span> <span class="o">=</span> <span class="n">my_new_val</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span> <span class="o">=</span> <span class="n">MyInterface</span><span class="p">(</span><span class="n">my_val</span><span class="o">=</span><span class="n">my_new_val</span><span class="p">),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">MyInterface</span><span class="p">(</span><span class="n">my_val</span><span class="o">=</span><span class="n">my_new_val</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -176,9 +177,9 @@ Some example files are given in the workflow directory</p>
 <span class="go">}</span>
 </pre></div>
 </div>
-<p>(my_new_val possibly can be a string -&gt; between “”)</p>
+<p>(<em>my_new_val</em> possibly can be a string -&gt; between “”)</p>
 <p>and in the code</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span> <span class="o">=</span> <span class="n">MyInterface</span><span class="p">(),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">MyInterface</span><span class="p">(),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="s2">&quot;my_node&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;my_val&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;my_node&quot;</span><span class="p">]:</span>
     <span class="n">my_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">my_val</span> <span class="o">=</span> <span class="n">my_new_val</span>
@@ -187,14 +188,45 @@ Some example files are given in the workflow directory</p>
 </div>
 <div class="section" id="the-new-way-using-nodeparams">
 <h3>the new way: using NodeParams<a class="headerlink" href="#the-new-way-using-nodeparams" title="Permalink to this headline">¶</a></h3>
-<p>Node params is a class inheriting from pipeline engine Node class, with a method load_inputs_from_dict allowing
+<p><em>NodeParams</em> is a class inheriting from pipeline engine Node class, with a method <em>load_inputs_from_dict</em> allowing
 to load inputs from a dictionnary. It is particularly useful if multiple inputs have to be set for a single node</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_node</span> <span class="kn">import</span> <span class="n">NodeParams</span>
 
-<span class="n">my_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span> <span class="o">=</span> <span class="n">MyInterface</span><span class="p">(),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
+<span class="n">my_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">MyInterface</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="s2">&quot;my_node&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
     <span class="n">my_node</span><span class="o">.</span><span class="n">load_inputs_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;my_node&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Or even better, using parse_key at the creation of the <em>NodeParams</em> and fill the parameter <em>params</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">macapype.utils.utils_node</span> <span class="kn">import</span> <span class="n">NodeParams</span>
+<span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">parse_key</span>
+
+<span class="n">my_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">MyInterface</span><span class="p">(),</span>
+                     <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_node&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="new-indiv-params">
+<h3>New: indiv_params<a class="headerlink" href="#new-indiv-params" title="Permalink to this headline">¶</a></h3>
+<p>Since version 0.1.2, it is possible to add a multi_params json file, containing specific parameter for specific instance of pipelines (e.g., a specific subject or session). The parameter of the params.json will be overloaded for that specific instance if defined in the multi_params.json</p>
+<p>To include a parameter specific <em>my_val</em> in <em>my_node</em> to an instance <em>sub-001/ses-001</em>, you have to fill a multi_params.json like this example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">{</span>
+<span class="go">    &quot;sub-001&quot;:</span>
+<span class="go">    {</span>
+<span class="go">        &quot;ses-001&quot;:</span>
+<span class="go">        {</span>
+<span class="go">            &quot;my_node&quot;:</span>
+<span class="go">            {</span>
+<span class="go">                my_new_val</span>
+<span class="go">            }</span>
+<span class="go">    }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>and add the path to the multi_params.json with -multi_params:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>workflows/segment_pnh.py -data path/to/dataset -out path/to/res -soft ANTS -params path/to/params.json -multi_params path/to/multi_params.json
 </pre></div>
 </div>
 </div>
@@ -221,7 +253,7 @@ to load inputs from a dictionnary. It is particularly useful if multiple inputs 
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -29,7 +29,6 @@ Correct bias (:py:mod:`macapype.pipelines.correct_bias`):
 
     create_correct_bias_pipe
     create_masked_correct_bias_pipe
-    create_debias_N4_pipe
 
 
 Register (:py:mod:`macapype.pipelines.register`):
@@ -69,8 +68,8 @@ Full pipeline (:py:mod:`macapype.pipelines.full_pipelines`):
 .. autosummary::
    :toctree: generated/
 
-    create_brain_extraction_pipe
     create_full_T1xT2_segment_pnh_subpipes
+    create_brain_extraction_pipe
     create_brain_segment_from_mask_pipe
     create_full_segment_pnh_subpipes
 

@@ -157,9 +157,6 @@
 <tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_masked_correct_bias_pipe</span></code></a>([params,&nbsp;name])</td>
 <td>Description: Correct bias using T1 and T2 images in a mask</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_debias_N4_pipe.html#macapype.pipelines.correct_bias.create_debias_N4_pipe" title="macapype.pipelines.correct_bias.create_debias_N4_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_debias_N4_pipe</span></code></a>([name])</td>
-<td>Description: Only apply ants N4BiasFieldCorrection, check where is used?</td>
-</tr>
 </tbody>
 </table>
 <p>Register (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.register</span></code>):</p>
@@ -208,11 +205,11 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></a>(params_template)</td>
-<td>Description: ANTS based segmentation pipeline using T1w and T2w images</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_T1xT2_segment_pnh_subpipes</span></code></a>(…)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_T1xT2_segment_pnh_subpipes</span></code></a>(…)</td>
 <td>Description: SPM based segmentation pipeline from T1w and T2w images</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></a>(params_template)</td>
+<td>Description: ANTS based segmentation pipeline using T1w and T2w images</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_segment_from_mask_pipe</span></code></a>(…[,&nbsp;…])</td>
 <td>Description: Segment T1 (using T2 for bias correction) and a previously</td>
@@ -303,7 +300,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

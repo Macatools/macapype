@@ -18,8 +18,8 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" href="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html" />
-    <link rel="prev" title="macapype.pipelines.segment.create_segment_atropos_pipe" href="macapype.pipelines.segment.create_segment_atropos_pipe.html" />
+    <link rel="next" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" href="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html" />
+    <link rel="prev" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" href="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -131,8 +131,10 @@
 <blockquote>
 <div><dl class="docutils">
 <dt>inputnode:</dt>
-<dd>preproc_T1: preprocessed T1 file name
-preproc_T2: preprocessed T2 file name</dd>
+<dd><p class="first">preproc_T1: preprocessed T1 file name
+preproc_T2: preprocessed T2 file name</p>
+<p class="last">indiv_params (opt): dict with individuals parameters for some nodes</p>
+</dd>
 <dt>arguments:</dt>
 <dd>params_template: dictionary of template files
 params: dictionary of node sub-parameters (from a json file)
@@ -156,7 +158,7 @@ name: pipeline name (default = “full_segment_pipe”)</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-20.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
