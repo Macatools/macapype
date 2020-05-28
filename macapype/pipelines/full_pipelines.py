@@ -363,6 +363,7 @@ def create_full_segment_pnh_subpipes(
 
     return seg_pipe
 
+
 # same as create_full_segment_pnh_subpipes but edited for baboon
 def create_full_segment_pnh_subpipes_baboon(
         params_template, params={}, name="full_segment_pnh_subpipes_baboon"):
@@ -414,8 +415,10 @@ def create_full_segment_pnh_subpipes_baboon(
     data_preparation_baboon_pipe = create_data_preparation_baboon_pipe(
         params_data_preparation_pipe)
 
-    seg_pipe.connect(inputnode, 'T1', data_preparation_baboon_pipe, 'inputnode.T1')
-    seg_pipe.connect(inputnode, 'T2', data_preparation_baboon_pipe, 'inputnode.T2')
+    seg_pipe.connect(inputnode, 'T1',
+                     data_preparation_baboon_pipe, 'inputnode.T1')
+    seg_pipe.connect(inputnode, 'T2',
+                     data_preparation_baboon_pipe, 'inputnode.T2')
 
     # full extract brain pipeline (correct_bias, denoising, extract brain)
     if 'brain_extraction_pipe' in params.keys():
@@ -428,11 +431,12 @@ def create_full_segment_pnh_subpipes_baboon(
     brain_extraction_pipe = create_brain_extraction_pipe(
         params=params_brain_extraction_pipe, params_template=params_template)
 
-    seg_pipe.connect(data_preparation_baboon_pipe, 'norm_intensity_T1.output_image',
-                     brain_extraction_pipe, 'inputnode.preproc_T1') #input image from N4biascorrected, cropped T1 image.
-    seg_pipe.connect(data_preparation_baboon_pipe, 'align_T2_on_T1.out_file', 
-                     brain_extraction_pipe, 'inputnode.preproc_T2') #input image from N4biascorrected, cropped T2 aligned to T1 image.
-
+    seg_pipe.connect(data_preparation_baboon_pipe,
+                     'norm_intensity_T1.output_image',
+                     brain_extraction_pipe, 'inputnode.preproc_T1')
+    seg_pipe.connect(data_preparation_baboon_pipe,
+                     'align_T2_on_T1.out_file',
+                     brain_extraction_pipe, 'inputnode.preproc_T2')
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" in params.keys():
@@ -442,10 +446,12 @@ def create_full_segment_pnh_subpipes_baboon(
             params_template=params_template,
             params=params_brain_segment_pipe)
 
-        seg_pipe.connect(data_preparation_baboon_pipe, 'norm_intensity_T1.output_image',
-                         brain_segment_pipe, 'inputnode.preproc_T1') #input image from N4biascorrected, cropped T1 image.
-        seg_pipe.connect(data_preparation_baboon_pipe, 'align_T2_on_T1.out_file', 
-                     brain_segment_pipe, 'inputnode.preproc_T2') #input image from N4biascorrected, cropped T2 aligned to T1 image.
+        seg_pipe.connect(data_preparation_baboon_pipe,
+                         'norm_intensity_T1.output_image',
+                         brain_segment_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(data_preparation_baboon_pipe,
+                         'align_T2_on_T1.out_file',
+                         brain_segment_pipe, 'inputnode.preproc_T2')
         seg_pipe.connect(brain_extraction_pipe,
                          "extract_pipe.smooth_mask.out_file",
                          brain_segment_pipe, "inputnode.brain_mask")
