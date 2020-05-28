@@ -1,0 +1,108 @@
+{
+    "general":
+    {
+        "template_name": "NMT_v1.2"
+    },
+
+    "data_preparation_pipe":
+    {
+        "crop":
+        {
+            "croplist_T1": "15 200 6 229 263 157",
+            "croplist_T2": "15 204 10 232 263 161",
+            "aT2": true,
+            "c": 1,
+            "n": 2
+        },
+        "norm_intensity":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
+         }
+    },
+    "brain_extraction_pipe":
+    {
+        "correct_bias_pipe":
+        {
+            "smooth":
+            {
+                "args": "-bin -s 2"
+            },
+            "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
+            {
+                "sigma": 2
+            }
+        },
+        "extract_pipe":
+        {
+            "atlas_brex":
+            {
+                "f": 0.65,
+                "reg": 1,
+                "wrp": "10,10,10",
+                "msk": "a,0,0",
+                "dil": 4
+            }
+
+        }
+    },
+    "brain_segment_pipe":
+    {
+        "masked_correct_bias_pipe":
+        {
+            "smooth":
+            {
+                "args": "-bin -s 2"
+            },
+            "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
+            {
+                    "sigma": 2
+            }
+        },
+        "register_NMT_pipe":
+        {
+            "norm_intensity":
+            {
+                "dimension": 3,
+                "bspline_fitting_distance": 200,
+                "n_iterations": [50, 50, 40, 30],
+                "convergence_threshold": 0.00000001,
+                "shrink_factor": 2,
+                "args": "-r 0 --verbose 1"
+            }
+        },
+        "segment_atropos_pipe":
+        {
+            "Atropos":
+            {
+                "dimension": 3,
+                "numberOfClasses": 3
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
+            }
+        }
+
+    }
+}
