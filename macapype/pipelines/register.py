@@ -6,7 +6,7 @@ import nipype.interfaces.afni as afni
 import nipype.interfaces.ants as ants
 
 from ..utils.misc import get_elem
-from ..utils.utils_nodes import NodeParams
+from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NwarpApplyPriors)
@@ -128,6 +128,9 @@ def create_iterative_register_pipe(
     return register_pipe
 
 
+###############################################################################
+# multi / indiv_params
+###############################################################################
 def create_register_NMT_pipe(params_template, params={},
                              name="register_NMT_pipe"):
     """
@@ -138,6 +141,7 @@ def create_register_NMT_pipe(params_template, params={},
 
         inputnode:
             T1: T1 file name
+            indiv_params: dict with individuals parameters for some nodes
 
         arguments:
             params_template: dictionary of info about template
@@ -162,17 +166,20 @@ def create_register_NMT_pipe(params_template, params={},
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1']),
+        niu.IdentityInterface(fields=['T1', 'indiv_params']),
         name='inputnode')
 
     # N4 intensity normalization over brain
     norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                params=parse_key(params, "norm_intensity"),
                                 name='norm_intensity')
-    if "norm_intensity" in params.keys():
-        norm_intensity.load_inputs_from_dict(params["norm_intensity"])
 
     register_NMT_pipe.connect(inputnode, 'T1',
                               norm_intensity, "input_image")
+
+    register_NMT_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "norm_intensity"),
+        norm_intensity, "indiv_params")
 
     deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
     register_NMT_pipe.connect(norm_intensity, 'output_image',

@@ -35,7 +35,6 @@ def get_elem(list_elem, index_elem):
 
 
 def get_first_elem(elem):
-
     print(elem)
     if isinstance(elem, list):
         print("OK, is list")
@@ -58,3 +57,27 @@ def gunzip(filename):
 
 def merge_3_elem_to_list(elem1, elem2, elem3):
     return [elem1, elem2, elem3]
+
+
+def parse_key(params, key):
+
+    from nipype.interfaces.base import isdefined
+
+    def _parse_key(params, cur_key):
+        if cur_key in params.keys():
+            return params[cur_key]
+        else:
+            "Error, key {} was not found in {}".format(key, params.keys())
+            return {}
+
+    if isdefined(params):
+        if isinstance(key, tuple):
+            for cur_key in key:
+                params = _parse_key(params, cur_key)
+        else:
+            params = _parse_key(params, key)
+
+        return params
+
+    else:
+        return {}

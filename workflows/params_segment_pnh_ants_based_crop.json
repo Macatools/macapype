@@ -1,13 +1,13 @@
 {
     "general":
     {
-        "template_name": "marmotemplate"
+        "template_name": "NMT_v1.2"
     },
     "data_preparation_pipe":
     {
         "crop":
         {
-            "args": "88 175 88 239 284 127"
+            "args": "Should not be used, specific to all"
         }
     },
     "brain_extraction_pipe":
@@ -32,10 +32,13 @@
             "atlas_brex":
             {
                 "f": 0.5,
-                "reg": 2,
+                "reg": 1,
+                "wrp": "10,10,10",
                 "msk": "a,0,0",
-                "wrp": "1"
+                "dil": 2,
+                "nrm": 1
             }
+
         }
     },
     "brain_segment_pipe":
@@ -52,7 +55,7 @@
             },
             "smooth_bias":
             {
-                "sigma": 2
+                    "sigma": 2
             }
         },
         "register_NMT_pipe":
@@ -87,5 +90,6 @@
                 "thresh": 0.5
             }
         }
+
     }
 }
