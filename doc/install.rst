@@ -3,7 +3,7 @@
 .. _install:
 
 **************
-How to install
+Installation
 **************
 
 Dependancies
