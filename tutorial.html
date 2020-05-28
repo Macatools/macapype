@@ -86,7 +86,7 @@
 <li><a class="reference internal" href="#the-old-fashioned-way">the “old fashioned” way:</a></li>
 <li><a class="reference internal" href="#the-semi-dirty-way">the “semi-dirty” way</a></li>
 <li><a class="reference internal" href="#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
-<li><a class="reference internal" href="#new-indiv-params">New: indiv_params</a></li>
+<li><a class="reference internal" href="#new-multi-params">New: multi_params</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
@@ -208,8 +208,8 @@ to load inputs from a dictionnary. It is particularly useful if multiple inputs 
 </pre></div>
 </div>
 </div>
-<div class="section" id="new-indiv-params">
-<h3>New: indiv_params<a class="headerlink" href="#new-indiv-params" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="new-multi-params">
+<h3>New: multi_params<a class="headerlink" href="#new-multi-params" title="Permalink to this headline">¶</a></h3>
 <p>Since version 0.1.2, it is possible to add a multi_params json file, containing specific parameter for specific instance of pipelines (e.g., a specific subject or session). The parameter of the params.json will be overloaded for that specific instance if defined in the multi_params.json</p>
 <p>To include a parameter specific <em>my_val</em> in <em>my_node</em> to an instance <em>sub-001/ses-001</em>, you have to fill a multi_params.json like this example:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">{</span>
@@ -219,8 +219,9 @@ to load inputs from a dictionnary. It is particularly useful if multiple inputs 
 <span class="go">        {</span>
 <span class="go">            &quot;my_node&quot;:</span>
 <span class="go">            {</span>
-<span class="go">                my_new_val</span>
+<span class="go">                &quot;my_val&quot;: my_new_val</span>
 <span class="go">            }</span>
+<span class="go">        }</span>
 <span class="go">    }</span>
 <span class="go">}</span>
 </pre></div>
@@ -229,6 +230,7 @@ to load inputs from a dictionnary. It is particularly useful if multiple inputs 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>workflows/segment_pnh.py -data path/to/dataset -out path/to/res -soft ANTS -params path/to/params.json -multi_params path/to/multi_params.json
 </pre></div>
 </div>
+<p><strong>N.B.: the sub-pipeline name or incoporated in the params.json (i.e. data_preparation/crop/args), but are dropped in multi_params (only crop/args are specified); this was done because the subpart of the dictionnary can not be passed along with nipype at each step, and would require to specify all the sub-pipeline tree names leading to a node). Thus, be careful with ambiguous node names (same node name in different sub-pipelines)</strong></p>
 </div>
 </div>
 <div class="section" id="modifying-an-existing-pipeline">

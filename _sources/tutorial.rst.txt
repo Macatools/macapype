@@ -101,7 +101,7 @@ Or even better, using parse_key at the creation of the *NodeParams* and fill the
                          params=parse_key(params, "my_node")
                          name="my_node")
 
-New: indiv_params
+New: multi_params
 ~~~~~~~~~~~~~~~~~~
 
 Since version 0.1.2, it is possible to add a multi_params json file, containing specific parameter for specific instance of pipelines (e.g., a specific subject or session). The parameter of the params.json will be overloaded for that specific instance if defined in the multi_params.json
@@ -117,8 +117,9 @@ To include a parameter specific *my_val* in *my_node* to an instance *sub-001/se
             {
                 "my_node":
                 {
-                    my_new_val
+                    "my_val": my_new_val
                 }
+            }
         }
     }
 
@@ -128,6 +129,7 @@ and add the path to the multi_params.json with -multi_params:
 
     workflows/segment_pnh.py -data path/to/dataset -out path/to/res -soft ANTS -params path/to/params.json -multi_params path/to/multi_params.json
 
+**N.B.: the sub-pipeline name or incoporated in the params.json (i.e. data_preparation/crop/args), but are dropped in multi_params (only crop/args are specified); this was done because the subpart of the dictionnary can not be passed along with nipype at each step, and would require to specify all the sub-pipeline tree names leading to a node). Thus, be careful with ambiguous node names (same node name in different sub-pipelines)**
 
 Modifying an existing pipeline
 ________________________________
