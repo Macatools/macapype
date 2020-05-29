@@ -1,4 +1,4 @@
-from nipype.pipeline.engine import Node
+from nipype.pipeline.engine import Node, MapNode
 from nipype.interfaces.io import BIDSDataGrabber
 from .misc import parse_key
 
@@ -51,6 +51,56 @@ class NodeParams(Node):
             self.load_inputs_from_dict(val)
         else:
             super(NodeParams, self).set_input(parameter=parameter, val=val)
+
+
+class MapNodeParams(MapNode):
+
+    """
+    Overloading of the class nodes for aloowing params reading directly from
+    a dictionnary; ultimately should be added to nipype if required
+    """
+    def __init__(
+            self,
+            interface,
+            name,
+            iterfield,
+            params={}):
+
+        iterfield.extend(list(params.keys()))
+        super(MapNodeParams, self).__init__(interface=interface, name=name,
+                                            iterfield=iterfield)
+
+        self.load_inputs_from_dict(params)
+
+    def load_inputs_from_dict(self, params, overwrite=True):
+
+        def_inputs = []
+        if not overwrite:
+            def_inputs = list(self.inputs.get_traitsfree().keys())
+
+        new_inputs = list(set(list(params.keys())) - set(def_inputs))
+
+        for key in new_inputs:
+            assert hasattr(self.inputs, key), \
+                print("Warning, Could not find {} in inputs {} for node {}".
+                      format(key, self._interface.inputs, self._name))
+            setattr(self.inputs, key, params[key])
+
+    def _check_inputs(self, parameter):
+        if parameter == "indiv_params":
+            print("**** checking for indiv_params****")
+            return True
+        else:
+            return super(MapNodeParams, self)._check_inputs(
+                parameter=parameter)
+
+    def set_input(self, parameter, val):
+        if parameter == "indiv_params":
+            print("**** setting indiv_params****")
+            print(val)
+            self.load_inputs_from_dict(val)
+        else:
+            super(MapNodeParams, self).set_input(parameter=parameter, val=val)
 
 
 class BIDSDataGrabberParams(BIDSDataGrabber):
