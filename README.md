@@ -1,4 +1,4 @@
-# Install
+# Quick Install
 To use it:
 ```shell
 pip install macapype
@@ -11,11 +11,15 @@ cd macapype
 python setup.py develop
 ```
 
+# Docker image
+```shell
+docker pull macatools/macapype/latest
+```
+
 # Documentation
 
 https://macatools.github.io/macapype/
 
-# Resources & Dependencies
+# Related to project:
 
-## Documents
-[Segmentation Tools For Monkey Brains](https://docs.google.com/document/d/11zeyjY46AsLZcf-Y5Q_LjIoE_aYkN8DaLwZIElF2ctE/edit)
+[A guide for PNH MRI processing](https://github.com/PRIME-RE/prime-re.github.io/wiki), and in particular, the session on [structural MRI processing](https://github.com/PRIME-RE/prime-re.github.io/wiki/Structural-processing)
