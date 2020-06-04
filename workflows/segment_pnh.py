@@ -74,7 +74,7 @@ from macapype.utils.misc import show_files, get_first_elem
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                          acquisitions, params_file, multi_params_file,
-                         wf_name="test_pipeline"):
+                         wf_name="test_pipeline_single"):
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -242,5 +242,5 @@ if __name__ == '__main__':
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
     #print('The PNH segmentation pipeline is ready')
     #print("Start to process")
-    wf.run()
+    wf.run(plugin='MultiProc', plugin_args={'n_procs' : 3})
 
