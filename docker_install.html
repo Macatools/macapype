@@ -135,11 +135,11 @@ $ docker build -t macapype_docker .
 </div>
 <p>Example of workflows (see <a class="reference internal" href="workflows.html#workflows"><span class="std std-ref">Workflows</span></a> for more explanations):</p>
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span># Given your dataset follows BIDS standard and is located in ~/Data_maca
-# - running the workflow segment_multi_pnh_ants_based on full dataset
-$ docker run -ti -v ~/Data_maca:/data/macapype macapype_docker python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
+# - running the workflow ants_based on full dataset
+$ docker run -ti -v ~/Data_maca:/data/macapype macapype_docker python /root/packages/macapype/workflows/segment_pnh.py -soft ANTS -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
 
 # - running the workflow segment_multi_pnh_ants_based on one subject/session
-$ docker run -ti -v ~/Data_maca:/data/macapype macapype_docker python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -subjects Apache -ses 01 -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
+$ docker run -ti -v ~/Data_maca:/data/macapype macapype_docker python /root/packages/macapype/workflows/segment_pnh.py -soft ANTS -data /data/macapype -out /data/macapype -subjects Apache -ses 01 -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
 </pre></div>
 </div>
 </div>
@@ -149,11 +149,11 @@ $ docker run -ti -v ~/Data_maca:/data/macapype macapype_docker python /root/pack
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker pull macatools/macapype:latest
 
 # Given your dataset follows BIDS standard and is located in ~/Data_maca
-# - running the workflow segment_multi_pnh_ants_based on full dataset
-$ docker run -ti -v ~/Data_maca:/data/macapype macatools/macapype:latest python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
+# - running the workflow ants_based on full dataset
+$ docker run -ti -v ~/Data_maca:/data/macapype macatools/macapype:latest python /root/packages/macapype/workflows/segment_pnh.py -soft ANTS -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
 
 # - running the workflow segment_multi_pnh_ants_based on one subject/session
-$ docker run -ti -v ~/Data_maca:/data/macapype macatools/macapype:latest python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -subjects Apache -ses 01 -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
+$ docker run -ti -v ~/Data_maca:/data/macapype macatools/macapype:latest python /root/packages/macapype/workflows/segment_pnh.py -soft ANTS -data /data/macapype -out /data/macapype -subjects Apache -ses 01 -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
 </pre></div>
 </div>
 </div>
