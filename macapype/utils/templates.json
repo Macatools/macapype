@@ -33,5 +33,13 @@
         "template_gm": "gm_all.nii.gz",
         "template_wm": "wm.nii.gz",
         "template_csf": "csf.nii.gz"
+    },
+    "haiko89_template":{
+        "template_head": "Haiko89_Asymmetric.Template_n89.nii.gz",
+        "template_brain": "Haiko89_Asymmetric.Template_n89.nii.gz",
+
+        "template_gm": "TPM_Asymmetric.GreyMatter_Haiko89.nii.gz",
+        "template_wm": "TPM_Asymmetric.WhiteMatter_Haiko89.nii.gz",
+        "template_csf": "TPM_Asymmetric.CSF_Haiko89.nii.gz"
     }
 }

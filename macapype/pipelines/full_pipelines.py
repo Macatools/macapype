@@ -7,8 +7,9 @@ from ..utils.utils_nodes import NodeParams, parse_key
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from .prepare import (create_data_preparation_pipe,
-                      create_data_mapnode_preparation_pipe)
+from .prepare import (create_old_data_preparation_pipe,
+                      create_short_data_preparation_pipe,
+                      create_long_data_preparation_pipe)
 
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
@@ -74,17 +75,26 @@ def create_full_T1xT2_segment_pnh_subpipes(
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'T2', 'indiv_params']),
+        niu.IdentityInterface(fields=['list_T1', 'list_T2', 'indiv_params']),
         name='inputnode'
     )
 
     # preprocessing
-    data_preparation_pipe = create_data_preparation_pipe(
-        params=parse_key(params, "data_preparation_pipe"))
+    if 'old_data_preparation_pipe' in params.keys():
+        assert 'bet_crop' in parse_key(params, "old_data_preparation_pipe"),\
+            "This version should contains betcrop in params.json"
 
-    seg_pipe.connect(inputnode, 'T1', data_preparation_pipe, 'inputnode.T1')
-    seg_pipe.connect(inputnode, 'T2', data_preparation_pipe, 'inputnode.T2')
+        data_preparation_pipe = create_old_data_preparation_pipe(
+            params=parse_key(params, "old_data_preparation_pipe"))
+    else:
+        print("Error, old_data_preparation_pipe was not \
+            found in params, skipping")
+        return seg_pipe
 
+    seg_pipe.connect(inputnode, 'list_T1',
+                     data_preparation_pipe, 'inputnode.list_T1')
+    seg_pipe.connect(inputnode, 'list_T2',
+                     data_preparation_pipe, 'inputnode.list_T2')
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
@@ -93,9 +103,9 @@ def create_full_T1xT2_segment_pnh_subpipes(
                         params=parse_key(params, "debias"),
                         name='debias')
 
-    seg_pipe.connect(data_preparation_pipe, 'denoise_T1.output_image',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      debias, 't1_file')
-    seg_pipe.connect(data_preparation_pipe, 'denoise_T2.output_image',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      debias, 't2_file')
     seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
                      debias, 'b')
@@ -121,19 +131,16 @@ def create_full_T1xT2_segment_pnh_subpipes(
     # Compute brain mask using old_segment of SPM and postprocessing on
     # tissues' masks
     if "old_segment_pipe" in params.keys():
-        params_old_segment_pipe = params["old_segment_pipe"]
-    else:
-        params_old_segment_pipe = {}
 
-    old_segment_pipe = create_old_segment_pipe(
-        params_template, params=params_old_segment_pipe)
+        old_segment_pipe = create_old_segment_pipe(
+            params_template, params=parse_key(params, "old_segment_pipe"))
 
-    seg_pipe.connect(reg, ('warp_file', gunzip),
-                     old_segment_pipe, 'inputnode.T1')
+        seg_pipe.connect(reg, ('warp_file', gunzip),
+                         old_segment_pipe, 'inputnode.T1')
 
-    seg_pipe.connect(
-        inputnode, 'indiv_params',
-        old_segment_pipe, 'inputnode.indiv_params')
+        seg_pipe.connect(
+            inputnode, 'indiv_params',
+            old_segment_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
 
@@ -145,15 +152,17 @@ def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """ Description: ANTS based segmentation pipeline using T1w and T2w images
 
-
     - correct_bias
+
     - denoise
+
     - extract_brain
+
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file name
-            preproc_T2: preprocessed T2 file name
+            preproc_T1: preprocessed T1 file
+            preproc_T2: preprocessed T2 file
 
             indiv_params (opt): dict with individuals parameters for some nodes
 
@@ -202,18 +211,21 @@ def create_brain_extraction_pipe(params_template, params={},
 def create_brain_segment_from_mask_pipe(
         params_template, params={}, name="brain_segment_from_mask_pipe"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
-        computed mask with NMT Atlas and atropos segment.
+    computed mask with NMT Atlas and atropos segment.
 
-        - denoise pipe
-        - debias pipe
-        - NMT align (after N4Debias)
-        - Atropos segment
+    - debias T1xT2 in mask only (masked_correct_bias_pipe)
+
+    - NMT align (after N4Debias)
+
+    - Atropos segment
 
     Inputs:
 
         inputnode:
             preproc_T1: preprocessed T1 file name
+
             preproc_T2: preprocessed T2 file name
+
             brain_mask: a mask computed for the same T1/T2 images
 
             indiv_params (opt): dict with individuals parameters for some nodes
@@ -302,12 +314,16 @@ def create_full_segment_pnh_subpipes(
 
         inputnode:
             preproc_T1: preprocessed T1 file name
+
             preproc_T2: preprocessed T2 file name
+
             indiv_params (opt): dict with individuals parameters for some nodes
 
         arguments:
             params_template: dictionary of template files
+
             params: dictionary of node sub-parameters (from a json file)
+
             name: pipeline name (default = "full_segment_pipe")
 
     Outputs:
@@ -318,26 +334,32 @@ def create_full_segment_pnh_subpipes(
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'T2', 'indiv_params']),
+        niu.IdentityInterface(fields=['list_T1', 'list_T2', 'indiv_params']),
         name='inputnode'
     )
 
     # preprocessing
-    if 'data_mapnode_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_data_mapnode_preparation_pipe(
-            params=parse_key(params, "data_mapnode_preparation_pipe"))
-    elif 'data_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_data_preparation_pipe(
-            params=parse_key(params, "data_preparation_pipe"))
+    if 'short_data_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_short_data_preparation_pipe(
+            params=parse_key(params, "short_data_preparation_pipe"))
+
+    elif 'long_data_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_data_preparation_pipe(
+            params=parse_key(params, "long_data_preparation_pipe"))
+
+    elif 'old_data_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_old_data_preparation_pipe(
+            params=parse_key(params, "old_data_preparation_pipe"))
+
     else:
-        print("Error, data_preparation_pipe or \
-            data_mapnode_preparation_pipe was not found")
+        print("Error, long_data_preparation_pipe, old_data_preparation_pipe or\
+            long_data_preparation_pipe was not found in params, skipping")
         return seg_pipe
 
-    seg_pipe.connect(inputnode, 'T1',
-                     data_preparation_pipe, 'inputnode.T1')
-    seg_pipe.connect(inputnode, 'T2',
-                     data_preparation_pipe, 'inputnode.T2')
+    seg_pipe.connect(inputnode, 'list_T1',
+                     data_preparation_pipe, 'inputnode.list_T1')
+    seg_pipe.connect(inputnode, 'list_T2',
+                     data_preparation_pipe, 'inputnode.list_T2')
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 

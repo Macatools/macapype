@@ -61,7 +61,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 from macapype.pipelines.full_pipelines import (
     create_full_segment_pnh_subpipes, create_full_T1xT2_segment_pnh_subpipes)
 
-from macapype.utils.utils_bids import (create_datasource_multi_params,
+from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource)
 
 from macapype.utils.utils_tests import load_test_data, format_template
@@ -73,7 +73,7 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
-                         acquisitions, params_file, multi_params_file,
+                         acquisitions, params_file, indiv_params_file,
                          wf_name="test_pipeline_single"):
     """ Set up the segmentatiopn pipeline based on ANTS
 
@@ -99,7 +99,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     acquisitions: list of str (optional)
         Acquisition name to match to BIDS specification (acq-[ACQ1]...)
 
-    multi_params_file: path to a JSON file
+    indiv_params_file: path to a JSON file
         JSON file that specify some parameters of the pipeline,
         unique for the subjects/sessions.
 
@@ -133,32 +133,33 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
     pprint.pprint(params)
 
-    # multi_params
-    multi_params = {}
-    if multi_params_file is not None:
+    # indiv_params
+    indiv_params = {}
+    if indiv_params_file is not None:
 
-        print("Multi Params:", multi_params_file)
+        print("Multi Params:", indiv_params_file)
 
-        assert os.path.exists(multi_params_file), "Error with file {}".format(
-            multi_params_file)
+        assert os.path.exists(indiv_params_file), "Error with file {}".format(
+            indiv_params_file)
 
-        multi_params = json.load(open(multi_params_file))
+        indiv_params = json.load(open(indiv_params_file))
 
-        wf_name+="_multi_params"
+        wf_name+="_indiv_params"
 
 
-    pprint.pprint(multi_params)
+    pprint.pprint(indiv_params)
 
     # params_template
+    assert ("general" in params.keys() and \
+        "template_name" in params["general"].keys()), \
+            "Error, the params.json should contains a general/template_name"
+
+    template_name = params["general"]["template_name"]
+
     if "general" in params.keys() and "my_path" in params["general"].keys():
         my_path = params["general"]["my_path"]
     else:
         my_path = ""
-
-    if "general" in params.keys() and "template_name" in params["general"].keys():
-        template_name = params["general"]["template_name"]
-    else:
-        template_name = 'NMT_v1.2'
 
     nmt_dir = load_test_data(template_name, path_to = my_path)
     params_template = format_template(nmt_dir, template_name)
@@ -184,8 +185,8 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
             params_template=params_template, params=params)
 
 
-    if multi_params:
-        datasource = create_datasource_multi_params(data_dir, multi_params,
+    if indiv_params:
+        datasource = create_datasource_indiv_params(data_dir, indiv_params,
                                                     subjects, sessions)
 
         main_workflow.connect(datasource, "indiv_params",
@@ -194,8 +195,8 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         datasource = create_datasource(data_dir, subjects, sessions,
                                        acquisitions)
 
-    main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.T1')
-    main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.T2')
+    main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
+    main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.list_T2')
 
     return main_workflow
 
@@ -220,8 +221,8 @@ if __name__ == '__main__':
                         help="Acquisitions ID")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
-    parser.add_argument("-multi_params", dest="multi_params_file", type=str,
-                        help="Multiple Parameters json file", required=False)
+    parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
+                        help="Individual parameters json file", required=False)
 
 
     args = parser.parse_args()
@@ -236,11 +237,12 @@ if __name__ == '__main__':
         sessions=args.ses,
         acquisitions=args.acq,
         params_file=args.params_file,
-        multi_params_file=args.multi_params_file)
+        indiv_params_file=args.indiv_params_file)
 
     wf.write_graph(graph2use="colored")
     wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
     #print('The PNH segmentation pipeline is ready')
     #print("Start to process")
-    wf.run(plugin='MultiProc', plugin_args={'n_procs' : 3})
+    #wf.run()
+    wf.run(plugin='MultiProc', plugin_args={'n_procs' : 4})
 

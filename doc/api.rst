@@ -16,8 +16,9 @@ Data preparation (:py:mod:`macapype.pipelines.prepare`):
 .. autosummary::
    :toctree: generated/
 
-    create_data_preparation_pipe
-    create_reorient_pipeline
+    create_old_data_preparation_pipe
+    create_short_data_preparation_pipe
+    create_long_data_preparation_pipe
 
 
 Correct bias (:py:mod:`macapype.pipelines.correct_bias`):

@@ -3,11 +3,14 @@
     {
         "template_name": "NMT_v1.2"
     },
-    "data_preparation_pipe":
+    "old_data_preparation_pipe":
     {
-        "crop":
+        "bet_crop":
         {
-            "args": "Should not be used, specific to all"
+            "m": true,
+            "aT2": true,
+            "c": 10,
+            "n": 2
         }
     },
     "brain_extraction_pipe":

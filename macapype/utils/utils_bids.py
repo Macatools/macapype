@@ -52,13 +52,13 @@ def create_datasource(data_dir, subjects=None, sessions=None,
     return bids_datasource
 
 
-def create_datasource_multi_params(data_dir, multi_params, subjects=None,
+def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
                                    sessions=None, acquisitions=None):
     """ Create a datasource node that have iterables following BIDS format,
-    including a multi_params file"""
+    including a indiv_params file"""
 
     bids_datasource = pe.Node(
-        interface=BIDSDataGrabberParams(multi_params),
+        interface=BIDSDataGrabberParams(indiv_params),
         name='bids_datasource'
     )
 
