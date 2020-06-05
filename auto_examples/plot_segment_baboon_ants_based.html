@@ -82,7 +82,9 @@
 <li><a class="reference internal" href="#">Plot the results of a segmentation with ANTS-based pipeline</a><ul>
 <li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
 <li><a class="reference internal" href="#data-preparation">Data preparation</a><ul>
+<li><a class="reference internal" href="#results-of-denoising">results of denoising</a></li>
 <li><a class="reference internal" href="#results-of-cropping">results of cropping</a></li>
+<li><a class="reference internal" href="#results-of-norm-intensity">results of norm_intensity</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#first-part-of-the-pipeline-brain-extraction">First part of the pipeline: brain extraction</a><ul>
@@ -109,7 +111,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/auto_examples/plot_segment_pnh_ants_based.rst.txt"
+  <a href="../_sources/auto_examples/plot_segment_baboon_ants_based.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -135,10 +137,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-segment-pnh-ants-based-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-segment-baboon-ants-based-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="plot-the-results-of-a-segmentation-with-ants-based-pipeline">
-<span id="plot-segment-pnh-ants-based"></span><span id="sphx-glr-auto-examples-plot-segment-pnh-ants-based-py"></span><h1>Plot the results of a segmentation with ANTS-based pipeline<a class="headerlink" href="#plot-the-results-of-a-segmentation-with-ants-based-pipeline" title="Permalink to this headline">¶</a></h1>
+<span id="plot-segment-baboon-ants-based"></span><span id="sphx-glr-auto-examples-plot-segment-baboon-ants-based-py"></span><h1>Plot the results of a segmentation with ANTS-based pipeline<a class="headerlink" href="#plot-the-results-of-a-segmentation-with-ants-based-pipeline" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: David Meunier &lt;david_meunier_79@hotmail.fr&gt;</span>
 
 <span class="c1"># License: BSD (3-clause)</span>
@@ -149,18 +151,19 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 
-<span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a>
+<span class="kn">from</span> <span class="nn">macapype.utils.utils_tests</span> <span class="kn">import</span> <span class="n">load_test_data</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 </pre></div>
 </div>
 <div class="section" id="testing-plot-in-local">
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a><span class="p">(</span><span class="s2">&quot;data_test_pnh&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;/home/INT/meunier.d/data_macapype&quot;</span>
 
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_KK_test&quot;</span><span class="p">)</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_baboon&quot;</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
@@ -168,33 +171,105 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_001.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>data_dirpath /home/INT/meunier.d/data_macapype already exists
-/home/INT/meunier.d/data_macapype/data_test_pnh Already exists, skipping download
-</pre></div>
-</div>
+<img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_001.png" />
 </div>
 <div class="section" id="data-preparation">
 <h2>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="results-of-cropping">
-<h3>results of cropping<a class="headerlink" href="#results-of-cropping" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cropped_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;bet_crop&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped.nii.gz&quot;</span><span class="p">)</span>
+<div class="section" id="results-of-denoising">
+<h3>results of denoising<a class="headerlink" href="#results-of-denoising" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">denoise_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_single_preparation_pipe/single_prep_T1/denoise/mapflow/_denoise0/sub-Babar_ses-test_T1w_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">denoise_T1_file</span><span class="p">)</span>
 
 <span class="c1"># displaying results</span>
-<span class="n">cropped_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;outfile_T1.png&quot;</span><span class="p">)</span>
+<span class="n">denoise_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;denoise_T1.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">,</span> <span class="n">denoise_T1_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+
+<span class="n">denoise_T2_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_single_preparation_pipe/single_prep_T2/denoise/mapflow/_denoise0/sub-Babar_ses-test_T2w_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">denoise_T2_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">denoise_T2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;denoise_T2.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoise_T2</span><span class="p">,</span> <span class="n">denoise_T2_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results-of-cropping">
+<h3>results of cropping<a class="headerlink" href="#results-of-cropping" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cropped_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_single_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;single_prep_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;crop_bb/mapflow/_crop_bb0/sub-Babar_ses-test_T1w_noise_corrected_roi.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cropped_T1_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">cropped_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;cropped_T1.png&quot;</span><span class="p">)</span>
 <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">cropped_T2_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_single_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;single_prep_T2&quot;</span><span class="p">,</span> <span class="s2">&quot;crop_bb/mapflow/_crop_bb0/sub-Babar_ses-test_T2w_noise_corrected_roi.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cropped_T2_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">cropped_T2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;cropped_T2.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T2</span><span class="p">,</span> <span class="n">cropped_T2_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results-of-norm-intensity">
+<h3>results of norm_intensity<a class="headerlink" href="#results-of-norm-intensity" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">norm_intensity_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_single_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;single_prep_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;norm_intensity/mapflow/_norm_intensity0/sub-Babar_ses-test_T1w_noise_corrected_roi_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">norm_intensity_T1_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">norm_intensity_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;norm_intensity_T1.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">norm_intensity_T1</span><span class="p">,</span> <span class="n">norm_intensity_T1_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+<span class="n">norm_intensity_T2_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_single_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;single_prep_T2&quot;</span><span class="p">,</span> <span class="s2">&quot;norm_intensity/mapflow/_norm_intensity0/sub-Babar_ses-test_T2w_noise_corrected_roi_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">norm_intensity_T2_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">norm_intensity_T2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;norm_intensity_T2.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">norm_intensity_T2</span><span class="p">,</span> <span class="n">norm_intensity_T2_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">norm_intensity_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoise_T2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">norm_intensity_T2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_002.png" />
+<ul class="sphx-glr-horizontal">
+<li><img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_002.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_segment_baboon_ants_based_002.png" />
+</li>
+<li><img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_003.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_segment_baboon_ants_based_003.png" />
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="first-part-of-the-pipeline-brain-extraction">
@@ -202,7 +277,10 @@
 <div class="section" id="correct-bias-results">
 <h3>Correct bias results<a class="headerlink" href="#correct-bias-results" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">debiased_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_T1&quot;</span><span class="p">,</span>
-                           <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths.nii.gz&quot;</span><span class="p">)</span>
+                           <span class="s2">&quot;sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">norm_intensity_T2_file</span><span class="p">)</span>
+
 
 <span class="n">debiased_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;debiased_T1.png&quot;</span><span class="p">)</span>
 
@@ -219,29 +297,32 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_003.png" />
+<img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_004.png" />
 </div>
 <div class="section" id="brain-extraction-results">
 <h3>Brain extraction results<a class="headerlink" href="#brain-extraction-results" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># At the end 1st part pipeline</span>
 <span class="n">mask_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;smooth_mask&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_brain_bin_bin.nii.gz&quot;</span><span class="p">)</span>
+    <span class="s2">&quot;sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_brain_bin_bin.nii.gz&quot;</span><span class="p">)</span>
 
-<span class="n">output_img_overlay</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_overlay.png&quot;</span><span class="p">)</span>
-<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}&quot;.format(output_img_overlay, mask_file, T1_file)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mask_file</span><span class="p">)</span>
+
+<span class="n">mask</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;mask.png&quot;</span><span class="p">)</span>
+<span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}&quot;.format(mask, mask_file, T1_file)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_004.png" />
+<img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_005.png" />
 </div>
 </div>
 <div class="section" id="second-part-of-the-pipeline-segmentation">
@@ -251,17 +332,8 @@
 </div>
 <div class="section" id="debias-t1xt2-and-debias-n4">
 <h3>debias T1xT2 and debias N4<a class="headerlink" href="#debias-t1xt2-and-debias-n4" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">denoised_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;denoise_T1&quot;</span><span class="p">,</span>
-                           <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
-
-
-<span class="n">denoised_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;denoised_T1.png&quot;</span><span class="p">)</span>
-
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> -cm Render3&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoised_T1</span><span class="p">,</span> <span class="n">denoised_T1_file</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="n">debiased_mask_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_mask_T1&quot;</span><span class="p">,</span>
-                         <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked.nii.gz&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">debiased_mask_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_mask_T1&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_masked.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">debiased_mask_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;debiased_mask_T1.png&quot;</span><span class="p">)</span>
 
@@ -270,7 +342,7 @@
 
 
 <span class="n">N4_debias_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;norm_intensity&quot;</span><span class="p">,</span>
-                         <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
+                         <span class="s2">&quot;sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">N4_debias_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;N4_debias_T1.png&quot;</span><span class="p">)</span>
 
@@ -280,7 +352,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoised_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">norm_intensity_T1</span><span class="p">))</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">debiased_mask_T1</span><span class="p">))</span>
@@ -291,17 +363,17 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_005.png" />
+<img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_006.png" />
 </div>
 <div class="section" id="register-template-to-subject">
 <h3>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deoblique_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
      <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span>  <span class="s2">&quot;deoblique&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
+    <span class="s2">&quot;sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_masked_corrected.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">reg_template_mask_to_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;align_NMT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NMT_allineate.nii.gz&quot;</span><span class="p">)</span>
+    <span class="s2">&quot;Haiko89_Asymmetric.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">reg_template_mask_to_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;reg_template_mask_to_T1.png&quot;</span><span class="p">)</span>
 
@@ -318,7 +390,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_006.png" />
+<img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_007.png" />
 </div>
 <div class="section" id="segmentation-results-by-tissue">
 <h3>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h3>
@@ -338,13 +410,13 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_pnh_ants_based_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_pnh_ants_based_007.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  40.039 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-pnh-ants-based-py">
+<img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_008.png" />
+<p><strong>Total running time of the script:</strong> ( 1 minutes  10.531 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-baboon-ants-based-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/bf7754578b3c58be1e62ede8ea84f74a/plot_segment_pnh_ants_based.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_pnh_ants_based.py</span></code></a></div>
+<a class="reference download internal" download="" href="../_downloads/a908695f195f1a743a60464bd8b73d9a/plot_segment_baboon_ants_based.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_baboon_ants_based.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/45ee72b111d611416933508b13c883e2/plot_segment_pnh_ants_based.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_segment_pnh_ants_based.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../_downloads/37714cf297f0f9ef0685294d95697ef3/plot_segment_baboon_ants_based.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_segment_baboon_ants_based.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>

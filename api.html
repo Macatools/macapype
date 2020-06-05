@@ -63,7 +63,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
@@ -139,8 +140,8 @@
 <tr class="row-odd"><td><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_data_preparation_pipe</span></code></a>(params[,&nbsp;name])</td>
 <td>prepare: - av = checking if multiples T1 and T2 and if it is the case, coregister and average (~ flirt_average) - coregister T2 on T1 with FLIRT - crop using .cropbox file</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/macapype.pipelines.prepare.create_reorient_pipeline.html#macapype.pipelines.prepare.create_reorient_pipeline" title="macapype.pipelines.prepare.create_reorient_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_reorient_pipeline</span></code></a>([name,&nbsp;new_dims])</td>
-<td>By kepkee: fslswapdim image_bad x z -y image_good fslorient -deleteorient image_good.nii.gz; fslorient -setqformcode 1 image_good.nii.gz</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_reorient_pipeline</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -300,7 +301,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-28.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-05.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

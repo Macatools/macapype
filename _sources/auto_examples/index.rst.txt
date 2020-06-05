@@ -14,6 +14,26 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_baboon_ants_based_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_segment_baboon_ants_based.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_segment_baboon_ants_based
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data with ANTS">
 
 .. only:: html

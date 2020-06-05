@@ -63,7 +63,8 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
@@ -80,11 +81,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Pipeline examples</a><ul>
-<li><a class="reference internal" href="#spm-based-pipelines">SPM-based pipelines:</a></li>
-<li><a class="reference internal" href="#ants-based-pipelines">ANTS-based pipelines:</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Pipeline examples</a></li>
 </ul>
 </ul>
 </li>
@@ -122,54 +119,11 @@
       
   <div class="section" id="pipeline-examples">
 <span id="examples"></span><h1>Pipeline examples<a class="headerlink" href="#pipeline-examples" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="spm-based-pipelines">
-<h2>SPM-based pipelines:<a class="headerlink" href="#spm-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="auto_examples/plot_segment_pnh_spm_based.html#plot-segment-pnh-spm-based"><span class="std std-ref">Segmentation of PNH test dataset</span></a> processed with SPM-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>, with the processing sequence:</p>
-<ul class="simple">
-<li><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></li>
-</ul>
-</div>
-<div class="section" id="ants-based-pipelines">
-<h2>ANTS-based pipelines:<a class="headerlink" href="#ants-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="auto_examples/plot_segment_pnh_ants_based.html#plot-segment-pnh-ants-based"><span class="std std-ref">Segmentation of PNH test dataset</span></a> processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a></dt>
-<dd><ul class="first last">
-<li>Averaging multiple files from same nature</li>
-<li>possibly <a class="reference internal" href="generated/macapype.pipelines.prepare.create_reorient_pipeline.html#macapype.pipelines.prepare.create_reorient_pipeline" title="macapype.pipelines.prepare.create_reorient_pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">reorientation</span> <span class="pre">pipeline</span></code></a></li>
-<li>cropping (using <a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a> for cropping tool, or fslroi specifying cropbox)</li>
-<li>denoising from Ants non-local mean</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">extraction</span> <span class="pre">pipeline</span></code></a></dt>
-<dd><ul class="first last">
-<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">debias</span> <span class="pre">pipeline</span></code></a> (similar to <a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>, but all steps are nipype nodes)</li>
-<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">extract</span> <span class="pre">brain</span> <span class="pre">pipeline</span></code></a> (using Atlax-Brex)</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">segment</span> <span class="pre">from</span> <span class="pre">mask</span></code></a> :</dt>
-<dd><ul class="first last">
-<li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">masked</span> <span class="pre">debias</span> <span class="pre">pipeline</span></code></a></li>
-<li><a class="reference internal" href="generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe" title="macapype.pipelines.register.create_register_NMT_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">register</span> <span class="pre">pipeline</span></code></a> from template (NMT) to subject space</li>
-<li><a class="reference internal" href="generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe" title="macapype.pipelines.segment.create_segment_atropos_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">segmentation</span> <span class="pre">pipeline</span></code></a> in subject space with Atropos</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-<p><a class="reference internal" href="auto_examples/plot_segment_sphinx_pnh_ants_based.html#plot-segment-sphinx-pnh-ants-based"><span class="std std-ref">Segmentation of PNH test dataset with reorientation</span></a>, starting from a sphinx position, processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>.</p>
-<p><a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">Segmentation of marmoset test dataset</span></a>, processed using same ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>. The automated cropping did not work, hence manual cropping was used, cropbox has to be specified manually.</p>
-</div>
+<p><a class="reference internal" href="auto_examples/plot_segment_pnh_spm_based.html#plot-segment-pnh-spm-based"><span class="std std-ref">Segmentation of PNH test dataset</span></a> processed with SPM-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>. Courtesy of the examples data: <a class="reference external" href="https://cordis.europa.eu/project/id/788240">ERC COVOPRIM</a> project; Acknoledgements to Pascal Belin and Regis Trapeau.</p>
+<p><a class="reference internal" href="auto_examples/plot_segment_pnh_ants_based.html#plot-segment-pnh-ants-based"><span class="std std-ref">Segmentation of PNH test dataset</span></a> processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>. Courtesy of the examples data: <a class="reference external" href="https://cordis.europa.eu/project/id/788240">ERC COVOPRIM</a> project; Acknoledgements to Pascal Belin and Regis Trapeau.</p>
+<p><a class="reference internal" href="auto_examples/plot_segment_sphinx_pnh_ants_based.html#plot-segment-sphinx-pnh-ants-based"><span class="std std-ref">Segmentation of PNH test dataset with reorientation</span></a>, starting from a sphinx position, processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>. Acknoledgements to Frederci Chavane and Isabelle Racicot.</p>
+<p><a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">Segmentation of marmoset test dataset</span></a>, processed using same ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>. The automated cropping did not work, hence manual cropping was used, cropbox has to be specified manually. Courtesy of the examples data: <a class="reference external" href="https://anr.fr/Projet-ANR-18-CE37-0017">ANR Marmobrain</a> project; Acknoledgements to Frederic Chavane and Thomas Brochier.</p>
+<p><a class="reference internal" href="auto_examples/plot_segment_baboon_ants_based.html#plot-segment-baboon-ants-based"><span class="std std-ref">Segmentation of baboon test dataset</span></a>, processed using same ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with single_preparation pipeline for data_preparation. Courtesy of the examples data: <a class="reference external" href="https://cordis.europa.eu/project/id/716931/fr">ERC GestImage</a> project, Acknoledgements to Adrien Meguerditchian and Yannick Becker.</p>
 </div>
 
 
@@ -184,7 +138,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-05-28.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-05.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
