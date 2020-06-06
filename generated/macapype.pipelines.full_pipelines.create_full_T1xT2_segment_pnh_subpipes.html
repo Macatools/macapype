@@ -18,8 +18,6 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe" href="macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html" />
-    <link rel="prev" title="macapype.pipelines.segment.create_segment_atropos_pipe" href="macapype.pipelines.segment.create_segment_atropos_pipe.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -59,8 +57,8 @@
      href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a></li>
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
@@ -119,59 +117,6 @@
       
   <div class="section" id="macapype-pipelines-full-pipelines-create-full-t1xt2-segment-pnh-subpipes">
 <h1>macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes<a class="headerlink" href="#macapype-pipelines-full-pipelines-create-full-t1xt2-segment-pnh-subpipes" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes">
-<code class="descclassname">macapype.pipelines.full_pipelines.</code><code class="descname">create_full_T1xT2_segment_pnh_subpipes</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='full_T1xT2_segment_pnh_subpipes'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_full_T1xT2_segment_pnh_subpipes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: SPM based segmentation pipeline from T1w and T2w images</p>
-<blockquote>
-<div><ul class="simple">
-<li><dl class="first docutils">
-<dt>data_preparation_pipe:</dt>
-<dd><ul class="first last">
-<li>avg_align</li>
-<li>deoblique,</li>
-<li>reorient if needed</li>
-<li>bet_crop (brain extraction and crop) -&gt; mask</li>
-<li>denoise</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li>T1xT2BiasFieldCorrection using mask -&gt; debias</li>
-<li>IterREGBET -&gt; registration to template file</li>
-<li>old_segment_pipe</li>
-</ul>
-</div></blockquote>
-<p>Inputs:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>inputnode:</dt>
-<dd><p class="first">T1: T1 file name
-T2: T2 file name</p>
-<p class="last">indiv_params (opt): dict with individuals parameters for some nodes</p>
-</dd>
-<dt>arguments:</dt>
-<dd><p class="first">params_template: dict of template files containing brain_template
-and priors (list of template based segmented tissues)</p>
-<p>params: dictionary of node sub-parameters (from a json file)</p>
-<p class="last">name: pipeline name (default = “T1xT2_segmentation_pipeline”)</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Outputs:</dt>
-<dd><dl class="first last docutils">
-<dt>old_segment_pipe.thresh_gm.out_file:</dt>
-<dd>segmented grey matter in template space</dd>
-<dt>old_segment_pipe.thresh_wm.out_file:</dt>
-<dd>segmented white matter in template space</dd>
-<dt>old_segment_pipe.thresh_csf.out_file:</dt>
-<dd>segmented csf in template space</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 
 
@@ -186,7 +131,7 @@ and priors (list of template based segmented tissues)</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-05.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-06.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

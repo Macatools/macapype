@@ -128,7 +128,7 @@
 <h2>SPM-based pipelines:<a class="headerlink" href="#spm-based-pipelines" title="Permalink to this headline">¶</a></h2>
 <p>SPM-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>, with the processing sequence:</p>
 <ul class="simple">
-<li><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a></li>
+<li><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></li>
 <li><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a></li>
 <li><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></li>
 <li><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></li>
@@ -136,10 +136,10 @@
 </div>
 <div class="section" id="ants-based-pipelines">
 <h2>ANTS-based pipelines:<a class="headerlink" href="#ants-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<p>ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
+<p>ANTS-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>, with the processing sequence :</p>
 <ul class="simple">
 <li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.prepare.create_data_preparation_pipe.html#macapype.pipelines.prepare.create_data_preparation_pipe" title="macapype.pipelines.prepare.create_data_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a></dt>
+<dt><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></dt>
 <dd><ul class="first last">
 <li>Averaging multiple files from same nature</li>
 <li>possibly <code class="xref py py-class docutils literal notranslate"><span class="pre">reorientation</span> <span class="pre">pipeline</span></code></li>
@@ -150,7 +150,7 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">extraction</span> <span class="pre">pipeline</span></code></a></dt>
+<dt><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">extraction</span> <span class="pre">pipeline</span></code></dt>
 <dd><ul class="first last">
 <li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">debias</span> <span class="pre">pipeline</span></code></a> (similar to <a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>, but all steps are nipype nodes)</li>
 <li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">extract</span> <span class="pre">brain</span> <span class="pre">pipeline</span></code></a> (using Atlax-Brex)</li>
@@ -159,7 +159,7 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">segment</span> <span class="pre">from</span> <span class="pre">mask</span></code></a> :</dt>
+<dt><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">segment</span> <span class="pre">from</span> <span class="pre">mask</span></code> :</dt>
 <dd><ul class="first last">
 <li><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">masked</span> <span class="pre">debias</span> <span class="pre">pipeline</span></code></a></li>
 <li><a class="reference internal" href="generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe" title="macapype.pipelines.register.create_register_NMT_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">register</span> <span class="pre">pipeline</span></code></a> from template (NMT) to subject space</li>
@@ -264,7 +264,7 @@ $ python workflows/segment_pnh -data ~/Data_maca -out ./local_test -soft SPM -su
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-05.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-06.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

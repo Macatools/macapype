@@ -14,7 +14,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of a baboon dataset with ANTS">
 
 .. only:: html
 

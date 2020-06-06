@@ -17,7 +17,7 @@ Data preparation (:py:mod:`macapype.pipelines.prepare`):
    :toctree: generated/
 
     create_data_preparation_pipe
-    create_reorient_pipeline
+    create_data_mapnode_preparation_pipe
 
 
 Correct bias (:py:mod:`macapype.pipelines.correct_bias`):

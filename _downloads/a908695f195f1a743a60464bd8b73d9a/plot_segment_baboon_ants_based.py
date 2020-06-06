@@ -1,9 +1,9 @@
 """
 .. _plot_segment_baboon_ants_based:
 
-============================================================
-Plot the results of a segmentation with ANTS-based pipeline
-============================================================
+===============================================================================
+Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline
+===============================================================================
 """
 
 # Authors: David Meunier <david_meunier_79@hotmail.fr>
