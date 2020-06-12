@@ -18,12 +18,15 @@ Old data preparation corresponds to the pipelines where T1 and T2 images are ave
 .. |logo2| image:: ./img/old_prep_betcrop_graph.png
     :scale: 100%
 
-.. table:: My table
+.. table::
    :align: center
 
    +---------+---------+
    | |logo1| | |logo2| |
    +---------+---------+
+
+Version with crop are used in :ref:`marmoset example <plot_segment_marmo_ants_based>`, the version with betcrop is used in both macaque examples with
+:ref:`SPM <plot_segment_macaque_spm_based>` and :ref:`ANTS <plot_segment_macaque_ants_based>`
 
 Short and long data preparation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,14 +42,14 @@ But in a very specific case, where the data of multiple sessions have been acqui
     :scale: 80%
 
 .. |logo4| image:: ./img/long_prep_graph.png
-    :scale: 100%
+    :scale: 80%
 
-.. table:: My table
+.. table::
    :align: center
 
    +---------+---------+
    | |logo3| | |logo4| |
    +---------+---------+
 
-
+The short version is used for the :ref:`baboon example <plot_segment_baboon_ants_based>`, the long version has been tested on a data set with multiple T1s (not shown in examples).
 
