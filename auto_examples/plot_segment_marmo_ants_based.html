@@ -65,6 +65,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
@@ -82,7 +83,8 @@
 <li><a class="reference internal" href="#">Plot the results of a segmentation of marmoset data with ANTS-based pipeline</a><ul>
 <li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
 <li><a class="reference internal" href="#data-preparation">Data preparation</a><ul>
-<li><a class="reference internal" href="#cropping">Cropping</a></li>
+<li><a class="reference internal" href="#results-of-cropping">results of cropping</a></li>
+<li><a class="reference internal" href="#results-of-denoising">results of denoising</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#first-part-of-the-pipeline-brain-extraction">First part of the pipeline: brain extraction</a><ul>
@@ -156,7 +158,7 @@
 <h2>Testing plot in local<a class="headerlink" href="#testing-plot-in-local" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <a href="http://macatools.github.io/macapype/generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data" title="View documentation for macapype.utils.utils_tests.load_test_data"><span class="n">load_test_data</span></a><span class="p">(</span><span class="s2">&quot;data_test_marmo&quot;</span><span class="p">)</span>
 
-<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;test_NodeParams_marmo&quot;</span><span class="p">)</span>
+<span class="n">wf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">&quot;example_segment_marmo_ants_based&quot;</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;graph.png&quot;</span><span class="p">)</span>
 
@@ -177,24 +179,88 @@
 </div>
 <div class="section" id="data-preparation">
 <h2>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="cropping">
-<h3>Cropping<a class="headerlink" href="#cropping" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cropped_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;crop_bb_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;T1w_0p33mm_28_roi.nii.gz&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prep_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;old_data_preparation_pipe&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="results-of-cropping">
+<h3>results of cropping<a class="headerlink" href="#results-of-cropping" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cropped_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prep_path</span><span class="p">,</span> <span class="s2">&quot;crop_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;T1w_0p33mm_28_roi.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cropped_T1_file</span><span class="p">),</span> <span class="s2">&quot;Error with </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T1_file</span><span class="p">)</span>
 
 <span class="c1"># displaying results</span>
 <span class="n">cropped_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;cropped_T1.png&quot;</span><span class="p">)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">,</span>
+                                                              <span class="n">cropped_T1_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">cropped_T2_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prep_path</span><span class="p">,</span> <span class="s2">&quot;crop_T2&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;T2w_0p4mm_32_flirt_roi.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cropped_T2_file</span><span class="p">),</span> <span class="s2">&quot;Error with </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T2_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">cropped_T2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;cropped_T2.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cropped_T2</span><span class="p">,</span>
+                                                              <span class="n">cropped_T2_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results-of-denoising">
+<h3>results of denoising<a class="headerlink" href="#results-of-denoising" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">denoise_T1_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">prep_path</span><span class="p">,</span> <span class="s2">&quot;denoise_T1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">denoise_T1_file</span><span class="p">),</span> <span class="s2">&quot;Error with </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoise_T1_file</span><span class="p">)</span>
+
+
+<span class="c1"># displaying results</span>
+<span class="n">denoise_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;denoise_T1.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">,</span> <span class="n">denoise_T1_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+
+<span class="n">denoise_T2_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">prep_path</span><span class="p">,</span> <span class="s2">&quot;denoise_T2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;T2w_0p4mm_32_flirt_roi_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">denoise_T2_file</span><span class="p">),</span> <span class="s2">&quot;Error with </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoise_T2_file</span><span class="p">)</span>
+
+<span class="c1"># displaying results</span>
+<span class="n">denoise_T2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;denoise_T2.png&quot;</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoise_T2</span><span class="p">,</span>
+                                                              <span class="n">denoise_T2_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">cropped_T2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoise_T2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_002.png" />
+<ul class="sphx-glr-horizontal">
+<li><img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_002.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_segment_marmo_ants_based_002.png" />
+</li>
+<li><img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_003.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_segment_marmo_ants_based_003.png" />
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="first-part-of-the-pipeline-brain-extraction">
@@ -219,29 +285,29 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_003.png" />
+<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_004.png" />
 </div>
 <div class="section" id="brain-extraction-results">
 <h3>Brain extraction results<a class="headerlink" href="#brain-extraction-results" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># At the end 1st part pipeline</span>
-<span class="n">mask_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+<span class="n">smooth_mask_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;smooth_mask&quot;</span><span class="p">,</span>
     <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected_maths_brain_bin_bin.nii.gz&quot;</span><span class="p">)</span>
 
-<span class="n">output_img_overlay</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;outfile_overlay.png&quot;</span><span class="p">)</span>
+<span class="n">smooth_mask</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;smooth_mask.png&quot;</span><span class="p">)</span>
 <span class="c1">#cmd = &quot;fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}&quot;.format(output_img_overlay, mask_file, T1_file)</span>
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">)</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> -a 50&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smooth_mask</span><span class="p">,</span> <span class="n">cropped_T1_file</span><span class="p">,</span> <span class="n">smooth_mask_file</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">output_img_overlay</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">smooth_mask</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span> <span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_004.png" />
+<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_005.png" />
 </div>
 </div>
 <div class="section" id="second-part-of-the-pipeline-segmentation">
@@ -251,16 +317,7 @@
 </div>
 <div class="section" id="debias-t1xt2-and-debias-n4">
 <h3>debias T1xT2 and debias N4<a class="headerlink" href="#debias-t1xt2-and-debias-n4" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">denoised_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span> <span class="s2">&quot;data_preparation_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;denoise_T1&quot;</span><span class="p">,</span>
-                           <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected.nii.gz&quot;</span><span class="p">)</span>
-
-
-<span class="n">denoised_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;denoised_T1.png&quot;</span><span class="p">)</span>
-
-<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;fsleyes render --outfile </span><span class="si">{}</span><span class="s2"> --size 1800 600 </span><span class="si">{}</span><span class="s2"> -cm Render3&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">denoised_T1</span><span class="p">,</span> <span class="n">denoised_T1_file</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-
-<span class="n">debiased_mask_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_mask_T1&quot;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">debiased_mask_T1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg_pipe</span><span class="p">,</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;restore_mask_T1&quot;</span><span class="p">,</span>
                          <span class="s2">&quot;T1w_0p33mm_28_roi_noise_corrected_maths_masked.nii.gz&quot;</span><span class="p">)</span>
 
 <span class="n">debiased_mask_T1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wf_path</span><span class="p">,</span><span class="s2">&quot;debiased_mask_T1.png&quot;</span><span class="p">)</span>
@@ -279,8 +336,8 @@
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoised_T1</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">36</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">))</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">debiased_mask_T1</span><span class="p">))</span>
@@ -291,7 +348,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_005.png" />
+<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_006.png" />
 </div>
 <div class="section" id="register-template-to-subject">
 <h3>register template to subject<a class="headerlink" href="#register-template-to-subject" title="Permalink to this headline">¶</a></h3>
@@ -319,7 +376,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_006.png" />
+<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_007.png" />
 </div>
 <div class="section" id="segmentation-results-by-tissue">
 <h3>segmentation results by tissue<a class="headerlink" href="#segmentation-results-by-tissue" title="Permalink to this headline">¶</a></h3>
@@ -339,8 +396,8 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_007.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  41.205 seconds)</p>
+<img alt="../_images/sphx_glr_plot_segment_marmo_ants_based_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_marmo_ants_based_008.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  52.098 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-marmo-ants-based-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/c1d125f225ee75484768c672cc4fd91d/plot_segment_marmo_ants_based.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_marmo_ants_based.py</span></code></a></div>
@@ -364,7 +421,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-06.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

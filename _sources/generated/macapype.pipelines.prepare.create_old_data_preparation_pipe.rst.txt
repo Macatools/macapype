@@ -1,0 +1,6 @@
+macapype.pipelines.prepare.create\_old\_data\_preparation\_pipe
+===============================================================
+
+.. currentmodule:: macapype.pipelines.prepare
+
+.. autofunction:: create_old_data_preparation_pipe

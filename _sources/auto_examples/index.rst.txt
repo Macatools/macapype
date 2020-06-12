@@ -34,6 +34,46 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_ants_based_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_segment_macaque_ants_based.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_segment_macaque_ants_based
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with SPM">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_spm_based_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_segment_macaque_spm_based.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_segment_macaque_spm_based
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data with ANTS">
 
 .. only:: html
@@ -58,29 +98,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_pnh_ants_based_thumb.png
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_macaque_ants_based_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_segment_pnh_ants_based.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_segment_pnh_ants_based
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with SPM">
-
-.. only:: html
-
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_pnh_spm_based_thumb.png
-
-        :ref:`sphx_glr_auto_examples_plot_segment_pnh_spm_based.py`
+        :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py`
 
 .. raw:: html
 
@@ -90,27 +110,7 @@ Examples Gallery
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_segment_pnh_spm_based
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
-
-.. only:: html
-
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_pnh_ants_based_thumb.png
-
-        :ref:`sphx_glr_auto_examples_plot_segment_sphinx_pnh_ants_based.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_segment_sphinx_pnh_ants_based
+   /auto_examples/plot_segment_sphinx_macaque_ants_based
 .. raw:: html
 
     <div style='clear:both'></div>

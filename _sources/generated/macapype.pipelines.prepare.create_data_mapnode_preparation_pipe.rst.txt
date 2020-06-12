@@ -1,6 +1,0 @@
-macapype.pipelines.prepare.create\_data\_mapnode\_preparation\_pipe
-===================================================================
-
-.. currentmodule:: macapype.pipelines.prepare
-
-.. autofunction:: create_data_mapnode_preparation_pipe

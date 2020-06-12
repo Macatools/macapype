@@ -6,7 +6,7 @@ __________________
 Macaque:
 ---------
 
-* :ref:`Segmentation of PNH test dataset <plot_segment_pnh_spm_based>` processed with SPM-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes>`.
+* :ref:`Segmentation of macaque test dataset <plot_segment_macaque_spm_based>` processed with SPM-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes>`.
 
 Origin of the dataset: `ERC COVOPRIM <https://cordis.europa.eu/project/id/788240>`_ project.
 
@@ -14,7 +14,7 @@ Acknowledgements to Pascal Belin and Regis Trapeau.
 
 |
 
-* :ref:`Segmentation of PNH test dataset <plot_segment_pnh_ants_based>` processed with ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`.
+* :ref:`Segmentation of macaque test dataset <plot_segment_macaque_ants_based>` processed with ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`.
 
 Origin of the dataset: `ERC COVOPRIM <https://cordis.europa.eu/project/id/788240>`_ project.
 
@@ -22,7 +22,7 @@ Acknowledgements to Pascal Belin and Regis Trapeau.
 
 |
 
-* :ref:`Segmentation of PNH test dataset with reorientation <plot_segment_sphinx_pnh_ants_based>`, starting from a sphinx position, processed with ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`.
+* :ref:`Segmentation of macaque test dataset with reorientation <plot_segment_sphinx_macaque_ants_based>`, starting from a sphinx position, processed with ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`.
 
 Acknowledgements to Frederic Chavane and Isabelle Racicot.
 
@@ -48,4 +48,4 @@ Baboon:
 
 Origin of the dataset: `ERC GestImage <https://cordis.europa.eu/project/id/716931/fr>`_ project.
 
-Acknowledgements to Adrien Meguerditchian and Yannick Becker.
+Acknowledgements to Adrien Meguerditchian and Yannick Becker. ** dataset not yet available for download and test**

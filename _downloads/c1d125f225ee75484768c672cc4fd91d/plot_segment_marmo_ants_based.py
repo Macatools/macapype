@@ -24,7 +24,7 @@ from macapype.utils.utils_tests import load_test_data
 
 data_path = load_test_data("data_test_marmo")
 
-wf_path = os.path.join(data_path, "test_NodeParams_marmo")
+wf_path = os.path.join(data_path, "example_segment_marmo_ants_based")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -36,26 +36,86 @@ plt.axis('off')
 plt.show()
 
 
-##############################################################################
+###############################################################################
 # Data preparation
-##############################################################################
+###############################################################################
+
+prep_path = op.join(wf_path, "old_data_preparation_pipe")
 
 ###############################################################################
-# Cropping
+# results of cropping
 #===========================
 
-cropped_T1_file = op.join(wf_path, "data_preparation_pipe", "crop_bb_T1", "T1w_0p33mm_28_roi.nii.gz")
+cropped_T1_file = op.join(prep_path, "crop_T1", "T1w_0p33mm_28_roi.nii.gz")
+
+assert op.exists(cropped_T1_file), "Error with {}".format(cropped_T1_file)
 
 # displaying results
 cropped_T1 = os.path.join(wf_path, "cropped_T1.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1, cropped_T1_file)
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1,
+                                                              cropped_T1_file)
 os.system(cmd)
 
-import matplotlib.pyplot as plt  # noqa
-img = plt.imread(cropped_T1)
-plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
+
+cropped_T2_file = op.join(prep_path, "crop_T2",
+                          "T2w_0p4mm_32_flirt_roi.nii.gz")
+
+assert op.exists(cropped_T2_file), "Error with {}".format(cropped_T2_file)
+
+# displaying results
+cropped_T2 = os.path.join(wf_path, "cropped_T2.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T2,
+                                                              cropped_T2_file)
+os.system(cmd)
+
+
+###############################################################################
+# results of denoising
+#===========================
+
+denoise_T1_file = op.join(
+    prep_path, "denoise_T1",
+    "T1w_0p33mm_28_roi_noise_corrected.nii.gz")
+
+assert op.exists(denoise_T1_file), "Error with {}".format(denoise_T1_file)
+
+
+# displaying results
+denoise_T1 = os.path.join(wf_path, "denoise_T1.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoise_T1, denoise_T1_file)
+os.system(cmd)
+
+
+denoise_T2_file = op.join(
+    prep_path, "denoise_T2",
+    "T2w_0p4mm_32_flirt_roi_noise_corrected.nii.gz")
+
+assert op.exists(denoise_T2_file), "Error with {}".format(denoise_T2_file)
+
+# displaying results
+denoise_T2 = os.path.join(wf_path, "denoise_T2.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoise_T2,
+                                                              denoise_T2_file)
+os.system(cmd)
+
+################################################################################
+
+fig, axs = plt.subplots(2, 1, figsize=(36, 24))
+axs[0].imshow(plt.imread(cropped_T1))
+axs[0].axis('off')
+
+axs[1].imshow(plt.imread(denoise_T1))
+axs[1].axis('off')
+
+plt.show()
+
+fig, axs = plt.subplots(2, 1, figsize=(36, 24))
+axs[0].imshow(plt.imread(cropped_T2))
+axs[0].axis('off')
+
+axs[1].imshow(plt.imread(denoise_T2))
+axs[1].axis('off')
+
 plt.show()
 
 ##############################################################################
@@ -88,17 +148,17 @@ plt.show()
 #==========================
 
 # At the end 1st part pipeline
-mask_file = os.path.join(
+smooth_mask_file = os.path.join(
     wf_path, "brain_extraction_pipe", "extract_pipe", "smooth_mask",
     "T1w_0p33mm_28_roi_noise_corrected_maths_brain_bin_bin.nii.gz")
 
-output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
+smooth_mask = os.path.join(wf_path,"smooth_mask.png")
 #cmd = "fsleyes render --outfile {} --size 800 600 {} -ot mask -o -a 50 {}".format(output_img_overlay, mask_file, T1_file)
-cmd = "fsleyes render --outfile {} --size 800 600 {} {} -a 50".format(output_img_overlay, cropped_T1_file, mask_file)
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -a 50".format(smooth_mask, cropped_T1_file, smooth_mask_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(output_img_overlay)
+img = plt.imread(smooth_mask)
 plt.figure(figsize=(36 , 12))
 plt.imshow(img)
 plt.axis('off')
@@ -113,15 +173,6 @@ seg_pipe = op.join(wf_path, "brain_segment_from_mask_pipe")
 ###############################################################################
 # debias T1xT2 and debias N4
 #=============================
-
-denoised_T1_file = os.path.join(wf_path, "data_preparation_pipe", "denoise_T1",
-                           "T1w_0p33mm_28_roi_noise_corrected.nii.gz")
-
-
-denoised_T1 = os.path.join(wf_path,"denoised_T1.png")
-
-cmd = "fsleyes render --outfile {} --size 1800 600 {} -cm Render3".format(denoised_T1, denoised_T1_file)
-os.system(cmd)
 
 debiased_mask_T1_file = os.path.join(seg_pipe, "masked_correct_bias_pipe", "restore_mask_T1",
                          "T1w_0p33mm_28_roi_noise_corrected_maths_masked.nii.gz")
@@ -142,8 +193,8 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 
-fig, axs = plt.subplots(3, 1, figsize=(36, 12))
-axs[0].imshow(plt.imread(denoised_T1))
+fig, axs = plt.subplots(3, 1, figsize=(36, 36))
+axs[0].imshow(plt.imread(denoise_T1))
 axs[0].axis('off')
 
 axs[1].imshow(plt.imread(debiased_mask_T1))

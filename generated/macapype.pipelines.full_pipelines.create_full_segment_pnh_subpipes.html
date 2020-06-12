@@ -18,6 +18,8 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="macapype.nodes.extract_brain.T1xT2BET" href="macapype.nodes.extract_brain.T1xT2BET.html" />
+    <link rel="prev" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" href="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -57,14 +59,15 @@
      href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
@@ -117,6 +120,51 @@
       
   <div class="section" id="macapype-pipelines-full-pipelines-create-full-segment-pnh-subpipes">
 <h1>macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes<a class="headerlink" href="#macapype-pipelines-full-pipelines-create-full-segment-pnh-subpipes" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes">
+<code class="descclassname">macapype.pipelines.full_pipelines.</code><code class="descname">create_full_segment_pnh_subpipes</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='full_segment_pnh_subpipes_baboon'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_full_segment_pnh_subpipes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Segment T1 (using T2 for bias correction) .</p>
+<p>new version (as it is now)
+- brain preproc (avg and align, reorient of specified cropping from T1xT2BET, bet is optional) # noqa
+- brain extraction (see create_brain_extraction_pipe):</p>
+<blockquote>
+<div><ul class="simple">
+<li>correct_bias</li>
+<li>denoise</li>
+<li>extract_brain</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>brain segment from mask (see create_brain_segment_from_mask_pipe):</dt>
+<dd><ul class="first last">
+<li>denoise pipe</li>
+<li>debias pipe</li>
+<li>NMT align (after N4Debias)</li>
+<li>Atropos segment</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Inputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>inputnode:</dt>
+<dd><p class="first">preproc_T1: preprocessed T1 file name</p>
+<p>preproc_T2: preprocessed T2 file name</p>
+<p class="last">indiv_params (opt): dict with individuals parameters for some nodes</p>
+</dd>
+<dt>arguments:</dt>
+<dd><p class="first">params_template: dictionary of template files</p>
+<p>params: dictionary of node sub-parameters (from a json file)</p>
+<p class="last">name: pipeline name (default = “full_segment_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Outputs:</p>
+</dd></dl>
+
 </div>
 
 
@@ -131,7 +179,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-06.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

@@ -20,13 +20,13 @@ from macapype.utils.utils_tests import load_test_data
 
 import matplotlib.pyplot as plt  # noqa
 
-##############################################################################
+###############################################################################
 # Testing plot in local
-##############################################################################
+###############################################################################
 
 data_path = "/home/INT/meunier.d/data_macapype"
 
-wf_path = os.path.join(data_path, "test_baboon")
+wf_path = os.path.join(data_path, "example_segment_baboon_ants_based_Odor")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -36,17 +36,74 @@ plt.imshow(img)
 plt.axis('off')
 plt.show()
 
-##############################################################################
+###############################################################################
 # Data preparation
-##############################################################################
+###############################################################################
+
+###############################################################################
+# results of cropping
+#===========================
+
+cropped_T1_file = op.join(wf_path, "short_data_preparation_pipe", "prep_T1",
+                          "crop", "sub-Odor_ses-T1_T1w_roi.nii.gz")
+
+assert op.exists(cropped_T1_file), "Error with {}".format(cropped_T1_file)
+
+# displaying results
+cropped_T1 = os.path.join(wf_path, "cropped_T1.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1,
+                                                              cropped_T1_file)
+os.system(cmd)
+
+
+cropped_T2_file = op.join(wf_path, "short_data_preparation_pipe", "prep_T2",
+                          "crop", "sub-Odor_ses-T1_T2w_roi.nii.gz")
+
+assert op.exists(cropped_T2_file), "Error with {}".format(cropped_T2_file)
+
+# displaying results
+cropped_T2 = os.path.join(wf_path, "cropped_T2.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T2,
+                                                              cropped_T2_file)
+os.system(cmd)
+
+###############################################################################
+# results of norm_intensity
+#===========================
+
+norm_intensity_T1_file = op.join(wf_path, "short_data_preparation_pipe",
+                                 "prep_T1", "norm_intensity",
+                                 "sub-Odor_ses-T1_T1w_roi_corrected.nii.gz")
+
+assert op.exists(norm_intensity_T1_file), "Error with {}".format(norm_intensity_T1_file)
+
+# displaying results
+norm_intensity_T1 = os.path.join(wf_path, "norm_intensity_T1.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(norm_intensity_T1, norm_intensity_T1_file)
+os.system(cmd)
+
+norm_intensity_T2_file = op.join(wf_path, "short_data_preparation_pipe",
+                                 "prep_T2", "norm_intensity",
+                                 "sub-Odor_ses-T1_T2w_roi_corrected.nii.gz")
+
+assert op.exists(norm_intensity_T2_file), "Error with {}".format(norm_intensity_T2_file)
+
+# displaying results
+norm_intensity_T2 = os.path.join(wf_path, "norm_intensity_T2.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(norm_intensity_T2, norm_intensity_T2_file)
+os.system(cmd)
+
 
 ###############################################################################
 # results of denoising
 #===========================
 
-denoise_T1_file = op.join(wf_path, "data_single_preparation_pipe/single_prep_T1/denoise/mapflow/_denoise0/sub-Babar_ses-test_T1w_noise_corrected.nii.gz")
+denoise_T1_file = op.join(
+    wf_path, "short_data_preparation_pipe", "prep_T1", "denoise",
+    "sub-Odor_ses-T1_T1w_roi_corrected_noise_corrected.nii.gz")
 
-assert op.exists(denoise_T1_file)
+assert op.exists(denoise_T1_file), "Error with {}".format(denoise_T1_file)
+
 
 # displaying results
 denoise_T1 = os.path.join(wf_path, "denoise_T1.png")
@@ -54,92 +111,55 @@ cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoise_T1, denois
 os.system(cmd)
 
 
-denoise_T2_file = op.join(wf_path, "data_single_preparation_pipe/single_prep_T2/denoise/mapflow/_denoise0/sub-Babar_ses-test_T2w_noise_corrected.nii.gz")
+denoise_T2_file = op.join(
+    wf_path, "short_data_preparation_pipe", "prep_T2", "denoise",
+    "sub-Odor_ses-T1_T2w_roi_corrected_noise_corrected.nii.gz")
 
-assert op.exists(denoise_T2_file)
+assert op.exists(denoise_T2_file), "Error with {}".format(denoise_T2_file)
 
 # displaying results
 denoise_T2 = os.path.join(wf_path, "denoise_T2.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoise_T2, denoise_T2_file)
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoise_T2,
+                                                              denoise_T2_file)
 os.system(cmd)
 
-###############################################################################
-# results of cropping
-#===========================
-
-cropped_T1_file = op.join(wf_path, "data_single_preparation_pipe", "single_prep_T1", "crop_bb/mapflow/_crop_bb0/sub-Babar_ses-test_T1w_noise_corrected_roi.nii.gz")
-
-assert op.exists(cropped_T1_file)
-
-# displaying results
-cropped_T1 = os.path.join(wf_path, "cropped_T1.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1, cropped_T1_file)
-os.system(cmd)
-
-
-cropped_T2_file = op.join(wf_path, "data_single_preparation_pipe", "single_prep_T2", "crop_bb/mapflow/_crop_bb0/sub-Babar_ses-test_T2w_noise_corrected_roi.nii.gz")
-
-assert op.exists(cropped_T2_file)
-
-# displaying results
-cropped_T2 = os.path.join(wf_path, "cropped_T2.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T2, cropped_T2_file)
-os.system(cmd)
-
-###############################################################################
-# results of norm_intensity
-#===========================
-
-norm_intensity_T1_file = op.join(wf_path, "data_single_preparation_pipe", "single_prep_T1", "norm_intensity/mapflow/_norm_intensity0/sub-Babar_ses-test_T1w_noise_corrected_roi_corrected.nii.gz")
-
-assert op.exists(norm_intensity_T1_file)
-
-# displaying results
-norm_intensity_T1 = os.path.join(wf_path, "norm_intensity_T1.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(norm_intensity_T1, norm_intensity_T1_file)
-os.system(cmd)
-
-norm_intensity_T2_file = op.join(wf_path, "data_single_preparation_pipe", "single_prep_T2", "norm_intensity/mapflow/_norm_intensity0/sub-Babar_ses-test_T2w_noise_corrected_roi_corrected.nii.gz")
-
-assert op.exists(norm_intensity_T2_file)
-
-# displaying results
-norm_intensity_T2 = os.path.join(wf_path, "norm_intensity_T2.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(norm_intensity_T2, norm_intensity_T2_file)
-os.system(cmd)
+################################################################################
 
 fig, axs = plt.subplots(3, 1, figsize=(36, 24))
-axs[0].imshow(plt.imread(denoise_T1))
+axs[0].imshow(plt.imread(cropped_T1))
 axs[0].axis('off')
 
-axs[1].imshow(plt.imread(cropped_T1))
+axs[1].imshow(plt.imread(norm_intensity_T1))
 axs[1].axis('off')
 
-axs[2].imshow(plt.imread(norm_intensity_T1))
+axs[2].imshow(plt.imread(denoise_T1))
 axs[2].axis('off')
+
 plt.show()
 
 fig, axs = plt.subplots(3, 1, figsize=(36, 24))
-axs[0].imshow(plt.imread(denoise_T2))
+axs[0].imshow(plt.imread(cropped_T2))
 axs[0].axis('off')
 
-axs[1].imshow(plt.imread(cropped_T2))
+axs[1].imshow(plt.imread(norm_intensity_T2))
 axs[1].axis('off')
 
-axs[2].imshow(plt.imread(norm_intensity_T2))
+axs[2].imshow(plt.imread(denoise_T2))
 axs[2].axis('off')
+
 plt.show()
 
-##############################################################################
+###############################################################################
 # First part of the pipeline: brain extraction
-##############################################################################
+###############################################################################
 
 ###############################################################################
 # Correct bias results
 #==========================
 
-debiased_T1_file = op.join(wf_path, "brain_extraction_pipe", "correct_bias_pipe", "restore_T1",
-                           "sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths.nii.gz")
+debiased_T1_file = op.join(
+    wf_path, "brain_extraction_pipe", "correct_bias_pipe", "restore_T1",
+    "sub-Odor_ses-T1_T1w_roi_corrected_noise_corrected_maths.nii.gz")
 
 assert op.exists(norm_intensity_T2_file)
 
@@ -151,7 +171,7 @@ os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
 fig, axs = plt.subplots(2, 1, figsize=(36, 24))
-axs[0].imshow(plt.imread(cropped_T1))
+axs[0].imshow(plt.imread(denoise_T1))
 axs[0].axis('off')
 
 axs[1].imshow(plt.imread(debiased_T1))
@@ -166,7 +186,7 @@ plt.show()
 # At the end 1st part pipeline
 mask_file = os.path.join(
     wf_path, "brain_extraction_pipe", "extract_pipe", "smooth_mask",
-    "sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_brain_bin_bin.nii.gz")
+    "sub-Odor_ses-T1_T1w_roi_corrected_noise_corrected_maths_brain_bin_bin.nii.gz")
 
 
 assert op.exists(mask_file)
@@ -194,7 +214,7 @@ seg_pipe = op.join(wf_path, "brain_segment_from_mask_pipe")
 #=============================
 
 debiased_mask_T1_file = os.path.join(seg_pipe, "masked_correct_bias_pipe", "restore_mask_T1",
-                         "sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_masked.nii.gz")
+                         "sub-Odor_ses-T1_T1w_roi_corrected_noise_corrected_maths_masked.nii.gz")
 
 debiased_mask_T1 = os.path.join(wf_path,"debiased_mask_T1.png")
 
@@ -203,7 +223,7 @@ os.system(cmd)
 
 
 N4_debias_T1_file = os.path.join(seg_pipe, "register_NMT_pipe", "norm_intensity",
-                         "sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_masked_corrected.nii.gz")
+                         "sub-Odor_ses-T1_T1w_roi_corrected_noise_corrected_maths_masked_corrected.nii.gz")
 
 N4_debias_T1 = os.path.join(wf_path,"N4_debias_T1.png")
 
@@ -229,7 +249,7 @@ plt.show()
 
 deoblique_T1_file = os.path.join(
      seg_pipe, "register_NMT_pipe",  "deoblique",
-    "sub-Babar_ses-test_T1w_noise_corrected_roi_corrected_maths_masked_corrected.nii.gz")
+    "sub-Odor_ses-T1_T1w_roi_corrected_noise_corrected_maths_masked_corrected.nii.gz")
 
 reg_template_mask_to_T1_file = os.path.join(
     seg_pipe, "register_NMT_pipe", "align_NMT",
