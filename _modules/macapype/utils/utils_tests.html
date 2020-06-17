@@ -116,6 +116,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 
 
 <div class="viewcode-block" id="load_test_data"><a class="viewcode-back" href="../../../generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data">[docs]</a><span class="k">def</span> <span class="nf">load_test_data</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path_to</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
@@ -195,6 +196,16 @@
         <span class="n">template_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">template_dict</span>
+
+
+<span class="k">def</span> <span class="nf">make_tmp_dir</span><span class="p">():</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="s2">&quot;/tmp/test_macapype&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tmp_dir</span>
 </pre></div>
 
     </div>
@@ -208,7 +219,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-12.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-17.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

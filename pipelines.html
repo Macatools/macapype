@@ -84,8 +84,13 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Pipelines</a><ul>
 <li><a class="reference internal" href="#data-preparation">Data preparation:</a><ul>
-<li><a class="reference internal" href="#old-data-preparation">Old data preparation</a></li>
-<li><a class="reference internal" href="#short-and-long-data-preparation">Short and long data preparation</a></li>
+<li><a class="reference internal" href="#short-data-preparation">Short data preparation</a></li>
+<li><a class="reference internal" href="#long-data-preparation">Long data preparation</a></li>
+<li><a class="reference internal" href="#options">Options</a><ul>
+<li><a class="reference internal" href="#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li><a class="reference internal" href="#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -129,40 +134,54 @@
 <span id="id1"></span><h1>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="data-preparation">
 <h2>Data preparation:<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="old-data-preparation">
-<h3>Old data preparation<a class="headerlink" href="#old-data-preparation" title="Permalink to this headline">¶</a></h3>
-<p>Old data preparation corresponds to the pipelines where T1 and T2 images are averaged by modality from the beginning, and T2 is aligned to T1, then cropped or betcropped, and denoised.</p>
-<table border="1" class="docutils align-center" id="old-prep">
+<div class="section" id="short-data-preparation">
+<h3>Short data preparation<a class="headerlink" href="#short-data-preparation" title="Permalink to this headline">¶</a></h3>
+<p>Short data preparation corresponds to the pipelines where T1 and T2 images are averaged by modality from the beginning, and T2 is aligned to T1, then cropped or betcropped, and denoised.</p>
+<p>The “auto”” version corresponds to <a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> with “betcrop” option (using <a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>)</p>
+<p>The “manual” version corresponds to <a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> with “crop” option, and specify crop box in args for each subject in individual params</p>
+<table border="1" class="docutils align-center" id="short-prep">
 <colgroup>
 <col width="50%" />
 <col width="50%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_images/old_prep_crop_graph.png"><img alt="logo1" src="_images/old_prep_crop_graph.png" style="width: 476.0px; height: 556.8000000000001px;" /></a></td>
-<td><a class="reference internal" href="_images/old_prep_betcrop_graph.png"><img alt="logo2" src="_images/old_prep_betcrop_graph.png" style="width: 487.0px; height: 595.0px;" /></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="_images/graph.png"><img alt="logo1" src="_images/graph.png" style="width: 457.0px; height: 569.0px;" /></a></td>
+<td><a class="reference internal" href="_images/graph1.png"><img alt="logo2" src="_images/graph1.png" style="width: 443.0px; height: 473.0px;" /></a></td>
 </tr>
 </tbody>
 </table>
-<p>Version with crop are used in <a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">marmoset example</span></a>, the version with betcrop is used in both macaque examples with
+<p>The version with crop are used in <a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">marmoset example</span></a>, the version with betcrop is used in both macaque examples with
 <a class="reference internal" href="auto_examples/plot_segment_macaque_spm_based.html#plot-segment-macaque-spm-based"><span class="std std-ref">SPM</span></a> and <a class="reference internal" href="auto_examples/plot_segment_macaque_ants_based.html#plot-segment-macaque-ants-based"><span class="std std-ref">ANTS</span></a></p>
 </div>
-<div class="section" id="short-and-long-data-preparation">
-<h3>Short and long data preparation<a class="headerlink" href="#short-and-long-data-preparation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="long-data-preparation">
+<h3>Long data preparation<a class="headerlink" href="#long-data-preparation" title="Permalink to this headline">¶</a></h3>
 <p>In some cases, you may want some processing done prior to the alignement, if T1 and T2 are very different.</p>
-<p>In this case, after aligning and averaging by modality (all T1s -&gt; average_T1), you may crop, debias (N4) and denoise each image (average_T1 and average T2) indendantly before aligning average_T2 to average_T1 (short_data_preparation)</p>
-<p>But in a very specific case, where the data of multiple sessions have been acquired with different settings (e.g. antenna contrast), you may have even all multiple modality data preprocessed (reorient, cropped, debiased, denoised) indendantly before being averaged and aligned by modality, and then av_T2 aligned to av_T1 (long_data_preparation)</p>
-<table border="1" class="docutils align-center" id="new-prep">
+<p>In this case, after aligning and averaging by modality (all T1s -&gt; average_T1), you may crop, debias (N4) and denoise each image (average_T1 and average T2) indendantly before aligning average_T2 to average_T1 (create_long_single_data_preparation_pipe)</p>
+<p>But in a very specific case, where the data of multiple sessions have been acquired with different settings (e.g. antenna contrast), you may have even all multiple modality data preprocessed (reorient, cropped, debiased, denoised) indendantly before being averaged and aligned by modality, and then av_T2 aligned to av_T1 (long_multi_data_preparation)</p>
+<table border="1" class="docutils align-center" id="long-prep">
 <colgroup>
 <col width="50%" />
 <col width="50%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_images/short_prep_graph.png"><img alt="logo3" src="_images/short_prep_graph.png" style="width: 597.6px; height: 863.2px;" /></a></td>
-<td><a class="reference internal" href="_images/long_prep_graph.png"><img alt="logo4" src="_images/long_prep_graph.png" style="width: 597.6px; height: 863.2px;" /></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="_images/graph2.png"><img alt="logo3" src="_images/graph2.png" style="width: 580.0px; height: 765.6px;" /></a></td>
+<td><a class="reference internal" href="_images/graph3.png"><img alt="logo4" src="_images/graph3.png" style="width: 580.0px; height: 765.6px;" /></a></td>
 </tr>
 </tbody>
 </table>
 <p>The short version is used for the <a class="reference internal" href="auto_examples/plot_segment_baboon_ants_based.html#plot-segment-baboon-ants-based"><span class="std std-ref">baboon example</span></a>, the long version has been tested on a data set with multiple T1s (not shown in examples).</p>
+</div>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="reorient-sub-pipeline">
+<h4>Reorient sub-pipeline<a class="headerlink" href="#reorient-sub-pipeline" title="Permalink to this headline">¶</a></h4>
+<p>For all the preparation pipelines, it is possible to add at the beginning of the pipeline a “reorient” subpipelines by specifying
+An example can be found in <a class="reference internal" href="auto_examples/plot_segment_sphinx_macaque_ants_based.html#plot-segment-sphinx-macaque-ants-based"><span class="std std-ref">macaque sphinx</span></a></p>
+</div>
+<div class="section" id="denoise-and-denoise-first">
+<h4>Denoise and denoise_first<a class="headerlink" href="#denoise-and-denoise-first" title="Permalink to this headline">¶</a></h4>
+<p>By default, denoising is done at the end of the preparation pipeline, on the cropped data. It is however possible to move the denoise at the beginning at the pipeline, with option denoise first. <em>N.B.:  This option is only available in long preparation (single and multi) so far</em></p>
+</div>
 </div>
 </div>
 </div>
@@ -179,7 +198,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-12.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-17.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
