@@ -1,20 +1,16 @@
 {
     "general":
     {
-        "template_name": "baboon_template"
+        "template_name": "haiko89_template"
     },
-
-    "data_mapnode_preparation_pipe":
+    "long_single_preparation_pipe":
     {
-        "mapnode_prep_T1":
+        "prep_T1":
         {
-            "denoise":
-            {
-                "shrink_factor": [1]
-            },
+
             "crop":
             {
-                "args": ["15 200 6 229 263 157"]
+                "args": "should be defined in indiv"
             },
             "norm_intensity":
             {
@@ -24,17 +20,17 @@
                 "convergence_threshold": 0.00000001,
                 "shrink_factor": 2,
                 "args": "-r 0 --verbose 1"
+            },
+            "denoise":
+            {
+                "shrink_factor": 1
             }
         },
-        "mapnode_prep_T2":
+        "prep_T2":
         {
-            "denoise":
-            {
-                "shrink_factor": [1]
-            },
             "crop":
             {
-                "args": ["15 204 10 232 263 161"]
+                "args": "should be defined in indiv"
             },
             "norm_intensity":
             {
@@ -44,6 +40,10 @@
                 "convergence_threshold": 0.00000001,
                 "shrink_factor": 2,
                 "args": "-r 0 --verbose 1"
+            },
+            "denoise":
+            {
+                "shrink_factor": 1
             }
         },
         "align_T2_on_T1":

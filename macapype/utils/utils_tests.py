@@ -4,6 +4,7 @@
 import os
 import os.path as op
 from os import makedirs
+import shutil
 
 
 def load_test_data(name, path_to=""):
@@ -14,8 +15,9 @@ def load_test_data(name, path_to=""):
         "NMT_FSL": "ajAtB7qgaPAmKyJ",
         "inia19": "WZo9wZdreTMwfQA",
         "marmotemplate": "5xzm7DJD9kB99gG",
-        "data_test_pnh": "DitTrBwGSGiyKPf",
-        "data_test_sphinx_pnh": "kaYWXmZ9CyiJBtW",
+        "haiko89_template": "rKeniMmCdsCsW8F",
+        "data_test_macaque": "SgG7bBMXao9Kfon",
+        "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
         "data_test_marmo": "pW4nQr46QSzSysg"
     }
 
@@ -82,3 +84,13 @@ def format_template(data_path, template_name):
         template_dict[key] = op.join(data_path, value)
 
     return template_dict
+
+
+def make_tmp_dir():
+    tmp_dir = "/tmp/test_macapype"
+    if os.path.exists(tmp_dir):
+        shutil.rmtree(tmp_dir)
+    os.makedirs(tmp_dir)
+    os.chdir(tmp_dir)
+
+    return tmp_dir

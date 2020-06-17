@@ -25,11 +25,12 @@ Workflows
 **********
 Running workflows can be found :ref:`here <workflows>`
 
-
 Tutorial
 ********
 
 Explanations on how to modify the processing can be found :ref:`here <tutorial>`
+
+Explanations of the various pipelines are found :ref:`here <pipelines>`
 
 Examples
 ********
@@ -38,7 +39,6 @@ Several examples can be found :ref:`here <examples>`
 
 Contributing
 *************
-
 Some advices on how to contribute to the source code can be found :ref:`here <contribute>`
 
 Table of contents
@@ -53,4 +53,5 @@ Table of contents
     workflows
     tutorial
     examples
+    pipelines
     contribute

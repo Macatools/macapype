@@ -43,6 +43,8 @@ install:
     - cd ${SRC_DIR}
     - pip install -e .
     - pip install flake8
+    - sudo apt-get install graphviz libgraphviz-dev
+    - pip install --upgrade pygraphviz graphviz
 
 script:
 

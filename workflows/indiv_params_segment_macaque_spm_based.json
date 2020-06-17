@@ -1,0 +1,20 @@
+{
+    "sub-Apache":
+    {
+        "ses-01":
+        {
+            "threshold_gm":
+            {
+                "thresh": 0.05
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.05
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.05
+            }
+        }
+    }
+}

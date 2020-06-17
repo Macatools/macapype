@@ -1,5 +1,5 @@
 """
-.. _plot_segment_pnh_spm_based:
+.. _plot_segment_macaque_spm_based:
 
 ===================================================================
 Plot the results of a segmentation with SPM-based pipeline T1xT2
@@ -25,10 +25,10 @@ from macapype.utils.utils_tests import load_test_data
 # Testing plot in local
 ##############################################################################
 
-data_path = load_test_data("data_test_pnh")
+data_path = load_test_data("data_test_macaque")
 
 # displaying results
-wf_path = os.path.join(data_path, "test_NodeParams_T1xT2")
+wf_path = os.path.join(data_path, "example_segment_macaque_spm_based")
 
 graph = os.path.join(wf_path, "graph.png")
 
@@ -45,83 +45,78 @@ plt.show()
 ##############################################################################
 
 ###############################################################################
-# Cropping
+# results of cropping
 #===========================
 
-bet_path = os.path.join(wf_path, "data_preparation_pipe", "bet_crop")
+cropped_T1_file = op.join(wf_path, "old_data_preparation_pipe", "bet_crop", "sub-Apache_ses-01_T1w_cropped.nii.gz")
 
-T1_file = op.join(bet_path, "sub-Apache_ses-01_T1w_cropped.nii.gz")
-print(T1_file)
-assert os.path.exists(T1_file)
+assert op.exists(cropped_T1_file), "Error with {}".format(cropped_T1_file)
 
-#outfile_T1 = os.path.join(wf_path, "outfile_T1.png")
-#cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(outfile_T1, T1_file)
-#os.system(cmd)
+# displaying results
+cropped_T1 = os.path.join(wf_path, "cropped_T1.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1, cropped_T1_file)
+os.system(cmd)
 
-#import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(outfile_T1)
-#plt.figure(figsize=(16, 16))
-#plt.imshow(img)
-#plt.axis('off')
-#plt.show()
+###############################################################################
+# results of denoising
+#===========================
+
+denoised_T1_file = os.path.join(wf_path, "old_data_preparation_pipe", "denoise_T1",
+                           "sub-Apache_ses-01_T1w_cropped_noise_corrected.nii.gz")
+
+assert op.exists(denoised_T1_file), "Error with {}".format(denoised_T1_file)
+
+
+denoised_T1 = os.path.join(wf_path,"denoised_T1.png")
+
+cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoised_T1, denoised_T1_file)
+os.system(cmd)
+
 
 
 ###############################################################################
 # brain extraction results
 #==========================
 
-bet_mask_file = op.join(bet_path, "sub-Apache_ses-01_T1w_BET_mask_cropped.nii.gz")
+bet_mask_file = op.join(wf_path, "old_data_preparation_pipe", "bet_crop", "sub-Apache_ses-01_T1w_BET_mask_cropped.nii.gz")
 
 assert os.path.exists(bet_mask_file)
 
-output_img_overlay = os.path.join(wf_path,"outfile_overlay.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm blue -a 50".format(output_img_overlay, T1_file, bet_mask_file)
+bet_mask = os.path.join(wf_path,"bet_mask.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm blue -a 50".format(bet_mask, cropped_T1_file, bet_mask_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(output_img_overlay)
+img = plt.imread(bet_mask)
 plt.figure(figsize=(36, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
-
 
 ###############################################################################
 # Correct bias results
 #==========================
 
-# Comparing Bet results (only if bet is set for T1xT2BiasFieldCorrection)
-#debias_path = op.join(wf_path, "debias")
-#outfile_debias_mask = os.path.join(wf_path,"outfile_debias_mask.png")
-#debias_mask_file = op.join(debias_path, "sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_BET_mask.nii.gz")
-#assert os.path.exists(debias_mask_file)
-#cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 33 {} -cm blue -a 33".format(outfile_debias_mask, T1_file, bet_mask_file, debias_mask_file)
-#os.system(cmd)
-
-
-#import matplotlib.pyplot as plt  # noqa
-#img = plt.imread(outfile_debias_mask)
-#plt.figure(figsize=(36, 12))
-#plt.imshow(img)
-#plt.axis('off')
-#plt.show()
-
-
-
-
 debiased_brain_file = op.join(wf_path, "debias",
                            "sub-Apache_ses-01_T1w_cropped_noise_corrected_debiased_brain.nii.gz")
 
-debiased_T1_brain = os.path.join(wf_path,"debiased_T1_brain.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {} {} -cm red -a 50 ".format(debiased_T1_brain, T1_file, debiased_brain_file)
+debiased_T1 = os.path.join(wf_path,"debiased_T1_brain.png")
+cmd = "fsleyes render --outfile {} --size 1800 600 {} ".format(debiased_T1, debiased_brain_file)
 os.system(cmd)
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(debiased_T1_brain)
-plt.figure(figsize=(36, 12))
-plt.imshow(img)
-plt.axis('off')
+fig, axs = plt.subplots(3, 1, figsize=(36, 36))
+axs[0].imshow(plt.imread(cropped_T1))
+axs[0].axis('off')
+
+axs[1].imshow(plt.imread(denoised_T1))
+axs[1].axis('off')
+
+axs[2].imshow(plt.imread(debiased_T1))
+axs[2].axis('off')
+
 plt.show()
+
 
 ###############################################################################
 #registration results

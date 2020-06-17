@@ -1,3 +1,4 @@
+
 import os
 import os.path as op
 
@@ -20,7 +21,7 @@ from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes
 from macapype.utils.utils_tests import load_test_data
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
-params_file = '{}/../workflows/params_segment_pnh_ants_based.json'.format(package_directory)
+params_file = '{}/../workflows/params_segment_sphinx_macaque_ants_based.json'.format(package_directory)
 params = json.load(open(params_file))
 
 print(params)
@@ -31,7 +32,6 @@ if "general" in params.keys() and "template_name" in params["general"].keys():
 else:
     template_name = 'NMT_v1.2'
 
-
 if "general" in params.keys() and "my_path" in params["general"].keys():
     my_path = params["general"]["my_path"]
 else:
@@ -41,21 +41,20 @@ template_dir = load_test_data(template_name)
 params_template = format_template(template_dir, template_name)
 print (params_template)
 
-data_path = load_test_data("data_test_pnh", my_path)
+data_path = load_test_data("data_test_sphinx_macaque", my_path)
 
 # data file
-T1_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "non_cropped", "sub-Apache_ses-01_T2w.nii")
+T1_file = op.join(data_path, "sub-ziggy_T1w.nii")
+T2_file = op.join(data_path, "sub-ziggy_T2w.nii")
 
 # running workflow
 segment_pnh = create_full_segment_pnh_subpipes(params=params,
                                                params_template=params_template,
-                                               name = "test_NodeParams_KK_test")
+                                               name = "example_segment_sphinx_macaque_ants_based")
 segment_pnh.base_dir = data_path
 
-segment_pnh.inputs.inputnode.T1 = T1_file
-segment_pnh.inputs.inputnode.T2 = T2_file
+segment_pnh.inputs.inputnode.list_T1 = [T1_file]
+segment_pnh.inputs.inputnode.list_T2 = [T2_file]
 
 segment_pnh.write_graph(graph2use="colored")
-segment_pnh.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 segment_pnh.run()

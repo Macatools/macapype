@@ -3,14 +3,21 @@
     {
         "template_name": "NMT_v1.2"
     },
-    "data_preparation_pipe":
+    "short_preparation_pipe":
     {
-        "crop":
+        "reorient":
         {
-            "args": "Should not be used, specific to all"
+            "new_dims": "x z -y"
+        },
+        "bet_crop":
+        {
+            "m": true,
+            "aT2": true,
+            "c": 10,
+            "n": 2
         }
     },
-    "brain_extraction_pipe":
+    "no_brain_extraction_pipe":
     {
         "correct_bias_pipe":
         {
@@ -41,7 +48,7 @@
 
         }
     },
-    "brain_segment_pipe":
+    "no_brain_segment_pipe":
     {
         "masked_correct_bias_pipe":
         {
@@ -69,6 +76,7 @@
                 "shrink_factor": 2,
                 "args": "-r 0 --verbose 1"
             }
+
         },
         "segment_atropos_pipe":
         {
@@ -90,6 +98,5 @@
                 "thresh": 0.5
             }
         }
-
     }
 }
