@@ -301,9 +301,9 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
 
 
 ###############################################################################
-# choices between the 3 main pipelines: "old", "short", long
+# choices between the 3 main pipelines: "short", "long_single" et "long_multi"
 ###############################################################################
-def create_old_data_preparation_pipe(params, name="old_data_preparation_pipe"):
+def create_short_preparation_pipe(params, name="short_preparation_pipe"):
 
     """Description: old data preparation:, T1s and T2s are averaged
     (by modality) and then average imgs are processed:
@@ -324,7 +324,7 @@ def create_old_data_preparation_pipe(params, name="old_data_preparation_pipe"):
 
         arguments:
             params: dictionary of node sub-parameters (from a json file)
-            name: pipeline name (default = "long_data_preparation_pipe")
+            name: pipeline name (default = "long_multi_preparation_pipe")
 
     Outputs:
 
@@ -477,8 +477,8 @@ def create_old_data_preparation_pipe(params, name="old_data_preparation_pipe"):
     return data_preparation_pipe
 
 
-def create_short_data_preparation_pipe(params,
-                                       name="short_data_preparation_pipe"):
+def create_long_single_preparation_pipe(params,
+                                        name="long_single_preparation_pipe"):
     """Description: Short data preparation, T1s and T2s are averaged
     (by modality) and then average imgs are processed:
 
@@ -503,7 +503,7 @@ def create_short_data_preparation_pipe(params,
 
         arguments:
             params: dictionary of node sub-parameters (from a json file)
-            name: pipeline name (default = "long_data_preparation_pipe")
+            name: pipeline name (default = "long_multi_preparation_pipe")
 
     Outputs:
 
@@ -514,7 +514,7 @@ def create_short_data_preparation_pipe(params,
     """
 
     # creating pipeline
-    short_data_preparation_pipe = pe.Workflow(name=name)
+    long_single_preparation_pipe = pe.Workflow(name=name)
 
     # Creating input node
     inputnode = pe.Node(
@@ -529,7 +529,7 @@ def create_short_data_preparation_pipe(params,
                      function=average_align),
         name="av_T1")
 
-    short_data_preparation_pipe.connect(
+    long_single_preparation_pipe.connect(
         inputnode, 'list_T1', av_T1, "list_img")
 
     # list_prep_pipeline for T1 list
@@ -537,11 +537,12 @@ def create_short_data_preparation_pipe(params,
         params=parse_key(params, "prep_T1"),
         name="prep_T1")
 
-    short_data_preparation_pipe.connect(
+    long_single_preparation_pipe.connect(
         av_T1, 'avg_img', prep_T1_pipe, "inputnode.img")
 
-    short_data_preparation_pipe.connect(inputnode, 'indiv_params',
-                                        prep_T1_pipe, "inputnode.indiv_params")
+    long_single_preparation_pipe.connect(inputnode, 'indiv_params',
+                                         prep_T1_pipe,
+                                         "inputnode.indiv_params")
 
     # average if multiple T2
     av_T2 = pe.Node(
@@ -550,7 +551,7 @@ def create_short_data_preparation_pipe(params,
                      function=average_align),
         name="av_T2")
 
-    short_data_preparation_pipe.connect(
+    long_single_preparation_pipe.connect(
         inputnode, 'list_T2', av_T2, "list_img")
 
     # list_prep_pipeline for T2 list
@@ -558,37 +559,38 @@ def create_short_data_preparation_pipe(params,
         params=parse_key(params, "prep_T2"),
         name="prep_T2")
 
-    short_data_preparation_pipe.connect(
+    long_single_preparation_pipe.connect(
         av_T2, 'avg_img', prep_T2_pipe, "inputnode.img")
 
-    short_data_preparation_pipe.connect(inputnode, 'indiv_params',
-                                        prep_T2_pipe, "inputnode.indiv_params")
+    long_single_preparation_pipe.connect(inputnode, 'indiv_params',
+                                         prep_T2_pipe,
+                                         "inputnode.indiv_params")
 
     # align T2 on T1 - mutualinfo works better for crossmodal biased images
     align_T2_on_T1 = NodeParams(fsl.FLIRT(),
                                 params=parse_key(params, "align_T2_on_T1"),
                                 name="align_T2_on_T1")
 
-    short_data_preparation_pipe.connect(prep_T1_pipe, 'outputnode.prep_img',
-                                        align_T2_on_T1, 'reference')
-    short_data_preparation_pipe.connect(prep_T2_pipe, 'outputnode.prep_img',
-                                        align_T2_on_T1, 'in_file')
+    long_single_preparation_pipe.connect(prep_T1_pipe, 'outputnode.prep_img',
+                                         align_T2_on_T1, 'reference')
+    long_single_preparation_pipe.connect(prep_T2_pipe, 'outputnode.prep_img',
+                                         align_T2_on_T1, 'in_file')
 
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
         name='outputnode')
 
-    short_data_preparation_pipe.connect(prep_T1_pipe, 'outputnode.prep_img',
-                                        outputnode, 'preproc_T1')
-    short_data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
-                                        outputnode, 'preproc_T2')
+    long_single_preparation_pipe.connect(prep_T1_pipe, 'outputnode.prep_img',
+                                         outputnode, 'preproc_T1')
+    long_single_preparation_pipe.connect(align_T2_on_T1, 'out_file',
+                                         outputnode, 'preproc_T2')
 
-    return short_data_preparation_pipe
+    return long_single_preparation_pipe
 
 
-def create_long_data_preparation_pipe(params,
-                                      name="long_data_preparation_pipe"):
+def create_long_multi_preparation_pipe(params,
+                                       name="long_multi_preparation_pipe"):
     """Description: long data preparation,
     each T1 and T2 is processed independantly with:
 
@@ -618,7 +620,7 @@ def create_long_data_preparation_pipe(params,
         arguments:
             params: dictionary of node sub-parameters (from a json file)
 
-            name: pipeline name (default = "long_data_preparation_pipe")
+            name: pipeline name (default = "long_multi_preparation_pipe")
 
     Outputs:
 
@@ -630,7 +632,7 @@ def create_long_data_preparation_pipe(params,
     """
 
     # creating pipeline
-    long_data_preparation_pipe = pe.Workflow(name=name)
+    long_multi_preparation_pipe = pe.Workflow(name=name)
 
     # Creating input node
     inputnode = pe.Node(
@@ -648,10 +650,10 @@ def create_long_data_preparation_pipe(params,
         params=parse_key(params, "mapnode_prep_T1"),
         name="mapnode_prep_T1")
 
-    long_data_preparation_pipe.connect(
+    long_multi_preparation_pipe.connect(
         inputnode, 'list_T1', mapnode_prep_T1_pipe, "inputnode.list_img")
 
-    long_data_preparation_pipe.connect(
+    long_multi_preparation_pipe.connect(
         inputnode, 'indiv_params',
         mapnode_prep_T1_pipe, "inputnode.indiv_params")
 
@@ -662,7 +664,7 @@ def create_long_data_preparation_pipe(params,
                      function=average_align),
         name="av_T1")
 
-    long_data_preparation_pipe.connect(
+    long_multi_preparation_pipe.connect(
         mapnode_prep_T1_pipe, 'outputnode.prep_list_img', av_T1, 'list_img')
 
     # mapnode_prep_pipeline for T2 list
@@ -670,10 +672,10 @@ def create_long_data_preparation_pipe(params,
         params=parse_key(params, "mapnode_prep_T2"),
         name="mapnode_prep_T2")
 
-    long_data_preparation_pipe.connect(
+    long_multi_preparation_pipe.connect(
         inputnode, 'list_T2', mapnode_prep_T2_pipe, "inputnode.list_img")
 
-    long_data_preparation_pipe.connect(
+    long_multi_preparation_pipe.connect(
         inputnode, 'indiv_params',
         mapnode_prep_T2_pipe, "inputnode.indiv_params")
 
@@ -684,7 +686,7 @@ def create_long_data_preparation_pipe(params,
                      function=average_align),
         name="av_T2")
 
-    long_data_preparation_pipe.connect(
+    long_multi_preparation_pipe.connect(
         mapnode_prep_T2_pipe, 'outputnode.prep_list_img', av_T2, 'list_img')
 
     # align T2 on T1 - mutualinfo works better for crossmodal biased images
@@ -692,15 +694,15 @@ def create_long_data_preparation_pipe(params,
                                 params=parse_key(params, "align_T2_on_T1"),
                                 name="align_T2_on_T1")
 
-    long_data_preparation_pipe.connect(av_T1, 'avg_img',
-                                       align_T2_on_T1, 'reference')
-    long_data_preparation_pipe.connect(av_T2, 'avg_img',
-                                       align_T2_on_T1, 'in_file')
+    long_multi_preparation_pipe.connect(av_T1, 'avg_img',
+                                        align_T2_on_T1, 'reference')
+    long_multi_preparation_pipe.connect(av_T2, 'avg_img',
+                                        align_T2_on_T1, 'in_file')
 
     # output node
-    long_data_preparation_pipe.connect(av_T1, 'avg_img',
-                                       outputnode, 'preproc_T1')
-    long_data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
-                                       outputnode, 'preproc_T2')
+    long_multi_preparation_pipe.connect(av_T1, 'avg_img',
+                                        outputnode, 'preproc_T1')
+    long_multi_preparation_pipe.connect(align_T2_on_T1, 'out_file',
+                                        outputnode, 'preproc_T2')
 
-    return long_data_preparation_pipe
+    return long_multi_preparation_pipe

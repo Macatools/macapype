@@ -3,7 +3,7 @@
     {
         "template_name": "marmotemplate"
     },
-     "old_data_preparation_pipe":
+     "short_preparation_pipe":
     {
         "crop":
         {

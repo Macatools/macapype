@@ -3,7 +3,7 @@
     {
         "template_name": "NMT_v1.2"
     },
-    "old_data_preparation_pipe":
+    "short_preparation_pipe":
     {
         "bet_crop":
         {

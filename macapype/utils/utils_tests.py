@@ -4,6 +4,7 @@
 import os
 import os.path as op
 from os import makedirs
+import shutil
 
 
 def load_test_data(name, path_to=""):
@@ -83,3 +84,13 @@ def format_template(data_path, template_name):
         template_dict[key] = op.join(data_path, value)
 
     return template_dict
+
+
+def make_tmp_dir():
+    tmp_dir = "/tmp/test_macapype"
+    if os.path.exists(tmp_dir):
+        shutil.rmtree(tmp_dir)
+    os.makedirs(tmp_dir)
+    os.chdir(tmp_dir)
+
+    return tmp_dir

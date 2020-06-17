@@ -7,9 +7,9 @@ from ..utils.utils_nodes import NodeParams, parse_key
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from .prepare import (create_old_data_preparation_pipe,
-                      create_short_data_preparation_pipe,
-                      create_long_data_preparation_pipe)
+from .prepare import (create_short_preparation_pipe,
+                      create_long_single_preparation_pipe,
+                      create_long_multi_preparation_pipe)
 
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
@@ -80,14 +80,14 @@ def create_full_T1xT2_segment_pnh_subpipes(
     )
 
     # preprocessing
-    if 'old_data_preparation_pipe' in params.keys():
-        assert 'bet_crop' in parse_key(params, "old_data_preparation_pipe"),\
+    if 'short_preparation_pipe' in params.keys():
+        assert 'bet_crop' in parse_key(params, "short_preparation_pipe"),\
             "This version should contains betcrop in params.json"
 
-        data_preparation_pipe = create_old_data_preparation_pipe(
-            params=parse_key(params, "old_data_preparation_pipe"))
+        data_preparation_pipe = create_short_preparation_pipe(
+            params=parse_key(params, "short_preparation_pipe"))
     else:
-        print("Error, old_data_preparation_pipe was not \
+        print("Error, short_preparation_pipe was not \
             found in params, skipping")
         return seg_pipe
 
@@ -339,21 +339,21 @@ def create_full_segment_pnh_subpipes(
     )
 
     # preprocessing
-    if 'short_data_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_short_data_preparation_pipe(
-            params=parse_key(params, "short_data_preparation_pipe"))
+    if 'long_single_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_single_preparation_pipe(
+            params=parse_key(params, "long_single_preparation_pipe"))
 
-    elif 'long_data_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_data_preparation_pipe(
-            params=parse_key(params, "long_data_preparation_pipe"))
+    elif 'long_multi_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_multi_preparation_pipe(
+            params=parse_key(params, "long_multi_preparation_pipe"))
 
-    elif 'old_data_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_old_data_preparation_pipe(
-            params=parse_key(params, "old_data_preparation_pipe"))
+    elif 'short_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_short_preparation_pipe(
+            params=parse_key(params, "short_preparation_pipe"))
 
     else:
-        print("Error, long_data_preparation_pipe, old_data_preparation_pipe or\
-            long_data_preparation_pipe was not found in params, skipping")
+        print("Error, short_preparation_pipe, long_single_preparation_pipe or\
+            long_multi_preparation_pipe was not found in params, skipping")
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'list_T1',
