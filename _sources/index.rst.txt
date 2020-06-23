@@ -10,6 +10,10 @@ Neuropycon is based on `Nipype <http://nipype.readthedocs.io/en/latest/#>`_, a t
 
 API, describing the different pipelines and nodes, can be found :ref:`here <api_documentation>`
 
+Forum macapype_users
+**********************
+
+The macapype_users can be be found `here <https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe>`_ (requires a framateam/framagit account, but should be accessible with a github or bitbucket account)
 Installation
 ************
 
