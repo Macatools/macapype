@@ -1,9 +1,21 @@
-
+import os
 import os.path as op
 from macapype.nodes.extract_brain import T1xT2BET
 
-from macapype.utils.utils_tests import load_test_data
+from macapype.utils.utils_tests import load_test_data, make_tmp_dir
 from macapype.utils.utils_nodes import NodeParams
+
+
+def test_server_amubox():
+    tmp_path = make_tmp_dir()
+    name = op.join(tmp_path, "data_test_macaque.zip")
+
+    code = "RDxdxzmX89xcABG"
+    server = "https://amubox.univ-amu.fr"
+    add = "{}/public.php?service=files&t={}&download".format(server, code)
+    cmd = "wget  --no-check-certificate  \"{}\" -O {}".format(add, name)
+
+    os.system(cmd)
 
 
 def test_data_test_macaque():

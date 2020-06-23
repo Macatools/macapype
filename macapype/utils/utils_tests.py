@@ -10,6 +10,9 @@ import shutil
 def load_test_data(name, path_to=""):
     """ Load test data, template and needed scripts """
 
+    """
+    server = "cloud.int.univ-amu.fr"
+
     data_dir = {
         "NMT_v1.2": "QBTrmKNDrNs5E49",
         "NMT_FSL": "ajAtB7qgaPAmKyJ",
@@ -20,6 +23,20 @@ def load_test_data(name, path_to=""):
         "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
         "data_test_marmo": "pW4nQr46QSzSysg"
     }
+
+    oc_path = "https://{}/index.php/s/{}/download"\
+            .format(server, data_dir[name])
+    """
+
+    server = "https://amubox.univ-amu.fr"
+    data_dir = {
+        "data_test_macaque": "RDxdxzmX89xcABG",
+        "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
+        "NMT_v1.2": "5YnwNf3Jr7Qsc8H"
+            }
+
+    oc_path = "{}/public.php?service=files&t={}&download".format(
+        server, data_dir[name])
 
     if path_to == "":
         path_to = op.expanduser("~")
@@ -47,10 +64,11 @@ def load_test_data(name, path_to=""):
 
         assert name in data_dir.keys(),\
             "Error, {} not found in data_dict".format(name)
-        oc_path = "https://cloud.int.univ-amu.fr/index.php/s/{}/download"\
-            .format(data_dir[name])
-        os.system("wget -O {} --no-check-certificate  --content-disposition\
-            {}".format(data_zip, oc_path))
+        # os.system("wget -O {} --no-check-certificate  --content-disposition\
+        #    {}".format(data_zip, oc_path))
+
+        os.system("wget --no-check-certificate  \
+            --content-disposition \"{}\" -O {} ".format(oc_path, data_zip))
 
     assert op.exists(data_zip),\
         "Error, data_zip = {} not found ".format(data_zip)
