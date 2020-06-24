@@ -21,6 +21,7 @@ Forum macapype_users
 
 The macapype_users can be be found `here <https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe>`_ (requires a framateam/framagit account, but should be accessible with a github or bitbucket account)
 
+
 Installation
 ************
 

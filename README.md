@@ -1,3 +1,5 @@
+[![Downloads](https://pepy.tech/badge/macapype)](https://pepy.tech/project/macapype)
+
 # Quick Install
 To use it:
 ```shell
