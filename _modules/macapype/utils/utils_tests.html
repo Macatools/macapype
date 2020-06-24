@@ -122,16 +122,33 @@
 <div class="viewcode-block" id="load_test_data"><a class="viewcode-back" href="../../../generated/macapype.utils.utils_tests.load_test_data.html#macapype.utils.utils_tests.load_test_data">[docs]</a><span class="k">def</span> <span class="nf">load_test_data</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path_to</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Load test data, template and needed scripts &quot;&quot;&quot;</span>
 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    server = &quot;cloud.int.univ-amu.fr&quot;</span>
+
+<span class="sd">    data_dir = {</span>
+<span class="sd">        &quot;NMT_v1.2&quot;: &quot;QBTrmKNDrNs5E49&quot;,</span>
+<span class="sd">        &quot;NMT_FSL&quot;: &quot;ajAtB7qgaPAmKyJ&quot;,</span>
+<span class="sd">        &quot;inia19&quot;: &quot;WZo9wZdreTMwfQA&quot;,</span>
+<span class="sd">        &quot;marmotemplate&quot;: &quot;5xzm7DJD9kB99gG&quot;,</span>
+<span class="sd">        &quot;haiko89_template&quot;: &quot;rKeniMmCdsCsW8F&quot;,</span>
+<span class="sd">        &quot;data_test_macaque&quot;: &quot;SgG7bBMXao9Kfon&quot;,</span>
+<span class="sd">        &quot;data_test_sphinx_macaque&quot;: &quot;f6C48Y3QqJfD9wM&quot;,</span>
+<span class="sd">        &quot;data_test_marmo&quot;: &quot;pW4nQr46QSzSysg&quot;</span>
+<span class="sd">    }</span>
+
+<span class="sd">    oc_path = &quot;https://{}/index.php/s/{}/download&quot;\</span>
+<span class="sd">            .format(server, data_dir[name])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;https://amubox.univ-amu.fr&quot;</span>
     <span class="n">data_dir</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;NMT_v1.2&quot;</span><span class="p">:</span> <span class="s2">&quot;QBTrmKNDrNs5E49&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;NMT_FSL&quot;</span><span class="p">:</span> <span class="s2">&quot;ajAtB7qgaPAmKyJ&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;inia19&quot;</span><span class="p">:</span> <span class="s2">&quot;WZo9wZdreTMwfQA&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;marmotemplate&quot;</span><span class="p">:</span> <span class="s2">&quot;5xzm7DJD9kB99gG&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;haiko89_template&quot;</span><span class="p">:</span> <span class="s2">&quot;rKeniMmCdsCsW8F&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;data_test_macaque&quot;</span><span class="p">:</span> <span class="s2">&quot;SgG7bBMXao9Kfon&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;data_test_sphinx_macaque&quot;</span><span class="p">:</span> <span class="s2">&quot;f6C48Y3QqJfD9wM&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;data_test_marmo&quot;</span><span class="p">:</span> <span class="s2">&quot;pW4nQr46QSzSysg&quot;</span>
-    <span class="p">}</span>
+        <span class="s2">&quot;data_test_macaque&quot;</span><span class="p">:</span> <span class="s2">&quot;RDxdxzmX89xcABG&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;data_test_sphinx_macaque&quot;</span><span class="p">:</span> <span class="s2">&quot;RkWbC2gmbn4ytK3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;NMT_v1.2&quot;</span><span class="p">:</span> <span class="s2">&quot;5YnwNf3Jr7Qsc8H&quot;</span>
+            <span class="p">}</span>
+
+    <span class="n">oc_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/public.php?service=files&amp;t=</span><span class="si">{}</span><span class="s2">&amp;download&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">server</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">path_to</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
         <span class="n">path_to</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
@@ -159,10 +176,11 @@
 
         <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_dir</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>\
             <span class="s2">&quot;Error, </span><span class="si">{}</span><span class="s2"> not found in data_dict&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">oc_path</span> <span class="o">=</span> <span class="s2">&quot;https://cloud.int.univ-amu.fr/index.php/s/</span><span class="si">{}</span><span class="s2">/download&quot;</span>\
-            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;wget -O </span><span class="si">{}</span><span class="s2"> --no-check-certificate  --content-disposition</span><span class="se">\</span>
-<span class="s2">            </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_zip</span><span class="p">,</span> <span class="n">oc_path</span><span class="p">))</span>
+        <span class="c1"># os.system(&quot;wget -O {} --no-check-certificate  --content-disposition\</span>
+        <span class="c1">#    {}&quot;.format(data_zip, oc_path))</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;wget --no-check-certificate  </span><span class="se">\</span>
+<span class="s2">            --content-disposition </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> -O </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oc_path</span><span class="p">,</span> <span class="n">data_zip</span><span class="p">))</span>
 
     <span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_zip</span><span class="p">),</span>\
         <span class="s2">&quot;Error, data_zip = </span><span class="si">{}</span><span class="s2"> not found &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_zip</span><span class="p">)</span>
@@ -219,7 +237,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-23.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
