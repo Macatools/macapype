@@ -3,12 +3,27 @@
 ********
 Macapype
 ********
-
+..
+.. .. _short_logo:
+.. .. |logo1| image:: ./img/logo/logo_macapype.png
+..     :scale: 100%
+..
+.. .. table::
+..    :align: center
+..
+..    +---------+
+..    | |logo1| |
+..    +---------+
+..
 Macapype is an open-source multi-modal brain data analysis kit which provides **Python-based
 pipelines** for advanced multi-thread processing of MRI anatomical data of PNH brain images.
 Neuropycon is based on `Nipype <http://nipype.readthedocs.io/en/latest/#>`_, a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common python framework.
 
 API, describing the different pipelines and nodes, can be found :ref:`here <api_documentation>`
+
+.. image:: ./img/logo/logo_macapype.png
+    :scale: 50%
+    :align: center
 
 Ressources
 ************

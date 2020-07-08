@@ -34,7 +34,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="../index.html">
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_macapype.png"></span>
           Macapype</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
       </div>
@@ -134,7 +134,41 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline</a><ul>
+<li><a class="reference internal" href="#testing-plot-in-local">Testing plot in local</a></li>
+<li><a class="reference internal" href="#data-preparation">Data preparation</a><ul>
+<li><a class="reference internal" href="#results-of-cropping">results of cropping</a></li>
+<li><a class="reference internal" href="#results-of-norm-intensity">results of norm_intensity</a></li>
+<li><a class="reference internal" href="#results-of-denoising">results of denoising</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#first-part-of-the-pipeline-brain-extraction">First part of the pipeline: brain extraction</a><ul>
+<li><a class="reference internal" href="#correct-bias-results">Correct bias results</a></li>
+<li><a class="reference internal" href="#brain-extraction-results">Brain extraction results</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#second-part-of-the-pipeline-segmentation">Second part of the pipeline: segmentation</a><ul>
+<li><a class="reference internal" href="#debias-t1xt2-and-debias-n4">debias T1xT2 and debias N4</a></li>
+<li><a class="reference internal" href="#register-template-to-subject">register template to subject</a></li>
+<li><a class="reference internal" href="#segmentation-results-by-tissue">segmentation results by tissue</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="first admonition-title">Note</p>
@@ -430,7 +464,7 @@
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_segment_baboon_ants_based_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_segment_baboon_ants_based_008.png" />
-<p><strong>Total running time of the script:</strong> ( 1 minutes  3.035 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 1 minutes  0.449 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-baboon-ants-based-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/a908695f195f1a743a60464bd8b73d9a/plot_segment_baboon_ants_based.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_baboon_ants_based.py</span></code></a></div>
@@ -454,7 +488,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-06-24.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
