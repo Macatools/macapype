@@ -1,4 +1,5 @@
 [![Downloads](https://pepy.tech/badge/macapype)](https://pepy.tech/project/macapype)
+[![Build Status](https://travis-ci.com/Macatools/macapype.svg?branch=master)](https://travis-ci.com/Macatools/macapype)
 
 # Quick Install
 To use it:
