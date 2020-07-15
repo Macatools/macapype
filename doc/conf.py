@@ -110,6 +110,11 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
+html_logo = "img/logo/logo_macapype.png"
+
+html_sidebars = {'**': ['localtoc.html', 'searchbox.html'],
+   'using/windows': ['windowssidebar.html', 'searchbox.html']}
+
 html_theme_options = {
     'navbar_title': 'Macapype',
     'bootswatch_theme': "flatly",
@@ -121,8 +126,8 @@ html_theme_options = {
         ("Tutorial", "tutorial"),
         ("Installation", "install"),
         ("Github", "https://github.com/macatools/macapype", True),
-    ],
-    'bootswatch_theme': "united"}
+    ]
+    }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
