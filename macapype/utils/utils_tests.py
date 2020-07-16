@@ -10,33 +10,53 @@ import shutil
 def load_test_data(name, path_to=""):
     """ Load test data, template and needed scripts """
 
-    """
-    server = "cloud.int.univ-amu.fr"
+    data_dict = {
+        "INT": {
+            "server": "cloud.int.univ-amu.fr",
+            "data_dir": {
+                "NMT_v1.2": "QBTrmKNDrNs5E49",
+                "NMT_FSL": "ajAtB7qgaPAmKyJ",
+                "inia19": "WZo9wZdreTMwfQA",
+                "marmotemplate": "5xzm7DJD9kB99gG",
+                "haiko89_template": "rKeniMmCdsCsW8F",
+                "data_test_macaque": "SgG7bBMXao9Kfon",
+                "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
+                "data_test_marmo": "pW4nQr46QSzSysg"},
+            "cloud_format": "https://{}/index.php/s/{}/download"},
 
-    data_dir = {
-        "NMT_v1.2": "QBTrmKNDrNs5E49",
-        "NMT_FSL": "ajAtB7qgaPAmKyJ",
-        "inia19": "WZo9wZdreTMwfQA",
-        "marmotemplate": "5xzm7DJD9kB99gG",
-        "haiko89_template": "rKeniMmCdsCsW8F",
-        "data_test_macaque": "SgG7bBMXao9Kfon",
-        "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
-        "data_test_marmo": "pW4nQr46QSzSysg"
-    }
+        "AMUBOX": {
+            "server": "https://amubox.univ-amu.fr",
+            "data_dir": {
+                "data_test_macaque": "RDxdxzmX89xcABG",
+                "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
+                "NMT_v1.2": "5YnwNf3Jr7Qsc8H"},
+            "cloud_format": "{}/public.php?service=files&t={}&download"}}
 
-    oc_path = "https://{}/index.php/s/{}/download"\
-            .format(server, data_dir[name])
-    """
+    def _download_data_zip(data_zip, name):
 
-    server = "https://amubox.univ-amu.fr"
-    data_dir = {
-        "data_test_macaque": "RDxdxzmX89xcABG",
-        "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
-        "NMT_v1.2": "5YnwNf3Jr7Qsc8H"
-            }
+        for key, cloud_elem in data_dict.items():
+            print(key)
 
-    oc_path = "{}/public.php?service=files&t={}&download".format(
-        server, data_dir[name])
+            data_dir = cloud_elem["data_dir"]
+
+            if name not in data_dir.keys():
+
+                print("{} not found in {}".format(name, key))
+                continue
+
+            server = cloud_elem["server"]
+            oc_path = cloud_elem["cloud_format"].format(server, data_dir[name])
+
+            os.system("wget --no-check-certificate  \
+                --content-disposition \"{}\" -O {} ".format(oc_path, data_zip))
+
+            if op.exists(data_zip):
+                print("Ok for download {} with {}, \
+                      quitting download function".format(data_zip, key))
+                return
+
+        assert op.exists(data_zip),\
+            "Error, data_zip = {} not found ".format(data_zip)
 
     if path_to == "":
         path_to = op.expanduser("~")
@@ -62,16 +82,7 @@ def load_test_data(name, path_to=""):
 
         print("Download {}".format(data_zip))
 
-        assert name in data_dir.keys(),\
-            "Error, {} not found in data_dict".format(name)
-        # os.system("wget -O {} --no-check-certificate  --content-disposition\
-        #    {}".format(data_zip, oc_path))
-
-        os.system("wget --no-check-certificate  \
-            --content-disposition \"{}\" -O {} ".format(oc_path, data_zip))
-
-    assert op.exists(data_zip),\
-        "Error, data_zip = {} not found ".format(data_zip)
+        _download_data_zip(data_zip, name)
 
     print("Unzip {} to {}".format(data_zip, data_path))
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
