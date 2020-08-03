@@ -9,8 +9,8 @@ from ..utils.utils_nodes import NodeParams, parse_key
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from .prepare import (create_short_preparation_pipe, 
-                      create_long_multi_preparation_pipe, 
+from .prepare import (create_short_preparation_pipe,
+                      create_long_multi_preparation_pipe,
                       create_long_single_preparation_pipe)
 
 from .segment import (create_old_segment_pipe,
