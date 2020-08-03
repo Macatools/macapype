@@ -59,7 +59,8 @@ import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines import (
-    create_full_segment_pnh_subpipes, create_full_T1xT2_segment_pnh_subpipes)
+    create_full_segment_pnh_subpipes, create_full_T1xT2_segment_pnh_subpipes,
+    create_full_spm_subpipes)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource)
@@ -167,7 +168,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
     # soft
     soft = soft.lower()
-    assert soft in ["spm12", "spm", "ants"], \
+    assert soft in ["spm12", "spm", "ants", "spm_t1"], \
         "error with {}, should be among [spm12, spm, ants]".format(soft)
 
     wf_name += "_{}".format(soft)
@@ -179,11 +180,12 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     if soft in ["spm","spm12"]:
         segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
             params_template=params_template, params=params)
-
     elif soft=="ants":
         segment_pnh = create_full_segment_pnh_subpipes(
             params_template=params_template, params=params)
-
+    elif soft=="spm_t1":
+        segment_pnh = create_full_spm_subpipes(
+            params_template=params_template, params=params)
 
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
@@ -196,7 +198,9 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                                        acquisitions)
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
-    main_workflow.connect(datasource, 'T2', segment_pnh, 'inputnode.list_T2')
+    if soft != "spm_t1":
+        main_workflow.connect(datasource, 'T2', 
+                              segment_pnh, 'inputnode.list_T2')
 
     return main_workflow
 

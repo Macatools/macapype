@@ -342,22 +342,21 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         name='inputnode'
     )
 
+    # avererge if multiple T2
+    av_T2 = pe.Node(niu.Function(
+        input_names=['list_img'],
+        output_names=['avg_img'],
+        function=average_align), name="av_T2")
+    data_preparation_pipe.connect(inputnode, 'list_T2', av_T2, 'list_img')
+
     # avererge if multiple T1
     av_T1 = pe.Node(
         niu.Function(input_names=['list_img'],
                      output_names=['avg_img'],
                      function=average_align),
         name="av_T1")
-
     data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
-    # avererge if multiple T2
-    av_T2 = pe.Node(niu.Function(
-        input_names=['list_img'],
-        output_names=['avg_img'],
-        function=average_align), name="av_T2")
-
-    data_preparation_pipe.connect(inputnode, 'list_T2', av_T2, 'list_img')
 
     if "reorient" in params.keys():
         print('reorient is in params')

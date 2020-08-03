@@ -1,15 +1,17 @@
 
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
+from nipype.interfaces import ants
+from nipype.interfaces import fsl
 
 from ..utils.utils_nodes import NodeParams, parse_key
 
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from .prepare import (create_short_preparation_pipe,
-                      create_long_single_preparation_pipe,
-                      create_long_multi_preparation_pipe)
+#from .prepare import create_data_preparation_pipe
+#from .prepare import create_data_preparation_baboon_pipe
+from .prepare import create_short_preparation_pipe
 
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
@@ -143,6 +145,95 @@ def create_full_T1xT2_segment_pnh_subpipes(
             old_segment_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
+
+
+def create_full_spm_subpipes(
+        params_template, params={}, name='full_spm_subpipes'):
+    """
+    """
+
+    print("Full pipeline name: ", name)
+
+    # Creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['list_T1', 'indiv_params']),
+        name='inputnode'
+    )
+
+    # preprocessing
+    data_preparation_pipe = create_short_preparation_pipe(
+        params=parse_key(params, "short_preparation_pipe"))
+
+    seg_pipe.connect(inputnode, 'list_T1',
+                     data_preparation_pipe, 'inputnode.list_T1')
+    seg_pipe.connect(inputnode, 'list_T1',
+                     data_preparation_pipe, 'inputnode.list_T2')
+    seg_pipe.connect(inputnode, 'indiv_params',
+                     data_preparation_pipe, 'inputnode.indiv_params')
+
+    # Bias correction of cropped images
+    debias = NodeParams(T1xT2BiasFieldCorrection(),
+                        params=parse_key(params, "debias"),
+                        name='debias')
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     debias, 't1_file')
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     debias, 't2_file')
+    seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
+                     debias, 'b')
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "debias"),
+        debias, 'indiv_params')
+
+    # Iterative registration to the INIA19 template
+    reg = NodeParams(IterREGBET(),
+                     params=parse_key(params, "reg"),
+                     name='reg')
+    reg.inputs.refb_file = params_template["template_brain"]
+    seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
+    seg_pipe.connect(debias, 't1_debiased_brain_file',
+                     reg, 'inb_file')
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "reg"),
+        reg, 'indiv_params')
+
+    # Subject to _template (ants)
+    nonlin_reg = NodeParams(ants.RegistrationSynQuick(),
+         params=parse_key(params, "nonlin_reg"),
+         name='nonlin_reg')
+#    print("SynQuick fixed image: " + params_template["template_brain"])
+#    exit()
+    nonlin_reg.inputs.fixed_image = params_template["template_brain"]
+    seg_pipe.connect(reg, "warp_file", nonlin_reg, "moving_image")
+    
+    # Transform T1 (fsl)
+    transform_msk = NodeParams(fsl.ApplyXFM(),
+         params=parse_key(params, "transform_mask"),
+         name='transform_others')
+    seg_pipe.connect(nonlin_reg, "out_matrix", transform_msk, "in_matrix_file")
+    seg_pipe.connect(debias, "debiased_mask_file", transform_msk, "in_file")
+    seg_pipe.connect(debias, "t1_debiased_file", transform_msk, "reference")
+
+    # Compute brain mask using old_segment of SPM and postprocessing on
+    # tissues' masks
+    if "old_segment_pipe" in params.keys():
+
+        old_segment_pipe = create_old_segment_pipe(
+            params_template, params=parse_key(params, "old_segment_pipe"))
+
+        seg_pipe.connect(nonlin_reg, ('warped_image', gunzip),
+                         old_segment_pipe, 'inputnode.T1')
+
+        seg_pipe.connect(
+            inputnode, 'indiv_params',
+            old_segment_pipe, 'inputnode.indiv_params')
+
+    return seg_pipe
+
 
 
 ###############################################################################
