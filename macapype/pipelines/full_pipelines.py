@@ -9,7 +9,9 @@ from ..utils.utils_nodes import NodeParams, parse_key
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from .prepare import create_short_preparation_pipe
+from .prepare import (create_short_preparation_pipe, 
+                      create_long_multi_preparation_pipe, 
+                      create_long_single_preparation_pipe)
 
 from .segment import (create_old_segment_pipe,
                       create_segment_atropos_pipe)
@@ -201,15 +203,15 @@ def create_full_spm_subpipes(
 
     # Subject to _template (ants)
     nonlin_reg = NodeParams(ants.RegistrationSynQuick(),
-         params=parse_key(params, "nonlin_reg"),
-         name='nonlin_reg')
+                            params=parse_key(params, "nonlin_reg"),
+                            name='nonlin_reg')
     nonlin_reg.inputs.fixed_image = params_template["template_brain"]
     seg_pipe.connect(reg, "warp_file", nonlin_reg, "moving_image")
-    
+
     # Transform T1 (fsl)
     transform_msk = NodeParams(fsl.ApplyXFM(),
-         params=parse_key(params, "transform_mask"),
-         name='transform_others')
+                               params=parse_key(params, "transform_mask"),
+                               name='transform_others')
     seg_pipe.connect(nonlin_reg, "out_matrix", transform_msk, "in_matrix_file")
     seg_pipe.connect(debias, "debiased_mask_file", transform_msk, "in_file")
     seg_pipe.connect(debias, "t1_debiased_file", transform_msk, "reference")
@@ -229,7 +231,6 @@ def create_full_spm_subpipes(
             old_segment_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
-
 
 
 ###############################################################################
