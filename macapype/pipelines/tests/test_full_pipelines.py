@@ -2,8 +2,7 @@ import os.path as op
 
 from macapype.utils.utils_tests import (make_tmp_dir, format_template,
                                         load_test_data)
-from macapype.pipelines.full_pipelines import (create_full_segment_pnh_subpipes,
-    create_full_spm_subpipes)
+from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes
 
 data_path = make_tmp_dir()
 
@@ -89,30 +88,6 @@ def test_create_full_segment_pnh_subpipes_no_subpipes():
         op.join(data_path,
                 "test_create_full_segment_pnh_subpipes_no_subpipes",
                 "graph.png"))
-
-
-def test_create_full_segment_pnh_subpipes():
-
-    params = {
-        # No params
-    }
-
-    # params template
-    template_name = 'inia19'
-    template_dir = load_test_data(template_name, data_path)
-    params_template = format_template(template_dir, template_name)
-
-    # running workflow
-    segment_pnh = create_full_segment_pnh_subpipes(
-        params=params, params_template=params_template,
-        name="test_create_full_spm_subpipes")
-
-    segment_pnh.base_dir = data_path
-
-    segment_pnh.write_graph(graph2use="colored")
-    assert op.exists(op.join(data_path,
-                             "test_create_full_spm_subpipes",
-                             "graph.png"))
 
 
 def test_create_full_segment_pnh_subpipes():

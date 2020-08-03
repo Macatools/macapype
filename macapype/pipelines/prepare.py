@@ -357,7 +357,6 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         name="av_T1")
     data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
-
     if "reorient" in params.keys():
         print('reorient is in params')
 
