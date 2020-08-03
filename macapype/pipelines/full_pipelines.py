@@ -9,8 +9,6 @@ from ..utils.utils_nodes import NodeParams, parse_key
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-#from .prepare import create_data_preparation_pipe
-#from .prepare import create_data_preparation_baboon_pipe
 from .prepare import create_short_preparation_pipe
 
 from .segment import (create_old_segment_pipe,
@@ -205,8 +203,6 @@ def create_full_spm_subpipes(
     nonlin_reg = NodeParams(ants.RegistrationSynQuick(),
          params=parse_key(params, "nonlin_reg"),
          name='nonlin_reg')
-#    print("SynQuick fixed image: " + params_template["template_brain"])
-#    exit()
     nonlin_reg.inputs.fixed_image = params_template["template_brain"]
     seg_pipe.connect(reg, "warp_file", nonlin_reg, "moving_image")
     
