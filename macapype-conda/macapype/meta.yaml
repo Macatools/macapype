@@ -1,0 +1,45 @@
+{% set name = "macapype" %}
+{% set version = "0.1.1" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 5c47726abf9e3cf79d3440406a0972152f5bdf39afcfdd911fb8a0723fd77d0b
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - networkx >=2.0
+    - python
+  run:
+    - networkx >=2.0
+    - python
+
+test:
+  imports:
+    - examples
+    - macapype
+    - macapype.nodes
+    - macapype.pipelines
+    - macapype.utils
+
+about:
+  home: The package home page
+  license: BSD 3
+  license_family: BSD
+  license_file: 
+  summary: "Pipeline for anatomic processing for macaque"
+  doc_url: https://macatools.github.io/macapype/
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - macatools
+    - davidmeunier79
+

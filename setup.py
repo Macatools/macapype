@@ -6,6 +6,9 @@ import os
 
 import re
 
+from distutils.core import setup, Extension
+import distutils.command.bdist_conda
+
 verstr = "unknown"
 try:
     verstrline = open('macapype/_version.py', "rt").read()
@@ -28,5 +31,7 @@ setup(
     author="David Meunier, Bastien Cagna",
     description="Pipeline for anatomic processing for macaque",
     license='BSD 3',
-    install_requires=["nipype", "networkx>=2.0", "pybids"]
+    install_requires=["nipype", "networkx>=2.0", "pybids"],
+    distclass=distutils.command.bdist_conda.CondaDistribution,
+    conda_buildnum=1
 )
