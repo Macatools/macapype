@@ -62,8 +62,8 @@ Not mandatory, but prefered:
 
 .. code-block:: bash
 
-    conda install -c conda-forge matplotlib
-    conda install ipython
+    $ conda install -c conda-forge matplotlib
+    $ conda install ipython
 
 Alternatively, the github version provides a environment.yml:
 
@@ -71,7 +71,7 @@ Alternatively, the github version provides a environment.yml:
 
 .. code:: bash
 
-    conda env create -f environment.yml
+    $ conda env create -f environment.yml
 
 (Will create a conda environment named 'macapype')
 
@@ -79,7 +79,7 @@ To activate the environment:
 
 .. code:: bash
 
-    conda activate macapype
+    $ conda activate macapype
 
 Install macapype package
 #########################
