@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.correct_bias.create_correct_bias_pipe &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" href="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html" />
@@ -134,32 +135,31 @@
       
   <div class="section" id="macapype-pipelines-correct-bias-create-correct-bias-pipe">
 <h1>macapype.pipelines.correct_bias.create_correct_bias_pipe<a class="headerlink" href="#macapype-pipelines-correct-bias-create-correct-bias-pipe" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="macapype.pipelines.correct_bias.create_correct_bias_pipe">
-<code class="descclassname">macapype.pipelines.correct_bias.</code><code class="descname">create_correct_bias_pipe</code><span class="sig-paren">(</span><em>params={}</em>, <em>name='correct_bias_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/correct_bias.html#create_correct_bias_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Description: Correct bias using T1 and T2 images</dt>
-<dd>Same as bash_regis.T1xT2BiasFieldCorrection</dd>
+<code class="sig-prename descclassname">macapype.pipelines.correct_bias.</code><code class="sig-name descname">create_correct_bias_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'correct_bias_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/correct_bias.html#create_correct_bias_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Description: Correct bias using T1 and T2 images</dt><dd><p>Same as bash_regis.T1xT2BiasFieldCorrection</p>
+</dd>
 </dl>
 <p>Inputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>inputnode:</dt>
-<dd>preproc_T1: preprocessed T1 file name
-preproc_T2: preprocessed T2 file name</dd>
-<dt>arguments:</dt>
-<dd><p class="first">params: dictionary of node sub-parameters (from a json file)</p>
-<p class="last">name: pipeline name (default = “correct_bias_pipe”)</p>
+<div><dl>
+<dt>inputnode:</dt><dd><p>preproc_T1: preprocessed T1 file name
+preproc_T2: preprocessed T2 file name</p>
+</dd>
+<dt>arguments:</dt><dd><p>params: dictionary of node sub-parameters (from a json file)</p>
+<p>name: pipeline name (default = “correct_bias_pipe”)</p>
 </dd>
 </dl>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>restore_T1.out_file:</dt>
-<dd>T1 after bias correction</dd>
-<dt>restore_T2.out_file</dt>
-<dd>T2 after bias correction</dd>
+<div><dl class="simple">
+<dt>restore_T1.out_file:</dt><dd><p>T1 after bias correction</p>
+</dd>
+<dt>restore_T2.out_file</dt><dd><p>T2 after bias correction</p>
+</dd>
 </dl>
 </div></blockquote>
 </dd></dl>
@@ -178,8 +178,8 @@ preproc_T2: preprocessed T2 file name</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

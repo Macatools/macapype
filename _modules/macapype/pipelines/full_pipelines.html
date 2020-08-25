@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.full_pipelines &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../../../_static/js/jquery-fix.js"></script>
+    <script src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 <meta charset='utf-8'>
@@ -124,6 +125,8 @@
 <span></span>
 <span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces</span> <span class="kn">import</span> <span class="n">ants</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces</span> <span class="kn">import</span> <span class="n">fsl</span>
 
 <span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span><span class="p">,</span> <span class="n">parse_key</span>
 
@@ -131,8 +134,8 @@
 <span class="kn">from</span> <span class="nn">macapype.nodes.register</span> <span class="kn">import</span> <span class="n">IterREGBET</span>
 
 <span class="kn">from</span> <span class="nn">.prepare</span> <span class="kn">import</span> <span class="p">(</span><span class="n">create_short_preparation_pipe</span><span class="p">,</span>
-                      <span class="n">create_long_single_preparation_pipe</span><span class="p">,</span>
-                      <span class="n">create_long_multi_preparation_pipe</span><span class="p">)</span>
+                      <span class="n">create_long_multi_preparation_pipe</span><span class="p">,</span>
+                      <span class="n">create_long_single_preparation_pipe</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.segment</span> <span class="kn">import</span> <span class="p">(</span><span class="n">create_old_segment_pipe</span><span class="p">,</span>
                       <span class="n">create_segment_atropos_pipe</span><span class="p">)</span>
@@ -266,6 +269,92 @@
             <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">seg_pipe</span></div>
+
+
+<span class="k">def</span> <span class="nf">create_full_spm_subpipes</span><span class="p">(</span>
+        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_spm_subpipes&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Full pipeline name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Creating pipeline</span>
+    <span class="n">seg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Creating input node</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># preprocessing</span>
+    <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_pipe</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">))</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T1&#39;</span><span class="p">,</span>
+                     <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.list_T1&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T1&#39;</span><span class="p">,</span>
+                     <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.list_T2&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
+                     <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Bias correction of cropped images</span>
+    <span class="n">debias</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">T1xT2BiasFieldCorrection</span><span class="p">(),</span>
+                        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;debias&quot;</span><span class="p">),</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;debias&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
+                     <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_file&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
+                     <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;bet_crop.mask_file&#39;</span><span class="p">,</span>
+                     <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;debias&quot;</span><span class="p">),</span>
+        <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Iterative registration to the INIA19 template</span>
+    <span class="n">reg</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">IterREGBET</span><span class="p">(),</span>
+                     <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;reg&quot;</span><span class="p">),</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reg&#39;</span><span class="p">)</span>
+    <span class="n">reg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refb_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_brain&quot;</span><span class="p">]</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_debiased_file&#39;</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="s1">&#39;inw_file&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_debiased_brain_file&#39;</span><span class="p">,</span>
+                     <span class="n">reg</span><span class="p">,</span> <span class="s1">&#39;inb_file&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;reg&quot;</span><span class="p">),</span>
+        <span class="n">reg</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Subject to _template (ants)</span>
+    <span class="n">nonlin_reg</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">RegistrationSynQuick</span><span class="p">(),</span>
+                            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;nonlin_reg&quot;</span><span class="p">),</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nonlin_reg&#39;</span><span class="p">)</span>
+    <span class="n">nonlin_reg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">fixed_image</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_brain&quot;</span><span class="p">]</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="s2">&quot;warp_file&quot;</span><span class="p">,</span> <span class="n">nonlin_reg</span><span class="p">,</span> <span class="s2">&quot;moving_image&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Transform T1 (fsl)</span>
+    <span class="n">transform_msk</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span>
+                               <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;transform_mask&quot;</span><span class="p">),</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;transform_others&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">nonlin_reg</span><span class="p">,</span> <span class="s2">&quot;out_matrix&quot;</span><span class="p">,</span> <span class="n">transform_msk</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">debias</span><span class="p">,</span> <span class="s2">&quot;debiased_mask_file&quot;</span><span class="p">,</span> <span class="n">transform_msk</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">debias</span><span class="p">,</span> <span class="s2">&quot;t1_debiased_file&quot;</span><span class="p">,</span> <span class="n">transform_msk</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute brain mask using old_segment of SPM and postprocessing on</span>
+    <span class="c1"># tissues&#39; masks</span>
+    <span class="k">if</span> <span class="s2">&quot;old_segment_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">old_segment_pipe</span> <span class="o">=</span> <span class="n">create_old_segment_pipe</span><span class="p">(</span>
+            <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">nonlin_reg</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;warped_image&#39;</span><span class="p">,</span> <span class="n">gunzip</span><span class="p">),</span>
+                         <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.T1&#39;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
+            <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">seg_pipe</span>
 
 
 <span class="c1">###############################################################################</span>
@@ -534,8 +623,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

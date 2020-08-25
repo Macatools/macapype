@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.register.create_register_NMT_pipe &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="macapype.pipelines.extract_brain.create_extract_pipe" href="macapype.pipelines.extract_brain.create_extract_pipe.html" />
@@ -134,37 +135,36 @@
       
   <div class="section" id="macapype-pipelines-register-create-register-nmt-pipe">
 <h1>macapype.pipelines.register.create_register_NMT_pipe<a class="headerlink" href="#macapype-pipelines-register-create-register-nmt-pipe" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="macapype.pipelines.register.create_register_NMT_pipe">
-<code class="descclassname">macapype.pipelines.register.</code><code class="descname">create_register_NMT_pipe</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='register_NMT_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/register.html#create_register_NMT_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.register.create_register_NMT_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Description: Register template to anat with the script NMT_subject_align,</dt>
-<dd>and then apply it to tissues list_priors</dd>
+<code class="sig-prename descclassname">macapype.pipelines.register.</code><code class="sig-name descname">create_register_NMT_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'register_NMT_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/register.html#create_register_NMT_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.register.create_register_NMT_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Description: Register template to anat with the script NMT_subject_align,</dt><dd><p>and then apply it to tissues list_priors</p>
+</dd>
 </dl>
 <p>Inputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>inputnode:</dt>
-<dd>T1: T1 file name
-indiv_params: dict with individuals parameters for some nodes</dd>
-<dt>arguments:</dt>
-<dd><p class="first">params_template: dictionary of info about template</p>
+<div><dl>
+<dt>inputnode:</dt><dd><p>T1: T1 file name
+indiv_params: dict with individuals parameters for some nodes</p>
+</dd>
+<dt>arguments:</dt><dd><p>params_template: dictionary of info about template</p>
 <p>params: dictionary of node sub-parameters (from a json file)</p>
-<p class="last">name: pipeline name (default = “register_NMT_pipe”)</p>
+<p>name: pipeline name (default = “register_NMT_pipe”)</p>
 </dd>
 </dl>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>norm_intensity.output_image:</dt>
-<dd>filled mask after erode</dd>
-<dt>align_seg_csf.out_file:</dt>
-<dd>csf template tissue in subject space</dd>
-<dt>align_seg_gm.out_file:</dt>
-<dd>grey matter template tissue in subject space</dd>
-<dt>align_seg_wm.out_file:</dt>
-<dd>white matter template tissue in subject space</dd>
+<div><dl class="simple">
+<dt>norm_intensity.output_image:</dt><dd><p>filled mask after erode</p>
+</dd>
+<dt>align_seg_csf.out_file:</dt><dd><p>csf template tissue in subject space</p>
+</dd>
+<dt>align_seg_gm.out_file:</dt><dd><p>grey matter template tissue in subject space</p>
+</dd>
+<dt>align_seg_wm.out_file:</dt><dd><p>white matter template tissue in subject space</p>
+</dd>
 </dl>
 </div></blockquote>
 </dd></dl>
@@ -183,8 +183,8 @@ indiv_params: dict with individuals parameters for some nodes</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.nodes.extract_brain.T1xT2BET &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" href="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html" />
     <link rel="prev" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" href="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -133,235 +135,225 @@
       
   <div class="section" id="macapype-nodes-extract-brain-t1xt2bet">
 <h1>macapype.nodes.extract_brain.T1xT2BET<a class="headerlink" href="#macapype-nodes-extract-brain-t1xt2bet" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="macapype.nodes.extract_brain.T1xT2BET">
-<em class="property">class </em><code class="descclassname">macapype.nodes.extract_brain.</code><code class="descname">T1xT2BET</code><span class="sig-paren">(</span><em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/extract_brain.html#T1xT2BET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.extract_brain.T1xT2BET" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">macapype.nodes.extract_brain.</code><code class="sig-name descname">T1xT2BET</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/extract_brain.html#T1xT2BET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.extract_brain.T1xT2BET" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Brain extraction using T1 and T2 images</p>
 <p>Inputs:</p>
 <blockquote>
 <div><p>Mandatory:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>t1_file</dt>
-<dd>Whole-head T1w image</dd>
-<dt>t2_file</dt>
-<dd>Whole-head T2w image</dd>
+<div><dl class="simple">
+<dt>t1_file</dt><dd><p>Whole-head T1w image</p>
+</dd>
+<dt>t2_file</dt><dd><p>Whole-head T2w image</p>
+</dd>
 </dl>
 </div></blockquote>
 <p>Optional:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>opt_os</dt>
-<dd>Suffix for the brain masked images (default is _BET)</dd>
-<dt>aT2</dt>
-<dd>Will coregrister T2w to T1w using flirt. Output will have the
-suffix provided. Will only work for spatially close images.</dd>
-<dt>opt_as</dt>
-<dd>Suffix for T2w to T1w registration (“-in-T1w” if not
-specified)</dd>
-<dt>n</dt>
-<dd>n = the number of iterations BET will be run to find center of
-gravity (n=1 if option -n is absent)</dd>
-<dt>m</dt>
-<dd>Will output the BET mask at the format
-output_prefixT1_mask.nii.gz)</dd>
-<dt>ms</dt>
-<dd>Suffix for the mask (default is _mask)</dd>
-<dt>c</dt>
-<dd>Will crop the inputs &amp; outputs after brain extraction. c is the
+<div><dl class="simple">
+<dt>opt_os</dt><dd><p>Suffix for the brain masked images (default is _BET)</p>
+</dd>
+<dt>aT2</dt><dd><p>Will coregrister T2w to T1w using flirt. Output will have the
+suffix provided. Will only work for spatially close images.</p>
+</dd>
+<dt>opt_as</dt><dd><p>Suffix for T2w to T1w registration (“-in-T1w” if not
+specified)</p>
+</dd>
+<dt>n</dt><dd><p>n = the number of iterations BET will be run to find center of
+gravity (n=1 if option -n is absent)</p>
+</dd>
+<dt>m</dt><dd><p>Will output the BET mask at the format
+output_prefixT1_mask.nii.gz)</p>
+</dd>
+<dt>ms</dt><dd><p>Suffix for the mask (default is _mask)</p>
+</dd>
+<dt>c</dt><dd><p>Will crop the inputs &amp; outputs after brain extraction. c is the
 space between the brain and the limits of the crop box
 expressed in percentage of the brain size (eg. if the brain
 size is 200 voxels in one dimension and c=10: the sides of the
 brain in this dimension will be 20 voxels away from the borders
-of the resulting crop box in this dimension)</dd>
-<dt>cs</dt>
-<dd>Suffix for the cropped images (default is _cropped)</dd>
-<dt>f</dt>
-<dd>-f options of BET: fractional intensity threshold (0-&gt;1);                 default=0.5; smaller values give larger brain outline estimates</dd>
-<dt>g</dt>
-<dd>‘-g options of BET:                 vertical gradient in fractional intensity threshold (-1-&gt;1);                default=0; positive values give larger brain outline at                bottom, smaller at top</dd>
-<dt>cog</dt>
-<dd>For difficult cases, you can directly provide a center of                 gravity. Only one iteration will be performed.</dd>
-<dt>k</dt>
-<dd>Will keep temporary files</dd>
-<dt>p</dt>
-<dd>Prefix for running FSL functions (can be a path or just a
-prefix)</dd>
+of the resulting crop box in this dimension)</p>
+</dd>
+<dt>cs</dt><dd><p>Suffix for the cropped images (default is _cropped)</p>
+</dd>
+<dt>f</dt><dd><p>-f options of BET: fractional intensity threshold (0-&gt;1);                 default=0.5; smaller values give larger brain outline estimates</p>
+</dd>
+<dt>g</dt><dd><p>‘-g options of BET:                 vertical gradient in fractional intensity threshold (-1-&gt;1);                default=0; positive values give larger brain outline at                bottom, smaller at top</p>
+</dd>
+<dt>cog</dt><dd><p>For difficult cases, you can directly provide a center of                 gravity. Only one iteration will be performed.</p>
+</dd>
+<dt>k</dt><dd><p>Will keep temporary files</p>
+</dd>
+<dt>p</dt><dd><p>Prefix for running FSL functions (can be a path or just a
+prefix)</p>
+</dd>
 </dl>
 </div></blockquote>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>t1_brain_file</dt>
-<dd>extracted brain from T1</dd>
-<dt>t2_brain_file</dt>
-<dd>extracted brain from T2</dd>
-<dt>t2_coreg_file</dt>
-<dd>coreg T2 from T1</dd>
-<dt>mask_file</dt>
-<dd>extracted mask from T1</dd>
-<dt>t1_cropped_file</dt>
-<dd>extracted cropped brain from T1</dd>
-<dt>t2_cropped_file</dt>
-<dd>extracted cropped brain from T2</dd>
+<div><dl class="simple">
+<dt>t1_brain_file</dt><dd><p>extracted brain from T1</p>
+</dd>
+<dt>t2_brain_file</dt><dd><p>extracted brain from T2</p>
+</dd>
+<dt>t2_coreg_file</dt><dd><p>coreg T2 from T1</p>
+</dd>
+<dt>mask_file</dt><dd><p>extracted mask from T1</p>
+</dd>
+<dt>t1_cropped_file</dt><dd><p>extracted cropped brain from T1</p>
+</dd>
+<dt>t2_cropped_file</dt><dd><p>extracted cropped brain from T2</p>
+</dd>
 </dl>
 </div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt>
-<dd><p class="first last">Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt><dd><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt>
-<dd><p class="first last">Defines if the interface can reuse partial results after interruption.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt><dd><p>Defines if the interface can reuse partial results after interruption.</p>
 </dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/cmd.html#module-cmd" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></a></dt>
-<dd><p class="first last">sets base command, immutable</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/cmd.html#module-cmd" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></a></dt><dd><p>sets base command, immutable</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></dt>
-<dd><p class="first last"><cite>command</cite> plus any arguments (args)</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></dt><dd><p><cite>command</cite> plus any arguments (args)</p>
 </dd>
-<dt><strong>terminal_output</strong></dt>
-<dd></dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt>
-<dd><p class="first last">interfaces should implement a version property</p>
+<dt><strong>terminal_output</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt><dd><p>interfaces should implement a version property</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
-<td>Collate expected outputs and apply output traits validation.</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
-<td>Prints class help</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></td>
-<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BETInputSpec</span></code></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BETInputSpec</span></code></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
-<td>A convenient way to load pre-set inputs from a JSON file.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></td>
-<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BETOutputSpec</span></code></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BETOutputSpec</span></code></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
-<td>Execute this interface.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
-<td>A convenient way to save current inputs to a JSON file.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_output_type</span></code>(output_type)</td>
-<td>Set the default output type for FSL classes.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_output_type</span></code>(output_type)</p></td>
+<td><p>Set the default output type for FSL classes.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
-<td>Set the default terminal output for CommandLine Interfaces.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
+<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="71%" />
-<col width="29%" />
+<col style="width: 71%" />
+<col style="width: 29%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>raise_exception</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>raise_exception</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>version_from_command</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>version_from_command</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
+<dl class="py method">
 <dt id="macapype.nodes.extract_brain.T1xT2BET.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.extract_brain.T1xT2BET.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.extract_brain.T1xT2BET.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subclasses must implement __init__</p>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#macapype.nodes.extract_brain.T1xT2BET.__init__" title="macapype.nodes.extract_brain.T1xT2BET.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(**inputs)</td>
-<td>Subclasses must implement __init__</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#macapype.nodes.extract_brain.T1xT2BET.__init__" title="macapype.nodes.extract_brain.T1xT2BET.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(**inputs)</p></td>
+<td><p>Subclasses must implement __init__</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
-<td>Collate expected outputs and apply output traits validation.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
-<td>Prints class help</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
-<td>A convenient way to load pre-set inputs from a JSON file.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
-<td>Execute this interface.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
-<td>A convenient way to save current inputs to a JSON file.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_output_type</span></code>(output_type)</td>
-<td>Set the default output type for FSL classes.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_output_type</span></code>(output_type)</p></td>
+<td><p>Set the default output type for FSL classes.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
-<td>Set the default terminal output for CommandLine Interfaces.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
+<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag,&nbsp;cmd])</td>
-<td></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag, cmd])</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></td>
-<td>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></p></td>
+<td><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></td>
-<td>Defines if the interface can reuse partial results after interruption.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></p></td>
+<td><p>Defines if the interface can reuse partial results after interruption.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></td>
-<td>sets base command, immutable</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></p></td>
+<td><p>sets base command, immutable</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></td>
-<td><cite>command</cite> plus any arguments (args) validates arguments and generates command line</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></p></td>
+<td><p><cite>command</cite> plus any arguments (args) validates arguments and generates command line</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></td>
-<td></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></td>
-<td></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></td>
-<td>interfaces should implement a version property</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></p></td>
+<td><p>interfaces should implement a version property</p></td>
 </tr>
 </tbody>
 </table>
@@ -381,8 +373,8 @@ prefix)</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.prepare &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../../../_static/js/jquery-fix.js"></script>
+    <script src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 <meta charset='utf-8'>
@@ -465,22 +466,20 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
     <span class="p">)</span>
 
+    <span class="c1"># avererge if multiple T2</span>
+    <span class="n">av_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+        <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_img&#39;</span><span class="p">],</span>
+        <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;avg_img&#39;</span><span class="p">],</span>
+        <span class="n">function</span><span class="o">=</span><span class="n">average_align</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;av_T2&quot;</span><span class="p">)</span>
+    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T2&#39;</span><span class="p">,</span> <span class="n">av_T2</span><span class="p">,</span> <span class="s1">&#39;list_img&#39;</span><span class="p">)</span>
+
     <span class="c1"># avererge if multiple T1</span>
     <span class="n">av_T1</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
         <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_img&#39;</span><span class="p">],</span>
                      <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;avg_img&#39;</span><span class="p">],</span>
                      <span class="n">function</span><span class="o">=</span><span class="n">average_align</span><span class="p">),</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;av_T1&quot;</span><span class="p">)</span>
-
     <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T1&#39;</span><span class="p">,</span> <span class="n">av_T1</span><span class="p">,</span> <span class="s1">&#39;list_img&#39;</span><span class="p">)</span>
-
-    <span class="c1"># avererge if multiple T2</span>
-    <span class="n">av_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
-        <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_img&#39;</span><span class="p">],</span>
-        <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;avg_img&#39;</span><span class="p">],</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">average_align</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;av_T2&quot;</span><span class="p">)</span>
-
-    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T2&#39;</span><span class="p">,</span> <span class="n">av_T2</span><span class="p">,</span> <span class="s1">&#39;list_img&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;reorient is in params&#39;</span><span class="p">)</span>
@@ -842,8 +841,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

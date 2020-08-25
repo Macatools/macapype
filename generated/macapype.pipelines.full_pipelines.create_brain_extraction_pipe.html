@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.full_pipelines.create_brain_extraction_pipe &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" href="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html" />
@@ -134,27 +135,26 @@
       
   <div class="section" id="macapype-pipelines-full-pipelines-create-brain-extraction-pipe">
 <h1>macapype.pipelines.full_pipelines.create_brain_extraction_pipe<a class="headerlink" href="#macapype-pipelines-full-pipelines-create-brain-extraction-pipe" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="macapype.pipelines.full_pipelines.create_brain_extraction_pipe">
-<code class="descclassname">macapype.pipelines.full_pipelines.</code><code class="descname">create_brain_extraction_pipe</code><span class="sig-paren">(</span><em>params_template</em>, <em>params={}</em>, <em>name='brain_extraction_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_brain_extraction_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">macapype.pipelines.full_pipelines.</code><code class="sig-name descname">create_brain_extraction_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'brain_extraction_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_brain_extraction_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: ANTS based segmentation pipeline using T1w and T2w images</p>
 <ul class="simple">
-<li>correct_bias</li>
-<li>denoise</li>
-<li>extract_brain</li>
+<li><p>correct_bias</p></li>
+<li><p>denoise</p></li>
+<li><p>extract_brain</p></li>
 </ul>
 <p>Inputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>inputnode:</dt>
-<dd><p class="first">preproc_T1: preprocessed T1 file
+<div><dl>
+<dt>inputnode:</dt><dd><p>preproc_T1: preprocessed T1 file
 preproc_T2: preprocessed T2 file</p>
-<p class="last">indiv_params (opt): dict with individuals parameters for some nodes</p>
+<p>indiv_params (opt): dict with individuals parameters for some nodes</p>
 </dd>
-<dt>arguments:</dt>
-<dd>params_template: dictionary of template files
+<dt>arguments:</dt><dd><p>params_template: dictionary of template files
 params: dictionary of node sub-parameters (from a json file)
-name: pipeline name (default = “full_segment_pipe”)</dd>
+name: pipeline name (default = “full_segment_pipe”)</p>
+</dd>
 </dl>
 </div></blockquote>
 <p>Outputs:</p>
@@ -174,8 +174,8 @@ name: pipeline name (default = “full_segment_pipe”)</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

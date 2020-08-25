@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.segment.create_segment_atropos_pipe &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" href="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html" />
@@ -134,34 +135,32 @@
       
   <div class="section" id="macapype-pipelines-segment-create-segment-atropos-pipe">
 <h1>macapype.pipelines.segment.create_segment_atropos_pipe<a class="headerlink" href="#macapype-pipelines-segment-create-segment-atropos-pipe" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="macapype.pipelines.segment.create_segment_atropos_pipe">
-<code class="descclassname">macapype.pipelines.segment.</code><code class="descname">create_segment_atropos_pipe</code><span class="sig-paren">(</span><em>params={}</em>, <em>name='segment_atropos_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/segment.html#create_segment_atropos_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.segment.create_segment_atropos_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">macapype.pipelines.segment.</code><code class="sig-name descname">create_segment_atropos_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'segment_atropos_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/segment.html#create_segment_atropos_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.segment.create_segment_atropos_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Segmentation with ANTS atropos script</p>
 <p>Inputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>inputnode:</dt>
-<dd><p class="first">brain_file: T1 image, after extraction and norm bin_norm_intensity</p>
+<div><dl>
+<dt>inputnode:</dt><dd><p>brain_file: T1 image, after extraction and norm bin_norm_intensity</p>
 <p>gm_prior_file: grey matter tissue intensity file</p>
 <p>wm_prior_file: white matter tissue intensity file</p>
-<p class="last">csf_prior_file: csf tissue intensity file</p>
+<p>csf_prior_file: csf tissue intensity file</p>
 </dd>
-<dt>arguments:</dt>
-<dd><p class="first">params: dictionary of node sub-parameters (from a json file)</p>
-<p class="last">name: pipeline name (default = “segment_atropos_pipe”)</p>
+<dt>arguments:</dt><dd><p>params: dictionary of node sub-parameters (from a json file)</p>
+<p>name: pipeline name (default = “segment_atropos_pipe”)</p>
 </dd>
 </dl>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>threshold_csf.out_file:</dt>
-<dd>csf tissue intensity mask in subject space</dd>
-<dt>threshold_gm.out_file:</dt>
-<dd>grey matter tissue intensity mask in subject space</dd>
-<dt>threshold_wm.out_file:</dt>
-<dd>white matter tissue intensity mask in subject space</dd>
+<div><dl class="simple">
+<dt>threshold_csf.out_file:</dt><dd><p>csf tissue intensity mask in subject space</p>
+</dd>
+<dt>threshold_gm.out_file:</dt><dd><p>grey matter tissue intensity mask in subject space</p>
+</dd>
+<dt>threshold_wm.out_file:</dt><dd><p>white matter tissue intensity mask in subject space</p>
+</dd>
 </dl>
 </div></blockquote>
 </dd></dl>
@@ -180,8 +179,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

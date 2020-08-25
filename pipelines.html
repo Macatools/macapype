@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pipelines &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/js/jquery-1.11.0.min.js"></script>
+    <script src="_static/js/jquery-fix.js"></script>
+    <script src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="How to contribute to the sources of the project" href="contribute.html" />
@@ -165,14 +166,14 @@
 <p>Short data preparation corresponds to the pipelines where T1 and T2 images are averaged by modality from the beginning, and T2 is aligned to T1, then cropped or betcropped, and denoised.</p>
 <p>The “auto”” version corresponds to <a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> with “betcrop” option (using <a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>)</p>
 <p>The “manual” version corresponds to <a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> with “crop” option, and specify crop box in args for each subject in individual params</p>
-<table border="1" class="docutils align-center" id="short-prep">
+<table class="docutils align-center" id="short-prep">
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_images/graph.png"><img alt="logo1" src="_images/graph.png" style="width: 457.0px; height: 569.0px;" /></a></td>
-<td><a class="reference internal" href="_images/graph1.png"><img alt="logo2" src="_images/graph1.png" style="width: 443.0px; height: 473.0px;" /></a></td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_images/graph.png"><img alt="logo1" src="_images/graph.png" style="width: 457.0px; height: 569.0px;" /></a></p></td>
+<td><p><a class="reference internal" href="_images/graph1.png"><img alt="logo2" src="_images/graph1.png" style="width: 443.0px; height: 473.0px;" /></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -184,14 +185,14 @@
 <p>In some cases, you may want some processing done prior to the alignement, if T1 and T2 are very different.</p>
 <p>In this case, after aligning and averaging by modality (all T1s -&gt; average_T1), you may crop, debias (N4) and denoise each image (average_T1 and average T2) indendantly before aligning average_T2 to average_T1 (create_long_single_data_preparation_pipe)</p>
 <p>But in a very specific case, where the data of multiple sessions have been acquired with different settings (e.g. antenna contrast), you may have even all multiple modality data preprocessed (reorient, cropped, debiased, denoised) indendantly before being averaged and aligned by modality, and then av_T2 aligned to av_T1 (long_multi_data_preparation)</p>
-<table border="1" class="docutils align-center" id="long-prep">
+<table class="docutils align-center" id="long-prep">
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_images/graph2.png"><img alt="logo3" src="_images/graph2.png" style="width: 580.0px; height: 765.6px;" /></a></td>
-<td><a class="reference internal" href="_images/graph3.png"><img alt="logo4" src="_images/graph3.png" style="width: 580.0px; height: 765.6px;" /></a></td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_images/graph2.png"><img alt="logo3" src="_images/graph2.png" style="width: 580.0px; height: 765.6px;" /></a></p></td>
+<td><p><a class="reference internal" href="_images/graph3.png"><img alt="logo4" src="_images/graph3.png" style="width: 580.0px; height: 765.6px;" /></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -224,8 +225,8 @@ An example can be found in <a class="reference internal" href="auto_examples/plo
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

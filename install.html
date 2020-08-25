@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Installation &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/js/jquery-1.11.0.min.js"></script>
+    <script src="_static/js/jquery-fix.js"></script>
+    <script src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="docker" href="docker_install.html" />
@@ -92,6 +93,7 @@
 <li><a class="reference internal" href="#using-git">Using git</a></li>
 <li><a class="reference internal" href="#using-pip">Using pip</a><ul>
 <li><a class="reference internal" href="#from-pypi">from pypi</a></li>
+<li><a class="reference internal" href="#using-conda">Using conda</a></li>
 </ul>
 </li>
 </ul>
@@ -144,6 +146,7 @@
 <li><a class="reference internal" href="#using-git">Using git</a></li>
 <li><a class="reference internal" href="#using-pip">Using pip</a><ul>
 <li><a class="reference internal" href="#from-pypi">from pypi</a></li>
+<li><a class="reference internal" href="#using-conda">Using conda</a></li>
 </ul>
 </li>
 </ul>
@@ -172,14 +175,14 @@
 <h3>External software dependancies<a class="headerlink" href="#external-software-dependancies" title="Permalink to this headline">¶</a></h3>
 <p>Macapype relies heavily on other neuroimaging Softwares, predominentyly:</p>
 <ul class="simple">
-<li><a class="reference external" href="http://www.fmrib.ox.ac.uk/fsl/index.html">FSL</a></li>
-<li><a class="reference external" href="http://stnava.github.io/ANTs/">ANTS</a></li>
-<li><a class="reference external" href="https://afni.nimh.nih.gov/">AFNI</a></li>
-<li><a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/">SPM</a></li>
+<li><p><a class="reference external" href="http://www.fmrib.ox.ac.uk/fsl/index.html">FSL</a></p></li>
+<li><p><a class="reference external" href="http://stnava.github.io/ANTs/">ANTS</a></p></li>
+<li><p><a class="reference external" href="https://afni.nimh.nih.gov/">AFNI</a></p></li>
+<li><p><a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/">SPM</a></p></li>
 </ul>
-<dl class="docutils">
-<dt>for frioul users, here is what should be added at the end of your .bash_personal</dt>
-<dd>in /home/nom.p (only accessible from a node, i.e once you have type frioul_interactive)</dd>
+<dl class="simple">
+<dt>for frioul users, here is what should be added at the end of your .bash_personal</dt><dd><p>in /home/nom.p (only accessible from a node, i.e once you have type frioul_interactive)</p>
+</dd>
 </dl>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/hpc/soft/afni/afni/
 <span class="nb">export</span> <span class="nv">ANTSPATH</span><span class="o">=</span>/hpc/soft/ANTS/antsbin/bin
@@ -199,7 +202,7 @@
 <div class="section" id="python-packages-dependancies">
 <h3>Python packages dependancies<a class="headerlink" href="#python-packages-dependancies" title="Permalink to this headline">¶</a></h3>
 <p>Macapype also relies on python packages.</p>
-<p>In case you have access to a conda environnment, here is the procedure to initialize your own environnment (called “macapype”, but can be called the name you prefer):</p>
+<p>In case you have access to a conda environment, here is the procedure to initialize your own environnment (called “macapype”, but can be called the name you prefer):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda init bash
 $ conda create -n macapype <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
 $ conda activate macapype
@@ -216,26 +219,45 @@ $ pip install pybids
 conda install ipython
 </pre></div>
 </div>
+<p>Alternatively, the github version provides a environment.yml:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda env create -f environment.yml
+</pre></div>
+</div>
+<p>(Will create a conda environment named ‘macapype’)</p>
+<p>To activate the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate macapype
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="install-macapype-package">
 <h2>Install macapype package<a class="headerlink" href="#install-macapype-package" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="using-git">
 <h3>Using git<a class="headerlink" href="#using-git" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/Macatools/macapype.git
-$ cd macapype
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/Macatools/macapype.git
+$ <span class="nb">cd</span> macapype
 $ python setup.py develop --user
 </pre></div>
 </div>
 </div>
 <div class="section" id="using-pip">
 <h3>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install git+https://github.com/Macatools/macapype
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install git+https://github.com/Macatools/macapype
 </pre></div>
 </div>
 <div class="section" id="from-pypi">
 <h4>from pypi<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h4>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install macapype
+<p>Macapype is available on * <a class="reference external" href="https://pypi.org/project/macapype/">pypi.org</a>:</p>
+<p>If ‘pip’ package is installed on your system, you can install the lastest stable version with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install macapype
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-conda">
+<h4>Using conda<a class="headerlink" href="#using-conda" title="Permalink to this headline">¶</a></h4>
+<p>Macapype is also available on <a class="reference external" href="https://anaconda.org/macatools/macapype">Anaconda cloud</a>:</p>
+<p>If ‘conda’ (Anaconda, or miniconda) is installed on your system, you can type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda install -c macatools macapype
 </pre></div>
 </div>
 </div>
@@ -243,10 +265,10 @@ $ python setup.py develop --user
 </div>
 <div class="section" id="testing-the-install">
 <h2>Testing the install<a class="headerlink" href="#testing-the-install" title="Permalink to this headline">¶</a></h2>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ipython
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ipython
 </pre></div>
 </div>
-<div class="code ipython highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">macapype</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">macapype</span>
 </pre></div>
 </div>
 </div>
@@ -264,8 +286,8 @@ $ python setup.py develop --user
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.nodes.correct_bias.T1xT2BiasFieldCorrection &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="macapype.nodes.register.IterREGBET" href="macapype.nodes.register.IterREGBET.html" />
+    <link rel="prev" title="macapype.nodes.extract_brain.T1xT2BET" href="macapype.nodes.extract_brain.T1xT2BET.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -132,232 +135,220 @@
       
   <div class="section" id="macapype-nodes-correct-bias-t1xt2biasfieldcorrection">
 <h1>macapype.nodes.correct_bias.T1xT2BiasFieldCorrection<a class="headerlink" href="#macapype-nodes-correct-bias-t1xt2biasfieldcorrection" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection">
-<em class="property">class </em><code class="descclassname">macapype.nodes.correct_bias.</code><code class="descname">T1xT2BiasFieldCorrection</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/correct_bias.html#T1xT2BiasFieldCorrection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Description:  Bias field correction using T1w &amp; T2w images.</dt>
-<dd>Provides an attempt of brain extration if wanted.</dd>
+<em class="property">class </em><code class="sig-prename descclassname">macapype.nodes.correct_bias.</code><code class="sig-name descname">T1xT2BiasFieldCorrection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">terminal_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/correct_bias.html#T1xT2BiasFieldCorrection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Description:  Bias field correction using T1w &amp; T2w images.</dt><dd><p>Provides an attempt of brain extration if wanted.</p>
+</dd>
 </dl>
 <p>Inputs:</p>
 <blockquote>
 <div><p>Mandatory:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>t1_file</dt>
-<dd>Whole-head T1w image</dd>
-<dt>t2_file</dt>
-<dd>Whole-head T2w image (use -aT2 if T2w image is not in the T1w
-space)</dd>
+<div><dl class="simple">
+<dt>t1_file</dt><dd><p>Whole-head T1w image</p>
+</dd>
+<dt>t2_file</dt><dd><p>Whole-head T2w image (use -aT2 if T2w image is not in the T1w
+space)</p>
+</dd>
 </dl>
 </div></blockquote>
 <p>Optional:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>os</dt>
-<dd>Suffix for the bias field corrected images (default is
-“_debiased”)</dd>
-<dt>aT2</dt>
-<dd>Will coregrister T2w to T1w using flirt. Output will have the                    suffix provided. Will only work for spatially close images.</dd>
-<dt>opt_as</dt>
-<dd>Suffix for T2w to T1w registration (“-in-T1w” if not specified)</dd>
-<dt>s</dt>
-<dd>size of gauss kernel in mm when performing mean filtering                     (default=4)argstr=”-s %d”, mandatory=False)</dd>
-<dt>b</dt>
-<dd>Brain mask file. Will also output bias corrected brain files                     with the format “output_prefix_brain.nii.gz”</dd>
-<dt>bet</dt>
-<dd>Will try to “smart” BET the anat files to get a brain mask:
+<div><dl class="simple">
+<dt>os</dt><dd><p>Suffix for the bias field corrected images (default is
+“_debiased”)</p>
+</dd>
+<dt>aT2</dt><dd><p>Will coregrister T2w to T1w using flirt. Output will have the                    suffix provided. Will only work for spatially close images.</p>
+</dd>
+<dt>opt_as</dt><dd><p>Suffix for T2w to T1w registration (“-in-T1w” if not specified)</p>
+</dd>
+<dt>s</dt><dd><p>size of gauss kernel in mm when performing mean filtering                     (default=4)argstr=”-s %d”, mandatory=False)</p>
+</dd>
+<dt>b</dt><dd><p>Brain mask file. Will also output bias corrected brain files                     with the format “output_prefix_brain.nii.gz”</p>
+</dd>
+<dt>bet</dt><dd><p>Will try to “smart” BET the anat files to get a brain mask:
 n = the number of iterations BET will be run to find center of
 gravity (default=0, will not BET if option -b has been
-specified).</dd>
-<dt>bs</dt>
-<dd>Suffix for the BET masked images (default is “_BET”)</dd>
-<dt>f</dt>
-<dd><dl class="first last docutils">
-<dt>-f options of BET: fractional intensity threshold (0-&gt;1);                     default=0.5; smaller values give larger brain outline</dt>
-<dd>estimates</dd>
+specified).</p>
+</dd>
+<dt>bs</dt><dd><p>Suffix for the BET masked images (default is “_BET”)</p>
+</dd>
+<dt>f</dt><dd><dl class="simple">
+<dt>-f options of BET: fractional intensity threshold (0-&gt;1);                     default=0.5; smaller values give larger brain outline</dt><dd><p>estimates</p>
+</dd>
 </dl>
 </dd>
-<dt>g</dt>
-<dd><dl class="first last docutils">
-<dt>-g options of BET:                        vertical gradient in fractional intensity threshold</dt>
-<dd>(-1-&gt;1); default=0; positive values give larger brain
-outline at bottom, smaller at top</dd>
+<dt>g</dt><dd><dl class="simple">
+<dt>-g options of BET:                        vertical gradient in fractional intensity threshold</dt><dd><p>(-1-&gt;1); default=0; positive values give larger brain
+outline at bottom, smaller at top</p>
+</dd>
 </dl>
 </dd>
-<dt>k</dt>
-<dd>Will keep temporary files</dd>
-<dt>p</dt>
-<dd>Prefix for running FSL functions                    (can be a path or just a prefix)</dd>
+<dt>k</dt><dd><p>Will keep temporary files</p>
+</dd>
+<dt>p</dt><dd><p>Prefix for running FSL functions                    (can be a path or just a prefix)</p>
+</dd>
 </dl>
 </div></blockquote>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>t1_debiased_file</dt>
-<dd>debiased T1</dd>
-<dt>t2_debiased_file</dt>
-<dd>debiased T2</dd>
-<dt>t2_coreg_file</dt>
-<dd>T2 on T1</dd>
-<dt>t1_debiased_brain_file</dt>
-<dd>debiased bet T1</dd>
-<dt>t2_debiased_brain_file</dt>
-<dd>debiased bet T2</dd>
-<dt>debiased_mask_file</dt>
-<dd>debiased bet mask</dd>
+<div><dl class="simple">
+<dt>t1_debiased_file</dt><dd><p>debiased T1</p>
+</dd>
+<dt>t2_debiased_file</dt><dd><p>debiased T2</p>
+</dd>
+<dt>t2_coreg_file</dt><dd><p>T2 on T1</p>
+</dd>
+<dt>t1_debiased_brain_file</dt><dd><p>debiased bet T1</p>
+</dd>
+<dt>t2_debiased_brain_file</dt><dd><p>debiased bet T2</p>
+</dd>
+<dt>debiased_mask_file</dt><dd><p>debiased bet mask</p>
+</dd>
 </dl>
 </div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt>
-<dd><p class="first last">Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt><dd><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt>
-<dd><p class="first last">Defines if the interface can reuse partial results after interruption.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt><dd><p>Defines if the interface can reuse partial results after interruption.</p>
 </dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/cmd.html#module-cmd" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></a></dt>
-<dd><p class="first last">sets base command, immutable</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/cmd.html#module-cmd" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></a></dt><dd><p>sets base command, immutable</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></dt>
-<dd><p class="first last"><cite>command</cite> plus any arguments (args)</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></dt><dd><p><cite>command</cite> plus any arguments (args)</p>
 </dd>
-<dt><strong>terminal_output</strong></dt>
-<dd></dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt>
-<dd><p class="first last">interfaces should implement a version property</p>
+<dt><strong>terminal_output</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt><dd><p>interfaces should implement a version property</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
-<td>Collate expected outputs and apply output traits validation.</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
-<td>Prints class help</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></td>
-<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrectionInputSpec</span></code></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrectionInputSpec</span></code></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
-<td>A convenient way to load pre-set inputs from a JSON file.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></td>
-<td>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrectionOutputSpec</span></code></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrectionOutputSpec</span></code></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
-<td>Execute this interface.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
-<td>A convenient way to save current inputs to a JSON file.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
-<td>Set the default terminal output for CommandLine Interfaces.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
+<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="71%" />
-<col width="29%" />
+<col style="width: 71%" />
+<col style="width: 29%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>raise_exception</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>raise_exception</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>version_from_command</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>version_from_command</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
+<dl class="py method">
 <dt id="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>command=None</em>, <em>terminal_output=None</em>, <em>**inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">terminal_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subclasses must implement __init__</p>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command,&nbsp;terminal_output])</td>
-<td>Subclasses must implement __init__</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command, terminal_output])</p></td>
+<td><p>Subclasses must implement __init__</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime,&nbsp;needed_outputs])</td>
-<td>Collate expected outputs and apply output traits validation.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</td>
-<td>Prints class help</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[,&nbsp;overwrite])</td>
-<td>A convenient way to load pre-set inputs from a JSON file.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd,&nbsp;ignore_exception])</td>
-<td>Execute this interface.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</td>
-<td>A convenient way to save current inputs to a JSON file.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</td>
-<td>Set the default terminal output for CommandLine Interfaces.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
+<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag,&nbsp;cmd])</td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag, cmd])</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></td>
-<td>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></p></td>
+<td><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></td>
-<td>Defines if the interface can reuse partial results after interruption.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></p></td>
+<td><p>Defines if the interface can reuse partial results after interruption.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></td>
-<td>sets base command, immutable</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></p></td>
+<td><p>sets base command, immutable</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></td>
-<td><cite>command</cite> plus any arguments (args) validates arguments and generates command line</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></p></td>
+<td><p><cite>command</cite> plus any arguments (args) validates arguments and generates command line</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></td>
-<td></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></td>
-<td></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></td>
-<td></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></td>
-<td>interfaces should implement a version property</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></p></td>
+<td><p>interfaces should implement a version property</p></td>
 </tr>
 </tbody>
 </table>
@@ -377,8 +368,8 @@ outline at bottom, smaller at top</dd>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

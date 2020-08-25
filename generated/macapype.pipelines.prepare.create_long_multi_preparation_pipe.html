@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>macapype.pipelines.prepare.create_long_multi_preparation_pipe &#8212; macapype 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="macapype.pipelines.correct_bias.create_correct_bias_pipe" href="macapype.pipelines.correct_bias.create_correct_bias_pipe.html" />
@@ -134,40 +135,37 @@
       
   <div class="section" id="macapype-pipelines-prepare-create-long-multi-preparation-pipe">
 <h1>macapype.pipelines.prepare.create_long_multi_preparation_pipe<a class="headerlink" href="#macapype-pipelines-prepare-create-long-multi-preparation-pipe" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="macapype.pipelines.prepare.create_long_multi_preparation_pipe">
-<code class="descclassname">macapype.pipelines.prepare.</code><code class="descname">create_long_multi_preparation_pipe</code><span class="sig-paren">(</span><em>params</em>, <em>name='long_multi_preparation_pipe'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/prepare.html#create_long_multi_preparation_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.prepare.create_long_multi_preparation_pipe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">macapype.pipelines.prepare.</code><code class="sig-name descname">create_long_multi_preparation_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'long_multi_preparation_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/prepare.html#create_long_multi_preparation_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.prepare.create_long_multi_preparation_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: long data preparation,
 each T1 and T2 is processed independantly with:</p>
 <ul class="simple">
-<li>reorient (opt: reorient) makes the whole pipeline more neat)</li>
-<li>start by denoising all input images (opt: denoise_first in json)</li>
-<li>crop T1 and T2 based on individual parameters</li>
-<li>running N4biascorrection on cropped T1 and T to help T2 and T1 alignment</li>
-<li>finish by denoising all input images (opt: denoise in json))</li>
-<li>processed T1s and T2s are averaged (by modality)</li>
-<li>Finally, align average T2 to average T1</li>
+<li><p>reorient (opt: reorient) makes the whole pipeline more neat)</p></li>
+<li><p>start by denoising all input images (opt: denoise_first in json)</p></li>
+<li><p>crop T1 and T2 based on individual parameters</p></li>
+<li><p>running N4biascorrection on cropped T1 and T to help T2 and T1 alignment</p></li>
+<li><p>finish by denoising all input images (opt: denoise in json))</p></li>
+<li><p>processed T1s and T2s are averaged (by modality)</p></li>
+<li><p>Finally, align average T2 to average T1</p></li>
 </ul>
 <p>Inputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>inputnode:</dt>
-<dd><p class="first">list_T1: T1 files (from BIDSDataGrabber)</p>
+<div><dl>
+<dt>inputnode:</dt><dd><p>list_T1: T1 files (from BIDSDataGrabber)</p>
 <p>list_T2: T2 files</p>
-<p class="last">indiv_params (opt): dict with individuals parameters for some nodes</p>
+<p>indiv_params (opt): dict with individuals parameters for some nodes</p>
 </dd>
-<dt>arguments:</dt>
-<dd><p class="first">params: dictionary of node sub-parameters (from a json file)</p>
-<p class="last">name: pipeline name (default = “long_multi_preparation_pipe”)</p>
+<dt>arguments:</dt><dd><p>params: dictionary of node sub-parameters (from a json file)</p>
+<p>name: pipeline name (default = “long_multi_preparation_pipe”)</p>
 </dd>
 </dl>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>outputnode:</dt>
-<dd><p class="first">preproc_T1: preprocessed T1 file</p>
-<p class="last">preproc_T2: preprocessed T2 file</p>
+<div><dl>
+<dt>outputnode:</dt><dd><p>preproc_T1: preprocessed T1 file</p>
+<p>preproc_T2: preprocessed T2 file</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -187,8 +185,8 @@ each T1 and T2 is processed independantly with:</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-07-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>
