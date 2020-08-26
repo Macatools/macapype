@@ -86,16 +86,17 @@
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#dependancies">Dependancies</a><ul>
 <li><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
-<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a></li>
+<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a><ul>
+<li><a class="reference internal" href="#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+<li><a class="reference internal" href="#from-an-environment-yml-file">From an environment.yml file</a></li>
+<li><a class="reference internal" href="#activate-the-environment">Activate the environment</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#install-macapype-package">Install macapype package</a><ul>
 <li><a class="reference internal" href="#using-git">Using git</a></li>
-<li><a class="reference internal" href="#using-pip">Using pip</a><ul>
-<li><a class="reference internal" href="#from-pypi">from pypi</a></li>
-<li><a class="reference internal" href="#using-conda">Using conda</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#using-pip">Using pip</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
@@ -139,16 +140,17 @@
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#dependancies">Dependancies</a><ul>
 <li><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
-<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a></li>
+<li><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a><ul>
+<li><a class="reference internal" href="#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+<li><a class="reference internal" href="#from-an-environment-yml-file">From an environment.yml file</a></li>
+<li><a class="reference internal" href="#activate-the-environment">Activate the environment</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#install-macapype-package">Install macapype package</a><ul>
 <li><a class="reference internal" href="#using-git">Using git</a></li>
-<li><a class="reference internal" href="#using-pip">Using pip</a><ul>
-<li><a class="reference internal" href="#from-pypi">from pypi</a></li>
-<li><a class="reference internal" href="#using-conda">Using conda</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#using-pip">Using pip</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
@@ -201,7 +203,9 @@
 </div>
 <div class="section" id="python-packages-dependancies">
 <h3>Python packages dependancies<a class="headerlink" href="#python-packages-dependancies" title="Permalink to this headline">¶</a></h3>
-<p>Macapype also relies on python packages.</p>
+<p>Macapype relies on python packages. Here we provide installations using Anaconda</p>
+<div class="section" id="creating-environment-with-all-packages">
+<h4>Creating environment with all packages<a class="headerlink" href="#creating-environment-with-all-packages" title="Permalink to this headline">¶</a></h4>
 <p>In case you have access to a conda environment, here is the procedure to initialize your own environnment (called “macapype”, but can be called the name you prefer):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda init bash
 $ conda create -n macapype <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
@@ -219,14 +223,21 @@ $ pip install pybids
 $ conda install ipython
 </pre></div>
 </div>
+</div>
+<div class="section" id="from-an-environment-yml-file">
+<h4>From an environment.yml file<a class="headerlink" href="#from-an-environment-yml-file" title="Permalink to this headline">¶</a></h4>
 <p>Alternatively, the github version provides a environment.yml:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda env create -f environment.yml
 </pre></div>
 </div>
 <p>(Will create a conda environment named ‘macapype’)</p>
+</div>
+<div class="section" id="activate-the-environment">
+<h4>Activate the environment<a class="headerlink" href="#activate-the-environment" title="Permalink to this headline">¶</a></h4>
 <p>To activate the environment:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda activate macapype
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -245,21 +256,15 @@ $ python setup.py develop --user
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install git+https://github.com/Macatools/macapype
 </pre></div>
 </div>
-<div class="section" id="from-pypi">
-<h4>from pypi<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h4>
 <p>Macapype is available on * <a class="reference external" href="https://pypi.org/project/macapype/">pypi.org</a>:</p>
 <p>If ‘pip’ package is installed on your system, you can install the lastest stable version with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install macapype
 </pre></div>
 </div>
-</div>
-<div class="section" id="using-conda">
-<h4>Using conda<a class="headerlink" href="#using-conda" title="Permalink to this headline">¶</a></h4>
 <p>Macapype is also available on <a class="reference external" href="https://anaconda.org/macatools/macapype">Anaconda cloud</a>:</p>
 <p>If ‘conda’ (Anaconda, or miniconda) is installed on your system, you can type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda install -c macatools macapype
 </pre></div>
-</div>
 </div>
 </div>
 </div>
@@ -286,7 +291,7 @@ $ python setup.py develop --user
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-25.<br/>
+        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-08-26.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
