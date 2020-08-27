@@ -88,6 +88,6 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
     mult_T2.inputs.expr = "a*b"
     mult_T2.inputs.outputtype = 'NIFTI_GZ'
 
-    extract_pipe.connect(inputnode, 'restore_T1', mult_T2, 'in_file_a')
+    extract_pipe.connect(inputnode, 'restore_T2', mult_T2, 'in_file_a')
     extract_pipe.connect(smooth_mask, 'out_file', mult_T2, 'in_file_b')
     return extract_pipe

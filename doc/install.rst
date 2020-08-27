@@ -40,9 +40,12 @@ for frioul users, here is what should be added at the end of your .bash_personal
 Python packages dependancies
 -----------------------------
 
-Macapype also relies on python packages.
+Macapype relies on python packages. Here we provide installations using Anaconda
 
-In case you have access to a conda environnment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
+Creating environment with all packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
 
 .. code-block:: bash
 
@@ -62,8 +65,27 @@ Not mandatory, but prefered:
 
 .. code-block:: bash
 
-    conda install -c conda-forge matplotlib
-    conda install ipython
+    $ conda install -c conda-forge matplotlib
+    $ conda install ipython
+
+From an environment.yml file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Alternatively, the github version provides a environment.yml:
+
+.. code:: bash
+
+    $ conda env create -f environment.yml
+
+(Will create a conda environment named 'macapype')
+
+Activate the environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+To activate the environment:
+
+.. code:: bash
+
+    $ conda activate macapype
 
 Install macapype package
 #########################
@@ -90,9 +112,26 @@ Using pip
 from pypi
 ^^^^^^^^^^
 
+Macapype is available on * `pypi.org <https://pypi.org/project/macapype/>`_:
+
+If 'pip' package is installed on your system, you can install the lastest stable version with:
+
 .. code:: bash
 
     $ pip install macapype
+
+
+Using conda
+^^^^^^^^^^^^
+
+Macapype is also available on `Anaconda cloud <https://anaconda.org/macatools/macapype>`_:
+
+If 'conda' (Anaconda, or miniconda) is installed on your system, you can type:
+
+.. code:: bash
+
+    $ conda install -c macatools macapype
+
 
 Testing the install
 ####################
