@@ -1,0 +1,12 @@
+name: macapype
+channels:
+    - conda-forge
+    - macatools
+
+dependencies:
+    - nipype
+    - networkx
+    - pip
+    - pip:
+        - pybids
+    - macapype
