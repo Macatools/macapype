@@ -704,3 +704,105 @@ def create_long_multi_preparation_pipe(params,
                                         outputnode, 'preproc_T2')
 
     return long_multi_preparation_pipe
+
+def create_short_preparation_noT1_pipe(params, name="short_preparation_noT1_pipe"):
+
+    # creating pipeline
+    data_preparation_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['list_T1', 'indiv_params']),
+        name='inputnode'
+    )
+
+    parse_params = pe.Node(ParseParams(), name="parse_params")
+    parse_params.inputs.key = name
+
+    data_preparation_pipe.connect(inputnode, "indiv_params", parse_params, "params")
+
+    # avererge if multiple T1
+    av_T1 = pe.Node(
+        niu.Function(input_names=['list_img'],
+                     output_names=['avg_img'],
+                     function=average_align),
+        name="av_T1")
+    data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
+
+    if "reorient" in params.keys():
+        print('reorient is in params')
+
+        if "new_dims" in params["reorient"].keys():
+            new_dims = tuple(params["reorient"]["new_dims"].split())
+
+        else:
+            new_dims = ("x", "z", "-y")
+
+        reorient_T1_pipe = _create_reorient_pipeline(
+            name="reorient_T1_pipe", new_dims=new_dims)
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      reorient_T1_pipe, 'inputnode.image')
+
+    if "bet_crop" in params.keys():
+        print('bet_crop is in params')
+
+        # Brain extraction (unused) + Cropping
+        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
+                              name='bet_crop')
+
+        if "reorient" in params.keys():
+
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't1_file')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          bet_crop, 't1_file')
+
+    elif "crop" in params.keys():
+        print('crop is in params')
+
+        assert "args" in params["crop"].keys(), \
+            "Error, args is not specified for crop node, breaking"
+
+        # cropping
+        # Crop bounding box for T1
+        crop_T1 = NodeParams(fsl.ExtractROI(),
+                             params=parse_key(params, 'crop'),
+                             name='crop_T1')
+
+        if "reorient" in params.keys():
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          crop_T1, 'in_file')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          crop_T1, 'in_file')
+
+        data_preparation_pipe.connect(
+            parse_params, ('parsed_params', parse_key, "crop"),
+            crop_T1, 'indiv_params')
+
+    # denoise with Ants package
+    denoise_T1 = NodeParams(interface=DenoiseImage(),
+                            params=parse_key(params, "denoise"),
+                            name="denoise_T1")
+
+    if "bet_crop" in params.keys():
+        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                      denoise_T1, 'input_image')
+
+    elif "crop" in params.keys():
+        data_preparation_pipe.connect(crop_T1, "roi_file",
+                                      denoise_T1, 'input_image')
+
+    # Creating output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(fields=['preproc_T1']),
+        name='outputnode')
+
+    data_preparation_pipe.connect(denoise_T1, 'output_image',
+                                  outputnode, 'preproc_T1')
+
+    return data_preparation_pipe

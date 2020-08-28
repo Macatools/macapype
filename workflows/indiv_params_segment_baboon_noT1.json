@@ -1,0 +1,29 @@
+{
+    "sub-anelka":
+    {
+        "ses-01":
+        {
+            "short_preparation_noT1_pipe":
+            {
+                "crop":
+                    {
+                        "args": "22 135 10 152 85 90"
+                    }
+            }
+        }
+    },
+
+    "sub-chet":
+    {
+        "ses-01":
+        {
+            "short_preparation_noT1_pipe":
+            {
+                "crop":
+                    {
+                        "args": "84 134 67 163 93 103"
+                    }
+            }
+        }
+    }
+}
