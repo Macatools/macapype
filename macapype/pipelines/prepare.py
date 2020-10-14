@@ -756,9 +756,14 @@ def create_short_preparation_noT1_pipe(params, name="short_preparation_noT1_pipe
             data_preparation_pipe.connect(reorient_T1_pipe,
                                           'swap_dim.out_file',
                                           bet_crop, 't1_file')
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'swap_dim.out_file',
+                                          bet_crop, 't2_file')
         else:
             data_preparation_pipe.connect(av_T1, 'avg_img',
                                           bet_crop, 't1_file')
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          bet_crop, 't2_file')
 
     elif "crop" in params.keys():
         print('crop is in params')

@@ -12,7 +12,7 @@
     {
         "crop":
         {
-            "args": "should not be used"
+            "args": "should be defined in indiv"
         },
         "norm_intensity":
         {
