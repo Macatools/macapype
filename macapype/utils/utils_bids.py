@@ -99,10 +99,9 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
     return bids_datasource
 
 
-#noT1
-
+# noT1
 def create_datasource_noT1(data_dir, subjects=None, sessions=None,
-                      acquisitions=None):
+                           acquisitions=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -143,7 +142,7 @@ def create_datasource_noT1(data_dir, subjects=None, sessions=None,
 
 
 def create_datasource_indiv_params_noT1(data_dir, indiv_params, subjects=None,
-                                   sessions=None, acquisitions=None):
+                                        sessions=None, acquisitions=None):
     """ Create a datasource node that have iterables following BIDS format,
     including a indiv_params file"""
 

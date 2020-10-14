@@ -93,7 +93,9 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
     extract_pipe.connect(smooth_mask, 'out_file', mult_T2, 'in_file_b')
     return extract_pipe
 
-def create_extract_noT1_pipe(params_template, params={}, name="extract_noT1_pipe"):
+
+def create_extract_noT1_pipe(params_template, params={},
+                             name="extract_noT1_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex
 
@@ -133,7 +135,7 @@ def create_extract_noT1_pipe(params_template, params={}, name="extract_noT1_pipe
                                 name='norm_intensity')
 
     extract_pipe.connect(inputnode, 'restore_T1',
-                                norm_intensity, "input_image")
+                         norm_intensity, "input_image")
 
     # atlas_brex
     atlas_brex = NodeParams(AtlasBREX(),

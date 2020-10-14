@@ -705,7 +705,9 @@ def create_long_multi_preparation_pipe(params,
 
     return long_multi_preparation_pipe
 
-def create_short_preparation_noT1_pipe(params, name="short_preparation_noT1_pipe"):
+
+def create_short_preparation_noT1_pipe(params,
+                                       name="short_preparation_noT1_pipe"):
 
     # creating pipeline
     data_preparation_pipe = pe.Workflow(name=name)
@@ -719,9 +721,10 @@ def create_short_preparation_noT1_pipe(params, name="short_preparation_noT1_pipe
     parse_params = pe.Node(ParseParams(), name="parse_params")
     parse_params.inputs.key = name
 
-    data_preparation_pipe.connect(inputnode, "indiv_params", parse_params, "params")
+    data_preparation_pipe.connect(inputnode, "indiv_params",
+                                  parse_params, "params")
 
-    # avererge if multiple T1
+    # average if multiple T1
     av_T1 = pe.Node(
         niu.Function(input_names=['list_img'],
                      output_names=['avg_img'],

@@ -297,6 +297,7 @@ def create_brain_extraction_pipe(params_template, params={},
 
     return brain_extraction_pipe
 
+
 def create_brain_segment_from_mask_pipe(
         params_template, params={}, name="brain_segment_from_mask_pipe"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
@@ -488,6 +489,7 @@ def create_full_segment_pnh_subpipes(
 
     return seg_pipe
 
+
 def create_full_segment_pnh_noT2atlasbrex_subpipes(
         params_template, params={}, name="full_segment_pnh_subpipes_baboon"):
     """Description: Segment T1 (using T2 for bias correction) .
@@ -557,7 +559,7 @@ def create_full_segment_pnh_noT2atlasbrex_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
-    # full extract brain pipeline (correct_bias (without T2), denoising, extract brain)
+    # full extract brain pipeline (correct_bias noT2, denoising, extract brain)
     if "brain_extraction_pipe" not in params.keys():
         return seg_pipe
 
@@ -591,12 +593,12 @@ def create_full_segment_pnh_noT2atlasbrex_subpipes(
 
     return seg_pipe
 
-###############################################################################
-# ANTS based segmentation for adrien baboons without T2
-# same as above, but replacing biascorrection with N4biascorrection in brain extraction and brain segmentation
 
+# ANTS based segmentation for adrien baboons without T2
+# same as above, but replacing biascorrection with N4biascorrection
+# in brain extraction and brain segmentation
 def create_brain_extraction_noT1_pipe(params_template, params={},
-                                 name="brain_extraction_noT1_pipe"):
+                                      name="brain_extraction_noT1_pipe"):
     """ Description: Brain extraction with only T1 images.
 
     - N4biascorrection (replacing T2 bias correction with N4)
@@ -636,6 +638,7 @@ def create_brain_extraction_noT1_pipe(params_template, params={},
     brain_extraction_pipe.connect(inputnode, "indiv_params",
                                   extract_pipe, "inputnode.indiv_params")
     return brain_extraction_pipe
+
 
 def create_brain_segment_from_mask_noT1_pipe(
         params_template, params={}, name="brain_segment_from_mask_noT1_pipe"):
@@ -685,9 +688,9 @@ def create_brain_segment_from_mask_noT1_pipe(
     restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
 
     brain_segment_pipe.connect(inputnode, 'preproc_T1',
-                                     restore_mask_T1, 'in_file')
+                               restore_mask_T1, 'in_file')
     brain_segment_pipe.connect(inputnode, 'brain_mask',
-                                     restore_mask_T1, 'mask_file')
+                               restore_mask_T1, 'mask_file')
 
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
@@ -720,10 +723,12 @@ def create_brain_segment_from_mask_noT1_pipe(
 
 
 def create_full_segment_pnh_noT1_subpipes(
-        params_template, params={}, name="full_segment_pnh_noT1_subpipes_baboon"):
+    params_template, params={},
+        name="full_segment_pnh_noT1_subpipes_baboon"):
     """Description: Segment T1 (with no T2).
 
-    - brain preproc (short_prepration pipe - try to do betcrop with the same file, includes denoising from ants)
+    - brain preproc (short_prepration pipe - try betcrop with the same file,
+    includes denoising from ants)
     - Perform N4biascorrection with defined parameters.
     - brain extraction (see create_brain_extraction_pipe):
         - correct_bias
@@ -759,7 +764,7 @@ def create_full_segment_pnh_noT1_subpipes(
 
     # Creating input node (grab only T1 files)
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['list_T1','indiv_params']),
+        niu.IdentityInterface(fields=['list_T1', 'indiv_params']),
         name='inputnode'
     )
 
