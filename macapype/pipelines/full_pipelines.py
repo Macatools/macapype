@@ -443,7 +443,16 @@ def create_full_segment_pnh_subpipes(
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
             long_multi_preparation_pipe was not found in params, skipping")
 
-        test_node = pe.Node(niu.Function(input_names = ['list_T1', 'list_T2'], output_names = [''], function = list_input_files))
+        test_node = pe.Node(niu.Function(input_names = ['list_T1', 'list_T2'],
+                                         output_names = [''],
+                                         function = list_input_files),
+                            name = "test_node")
+
+        seg_pipe.connect(inputnode, 'list_T1',
+                        test_node, 'list_T1')
+        seg_pipe.connect(inputnode, 'list_T2',
+                        test_node, 'list_T2')
+
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'list_T1',
