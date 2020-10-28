@@ -1,6 +1,7 @@
 name: macapype
 channels:
     - conda-forge
+
 dependancies:
     - python=3.7
     - nipype
