@@ -74,7 +74,7 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
         }
     }
 
-    layout = BIDSLayout(data_dir)
+    layout = BIDSLayout(data_dir, validate)
 
     # Verbose
     print("BIDS layout:", layout)
@@ -93,6 +93,10 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
 
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
+
+    if rec is not None:
+        iterables.append(('record', rec))
+
 
     bids_datasource.iterables = iterables
 
