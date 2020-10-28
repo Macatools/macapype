@@ -4,7 +4,7 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces import ants
 from nipype.interfaces import fsl
 
-from ..utils.utils_nodes import NodeParams, parse_key
+from ..utils.utils_nodes import NodeParams
 
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
@@ -23,7 +23,7 @@ from .register import create_register_NMT_pipe
 
 from .extract_brain import create_extract_pipe
 
-from macapype.utils.misc import gunzip
+from macapype.utils.misc import gunzip, parse_key, list_input_files
 
 
 ###############################################################################
@@ -442,6 +442,8 @@ def create_full_segment_pnh_subpipes(
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
             long_multi_preparation_pipe was not found in params, skipping")
+
+        test_node = pe.Node(niu.Function(input_names = ['list_T1', 'list_T2'], output_names = [''], function = list_input_files))
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'list_T1',
