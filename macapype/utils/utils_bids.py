@@ -8,7 +8,7 @@ from .utils_nodes import BIDSDataGrabberParams
 
 
 def create_datasource(data_dir, subjects=None, sessions=None,
-                      acquisitions=None):
+                      acquisitions=None, records=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -19,11 +19,11 @@ def create_datasource(data_dir, subjects=None, sessions=None,
     bids_datasource.inputs.output_query = {
         'T1': {
             "datatype": "anat", "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
+            "extension": ["nii", ".nii.gz"]
         },
         'T2': {
             "datatype": "anat", "suffix": "T2w",
-            "extensions": ["nii", ".nii.gz"]
+            "extension": ["nii", ".nii.gz"]
         }
     }
 
@@ -47,13 +47,17 @@ def create_datasource(data_dir, subjects=None, sessions=None,
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
 
+    if records is not None:
+        iterables.append(('record', records))
+
     bids_datasource.iterables = iterables
 
     return bids_datasource
 
 
 def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
-                                   sessions=None, acquisitions=None):
+                                   sessions=None, acquisitions=None,
+                                   records=None):
     """ Create a datasource node that have iterables following BIDS format,
     including a indiv_params file"""
 
@@ -66,11 +70,11 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
     bids_datasource.inputs.output_query = {
         'T1': {
             "datatype": "anat", "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
+            "extension": ["nii", ".nii.gz"]
         },
         'T2': {
             "datatype": "anat", "suffix": "T2w",
-            "extensions": ["nii", ".nii.gz"]
+            "extension": ["nii", ".nii.gz"]
         }
     }
 
@@ -94,6 +98,9 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
 
+    if records is not None:
+        iterables.append(('record', records))
+
     bids_datasource.iterables = iterables
 
     return bids_datasource
@@ -101,7 +108,7 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
 
 # noT1
 def create_datasource_noT1(data_dir, subjects=None, sessions=None,
-                           acquisitions=None):
+                           acquisitions=None, records=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -112,7 +119,7 @@ def create_datasource_noT1(data_dir, subjects=None, sessions=None,
     bids_datasource.inputs.output_query = {
         'T1': {
             "datatype": "anat", "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
+            "extension": ["nii", ".nii.gz"]
         }
     }
 
@@ -135,6 +142,9 @@ def create_datasource_noT1(data_dir, subjects=None, sessions=None,
 
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
+
+    if records is not None:
+        iterables.append(('record', records))
 
     bids_datasource.iterables = iterables
 
@@ -155,7 +165,7 @@ def create_datasource_indiv_params_noT1(data_dir, indiv_params, subjects=None,
     bids_datasource.inputs.output_query = {
         'T1': {
             "datatype": "anat", "suffix": "T1w",
-            "extensions": ["nii", ".nii.gz"]
+            "extension": ["nii", ".nii.gz"]
         }
     }
 

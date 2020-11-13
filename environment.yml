@@ -1,12 +1,10 @@
 name: macapype
 channels:
     - conda-forge
-    - macatools
 
-dependencies:
+dependancies:
+    - python=3.7
     - nipype
-    - networkx
-    - pip
+    - networkx=2.*,
     - pip:
-        - pybids
-    - macapype
+        pybids

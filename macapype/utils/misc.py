@@ -81,3 +81,11 @@ def parse_key(params, key):
 
     else:
         return {}
+
+
+def list_input_files(list_T1, list_T2):
+
+    print("list_T1:", list_T1)
+    print("list_T2:", list_T2)
+
+    return ""

@@ -74,7 +74,7 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
-                         acquisitions, params_file, indiv_params_file,
+                         acquisitions, records, params_file, indiv_params_file,
                          wf_name="test_pipeline_single"):
     """ Set up the segmentatiopn pipeline based on ANTS
 
@@ -222,7 +222,9 @@ if __name__ == '__main__':
     parser.add_argument("-ses", dest="ses", type=str,
                         help="Session", required=False)
     parser.add_argument("-acq", dest="acq", type=str, nargs='+', default=None,
-                        help="Acquisitions ID")
+                        help="Acquisitions")
+    parser.add_argument("-rec", dest="rec", type=str, nargs='+', default=None,
+                        help="Records")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
     parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
@@ -240,6 +242,7 @@ if __name__ == '__main__':
         subjects=args.subjects,
         sessions=args.ses,
         acquisitions=args.acq,
+        records=args.rec,
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file)
 
