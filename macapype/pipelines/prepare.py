@@ -98,19 +98,20 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
 
     # Reorient if needed
     if "reorient" in params.keys():
-
+        print("adding reorient pipeline")
         if "new_dims" in params["reorient"].keys():
             new_dims = tuple(params["reorient"]["new_dims"].split())
-
+            print("using new dim")
         else:
             new_dims = ("x", "z", "-y")
 
-            reorient_pipe = _create_reorient_pipeline(
-                name="reorient_pipe", new_dims=new_dims)
+        reorient_pipe = _create_reorient_pipeline(
+            name="reorient_pipe", new_dims=new_dims)
 
-            prep_pipeline.connect(inputnode, 'img',
-                                  reorient_pipe, 'inputnode.img')
+        prep_pipeline.connect(inputnode, 'img',
+                              reorient_pipe, 'inputnode.image')
 
+            
     if "denoise_first" in params.keys():
         # denoise with Ants package
         # (taking into account whether reorient has been performed or not)
