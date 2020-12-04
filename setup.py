@@ -34,7 +34,7 @@ try:
         author="David Meunier, Bastien Cagna",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
-        install_requires=["nipype", "networkx>=2.0", "pybids"],
+        install_requires=["nipype", "networkx>=2.0", "pybids", "skimage"],
         distclass=distutils.command.bdist_conda.CondaDistribution,
         conda_buildnum=1)
 
@@ -49,4 +49,5 @@ except ModuleNotFoundError as e:
         author="David Meunier, Bastien Cagna",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
-        install_requires=["nipype", "networkx>=2.0", "pybids"])
+        install_requires=["nipype", "networkx>=2.0", "pybids", "skimage"])
+
