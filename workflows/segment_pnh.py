@@ -59,8 +59,10 @@ import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines import (
-    create_full_segment_pnh_subpipes, create_full_T1xT2_segment_pnh_subpipes,
-    create_full_spm_subpipes)
+    create_full_T1xT2_spm_pnh_subpipes,
+    create_full_T1xT2_ants_pnh_subpipes,
+    create_full_T1_spm_pnh_subpipes,
+    create_full_T1_ants_pnh_subpipes,)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource)
@@ -178,14 +180,18 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     main_workflow.base_dir = process_dir
 
     if soft in ["spm","spm12"]:
-        segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
+        segment_pnh = create_T1xT2_spm_pnh_subpipes(
             params_template=params_template, params=params)
     elif soft=="ants":
-        segment_pnh = create_full_segment_pnh_subpipes(
+        segment_pnh = create_T1xT2_ants_pnh_subpipes(
             params_template=params_template, params=params)
     elif soft=="spm_t1":
-        segment_pnh = create_full_spm_subpipes(
+        segment_pnh = create_T1_spm_subpipes(
             params_template=params_template, params=params)
+    elif soft=="ants_t1":
+        segment_pnh = create_T1_ants_subpipes(
+            params_template=params_template, params=params)
+        create_full_segment_pnh_noT1_subpipes
 
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
