@@ -2,12 +2,13 @@ import os.path as op
 
 from macapype.utils.utils_tests import (make_tmp_dir, format_template,
                                         load_test_data)
-from macapype.pipelines.full_pipelines import create_full_segment_pnh_subpipes
+from macapype.pipelines.full_pipelines import \
+    create_full_T1xT2_ants_pnh_subpipes
 
 data_path = make_tmp_dir()
 
 
-def test_create_full_segment_pnh_subpipes_no_args():
+def test_create_full_T1xT2_ants_pnh_subpipes_no_args():
 
     params = {
         "short_preparation_pipe":
@@ -45,19 +46,20 @@ def test_create_full_segment_pnh_subpipes_no_args():
     params_template = format_template(template_dir, template_name)
 
     # running workflow
-    segment_pnh = create_full_segment_pnh_subpipes(
+    segment_pnh = create_full_T1xT2_ants_pnh_subpipes(
         params=params, params_template=params_template,
-        name="test_create_full_segment_pnh_subpipes_no_args")
+        name="test_create_full_T1xT2_ants_pnh_subpipes_no_args")
 
     segment_pnh.base_dir = data_path
 
     segment_pnh.write_graph(graph2use="colored")
-    assert op.exists(op.join(data_path,
-                             "test_create_full_segment_pnh_subpipes_no_args",
-                             "graph.png"))
+    assert op.exists(
+        op.join(
+            data_path, "test_create_full_T1xT2_ants_pnh_subpipes_no_args",
+            "graph.png"))
 
 
-def test_create_full_segment_pnh_subpipes_no_subpipes():
+def test_create_full_T1xT2_ants_pnh_subpipes_no_subpipes():
 
     params = {
         "short_preparation_pipe":
@@ -77,20 +79,20 @@ def test_create_full_segment_pnh_subpipes_no_subpipes():
     params_template = format_template(template_dir, template_name)
 
     # running workflow
-    segment_pnh = create_full_segment_pnh_subpipes(
+    segment_pnh = create_full_T1xT2_ants_pnh_subpipes(
         params=params, params_template=params_template,
-        name="test_create_full_segment_pnh_subpipes_no_subpipes")
+        name="test_create_full_T1xT2_ants_pnh_subpipes_no_subpipes")
 
     segment_pnh.base_dir = data_path
 
     segment_pnh.write_graph(graph2use="colored")
     assert op.exists(
         op.join(data_path,
-                "test_create_full_segment_pnh_subpipes_no_subpipes",
+                "test_create_full_T1xT2_ants_pnh_subpipes_no_subpipes",
                 "graph.png"))
 
 
-def test_create_full_segment_pnh_subpipes():
+def test_create_full_T1xT2_ants_pnh_subpipes():
 
     params = {
         "short_preparation_pipe":
@@ -192,13 +194,13 @@ def test_create_full_segment_pnh_subpipes():
     params_template = format_template(template_dir, template_name)
 
     # running workflow
-    segment_pnh = create_full_segment_pnh_subpipes(
+    segment_pnh = create_full_T1xT2_ants_pnh_subpipes(
         params=params, params_template=params_template,
-        name="test_create_full_segment_pnh_subpipes")
+        name="test_create_full_T1xT2_ants_pnh_subpipes")
 
     segment_pnh.base_dir = data_path
 
     segment_pnh.write_graph(graph2use="colored")
     assert op.exists(op.join(data_path,
-                             "test_create_full_segment_pnh_subpipes",
+                             "test_create_full_T1xT2_ants_pnh_subpipes",
                              "graph.png"))
