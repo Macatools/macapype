@@ -1,4 +1,4 @@
-macapype.nodes.correct\_bias.T1xT2BiasFieldCorrection
+﻿macapype.nodes.correct\_bias.T1xT2BiasFieldCorrection
 =====================================================
 
 .. currentmodule:: macapype.nodes.correct_bias

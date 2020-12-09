@@ -1,4 +1,4 @@
-macapype.nodes.register.IterREGBET
+﻿macapype.nodes.register.IterREGBET
 ==================================
 
 .. currentmodule:: macapype.nodes.register

@@ -1,4 +1,4 @@
-macapype.pipelines.correct\_bias.create\_masked\_correct\_bias\_pipe
+﻿macapype.pipelines.correct\_bias.create\_masked\_correct\_bias\_pipe
 ====================================================================
 
 .. currentmodule:: macapype.pipelines.correct_bias

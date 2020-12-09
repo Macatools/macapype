@@ -1,4 +1,4 @@
-macapype.pipelines.prepare.create\_short\_preparation\_pipe
+﻿macapype.pipelines.prepare.create\_short\_preparation\_pipe
 ===========================================================
 
 .. currentmodule:: macapype.pipelines.prepare

@@ -1,4 +1,4 @@
-macapype.pipelines.segment.create\_segment\_atropos\_pipe
+﻿macapype.pipelines.segment.create\_segment\_atropos\_pipe
 =========================================================
 
 .. currentmodule:: macapype.pipelines.segment
