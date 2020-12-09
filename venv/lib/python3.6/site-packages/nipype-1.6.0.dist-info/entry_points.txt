@@ -1,0 +1,4 @@
+
+           [console_scripts]
+           nipypecli=nipype.scripts.cli:cli
+        

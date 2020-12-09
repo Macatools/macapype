@@ -1,0 +1,166 @@
+Metadata-Version: 2.1
+Name: nibabel
+Version: 3.2.1
+Summary: Access a multitude of neuroimaging data formats
+Home-page: https://nipy.org/nibabel
+Author: nibabel developers
+Author-email: neuroimaging@python.org
+Maintainer: Chris Markiewicz
+Maintainer-email: neuroimaging@python.org
+License: MIT License
+Download-URL: https://github.com/nipy/nibabel
+Platform: OS Independent
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering
+Provides: nibabel
+Provides: nisext
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst; charset=UTF-8
+Requires-Dist: numpy (>=1.14)
+Requires-Dist: packaging (>=14.3)
+Provides-Extra: all
+Requires-Dist: pydicom (>=0.9.9) ; extra == 'all'
+Requires-Dist: pillow ; extra == 'all'
+Requires-Dist: gitpython ; extra == 'all'
+Requires-Dist: twine ; extra == 'all'
+Requires-Dist: matplotlib (>=1.5.3) ; extra == 'all'
+Requires-Dist: numpydoc ; extra == 'all'
+Requires-Dist: sphinx (<3,>=0.3) ; extra == 'all'
+Requires-Dist: texext ; extra == 'all'
+Requires-Dist: h5py ; extra == 'all'
+Requires-Dist: scipy ; extra == 'all'
+Requires-Dist: flake8 ; extra == 'all'
+Requires-Dist: coverage ; extra == 'all'
+Requires-Dist: pytest (!=5.3.4) ; extra == 'all'
+Requires-Dist: pytest-cov ; extra == 'all'
+Requires-Dist: pytest-doctestplus ; extra == 'all'
+Provides-Extra: dev
+Requires-Dist: gitpython ; extra == 'dev'
+Requires-Dist: twine ; extra == 'dev'
+Provides-Extra: dicom
+Requires-Dist: pydicom (>=0.9.9) ; extra == 'dicom'
+Provides-Extra: dicomfs
+Requires-Dist: pydicom (>=0.9.9) ; extra == 'dicomfs'
+Requires-Dist: pillow ; extra == 'dicomfs'
+Provides-Extra: doc
+Requires-Dist: matplotlib (>=1.5.3) ; extra == 'doc'
+Requires-Dist: numpydoc ; extra == 'doc'
+Requires-Dist: sphinx (<3,>=0.3) ; extra == 'doc'
+Requires-Dist: texext ; extra == 'doc'
+Provides-Extra: minc2
+Requires-Dist: h5py ; extra == 'minc2'
+Provides-Extra: spm
+Requires-Dist: scipy ; extra == 'spm'
+Provides-Extra: style
+Requires-Dist: flake8 ; extra == 'style'
+Provides-Extra: test
+Requires-Dist: coverage ; extra == 'test'
+Requires-Dist: pytest (!=5.3.4) ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: pytest-doctestplus ; extra == 'test'
+
+.. -*- rest -*-
+.. vim:syntax=rst
+
+.. image:: https://codecov.io/gh/nipy/nibabel/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/nipy/nibabel
+
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.591597.svg
+   :target: https://doi.org/10.5281/zenodo.591597
+
+.. Following contents should be from LONG_DESCRIPTION in nibabel/info.py
+
+
+=======
+NiBabel
+=======
+
+Read / write access to some common neuroimaging file formats
+
+This package provides read +/- write access to some common medical and
+neuroimaging file formats, including: ANALYZE_ (plain, SPM99, SPM2 and later),
+GIFTI_, NIfTI1_, NIfTI2_, `CIFTI-2`_, MINC1_, MINC2_, `AFNI BRIK/HEAD`_, MGH_ and
+ECAT_ as well as Philips PAR/REC.  We can read and write FreeSurfer_ geometry,
+annotation and morphometry files.  There is some very limited support for
+DICOM_.  NiBabel is the successor of PyNIfTI_.
+
+.. _ANALYZE: http://www.grahamwideman.com/gw/brain/analyze/formatdoc.htm
+.. _AFNI BRIK/HEAD: https://afni.nimh.nih.gov/pub/dist/src/README.attributes
+.. _NIfTI1: http://nifti.nimh.nih.gov/nifti-1/
+.. _NIfTI2: http://nifti.nimh.nih.gov/nifti-2/
+.. _CIFTI-2: https://www.nitrc.org/projects/cifti/
+.. _MINC1:
+    https://en.wikibooks.org/wiki/MINC/Reference/MINC1_File_Format_Reference
+.. _MINC2:
+    https://en.wikibooks.org/wiki/MINC/Reference/MINC2.0_File_Format_Reference
+.. _PyNIfTI: http://niftilib.sourceforge.net/pynifti/
+.. _GIFTI: https://www.nitrc.org/projects/gifti
+.. _MGH: https://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/MghFormat
+.. _ECAT: http://xmedcon.sourceforge.net/Docs/Ecat
+.. _Freesurfer: https://surfer.nmr.mgh.harvard.edu
+.. _DICOM: http://medical.nema.org/
+
+The various image format classes give full or selective access to header
+(meta) information and access to the image data is made available via NumPy
+arrays.
+
+Website
+=======
+
+Current documentation on nibabel can always be found at the `NIPY nibabel
+website <http://nipy.org/nibabel>`_.
+
+Mailing Lists
+=============
+
+Please send any questions or suggestions to the `neuroimaging mailing list
+<https://mail.python.org/mailman/listinfo/neuroimaging>`_.
+
+Code
+====
+
+Install nibabel with::
+
+    pip install nibabel
+
+You may also be interested in:
+
+* the `nibabel code repository`_ on Github;
+* documentation_ for all releases and current development tree;
+* download the `current release`_ from pypi;
+* download `current development version`_ as a zip file;
+* downloads of all `available releases`_.
+
+.. _nibabel code repository: https://github.com/nipy/nibabel
+.. _Documentation: http://nipy.org/nibabel
+.. _current release: https://pypi.python.org/pypi/nibabel
+.. _current development version: https://github.com/nipy/nibabel/archive/master.zip
+.. _available releases: https://github.com/nipy/nibabel/releases
+
+License
+=======
+
+Nibabel is licensed under the terms of the MIT license. Some code included
+with nibabel is licensed under the BSD license.  Please see the COPYING file
+in the nibabel distribution.
+
+Citing nibabel
+==============
+
+Please see the `available releases`_ for the release of nibabel that you are
+using.  Recent releases have a Zenodo_ `Digital Object Identifier`_ badge at
+the top of the release notes.  Click on the badge for more information.
+
+.. _zenodo: https://zenodo.org
+.. _Digital Object Identifier: https://en.wikipedia.org/wiki/Digital_object_identifier
+
+

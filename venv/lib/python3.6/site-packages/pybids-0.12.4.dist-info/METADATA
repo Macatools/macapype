@@ -1,0 +1,83 @@
+Metadata-Version: 2.1
+Name: pybids
+Version: 0.12.4
+Summary: bids: interface with datasets conforming to BIDS
+Home-page: http://github.com/bids-standard/pybids
+Author: PyBIDS Developers
+Author-email: bids-discussion@googlegroups.com
+Maintainer: PyBIDS Developers
+Maintainer-email: bids-discussion@googlegroups.com
+License: MIT
+Platform: OS Independent
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering
+Requires-Python: >=3.5
+Description-Content-Type: text/x-rst; charset=UTF-8
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: nibabel (>=2.1)
+Requires-Dist: pandas (>=0.23)
+Requires-Dist: patsy
+Requires-Dist: sqlalchemy (<1.4.0.dev0)
+Requires-Dist: bids-validator
+Requires-Dist: num2words
+Requires-Dist: click
+Provides-Extra: analysis
+Provides-Extra: dev
+Requires-Dist: sphinx (>=2.2) ; extra == 'dev'
+Requires-Dist: numpydoc ; extra == 'dev'
+Requires-Dist: sphinx-rtd-theme ; extra == 'dev'
+Requires-Dist: pytest (>=3.3) ; extra == 'dev'
+Requires-Dist: mock ; extra == 'dev'
+Requires-Dist: pathlib ; (python_version < "3.4") and extra == 'dev'
+Provides-Extra: doc
+Requires-Dist: sphinx (>=2.2) ; extra == 'doc'
+Requires-Dist: numpydoc ; extra == 'doc'
+Requires-Dist: sphinx-rtd-theme ; extra == 'doc'
+Provides-Extra: docs
+Requires-Dist: sphinx (>=2.2) ; extra == 'docs'
+Requires-Dist: numpydoc ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme ; extra == 'docs'
+Provides-Extra: test
+Requires-Dist: pytest (>=3.3) ; extra == 'test'
+Requires-Dist: mock ; extra == 'test'
+Requires-Dist: pathlib ; (python_version < "3.4") and extra == 'test'
+Provides-Extra: tests
+Requires-Dist: pytest (>=3.3) ; extra == 'tests'
+Requires-Dist: mock ; extra == 'tests'
+Requires-Dist: pathlib ; (python_version < "3.4") and extra == 'tests'
+Provides-Extra: travis_tests
+Requires-Dist: pytest (>=3.3) ; extra == 'travis_tests'
+Requires-Dist: mock ; extra == 'travis_tests'
+Requires-Dist: codecov ; extra == 'travis_tests'
+Requires-Dist: pytest-cov ; extra == 'travis_tests'
+Requires-Dist: pytest-xdist ; extra == 'travis_tests'
+Requires-Dist: pathlib ; (python_version < "3.4") and extra == 'travis_tests'
+Provides-Extra: tutorial
+Requires-Dist: nbconvert ; extra == 'tutorial'
+Requires-Dist: jupyter-client ; extra == 'tutorial'
+Requires-Dist: ipykernel ; extra == 'tutorial'
+
+PyBIDS
+======
+PyBIDS is a Python module to interface with datasets conforming BIDS.
+See BIDS paper_ and http://bids.neuroimaging.io website for more information.
+
+.. _paper: http://www.nature.com/articles/sdata201644
+
+License
+=======
+``pybids`` is licensed under the terms of the MIT license. See the file
+"LICENSE" for information on the history of this software, terms & conditions
+for usage, and a DISCLAIMER OF ALL WARRANTIES.
+
+All trademarks referenced herein are property of their respective holders.
+
+Copyright (c) 2016--, PyBIDS developers, Planet Earth
+
+

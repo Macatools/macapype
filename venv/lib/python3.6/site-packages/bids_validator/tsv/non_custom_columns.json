@@ -1,0 +1,46 @@
+{
+  "channels": [
+    "description",
+    "high_cutoff",
+    "low_cutoff",
+    "name",
+    "notch",
+    "sampling_frequency",
+    "software_filters",
+    "status",
+    "status_description",
+    "type",
+    "units",
+    "reference",
+    "group"
+  ],
+  "electrodes": [
+    "name",
+    "x",
+    "y",
+    "z",
+    "size",
+    "material",
+    "manufacturer",
+    "group",
+    "hemisphere",
+    "type",
+    "impedance",
+    "dimension"
+  ],
+  "events": [
+    "duration",
+    "HED",
+    "onset",
+    "trial_type",
+    "response_time",
+    "stim_file",
+    "sample",
+    "value"
+  ],
+  "misc": [],
+  "participants": ["participant_id"],
+  "phenotype": ["participant_id"],
+  "scans": ["acq_time", "filename"],
+  "sessions": ["acq_time", "session_id"]
+}

@@ -1,3 +1,6 @@
+from nipype.interfaces.base import TraitedSpec, SimpleInterface
+from nipype.interfaces.base import traits, File
+
 
 class MeshifyInputSpec(TraitedSpec):
     image_file = File(
@@ -20,13 +23,12 @@ class MeshifyOutputSpec(TraitedSpec):
     mesh_file = File(desc="out file", exists=True)
 
 
-class Meshify(FSLCommand):
+class Meshify(SimpleInterface):
     """ Create a Gifti mesh from a binary Nifti image """
     _cmd = 'fslorient'
     input_spec = MeshifyInputSpec
     output_spec = MeshifyOutputSpec
 
-    
     def _run_interface(self, runtime):
         import os.path as op
         import nibabel.gifti as ng
@@ -41,17 +43,17 @@ class Meshify(FSLCommand):
         from nipype.utils.filemanip import split_filename
 
         # Generate output mesh filename from the input image name
-        _, fname, _ = split_filename(data_file)
+        _, fname, _ = split_filename(self.input_spec.image_file)
         gii_file = op.abspath(op.join(runtime.cwd, fname + ".gii"))
 
-        # Load the largest connected component of the input image
-        img = nimg.largest_connected_component_img(data_file)
+        # Load the largest connected component of the input image
+        img = nimg.largest_connected_component_img(self.input_spec.image_file)
 
         #TODO: check if the input image is correct (binary)
 
         # Run the marching cube algorithm
         verts, faces, normals, values  = sm.marching_cubes(
-            img.get_data(), input_spec.level)
+            img.get_data(), self.input_spec.level)
 
         # Convert vertices coordinates to image space
         # TODO: check that is correct by plotting the mesh on the image
@@ -65,19 +67,17 @@ class Meshify(FSLCommand):
             ng.GiftiDataArray(mm_verts, intent='NIFTI_INTENT_POINTSET'),
             ng.GiftiDataArray(faces, intent='NIFTI_INTENT_TRIANGLE')])
         gii.meta = ng.GiftiMetaData().from_dict({
-            "volume_file": input_spec.image_file,
-            "marching_cube_level": input_spec.level,
-            "smoothing_iterations": input_spec.smoothing_iter,
-            "smoothing_dt": input_spec.smoothing_dt
+            "volume_file": self.input_spec.image_file,
+            "marching_cube_level": self.input_spec.level,
+            "smoothing_iterations": self.input_spec.smoothing_iter,
+            "smoothing_dt": self.input_spec.smoothing_dt
         })
         ng.write(gii, gii_file)
 
         # Optional: Smooth the marching cube output with SLAM
-        if input_spec.smoothing_iter > 0:
+        if self.input_spec.smoothing_iter > 0:
             mesh = sdg.laplacian_mesh_smoothing(
                 sio.load_mesh(gii_file), 
-                nb_iter=input_spec.smoothing_iter, 
-                dt=input_spec.smoothing_dt)
+                nb_iter=self.input_spec.smoothing_iter,
+                dt=self.input_spec.smoothing_dt)
             sio.write_mesh(mesh, gii_file)
-
-

@@ -34,7 +34,8 @@ try:
         author="David Meunier, Bastien Cagna",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
-        install_requires=["nipype", "networkx>=2.0", "pybids", "skimage"],
+        install_requires=[
+            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "slam@git+https://github.com/gauzias/slam"],
         distclass=distutils.command.bdist_conda.CondaDistribution,
         conda_buildnum=1)
 

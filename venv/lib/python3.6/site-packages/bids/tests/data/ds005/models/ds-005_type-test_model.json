@@ -1,0 +1,90 @@
+{
+  "Name": "test_model",
+  "Description": "simple test model",
+  "Steps": [
+    {
+      "Name": "run",
+      "Level": "Run",
+      "Model": {
+        "X": ["RT", "trial_type"]
+      },
+      "Transformations": [
+        {
+          "Name": "Scale",
+          "Input": "RT"
+        }
+      ],
+      "DummyContrasts": {
+        "Conditions": ["RT"],
+        "Type": "t"
+        },
+      "Contrasts": [
+        {
+          "Name": "RT-trial_type",
+          "ConditionList": [
+            "RT",
+            "trial_type"
+          ],
+          "Weights": [1, -1]
+        },
+        {
+          "Name": "crummy-F",
+          "ConditionList": [
+            "RT",
+            "trial_type"
+          ],
+          "Weights": [
+            [1, 0],
+            [0, 1]
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "session",
+      "Level": "Session",
+      "DummyContrasts": {
+        "Type": "FEMA"
+      }
+    },
+    {
+      "Name": "participant",
+      "Level": "Subject",
+      "Contrasts": [
+        {
+          "Name": "RT",
+          "ConditionList": [
+            "RT"
+          ],
+          "Type": "FEMA",
+          "Weights": [1]
+        },
+        {
+          "Name": "RT-trial_type",
+          "ConditionList": [
+            "RT-trial_type"
+          ],
+          "Type": "FEMA",
+          "Weights": [1]
+        },
+        {
+          "Name": "crummy-F",
+          "ConditionList": [
+            "crummy-F"
+          ],
+          "Type": "FEMA",
+          "Weights": [
+            [1]
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "group",
+      "Level": "Dataset",
+      "DummyContrasts": {
+        "Type": "t"
+      }
+    }
+  ]
+}
