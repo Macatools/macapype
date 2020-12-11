@@ -519,6 +519,8 @@ class NwarpApplyPriors(AFNICommandBase):
         new_value = []
         if name == 'in_file':
             if isinstance(value, list):
+
+                print("A list for in_file")
                 for in_file in value:
                     print(in_file)
 
@@ -528,9 +530,13 @@ class NwarpApplyPriors(AFNICommandBase):
                     new_value.append(os.path.join(cur_dir, in_file))
 
                 value = new_value
+            else:
+
+                print("A list for in_file")
 
         elif name == 'out_file':
             if isinstance(value, list):
+                print("A list for out_file")
                 for out_file in value[:1]:
                     print(out_file)
 
@@ -541,6 +547,8 @@ class NwarpApplyPriors(AFNICommandBase):
                 for i in range(1, 4):
                     new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
             else:
+                print("Not a list for out_file")
+
                 path, fname, ext = split_f(value)
                 new_value = os.path.abspath(fname + "_Nwarp" + ext)
 
