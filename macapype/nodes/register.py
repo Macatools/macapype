@@ -514,6 +514,8 @@ class NwarpApplyPriors(AFNICommandBase):
 
         cur_dir = os.getcwd()
 
+        print(cur_dir)
+
         new_value = []
         if name == 'in_file':
             if isinstance(value, list):
@@ -540,7 +542,7 @@ class NwarpApplyPriors(AFNICommandBase):
                     new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
             else:
                 path, fname, ext = split_f(value)
-                new_value = os.path.join(cur_dir, fname + "_Nwarp" + ext)
+                new_value = os.path.abspath(fname + "_Nwarp" + ext)
 
             value = new_value
 
