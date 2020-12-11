@@ -514,8 +514,6 @@ class NwarpApplyPriors(AFNICommandBase):
 
         cur_dir = os.getcwd()
 
-        print(cur_dir)
-
         new_value = []
         if name == 'in_file':
             if isinstance(value, list):
@@ -531,8 +529,7 @@ class NwarpApplyPriors(AFNICommandBase):
 
                 value = new_value
             else:
-
-                print("A list for in_file")
+                print("Not a list for in_file {}".format(value))
 
         elif name == 'out_file':
             if isinstance(value, list):
