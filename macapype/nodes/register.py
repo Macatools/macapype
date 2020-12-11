@@ -544,10 +544,11 @@ class NwarpApplyPriors(AFNICommandBase):
                 for i in range(1, 4):
                     new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
             else:
-                print("Not a list for out_file")
+                print("Not a list for out_file {}".format(value))
 
                 path, fname, ext = split_f(value)
                 new_value = os.path.abspath(fname + "_Nwarp" + ext)
+                print(new_value)
 
             value = new_value
 
