@@ -516,7 +516,7 @@ class NwarpApplyPriors(AFNICommandBase):
 
         new_value = []
         if name == 'in_file':
-            if isinstance(out_file, list):
+            if isinstance(value, list):
                 for in_file in value:
                     print(in_file)
 
@@ -528,7 +528,7 @@ class NwarpApplyPriors(AFNICommandBase):
                 value = new_value
 
         elif name == 'out_file':
-            if isinstance(out_file, list):
+            if isinstance(value, list):
                 for out_file in value[:1]:
                     print(out_file)
 
