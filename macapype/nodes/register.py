@@ -539,7 +539,7 @@ class NwarpApplyPriors(AFNICommandBase):
                 for i in range(1, 4):
                     new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
             else:
-                path, fname, ext = split_f(out_file)
+                path, fname, ext = split_f(value)
                 new_value = os.path.join(cur_dir, fname + "_Nwarp" + ext)
 
             value = new_value
