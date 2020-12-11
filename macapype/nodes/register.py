@@ -516,18 +516,19 @@ class NwarpApplyPriors(AFNICommandBase):
 
         new_value = []
         if name == 'in_file':
-            for in_file in value:
-                print(in_file)
+            if isinstance(out_file, list):
+                for in_file in value:
+                    print(in_file)
 
-                # copy en local
-                shutil.copy(in_file, cur_dir)
+                    # copy en local
+                    shutil.copy(in_file, cur_dir)
 
-                new_value.append(os.path.join(cur_dir, in_file))
+                    new_value.append(os.path.join(cur_dir, in_file))
 
-            value = new_value
+                value = new_value
 
         elif name == 'out_file':
-            if isinstance(out_file, int):
+            if isinstance(out_file, list):
                 for out_file in value[:1]:
                     print(out_file)
 
