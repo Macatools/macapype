@@ -527,9 +527,15 @@ class NwarpApplyPriors(AFNICommandBase):
 
                     new_value.append(os.path.join(cur_dir, in_file))
 
-                value = new_value
+
             else:
                 print("Not a list for in_file {}".format(value))
+                shutil.copy(in_file, cur_dir)
+
+                new_value = os.path.join(cur_dir, in_file))
+                print(new_value)
+
+            value = new_value
 
         elif name == 'out_file':
             if isinstance(value, list):
