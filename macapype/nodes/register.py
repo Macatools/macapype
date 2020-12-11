@@ -527,15 +527,20 @@ class NwarpApplyPriors(AFNICommandBase):
             value = new_value
 
         elif name == 'out_file':
-            for out_file in value[:1]:
-                print(out_file)
+            if isinstance(out_file, int):
+                for out_file in value[:1]:
+                    print(out_file)
 
+                    path, fname, ext = split_f(out_file)
+                    # out_files.append(os.path.join(path,fname + "_Nwarp" + ext))
+                    new_value.append(os.path.join(cur_dir, fname + "_Nwarp" + ext))
+
+                for i in range(1, 4):
+                    new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
+            else:
                 path, fname, ext = split_f(out_file)
-                # out_files.append(os.path.join(path,fname + "_Nwarp" + ext))
-                new_value.append(os.path.join(cur_dir, fname + "_Nwarp" + ext))
+                new_value = os.path.join(cur_dir, fname + "_Nwarp" + ext))
 
-            for i in range(1, 4):
-                new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
             value = new_value
 
         return super(NwarpApplyPriors, self)._format_arg(name, spec, value)
