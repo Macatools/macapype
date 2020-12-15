@@ -33,9 +33,9 @@ class Meshify(SimpleInterface):
         import os.path as op
         import nibabel.gifti as ng
         import numpy as np
-
-        import skimage.measure as sm 
-        from nilearn.image as nimg
+		
+        import skimage.measure as sm
+        import nilearn.image as nimg
 
         import slam.io as sio
         import slam.differential_geometry as sdg
@@ -49,10 +49,10 @@ class Meshify(SimpleInterface):
         # Load the largest connected component of the input image
         img = nimg.largest_connected_component_img(self.input_spec.image_file)
 
-        #TODO: check if the input image is correct (binary)
+        # TODO: check if the input image is correct (binary)
 
         # Run the marching cube algorithm
-        verts, faces, normals, values  = sm.marching_cubes(
+        verts, faces, normals, values = sm.marching_cubes(
             img.get_data(), self.input_spec.level)
 
         # Convert vertices coordinates to image space
@@ -77,7 +77,7 @@ class Meshify(SimpleInterface):
         # Optional: Smooth the marching cube output with SLAM
         if self.input_spec.smoothing_iter > 0:
             mesh = sdg.laplacian_mesh_smoothing(
-                sio.load_mesh(gii_file), 
+                sio.load_mesh(gii_file),
                 nb_iter=self.input_spec.smoothing_iter,
                 dt=self.input_spec.smoothing_dt)
             sio.write_mesh(mesh, gii_file)
