@@ -15,10 +15,10 @@ def test_meshify():
     nb.save(nb.Nifti1Image(dt, affine), tmp_file)
 
     try:
-	    # Test the node
+        # Test the node
         print("Create Meshify node")
         meshify = surf.Meshify()
-        meshify.inputs.image_file=tmp_file
+        meshify.inputs.image_file = tmp_file
         print("Run Meshify node")
         meshify.run()
 
@@ -29,8 +29,3 @@ def test_meshify():
         print("Remove temporary data")
         os.remove(tmp_file)
         os.remove(tmp_file[:-4] + ".gii")
-
-
-if __name__ == "__main__":
-	test_meshify()
-

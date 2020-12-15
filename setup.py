@@ -31,7 +31,8 @@ try:
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
         install_requires=[
-            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "slam@git+https://github.com/BastienCagna/slam.git@change-setup-metadata"],
+            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
+            "slam@git+https://github.com/BastienCagna/slam.git@change-setup-metadata"],
         distclass=distutils.command.bdist_conda.CondaDistribution,
         conda_buildnum=1)
 
@@ -47,5 +48,5 @@ except ModuleNotFoundError as e:
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
         install_requires=[
-            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "slam@git+https://github.com/BastienCagna/slam.git@change-setup-metadata"])
-
+            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
+            "slam@git+https://github.com/BastienCagna/slam.git@change-setup-metadata"])

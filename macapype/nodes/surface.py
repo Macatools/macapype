@@ -6,15 +6,18 @@ class MeshifyInputSpec(TraitedSpec):
     image_file = File(
         exists=True, desc='input file', mandatory=True)
 
-    level = traits.Float(0.5, usedefault=True, 
+    level = traits.Float(
+        0.5, usedefault=True,
         desc='Threshold used to detect surfaces',
         mandatory=False)
 
-    smoothing_iter = traits.Int(0, usedefault=True, 
+    smoothing_iter = traits.Int(
+        0, usedefault=True,
         desc='Number of Laplacian smoothing iterations',
         mandatory=False)
 
-    smoothing_dt = traits.Float(0.1, usedefault=True, 
+    smoothing_dt = traits.Float(
+        0.1, usedefault=True,
         desc='dt param of the Laplacian smoothing',
         mandatory=False)
 
@@ -33,7 +36,6 @@ class Meshify(SimpleInterface):
         import os.path as op
         import nibabel.gifti as ng
         import numpy as np
-		
         import skimage.measure as sm
         import nilearn.image as nimg
 
@@ -83,4 +85,3 @@ class Meshify(SimpleInterface):
             sio.write_mesh(mesh, gii_file)
 
         return runtime
-
