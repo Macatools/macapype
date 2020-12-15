@@ -23,15 +23,15 @@ from .correct_bias import (create_masked_correct_bias_pipe,
 from .register import create_register_NMT_pipe
 
 from .extract_brain import (create_extract_pipe,
-                            create_extract_noT1_pipe)
+                            create_extract_T1_pipe)
 
 from macapype.utils.misc import gunzip, parse_key, list_input_files
 
 
 ###############################################################################
 # SPM based segmentation (from: Régis Trapeau) (-soft SPM or SPM12)
-def create_full_T1xT2_spm_pnh_subpipes(
-        params_template, params={}, name='full_T1xT2_spm_pnh_subpipes'):
+def create_full_spm_subpipes(
+        params_template, params={}, name='full_spm_subpipes'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
 
         - data_preparation_pipe:
@@ -151,8 +151,8 @@ def create_full_T1xT2_spm_pnh_subpipes(
 
 ###############################################################################
 # SPM based, but only T1 is available (-soft SPM_T1)
-def create_full_T1_spm_pnh_subpipes(
-        params_template, params={}, name='full_T1_spm_pnh_subpipes'):
+def create_full_T1_spm_subpipes(
+        params_template, params={}, name='full_T1_spm_subpipes'):
     """
     """
 
@@ -297,7 +297,6 @@ def create_brain_extraction_pipe(params_template, params={},
                                   extract_pipe, "inputnode.restore_T2")
     brain_extraction_pipe.connect(inputnode, "indiv_params",
                                   extract_pipe, "inputnode.indiv_params")
-
     return brain_extraction_pipe
 
 
@@ -388,8 +387,8 @@ def create_brain_segment_from_mask_pipe(
 
 
 # (-soft ANTS)
-def create_full_T1xT2_ants_pnh_subpipes(
-        params_template, params={}, name="full_T1xT2_ants_pnh_subpipes"):
+def create_full_ants_subpipes(
+        params_template, params={}, name="full_ants_subpipes"):
     """Description: Segment T1 (using T2 for bias correction) .
 
     new version (as it is now)
@@ -503,14 +502,13 @@ def create_full_T1xT2_ants_pnh_subpipes(
                      brain_segment_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
-
 # ################# ANTS based segmentation for adrien baboons (T1 without T2)
 
 
 # same as above, but replacing biascorrection with N4biascorrection
 # in brain extraction and brain segmentation
 def create_brain_extraction_T1_pipe(params_template, params={},
-                                    name="brain_extraction_noT1_pipe"):
+                                    name="brain_extraction_T1_pipe"):
     """ Description: Brain extraction with only T1 images.
 
     - N4biascorrection (replacing T2 bias correction with N4)
@@ -541,19 +539,19 @@ def create_brain_extraction_T1_pipe(params_template, params={},
         name='inputnode')
 
     # brain extraction (with atlasbrex)
-    extract_pipe = create_extract_noT1_pipe(
+    extract_T1_pipe = create_extract_T1_pipe(
         params_template=params_template,
-        params=parse_key(params, "extract_pipe"))
+        params=parse_key(params, "extract_T1_pipe"))
 
     brain_extraction_pipe.connect(inputnode, "preproc_T1",
-                                  extract_pipe, "inputnode.restore_T1")
+                                  extract_T1_pipe, "inputnode.restore_T1")
     brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                  extract_pipe, "inputnode.indiv_params")
+                                  extract_T1_pipe, "inputnode.indiv_params")
     return brain_extraction_pipe
 
 
 def create_brain_segment_from_mask_T1_pipe(
-        params_template, params={}, name="brain_segment_from_mask_noT1_pipe"):
+        params_template, params={}, name="brain_segment_from_mask_T1_pipe"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
     computed mask with NMT Atlas and atropos segment.
 
@@ -635,9 +633,9 @@ def create_brain_segment_from_mask_T1_pipe(
 
 
 # -soft ANTS_T1
-def create_full_T1_pnh_ants_subpipes(
+def create_full_T1_ants_subpipes(
     params_template, params={},
-        name="full_T1_pnh_ants_subpipes"):
+        name="full_T1_ants_subpipes"):
     """Description: Segment T1 (with no T2).
 
     - brain preproc (short_prepration pipe - try betcrop with the same file,
@@ -697,11 +695,11 @@ def create_full_T1_pnh_ants_subpipes(
                      data_preparation_pipe, 'inputnode.indiv_params')
 
     # full extract brain pipeline (correct_bias, denoising, extract brain)
-    if "brain_extraction_pipe" not in params.keys():
+    if "brain_extraction_T1_pipe" not in params.keys():
         return seg_pipe
 
     brain_extraction_pipe = create_brain_extraction_T1_pipe(
-        params=parse_key(params, "brain_extraction_pipe"),
+        params=parse_key(params, "brain_extraction_T1_pipe"),
         params_template=params_template)
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
@@ -710,17 +708,17 @@ def create_full_T1_pnh_ants_subpipes(
                      brain_extraction_pipe, 'inputnode.indiv_params')
 
     # full_segment (restarting from the avg_align files)
-    if "brain_segment_pipe" not in params.keys():
+    if "brain_segment_T1_pipe" not in params.keys():
         return seg_pipe
 
     brain_segment_pipe = create_brain_segment_from_mask_T1_pipe(
         params_template=params_template,
-        params=parse_key(params, "brain_segment_pipe"))
+        params=parse_key(params, "brain_segment_T1_pipe"))
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      brain_segment_pipe, 'inputnode.preproc_T1')
     seg_pipe.connect(brain_extraction_pipe,
-                     "extract_noT1_pipe.smooth_mask.out_file",
+                     "extract_T1_pipe.smooth_mask.out_file",
                      brain_segment_pipe, "inputnode.brain_mask")
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')

@@ -8,7 +8,7 @@
         "template_gm": "/hpc/meca/users/loh.k/baboon_proc/haiko89_template/TPM_Asymmetric.GreyMatter_Haiko89.nii.gz",
         "template_wm": "/hpc/meca/users/loh.k/baboon_proc/haiko89_template/TPM_Asymmetric.WhiteMatter_Haiko89.nii.gz"
     },
-    "short_preparation_noT1_pipe":
+    "short_preparation_T1_pipe":
     {
         "crop":
         {
@@ -24,9 +24,9 @@
             "args": "-r 0 --verbose 1"
         }
     },
-    "brain_extraction_pipe":
+    "brain_extraction_T1_pipe":
     {
-        "extract_pipe":
+        "extract_T1_pipe":
         {
             "atlas_brex":
             {
@@ -37,7 +37,7 @@
             }
         }
     },
-    "brain_segment_pipe":
+    "brain_segment_T1_pipe":
     {
         "register_NMT_pipe":
         {
