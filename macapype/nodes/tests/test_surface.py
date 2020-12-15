@@ -10,7 +10,7 @@ def test_meshify():
     dt = np.zeros((100, 60, 100))
     dt[40:60, 20:40, 20:50] = 1
     affine = np.eye(4)
-    
+
     tmp_file = "./test_meshify_input_image.nii"
     nb.save(nb.Nifti1Image(dt, affine), tmp_file)
 
