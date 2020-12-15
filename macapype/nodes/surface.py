@@ -6,16 +6,16 @@ class MeshifyInputSpec(TraitedSpec):
     image_file = File(
         exists=True, desc='input file', mandatory=True)
 
-    level = traits.Int(
-        default=0.5, desc='Threshold used to detect surfaces',
+    level = traits.Float(0.5, usedefault=True, 
+        desc='Threshold used to detect surfaces',
         mandatory=False)
 
-    smoothing_iter = traits.Int(
-        default=0, desc='Number of Laplacian smoothing iterations',
+    smoothing_iter = traits.Int(0, usedefault=True, 
+        desc='Number of Laplacian smoothing iterations',
         mandatory=False)
 
-    smoothing_dt = traits.Int(
-        default=0.1, desc='dt param of the Laplacian smoothing',
+    smoothing_dt = traits.Float(0.1, usedefault=True, 
+        desc='dt param of the Laplacian smoothing',
         mandatory=False)
 
 
@@ -52,7 +52,7 @@ class Meshify(SimpleInterface):
         # TODO: check if the input image is correct (binary)
 
         # Run the marching cube algorithm
-        verts, faces, normals, values = sm.marching_cubes(
+        verts, faces, normals, values = sm.marching_cubes_lewiner(
             img.get_data(), self.inputs.level)
 
         # Convert vertices coordinates to image space
@@ -68,9 +68,9 @@ class Meshify(SimpleInterface):
             ng.GiftiDataArray(faces, intent='NIFTI_INTENT_TRIANGLE')])
         gii.meta = ng.GiftiMetaData().from_dict({
             "volume_file": self.inputs.image_file,
-            "marching_cube_level": self.inputs.level,
-            "smoothing_iterations": self.inputs.smoothing_iter,
-            "smoothing_dt": self.inputs.smoothing_dt
+            "marching_cube_level": str(self.inputs.level),
+            "smoothing_iterations": str(self.inputs.smoothing_iter),
+            "smoothing_dt": str(self.inputs.smoothing_dt)
         })
         ng.write(gii, gii_file)
 
@@ -81,4 +81,6 @@ class Meshify(SimpleInterface):
                 nb_iter=self.inputs.smoothing_iter,
                 dt=self.inputs.smoothing_dt)
             sio.write_mesh(mesh, gii_file)
+
+        return runtime
 

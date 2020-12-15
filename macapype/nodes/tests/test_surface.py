@@ -28,6 +28,7 @@ def test_meshify():
     finally:
         print("Remove temporary data")
         os.remove(tmp_file)
+        os.remove(tmp_file[:-4] + ".gii")
 
 
 if __name__ == "__main__":
