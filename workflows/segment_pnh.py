@@ -28,7 +28,7 @@
 
     Example
     ---------
-    python segment_pnh_kepkee.py -data [PATH_TO_BIDS] -out ../local_tests/ -subjects Elouk
+    python segment_kepkee.py -data [PATH_TO_BIDS] -out ../local_tests/ -subjects Elouk
 
     Requirements
     --------------
@@ -59,8 +59,10 @@ import nipype.interfaces.fsl as fsl
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines import (
-    create_full_segment_pnh_subpipes, create_full_T1xT2_segment_pnh_subpipes,
-    create_full_spm_subpipes)
+    create_full_spm_subpipes,
+    create_full_ants_subpipes,
+    create_full_T1_spm_subpipes,
+    create_full_T1_ants_subpipes,)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource)
@@ -167,26 +169,31 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     print (params_template)
 
     # soft
-    soft = soft.lower()
-    assert soft in ["spm12", "spm", "ants", "spm_t1"], \
+    wf_name += "_{}".format(soft)
+
+    soft = soft.lower().split("_")
+    assert "spm" in soft or "ants" in soft, \
         "error with {}, should be among [spm12, spm, ants]".format(soft)
 
-    wf_name += "_{}".format(soft)
 
     # main_workflow
     main_workflow = pe.Workflow(name= wf_name)
     main_workflow.base_dir = process_dir
 
-    if soft in ["spm","spm12"]:
-        segment_pnh = create_full_T1xT2_segment_pnh_subpipes(
-            params_template=params_template, params=params)
-    elif soft=="ants":
-        segment_pnh = create_full_segment_pnh_subpipes(
-            params_template=params_template, params=params)
-    elif soft=="spm_t1":
-        segment_pnh = create_full_spm_subpipes(
-            params_template=params_template, params=params)
-
+    if "spm" in soft or "spm12" in soft:
+        if "t1" in soft:
+            segment_pnh = create_full_T1_spm_subpipes(
+                params_template=params_template, params=params)
+        else:
+            segment_pnh = create_full_spm_subpipes(
+                params_template=params_template, params=params)
+    elif "ants" in soft:
+        if "t1" in soft:
+            segment_pnh = create_full_T1_ants_subpipes(
+                params_template=params_template, params=params)
+        else:
+            segment_pnh = create_full_ants_subpipes(
+                params_template=params_template, params=params)
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
                                                     subjects, sessions)
@@ -198,11 +205,17 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                                        acquisitions)
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
-    if soft != "spm_t1":
+    if not "t1" in soft:
         main_workflow.connect(datasource, 'T2', 
                               segment_pnh, 'inputnode.list_T2')
 
-    return main_workflow
+
+    main_workflow.write_graph(graph2use="colored")
+    main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+
+    if not "test" in soft:
+        main_workflow.run(plugin='MultiProc', plugin_args={'n_procs' : 4})
+
 
 if __name__ == '__main__':
 
@@ -235,7 +248,7 @@ if __name__ == '__main__':
 
     # main_workflow
     print("Initialising the pipeline...")
-    wf = create_main_workflow(
+    create_main_workflow(
         data_dir=args.data,
         soft=args.soft,
         process_dir=args.out,
@@ -245,11 +258,4 @@ if __name__ == '__main__':
         records=args.rec,
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file)
-
-    wf.write_graph(graph2use="colored")
-    wf.config['execution'] = {'remove_unnecessary_outputs': 'false'}
-    #print('The PNH segmentation pipeline is ready')
-    #print("Start to process")
-    #wf.run()
-    wf.run(plugin='MultiProc', plugin_args={'n_procs' : 4})
 

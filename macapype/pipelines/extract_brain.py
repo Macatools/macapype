@@ -94,8 +94,8 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
     return extract_pipe
 
 
-def create_extract_noT1_pipe(params_template, params={},
-                             name="extract_noT1_pipe"):
+def create_extract_T1_pipe(params_template, params={},
+                           name="extract_T1_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex
 
@@ -164,5 +164,13 @@ def create_extract_noT1_pipe(params_template, params={},
     smooth_mask.inputs.args = "-s 1 -thr 0.5 -bin"
 
     extract_pipe.connect(mask_brex, 'out_file', smooth_mask, 'in_file')
+
+    # mult_T1
+    mult_T1 = pe.Node(afni.Calc(), name='mult_T1')
+    mult_T1.inputs.expr = "a*b"
+    mult_T1.inputs.outputtype = 'NIFTI_GZ'
+
+    extract_pipe.connect(inputnode, 'restore_T1', mult_T1, 'in_file_a')
+    extract_pipe.connect(smooth_mask, 'out_file', mult_T1, 'in_file_b')
 
     return extract_pipe

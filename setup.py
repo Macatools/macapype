@@ -19,7 +19,6 @@ else:
     else:
         raise RuntimeError("unable to find version in yourpackage/_version.py")
 
-
 try:
     import distutils.command.bdist_conda
 
