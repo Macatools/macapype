@@ -6,17 +6,30 @@ import os
 
 def test_meshify():
     # Create a temporary test image
+    print("Generate fake Nifti image")
     dt = np.zeros((100, 60, 100))
     dt[40:60, 20:40, 20:50] = 1
-    tmp_file = "/tmp/macapype/test_meshify_input_image.nii"
-    nb.save(nb.Nifti1Image(dt), tmp_file)
+    affine = np.eye(4)
+    
+    tmp_file = "./test_meshify_input_image.nii"
+    nb.save(nb.Nifti1Image(dt, affine), tmp_file)
 
-    # Test the node
-    meshify = surf.Meshify
-    meshify.input_spec.image_input = tmp_file
-    meshify.run()
+    try:
+	    # Test the node
+        print("Create Meshify node")
+        meshify = surf.Meshify()
+        meshify.inputs.image_file=tmp_file
+        print("Run Meshify node")
+        meshify.run()
 
-    assert os.path.exists(tmp_file[:-4] + ".gii")
+        print("Assert output")
+        assert os.path.exists(tmp_file[:-4] + ".gii")
+        pass
+    finally:
+        print("Remove temporary data")
+        os.remove(tmp_file)
 
-    os.remove(tmp_file)
-    pass
+
+if __name__ == "__main__":
+	test_meshify()
+

@@ -43,17 +43,17 @@ class Meshify(SimpleInterface):
         from nipype.utils.filemanip import split_filename
 
         # Generate output mesh filename from the input image name
-        _, fname, _ = split_filename(self.input_spec.image_file)
+        _, fname, _ = split_filename(self.inputs.image_file)
         gii_file = op.abspath(op.join(runtime.cwd, fname + ".gii"))
 
         # Load the largest connected component of the input image
-        img = nimg.largest_connected_component_img(self.input_spec.image_file)
+        img = nimg.largest_connected_component_img(self.inputs.image_file)
 
         # TODO: check if the input image is correct (binary)
 
         # Run the marching cube algorithm
         verts, faces, normals, values = sm.marching_cubes(
-            img.get_data(), self.input_spec.level)
+            img.get_data(), self.inputs.level)
 
         # Convert vertices coordinates to image space
         # TODO: check that is correct by plotting the mesh on the image
@@ -67,17 +67,18 @@ class Meshify(SimpleInterface):
             ng.GiftiDataArray(mm_verts, intent='NIFTI_INTENT_POINTSET'),
             ng.GiftiDataArray(faces, intent='NIFTI_INTENT_TRIANGLE')])
         gii.meta = ng.GiftiMetaData().from_dict({
-            "volume_file": self.input_spec.image_file,
-            "marching_cube_level": self.input_spec.level,
-            "smoothing_iterations": self.input_spec.smoothing_iter,
-            "smoothing_dt": self.input_spec.smoothing_dt
+            "volume_file": self.inputs.image_file,
+            "marching_cube_level": self.inputs.level,
+            "smoothing_iterations": self.inputs.smoothing_iter,
+            "smoothing_dt": self.inputs.smoothing_dt
         })
         ng.write(gii, gii_file)
 
         # Optional: Smooth the marching cube output with SLAM
-        if self.input_spec.smoothing_iter > 0:
+        if self.inputs.smoothing_iter > 0:
             mesh = sdg.laplacian_mesh_smoothing(
                 sio.load_mesh(gii_file),
-                nb_iter=self.input_spec.smoothing_iter,
-                dt=self.input_spec.smoothing_dt)
+                nb_iter=self.inputs.smoothing_iter,
+                dt=self.inputs.smoothing_dt)
             sio.write_mesh(mesh, gii_file)
+
