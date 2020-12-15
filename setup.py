@@ -47,5 +47,5 @@ except ModuleNotFoundError as e:
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
         install_requires=[
-            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "slam@git+https://github.com/gauzias/slam"])
+            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "slam@git+https://github.com/BastienCagna/slam.git"])
 
