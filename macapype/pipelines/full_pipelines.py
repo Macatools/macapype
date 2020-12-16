@@ -25,6 +25,8 @@ from .register import create_register_NMT_pipe
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
 
+from .surface import create_surface_pipe
+
 from macapype.utils.misc import gunzip, parse_key, list_input_files
 
 
@@ -145,6 +147,14 @@ def create_full_spm_subpipes(
         seg_pipe.connect(
             inputnode, 'indiv_params',
             old_segment_pipe, 'inputnode.indiv_params')
+
+        if "surface_pipe" in params.keys()
+            surface_pipe = create_surface_pipe(
+                params_template, params=parse_key(params, "surface_pipe"))
+
+
+            seg_pipe.connect(old_segment_pipe, 'threshold_gm.out_file',
+                            surface_pipe, 'inputnode.T1')
 
     return seg_pipe
 

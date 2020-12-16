@@ -1,11 +1,12 @@
 /local*
 /data
+/venv
 *.pyc
 *~
 *.pklz
 *trace*
 *egg*
-
+.idea
 doc/_build
 doc/auto_examples
 doc/generated

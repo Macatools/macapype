@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
-import os
-
 import re
-
-from distutils.core import setup, Extension
+from setuptools import find_packages
+from distutils.core import setup
 
 
 verstr = "unknown"
@@ -32,7 +29,9 @@ try:
         author="David Meunier, Bastien Cagna",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
-        install_requires=["nipype", "networkx>=2.0", "pybids"],
+        install_requires=[
+            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
+            "brain-slam"],
         distclass=distutils.command.bdist_conda.CondaDistribution,
         conda_buildnum=1)
 
@@ -47,4 +46,6 @@ except ModuleNotFoundError as e:
         author="David Meunier, Bastien Cagna",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
-        install_requires=["nipype", "networkx>=2.0", "pybids"])
+        install_requires=[
+            "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
+            "brain-slam"])
