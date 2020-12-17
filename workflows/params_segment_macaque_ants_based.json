@@ -93,6 +93,9 @@
                 "thresh": 0.5
             }
         }
-
+    },
+    "nii_to_mesh_pipe":
+    {
+        "template_dir": "/hpc/meca/users/loh.k/baboon_proc/haiko89_template/"
     }
 }

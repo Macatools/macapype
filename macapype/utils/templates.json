@@ -40,6 +40,11 @@
 
         "template_gm": "TPM_Asymmetric.GreyMatter_Haiko89.nii.gz",
         "template_wm": "TPM_Asymmetric.WhiteMatter_Haiko89.nii.gz",
-        "template_csf": "TPM_Asymmetric.CSF_Haiko89.nii.gz"
+        "template_csf": "TPM_Asymmetric.CSF_Haiko89.nii.gz",
+
+        "L_hemi_template": "Haiko89_Asymmetric.Template_n89_brainmask_L.nii.gz",
+        "R_hemi_template": "Haiko89_Asymmetric.Template_n89_brainmask_R.nii.gz",
+        "cereb_template": "Haiko89_Asymmetric.Template_n89_brainmask_cerebellum.nii.gz"
+
     }
 }
