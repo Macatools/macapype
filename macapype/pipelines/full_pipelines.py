@@ -507,9 +507,9 @@ def create_full_ants_subpipes(
     if 'nii_to_mesh_pipe' not in params.keys():
         return seg_pipe
 
-    template_dir = params["nii_to_mesh_pipe"]["template_dir"]
-
-    nii_to_mesh_pipe = create_nii_to_mesh_pipe(template_dir=template_dir)
+    nii_to_mesh_pipe = create_nii_to_mesh_pipe(
+        params_template=params_template,
+        params=parse_key(params, "nii_to_mesh_pipe"))
 
     # from data_preparation_pipe
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
