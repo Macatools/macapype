@@ -25,7 +25,6 @@ from .register import create_register_NMT_pipe
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
 
-# from .surface import create_surface_pipe
 from .surface import create_nii_to_mesh_pipe
 
 from macapype.utils.misc import gunzip, parse_key, list_input_files
