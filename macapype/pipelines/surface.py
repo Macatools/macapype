@@ -7,7 +7,7 @@ import nipype.interfaces.afni as afni
 
 import macapype.nodes.register as reg
 from macapype.nodes.surface import Meshify
-from macapype.utils.utils_nodes import parse_key
+from macapype.utils.utils_nodes import parse_key, NodeParams
 
 
 def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
@@ -273,25 +273,33 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
                              split_hemi_pipe, 'inputnode.segmented_file')
 
     # meshify L GM hemisphere
-    mesh_L_GM = pe.Node(interface=Meshify(), name="mesh_L_GM")
+    mesh_L_GM = NodeParams(interface=Meshify(),
+                           params=parse_key(params, "mesh_L_GM"),
+                           name="mesh_L_GM")
 
     mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_L_WM.out_file',
                              mesh_L_GM, "image_file")
 
     # meshify R GM hemisphere
-    mesh_R_GM = pe.Node(interface=Meshify(), name="mesh_R_GM")
+    mesh_R_GM = NodeParams(interface=Meshify(),
+                           params=parse_key(params, "mesh_R_GM"),
+                           name="mesh_R_GM")
 
     mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_R_WM.out_file',
                              mesh_R_GM, "image_file")
 
     # meshify L WM hemisphere
-    mesh_L_WM = pe.Node(interface=Meshify(), name="mesh_L_WM")
+    mesh_L_WM = NodeParams(interface=Meshify(),
+                           params=parse_key(params, "mesh_L_WM"),
+                           name="mesh_L_WM")
 
     mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_L_WM.out_file',
                              mesh_L_WM, "image_file")
 
     # meshify R WM hemisphere
-    mesh_R_WM = pe.Node(interface=Meshify(), name="mesh_R_WM")
+    mesh_R_WM = NodeParams(interface=Meshify(),
+                           params=parse_key(params, "mesh_R_WM"),
+                           name="mesh_R_WM")
 
     mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_R_WM.out_file',
                              mesh_R_WM, "image_file")

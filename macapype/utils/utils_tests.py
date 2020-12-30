@@ -15,6 +15,7 @@ def load_test_data(name, path_to=""):
             "server": "cloud.int.univ-amu.fr",
             "data_dir": {
                 "NMT_v1.2": "QBTrmKNDrNs5E49",
+                "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
                 "NMT_FSL": "ajAtB7qgaPAmKyJ",
                 "inia19": "WZo9wZdreTMwfQA",
                 "marmotemplate": "5xzm7DJD9kB99gG",

@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "NMT_v1.2"
+        "template_name": "NMT_v1.2.hemi"
     },
     "short_preparation_pipe":
     {
@@ -96,6 +96,24 @@
     },
     "nii_to_mesh_pipe":
     {
-        "template_dir": "/hpc/meca/users/loh.k/baboon_proc/haiko89_template/"
+        "split_hemi_pipe":
+        {
+        },
+        "mesh_L_GM":
+        {
+            "smoothing_iter":10
+        },
+        "mesh_R_GM":
+        {
+            "smoothing_iter":10
+        },
+        "mesh_L_WM":
+        {
+            "smoothing_iter":10
+        },
+        "mesh_R_WM":
+        {
+            "smoothing_iter":10
+        }
     }
 }

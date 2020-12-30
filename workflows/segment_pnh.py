@@ -214,7 +214,10 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
     if not "test" in soft:
-        main_workflow.run(plugin='MultiProc', plugin_args={'n_procs' : 4})
+        if "seq" in soft:
+            main_workflow.run()
+        else:
+            main_workflow.run(plugin='MultiProc', plugin_args={'n_procs' : 4})
 
 
 if __name__ == '__main__':

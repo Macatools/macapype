@@ -8,6 +8,19 @@
         "template_wm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_WM.nii.gz",
         "template_csf": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz"
     },
+    "NMT_v1.2.hemi":
+    {
+        "template_head": "NMT.nii.gz",
+        "template_brain": "NMT_SS.nii.gz",
+
+        "template_gm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_GM.nii.gz",
+        "template_wm": "masks/probabilisitic_segmentation_masks/NMT_segmentation_WM.nii.gz",
+        "template_csf": "masks/probabilisitic_segmentation_masks/NMT_segmentation_CSF.nii.gz",
+
+        "L_hemi_template": "masks/anatomical_masks/NMT_brainmask_L.nii.gz",
+        "R_hemi_template": "masks/anatomical_masks/NMT_brainmask_R.nii.gz",
+        "cereb_template": "masks/anatomical_masks/NMT_cerebellum_mask.nii.gz"
+    },
     "inia19":
     {
         "template_head": "inia19-t1.nii",
