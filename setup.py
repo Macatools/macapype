@@ -31,7 +31,7 @@ try:
         license='BSD 3',
         install_requires=[
             "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
-            "slam@git+https://github.com/BastienCagna/slam.git@change-setup-metadata"],
+            "brain-slam"],
         distclass=distutils.command.bdist_conda.CondaDistribution,
         conda_buildnum=1)
 
@@ -48,4 +48,4 @@ except ModuleNotFoundError as e:
         license='BSD 3',
         install_requires=[
             "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
-            "slam@git+https://github.com/BastienCagna/slam.git@change-setup-metadata"])
+            "brain-slam"])

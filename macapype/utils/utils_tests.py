@@ -15,10 +15,11 @@ def load_test_data(name, path_to=""):
             "server": "cloud.int.univ-amu.fr",
             "data_dir": {
                 "NMT_v1.2": "QBTrmKNDrNs5E49",
+                "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
                 "NMT_FSL": "ajAtB7qgaPAmKyJ",
                 "inia19": "WZo9wZdreTMwfQA",
                 "marmotemplate": "5xzm7DJD9kB99gG",
-                "haiko89_template": "rKeniMmCdsCsW8F",
+                "haiko89_template": "N9yXkSgXNbKF26z",
                 "data_test_macaque": "SgG7bBMXao9Kfon",
                 "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
                 "data_test_marmo": "pW4nQr46QSzSysg"},

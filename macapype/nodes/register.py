@@ -527,13 +527,12 @@ class NwarpApplyPriors(AFNICommandBase):
 
                     new_value.append(os.path.join(cur_dir, in_file))
 
-
             else:
                 print("Not a list for in_file {}".format(value))
                 shutil.copy(value, cur_dir)
 
                 path, fname, ext = split_f(value)
-                new_value = os.path.join(cur_dir, fname+ ext)
+                new_value = os.path.join(cur_dir, fname + ext)
                 print(new_value)
 
             value = new_value
@@ -545,11 +544,12 @@ class NwarpApplyPriors(AFNICommandBase):
                     print(out_file)
 
                     path, fname, ext = split_f(out_file)
-                    # out_files.append(os.path.join(path,fname + "_Nwarp" + ext))
-                    new_value.append(os.path.join(cur_dir, fname + "_Nwarp" + ext))
+                    new_value.append(os.path.join(cur_dir,
+                                                  fname + "_Nwarp" + ext))
 
                 for i in range(1, 4):
-                    new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
+                    new_value.append(os.path.join(cur_dir,
+                                                  "tmp_%02d.nii.gz" % i))
             else:
                 print("Not a list for out_file {}".format(value))
 

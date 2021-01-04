@@ -25,6 +25,8 @@ from .register import create_register_NMT_pipe
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
 
+from .surface import create_nii_to_mesh_pipe
+
 from macapype.utils.misc import gunzip, parse_key, list_input_files
 
 
@@ -501,7 +503,36 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
+    if 'nii_to_mesh_pipe' not in params.keys():
+        return seg_pipe
+
+    nii_to_mesh_pipe = create_nii_to_mesh_pipe(
+        params_template=params_template,
+        params=parse_key(params, "nii_to_mesh_pipe"))
+
+    # from data_preparation_pipe
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     nii_to_mesh_pipe, 'inputnode.t1_ref_file')
+
+    # from brain_segment_pipe
+    seg_pipe.connect(brain_segment_pipe,
+                     'register_NMT_pipe.NMT_subject_align.warpinv_file',
+                     nii_to_mesh_pipe, 'inputnode.warpinv_file')
+
+    seg_pipe.connect(brain_segment_pipe,
+                     'register_NMT_pipe.NMT_subject_align.inv_transfo_file',
+                     nii_to_mesh_pipe, 'inputnode.inv_transfo_file')
+
+    seg_pipe.connect(brain_segment_pipe,
+                     'register_NMT_pipe.NMT_subject_align.shft_aff_file',
+                     nii_to_mesh_pipe, 'inputnode.shft_aff_file')
+
+    seg_pipe.connect(brain_segment_pipe,
+                     'segment_atropos_pipe.seg_at.segmented_file',
+                     nii_to_mesh_pipe, "inputnode.segmented_file")
+
     return seg_pipe
+
 # ################# ANTS based segmentation for adrien baboons (T1 without T2)
 
 
