@@ -516,26 +516,47 @@ class NwarpApplyPriors(AFNICommandBase):
 
         new_value = []
         if name == 'in_file':
-            for in_file in value:
-                print(in_file)
+            if isinstance(value, list):
 
-                # copy en local
-                shutil.copy(in_file, cur_dir)
+                print("A list for in_file")
+                for in_file in value:
+                    print(in_file)
 
-                new_value.append(os.path.join(cur_dir, in_file))
+                    # copy en local
+                    shutil.copy(in_file, cur_dir)
+
+                    new_value.append(os.path.join(cur_dir, in_file))
+
+            else:
+                print("Not a list for in_file {}".format(value))
+                shutil.copy(value, cur_dir)
+
+                path, fname, ext = split_f(value)
+                new_value = os.path.join(cur_dir, fname + ext)
+                print(new_value)
 
             value = new_value
 
         elif name == 'out_file':
-            for out_file in value[:1]:
-                print(out_file)
+            if isinstance(value, list):
+                print("A list for out_file")
+                for out_file in value[:1]:
+                    print(out_file)
 
-                path, fname, ext = split_f(out_file)
-                # out_files.append(os.path.join(path,fname + "_Nwarp" + ext))
-                new_value.append(os.path.join(cur_dir, fname + "_Nwarp" + ext))
+                    path, fname, ext = split_f(out_file)
+                    new_value.append(os.path.join(cur_dir,
+                                                  fname + "_Nwarp" + ext))
 
-            for i in range(1, 4):
-                new_value.append(os.path.join(cur_dir, "tmp_%02d.nii.gz" % i))
+                for i in range(1, 4):
+                    new_value.append(os.path.join(cur_dir,
+                                                  "tmp_%02d.nii.gz" % i))
+            else:
+                print("Not a list for out_file {}".format(value))
+
+                path, fname, ext = split_f(value)
+                new_value = os.path.abspath(fname + "_Nwarp" + ext)
+                print(new_value)
+
             value = new_value
 
         return super(NwarpApplyPriors, self)._format_arg(name, spec, value)

@@ -188,10 +188,10 @@ def create_register_NMT_pipe(params_template, params={},
     # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
     NMT_subject_align = pe.Node(NMTSubjectAlign(), name='NMT_subject_align')
 
+    NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
+
     register_NMT_pipe.connect(deoblique, 'out_file',
                               NMT_subject_align, "T1_file")
-
-    NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
 
     # align_masks
     # "overwrap" of NwarpApply, with specifying the outputs as wished
@@ -266,5 +266,4 @@ def create_register_NMT_pipe(params_template, params={},
                               align_seg_wm, "reference")  # -base
     register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                               align_seg_wm, "in_matrix")  # -1Dmatrix_apply
-
     return register_NMT_pipe
