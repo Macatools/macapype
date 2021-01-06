@@ -21,6 +21,18 @@
         "R_hemi_template": "masks/anatomical_masks/NMT_brainmask_R.nii.gz",
         "cereb_template": "masks/anatomical_masks/NMT_cerebellum_mask.nii.gz"
     },
+    "NMT_v1.3":
+    {
+        "template_head": "NMT.nii.gz",
+        "template_brain": "NMT_SS.nii.gz",
+
+        "template_gm": "processing_masks/NMT_segmentation_GM.nii.gz",
+        "template_wm": "processing_masks/NMT_segmentation_WM.nii.gz",
+        "template_csf": "processing_masks/NMT_segmentation_CSF.nii.gz",
+
+        "LR_hemi_template": "supplemental_masks/NMT_LR_brainmask.nii.gz",
+        "cereb_template": "supplemental_masks/NMT_cerebellum_mask.nii.gz"
+    },
     "inia19":
     {
         "template_head": "inia19-t1.nii",

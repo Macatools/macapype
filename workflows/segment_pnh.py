@@ -235,7 +235,7 @@ if __name__ == '__main__':
                         required=True)
     parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
                         help="Subjects' ID", required=False)
-    parser.add_argument("-ses", dest="ses", type=str,
+    parser.add_argument("-ses", dest="ses", type=str, nargs='+',
                         help="Session", required=False)
     parser.add_argument("-acq", dest="acq", type=str, nargs='+', default=None,
                         help="Acquisitions")

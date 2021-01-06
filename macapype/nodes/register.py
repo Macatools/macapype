@@ -312,12 +312,12 @@ class NMTSubjectAlignInputSpec(CommandLineInputSpec):
     T1_file = File(
         exists=True,
         desc='Target file',
-        mandatory=True, position=0, argstr="%s")
+        mandatory=True, position=0, argstr="-i %s")
 
     NMT_SS_file = File(
         exists=True,
         desc='Align to T1',
-        mandatory=True, position=1, argstr="%s")
+        mandatory=True, position=1, argstr="-r %s")
 
 
 class NMTSubjectAlignOutputSpec(TraitedSpec):
@@ -390,7 +390,7 @@ class NMTSubjectAlign(CommandLine):
     output_spec = NMTSubjectAlignOutputSpec
 
     package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'tcsh -x {}/../bash/NMT_subject_align.csh'.format(package_directory)
+    _cmd = 'bash {}/../bash/NMT_subject_align'.format(package_directory)
 
     def _list_outputs(self):
 
