@@ -9,7 +9,7 @@ from ..utils.misc import get_elem
 from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
-                              NwarpApplyPriors)
+                              NMTSubjectAlign2, NwarpApplyPriors)
 
 
 def create_iterative_register_pipe(
@@ -266,4 +266,32 @@ def create_register_NMT_pipe(params_template, params={},
                               align_seg_wm, "reference")  # -base
     register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                               align_seg_wm, "in_matrix")  # -1Dmatrix_apply
+
+    # ### to be removed
+    # align subj to nmt (with NMT_subject_align2, wrapped version with nodes)
+    NMT_subject_align2 = pe.Node(NMTSubjectAlign2(), name='NMT_subject_align2')
+
+    NMT_subject_align2.inputs.NMT_SS_file = params_template["template_brain"]
+
+    register_NMT_pipe.connect(deoblique, 'out_file',
+                              NMT_subject_align2, "T1_file")
+
+    # align_masks2
+    # "overwrap" of NwarpApply, with specifying the outputs as wished
+    list_priors = [params_template["template_head"],
+                   params_template["template_csf"],
+                   params_template["template_gm"],
+                   params_template["template_wm"]]
+
+    align_masks2 = pe.Node(NwarpApplyPriors(), name='align_masks2')
+    align_masks2.inputs.in_file = list_priors
+    align_masks2.inputs.out_file = list_priors
+    align_masks2.inputs.interp = "NN"
+    align_masks2.inputs.args = "-overwrite"
+
+    register_NMT_pipe.connect(NMT_subject_align2, 'shft_aff_file',
+                              align_masks2, 'master')
+    register_NMT_pipe.connect(NMT_subject_align2, 'warpinv_file',
+                              align_masks2, "warp")
+
     return register_NMT_pipe

@@ -201,8 +201,8 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
 
         split_LR = pe.Node(
             interface=niu.Function(
-                inputnames=["LR_mask_file"],
-                outputnames=["L_mask_file", "R_mask_file"],
+                input_names=["LR_mask_file"],
+                output_names=["L_mask_file", "R_mask_file"],
                 function=split_LR_mask),
             name="split_LR")
 

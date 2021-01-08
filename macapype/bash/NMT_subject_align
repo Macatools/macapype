@@ -297,7 +297,7 @@ if [ ! -z "$segset" ]; then
 #cp $base ./
 
 # get rid of temporary warped datasets
-rm __tmp*_${dsetprefix}*.HEAD __tmp*_${dsetprefix}*.BRIK* __tmp*_${dsetprefix}*.1D
+#rm __tmp*_${dsetprefix}*.HEAD __tmp*_${dsetprefix}*.BRIK* __tmp*_${dsetprefix}*.1D
 #rm ${dsetprefix}.1D
 #rm ${dsetprefix}_inv.1D
 #rm *_aff_mat.aff12.1D
