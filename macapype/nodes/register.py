@@ -322,7 +322,7 @@ class NMTSubjectAlignInputSpec(CommandLineInputSpec):
 
 class NMTSubjectAlignOutputSpec(TraitedSpec):
 
-    shft_aff_file = File(
+    aff_file = File(
         exists=True,
         desc="shft_aff")
 
@@ -364,9 +364,9 @@ class NMTSubjectAlign(CommandLine):
 
     Outputs:
 
-        shft_aff_file = File(
+        aff_file = File(
             exists=True,
-            desc="shft_aff")
+            desc="aff")
 
         warp_file = File(
             exists=True,
@@ -400,7 +400,7 @@ class NMTSubjectAlign(CommandLine):
 
         path, fname, ext = split_f(self.inputs.T1_file)
 
-        outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
+        outputs["aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
 
         # TODO will require some checks
         # outputs["warpinv_file"] = os.path.abspath(
@@ -438,25 +438,25 @@ class NMTSubjectAlign2InputSpec(CommandLineInputSpec):
 
 class NMTSubjectAlign2OutputSpec(TraitedSpec):
 
-    shft_aff_file = File(
+    aff_file = File(
         exists=True,
-        desc="shft_aff")
+        desc="affine (subject image linearly transformed to the NMT template)")
 
     warp_file = File(
         exists=True,
-        desc="shft_WARP.nii.gz")
+        desc="WARP.nii.gz")
 
     warpinv_file = File(
         exists=True,
-        desc="shft_WARPINV.nii.gz")
+        desc="WARPINV.nii.gz")
 
     transfo_file = File(
         exists=True,
-        desc="composite_linear_to_NMT.1D")
+        desc="Combined Linear transform from subject to NMT)")
 
     inv_transfo_file = File(
         exists=True,
-        desc="_composite_linear_to_NMT_inv.1D")
+        desc="Inverse Linear Transform from NMT to subject")
 
 
 class NMTSubjectAlign2(CommandLine):
@@ -480,9 +480,10 @@ class NMTSubjectAlign2(CommandLine):
 
     Outputs:
 
-        shft_aff_file = File(
+        aff_file = File(
             exists=True,
-            desc="shft_aff")
+            desc="affine
+            (subject image linearly transformed to the NMT template)")
 
         warp_file = File(
             exists=True,
@@ -494,11 +495,11 @@ class NMTSubjectAlign2(CommandLine):
 
         transfo_file = File(
             exists=True,
-            desc="composite_linear_to_NMT")
+            desc="Combined Linear transform from subject to NMT")
 
         inv_transfo_file = File(
             exists=True,
-            desc="_composite_linear_to_NMT_inv")
+            desc="Inverse Linear Transform from NMT to subject")
 
 
     """
@@ -516,16 +517,16 @@ class NMTSubjectAlign2(CommandLine):
 
         path, fname, ext = split_f(self.inputs.T1_file)
 
-        outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
+        outputs["aff_file"] = os.path.abspath(fname + "_affine" + ext)
 
         # TODO will require some checks
         # outputs["warpinv_file"] = os.path.abspath(
         # fname + "_shft_WARPINV.nii")
         outputs["warpinv_file"] = os.path.abspath(
-            fname + "_shft_WARPINV.nii.gz")
+            fname + "_WARPINV.nii.gz")
 
         outputs["warp_file"] = os.path.abspath(
-            fname + "_shft_WARP.nii.gz")
+            fname + "_WARP.nii.gz")
 
         # outputs["warpinv_file"] = os.path.abspath(
         #    fname + "_shft_WARPINV" + ext)

@@ -524,8 +524,8 @@ def create_full_ants_subpipes(
                      nii_to_mesh_pipe, 'inputnode.inv_transfo_file')
 
     seg_pipe.connect(brain_segment_pipe,
-                     'register_NMT_pipe.NMT_subject_align.shft_aff_file',
-                     nii_to_mesh_pipe, 'inputnode.shft_aff_file')
+                     'register_NMT_pipe.NMT_subject_align.aff_file',
+                     nii_to_mesh_pipe, 'inputnode.aff_file')
 
     seg_pipe.connect(brain_segment_pipe,
                      'segment_atropos_pipe.seg_at.segmented_file',

@@ -60,7 +60,7 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['warpinv_file',
                                       'inv_transfo_file',
-                                      'shft_aff_file',
+                                      'aff_file',
                                       't1_ref_file',
                                       'segmented_file']),
         name='inputnode')
@@ -88,7 +88,7 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
         warp_cereb.inputs.args = "-overwrite"
 
         split_hemi_pipe.connect(bin_cereb, 'out_file', warp_cereb, 'in_file')
-        split_hemi_pipe.connect(inputnode, 'shft_aff_file',
+        split_hemi_pipe.connect(inputnode, 'aff_file',
                                 warp_cereb, 'master')
         split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_cereb, "warp")
 
@@ -121,7 +121,7 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
         warp_L_hemi.inputs.interp = "NN"
         warp_L_hemi.inputs.args = "-overwrite"
 
-        split_hemi_pipe.connect(inputnode, 'shft_aff_file',
+        split_hemi_pipe.connect(inputnode, 'aff_file',
                                 warp_L_hemi, 'master')
         split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_L_hemi, "warp")
 
@@ -148,7 +148,7 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
         warp_R_hemi.inputs.interp = "NN"
         warp_R_hemi.inputs.args = "-overwrite"
 
-        split_hemi_pipe.connect(inputnode, 'shft_aff_file',
+        split_hemi_pipe.connect(inputnode, 'aff_file',
                                 warp_R_hemi, 'master')
         split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_R_hemi, "warp")
 
@@ -179,7 +179,7 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
         warp_LR_hemi.inputs.interp = "NN"
         warp_LR_hemi.inputs.args = "-overwrite"
 
-        split_hemi_pipe.connect(inputnode, 'shft_aff_file',
+        split_hemi_pipe.connect(inputnode, 'aff_file',
                                 warp_LR_hemi, 'master')
         split_hemi_pipe.connect(inputnode, 'warpinv_file',
                                 warp_LR_hemi, "warp")
@@ -364,7 +364,7 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['warpinv_file',
                                       'inv_transfo_file',
-                                      'shft_aff_file',
+                                      'aff_file',
                                       't1_ref_file',
                                       'segmented_file']),
         name='inputnode')
@@ -377,8 +377,8 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
     mesh_to_seg_pipe.connect(inputnode, 'warpinv_file',
                              split_hemi_pipe, 'inputnode.warpinv_file')
 
-    mesh_to_seg_pipe.connect(inputnode, 'shft_aff_file',
-                             split_hemi_pipe, 'inputnode.shft_aff_file')
+    mesh_to_seg_pipe.connect(inputnode, 'aff_file',
+                             split_hemi_pipe, 'inputnode.aff_file')
 
     mesh_to_seg_pipe.connect(inputnode, 'inv_transfo_file',
                              split_hemi_pipe, 'inputnode.inv_transfo_file')

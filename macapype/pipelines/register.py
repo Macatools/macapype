@@ -132,7 +132,7 @@ def create_iterative_register_pipe(
 # multi / indiv_params
 ###############################################################################
 def create_register_NMT_pipe(params_template, params={},
-                             name="register_NMT_pipe"):
+                             name="register_NMT_pipe", NMT_version="1.2"):
     """
     Description: Register template to anat with the script NMT_subject_align,
         and then apply it to tissues list_priors
@@ -185,8 +185,23 @@ def create_register_NMT_pipe(params_template, params={},
     register_NMT_pipe.connect(norm_intensity, 'output_image',
                               deoblique, "in_file")
 
-    # align subj to nmt (with NMT_subject_align, wrapped version with nodes)
-    NMT_subject_align = pe.Node(NMTSubjectAlign(), name='NMT_subject_align')
+    if "NMT_version" in params.keys():
+        NMT_version = params["NMT_version"]
+
+    print("*** Found NMT_version {}".format(NMT_version))
+
+    if NMT_version == "1.2":
+        # align subj to nmt
+        NMT_subject_align = pe.Node(NMTSubjectAlign(),
+                                    name='NMT_subject_align')
+    elif NMT_version == "1.3":
+        # align subj to nmt
+        NMT_subject_align = pe.Node(NMTSubjectAlign2(),
+                                    name='NMT_subject_align')
+
+    else:
+        print("NMT_version {} is not implemented".format(NMT_version))
+        exit()
 
     NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
 
@@ -200,13 +215,13 @@ def create_register_NMT_pipe(params_template, params={},
                    params_template["template_gm"],
                    params_template["template_wm"]]
 
-    align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
+    align_masks = pe.Node(NwarpApplyPriors(), name='align_masks2')
     align_masks.inputs.in_file = list_priors
     align_masks.inputs.out_file = list_priors
     align_masks.inputs.interp = "NN"
     align_masks.inputs.args = "-overwrite"
 
-    register_NMT_pipe.connect(NMT_subject_align, 'shft_aff_file',
+    register_NMT_pipe.connect(NMT_subject_align, 'aff_file',
                               align_masks, 'master')
     register_NMT_pipe.connect(NMT_subject_align, 'warpinv_file',
                               align_masks, "warp")
@@ -266,32 +281,5 @@ def create_register_NMT_pipe(params_template, params={},
                               align_seg_wm, "reference")  # -base
     register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                               align_seg_wm, "in_matrix")  # -1Dmatrix_apply
-
-    # ### to be removed
-    # align subj to nmt (with NMT_subject_align2, wrapped version with nodes)
-    NMT_subject_align2 = pe.Node(NMTSubjectAlign2(), name='NMT_subject_align2')
-
-    NMT_subject_align2.inputs.NMT_SS_file = params_template["template_brain"]
-
-    register_NMT_pipe.connect(deoblique, 'out_file',
-                              NMT_subject_align2, "T1_file")
-
-    # align_masks2
-    # "overwrap" of NwarpApply, with specifying the outputs as wished
-    list_priors = [params_template["template_head"],
-                   params_template["template_csf"],
-                   params_template["template_gm"],
-                   params_template["template_wm"]]
-
-    align_masks2 = pe.Node(NwarpApplyPriors(), name='align_masks2')
-    align_masks2.inputs.in_file = list_priors
-    align_masks2.inputs.out_file = list_priors
-    align_masks2.inputs.interp = "NN"
-    align_masks2.inputs.args = "-overwrite"
-
-    register_NMT_pipe.connect(NMT_subject_align2, 'shft_aff_file',
-                              align_masks2, 'master')
-    register_NMT_pipe.connect(NMT_subject_align2, 'warpinv_file',
-                              align_masks2, "warp")
 
     return register_NMT_pipe
