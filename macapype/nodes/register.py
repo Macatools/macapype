@@ -322,7 +322,7 @@ class NMTSubjectAlignInputSpec(CommandLineInputSpec):
 
 class NMTSubjectAlignOutputSpec(TraitedSpec):
 
-    shft_aff_file = File(
+    aff_file = File(
         exists=True,
         desc="shft_aff")
 
@@ -364,9 +364,9 @@ class NMTSubjectAlign(CommandLine):
 
     Outputs:
 
-        shft_aff_file = File(
+        aff_file = File(
             exists=True,
-            desc="shft_aff")
+            desc="aff")
 
         warp_file = File(
             exists=True,
@@ -400,7 +400,7 @@ class NMTSubjectAlign(CommandLine):
 
         path, fname, ext = split_f(self.inputs.T1_file)
 
-        outputs["shft_aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
+        outputs["aff_file"] = os.path.abspath(fname + "_shft_aff" + ext)
 
         # TODO will require some checks
         # outputs["warpinv_file"] = os.path.abspath(
@@ -410,6 +410,123 @@ class NMTSubjectAlign(CommandLine):
 
         outputs["warp_file"] = os.path.abspath(
             fname + "_shft_WARP.nii.gz")
+
+        # outputs["warpinv_file"] = os.path.abspath(
+        #    fname + "_shft_WARPINV" + ext)
+
+        outputs["transfo_file"] = os.path.abspath(
+            fname + "_composite_linear_to_NMT.1D")
+        outputs["inv_transfo_file"] = os.path.abspath(
+            fname + "_composite_linear_to_NMT_inv.1D")
+
+        return outputs
+
+
+# NMTSubjectAlign2
+class NMTSubjectAlign2InputSpec(CommandLineInputSpec):
+
+    T1_file = File(
+        exists=True,
+        desc='Target file',
+        mandatory=True, position=0, argstr="-i %s")
+
+    NMT_SS_file = File(
+        exists=True,
+        desc='Align to T1',
+        mandatory=True, position=1, argstr="-r %s")
+
+
+class NMTSubjectAlign2OutputSpec(TraitedSpec):
+
+    aff_file = File(
+        exists=True,
+        desc="affine (subject image linearly transformed to the NMT template)")
+
+    warp_file = File(
+        exists=True,
+        desc="WARP.nii.gz")
+
+    warpinv_file = File(
+        exists=True,
+        desc="WARPINV.nii.gz")
+
+    transfo_file = File(
+        exists=True,
+        desc="Combined Linear transform from subject to NMT)")
+
+    inv_transfo_file = File(
+        exists=True,
+        desc="Inverse Linear Transform from NMT to subject")
+
+
+class NMTSubjectAlign2(CommandLine):
+    """
+    Description:
+        Align NMT subject to template
+
+
+    Inputs:
+
+        T1_file = File(
+            exists=True,
+            desc='Target file',
+            mandatory=True, position=1, argstr="%s")
+
+        NMT_SS_file = File(
+            exists=True,
+            desc='Align to T1',
+            mandatory=True, position=2, argstr="%s")
+
+
+    Outputs:
+
+        aff_file = File(
+            exists=True,
+            desc="affine
+            (subject image linearly transformed to the NMT template)")
+
+        warp_file = File(
+            exists=True,
+            desc="shft_WARP")
+
+        warpinv_file = File(
+            exists=True,
+            desc="shft_WARPINV")
+
+        transfo_file = File(
+            exists=True,
+            desc="Combined Linear transform from subject to NMT")
+
+        inv_transfo_file = File(
+            exists=True,
+            desc="Inverse Linear Transform from NMT to subject")
+
+
+    """
+    input_spec = NMTSubjectAlign2InputSpec
+    output_spec = NMTSubjectAlign2OutputSpec
+
+    package_directory = os.path.dirname(os.path.abspath(__file__))
+    _cmd = 'bash {}/../bash/NMT_subject_align'.format(package_directory)
+
+    def _list_outputs(self):
+
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+
+        path, fname, ext = split_f(self.inputs.T1_file)
+
+        outputs["aff_file"] = os.path.abspath(fname + "_affine" + ext)
+
+        # TODO will require some checks
+        # outputs["warpinv_file"] = os.path.abspath(
+        # fname + "_shft_WARPINV.nii")
+        outputs["warpinv_file"] = os.path.abspath(
+            fname + "_WARPINV.nii.gz")
+
+        outputs["warp_file"] = os.path.abspath(
+            fname + "_WARP.nii.gz")
 
         # outputs["warpinv_file"] = os.path.abspath(
         #    fname + "_shft_WARPINV" + ext)

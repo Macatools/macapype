@@ -10,6 +10,48 @@ from macapype.nodes.surface import Meshify
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
 
+def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
+
+    import os
+
+    import nibabel as nib
+    import numpy as np
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(LR_mask_file)
+
+    LR_mask_img = nib.load(LR_mask_file)
+
+    LR_mask_data = LR_mask_img.get_fdata()
+
+    # L_mask
+    L_mask_data = np.zeros(shape=LR_mask_data.shape)
+
+    L_mask_data[LR_mask_data == left_index] = 1
+
+    L_mask_file = os.path.abspath("L_mask"+ext)
+
+    nib.save(
+        nib.Nifti1Image(L_mask_data, affine=LR_mask_img.affine,
+                        header=LR_mask_img.header),
+        L_mask_file)
+
+    # R_mask
+    R_mask_data = np.zeros(shape=LR_mask_data.shape)
+
+    R_mask_data[LR_mask_data == right_index] = 1
+
+    R_mask_file = os.path.abspath("R_mask"+ext)
+
+    nib.save(
+        nib.Nifti1Image(R_mask_data, affine=LR_mask_img.affine,
+                        header=LR_mask_img.header),
+        R_mask_file)
+
+    return L_mask_file, R_mask_file
+
+
 def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
 
     split_hemi_pipe = pe.Workflow(name=name)
@@ -18,98 +60,161 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['warpinv_file',
                                       'inv_transfo_file',
-                                      'shft_aff_file',
+                                      'aff_file',
                                       't1_ref_file',
                                       'segmented_file']),
         name='inputnode')
 
     # get values
-    L_hemi_template_file = params_template["L_hemi_template"]
-    R_hemi_template_file = params_template["R_hemi_template"]
-    cereb_template_file = params_template["cereb_template"]
 
-    # Warp L hemi template brainmask to subject space
-    warp_L_hemi = pe.Node(interface=reg.NwarpApplyPriors(), name='warp_L_hemi')
+    if "cereb_template" in params_template.keys():
 
-    warp_L_hemi.inputs.in_file = L_hemi_template_file
-    warp_L_hemi.inputs.out_file = L_hemi_template_file
-    warp_L_hemi.inputs.interp = "NN"
-    warp_L_hemi.inputs.args = "-overwrite"
+        cereb_template_file = params_template["cereb_template"]
 
-    split_hemi_pipe.connect(inputnode, 'shft_aff_file', warp_L_hemi, 'master')
-    split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_L_hemi, "warp")
+        # ### cereb
+        # Binarize cerebellum
+        bin_cereb = pe.Node(interface=fsl.UnaryMaths(), name='bin_cereb')
+        bin_cereb.inputs.operation = "bin"
 
-    # Align L hemi template
-    align_L_hemi = pe.Node(interface=afni.Allineate(), name='align_L_hemi')
+        bin_cereb.inputs.in_file = cereb_template_file
 
-    align_L_hemi.inputs.final_interpolation = "nearestneighbour"
-    align_L_hemi.inputs.overwrite = True
-    align_L_hemi.inputs.outputtype = "NIFTI_GZ"
+        # Warp cereb brainmask to subject space
+        warp_cereb = pe.Node(interface=reg.NwarpApplyPriors(),
+                             name='warp_cereb')
 
-    split_hemi_pipe.connect(warp_L_hemi, 'out_file',
-                            align_L_hemi, "in_file")  # -source
-    split_hemi_pipe.connect(inputnode, 't1_ref_file',
-                            align_L_hemi, "reference")  # -base
-    split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
-                            align_L_hemi, "in_matrix")  # -1Dmatrix_apply
+        warp_cereb.inputs.in_file = cereb_template_file
+        warp_cereb.inputs.out_file = cereb_template_file
+        warp_cereb.inputs.interp = "NN"
+        warp_cereb.inputs.args = "-overwrite"
 
-    # Warp L hemi template brainmask to subject space
-    warp_R_hemi = pe.Node(interface=reg.NwarpApplyPriors(), name='warp_R_hemi')
+        split_hemi_pipe.connect(bin_cereb, 'out_file', warp_cereb, 'in_file')
+        split_hemi_pipe.connect(inputnode, 'aff_file',
+                                warp_cereb, 'master')
+        split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_cereb, "warp")
 
-    warp_R_hemi.inputs.in_file = R_hemi_template_file
-    warp_R_hemi.inputs.out_file = R_hemi_template_file
-    warp_R_hemi.inputs.interp = "NN"
-    warp_R_hemi.inputs.args = "-overwrite"
+        # Align cereb template
+        align_cereb = pe.Node(interface=afni.Allineate(), name='align_cereb')
 
-    split_hemi_pipe.connect(inputnode, 'shft_aff_file', warp_R_hemi, 'master')
-    split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_R_hemi, "warp")
+        align_cereb.inputs.final_interpolation = "nearestneighbour"
+        align_cereb.inputs.overwrite = True
+        align_cereb.inputs.outputtype = "NIFTI_GZ"
 
-    # Align L hemi template
-    align_R_hemi = pe.Node(interface=afni.Allineate(), name='align_R_hemi')
+        split_hemi_pipe.connect(warp_cereb, 'out_file',
+                                align_cereb, "in_file")  # -source
+        split_hemi_pipe.connect(inputnode, 't1_ref_file',
+                                align_cereb, "reference")  # -base
+        split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
+                                align_cereb, "in_matrix")  # -1Dmatrix_apply
 
-    align_R_hemi.inputs.final_interpolation = "nearestneighbour"
-    align_R_hemi.inputs.overwrite = True
-    align_R_hemi.inputs.outputtype = "NIFTI_GZ"
+    if "L_hemi_template" in params_template.keys() and \
+            "R_hemi_template" in params_template.keys():
 
-    split_hemi_pipe.connect(warp_R_hemi, 'out_file',
-                            align_R_hemi, "in_file")  # -source
-    split_hemi_pipe.connect(inputnode, 't1_ref_file',
-                            align_R_hemi, "reference")  # -base
-    split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
-                            align_R_hemi, "in_matrix")  # -1Dmatrix_apply
+        L_hemi_template_file = params_template["L_hemi_template"]
+        R_hemi_template_file = params_template["R_hemi_template"]
 
-    # cereb
-    # Binarize cerebellum
-    bin_cereb = pe.Node(interface=fsl.UnaryMaths(), name='bin_cereb')
-    bin_cereb.inputs.operation = "bin"
+        # Warp L hemi template brainmask to subject space
+        warp_L_hemi = pe.Node(interface=reg.NwarpApplyPriors(),
+                              name='warp_L_hemi')
 
-    bin_cereb.inputs.in_file = cereb_template_file
+        warp_L_hemi.inputs.in_file = L_hemi_template_file
+        warp_L_hemi.inputs.out_file = L_hemi_template_file
+        warp_L_hemi.inputs.interp = "NN"
+        warp_L_hemi.inputs.args = "-overwrite"
 
-    # Warp L hemi template brainmask to subject space
-    warp_cereb = pe.Node(interface=reg.NwarpApplyPriors(), name='warp_cereb')
+        split_hemi_pipe.connect(inputnode, 'aff_file',
+                                warp_L_hemi, 'master')
+        split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_L_hemi, "warp")
 
-    warp_cereb.inputs.in_file = cereb_template_file
-    warp_cereb.inputs.out_file = cereb_template_file
-    warp_cereb.inputs.interp = "NN"
-    warp_cereb.inputs.args = "-overwrite"
+        # Align L hemi template
+        align_L_hemi = pe.Node(interface=afni.Allineate(), name='align_L_hemi')
 
-    split_hemi_pipe.connect(bin_cereb, 'out_file', warp_cereb, 'in_file')
-    split_hemi_pipe.connect(inputnode, 'shft_aff_file', warp_cereb, 'master')
-    split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_cereb, "warp")
+        align_L_hemi.inputs.final_interpolation = "nearestneighbour"
+        align_L_hemi.inputs.overwrite = True
+        align_L_hemi.inputs.outputtype = "NIFTI_GZ"
 
-    # Align L hemi template
-    align_cereb = pe.Node(interface=afni.Allineate(), name='align_cereb')
+        split_hemi_pipe.connect(warp_L_hemi, 'out_file',
+                                align_L_hemi, "in_file")  # -source
+        split_hemi_pipe.connect(inputnode, 't1_ref_file',
+                                align_L_hemi, "reference")  # -base
+        split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
+                                align_L_hemi, "in_matrix")  # -1Dmatrix_apply
 
-    align_cereb.inputs.final_interpolation = "nearestneighbour"
-    align_cereb.inputs.overwrite = True
-    align_cereb.inputs.outputtype = "NIFTI_GZ"
+        # Warp R hemi template brainmask to subject space
+        warp_R_hemi = pe.Node(interface=reg.NwarpApplyPriors(),
+                              name='warp_R_hemi')
 
-    split_hemi_pipe.connect(warp_cereb, 'out_file',
-                            align_cereb, "in_file")  # -source
-    split_hemi_pipe.connect(inputnode, 't1_ref_file',
-                            align_cereb, "reference")  # -base
-    split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
-                            align_cereb, "in_matrix")  # -1Dmatrix_apply
+        warp_R_hemi.inputs.in_file = R_hemi_template_file
+        warp_R_hemi.inputs.out_file = R_hemi_template_file
+        warp_R_hemi.inputs.interp = "NN"
+        warp_R_hemi.inputs.args = "-overwrite"
+
+        split_hemi_pipe.connect(inputnode, 'aff_file',
+                                warp_R_hemi, 'master')
+        split_hemi_pipe.connect(inputnode, 'warpinv_file', warp_R_hemi, "warp")
+
+        # Align R hemi template
+        align_R_hemi = pe.Node(interface=afni.Allineate(), name='align_R_hemi')
+
+        align_R_hemi.inputs.final_interpolation = "nearestneighbour"
+        align_R_hemi.inputs.overwrite = True
+        align_R_hemi.inputs.outputtype = "NIFTI_GZ"
+
+        split_hemi_pipe.connect(warp_R_hemi, 'out_file',
+                                align_R_hemi, "in_file")  # -source
+        split_hemi_pipe.connect(inputnode, 't1_ref_file',
+                                align_R_hemi, "reference")  # -base
+        split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
+                                align_R_hemi, "in_matrix")  # -1Dmatrix_apply
+
+    elif "LR_hemi_template" in params_template.keys():
+
+        LR_hemi_template_file = params_template["LR_hemi_template"]
+
+        # Warp LR hemi template brainmask to subject space
+        warp_LR_hemi = pe.Node(interface=reg.NwarpApplyPriors(),
+                               name='warp_LR_hemi')
+
+        warp_LR_hemi.inputs.in_file = LR_hemi_template_file
+        warp_LR_hemi.inputs.out_file = LR_hemi_template_file
+        warp_LR_hemi.inputs.interp = "NN"
+        warp_LR_hemi.inputs.args = "-overwrite"
+
+        split_hemi_pipe.connect(inputnode, 'aff_file',
+                                warp_LR_hemi, 'master')
+        split_hemi_pipe.connect(inputnode, 'warpinv_file',
+                                warp_LR_hemi, "warp")
+
+        # Align LR hemi template
+        align_LR_hemi = pe.Node(interface=afni.Allineate(),
+                                name='align_LR_hemi')
+
+        align_LR_hemi.inputs.final_interpolation = "nearestneighbour"
+        align_LR_hemi.inputs.overwrite = True
+        align_LR_hemi.inputs.outputtype = "NIFTI_GZ"
+
+        split_hemi_pipe.connect(warp_LR_hemi, 'out_file',
+                                align_LR_hemi, "in_file")  # -source
+        split_hemi_pipe.connect(inputnode, 't1_ref_file',
+                                align_LR_hemi, "reference")  # -base
+        split_hemi_pipe.connect(inputnode, 'inv_transfo_file',
+                                align_LR_hemi, "in_matrix")  # -1Dmatrix_apply
+
+        split_LR = pe.Node(
+            interface=niu.Function(
+                input_names=["LR_mask_file"],
+                output_names=["L_mask_file", "R_mask_file"],
+                function=split_LR_mask),
+            name="split_LR")
+
+        split_hemi_pipe.connect(align_LR_hemi, "out_file",
+                                split_LR, 'LR_mask_file')
+
+    else:
+        print("Error, could not find LR_hemi_template or L_hemi_template and \
+            R_hemi_template, skipping")
+        print(params_template.keys())
+
+        exit()
 
     # Using LH and RH masks to obtain hemisphere segmentation masks
     calc_L_hemi = pe.Node(interface=afni.Calc(), name='calc_L_hemi')
@@ -118,9 +223,15 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
 
     split_hemi_pipe.connect(inputnode, 'segmented_file',
                             calc_L_hemi, "in_file_a")
-    split_hemi_pipe.connect(align_L_hemi, 'out_file',
-                            calc_L_hemi, "in_file_b")
 
+    if "LR_hemi_template" in params_template.keys():
+        split_hemi_pipe.connect(split_LR, 'L_mask_file',
+                                calc_L_hemi, "in_file_b")
+    else:
+        split_hemi_pipe.connect(align_L_hemi, 'out_file',
+                                calc_L_hemi, "in_file_b")
+
+    # R_hemi
     calc_R_hemi = pe.Node(interface=afni.Calc(),
                           name='calc_R_hemi')
     calc_R_hemi.inputs.expr = 'a*b/b'
@@ -128,8 +239,14 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
 
     split_hemi_pipe.connect(inputnode, 'segmented_file',
                             calc_R_hemi, "in_file_a")
-    split_hemi_pipe.connect(align_R_hemi, 'out_file',
-                            calc_R_hemi, "in_file_b")
+
+    if "LR_hemi_template" in params_template.keys():
+
+        split_hemi_pipe.connect(split_LR, 'R_mask_file',
+                                calc_R_hemi, "in_file_b")
+    else:
+        split_hemi_pipe.connect(align_R_hemi, 'out_file',
+                                calc_R_hemi, "in_file_b")
 
     # remove cerebellum from left and right brain segmentations
     calc_nocb_L_hemi = pe.Node(interface=afni.Calc(),
@@ -247,7 +364,7 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['warpinv_file',
                                       'inv_transfo_file',
-                                      'shft_aff_file',
+                                      'aff_file',
                                       't1_ref_file',
                                       'segmented_file']),
         name='inputnode')
@@ -260,8 +377,8 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
     mesh_to_seg_pipe.connect(inputnode, 'warpinv_file',
                              split_hemi_pipe, 'inputnode.warpinv_file')
 
-    mesh_to_seg_pipe.connect(inputnode, 'shft_aff_file',
-                             split_hemi_pipe, 'inputnode.shft_aff_file')
+    mesh_to_seg_pipe.connect(inputnode, 'aff_file',
+                             split_hemi_pipe, 'inputnode.aff_file')
 
     mesh_to_seg_pipe.connect(inputnode, 'inv_transfo_file',
                              split_hemi_pipe, 'inputnode.inv_transfo_file')

@@ -16,6 +16,7 @@ def load_test_data(name, path_to=""):
             "data_dir": {
                 "NMT_v1.2": "QBTrmKNDrNs5E49",
                 "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
+                "NMT_v1.3": "qmBSE4prcXYLE94",
                 "NMT_FSL": "ajAtB7qgaPAmKyJ",
                 "inia19": "WZo9wZdreTMwfQA",
                 "marmotemplate": "5xzm7DJD9kB99gG",
