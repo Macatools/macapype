@@ -200,11 +200,11 @@ RUN apt-get -y install graphviz
 RUN pip3 install pybids
 
 ############################################# install macapype
-ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
+ADD https://api.github.com/repos/ostanley/macapype/git/refs/heads/single_session version.json
 WORKDIR /opt/packages/
-RUN git clone https://github.com/macatools/macapype.git
+RUN git clone https://github.com/ostanley/macapype.git
 WORKDIR /opt/packages/macapype
-RUN git checkout master
+RUN git checkout 7T
 RUN python3 setup.py develop
 
 RUN echo $(which python)
