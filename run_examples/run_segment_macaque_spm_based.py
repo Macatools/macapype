@@ -11,7 +11,6 @@ import os.path as op
 from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.pipelines.full_pipelines import create_full_T1xT2_segment_pnh_subpipes  # noqa
-from macapype.utils.utils_spm import format_spm_priors
 import json, pprint
 
 # data file
@@ -55,4 +54,4 @@ segment_pnh.inputs.inputnode.list_T2 = [T2_file]
 
 segment_pnh.write_graph(graph2use="colored")
 segment_pnh.config['execution'] = {'remove_unnecessary_outputs': 'false'}
-segment_pnh.run()
+#segment_pnh.run()

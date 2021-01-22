@@ -703,8 +703,10 @@ def create_long_multi_preparation_pipe(params,
     return long_multi_preparation_pipe
 
 
-def create_short_preparation_noT1_pipe(params,
-                                       name="short_preparation_noT1_pipe"):
+###############################################################################
+# works with only one T1
+def create_short_preparation_T1_pipe(params,
+                                     name="short_preparation_T1_pipe"):
 
     # creating pipeline
     data_preparation_pipe = pe.Workflow(name=name)

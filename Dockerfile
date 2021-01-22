@@ -176,53 +176,56 @@ RUN echo '{ \
 MAINTAINER David Meunier "david.meunier@univ-amu.fr"
 ######################## Python packages
   
-RUN apt-get update
-RUN apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget
+RUN apt-get update && apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
 #RUN apt-get install -y python3-tk
 
 #RUN apt-get install libx11-6 libxext6 libxt6 # matlab
-RUN pip3 install xvfbwrapper psutil numpy scipy matplotlib statsmodels pandas networkx==1.9
-RUN pip3 install mock prov click funcsigs pydotplus pydot rdflib pbr nibabel packaging pytest
-#nipype==0.12
-RUN mkdir -p /opt/packages/
-########## nipype
-RUN pip3 install nipype
-#WORKDIR /root/packages/
-#RUN git clone https://github.com/davidmeunier79/nipype.git
-#WORKDIR /root/packages/nipype
-#RUN python3 setup.py develop
+RUN pip3 install xvfbwrapper \
+    psutil \
+    numpy \
+    scipy \
+    matplotlib \
+    statsmodels \
+    pandas \
+    networkx==1.9 \
+    mock \
+    prov \
+    click \
+    funcsigs \
+    pydotplus \
+    pydot \
+    rdflib \
+    pbr \
+    nibabel \
+    packaging \
+    pytest \
+    install \
+    graphviz \
+    pybids \
+    nipype \
+    nilearn \
+    scikit-image \
+    brain-slam
 
-# Error with dot packages:
-RUN pip3 install graphviz
-RUN apt-get -y install graphviz
-
-# with bids layout
-RUN pip3 install pybids
 
 ############################################# install macapype
-ADD https://api.github.com/repos/ostanley/macapype/git/refs/heads/single_session version.json
+
+RUN mkdir -p /opt/packages/
+
+ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
 WORKDIR /opt/packages/
-RUN git clone https://github.com/ostanley/macapype.git
+
+RUN git clone https://github.com/macatools/macapype.git
 WORKDIR /opt/packages/macapype
-RUN git checkout 7T
+
+RUN git checkout master
 RUN python3 setup.py develop
 
-RUN echo $(which python)
-RUN echo $(which python3)
-
-RUN ln -s /usr/bin/python3 /usr/bin/python && \
+RUN echo $(which python) && \
+    echo $(which python3) && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
     ln -s /usr/bin/pip3 /usr/bin/pip
-#
-# RUN \
-#    echo 'alias python="/usr/bin/python3"' >> /root/.bashrc && \
-#    echo 'alias pip="/usr/bin/pip3"' >> /root/.bashrc
-#
-# RUN /bin/bash -c "source /root/.bashrc"
 
-RUN echo $(which python)
-RUN echo $(which python3)
-
-RUN echo $(python --version)
 #####################################################################################################
 ############################################ extra (exemple of a line to launch) ####################
 #####################################################################################################

@@ -1,0 +1,322 @@
+#!/bin/bash
+
+function Help {
+    cat <<HELP
+Linear and nonlinear alignment of individual datato the NMT
+
+Usage:
+      NMT_subject_align -i [input_dataset] -r [template_dset] <other options>
+
+	where:
+		input_dataset = the path of your volume in its original space.
+		template_dset = the path of the template that you wish to align your data to.
+	optional_arguments:
+		-a [segmentation/atlas_dset]: Warps a provided segmentation or atlas to the native space of the input_dataset
+		-w [0 - 9]: By default, the nonlinear aspect of the alignment has the auto_warp.py flag, "workhard" activated
+			for iterations 0 - 2. The number of iterations that will workhard can be modified here for 0 - n iterations.
+			Increasing this number will increase processing time. (Default = 2)
+
+Example:
+   bash NMT_subject_align -i macaque1+orig -r ../NMT.nii.gz
+
+Dependencies:
+		AFNI
+
+Outputs:
+   NMT_subject_align provides multiple outputs to assist in registering your anatomicals and associated MRI data to the NMT:
+   - Subject scan registered to the NMT
+   	+ **mydset_rigid.nii.gz** - datawith rigid-body alignment to the NMT
+   	+ **mydset_rigid_aff.nii.gz** - datawith affine alignment to the NMT
+   	+ **mydset_warp2std.nii.gz** - datawith nonlinear alignment to the NMT
+   - Registration parameters for Alignment to NMT
+   	+ **mydset_rigid_mat.aff12.1D** - Rigid-body transformation parameters to the NMT
+   	+ **mydset_affine_mat.aff12.1D** - Affine transformation parameters to the NMT
+   	+ **mydset_composite_linear_to_NMT.1D** - Combined rigid-body and affine transformations to the NMT
+   	+ **mydset_WARP.nii.gz** - warp deformations to the NMT from nonlinear alignment only
+   - Registration parameters for NMT Alignment to Subject
+   	+ **mydset_rigid_mat_inv.aff12.1D** - inverse of mydset_rigid_mat.aff12.1D
+   	+ **mydset_affine_mat_inv.aff12.1D** - inverse of mydset_affine_mat.aff12.1D
+   	+ **mydset_composite_linear_to_NMT_inv.1D** - inverse of mydset_composite_linear_to_NMT.1D
+   	+ **mydset_WARPINV.nii.gz** - inverse of mydset_WARP.nii.gz
+   - Specified Atlas Aligned to Single Subject (Optional)
+   	+ **mask_in_mydset.nii.gz** - D99 Atlas or other mask aligned to native scan
+   - qc/: A directory containing montages of the aligned volumes for assessing alignment accuracy.
+
+    Here all occurrences of mydset the output file names would be replaced
+       with the name of your dataset
+
+HELP
+    exit 1
+}
+segset=""
+workhard=2
+while getopts "h:i:r:a:w:" OPT
+  do
+  case $OPT in
+
+      h) #help
+	  echo "$Help"
+	  exit 0
+	  ;;
+      i) #input
+	  dset=$OPTARG
+	  ;;
+      r) #reference
+	  base=$OPTARG
+	  ;;
+      a) #segmentation/atlas dataset
+	  segset=$OPTARG
+	  ;;
+      w) #workhard optiom
+	  workhard=$OPTARG
+	  ;;
+      \?) # getopts issues an error message
+	  Help >&2
+	  exit 1
+	  ;;
+  esac
+done
+if [ -z "$dset" ]; then
+	  Help >&2
+	  exit 1
+fi
+if [ -z "$base" ]; then
+	  Help >&2
+	  exit 1
+fi
+#setenv AFNI_COMPRESSOR GZIP
+
+mkdir qc
+# optional resample to template resolution and use that
+# finalmaster=`@GetAfniPrefix $base`
+finalmaster=$dset
+
+# get the non-NIFTI name out, dset+ , dset.nii, dset.nii.gz all -> 'dset'
+dsetprefix=$(@GetAfniPrefix $dset)
+dsetprefix=$(basename $dsetprefix .gz)
+dsetprefix=$(basename $dsetprefix .nii)
+
+# which afni view is used even if NIFTI datais used as base
+# usually +tlrc
+#baseview=`3dinfo -av_space $base`
+
+# this fails for AFNI format, but that's okay!
+#3dcopy $d$dsetprefix
+# get just the first occurrence if both +orig, +tlrc
+#dset=( $dsetprefix+*.HEAD )
+#dset=$dset[1]
+
+# this fails for NIFTI format, but that's okay!
+3dAFNItoNIFTI -prefix ${dsetprefix}.nii.gz ${dset}
+dset=${dsetprefix}.nii.gz
+
+
+if [ ! -z "$segset" ]; then
+   #segsetprefix=`@GetAfniPrefix $segset`
+   segsetdir=`dirname $segset`
+   echo $segset|grep CHARM
+   if [ $? == 0 ]; then
+      segsetprefix=CHARM
+   else
+      echo $segset|grep D99
+      if [ $?== 0 ]; then
+            segsetprefix=D99
+      else
+            segsetprefix=$(@GetAfniPrefix $segset)
+            segsetprefix=$(basename $segsetprefix .gz)
+            segsetprefix=$(basename $segsetprefix .nii)
+      fi
+   fi
+fi
+# put the center of the dataon top of the center of the template
+#@Align_Centers -base $base -d$dset
+
+# keep a copy of the inverse translation too
+# (should just be negation of translation column)
+#cat_matvec ${dsetprefix}_shft.1D -I > ${dsetprefix}_shft_inv.1D
+
+# figure out short name for template to insert into output files
+echo $base |grep NMT
+if [ $? == 0 ]; then
+   templatename=NMT
+else
+   templatename=template
+fi
+echo ""
+echo "============================RIGID-BODY============================"
+# do affine alignment with lpa cost
+# using the source as dset2 input and the base as dset1
+# (the base and source are treated differently
+# by align_epi_anats resampling and by 3dAllineate)
+echo align_epi_anat.py -dset1 $dset -dset2 $base -overwrite -dset1to2 -cost lpa \
+echo -rigid_body -giant_move -suffix _rigid -dset2_strip None -dset1_strip None -master_dset1 $base
+
+align_epi_anat.py -dset1 $dset -dset2 $base -overwrite -dset1to2 -cost lpa \
+    -rigid_body -giant_move -suffix _rigid -dset2_strip None -dset1_strip None -master_dset1 $base
+3dAFNItoNIFTI -prefix ${dsetprefix}_rigid.nii.gz ${dsetprefix}_rigid+tlrc
+rm ${dsetprefix}_rigid+tlrc.*
+
+#QC output of rigid-body alignment
+#@chauffeur_afni -ulay ${dsetprefix}_rigid.nii.gz -prefix qc/${dsetprefix}_rigid -do_clean
+echo "============================================================="
+
+#origview=`@GetAfniView $dset`
+#dset=${dsetprefix}_rigid.nii.gz
+#dsetprefix=${dsetprefix}_rigid
+
+echo ""
+echo "===========================AFFINE==========================="
+echo align_epi_anat.py -dset1 ${dsetprefix}_rigid.nii.gz -dset2 $base -overwrite -dset1to2 \
+echo -suffix _aff -dset2_strip None -dset1_strip None -master_dset1 $base -cost lpa
+# do affine alignment with lpa cost
+# using the source as dset2 input and the base as dset1
+# (the base and source are treated differently
+# by align_epi_anats resampling and by 3dAllineate)
+align_epi_anat.py -dset1 ${dsetprefix}_rigid.nii.gz -dset2 $base -overwrite -dset1to2 \
+     -suffix _aff -dset2_strip None -dset1_strip None -master_dset1 $base -cost lpa
+#
+3dAFNItoNIFTI -prefix ${dsetprefix}_affine.nii.gz ${dsetprefix}_rigid_aff+tlrc
+rm ${dsetprefix}_rigid_aff+tlrc.*
+
+#QC output of affine alignment
+#@chauffeur_afni -ulay ${dsetprefix}_affine.nii.gz -prefix qc/${dsetprefix}_affine -do_clean
+echo "============================================================="
+
+echo ""
+echo "===================COMPUTING LINEAR WARPS==================="
+
+# compute the inverse of the affine alignment transformation - all 12 numbers
+#cat_matvec ${dsetprefix}_aff_mat.aff12.1D > ${dsetprefix}_aff_mat.aff12.1D
+cat_matvec -ONELINE ${dsetprefix}_rigid_mat.aff12.1D -I > ${dsetprefix}_rigid_mat_inv.aff12.1D
+cat_matvec -ONELINE ${dsetprefix}_rigid_aff_mat.aff12.1D -I > ${dsetprefix}_affine_mat_inv.aff12.1D
+mv ${dsetprefix}_rigid_aff_mat.aff12.1D ${dsetprefix}_affine_mat.aff12.1D
+
+# combine shft and affine 1D files for composite linear transformation to template space
+cat_matvec -ONELINE ${dsetprefix}_affine_mat.aff12.1D ${dsetprefix}_rigid_mat.aff12.1D > ${dsetprefix}_composite_linear_to_NMT.1D
+#Now create the inverse composite warp from NMT to subject space
+cat_matvec -ONELINE ${dsetprefix}_rigid_mat_inv.aff12.1D ${dsetprefix}_affine_mat_inv.aff12.1D > ${dsetprefix}_composite_linear_to_NMT_inv.1D
+
+# combine nonlinear and affine warps for datawarped to standard template space
+#   **** mod - DRG 07 Nov 2016
+3dAllineate -prefix ${dsetprefix}_affine.nii.gz                      \
+   -1Dmatrix_apply "${dsetprefix}_composite_linear_to_NMT.1D" \
+   -source ${dsetprefix}.nii.gz -master $base -final wsinc5 -overwrite
+
+echo "============================================================="
+## put affine aligned data on template grid
+# similar to aff databut with exactly same grid
+#3dAllineate -1Dmatrix_apply ${dsetprefix}_aff_mat.aff12.1D \
+#    -prefix ${dsetprefix}_aff.nii.gz -base $base -master BASE         \
+#    -source $d-overwrite
+
+# affinely align to template
+#  (could let auto_warp.py hande this, but AUTO_CENTER option might be needed)
+# @auto_tlrc -base $base -input $d-no_ss -init_xform AUTO_CENTER
+
+# !!! Now skipping cheap skullstripping !!!
+#   didn't work for macaques with very different size brains. V1 got cut off
+#   probably could work with dilated mask
+# "cheap" skullstripping with affine registered dataset
+#  the macaque brains are similar enough that the affine seems to be sufficient here
+#  for skullstripping
+# 3dcalc -a ${dsetprefix}_aff+tlrc. -b $base -expr 'a*step(b)'   \
+#    -prefix ${dsetprefix}_aff_ns -overwrite
+
+echo ""
+echo "==========================NONLINEAR=========================="
+echo auto_warp.py -base $base -affine_input_xmat ID -qworkhard 0 ${workhard} \
+echo -input ${dsetprefix}_affine.nii.gz -overwrite \
+echo -output_dir awpy_${dsetprefix} -qw_opts -iwarp
+# nonlinear alignment of affine skullstripped datato template
+#  by default,the warp and the warped dataare computed
+#  by using "-qw_opts ", one could save the inverse warp and do extra padding
+#  with -qw_opts '-iwarp -expad 30'
+# change qw_opts to remove max_lev 2 for final   ********************
+rm -rf awpy_${dsetprefix}
+auto_warp.py -base $base -affine_input_xmat ID -qworkhard 0 ${workhard} \
+   -input ${dsetprefix}_affine.nii.gz -overwrite \
+   -output_dir awpy_${dsetprefix} -qw_opts -iwarp
+
+# the awpy has the result dataset, copy the warped data, the warp, inverse warp
+# don't copy the warped data- combine the transformations instead below
+# cp awpy_${dsetprefix}/${dsetprefix}_aff.aw.nii ./${dsetprefix}_warp2std.nii
+cp awpy_${dsetprefix}/anat.un.qw_WARP.nii ${dsetprefix}_WARP.nii
+cp awpy_${dsetprefix}/anat.un.qw_WARPINV.nii ${dsetprefix}_WARPINV.nii
+
+# if the datasets are compressed,; then copy those instead
+# note - not using the autowarped dataset, just the WARP
+#  see 3dNwarpApply just below
+# cp awpy_${dsetprefix}/${dsetprefix}_aff.aw.nii.gz ./${dsetprefix}_warp2std.nii.gz
+cp awpy_${dsetprefix}/anat.un.qw_WARP.nii.gz  ./${dsetprefix}_WARP.nii.gz
+cp awpy_${dsetprefix}/anat.un.qw_WARPINV.nii.gz ${dsetprefix}_WARPINV.nii.gz
+# compress these copies (if not already compressed)
+# gzip -f ${dsetprefix}_warp2std.nii ${dsetprefix}_WARP.nii
+gzip -f ${dsetprefix}_WARP.nii ${dsetprefix}_WARPINV.nii
+
+# combine nonlinear and affine warps for datawarped to standard template space
+#   **** mod - DRG 07 Nov 2016
+3dNwarpApply -prefix ${dsetprefix}_warp2std.nii.gz                      \
+   -nwarp "${dsetprefix}_WARP.nii.gz ${dsetprefix}_affine_mat.aff12.1D ${dsetprefix}_rigid_mat.aff12.1D" \
+   -source ${dsetprefix}.nii.gz -master $base
+
+rm -rf awpy_${dsetprefix}
+
+#QC output of nonlinear alignment
+#@chauffeur_afni -ulay ${dsetprefix}_warp2std.nii.gz -prefix qc/${dsetprefix}_warp2std -do_clean
+echo "============================================================="
+
+ # warp segmentation from atlas back to the original macaque space
+ #  of the input data(compose overall warp when applying)
+ #  note - if transforming other datasets like the template
+ #    back to the same native space, it will be faster to compose
+ #    the warp separately with 3dNwarpCat or 3dNwarpCalc rather
+ #    than composing it for each 3dNwarpApply
+if [ ! -z "$segset" ]; then
+    echo ""
+    echo "=========================SEGMENTATION========================"
+    3dNwarpApply -ainterp NN -short -overwrite \
+        -nwarp "${dsetprefix}_rigid_mat_inv.aff12.1D ${dsetprefix}_affine_mat_inv.aff12.1D ${dsetprefix}_WARPINV.nii.gz" \
+        -source $segset -master ${dset} -prefix ${segsetprefix}_in_${dsetprefix}.nii.gz
+ #   3dAllineate -source ${segname}_in_${dsetprefix}_nl.nii.gz -base ${dsetprefix}.nii.gz \
+ #   	-final NN -1Dmatrix_apply ${dsetprefix}_composite_linear_to_NMT_inv.1D -prefix ${segname}_in_${dsetprefix}.nii.gz
+ #   rm ${segname}_in_${dsetprefix}_nl.nii.gz
+
+    # change the datum type to byte to save space
+    # this step also gets rid of the shift transform in the header
+    3dcalc -a ${segsetprefix}_in_${dsetprefix}.nii.gz -expr a -datum byte -nscale \
+       -overwrite -prefix ${segsetprefix}_in_${dsetprefix}.nii.gz
+
+    # copy segmentation information from atlas to this native-space
+    #   segmentation dataand mark to be shown with integer colormap
+    3drefit -cmap INT_CMAP ${segsetprefix}_in_${dsetprefix}.nii.gz
+    3drefit -copytables $segset ${segsetprefix}_in_${dsetprefix}.nii.gz
+    #mv ${segsetdir}/${segname}_in_${dsetprefix}.nii.gz ./${segname}_in_${dsetprefix}.nii.gz
+    echo "============================================================="
+ fi
+
+#cp $base ./
+
+# get rid of temporary warped datasets
+#rm __tmp*_${dsetprefix}*.HEAD __tmp*_${dsetprefix}*.BRIK* __tmp*_${dsetprefix}*.1D
+#rm ${dsetprefix}.1D
+#rm ${dsetprefix}_inv.1D
+#rm *_aff_mat.aff12.1D
+
+#NMT_subject_align.csh log
+#cho "${base}" >> .log.txt
+# notes
+
+# warp the transformed macaque back to its original space
+#  just as a quality control. The two datasets should be very similar
+#3dNwarpApply -overwrite -short -nwarp \
+#   "${dsetprefix}_inv.aff12.1D INV(${dsetprefix}_WARP.nii.gz)" \
+#   -source ${dsetprefix}_warp2std.nii.gz -master ${finalmaster}+orig \
+#   -prefix ${dsetprefix}_iwarpback -overwrite
+
+# zeropad the warp if segmentation doesn't cover the brain and reapply the warp
+# 3dZeropad -S 50 -prefix ${dsetprefix}_zp_WARP.nii.gz ${dsetprefix}_WARP.nii.gz
+# 3dNwarpApply -interp NN \
+#   -nwarp "${dsetprefix}_inv.aff12.1D INV(${dsetprefix}_zp_WARP.nii.gz)" \
+#   -source $segset -master $d-prefix ${dsetprefix}_seg_zp
+# 3drefit -cmap INT_CMAP ${dsetprefix}_seg_zp+orig
+# 3drefit -copytables $segset ${dsetprefix}_seg_zp+orig

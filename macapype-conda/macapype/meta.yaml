@@ -1,5 +1,5 @@
 {% set name = "macapype" %}
-{% set version = "0.1.1" %}
+{% set version = "0.2" %}
 
 package:
   name: "{{ name|lower }}"
@@ -7,7 +7,7 @@ package:
 
 source:
   url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: 5c47726abf9e3cf79d3440406a0972152f5bdf39afcfdd911fb8a0723fd77d0b
+  sha256: 9b62c1d502cea07e628c2667914f8bc75614aad253263a4a99bd38b8cca9b46f
 
 build:
   number: 0
@@ -15,11 +15,26 @@ build:
 
 requirements:
   host:
+    - brain-slam
     - networkx >=2.0
+    - nibabel
+    - nilearn
+    - nipype
+    - numpy
+    - pip
+    - pybids
     - python
+    - scikit-image
   run:
+    - brain-slam
     - networkx >=2.0
+    - nibabel
+    - nilearn
+    - nipype
+    - numpy
+    - pybids
     - python
+    - scikit-image
 
 test:
   imports:
@@ -35,11 +50,12 @@ about:
   license_family: BSD
   license_file: 
   summary: "Pipeline for anatomic processing for macaque"
-  doc_url: https://macatools.github.io/macapype/
+  doc_url: 
   dev_url: 
 
 extra:
   recipe-maintainers:
-    - macatools
     - davidmeunier79
+    - kepkeeloh
+    - BastienCagna
 
