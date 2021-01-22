@@ -233,19 +233,18 @@ if __name__ == '__main__':
     parser.add_argument("-soft", dest="soft", type=str,
                         help="Sofware of analysis (SPM or ANTS are defined)",
                         required=True)
-    parser.add_argument("-subjects", dest="subjects", type=str, nargs='+',
-                        help="Subjects' ID", required=False)
-    parser.add_argument("-ses", dest="ses", type=str, nargs='+',
-                        help="Session", required=False)
-    parser.add_argument("-acq", dest="acq", type=str, nargs='+', default=None,
+    parser.add_argument("-subjects", "-sub", dest="sub",
+                        type=str, nargs='+', help="Subjects", required=False)
+    parser.add_argument("-sessions", "-ses", dest="ses",
+                        type=str, nargs='+', help="Sessions", required=False)
+    parser.add_argument("-acquisitions", "-acq", dest="acq", type=str, nargs='+', default=None,
                         help="Acquisitions")
-    parser.add_argument("-rec", dest="rec", type=str, nargs='+', default=None,
+    parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+', default=None,
                         help="Records")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
     parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
                         help="Individual parameters json file", required=False)
-
 
     args = parser.parse_args()
 
@@ -255,7 +254,7 @@ if __name__ == '__main__':
         data_dir=args.data,
         soft=args.soft,
         process_dir=args.out,
-        subjects=args.subjects,
+        subjects=args.sub,
         sessions=args.ses,
         acquisitions=args.acq,
         records=args.rec,
