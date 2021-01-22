@@ -201,7 +201,12 @@ RUN pip3 install xvfbwrapper \
     pytest \
     install \
     graphviz \
-    pybids
+    pybids \
+    nipype \
+    nilearn \
+    scikit-image \
+    brain-slam
+
 
 ############################################# install macapype
 
