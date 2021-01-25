@@ -14,17 +14,21 @@ def set_spm():
             spm_dir = os.environ["SPM_DIR"]
             spm_ver = os.environ["SPM_VERSION"]
             mcr_version = os.environ["MCR_VERSION"]
+
+            print("OK, SPM {} MCR version {} was found".format(spm_ver,
+                                                            mcr_version))
+
+            spm_cmd = '{}/run_spm{}.sh /opt/mcr/{} script'.format(
+                spm_dir, spm_ver, mcr_version)
+            spm.SPMCommand.set_mlab_paths(matlab_cmd=spm_cmd, use_mcr=True)
+            return True
+
         except KeyError:
             print("Error, could not find SPM or MCR environement")
-            return False
 
-        print("OK, SPM {} MCR version {} was found".format(spm_ver,
-                                                           mcr_version))
+            print("Going for octave")
+            #return False
 
-        spm_cmd = '{}/run_spm{}.sh /opt/mcr/{} script'.format(
-            spm_dir, spm_ver, mcr_version)
-        spm.SPMCommand.set_mlab_paths(matlab_cmd=spm_cmd, use_mcr=True)
-        return True
 
     else:
         print("OK, matlab was found")
