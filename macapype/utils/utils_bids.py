@@ -42,7 +42,9 @@ def create_datasource(data_dir, subjects=None, sessions=None,
 
     iterables = []
     iterables.append(('subject', subjects))
-    iterables.append(('session', sessions))
+
+    if sessions != []:
+        iterables.append(('session', sessions))
 
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
