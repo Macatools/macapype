@@ -113,6 +113,8 @@ def create_full_spm_subpipes(
                      debias, 't1_file')
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      debias, 't2_file')
+    seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
+                     debias, 'b')
 
     seg_pipe.connect(
         inputnode, ('indiv_params', parse_key, "debias"),
