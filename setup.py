@@ -26,7 +26,7 @@ try:
         name="macapype",
         version=verstr,
         packages=find_packages(),
-        author="David Meunier, Bastien Cagna",
+        author="macatools team",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
         install_requires=[
@@ -43,7 +43,7 @@ except ModuleNotFoundError as e:
         name="macapype",
         version=verstr,
         packages=find_packages(),
-        author="David Meunier, Bastien Cagna",
+        author="macatools team",
         description="Pipeline for anatomic processing for macaque",
         license='BSD 3',
         install_requires=[
