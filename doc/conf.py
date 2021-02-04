@@ -42,7 +42,8 @@ extensions = [
     'numpydoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
-    'sphinx_gallery.gen_gallery'
+    'sphinx_gallery.gen_gallery',
+    'sphinxcontrib.fulltoc'
 ]
 
 # generate autosummary even if no references
@@ -63,10 +64,10 @@ master_doc = 'index'
 # General information about the project.
 project = 'macapype'
 td = date.today()
-copyright = u'%s, Macapype Developers. Last updated on %s' % (td.year,
+copyright = u'%s, Macapype Developers (macatools). Last updated on %s' % (td.year,
                                                                 td.isoformat())
 
-author = 'David Meunier, Bastien Cagna'
+author = 'Macapype Developers (macatools)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
