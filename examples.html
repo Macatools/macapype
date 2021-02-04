@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pipeline examples &#8212; macapype 0.1.1 documentation</title>
+    <title>Pipeline examples &#8212; macapype 0.2.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,15 +61,76 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#pull-request">Pull Request</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -82,13 +143,20 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Pipeline examples</a><ul>
-<li><a class="reference internal" href="#macaque">Macaque:</a></li>
-<li><a class="reference internal" href="#marmoset">Marmoset:</a></li>
-<li><a class="reference internal" href="#baboon">Baboon:</a></li>
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#baboon">Baboon:</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
 </li>
@@ -123,13 +191,20 @@
 <div class="container">
   <div class="row">
       <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
-<li><a class="reference internal" href="#">Pipeline examples</a><ul>
-<li><a class="reference internal" href="#macaque">Macaque:</a></li>
-<li><a class="reference internal" href="#marmoset">Marmoset:</a></li>
-<li><a class="reference internal" href="#baboon">Baboon:</a></li>
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#baboon">Baboon:</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 
 <form action="search.html" method="get">
@@ -148,7 +223,7 @@
 <div class="section" id="macaque">
 <h2>Macaque:<a class="headerlink" href="#macaque" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="auto_examples/plot_segment_macaque_spm_based.html#plot-segment-macaque-spm-based"><span class="std std-ref">Segmentation of macaque test dataset</span></a> processed with SPM-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="auto_examples/plot_segment_macaque_spm_based.html#plot-segment-macaque-spm-based"><span class="std std-ref">Segmentation of macaque test dataset</span></a> processed with SPM-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>.</p></li>
 </ul>
 <p>Origin of the dataset: <a class="reference external" href="https://cordis.europa.eu/project/id/788240">ERC COVOPRIM</a> project.</p>
 <p>Acknowledgements to Pascal Belin and Regis Trapeau.</p>
@@ -156,7 +231,7 @@
 <div class="line"><br /></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="auto_examples/plot_segment_macaque_ants_based.html#plot-segment-macaque-ants-based"><span class="std std-ref">Segmentation of macaque test dataset</span></a> processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="auto_examples/plot_segment_macaque_ants_based.html#plot-segment-macaque-ants-based"><span class="std std-ref">Segmentation of macaque test dataset</span></a> processed with ANTS-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>.</p></li>
 </ul>
 <p>Origin of the dataset: <a class="reference external" href="https://cordis.europa.eu/project/id/788240">ERC COVOPRIM</a> project.</p>
 <p>Acknowledgements to Pascal Belin and Regis Trapeau.</p>
@@ -164,7 +239,7 @@
 <div class="line"><br /></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="auto_examples/plot_segment_sphinx_macaque_ants_based.html#plot-segment-sphinx-macaque-ants-based"><span class="std std-ref">Segmentation of macaque test dataset with reorientation</span></a>, starting from a sphinx position, processed with ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="auto_examples/plot_segment_sphinx_macaque_ants_based.html#plot-segment-sphinx-macaque-ants-based"><span class="std std-ref">Segmentation of macaque test dataset with reorientation</span></a>, starting from a sphinx position, processed with ANTS-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>.</p></li>
 </ul>
 <p>Acknowledgements to Frederic Chavane and Isabelle Racicot.</p>
 <div class="line-block">
@@ -174,7 +249,7 @@
 <div class="section" id="marmoset">
 <h2>Marmoset:<a class="headerlink" href="#marmoset" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">Segmentation of marmoset test dataset</span></a>, processed using same ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">Segmentation of marmoset test dataset</span></a>, processed using same ANTS-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>.</p></li>
 </ul>
 <p>The automated cropping did not work, hence manual cropping was used, cropbox has to be specified manually.</p>
 <p>Origin of the dataset: <a class="reference external" href="https://anr.fr/Projet-ANR-18-CE37-0017">ANR Marmobrain</a> project.</p>
@@ -186,7 +261,7 @@
 <div class="section" id="baboon">
 <h2>Baboon:<a class="headerlink" href="#baboon" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="auto_examples/plot_segment_baboon_ants_based.html#plot-segment-baboon-ants-based"><span class="std std-ref">Segmentation of baboon test dataset</span></a>, processed using same ANTS-based <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes" title="macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code></a>, with single_preparation pipeline for data_preparation.</p></li>
+<li><p><a class="reference internal" href="auto_examples/plot_segment_baboon_ants_based.html#plot-segment-baboon-ants-based"><span class="std std-ref">Segmentation of baboon test dataset</span></a>, processed using same ANTS-based <code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">pipeline</span></code>, with single_preparation pipeline for data_preparation.</p></li>
 </ul>
 <p>Origin of the dataset: <a class="reference external" href="https://cordis.europa.eu/project/id/716931/fr">ERC GestImage</a> project.</p>
 <p>Acknowledgements to Adrien Meguerditchian and Yannick Becker. ** dataset not yet available for download and test**</p>
@@ -205,7 +280,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-12-09.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

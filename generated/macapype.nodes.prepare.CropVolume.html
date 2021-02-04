@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.nodes.prepare.CropVolume &#8212; macapype 0.1.1 documentation</title>
+    <title>macapype.nodes.prepare.CropVolume &#8212; macapype 0.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -19,8 +19,6 @@
     <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="macapype.utils.utils_tests.load_test_data" href="macapype.utils.utils_tests.load_test_data.html" />
-    <link rel="prev" title="macapype.nodes.register.IterREGBET" href="macapype.nodes.register.IterREGBET.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -39,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -60,16 +58,77 @@
      href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute.html#pull-request">Pull Request</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -83,7 +142,14 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">macapype.nodes.prepare.CropVolume</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
 </li>
@@ -119,7 +185,14 @@
   <div class="row">
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
-<li><a class="reference internal" href="#">macapype.nodes.prepare.CropVolume</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 
 <form action="../search.html" method="get">
@@ -341,7 +414,7 @@ prefix)</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-12-09.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

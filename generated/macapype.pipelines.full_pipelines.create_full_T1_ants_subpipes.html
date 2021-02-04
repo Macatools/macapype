@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.full_pipelines.create_brain_extraction_pipe &#8212; macapype 0.2.1 documentation</title>
+    <title>macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes &#8212; macapype 0.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -161,7 +161,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.rst.txt"
+  <a href="../_sources/generated/macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -206,27 +206,46 @@
       </div>
     <div class="col-md-9 content">
       
-  <div class="section" id="macapype-pipelines-full-pipelines-create-brain-extraction-pipe">
-<h1>macapype.pipelines.full_pipelines.create_brain_extraction_pipe<a class="headerlink" href="#macapype-pipelines-full-pipelines-create-brain-extraction-pipe" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="macapype-pipelines-full-pipelines-create-full-t1-ants-subpipes">
+<h1>macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes<a class="headerlink" href="#macapype-pipelines-full-pipelines-create-full-t1-ants-subpipes" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="macapype.pipelines.full_pipelines.create_brain_extraction_pipe">
-<code class="sig-prename descclassname">macapype.pipelines.full_pipelines.</code><code class="sig-name descname">create_brain_extraction_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'brain_extraction_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_brain_extraction_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: ANTS based segmentation pipeline using T1w and T2w images</p>
+<dt id="macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes">
+<code class="sig-prename descclassname">macapype.pipelines.full_pipelines.</code><code class="sig-name descname">create_full_T1_ants_subpipes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'full_T1_ants_subpipes'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_full_T1_ants_subpipes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Segment T1 (with no T2).</p>
 <ul class="simple">
+<li><p>brain preproc (short_prepration pipe - try betcrop with the same file,</p></li>
+</ul>
+<p>includes denoising from ants)
+- Perform N4biascorrection with defined parameters.
+- brain extraction (see create_brain_extraction_pipe):</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>correct_bias</p></li>
 <li><p>denoise</p></li>
 <li><p>extract_brain</p></li>
 </ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>brain segment from mask (see create_brain_segment_from_mask_pipe):</dt><dd><ul>
+<li><p>denoise pipe</p></li>
+<li><p>debias pipe</p></li>
+<li><p>NMT align (after N4Debias)</p></li>
+<li><p>Atropos segment</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 <p>Inputs:</p>
 <blockquote>
 <div><dl>
-<dt>inputnode:</dt><dd><p>preproc_T1: preprocessed T1 file
-preproc_T2: preprocessed T2 file</p>
+<dt>inputnode:</dt><dd><p>list_T1: preprocessed T1 file name</p>
 <p>indiv_params (opt): dict with individuals parameters for some nodes</p>
 </dd>
-<dt>arguments:</dt><dd><p>params_template: dictionary of template files
-params: dictionary of node sub-parameters (from a json file)
-name: pipeline name (default = “full_segment_pipe”)</p>
+<dt>arguments:</dt><dd><p>params_template: dictionary of template files</p>
+<p>params: dictionary of node sub-parameters (from a json file)</p>
+<p>name: pipeline name (default = “full_segment_pipe”)</p>
 </dd>
 </dl>
 </div></blockquote>

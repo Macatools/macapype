@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.register &#8212; macapype 0.1.1 documentation</title>
+    <title>macapype.pipelines.register &#8212; macapype 0.2.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -59,15 +59,76 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -80,7 +141,17 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -109,7 +180,17 @@
 <div class="container">
   <div class="row">
       <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+
 <form action="../../../search.html" method="get">
  <div class="form-group">
   <input type="text" name="q" class="form-control" placeholder="Search" />
@@ -133,7 +214,7 @@
 <span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span><span class="p">,</span> <span class="n">parse_key</span>
 
 <span class="kn">from</span> <span class="nn">..nodes.register</span> <span class="kn">import</span> <span class="p">(</span><span class="n">interative_flirt</span><span class="p">,</span> <span class="n">NMTSubjectAlign</span><span class="p">,</span>
-                              <span class="n">NwarpApplyPriors</span><span class="p">)</span>
+                              <span class="n">NMTSubjectAlign2</span><span class="p">,</span> <span class="n">NwarpApplyPriors</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">create_iterative_register_pipe</span><span class="p">(</span>
@@ -256,7 +337,7 @@
 <span class="c1"># multi / indiv_params</span>
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="create_register_NMT_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_register_NMT_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
-                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">):</span>
+                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="n">NMT_version</span><span class="o">=</span><span class="s2">&quot;1.2&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Register template to anat with the script NMT_subject_align,</span>
 <span class="sd">        and then apply it to tissues list_priors</span>
@@ -309,13 +390,28 @@
     <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
                               <span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
 
-    <span class="c1"># align subj to nmt (with NMT_subject_align, wrapped version with nodes)</span>
-    <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NMTSubjectAlign</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;NMT_version&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">NMT_version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;NMT_version&quot;</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Found NMT_version </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;1.2&quot;</span><span class="p">:</span>
+        <span class="c1"># align subj to nmt</span>
+        <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NMTSubjectAlign</span><span class="p">(),</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;1.3&quot;</span><span class="p">:</span>
+        <span class="c1"># align subj to nmt</span>
+        <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NMTSubjectAlign2</span><span class="p">(),</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NMT_version </span><span class="si">{}</span><span class="s2"> is not implemented&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
+        <span class="n">exit</span><span class="p">()</span>
+
+    <span class="n">NMT_subject_align</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_SS_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_brain&quot;</span><span class="p">]</span>
 
     <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                               <span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s2">&quot;T1_file&quot;</span><span class="p">)</span>
-
-    <span class="n">NMT_subject_align</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_SS_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_brain&quot;</span><span class="p">]</span>
 
     <span class="c1"># align_masks</span>
     <span class="c1"># &quot;overwrap&quot; of NwarpApply, with specifying the outputs as wished</span>
@@ -324,13 +420,13 @@
                    <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_gm&quot;</span><span class="p">],</span>
                    <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_wm&quot;</span><span class="p">]]</span>
 
-    <span class="n">align_masks</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_masks&#39;</span><span class="p">)</span>
+    <span class="n">align_masks</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_masks2&#39;</span><span class="p">)</span>
     <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">list_priors</span>
     <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">list_priors</span>
     <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;NN&quot;</span>
     <span class="n">align_masks</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-overwrite&quot;</span>
 
-    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;shft_aff_file&#39;</span><span class="p">,</span>
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
                               <span class="n">align_masks</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span>
     <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
                               <span class="n">align_masks</span><span class="p">,</span> <span class="s2">&quot;warp&quot;</span><span class="p">)</span>
@@ -405,7 +501,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-12-09.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

@@ -9,12 +9,27 @@ Definition of workflows
 SPM-based pipelines:
 ~~~~~~~~~~~~~~~~~~~~~
 
+Using T1w and T2w images
+************************
+
 SPM-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_T1xT2>`, with the processing sequence:
 
 * :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
 * :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`
 * :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
 * :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
+
+
+Unsing only a T1w image
+***********************
+<macapype.pipelines.full_pipelines.create_full_spm_subpipes>`, with the processing sequence:
+
+* :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
+* :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>` but the T1w replaces the T2w
+* :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
+* :class:`ANTS non linear registration and FSL Apply XFM to tranform images to the template`
+* :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
+
 
 ANTS-based pipelines:
 ~~~~~~~~~~~~~~~~~~~~~

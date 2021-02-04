@@ -50,42 +50,8 @@ In case you have access to a conda environment, here is the procedure to initial
 .. code-block:: bash
 
     $ conda init bash
-    $ conda create -n macapype python=3.7
-    $ conda activate macapype
-
-Now for the packages:
-
-.. code-block:: bash
-
-    $ conda install -c conda-forge nilearn
-    $ conda install -c conda-forge nipype
-    $ pip install pybids
-
-Not mandatory, but prefered:
-
-.. code-block:: bash
-
-    $ conda install -c conda-forge matplotlib
-    $ conda install ipython
-
-From an environment.yml file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Alternatively, the github version provides a environment.yml:
-
-.. code:: bash
-
-    $ conda env create -f environment.yml
-
-(Will create a conda environment named 'macapype')
-
-Activate the environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-To activate the environment:
-
-.. code:: bash
-
-    $ conda activate macapype
+    $ conda create -n macapype_env python=3.7
+    $ conda activate macapype_env
 
 Install macapype package
 #########################
@@ -132,6 +98,8 @@ If 'conda' (Anaconda, or miniconda) is installed on your system, you can type:
 
     $ conda install -c macatools macapype
 
+!!!! The lastest version of macapype (0.2.1) is not available, due to the inclusion of packages that are not yet packaged in conda
+use "pip install macapype" or "git clone https://github.com/Macatools/macapype.git" till further notice
 
 Testing the install
 ####################

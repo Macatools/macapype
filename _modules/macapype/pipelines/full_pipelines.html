@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.full_pipelines &#8212; macapype 0.1.1 documentation</title>
+    <title>macapype.pipelines.full_pipelines &#8212; macapype 0.2.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -59,15 +59,76 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -80,7 +141,17 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -109,7 +180,17 @@
 <div class="container">
   <div class="row">
       <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+
 <form action="../../../search.html" method="get">
  <div class="form-group">
   <input type="text" name="q" class="form-control" placeholder="Search" />
@@ -136,7 +217,7 @@
 <span class="kn">from</span> <span class="nn">.prepare</span> <span class="kn">import</span> <span class="p">(</span><span class="n">create_short_preparation_pipe</span><span class="p">,</span>
                       <span class="n">create_long_multi_preparation_pipe</span><span class="p">,</span>
                       <span class="n">create_long_single_preparation_pipe</span><span class="p">,</span>
-                      <span class="n">create_short_preparation_noT1_pipe</span><span class="p">)</span>
+                      <span class="n">create_short_preparation_T1_pipe</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.segment</span> <span class="kn">import</span> <span class="p">(</span><span class="n">create_old_segment_pipe</span><span class="p">,</span>
                       <span class="n">create_segment_atropos_pipe</span><span class="p">)</span>
@@ -147,15 +228,17 @@
 <span class="kn">from</span> <span class="nn">.register</span> <span class="kn">import</span> <span class="n">create_register_NMT_pipe</span>
 
 <span class="kn">from</span> <span class="nn">.extract_brain</span> <span class="kn">import</span> <span class="p">(</span><span class="n">create_extract_pipe</span><span class="p">,</span>
-                            <span class="n">create_extract_noT1_pipe</span><span class="p">)</span>
+                            <span class="n">create_extract_T1_pipe</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.surface</span> <span class="kn">import</span> <span class="n">create_nii_to_mesh_pipe</span>
 
 <span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">gunzip</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="n">list_input_files</span>
 
 
 <span class="c1">###############################################################################</span>
-<span class="c1"># SPM based segmentation (from: Régis Trapeau)</span>
-<div class="viewcode-block" id="create_full_T1xT2_segment_pnh_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1xT2_segment_pnh_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_T1xT2_segment_pnh_subpipes</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_T1xT2_segment_pnh_subpipes&#39;</span><span class="p">):</span>
+<span class="c1"># SPM based segmentation (from: Régis Trapeau) (-soft SPM or SPM12)</span>
+<div class="viewcode-block" id="create_full_spm_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_spm_subpipes</span><span class="p">(</span>
+        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_spm_subpipes&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Description: SPM based segmentation pipeline from T1w and T2w images</span>
 
 <span class="sd">        - data_preparation_pipe:</span>
@@ -171,8 +254,8 @@
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            T1: T1 file name</span>
-<span class="sd">            T2: T2 file name</span>
+<span class="sd">            list_T1: T1 file names</span>
+<span class="sd">            list_T2: T2 file names</span>
 
 <span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
 
@@ -183,7 +266,7 @@
 
 <span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
 
-<span class="sd">            name: pipeline name (default = &quot;T1xT2_segmentation_pipeline&quot;)</span>
+<span class="sd">            name: pipeline name (default = &quot;full_spm_subpipes&quot;)</span>
 
 <span class="sd">    Outputs:</span>
 <span class="sd">            old_segment_pipe.thresh_gm.out_file:</span>
@@ -233,10 +316,11 @@
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
                      <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_file&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T2&#39;</span><span class="p">,</span>
                      <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;bet_crop.mask_file&#39;</span><span class="p">,</span>
                      <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
         <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;debias&quot;</span><span class="p">),</span>
         <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
@@ -273,9 +357,49 @@
     <span class="k">return</span> <span class="n">seg_pipe</span></div>
 
 
-<span class="k">def</span> <span class="nf">create_full_spm_subpipes</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_spm_subpipes&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">###############################################################################</span>
+<span class="c1"># SPM based, but only T1 is available (-soft SPM_T1)</span>
+<div class="viewcode-block" id="create_full_T1_spm_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_T1_spm_subpipes</span><span class="p">(</span>
+        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_T1_spm_subpipes&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Description: SPM based segmentation pipeline from T1w image only.</span>
+<span class="sd">        This is fact the same as create_full_spm_subpipes, where T2 is</span>
+<span class="sd">        replaced by T1</span>
+
+<span class="sd">        - data_preparation_pipe:</span>
+<span class="sd">            - avg_align</span>
+<span class="sd">            - deoblique,</span>
+<span class="sd">            - reorient if needed</span>
+<span class="sd">            - bet_crop (brain extraction and crop) -&gt; mask</span>
+<span class="sd">            - denoise</span>
+<span class="sd">        - T1xT2BiasFieldCorrection using mask -&gt; debias</span>
+<span class="sd">        - IterREGBET -&gt; registration to template file</span>
+<span class="sd">        - old_segment_pipe</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+<span class="sd">            list_T1: T1 file names</span>
+
+<span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
+
+
+<span class="sd">        arguments:</span>
+<span class="sd">            params_template: dict of template files containing brain_template</span>
+<span class="sd">            and priors (list of template based segmented tissues)</span>
+
+<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name: pipeline name (default = &quot;full_spm_subpipes&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+<span class="sd">            old_segment_pipe.thresh_gm.out_file:</span>
+<span class="sd">                segmented grey matter in template space</span>
+
+<span class="sd">            old_segment_pipe.thresh_wm.out_file:</span>
+<span class="sd">                segmented white matter in template space</span>
+
+<span class="sd">            old_segment_pipe.thresh_csf.out_file:</span>
+<span class="sd">                segmented csf in template space</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Full pipeline name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -356,12 +480,12 @@
             <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
             <span class="n">old_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">seg_pipe</span>
-
+    <span class="k">return</span> <span class="n">seg_pipe</span></div>
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># ANTS based segmentation (from Kepkee Loh / Julien Sein)</span>
-<span class="c1"># same as before, but with indiv_params</span>
+
+
 <div class="viewcode-block" id="create_brain_extraction_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_brain_extraction_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                                  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Description: ANTS based segmentation pipeline using T1w and T2w images</span>
@@ -418,7 +542,6 @@
                                   <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T2&quot;</span><span class="p">)</span>
     <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
                                   <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">brain_extraction_pipe</span></div>
 
 
@@ -508,8 +631,9 @@
     <span class="k">return</span> <span class="n">brain_segment_pipe</span></div>
 
 
-<div class="viewcode-block" id="create_full_segment_pnh_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes.html#macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_segment_pnh_subpipes</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pnh_subpipes_baboon&quot;</span><span class="p">):</span>
+<span class="c1"># (-soft ANTS)</span>
+<div class="viewcode-block" id="create_full_ants_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_ants_subpipes.html#macapype.pipelines.full_pipelines.create_full_ants_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_ants_subpipes</span><span class="p">(</span>
+        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_ants_subpipes&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Description: Segment T1 (using T2 for bias correction) .</span>
 
 <span class="sd">    new version (as it is now)</span>
@@ -527,9 +651,9 @@
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            preproc_T1: preprocessed T1 file name</span>
+<span class="sd">            list_T1: preprocessed T1 file name</span>
 
-<span class="sd">            preproc_T2: preprocessed T2 file name</span>
+<span class="sd">            list_T2: preprocessed T2 file name</span>
 
 <span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
 
@@ -622,118 +746,43 @@
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="s1">&#39;nii_to_mesh_pipe&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">seg_pipe</span>
+
+    <span class="n">nii_to_mesh_pipe</span> <span class="o">=</span> <span class="n">create_nii_to_mesh_pipe</span><span class="p">(</span>
+        <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;nii_to_mesh_pipe&quot;</span><span class="p">))</span>
+
+    <span class="c1"># from data_preparation_pipe</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
+                     <span class="n">nii_to_mesh_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.t1_ref_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># from brain_segment_pipe</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span>
+                     <span class="s1">&#39;register_NMT_pipe.NMT_subject_align.warpinv_file&#39;</span><span class="p">,</span>
+                     <span class="n">nii_to_mesh_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.warpinv_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span>
+                     <span class="s1">&#39;register_NMT_pipe.NMT_subject_align.inv_transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">nii_to_mesh_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.inv_transfo_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span>
+                     <span class="s1">&#39;register_NMT_pipe.NMT_subject_align.aff_file&#39;</span><span class="p">,</span>
+                     <span class="n">nii_to_mesh_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.aff_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span>
+                     <span class="s1">&#39;segment_atropos_pipe.seg_at.segmented_file&#39;</span><span class="p">,</span>
+                     <span class="n">nii_to_mesh_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.segmented_file&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">seg_pipe</span></div>
 
-
-<span class="k">def</span> <span class="nf">create_full_segment_pnh_noT2atlasbrex_subpipes</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pnh_subpipes_baboon&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description: Segment T1 (using T2 for bias correction) .</span>
-
-<span class="sd">    new version (as it is now)</span>
-<span class="sd">    - brain preproc (avg and align, reorient of specified cropping from T1xT2BET, bet is optional) # noqa</span>
-<span class="sd">    - brain extraction (see create_brain_extraction_pipe):</span>
-<span class="sd">        - correct_bias</span>
-<span class="sd">        - denoise</span>
-<span class="sd">        - extract_brain</span>
-<span class="sd">    - brain segment from mask (see create_brain_segment_from_mask_pipe):</span>
-<span class="sd">        - denoise pipe</span>
-<span class="sd">        - debias pipe</span>
-<span class="sd">        - NMT align (after N4Debias)</span>
-<span class="sd">        - Atropos segment</span>
-
-<span class="sd">    Inputs:</span>
-
-<span class="sd">        inputnode:</span>
-<span class="sd">            preproc_T1: preprocessed T1 file name</span>
-
-<span class="sd">            preproc_T2: preprocessed T2 file name</span>
-
-<span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
-
-<span class="sd">        arguments:</span>
-<span class="sd">            params_template: dictionary of template files</span>
-
-<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
-
-<span class="sd">            name: pipeline name (default = &quot;full_segment_pipe&quot;)</span>
-
-<span class="sd">    Outputs:</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># creating pipeline</span>
-    <span class="n">seg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="c1"># Creating input node</span>
-    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;list_T2&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">]),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
-    <span class="p">)</span>
-
-    <span class="c1"># preprocessing</span>
-    <span class="k">if</span> <span class="s1">&#39;long_single_preparation_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_long_single_preparation_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;long_single_preparation_pipe&quot;</span><span class="p">))</span>
-
-    <span class="k">elif</span> <span class="s1">&#39;long_multi_preparation_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_long_multi_preparation_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;long_multi_preparation_pipe&quot;</span><span class="p">))</span>
-
-    <span class="k">elif</span> <span class="s1">&#39;short_preparation_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">))</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, short_preparation_pipe, long_single_preparation_pipe or</span><span class="se">\</span>
-<span class="s2">            long_multi_preparation_pipe was not found in params, skipping&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">seg_pipe</span>
-
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T1&#39;</span><span class="p">,</span>
-                     <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.list_T1&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T2&#39;</span><span class="p">,</span>
-                     <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.list_T2&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
-                     <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
-
-    <span class="c1"># full extract brain pipeline (correct_bias noT2, denoising, extract brain)</span>
-    <span class="k">if</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">seg_pipe</span>
-
-    <span class="n">brain_extraction_pipe</span> <span class="o">=</span> <span class="n">create_brain_extraction_noT1_pipe</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">),</span>
-        <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">)</span>
-
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
-                     <span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
-
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
-                     <span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
-
-    <span class="c1"># full_segment (restarting from the avg_align files)</span>
-    <span class="k">if</span> <span class="s2">&quot;brain_segment_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">seg_pipe</span>
-
-    <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">create_brain_segment_from_mask_pipe</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">))</span>
-
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T2&#39;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T2&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span>
-                     <span class="s2">&quot;extract_noT1_pipe.smooth_mask.out_file&quot;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_mask&quot;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
-                     <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">seg_pipe</span>
+<span class="c1"># ################# ANTS based segmentation for adrien baboons (T1 without T2)</span>
 
 
-<span class="c1"># ANTS based segmentation for adrien baboons without T2</span>
 <span class="c1"># same as above, but replacing biascorrection with N4biascorrection</span>
 <span class="c1"># in brain extraction and brain segmentation</span>
-<span class="k">def</span> <span class="nf">create_brain_extraction_noT1_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
-                                      <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brain_extraction_noT1_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_brain_extraction_T1_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_brain_extraction_T1_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_T1_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_brain_extraction_T1_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brain_extraction_T1_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Description: Brain extraction with only T1 images.</span>
 
 <span class="sd">    - N4biascorrection (replacing T2 bias correction with N4)</span>
@@ -764,19 +813,19 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># brain extraction (with atlasbrex)</span>
-    <span class="n">extract_pipe</span> <span class="o">=</span> <span class="n">create_extract_noT1_pipe</span><span class="p">(</span>
+    <span class="n">extract_T1_pipe</span> <span class="o">=</span> <span class="n">create_extract_T1_pipe</span><span class="p">(</span>
         <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_T1_pipe&quot;</span><span class="p">))</span>
 
     <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;preproc_T1&quot;</span><span class="p">,</span>
-                                  <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
+                                  <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
     <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
-                                  <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">brain_extraction_pipe</span>
+                                  <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">brain_extraction_pipe</span></div>
 
 
-<span class="k">def</span> <span class="nf">create_brain_segment_from_mask_noT1_pipe</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brain_segment_from_mask_noT1_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_brain_segment_from_mask_T1_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_T1_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_T1_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_brain_segment_from_mask_T1_pipe</span><span class="p">(</span>
+        <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brain_segment_from_mask_T1_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Description: Segment T1 (using T2 for bias correction) and a previously</span>
 <span class="sd">    computed mask with NMT Atlas and atropos segment.</span>
 
@@ -790,8 +839,6 @@
 
 <span class="sd">        inputnode:</span>
 <span class="sd">            preproc_T1: preprocessed T1 file name</span>
-
-<span class="sd">            preproc_T2: preprocessed T2 file name</span>
 
 <span class="sd">            brain_mask: a mask computed for the same T1/T2 images</span>
 
@@ -854,12 +901,13 @@
     <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;align_seg_wm.out_file&#39;</span><span class="p">,</span>
                                <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.wm_prior_file&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">brain_segment_pipe</span>
+    <span class="k">return</span> <span class="n">brain_segment_pipe</span></div>
 
 
-<span class="k">def</span> <span class="nf">create_full_segment_pnh_noT1_subpipes</span><span class="p">(</span>
+<span class="c1"># -soft ANTS_T1</span>
+<div class="viewcode-block" id="create_full_T1_ants_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_T1_ants_subpipes</span><span class="p">(</span>
     <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_segment_pnh_noT1_subpipes_baboon&quot;</span><span class="p">):</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;full_T1_ants_subpipes&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Description: Segment T1 (with no T2).</span>
 
 <span class="sd">    - brain preproc (short_prepration pipe - try betcrop with the same file,</span>
@@ -878,9 +926,7 @@
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            preproc_T1: preprocessed T1 file name</span>
-
-<span class="sd">            preproc_T2: preprocessed T2 file name</span>
+<span class="sd">            list_T1: preprocessed T1 file name</span>
 
 <span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
 
@@ -904,25 +950,13 @@
     <span class="p">)</span>
 
     <span class="c1"># preprocessing (perform preparation pipe with only T1)</span>
-    <span class="k">if</span> <span class="s1">&#39;long_single_preparation_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_long_single_preparation_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;long_single_preparation_pipe&quot;</span><span class="p">))</span>
-
-    <span class="k">elif</span> <span class="s1">&#39;long_multi_preparation_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_long_multi_preparation_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;long_multi_preparation_pipe&quot;</span><span class="p">))</span>
-
-    <span class="k">elif</span> <span class="s1">&#39;short_preparation_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">))</span>
-
-    <span class="k">elif</span> <span class="s1">&#39;short_preparation_noT1_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_noT1_pipe</span><span class="p">(</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_noT1_pipe&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s1">&#39;short_preparation_T1_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_T1_pipe</span><span class="p">(</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_T1_pipe&quot;</span><span class="p">))</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, short_preparation_pipe, long_single_preparation_pipe or</span><span class="se">\</span>
-<span class="s2">            long_multi_preparation_pipe was not found in params, skipping&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, short_preparation_T1_pipe was not found in params, </span><span class="se">\</span>
+<span class="s2">            skipping&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">seg_pipe</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T1&#39;</span><span class="p">,</span>
@@ -931,11 +965,11 @@
                      <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
     <span class="c1"># full extract brain pipeline (correct_bias, denoising, extract brain)</span>
-    <span class="k">if</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;brain_extraction_T1_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">seg_pipe</span>
 
-    <span class="n">brain_extraction_pipe</span> <span class="o">=</span> <span class="n">create_brain_extraction_noT1_pipe</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_pipe&quot;</span><span class="p">),</span>
+    <span class="n">brain_extraction_pipe</span> <span class="o">=</span> <span class="n">create_brain_extraction_T1_pipe</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_extraction_T1_pipe&quot;</span><span class="p">),</span>
         <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">)</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
@@ -944,22 +978,22 @@
                      <span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
     <span class="c1"># full_segment (restarting from the avg_align files)</span>
-    <span class="k">if</span> <span class="s2">&quot;brain_segment_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;brain_segment_T1_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">seg_pipe</span>
 
-    <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">create_brain_segment_from_mask_noT1_pipe</span><span class="p">(</span>
+    <span class="n">brain_segment_pipe</span> <span class="o">=</span> <span class="n">create_brain_segment_from_mask_T1_pipe</span><span class="p">(</span>
         <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">))</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_segment_T1_pipe&quot;</span><span class="p">))</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span>
-                     <span class="s2">&quot;extract_noT1_pipe.smooth_mask.out_file&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;extract_T1_pipe.smooth_mask.out_file&quot;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_mask&quot;</span><span class="p">)</span>
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">seg_pipe</span>
+    <span class="k">return</span> <span class="n">seg_pipe</span></div>
 </pre></div>
 
     </div>
@@ -973,7 +1007,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Macapype Developers. Last updated on 2020-12-09.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
