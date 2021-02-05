@@ -394,7 +394,7 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
                            params=parse_key(params, "mesh_L_GM"),
                            name="mesh_L_GM")
 
-    mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_L_WM.out_file',
+    mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_L_GM.out_file',
                              mesh_L_GM, "image_file")
 
     # meshify R GM hemisphere
@@ -402,7 +402,7 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
                            params=parse_key(params, "mesh_R_GM"),
                            name="mesh_R_GM")
 
-    mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_R_WM.out_file',
+    mesh_to_seg_pipe.connect(split_hemi_pipe, 'extract_R_GM.out_file',
                              mesh_R_GM, "image_file")
 
     # meshify L WM hemisphere
