@@ -534,7 +534,9 @@ def create_full_ants_subpipes(
 
     return seg_pipe
 
-# ################# ANTS based segmentation for adrien baboons (T1 without T2)
+###############################################################################
+# ANTS based segmentation for adrien baboons (T1 without T2)
+###############################################################################
 
 
 # same as above, but replacing biascorrection with N4biascorrection
