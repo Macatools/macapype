@@ -50,7 +50,7 @@ def create_datasource(data_dir, subjects=None, sessions=None,
         iterables.append(('acquisition', acquisitions))
 
     if records is not None:
-        iterables.append(('record', records))
+        iterables.append(('recording', records))
 
     bids_datasource.iterables = iterables
 
