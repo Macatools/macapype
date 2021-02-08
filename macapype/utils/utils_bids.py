@@ -101,7 +101,7 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
         iterables.append(('acquisition', acquisitions))
 
     if records is not None:
-        iterables.append(('record', records))
+        iterables.append(('recording', records))
 
     bids_datasource.iterables = iterables
 
