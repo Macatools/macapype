@@ -94,6 +94,14 @@ Here, all your commits will appear in a list. Normally you should keep (i.e. "pi
     git pull upstream master
     git branch -D my_new_feature
 
+Versionning
+###########
+
+We use the version in this way:
+
+* until we are fully satisfied of the code (multiple full pipelines, evaluation, etc.), we stay in 0.? version.
+* second digits are modified when substancial new features have been added
+* third digits are more and more test and fixes (for the same release). Hence the 0.? or 0.?.0 is more bugged than the 0.?.1 , which itself if more bugged than the 0.?.2 etc...
 
 
 
