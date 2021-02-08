@@ -74,6 +74,7 @@ Table of contents
 .. toctree::
     :maxdepth: 2
 
+    api
     install
     docker_install
     workflows

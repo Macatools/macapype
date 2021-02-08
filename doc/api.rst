@@ -69,17 +69,10 @@ Full pipeline (:py:mod:`macapype.pipelines.full_pipelines`):
 .. autosummary::
    :toctree: generated/
 
-    create_full_spm_subpipes
-    create_full_T1_spm_subpipes
-
+    create_full_T1xT2_segment_pnh_subpipes
     create_brain_extraction_pipe
     create_brain_segment_from_mask_pipe
-    create_full_ants_subpipes
-
-    create_brain_extraction_T1_pipe
-    create_brain_segment_from_mask_T1_pipe
-    create_full_T1_ants_subpipes
-
+    create_full_segment_pnh_subpipes
 
 
 Nodes

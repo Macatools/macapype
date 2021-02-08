@@ -196,17 +196,15 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 params_template=params_template, params=params)
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
-                                                    subjects, sessions,
-                                                    acquisitions, records)
+                                                    subjects, sessions)
 
         main_workflow.connect(datasource, "indiv_params",
                               segment_pnh,'inputnode.indiv_params')
     else:
         datasource = create_datasource(data_dir, subjects, sessions,
-                                       acquisitions, records)
+                                       acquisitions)
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
-
     if not "t1" in soft:
         main_workflow.connect(datasource, 'T2', 
                               segment_pnh, 'inputnode.list_T2')

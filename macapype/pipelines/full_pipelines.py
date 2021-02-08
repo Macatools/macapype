@@ -49,8 +49,8 @@ def create_full_spm_subpipes(
     Inputs:
 
         inputnode:
-            list_T1: T1 file names
-            list_T2: T2 file names
+            T1: T1 file name
+            T2: T2 file name
 
             indiv_params (opt): dict with individuals parameters for some nodes
 
@@ -61,7 +61,7 @@ def create_full_spm_subpipes(
 
             params: dictionary of node sub-parameters (from a json file)
 
-            name: pipeline name (default = "full_spm_subpipes")
+            name: pipeline name (default = "T1xT2_segmentation_pipeline")
 
     Outputs:
             old_segment_pipe.thresh_gm.out_file:
@@ -156,45 +156,7 @@ def create_full_spm_subpipes(
 # SPM based, but only T1 is available (-soft SPM_T1)
 def create_full_T1_spm_subpipes(
         params_template, params={}, name='full_T1_spm_subpipes'):
-    """ Description: SPM based segmentation pipeline from T1w image only.
-        This is fact the same as create_full_spm_subpipes, where T2 is
-        replaced by T1
-
-        - data_preparation_pipe:
-            - avg_align
-            - deoblique,
-            - reorient if needed
-            - bet_crop (brain extraction and crop) -> mask
-            - denoise
-        - T1xT2BiasFieldCorrection using mask -> debias
-        - IterREGBET -> registration to template file
-        - old_segment_pipe
-
-    Inputs:
-
-        inputnode:
-            list_T1: T1 file names
-
-            indiv_params (opt): dict with individuals parameters for some nodes
-
-
-        arguments:
-            params_template: dict of template files containing brain_template
-            and priors (list of template based segmented tissues)
-
-            params: dictionary of node sub-parameters (from a json file)
-
-            name: pipeline name (default = "full_spm_subpipes")
-
-    Outputs:
-            old_segment_pipe.thresh_gm.out_file:
-                segmented grey matter in template space
-
-            old_segment_pipe.thresh_wm.out_file:
-                segmented white matter in template space
-
-            old_segment_pipe.thresh_csf.out_file:
-                segmented csf in template space
+    """
     """
 
     print("Full pipeline name: ", name)
@@ -281,6 +243,7 @@ def create_full_T1_spm_subpipes(
 # ANTS based segmentation (from Kepkee Loh / Julien Sein)
 
 
+# same as before, but with indiv_params
 def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """ Description: ANTS based segmentation pipeline using T1w and T2w images
@@ -446,9 +409,9 @@ def create_full_ants_subpipes(
     Inputs:
 
         inputnode:
-            list_T1: preprocessed T1 file name
+            preproc_T1: preprocessed T1 file name
 
-            list_T2: preprocessed T2 file name
+            preproc_T2: preprocessed T2 file name
 
             indiv_params (opt): dict with individuals parameters for some nodes
 
@@ -637,6 +600,8 @@ def create_brain_segment_from_mask_T1_pipe(
         inputnode:
             preproc_T1: preprocessed T1 file name
 
+            preproc_T2: preprocessed T2 file name
+
             brain_mask: a mask computed for the same T1/T2 images
 
             indiv_params (opt): dict with individuals parameters for some nodes
@@ -723,7 +688,9 @@ def create_full_T1_ants_subpipes(
     Inputs:
 
         inputnode:
-            list_T1: preprocessed T1 file name
+            preproc_T1: preprocessed T1 file name
+
+            preproc_T2: preprocessed T2 file name
 
             indiv_params (opt): dict with individuals parameters for some nodes
 
