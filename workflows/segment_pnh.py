@@ -76,7 +76,7 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
-                         acquisitions, records, params_file, indiv_params_file,
+                         acquisitions, reconstructions, params_file, indiv_params_file,
                          wf_name="test_pipeline_single"):
     """ Set up the segmentatiopn pipeline based on ANTS
 
@@ -197,13 +197,14 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
                                                     subjects, sessions,
-                                                    acquisitions, records)
+                                                    acquisitions,
+                                                    reconstructions)
 
         main_workflow.connect(datasource, "indiv_params",
                               segment_pnh,'inputnode.indiv_params')
     else:
         datasource = create_datasource(data_dir, subjects, sessions,
-                                       acquisitions, records)
+                                       acquisitions, reconstructions)
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
 
@@ -241,8 +242,8 @@ if __name__ == '__main__':
                         type=str, nargs='+', help="Sessions", required=False)
     parser.add_argument("-acquisitions", "-acq", dest="acq", type=str, nargs='+', default=None,
                         help="Acquisitions")
-    parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+', default=None,
-                        help="Records")
+    parser.add_argument("-reconstructions", "-rec", dest="rec", type=str, nargs='+', default=None,
+                        help="Reconstruction")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
     parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
@@ -259,7 +260,7 @@ if __name__ == '__main__':
         subjects=args.sub,
         sessions=args.ses,
         acquisitions=args.acq,
-        records=args.rec,
+        reconstructions=args.rec,
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file)
 
