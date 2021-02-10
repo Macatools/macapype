@@ -247,6 +247,8 @@ if __name__ == '__main__':
                         help="Parameters json file", required=False)
     parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
                         help="Individual parameters json file", required=False)
+    parser.add_argument("-mask", dest="mask_file", type=str,
+                        help="precomputed mask file", required=False)
 
     args = parser.parse_args()
 
@@ -261,5 +263,6 @@ if __name__ == '__main__':
         acquisitions=args.acq,
         records=args.rec,
         params_file=args.params_file,
-        indiv_params_file=args.indiv_params_file)
+        indiv_params_file=args.indiv_params_file,
+        mask_file=args.mask_file)
 
