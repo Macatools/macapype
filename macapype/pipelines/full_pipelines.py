@@ -87,7 +87,7 @@ def create_full_spm_subpipes(
 
     # preprocessing
     if 'short_preparation_pipe' in params.keys():
-        assert 'bet_crop' in parse_key(params, "short_preparation_pipe"),\
+        #assert 'bet_crop' in parse_key(params, "short_preparation_pipe"),\
             "This version should contains betcrop in params.json"
 
         data_preparation_pipe = create_short_preparation_pipe(
@@ -113,12 +113,12 @@ def create_full_spm_subpipes(
                      debias, 't1_file')
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      debias, 't2_file')
-    seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
-                     debias, 'b')
 
-    seg_pipe.connect(
-        inputnode, ('indiv_params', parse_key, "debias"),
-        debias, 'indiv_params')
+    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
+        seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
+                         debias, 'b')
+    else:
+        debias.inputs.bet = 1
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
