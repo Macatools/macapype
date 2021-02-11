@@ -280,6 +280,7 @@ def create_full_T1_spm_subpipes(
 ###############################################################################
 # ANTS based segmentation (from Kepkee Loh / Julien Sein)
 
+
 def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """ Description: ANTS based segmentation pipeline using T1w and T2w images
@@ -506,7 +507,7 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
-    if mask_file is not None:
+    if mask_file is None:
 
         # full extract brain pipeline (correct_bias, denoising, extract brain)
         if "brain_extraction_pipe" not in params.keys():
@@ -517,13 +518,12 @@ def create_full_ants_subpipes(
             params_template=params_template)
 
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                        brain_extraction_pipe, 'inputnode.preproc_T1')
+                         brain_extraction_pipe, 'inputnode.preproc_T1')
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                        brain_extraction_pipe, 'inputnode.preproc_T2')
+                         brain_extraction_pipe, 'inputnode.preproc_T2')
 
         seg_pipe.connect(inputnode, 'indiv_params',
-                        brain_extraction_pipe, 'inputnode.indiv_params')
-
+                         brain_extraction_pipe, 'inputnode.indiv_params')
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
@@ -539,11 +539,9 @@ def create_full_ants_subpipes(
                      brain_segment_pipe, 'inputnode.preproc_T2')
 
     if mask_file is not None:
-
         seg_pipe.connect(brain_extraction_pipe,
-                        "extract_pipe.smooth_mask.out_file",
-                        brain_segment_pipe, "inputnode.brain_mask")
-
+                         "extract_pipe.smooth_mask.out_file",
+                         brain_segment_pipe, "inputnode.brain_mask")
     else:
         brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
 
