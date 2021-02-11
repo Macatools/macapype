@@ -77,7 +77,7 @@ from macapype.utils.misc import show_files, get_first_elem
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                          acquisitions, records, params_file, indiv_params_file,
-                         wf_name="test_pipeline_single"):
+                         wf_name="test_pipeline_single", mask_file = None):
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -193,7 +193,9 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 params_template=params_template, params=params)
         else:
             segment_pnh = create_full_ants_subpipes(
-                params_template=params_template, params=params)
+                params_template=params_template, params=params,
+                mask_file=mask_file)
+
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
                                                     subjects, sessions,
