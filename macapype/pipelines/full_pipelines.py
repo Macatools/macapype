@@ -538,7 +538,7 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      brain_segment_pipe, 'inputnode.preproc_T2')
 
-    if mask_file is not None:
+    if mask_file is None:
         seg_pipe.connect(brain_extraction_pipe,
                          "extract_pipe.smooth_mask.out_file",
                          brain_segment_pipe, "inputnode.brain_mask")
