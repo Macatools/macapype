@@ -171,6 +171,9 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     # soft
     wf_name += "_{}".format(soft)
 
+    if mask_file is not None:
+         wf_name += "_mask"
+
     soft = soft.lower().split("_")
     assert "spm" in soft or "ants" in soft, \
         "error with {}, should be among [spm12, spm, ants]".format(soft)
