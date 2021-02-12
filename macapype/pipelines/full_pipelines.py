@@ -87,7 +87,7 @@ def create_full_spm_subpipes(
 
     # preprocessing
     if 'short_preparation_pipe' in params.keys():
-        #assert 'bet_crop' in parse_key(params, "short_preparation_pipe"),\
+        assert 'bet_crop' in parse_key(params, "short_preparation_pipe"),\
             "This version should contains betcrop in params.json"
 
         data_preparation_pipe = create_short_preparation_pipe(
