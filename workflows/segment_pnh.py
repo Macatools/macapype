@@ -76,8 +76,13 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
+<<<<<<< HEAD
+                         acquisitions, records, params_file, indiv_params_file,
+                         wf_name="test_pipeline_single", mask_file = None):
+=======
                          acquisitions, reconstructions, params_file, indiv_params_file,
                          wf_name="test_pipeline_single"):
+>>>>>>> 16d112a8e281c3c94fb1b3d336705f3df62b52d9
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -171,10 +176,12 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     # soft
     wf_name += "_{}".format(soft)
 
+    if mask_file is not None:
+         wf_name += "_mask"
+
     soft = soft.lower().split("_")
     assert "spm" in soft or "ants" in soft, \
         "error with {}, should be among [spm12, spm, ants]".format(soft)
-
 
     # main_workflow
     main_workflow = pe.Workflow(name= wf_name)
@@ -193,7 +200,9 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 params_template=params_template, params=params)
         else:
             segment_pnh = create_full_ants_subpipes(
-                params_template=params_template, params=params)
+                params_template=params_template, params=params,
+                mask_file=mask_file)
+
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
                                                     subjects, sessions,
@@ -240,14 +249,16 @@ if __name__ == '__main__':
                         type=str, nargs='+', help="Subjects", required=False)
     parser.add_argument("-sessions", "-ses", dest="ses",
                         type=str, nargs='+', help="Sessions", required=False)
-    parser.add_argument("-acquisitions", "-acq", dest="acq", type=str, nargs='+', default=None,
-                        help="Acquisitions")
-    parser.add_argument("-reconstructions", "-rec", dest="rec", type=str, nargs='+', default=None,
-                        help="Reconstruction")
+    parser.add_argument("-acquisitions", "-acq", dest="acq", type=str,
+                        nargs='+', default=None, help="Acquisitions")
+    parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+',
+                        default=None, help="Records")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
     parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
                         help="Individual parameters json file", required=False)
+    parser.add_argument("-mask", dest="mask_file", type=str,
+                        help="precomputed mask file", required=False)
 
     args = parser.parse_args()
 
@@ -262,5 +273,6 @@ if __name__ == '__main__':
         acquisitions=args.acq,
         reconstructions=args.rec,
         params_file=args.params_file,
-        indiv_params_file=args.indiv_params_file)
+        indiv_params_file=args.indiv_params_file,
+        mask_file=args.mask_file)
 
