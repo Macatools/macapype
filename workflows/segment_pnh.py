@@ -243,10 +243,10 @@ if __name__ == '__main__':
                         type=str, nargs='+', help="Subjects", required=False)
     parser.add_argument("-sessions", "-ses", dest="ses",
                         type=str, nargs='+', help="Sessions", required=False)
-    parser.add_argument("-acquisitions", "-acq", dest="acq", type=str, nargs='+', default=None,
-                        help="Acquisitions")
-    parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+', default=None,
-                        help="Records")
+    parser.add_argument("-acquisitions", "-acq", dest="acq", type=str,
+                        nargs='+', default=None, help="Acquisitions")
+    parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+',
+                        default=None, help="Records")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
     parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
