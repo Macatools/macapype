@@ -76,8 +76,13 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
+<<<<<<< HEAD
                          acquisitions, records, params_file, indiv_params_file,
                          wf_name="test_pipeline_single", mask_file = None):
+=======
+                         acquisitions, reconstructions, params_file, indiv_params_file,
+                         wf_name="test_pipeline_single"):
+>>>>>>> 16d112a8e281c3c94fb1b3d336705f3df62b52d9
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -201,13 +206,14 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     if indiv_params:
         datasource = create_datasource_indiv_params(data_dir, indiv_params,
                                                     subjects, sessions,
-                                                    acquisitions, records)
+                                                    acquisitions,
+                                                    reconstructions)
 
         main_workflow.connect(datasource, "indiv_params",
                               segment_pnh,'inputnode.indiv_params')
     else:
         datasource = create_datasource(data_dir, subjects, sessions,
-                                       acquisitions, records)
+                                       acquisitions, reconstructions)
 
     main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
 
@@ -265,7 +271,7 @@ if __name__ == '__main__':
         subjects=args.sub,
         sessions=args.ses,
         acquisitions=args.acq,
-        records=args.rec,
+        reconstructions=args.rec,
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file,
         mask_file=args.mask_file)

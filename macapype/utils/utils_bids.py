@@ -8,7 +8,7 @@ from .utils_nodes import BIDSDataGrabberParams
 
 
 def create_datasource(data_dir, subjects=None, sessions=None,
-                      acquisitions=None, records=None):
+                      acquisitions=None, reconstructions=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
         interface=nio.BIDSDataGrabber(),
@@ -49,8 +49,8 @@ def create_datasource(data_dir, subjects=None, sessions=None,
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
 
-    if records is not None:
-        iterables.append(('recording', records))
+    if reconstructions is not None:
+        iterables.append(('reconstruction', reconstructions))
 
     bids_datasource.iterables = iterables
 
@@ -59,7 +59,7 @@ def create_datasource(data_dir, subjects=None, sessions=None,
 
 def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
                                    sessions=None, acquisitions=None,
-                                   records=None):
+                                   reconstructions=None):
     """ Create a datasource node that have iterables following BIDS format,
     including a indiv_params file"""
 
@@ -100,8 +100,8 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
 
-    if records is not None:
-        iterables.append(('recording', records))
+    if reconstructions is not None:
+        iterables.append(('reconstruction', reconstructions))
 
     bids_datasource.iterables = iterables
 
