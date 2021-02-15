@@ -87,8 +87,6 @@ def create_full_spm_subpipes(
 
     # preprocessing
     if 'short_preparation_pipe' in params.keys():
-        assert 'bet_crop' in parse_key(params, "short_preparation_pipe"),\
-            "This version should contains betcrop in params.json"
 
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"))
@@ -209,8 +207,14 @@ def create_full_T1_spm_subpipes(
     )
 
     # preprocessing
-    data_preparation_pipe = create_short_preparation_pipe(
-        params=parse_key(params, "short_preparation_pipe"))
+    # preprocessing
+    if 'short_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_short_preparation_pipe(
+            params=parse_key(params, "short_preparation_pipe"))
+    else:
+        print("Error, short_preparation_pipe was not \
+            found in params, skipping")
+        return seg_pipe
 
     seg_pipe.connect(inputnode, 'list_T1',
                      data_preparation_pipe, 'inputnode.list_T1')
@@ -228,8 +232,13 @@ def create_full_T1_spm_subpipes(
                      debias, 't1_file')
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      debias, 't2_file')
-    seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
-                     debias, 'b')
+
+    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
+        seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
+                         debias, 'b')
+    else:
+        debias.inputs.bet = 1
+
     seg_pipe.connect(
         inputnode, ('indiv_params', parse_key, "debias"),
         debias, 'indiv_params')
@@ -428,7 +437,7 @@ def create_brain_segment_from_mask_pipe(
 
 # (-soft ANTS)
 def create_full_ants_subpipes(
-        params_template, params={}, name="full_ants_subpipes"):
+        params_template, params={}, name="full_ants_subpipes", mask_file=None):
     """Description: Segment T1 (using T2 for bias correction) .
 
     new version (as it is now)
@@ -507,21 +516,23 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
-    # full extract brain pipeline (correct_bias, denoising, extract brain)
-    if "brain_extraction_pipe" not in params.keys():
-        return seg_pipe
+    if mask_file is None:
 
-    brain_extraction_pipe = create_brain_extraction_pipe(
-        params=parse_key(params, "brain_extraction_pipe"),
-        params_template=params_template)
+        # full extract brain pipeline (correct_bias, denoising, extract brain)
+        if "brain_extraction_pipe" not in params.keys():
+            return seg_pipe
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     brain_extraction_pipe, 'inputnode.preproc_T1')
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                     brain_extraction_pipe, 'inputnode.preproc_T2')
+        brain_extraction_pipe = create_brain_extraction_pipe(
+            params=parse_key(params, "brain_extraction_pipe"),
+            params_template=params_template)
 
-    seg_pipe.connect(inputnode, 'indiv_params',
-                     brain_extraction_pipe, 'inputnode.indiv_params')
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         brain_extraction_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
+                         brain_extraction_pipe, 'inputnode.preproc_T2')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         brain_extraction_pipe, 'inputnode.indiv_params')
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
@@ -535,9 +546,14 @@ def create_full_ants_subpipes(
                      brain_segment_pipe, 'inputnode.preproc_T1')
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      brain_segment_pipe, 'inputnode.preproc_T2')
-    seg_pipe.connect(brain_extraction_pipe,
-                     "extract_pipe.smooth_mask.out_file",
-                     brain_segment_pipe, "inputnode.brain_mask")
+
+    if mask_file is None:
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_pipe.smooth_mask.out_file",
+                         brain_segment_pipe, "inputnode.brain_mask")
+    else:
+        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
+
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
