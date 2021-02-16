@@ -6,7 +6,7 @@ import nipype.interfaces.spm as spm
 
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 
-from ..utils.misc import get_elem, merge_3_elem_to_list
+from ..utils.misc import gunzip, get_elem, merge_3_elem_to_list
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
 
@@ -139,7 +139,16 @@ def create_old_segment_pipe(params_template, params={},
         name='inputnode'
     )
 
-    assert set_spm(), "Error, SPM was not found, cannot run Regis pipeline"
+    assert set_spm(), \
+        "Error, SPM was not found, cannot run SPM old segment pipeline"
+
+    unzip = pe.Node(
+        interface=niu.Function(input_names=['zipped_file'],
+                               output_names=["unzipped_file"],
+                               function=gunzip),
+        name="unzip")
+
+    be_pipe.connect(inputnode, 'T1', unzip, 'zipped_file')
 
     # Segment in to 6 tissues
     segment = NodeParams(spm.Segment(),
@@ -150,7 +159,7 @@ def create_old_segment_pipe(params_template, params={},
                                        params_template["template_wm"],
                                        params_template["template_csf"]]
 
-    be_pipe.connect(inputnode, 'T1', segment, 'data')
+    be_pipe.connect(unzip, 'unzipped_file', segment, 'data')
 
     # Threshold GM, WM and CSF
     thd_nodes = {}

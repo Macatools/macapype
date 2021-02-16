@@ -76,13 +76,8 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
-<<<<<<< HEAD
-                         acquisitions, records, params_file, indiv_params_file,
-                         wf_name="test_pipeline_single", mask_file = None):
-=======
                          acquisitions, reconstructions, params_file, indiv_params_file,
-                         wf_name="test_pipeline_single"):
->>>>>>> 16d112a8e281c3c94fb1b3d336705f3df62b52d9
+                         wf_name="test_pipeline_single", mask_file = None):
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -145,7 +140,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     indiv_params = {}
     if indiv_params_file is not None:
 
-        print("Multi Params:", indiv_params_file)
+        print("Indiv Params:", indiv_params_file)
 
         assert os.path.exists(indiv_params_file), "Error with file {}".format(
             indiv_params_file)
@@ -255,7 +250,7 @@ if __name__ == '__main__':
                         default=None, help="Records")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
-    parser.add_argument("-indiv_params", dest="indiv_params_file", type=str,
+    parser.add_argument("-indiv_params", "-indiv", dest="indiv_params_file", type=str,
                         help="Individual parameters json file", required=False)
     parser.add_argument("-mask", dest="mask_file", type=str,
                         help="precomputed mask file", required=False)

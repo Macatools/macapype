@@ -25,9 +25,9 @@ from .register import create_register_NMT_pipe
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
 
-from .surface import create_nii_to_mesh_pipe
+from .surface import create_nii_to_mesh_pipe, create_nii_to_mesh_fs_pipe
 
-from macapype.utils.misc import gunzip, parse_key, list_input_files
+from macapype.utils.misc import parse_key, list_input_files
 
 
 ###############################################################################
@@ -111,6 +111,8 @@ def create_full_spm_subpipes(
                      debias, 't1_file')
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      debias, 't2_file')
+    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
+                     debias, 'indiv_params')
 
     if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
         seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
@@ -140,12 +142,28 @@ def create_full_spm_subpipes(
         old_segment_pipe = create_old_segment_pipe(
             params_template, params=parse_key(params, "old_segment_pipe"))
 
-        seg_pipe.connect(reg, ('warp_file', gunzip),
+        seg_pipe.connect(reg, 'warp_file',
                          old_segment_pipe, 'inputnode.T1')
 
         seg_pipe.connect(
             inputnode, 'indiv_params',
             old_segment_pipe, 'inputnode.indiv_params')
+
+    else:
+        return seg_pipe
+
+    if "nii_to_mesh_fs_pipe" in params.keys():
+        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
+            params=parse_key(params, "nii_to_mesh_fs_pipe"))
+
+        seg_pipe.connect(reg, 'warp_file',
+                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
+
+        seg_pipe.connect(old_segment_pipe, 'threshold_wm.out_file',
+                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
 
@@ -207,7 +225,6 @@ def create_full_T1_spm_subpipes(
     )
 
     # preprocessing
-    # preprocessing
     if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"))
@@ -232,16 +249,14 @@ def create_full_T1_spm_subpipes(
                      debias, 't1_file')
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      debias, 't2_file')
+    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
+                     debias, 'indiv_params')
 
     if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
         seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
                          debias, 'b')
     else:
         debias.inputs.bet = 1
-
-    seg_pipe.connect(
-        inputnode, ('indiv_params', parse_key, "debias"),
-        debias, 'indiv_params')
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
@@ -251,9 +266,9 @@ def create_full_T1_spm_subpipes(
     seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
     seg_pipe.connect(debias, 't1_debiased_brain_file',
                      reg, 'inb_file')
-    seg_pipe.connect(
-        inputnode, ('indiv_params', parse_key, "reg"),
-        reg, 'indiv_params')
+
+    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
+                     reg, 'indiv_params')
 
     # Subject to _template (ants)
     nonlin_reg = NodeParams(ants.RegistrationSynQuick(),
@@ -277,12 +292,11 @@ def create_full_T1_spm_subpipes(
         old_segment_pipe = create_old_segment_pipe(
             params_template, params=parse_key(params, "old_segment_pipe"))
 
-        seg_pipe.connect(nonlin_reg, ('warped_image', gunzip),
+        seg_pipe.connect(nonlin_reg, 'warped_image',
                          old_segment_pipe, 'inputnode.T1')
 
-        seg_pipe.connect(
-            inputnode, 'indiv_params',
-            old_segment_pipe, 'inputnode.indiv_params')
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         old_segment_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
 
@@ -557,33 +571,33 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
-    if 'nii_to_mesh_pipe' not in params.keys():
-        return seg_pipe
+    if 'nii_to_mesh_pipe' in params.keys():
 
-    nii_to_mesh_pipe = create_nii_to_mesh_pipe(
-        params_template=params_template,
-        params=parse_key(params, "nii_to_mesh_pipe"))
+        nii_to_mesh_pipe = create_nii_to_mesh_pipe(
+            params_template=params_template,
+            params=parse_key(params, "nii_to_mesh_pipe"))
 
-    # from data_preparation_pipe
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     nii_to_mesh_pipe, 'inputnode.t1_ref_file')
+        # from data_preparation_pipe
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         nii_to_mesh_pipe, 'inputnode.t1_ref_file')
 
-    # from brain_segment_pipe
-    seg_pipe.connect(brain_segment_pipe,
-                     'register_NMT_pipe.NMT_subject_align.warpinv_file',
-                     nii_to_mesh_pipe, 'inputnode.warpinv_file')
+        # from brain_segment_pipe
+        seg_pipe.connect(brain_segment_pipe,
+                         'register_NMT_pipe.NMT_subject_align.warpinv_file',
+                         nii_to_mesh_pipe, 'inputnode.warpinv_file')
 
-    seg_pipe.connect(brain_segment_pipe,
-                     'register_NMT_pipe.NMT_subject_align.inv_transfo_file',
-                     nii_to_mesh_pipe, 'inputnode.inv_transfo_file')
+        seg_pipe.connect(
+            brain_segment_pipe,
+            'register_NMT_pipe.NMT_subject_align.inv_transfo_file',
+            nii_to_mesh_pipe, 'inputnode.inv_transfo_file')
 
-    seg_pipe.connect(brain_segment_pipe,
-                     'register_NMT_pipe.NMT_subject_align.aff_file',
-                     nii_to_mesh_pipe, 'inputnode.aff_file')
+        seg_pipe.connect(brain_segment_pipe,
+                         'register_NMT_pipe.NMT_subject_align.aff_file',
+                         nii_to_mesh_pipe, 'inputnode.aff_file')
 
-    seg_pipe.connect(brain_segment_pipe,
-                     'segment_atropos_pipe.seg_at.segmented_file',
-                     nii_to_mesh_pipe, "inputnode.segmented_file")
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.seg_at.segmented_file',
+                         nii_to_mesh_pipe, "inputnode.segmented_file")
 
     return seg_pipe
 

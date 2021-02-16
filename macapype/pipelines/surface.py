@@ -4,52 +4,11 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
+import nipype.interfaces.freesurfer as fs
 
 import macapype.nodes.register as reg
-from macapype.nodes.surface import Meshify
+from macapype.nodes.surface import Meshify, split_LR_mask
 from macapype.utils.utils_nodes import parse_key, NodeParams
-
-
-def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
-
-    import os
-
-    import nibabel as nib
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
-
-    path, fname, ext = split_f(LR_mask_file)
-
-    LR_mask_img = nib.load(LR_mask_file)
-
-    LR_mask_data = LR_mask_img.get_fdata()
-
-    # L_mask
-    L_mask_data = np.zeros(shape=LR_mask_data.shape)
-
-    L_mask_data[LR_mask_data == left_index] = 1
-
-    L_mask_file = os.path.abspath("L_mask"+ext)
-
-    nib.save(
-        nib.Nifti1Image(L_mask_data, affine=LR_mask_img.affine,
-                        header=LR_mask_img.header),
-        L_mask_file)
-
-    # R_mask
-    R_mask_data = np.zeros(shape=LR_mask_data.shape)
-
-    R_mask_data[LR_mask_data == right_index] = 1
-
-    R_mask_file = os.path.abspath("R_mask"+ext)
-
-    nib.save(
-        nib.Nifti1Image(R_mask_data, affine=LR_mask_img.affine,
-                        header=LR_mask_img.header),
-        R_mask_file)
-
-    return L_mask_file, R_mask_file
 
 
 def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
@@ -68,7 +27,6 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
     # get values
 
     if "cereb_template" in params_template.keys():
-
         cereb_template_file = params_template["cereb_template"]
 
         # ### cereb
@@ -422,3 +380,128 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
                              mesh_R_WM, "image_file")
 
     return mesh_to_seg_pipe
+
+###############################################################################
+
+# using freesurfer tools to build the mesh through tesselation
+
+
+def create_nii_to_mesh_fs_pipe(params, name="nii_to_mesh_fs_pipe"):
+
+    # creating pipeline
+    nii_to_mesh_fs_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['wm_mask_file', 'reg_brain_file',
+                                      'indiv_params']),
+        name='inputnode')
+
+    # resample everything
+    refit_wm = pe.Node(interface=afni.Refit(), name="refit_wm")
+    refit_wm.inputs.args = "-xdel 1.0 -ydel 1.0 -zdel 1.0 -keepcen"
+
+    nii_to_mesh_fs_pipe.connect(inputnode, 'wm_mask_file',
+                                refit_wm, 'in_file')
+
+    # resample everything
+    refit_reg = pe.Node(interface=afni.Refit(), name="refit_reg")
+    refit_reg.inputs.args = "-xdel 1.0 -ydel 1.0 -zdel 1.0 -keepcen"
+
+    nii_to_mesh_fs_pipe.connect(inputnode, 'reg_brain_file',
+                                refit_reg, 'in_file')
+
+    # mri_convert wm to freesurfer mgz
+    convert_wm = pe.Node(interface=fs.MRIConvert(),
+                         name="convert_wm")
+    convert_wm.inputs.out_type = "mgz"
+    convert_wm.inputs.conform = True
+
+    nii_to_mesh_fs_pipe.connect(refit_wm, 'out_file',
+                                convert_wm, 'in_file')
+
+    # mri_convert reg to freesurfer mgz
+    convert_reg = pe.Node(interface=fs.MRIConvert(),
+                          name="convert_reg")
+    convert_reg.inputs.out_type = "mgz"
+    convert_reg.inputs.conform = True
+
+    nii_to_mesh_fs_pipe.connect(refit_reg, 'out_file',
+                                convert_reg, 'in_file')
+
+    # mri_fill
+    fill_wm = NodeParams(interface=fs.MRIFill(),
+                         params=parse_key(params, "fill_wm"),
+                         name="fill_wm")
+
+    fill_wm.inputs.out_file = "filled.mgz"
+
+    nii_to_mesh_fs_pipe.connect(convert_wm, 'out_file',
+                                fill_wm, 'in_file')
+
+    nii_to_mesh_fs_pipe.connect(
+        inputnode, ("indiv_params", parse_key, "fill_wm"),
+        fill_wm, 'indiv_params')
+
+    # pretesselate wm
+    pretess_wm = pe.Node(interface=fs.MRIPretess(),
+                         name="pretess_wm")
+    pretess_wm.inputs.label = 255
+
+    nii_to_mesh_fs_pipe.connect(fill_wm, 'out_file',
+                                pretess_wm, 'in_filled')
+
+    nii_to_mesh_fs_pipe.connect(convert_reg, 'out_file',
+                                pretess_wm, 'in_norm')
+
+    # tesselate wm lh
+    tess_wm_lh = pe.Node(interface=fs.MRITessellate(), name="tess_wm_lh")
+    tess_wm_lh.inputs.label_value = 255
+    tess_wm_lh.inputs.out_file = "lh_tess"
+
+    nii_to_mesh_fs_pipe.connect(pretess_wm, 'out_file',
+                                tess_wm_lh, 'in_file')
+
+    # tesselate wm rh
+    tess_wm_rh = pe.Node(interface=fs.MRITessellate(), name="tess_wm_rh")
+    tess_wm_rh.inputs.label_value = 127
+    tess_wm_rh.inputs.out_file = "rh_tess"
+
+    nii_to_mesh_fs_pipe.connect(pretess_wm, 'out_file',
+                                tess_wm_rh, 'in_file')
+
+    # ExtractMainComponent lh
+    extract_mc_lh = pe.Node(interface=fs.ExtractMainComponent(),
+                            name="extract_mc_lh")
+
+    nii_to_mesh_fs_pipe.connect(tess_wm_lh, 'surface',
+                                extract_mc_lh, 'in_file')
+
+    extract_mc_lh.inputs.out_file = "lh.lh_tess.maincmp"
+
+    # ExtractMainComponent rh
+    extract_mc_rh = pe.Node(interface=fs.ExtractMainComponent(),
+                            name="extract_mc_rh")
+
+    nii_to_mesh_fs_pipe.connect(tess_wm_rh, 'surface',
+                                extract_mc_rh, 'in_file')
+
+    extract_mc_rh.inputs.out_file = "rh.rh_tess.maincmp"
+
+    # SmoothTessellation lh
+    smooth_tess_lh = pe.Node(interface=fs.SmoothTessellation(),
+                             name="smooth_tess_lh")
+    smooth_tess_lh.inputs.disable_estimates = True
+
+    nii_to_mesh_fs_pipe.connect(extract_mc_lh, 'out_file',
+                                smooth_tess_lh, 'in_file')
+
+    # SmoothTessellation rh
+    smooth_tess_rh = pe.Node(interface=fs.SmoothTessellation(),
+                             name="smooth_tess_rh")
+    smooth_tess_rh.inputs.disable_estimates = True
+
+    nii_to_mesh_fs_pipe.connect(extract_mc_rh, 'out_file',
+                                smooth_tess_rh, 'in_file')
+
+    return nii_to_mesh_fs_pipe

@@ -113,7 +113,7 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
         # denoise with Ants package
         # (taking into account whether reorient has been performed or not)
         denoise_first = NodeParams(interface=DenoiseImage(),
-                                   params=parse_key(params, "denoise"),
+                                   params=parse_key(params, "denoise_first"),
                                    name="denoise")
 
         if "reorient" in params.keys():
@@ -361,7 +361,7 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
             new_dims = tuple(params["reorient"]["new_dims"].split())
 
         else:
-            new_dims = ("x", "z", "-y")
+            new_dims = ("x", "z", "-y")  # if sphinx based I think
 
         reorient_T1_pipe = _create_reorient_pipeline(
             name="reorient_T1_pipe", new_dims=new_dims)
@@ -415,6 +415,14 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         crop_T2 = NodeParams(fsl.ExtractROI(),
                              params=parse_key(params, 'crop'),
                              name='crop_T2')
+
+        data_preparation_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "crop"),
+            crop_T1, 'indiv_params')
+
+        data_preparation_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "crop"),
+            crop_T2, 'indiv_params')
 
         if "reorient" in params.keys():
             data_preparation_pipe.connect(reorient_T1_pipe,
