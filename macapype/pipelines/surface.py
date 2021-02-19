@@ -11,8 +11,48 @@ from macapype.nodes.surface import Meshify, split_LR_mask
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
 
-def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
+def _create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
 
+    """Description: Split segmentated tissus according hemisheres after \
+    removal of cortical structure
+
+    Processing steps:
+
+    - TODO
+
+    Params:
+
+        - None so far
+
+    Inputs:
+
+        inputnode:
+
+            warpinv_file:
+                non-linear transformation (from NMT_subject_align)
+
+            inv_transfo_file:
+                inverse transformation
+
+            aff_file:
+                affine transformation file
+
+            t1_ref_file:
+                preprocessd T1
+
+            segmented_file:
+                from atropos segmentation, with all the tissues segmented
+
+        arguments:
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "split_hemi_pipe")
+
+    Outputs:
+    """
     split_hemi_pipe = pe.Workflow(name=name)
 
     # creating inputnode
@@ -314,7 +354,51 @@ def create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
 
 
 def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
+    """
+    Description: basic nii to mesh pipeline after segmentation
 
+    Processing steps:
+
+    - split in hemisphere after removal of the subcortical structures
+    - using scipy marching cube methods to compute mesh
+    - some smoothing (using brain-slam)
+
+    Params:
+
+        - split_hemi_pipe (see :class:`_create_split_hemi_pipe \
+        <macapype.pipelines.surface._create_split_hemi_pipe>` for arguments)
+        - mesh_L_GM, mesh_R_GM, mesh_L_WM, mesh_R_WM (see :class:`Meshify  \
+        <macapype.nodes.surface.Meshify>` for arguments)
+
+    Inputs:
+
+        inputnode:
+
+            warpinv_file:
+                non-linear transformation (from NMT_subject_align)
+
+            inv_transfo_file:
+                inverse transformation
+
+            aff_file:
+                affine transformation file
+
+            t1_ref_file:
+                preprocessd T1
+
+            segmented_file:
+                from atropos segmentation, with all the tissues segmented
+
+        arguments:
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "nii_to_mesh_pipe")
+
+    Outputs:
+    """
     # creating pipeline
     mesh_to_seg_pipe = pe.Workflow(name=name)
 
@@ -328,18 +412,18 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
         name='inputnode')
 
     # split hemi pipe (+ cerebellum)
-    split_hemi_pipe = create_split_hemi_pipe(
+    split_hemi_pipe = _create_split_hemi_pipe(
         params=parse_key(params, "split_hemi_pipe"),
         params_template=params_template)
 
     mesh_to_seg_pipe.connect(inputnode, 'warpinv_file',
                              split_hemi_pipe, 'inputnode.warpinv_file')
 
-    mesh_to_seg_pipe.connect(inputnode, 'aff_file',
-                             split_hemi_pipe, 'inputnode.aff_file')
-
     mesh_to_seg_pipe.connect(inputnode, 'inv_transfo_file',
                              split_hemi_pipe, 'inputnode.inv_transfo_file')
+
+    mesh_to_seg_pipe.connect(inputnode, 'aff_file',
+                             split_hemi_pipe, 'inputnode.aff_file')
 
     mesh_to_seg_pipe.connect(inputnode, 't1_ref_file',
                              split_hemi_pipe, 'inputnode.t1_ref_file')
@@ -381,13 +465,45 @@ def create_nii_to_mesh_pipe(params, params_template, name="nii_to_mesh_pipe"):
 
     return mesh_to_seg_pipe
 
+
 ###############################################################################
-
 # using freesurfer tools to build the mesh through tesselation
-
-
 def create_nii_to_mesh_fs_pipe(params, name="nii_to_mesh_fs_pipe"):
 
+    """
+    Description: surface generation using freesurfer tools
+
+    Params:
+
+    - fill_wm (see `MRIFill <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.freesurfer.utils.html#mrifill>`_) \
+    - also available as :ref:`indiv_params <indiv_params>`
+
+
+    Inputs:
+
+        inputnode:
+
+            wm_mask_file:
+                segmented white matter mask (binary) in template space
+
+            reg_brain_file:
+                preprocessd T1, registered to template
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+        arguments:
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "nii_to_mesh_fs_pipe")
+
+    Outputs:
+
+    """
     # creating pipeline
     nii_to_mesh_fs_pipe = pe.Workflow(name=name)
 

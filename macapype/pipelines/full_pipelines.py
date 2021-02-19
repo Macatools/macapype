@@ -35,35 +35,57 @@ from macapype.utils.misc import parse_key, list_input_files
 def create_full_spm_subpipes(
         params_template, params={}, name='full_spm_subpipes'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
+    in template space
 
-        - data_preparation_pipe:
-            - avg_align
-            - deoblique,
-            - reorient if needed
-            - bet_crop (brain extraction and crop) -> mask
-            - denoise
-        - T1xT2BiasFieldCorrection using mask -> debias
-        - IterREGBET -> registration to template file
-        - old_segment_pipe
+    Processing steps:
+
+    - Data preparation (short, with betcrop or crop)
+    - debias using T1xT2BiasFieldCorrection (using mask is betcrop)
+    - registration to template file with IterREGBET
+    - SPM segmentation the old way (SPM8, not dartel based)
+
+    Params:
+
+    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
+    <macapype.pipelines.prepare.create_short_preparation_pipe>`)
+    - debias (see :class:`T1xT2BiasFieldCorrection \
+    <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    - reg (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>`) - \
+    also available as :ref:`indiv_params <indiv_params>`
+    - old_segment_pipe (see :class:`create_old_segment_pipe \
+    <macapype.pipelines.segment.create_old_segment_pipe>`)
+    - nii_to_mesh_fs_pipe (see :class:`create_nii_to_mesh_fs_pipe \
+    <macapype.pipelines.surface.create_nii_to_mesh_fs_pipe>`)
 
     Inputs:
 
         inputnode:
-            list_T1: T1 file names
-            list_T2: T2 file names
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            list_T1:
+                T1 file names
+
+            list_T2:
+                T2 file names
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
 
         arguments:
-            params_template: dict of template files containing brain_template
-            and priors (list of template based segmented tissues)
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dict of template files containing brain_template and priors \
+            (list of template based segmented tissues)
 
-            name: pipeline name (default = "full_spm_subpipes")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_spm_subpipes")
 
     Outputs:
+
             old_segment_pipe.thresh_gm.out_file:
                 segmented grey matter in template space
 
@@ -173,36 +195,52 @@ def create_full_spm_subpipes(
 def create_full_T1_spm_subpipes(
         params_template, params={}, name='full_T1_spm_subpipes'):
     """ Description: SPM based segmentation pipeline from T1w image only.
-        This is fact the same as create_full_spm_subpipes, where T2 is
-        replaced by T1
+    This is fact the same as create_full_spm_subpipes, where T2 is \
+    replaced by T1
 
-        - data_preparation_pipe:
-            - avg_align
-            - deoblique,
-            - reorient if needed
-            - bet_crop (brain extraction and crop) -> mask
-            - denoise
-        - T1xT2BiasFieldCorrection using mask -> debias
-        - IterREGBET -> registration to template file
-        - old_segment_pipe
+    Processing steps:
+
+
+    - Data preparation (short, with betcrop or crop) on T1 (2 times)
+    - debias using T1xT2BiasFieldCorrection (using mask is betcrop)
+    - registration to template file with IterREGBET
+    - SPM segmentation the old way (SPM8, not dartel based)
+
+    Params:
+
+    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
+    <macapype.pipelines.prepare.create_short_preparation_pipe>`)
+    - debias (see :class:`T1xT2BiasFieldCorrection \
+    <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`)
+    - reg (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>`)
+    - old_segment_pipe (see :class:`create_old_segment_pipe \
+    <macapype.pipelines.segment.create_old_segment_pipe>`)
 
     Inputs:
 
         inputnode:
-            list_T1: T1 file names
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            list_T1:
+                T1 file names
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
 
         arguments:
-            params_template: dict of template files containing brain_template
-            and priors (list of template based segmented tissues)
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dict of template files containing brain_template and priors \
+                (list of template based segmented tissues)
 
-            name: pipeline name (default = "full_spm_subpipes")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_spm_subpipes")
 
     Outputs:
+
             old_segment_pipe.thresh_gm.out_file:
                 segmented grey matter in template space
 
@@ -300,33 +338,45 @@ def create_full_T1_spm_subpipes(
 
     return seg_pipe
 
+
 ###############################################################################
 # ANTS based segmentation (from Kepkee Loh / Julien Sein)
-
-
 def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
-    """ Description: ANTS based segmentation pipeline using T1w and T2w images
+    """ Description: Brain extraction with atlas-brex after debiasing
 
-    - correct_bias
+    Params:
 
-    - denoise
+    - correct_bias_pipe (see :class:`create_correct_bias_pipe \
+    <macapype.pipelines.correct_bias.create_correct_bias_pipe>`)
+    - extract_pipe (see `create_extract_pipe <macapype.pipeline.\
+    extract_brain.create_extract_pipe>`)
 
-    - extract_brain
 
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file
-            preproc_T2: preprocessed T2 file
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            preproc_T1:
+                preprocessed T1 file
+
+            preproc_T2:
+                preprocessed T2 file
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
 
         arguments:
-            params_template: dictionary of template files
-            params: dictionary of node sub-parameters (from a json file)
-            name: pipeline name (default = "full_segment_pipe")
+
+            params_template:
+                dictionary of template files
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
 
     Outputs:
 
@@ -368,30 +418,42 @@ def create_brain_segment_from_mask_pipe(
     """ Description: Segment T1 (using T2 for bias correction) and a previously
     computed mask with NMT Atlas and atropos segment.
 
-    - debias T1xT2 in mask only (masked_correct_bias_pipe)
+    Params:
 
-    - NMT align (after N4Debias)
-
-    - Atropos segment
+    - masked_correct_bias_pipe (see :class:`create_masked_correct_bias_pipe \
+    <macapype.pipelines.correct_bias.create_masked_correct_bias_pipe>`)
+    - register_NMT_pipe (see :class:`create_register_NMT_pipe \
+    <macapype.pipelines.register.create_register_NMT_pipe>`)
+    - segment_atropos_pipe (see :class:`create_segment_atropos_pipe \
+    <macapype.pipelines.segment.create_segment_atropos_pipe>`)
 
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file name
 
-            preproc_T2: preprocessed T2 file name
+            preproc_T1:
+                preprocessed T1 file name
 
-            brain_mask: a mask computed for the same T1/T2 images
+            preproc_T2:
+                preprocessed T2 file name
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            brain_mask:
+                a mask computed for the same T1/T2 images
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
 
         arguments:
-            params_template: dictionary of template files
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of template files
 
-            name: pipeline name (default = "full_segment_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
 
     Outputs:
 
@@ -454,37 +516,51 @@ def create_full_ants_subpipes(
         params_template, params={}, name="full_ants_subpipes", mask_file=None):
     """Description: Segment T1 (using T2 for bias correction) .
 
-    new version (as it is now)
-    - brain preproc (avg and align, reorient of specified cropping from T1xT2BET, bet is optional) # noqa
-    - brain extraction (see create_brain_extraction_pipe):
-        - correct_bias
-        - denoise
-        - extract_brain
-    - brain segment from mask (see create_brain_segment_from_mask_pipe):
-        - denoise pipe
-        - debias pipe
-        - NMT align (after N4Debias)
-        - Atropos segment
+    Params:
+
+    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
+    <macapype.pipelines.prepare.create_short_preparation_pipe>`) or \
+    long_single_preparation_pipe \
+    (see :class:`create_long_single_preparation_pipe \
+    <macapype.pipelines.prepare.create_long_single_preparation_pipe>`) or \
+    long_multi_preparation_pipe \
+    (see :class:`create_long_multi_preparation_pipe \
+    <macapype.pipelines.prepare.create_long_multi_preparation_pipe>`)
+
+    - brain_extraction_pipe (see :class:`create_brain_extraction_pipe \
+    <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`)
+    - brain_segment_pipe (see :class:`create_brain_segment_from_mask_pipe\
+    <macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe>`)
+    - nii_to_mesh_pipe (see :class:`create_nii_to_mesh_pipe\
+    <macapype.pipelines.surface.create_nii_to_mesh_pipe>`)
 
     Inputs:
 
         inputnode:
-            list_T1: preprocessed T1 file name
 
-            list_T2: preprocessed T2 file name
+            list_T1:
+                preprocessed T1 file name
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            list_T2:
+                preprocessed T2 file name
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
         arguments:
-            params_template: dictionary of template files
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of template files
 
-            name: pipeline name (default = "full_segment_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
 
     Outputs:
-
     """
+
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
 
@@ -610,27 +686,37 @@ def create_full_ants_subpipes(
 # in brain extraction and brain segmentation
 def create_brain_extraction_T1_pipe(params_template, params={},
                                     name="brain_extraction_T1_pipe"):
-    """ Description: Brain extraction with only T1 images.
+    """
+    Description: Brain extraction with only T1 images.
 
-    - N4biascorrection (replacing T2 bias correction with N4)
-
-    - extract_brain using atlasbrex
+    - extract_T1_pipe (see `create_extract_T1_pipe <macapype.pipeline.\
+    extract_brain.create_extract_T1_pipe>`)
 
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file
-            indiv_params (opt): dict with individuals parameters for some nodes
 
+            preproc_T1:
+                preprocessed T1 file
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
         arguments:
-            params_template: dictionary of template files
-            params: dictionary of node sub-parameters (from a json file)
-            name: pipeline name (default = "full_segment_pipe")
+
+            params_template:
+                dictionary of template files
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
 
     Outputs:
 
     """
+
     # creating pipeline
     brain_extraction_pipe = pe.Workflow(name=name)
 
@@ -653,31 +739,40 @@ def create_brain_extraction_T1_pipe(params_template, params={},
 
 def create_brain_segment_from_mask_T1_pipe(
         params_template, params={}, name="brain_segment_from_mask_T1_pipe"):
-    """ Description: Segment T1 (using T2 for bias correction) and a previously
-    computed mask with NMT Atlas and atropos segment.
+    """
+    Description: Segment T1 from a previously computed mask.
 
-    - debias T1xT2 in mask only (masked_correct_bias_pipe)
+    Params:
 
-    - NMT align (after N4Debias)
-
-    - Atropos segment
+    - register_NMT_pipe (see :class:`create_register_NMT_pipe \
+    <macapype.pipelines.register.create_register_NMT_pipe>`)
+    - segment_atropos_pipe (see :class:`create_segment_atropos_pipe \
+    <macapype.pipelines.segment.create_segment_atropos_pipe>`)
 
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file name
 
-            brain_mask: a mask computed for the same T1/T2 images
+            preproc_T1:
+                preprocessed T1 file name
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            brain_mask:
+                a mask computed for the same T1/T2 images
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
 
         arguments:
-            params_template: dictionary of template files
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of template files
 
-            name: pipeline name (default = "full_segment_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
 
     Outputs:
 
@@ -732,41 +827,45 @@ def create_brain_segment_from_mask_T1_pipe(
 
 
 # -soft ANTS_T1
-def create_full_T1_ants_subpipes(
-    params_template, params={},
-        name="full_T1_ants_subpipes"):
-    """Description: Segment T1 (with no T2).
+def create_full_T1_ants_subpipes(params_template, params={},
+                                 name="full_T1_ants_subpipes"):
+    """Description: Full pipeline to segment T1 (with no T2).
 
-    - brain preproc (short_prepration pipe - try betcrop with the same file,
-    includes denoising from ants)
-    - Perform N4biascorrection with defined parameters.
-    - brain extraction (see create_brain_extraction_pipe):
-        - correct_bias
-        - denoise
-        - extract_brain
-    - brain segment from mask (see create_brain_segment_from_mask_pipe):
-        - denoise pipe
-        - debias pipe
-        - NMT align (after N4Debias)
-        - Atropos segment
+    Params:
+
+    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe <\
+    macapype.pipelines.prepare.create_short_preparation_pipe>`
+    - brain_extraction_T1_pipe (see :class:`create_brain_extraction_T1_pipe \
+    <macapype.pipelines.full_pipelines.create_brain_extraction_T1_pipe>`)
+    - brain_segment_T1_pipe (see \
+    :class:`create_brain_segment_from_mask_T1_pipe \
+<macapype.pipelines.full_pipelines.create_brain_segment_from_mask_T1_pipe>`)
 
     Inputs:
 
         inputnode:
-            list_T1: preprocessed T1 file name
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            list_T1:
+                preprocessed T1 file name
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
         arguments:
-            params_template: dictionary of template files
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of template files
 
-            name: pipeline name (default = "full_segment_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
 
     Outputs:
 
     """
+
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
 

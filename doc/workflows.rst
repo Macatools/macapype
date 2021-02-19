@@ -12,19 +12,19 @@ SPM-based pipelines:
 Using T1w and T2w images
 ************************
 
-SPM-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_T1xT2>`, with the processing sequence:
+:class:`full SPM pipeline <macapype.pipelines.full_pipelines.create_full_spm_subpipes>`, with the processing sequence:
 
-* :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
+* :class:`Data preparation <macapype.pipelines.prepare.create_short_preparation_pipe.>`
 * :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`
 * :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
 * :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
 
 
-Unsing only a T1w image
+Using only a T1w image
 ***********************
-<macapype.pipelines.full_pipelines.create_full_spm_subpipes>`, with the processing sequence:
+:class:`full SPM T1 pipeline <macapype.pipelines.full_pipelines.create_full_spm_T1_subpipes>`, with the processing sequence:
 
-* :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
+* :class:`Data preparation <macapype.pipelines.prepare.create_short_preparation_pipe.>`
 * :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>` but the T1w replaces the T2w
 * :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
 * :class:`ANTS non linear registration and FSL Apply XFM to tranform images to the template`
@@ -34,13 +34,14 @@ Unsing only a T1w image
 ANTS-based pipelines:
 ~~~~~~~~~~~~~~~~~~~~~
 
-ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_segment_pnh_subpipes>`, with the processing sequence :
+Using T1w and T2w images
+************************
 
-* :class:`Data preparation <macapype.pipelines.prepare.create_data_preparation_pipe>`
-    - Averaging multiple files from same nature
-    - possibly :class:`reorientation pipeline <macapype.pipelines.prepare.create_reorient_pipeline>`
-    - cropping (using :class:`T1xT2BET <macapype.nodes.extract_brain.T1xT2BET>` for cropping tool, or fslroi specifying cropbox)
-    - denoising from Ants non-local mean
+:class:`full ANTS pipeline <macapype.pipelines.full_pipelines.create_full_ants_subpipes>`, with the processing sequence :
+
+* :class:`Short data preparation <macapype.pipelines.prepare.create_short_preparation_pipe>` or :class:`Long single data preparation <macapype.pipelines.prepare.create_long_single_preparation_pipe>` or :class:`Long multi data preparation <macapype.pipelines.prepare.create_long_multi_preparation_pipe>`
+
+(See :ref:`Pipelines <pipelines>` for more details)
 
 * :class:`Brain extraction pipeline <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`
     - :class:`debias pipeline <macapype.pipelines.correct_bias.create_correct_bias_pipe>` (similar to :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`, but all steps are nipype nodes)
@@ -51,73 +52,54 @@ ANTS-based :class:`full pipeline <macapype.pipelines.full_pipelines.create_full_
     - :class:`register pipeline <macapype.pipelines.register.create_register_NMT_pipe>` from template (NMT) to subject space
     - :class:`segmentation pipeline <macapype.pipelines.segment.create_segment_atropos_pipe>` in subject space with Atropos
 
+Using only T1w images
+************************
+
+:class:`full ANTS T1 pipeline <macapype.pipelines.full_pipelines.create_full_ants_T1_subpipes>`, with the processing sequence :
+
 
 ********************
 How to run workflows
 ********************
 
-Following the BIDS format
-=========================
-
-To run the pipeline over a full BIDS dataset:
+* the main file is located in workflows and is called segment_pnh.py and should be called like a python script:
 
 .. code:: bash
 
-    $ python workflows/segment_pnh_spm_based.py -data ~/Data_maca -out ./local_test
+    $ python workflows/segment_pnh.py
 
-To specify with subjects/sessions you want to run the pipeline on:
+* all the data have to be in BIDS format to run properly (see `BIDS specification <https://bids-specification.readthedocs.io/en/stable/index.html>`_ for more details)
 
-.. code:: bash
+* the following parameters are mandatory:
 
-    $ python workflows/segment_pnh -data ~/Data_maca -out ./local_test -soft SPM -sub Elouk -ses 01
-    $ python workflows/segment_pnh -data ~/Data_maca -out ./local_test -soft SPM -sub Elouk
+    * -data is the path to your data dataset (existing BIDS format directory)
 
-You can also specify a json file containing the parameters of your analysis
+    * -out is the path to the output results (an existing path)
+
+    * -soft can be one of these : SPM or ANTS
+
+        * with _T1 at the end if only T1w (and not T2w) are available
+
+        * with _test to see if the full pipeline is coherent (will only generate the graph.dot and graph.png)
+
+    * -params: a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
 .. code:: bash
 
     $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json
 
-Here is an example of the params.json corresponding to :class:`segment_pnh_spm_based pipeline <macapype.pipelines.full_segment.create_full_segment_pnh_T1xT2>`:
+* the following parameters are optional:
 
-.. include:: ../workflows/params_segment_pnh_spm_based.json
-   :literal:
+    * -indiv or -indiv_params : a json file overwriting the default parameters (both macapype default and parameters specified in -params json file) for specific subjects/sessions. See :ref:`Individual Parameters <indiv_params>` for more details
 
-
-Indiv params:
-=============
-
-Adding -indiv
-*************
-
-You can also include indiv_params.json, for specifiying parameters specific parameters:
-
+    * -sub (-subjects), -ses (-sessions), -acq (-acquisions), -rec (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator.
 
 .. code:: bash
 
-    $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -indiv indiv_params.json
+    $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -sub Apache Baron -ses 01 -rec mean
 
-List of indiv params:
-*********************
+    * -mask allows to specify a precomputed binary mask file (skipping brain extraction). The bets usage of this option if precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified.
 
-Data preparation (ANTS, ANTS_T1, SPM, SPM_T1):
+        * warning: the mask should be in the same space as the data.
 
-- "crop" (args) in short_data_preparation, long_single_preparation and long_multi_preparation
-- "denoise", "denoise_first" (see `Denoise <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html#denoiseimage>`_ for arguments) for long_single_preparation and long_multi_preparation
-- "norm_intensity" (see `N4BiasFieldCorrection<https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html#n4biasfieldcorrection>` for arguments) for long_single_preparation and long_multi_preparation
-
-SPM based pipeline (SPM and SPM_T1):
-- "reg" (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>` for arguments)
-- "debias" (see :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>` for arguments)
-
-Old segment (SPM and SPM_T1):
-- "threshold_gm", "threshold_wm", "threshold_csf" (thresh)
-
-nii_to_mesh_fs_pipe (SPM):
-- "fill_wm" (args)
-
-Brain extraction (ANTS and ANTS_T1):
-- "atlas_brex" (see :class:`AtlasBREX <macapype.nodes.extract_brain.AtlasBREX>` for arguments)
-
-Brain segmentation (ANTS and ANTS_T1):
-- "norm_intensity "(will be the same args as in Data preparation)
+        * only works with -soft ANTS so far

@@ -15,6 +15,12 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     """
     Description: Segmentation with ANTS atropos script
 
+    Params:
+        - Atropos (see :class:`AtroposN4 <macapype.nodes.segment.AtroposN4>`)
+        - threshold_gm, threshold_wm, threshold_csf (see `Threshold \
+        <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.\
+        interfaces.fsl.maths.html#threshold>`_ for arguments)
+
     Inputs:
 
         inputnode:
@@ -105,6 +111,20 @@ def create_old_segment_pipe(params_template, params={},
         - Compute union of those 3 tissues;
         - Apply morphological opening on the union mask
         - Fill holes
+
+    Params:
+
+    - segment (see `Segment <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.spm.preprocess.html#segment>`_)
+    - threshold_gm, threshold_wm, threshold_csf (see `Threshold \
+    <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.\
+    interfaces.fsl.maths.html#threshold>`_ for arguments) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    - dilate_mask (see `DilateMask <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.maths.html#dilateimage>`_)
+    - erode_mask (see `ErodeMask <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.maths.html#erodeimage>`_)
+
 
     Inputs:
 

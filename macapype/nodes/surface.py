@@ -69,7 +69,9 @@ class MeshifyOutputSpec(TraitedSpec):
 
 
 class Meshify(SimpleInterface):
-    """ Create a Gifti mesh from a binary Nifti image """
+    """
+    Definition: Create a Gifti mesh from a binary Nifti image
+    """
     _cmd = 'fslorient'
     input_spec = MeshifyInputSpec
     output_spec = MeshifyOutputSpec

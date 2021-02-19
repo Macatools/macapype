@@ -345,44 +345,35 @@ class NMTSubjectAlignOutputSpec(TraitedSpec):
 
 class NMTSubjectAlign(CommandLine):
     """
-    Description:
-        Align NMT subject to template
-
+    Description: Align NMT subject to template (NMT 1.2)
 
     Inputs:
 
-        T1_file = File(
-            exists=True,
-            desc='Target file',
-            mandatory=True, position=1, argstr="%s")
+        Mandatory:
 
-        NMT_SS_file = File(
-            exists=True,
-            desc='Align to T1',
-            mandatory=True, position=2, argstr="%s")
+            T1_file:
+                File, 'Target file'
+
+            NMT_SS_file:
+                File, 'Align to T1'
 
 
     Outputs:
 
-        aff_file = File(
-            exists=True,
-            desc="aff")
+        aff_file:
+            File, "aff"
 
-        warp_file = File(
-            exists=True,
-            desc="shft_WARP")
+        warp_file:
+            File, "shft_WARP"
 
-        warpinv_file = File(
-            exists=True,
-            desc="shft_WARPINV")
+        warpinv_file:
+            File, "shft_WARPINV"
 
-        transfo_file = File(
-            exists=True,
-            desc="composite_linear_to_NMT")
+        transfo_file:
+            File, "composite_linear_to_NMT"
 
-        inv_transfo_file = File(
-            exists=True,
-            desc="_composite_linear_to_NMT_inv")
+        inv_transfo_file:
+            File, "_composite_linear_to_NMT_inv"
 
 
     """
@@ -461,47 +452,34 @@ class NMTSubjectAlign2OutputSpec(TraitedSpec):
 
 class NMTSubjectAlign2(CommandLine):
     """
-    Description:
-        Align NMT subject to template
-
+    Description: Align NMT subject to template (NMT 1.3)
 
     Inputs:
 
-        T1_file = File(
-            exists=True,
-            desc='Target file',
-            mandatory=True, position=1, argstr="%s")
+        Mandatory:
 
-        NMT_SS_file = File(
-            exists=True,
-            desc='Align to T1',
-            mandatory=True, position=2, argstr="%s")
+            T1_file:
+                File, 'Target file'
 
+            NMT_SS_file:
+                File, 'Align to T1'
 
     Outputs:
 
-        aff_file = File(
-            exists=True,
-            desc="affine
-            (subject image linearly transformed to the NMT template)")
+        aff_file:
+            File, "subject image linearly transformed to the NMT template"
 
-        warp_file = File(
-            exists=True,
-            desc="shft_WARP")
+        warp_file:
+            File, "shft_WARP"
 
-        warpinv_file = File(
-            exists=True,
-            desc="shft_WARPINV")
+        warpinv_file:
+            File, "shft_WARPINV"
 
-        transfo_file = File(
-            exists=True,
-            desc="Combined Linear transform from subject to NMT")
+        transfo_file:
+            File, "Combined Linear transform from subject to NMT"
 
-        inv_transfo_file = File(
-            exists=True,
-            desc="Inverse Linear Transform from NMT to subject")
-
-
+        inv_transfo_file:
+            File, "Inverse Linear Transform from NMT to subject"
     """
     input_spec = NMTSubjectAlign2InputSpec
     output_spec = NMTSubjectAlign2OutputSpec

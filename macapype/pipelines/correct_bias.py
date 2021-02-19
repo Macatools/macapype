@@ -12,16 +12,34 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
     Description: Correct bias using T1 and T2 images
         Same as bash_regis.T1xT2BiasFieldCorrection
 
+    Params:
+
+        - smooth (see `MathsCommand <https://nipype.readthedocs.io/en/0.12.1/\
+        interfaces/generated/nipype.interfaces.fsl.maths.html#mathscommand>`_)
+        - norm_smooth (see `MultiMathsCommand <https://nipype.readthedocs.io/\
+        en/0.12.1/interfaces/generated/nipype.interfaces.fsl.maths.html\
+        #multiimagemaths>`_)
+        - smooth_bias (see `IsotropicSmooth <https://nipype.readthedocs.io/en/\
+        0.12.1/interfaces/generated/nipype.interfaces.fsl.maths.html#\
+        isotropicsmooth>`_)
+
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file name
-            preproc_T2: preprocessed T2 file name
+
+            preproc_T1:
+                preprocessed T1 file name
+
+            preproc_T2:
+                preprocessed T2 file name
 
         arguments:
-            params: dictionary of node sub-parameters (from a json file)
 
-            name: pipeline name (default = "correct_bias_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "correct_bias_pipe")
 
     Outputs:
 
@@ -170,19 +188,37 @@ def create_masked_correct_bias_pipe(params={},
     Description: Correct bias using T1 and T2 images in a mask
         Same as bash_regis.T1xT2BiasFieldCorrection
 
+    Params:
+
+        - smooth (see `MathsCommand <https://nipype.readthedocs.io/en/0.12.1/\
+        interfaces/generated/nipype.interfaces.fsl.maths.html#mathscommand>`_)
+        - norm_smooth (see `MultiMathsCommand <https://nipype.readthedocs.io/\
+        en/0.12.1/interfaces/generated/nipype.interfaces.fsl.maths.html\
+        #multiimagemaths>`_)
+        - smooth_bias (see `IsotropicSmooth <https://nipype.readthedocs.io/en/\
+        0.12.1/interfaces/generated/nipype.interfaces.fsl.maths.html#\
+        isotropicsmooth>`_)
+
     Inputs:
 
         inputnode:
-            preproc_T1: preprocessed T1 file name
 
-            preproc_T2: preprocessed T2 file name
+            preproc_T1:
+                preprocessed T1 file name
 
-            brain_mask: brain mask where operation will be applied
+            preproc_T2:
+                preprocessed T2 file name
+
+            brain_mask:
+                brain mask where operation will be applied
 
         arguments:
-            params: dictionary of node sub-parameters (from a json file)
 
-            name: pipeline name (default = "masked_correct_bias_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "masked_correct_bias_pipe")
 
     Outputs:
 
