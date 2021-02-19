@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>How to contribute to the sources of the project &#8212; macapype 0.2.1 documentation</title>
+    <title>How to contribute to the sources of the project &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -77,7 +77,7 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
@@ -86,13 +86,28 @@
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
@@ -113,7 +128,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#options">Options</a><ul>
@@ -128,6 +143,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -144,15 +160,18 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -191,15 +210,18 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -292,6 +314,15 @@ git branch -D my_new_feature
 </pre></div>
 </div>
 </div>
+<div class="section" id="versionning">
+<h2>Versionning<a class="headerlink" href="#versionning" title="Permalink to this headline">¶</a></h2>
+<p>We use the version in this way:</p>
+<ul class="simple">
+<li><p>until we are fully satisfied of the code (multiple full pipelines, evaluation, etc.), we stay in 0.? version.</p></li>
+<li><p>second digits are modified when substancial new features have been added</p></li>
+<li><p>third digits are more and more test and fixes (for the same release). Hence the 0.? or 0.?.0 is more bugged than the 0.?.1 , which itself if more bugged than the 0.?.2 etc…</p></li>
+</ul>
+</div>
 </div>
 
 
@@ -306,7 +337,7 @@ git branch -D my_new_feature
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

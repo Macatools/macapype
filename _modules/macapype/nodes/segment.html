@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>macapype.nodes.segment &#8212; macapype 0.2.2 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../../../_static/js/jquery-fix.js"></script>
+    <script src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../tutorial.html">Tutorial</a></li>
+                <li><a href="../../../install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+
+<form action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <h1>Source code for macapype.nodes.segment</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nb</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">CommandLine</span><span class="p">,</span> <span class="n">CommandLineInputSpec</span><span class="p">,</span>
+                                    <span class="n">TraitedSpec</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">traits</span><span class="p">,</span> <span class="n">File</span>
+
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseInterface</span><span class="p">,</span> <span class="n">BaseInterfaceInputSpec</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">binary_fill_holes</span>
+
+
+<span class="k">class</span> <span class="nc">BinaryFillHolesInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+
+    <span class="n">in_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;3D Nifti image to fill&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Size of the filling square&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BinaryFillHolesOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+
+    <span class="n">out_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Filled 3D Nifti image&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BinaryFillHoles</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Fill holes of the given 3D Nifti image slice by slice</span>
+
+<span class="sd">    Inputs</span>
+<span class="sd">    --------</span>
+<span class="sd">    image: File (3D Nifti)</span>
+
+
+<span class="sd">    Outputs</span>
+<span class="sd">    ---------</span>
+<span class="sd">    out_file: File (3D Nifti)</span>
+<span class="sd">        Result filled 3D Nifti image.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">BinaryFillHolesInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">BinaryFillHolesOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">in_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">in_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_nii</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s1">&#39;_filled&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+
+        <span class="n">nii_image</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">in_file</span><span class="p">)</span>
+
+        <span class="n">struc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+
+        <span class="n">nii_data</span> <span class="o">=</span> <span class="n">nii_image</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+        <span class="n">nii_data</span> <span class="o">=</span> <span class="n">binary_fill_holes</span><span class="p">(</span><span class="n">nii_data</span><span class="p">,</span> <span class="n">struc</span><span class="p">)</span>
+        <span class="n">out_image</span> <span class="o">=</span> <span class="n">nb</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">nii_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+                                   <span class="n">affine</span><span class="o">=</span><span class="n">nii_image</span><span class="o">.</span><span class="n">_affine</span><span class="p">)</span>
+        <span class="n">nb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">out_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_nii</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;out_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_nii</span>
+
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># AtroposN4</span>
+<span class="k">class</span> <span class="nc">AtroposN4InputSpec</span><span class="p">(</span><span class="n">CommandLineInputSpec</span><span class="p">):</span>
+
+    <span class="n">dimension</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Dimension&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-d </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">brain_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;brain_file&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-a </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">brainmask_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;brainmask_file&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-x </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">numberOfClasses</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;numberOfClasses&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-c </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">priors</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;priors&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">template_file</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span>
+        <span class="s2">&quot;tmp_</span><span class="si">%02d</span><span class="s2">_allineate.nii.gz&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;template_file&#39;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-p </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">out_pref</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span>
+        <span class="s2">&quot;segment_&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;output prefix&quot;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">position</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;-o </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">AtroposN4OutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+    <span class="n">segmented_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;segmented file with all tissues&quot;</span><span class="p">)</span>
+
+    <span class="n">segmented_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;segmented indivual files&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AtroposN4"><a class="viewcode-back" href="../../../generated/macapype.nodes.segment.AtroposN4.html#macapype.nodes.segment.AtroposN4">[docs]</a><span class="k">class</span> <span class="nc">AtroposN4</span><span class="p">(</span><span class="n">CommandLine</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description: Wrap of antsAtroposN4.sh</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        Mandatory:</span>
+
+<span class="sd">            dimension</span>
+<span class="sd">                Int, default=3 , &#39;Dimension&#39;</span>
+
+<span class="sd">            brain_file</span>
+<span class="sd">                File, &#39;brain_file&#39;</span>
+
+<span class="sd">            brainmask_file</span>
+<span class="sd">                File, &#39;brainmask_file&#39;</span>
+
+<span class="sd">            numberOfClasses</span>
+<span class="sd">                Int, default=3, &#39;numberOfClasses&#39;</span>
+
+<span class="sd">            priors</span>
+<span class="sd">                List of Files, &#39;priors&#39;</span>
+
+<span class="sd">            template_file</span>
+<span class="sd">                String, default=&quot;tmp_%02d_allineate.nii.gz&quot;, &#39;template_file&#39;</span>
+
+<span class="sd">        Optional:</span>
+
+<span class="sd">            out_pref:</span>
+<span class="sd">                String, default = &quot;segment_&quot;, &quot;output prefix&quot;</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        brain_file:</span>
+<span class="sd">            File, &quot;extracted brain from AtroposN4.sh&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">AtroposN4InputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">AtroposN4OutputSpec</span>
+
+    <span class="n">_cmd</span> <span class="o">=</span> <span class="s1">&#39;bash antsAtroposN4.sh&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_format_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">os</span>
+        <span class="kn">import</span> <span class="nn">shutil</span>
+
+        <span class="n">cur_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># all the files have to be in local and</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;brain_file&#39;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;brainmask_file&#39;</span><span class="p">:</span>
+            <span class="c1"># requires local copy</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">cur_path</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">value</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;priors&#39;</span><span class="p">:</span>
+            <span class="n">new_value</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">prior_file</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">prior_file</span><span class="p">,</span> <span class="n">cur_path</span><span class="p">)</span>
+                <span class="n">new_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">prior_file</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">value</span> <span class="o">=</span> <span class="n">new_value</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AtroposN4</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_format_arg</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">import</span> <span class="nn">os</span>
+        <span class="kn">import</span> <span class="nn">glob</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;segmented_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_pref</span> <span class="o">+</span> <span class="s2">&quot;Segmentation.nii.gz&quot;</span><span class="p">)</span>
+
+        <span class="n">seg_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_pref</span> <span class="o">+</span> <span class="s2">&quot;SegmentationPosteriors*.nii.gz&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">seg_files</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">priors</span><span class="p">),</span> \
+            <span class="s2">&quot;Error, there should </span><span class="si">{}</span><span class="s2"> SegmentationPosteriors&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">priors</span><span class="p">))</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="n">seg_file</span><span class="p">)</span> <span class="k">for</span> <span class="n">seg_file</span> <span class="ow">in</span> <span class="n">seg_files</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># path_to = &quot;/hpc/crise/meunier.d&quot;</span>
+    <span class="n">path_to</span> <span class="o">=</span> <span class="s2">&quot;/hpc/crise/meunier.d/Data/Primavoice/test_pipeline_kepkee_crop&quot;</span>
+
+    <span class="n">seg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_to</span><span class="p">,</span> <span class="s2">&quot;segment_pnh_subpipes&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;segment_devel_NMT_sub_align&quot;</span><span class="p">)</span>
+
+    <span class="n">brain_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">seg_path</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;_session_01_subject_Apache&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;deoblique&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_</span><span class="se">\</span>
+<span class="s2">            corrected.nii.gz&quot;</span><span class="p">)</span>
+
+    <span class="n">brainmask_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">seg_path</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;_session_01_subject_Apache&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bin_norm_intensity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_</span><span class="se">\</span>
+<span class="s2">            corrected_bin.nii.gz&quot;</span><span class="p">)</span>
+
+    <span class="n">priors</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">seg_path</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;_session_01_subject_Apache&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;align_seg_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_CSF_allineate.nii.gz&quot;</span><span class="p">),</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                  <span class="n">seg_path</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;_session_01_subject_Apache&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;align_seg_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_GM_allineate.nii.gz&quot;</span><span class="p">),</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                  <span class="n">seg_path</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;_session_01_subject_Apache&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;align_seg_wm&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_segmentation_WM_allineate.nii.gz&quot;</span><span class="p">)]</span>
+
+    <span class="n">seg_at</span> <span class="o">=</span> <span class="n">AtroposN4</span><span class="p">()</span>
+
+    <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">brain_file</span> <span class="o">=</span> <span class="n">brain_file</span>
+    <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">brainmask_file</span> <span class="o">=</span> <span class="n">brainmask_file</span>
+
+    <span class="n">seg_at</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">priors</span> <span class="o">=</span> <span class="n">priors</span>
+
+    <span class="n">val</span> <span class="o">=</span> <span class="n">seg_at</span><span class="o">.</span><span class="n">run</span><span class="p">()</span><span class="o">.</span><span class="n">outputs</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

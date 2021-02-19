@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Documentation &#8212; macapype 0.2.1 documentation</title>
+    <title>API Documentation &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -76,7 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
@@ -85,13 +85,28 @@
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
@@ -112,7 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#options">Options</a><ul>
@@ -127,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -143,9 +159,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
@@ -186,9 +204,11 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
@@ -218,13 +238,28 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_short_preparation_pipe</span></code></a>(params[, name])</p></td>
-<td><p>Description: old data preparation:, T1s and T2s are averaged (by modality) and then average imgs are processed:</p></td>
+<td><p>Description: short data preparation:</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.prepare.create_long_single_preparation_pipe.html#macapype.pipelines.prepare.create_long_single_preparation_pipe" title="macapype.pipelines.prepare.create_long_single_preparation_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_long_single_preparation_pipe</span></code></a>(params)</p></td>
 <td><p>Description: Short data preparation, T1s and T2s are averaged (by modality) and then average imgs are processed:</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.prepare.create_long_multi_preparation_pipe.html#macapype.pipelines.prepare.create_long_multi_preparation_pipe" title="macapype.pipelines.prepare.create_long_multi_preparation_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_long_multi_preparation_pipe</span></code></a>(params[, …])</p></td>
-<td><p>Description: long data preparation, each T1 and T2 is processed independantly with:</p></td>
+<td><p>Description: long data preparation, each T1 and T2 is processed independantly (mapnode) with:</p></td>
+</tr>
+</tbody>
+</table>
+<p>(hidden)</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.prepare._create_prep_pipeline.html#macapype.pipelines.prepare._create_prep_pipeline" title="macapype.pipelines.prepare._create_prep_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_prep_pipeline</span></code></a>(params[, name])</p></td>
+<td><p>Description: hidden function for sequence of preprocessing</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.prepare._create_mapnode_prep_pipeline.html#macapype.pipelines.prepare._create_mapnode_prep_pipeline" title="macapype.pipelines.prepare._create_mapnode_prep_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_mapnode_prep_pipeline</span></code></a>(params[, name])</p></td>
+<td><p>Description: hidden function for sequence of preprocessing (mapnode)</p></td>
 </tr>
 </tbody>
 </table>
@@ -251,7 +286,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe" title="macapype.pipelines.register.create_register_NMT_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_register_NMT_pipe</span></code></a>(params_template[, …])</p></td>
-<td><p>Description: Register template to anat with the script NMT_subject_align,</p></td>
+<td><p>Description: Register template to anat with the script     NMT_subject_align (see <a class="reference internal" href="generated/macapype.nodes.register.NMTSubjectAlign.html#macapype.nodes.register.NMTSubjectAlign" title="macapype.nodes.register.NMTSubjectAlign"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign</span></code></a> and <a class="reference internal" href="generated/macapype.nodes.register.NMTSubjectAlign2.html#macapype.nodes.register.NMTSubjectAlign2" title="macapype.nodes.register.NMTSubjectAlign2"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2</span></code></a> for explanations), and then     apply it to tissues list_priors</p></td>
 </tr>
 </tbody>
 </table>
@@ -263,6 +298,9 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.extract_brain.create_extract_pipe.html#macapype.pipelines.extract_brain.create_extract_pipe" title="macapype.pipelines.extract_brain.create_extract_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_extract_pipe</span></code></a>(params_template[, …])</p></td>
+<td><p>Description: Extract T1 brain using AtlasBrex</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.extract_brain.create_extract_T1_pipe.html#macapype.pipelines.extract_brain.create_extract_T1_pipe" title="macapype.pipelines.extract_brain.create_extract_T1_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_extract_T1_pipe</span></code></a>(params_template[, …])</p></td>
 <td><p>Description: Extract T1 brain using AtlasBrex</p></td>
 </tr>
 </tbody>
@@ -282,6 +320,21 @@
 </tr>
 </tbody>
 </table>
+<p>Surface (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.surface</span></code>):</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.surface.create_nii_to_mesh_pipe.html#macapype.pipelines.surface.create_nii_to_mesh_pipe" title="macapype.pipelines.surface.create_nii_to_mesh_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_nii_to_mesh_pipe</span></code></a>(params, params_template)</p></td>
+<td><p>Description: basic nii to mesh pipeline after segmentation,     split in hemisphere after removal of the subcortical structures and     using scipy marching cube methods to compute mesh after smoothing</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.surface.create_nii_to_mesh_fs_pipe.html#macapype.pipelines.surface.create_nii_to_mesh_fs_pipe" title="macapype.pipelines.surface.create_nii_to_mesh_fs_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_nii_to_mesh_fs_pipe</span></code></a>(params[, name])</p></td>
+<td><p>Description: surface generation using freesurfer tools</p></td>
+</tr>
+</tbody>
+</table>
 <p>Full pipeline (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.pipelines.full_pipelines</span></code>):</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -290,13 +343,13 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_spm_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_spm_subpipes</span></code></a>(params_template[, …])</p></td>
-<td><p>Description: SPM based segmentation pipeline from T1w and T2w images</p></td>
+<td><p>Description: SPM based segmentation pipeline from T1w and T2w images     in template space (main difference with the ANTS based pipeline,     in subject space)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_T1_spm_subpipes</span></code></a>(params_template)</p></td>
 <td><p>Description: SPM based segmentation pipeline from T1w image only.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_extraction_pipe</span></code></a>(params_template)</p></td>
-<td><p>Description: ANTS based segmentation pipeline using T1w and T2w images</p></td>
+<td><p>Description: Brain extraction with atlas-brex after debiasing</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_segment_from_mask_pipe</span></code></a>(…[, …])</p></td>
 <td><p>Description: Segment T1 (using T2 for bias correction) and a previously computed mask with NMT Atlas and atropos segment.</p></td>
@@ -308,16 +361,40 @@
 <td><p>Description: Brain extraction with only T1 images.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_T1_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_T1_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_T1_pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_brain_segment_from_mask_T1_pipe</span></code></a>(…)</p></td>
-<td><p>Description: Segment T1 (using T2 for bias correction) and a previously computed mask with NMT Atlas and atropos segment.</p></td>
+<td><p>Description: Segment T1 from a previously computed mask.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_T1_ants_subpipes</span></code></a>(params_template)</p></td>
-<td><p>Description: Segment T1 (with no T2).</p></td>
+<td><p>Description: Full pipeline to segment T1 (with no T2).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="nodes">
 <h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h2>
+<p>Surface (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.surface</span></code>):</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.nodes.surface.Meshify.html#macapype.nodes.surface.Meshify" title="macapype.nodes.surface.Meshify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Meshify</span></code></a>([from_file, resource_monitor])</p></td>
+<td><p>Definition: Create a Gifti mesh from a binary Nifti image</p></td>
+</tr>
+</tbody>
+</table>
+<p>Segment (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.segment</span></code>):</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.nodes.segment.AtroposN4.html#macapype.nodes.segment.AtroposN4" title="macapype.nodes.segment.AtroposN4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtroposN4</span></code></a>([command, terminal_output])</p></td>
+<td><p>Description: Wrap of antsAtroposN4.sh</p></td>
+</tr>
+</tbody>
+</table>
 <p>Extract brain (<code class="xref py py-mod docutils literal notranslate"><span class="pre">macapype.nodes.extract_brain</span></code>):</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -327,6 +404,9 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>(**inputs)</p></td>
 <td><p>Description: Brain extraction using T1 and T2 images</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.nodes.extract_brain.AtlasBREX.html#macapype.nodes.extract_brain.AtlasBREX" title="macapype.nodes.extract_brain.AtlasBREX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtlasBREX</span></code></a>([command, terminal_output])</p></td>
+<td><p>Description: Atlas based BrainExtraction</p></td>
 </tr>
 </tbody>
 </table>
@@ -351,6 +431,12 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IterREGBET</span></code></a>([command, terminal_output])</p></td>
 <td><p>Description: Iterative registration of the in-file to the ref file ( registered brain mask of the ref image is used at each iteration).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/macapype.nodes.register.NMTSubjectAlign.html#macapype.nodes.register.NMTSubjectAlign" title="macapype.nodes.register.NMTSubjectAlign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NMTSubjectAlign</span></code></a>([command, terminal_output])</p></td>
+<td><p>Description: Align NMT subject to template (NMT 1.2)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/macapype.nodes.register.NMTSubjectAlign2.html#macapype.nodes.register.NMTSubjectAlign2" title="macapype.nodes.register.NMTSubjectAlign2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NMTSubjectAlign2</span></code></a>([command, terminal_output])</p></td>
+<td><p>Description: Align NMT subject to template (NMT 1.3)</p></td>
 </tr>
 </tbody>
 </table>
@@ -396,7 +482,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

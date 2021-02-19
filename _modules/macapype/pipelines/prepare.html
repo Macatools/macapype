@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.prepare &#8212; macapype 0.2.1 documentation</title>
+    <title>macapype.pipelines.prepare &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -76,7 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
@@ -85,13 +85,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
@@ -112,7 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
@@ -127,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -143,9 +159,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
@@ -182,9 +200,11 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
@@ -255,7 +275,7 @@
 <span class="k">def</span> <span class="nf">_create_mapnode_reorient_pipeline</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;reorient_pipe&quot;</span><span class="p">,</span>
                                       <span class="n">new_dims</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    By kepkee:</span>
+<span class="sd">    By kepkee (mapnode):</span>
 <span class="sd">    fslswapdim image_bad x z -y image_good</span>
 <span class="sd">    fslorient -deleteorient image_good.nii.gz;</span>
 <span class="sd">    fslorient -setqformcode 1 image_good.nii.gz</span>
@@ -284,7 +304,28 @@
     <span class="k">return</span> <span class="n">reorient_pipe</span>
 
 
-<span class="k">def</span> <span class="nf">_create_prep_pipeline</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prep_pipeline&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="_create_prep_pipeline"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare._create_prep_pipeline.html#macapype.pipelines.prepare._create_prep_pipeline">[docs]</a><span class="k">def</span> <span class="nf">_create_prep_pipeline</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prep_pipeline&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description: hidden function for sequence of preprocessing</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">    - reorient (new dims as a string (e.g. &quot;x z -y&quot;))</span>
+<span class="sd">    - denoise_first (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
+<span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
+<span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
+<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - crop (see `ExtractROI &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
+<span class="sd">    interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi&gt;`_ \</span>
+<span class="sd">    for arguments) - also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - norm_intensity (see `N4BiasFieldCorrection &lt;https://nipype.readthedocs.\</span>
+<span class="sd">    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\</span>
+<span class="sd">    html#n4biasfieldcorrection&gt;`_ for arguments) - also available as \</span>
+<span class="sd">    :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - denoise (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
+<span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
+<span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
+<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># init pipeline</span>
     <span class="n">prep_pipeline</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -318,7 +359,7 @@
         <span class="c1"># denoise with Ants package</span>
         <span class="c1"># (taking into account whether reorient has been performed or not)</span>
         <span class="n">denoise_first</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
-                                   <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise&quot;</span><span class="p">),</span>
+                                   <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise_first&quot;</span><span class="p">),</span>
                                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -388,10 +429,32 @@
         <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;output_image&quot;</span><span class="p">,</span>
                               <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;prep_img&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">prep_pipeline</span>
+    <span class="k">return</span> <span class="n">prep_pipeline</span></div>
 
 
-<span class="k">def</span> <span class="nf">_create_mapnode_prep_pipeline</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mapnode_prep_pipeline&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="_create_mapnode_prep_pipeline"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare._create_mapnode_prep_pipeline.html#macapype.pipelines.prepare._create_mapnode_prep_pipeline">[docs]</a><span class="k">def</span> <span class="nf">_create_mapnode_prep_pipeline</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mapnode_prep_pipeline&quot;</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Description: hidden function for sequence of preprocessing (mapnode)</span>
+
+<span class="sd">    Params: (Warning: **all arguments are in lists**)</span>
+
+<span class="sd">    - reorient (new dims as a string (e.g. &quot;x z -y&quot;))</span>
+<span class="sd">    - denoise_first (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
+<span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
+<span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
+<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - crop (see `ExtractROI &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
+<span class="sd">    interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi&gt;`_ \</span>
+<span class="sd">    for arguments) - also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - norm_intensity (see `N4BiasFieldCorrection &lt;https://nipype.readthedocs.\</span>
+<span class="sd">    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\</span>
+<span class="sd">    html#n4biasfieldcorrection&gt;`_ for arguments) - also available as \</span>
+<span class="sd">    :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - denoise (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
+<span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
+<span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
+<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># init pipeline</span>
     <span class="n">mapnode_prep_pipeline</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -500,39 +563,61 @@
         <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;output_image&quot;</span><span class="p">,</span>
                                       <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;prep_list_img&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">mapnode_prep_pipeline</span>
+    <span class="k">return</span> <span class="n">mapnode_prep_pipeline</span></div>
 
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># choices between the 3 main pipelines: &quot;short&quot;, &quot;long_single&quot; et &quot;long_multi&quot;</span>
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="create_short_preparation_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_short_preparation_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description: old data preparation:, T1s and T2s are averaged</span>
-<span class="sd">    (by modality) and then average imgs are processed:</span>
+    <span class="sd">&quot;&quot;&quot;Description: short data preparation:</span>
 
+<span class="sd">    - T1s and T2s are averaged (by modality).</span>
 <span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
+<span class="sd">    - Cropped (bet_crop include alignement, and mask generation)</span>
+<span class="sd">    - denoising all images (no denoise_first)</span>
 
-<span class="sd">    - bet_crop (include alignement, and mask generation)</span>
+<span class="sd">    Params:</span>
 
-<span class="sd">    - denoising all input images (opt: denoise in json))</span>
-
+<span class="sd">    - reorient (optional; new_dims as a string (e.g. &quot;x z -y&quot;))</span>
+<span class="sd">    - bet_crop (:class:`T1xT2BET &lt;macapype.nodes.extract_brain.T1xT2BET&gt;`\</span>
+<span class="sd">    ) or crop (see `ExtractRoi &lt;https://nipype.readthedocs.io/en/0.12.1/inte\</span>
+<span class="sd">    rfaces/generated/nipype.interfaces.fsl.utils.html#extractroi&gt;`_ for \</span>
+<span class="sd">    arguments). crop is also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - denoise (see `DenoiseImage &lt;https://\</span>
+<span class="sd">    nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\</span>
+<span class="sd">    .ants.segmentation.html#denoiseimage&gt;`_ for arguments))</span>
 
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            list_T1: T1 files (from BIDSDataGrabber)</span>
-<span class="sd">            list_T2: T2 files</span>
-<span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
+
+<span class="sd">            list_T1:</span>
+<span class="sd">                T1 files (from BIDSDataGrabber)</span>
+
+<span class="sd">            list_T2:</span>
+<span class="sd">                T2 files</span>
+
+<span class="sd">            indiv_params (opt):</span>
+<span class="sd">                dict with individuals parameters for some nodes</span>
 
 <span class="sd">        arguments:</span>
-<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
-<span class="sd">            name: pipeline name (default = &quot;long_multi_preparation_pipe&quot;)</span>
+
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;long_multi_preparation_pipe&quot;)</span>
 
 <span class="sd">    Outputs:</span>
 
 <span class="sd">        outputnode:</span>
-<span class="sd">            preproc_T1: preprocessed T1 file</span>
-<span class="sd">            preproc_T2: preprocessed T2 file</span>
+
+<span class="sd">            preproc_T1:</span>
+<span class="sd">                preprocessed T1 file</span>
+
+<span class="sd">            preproc_T2:</span>
+<span class="sd">                preprocessed T2 file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># creating pipeline</span>
@@ -566,7 +651,7 @@
             <span class="n">new_dims</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;reorient&quot;</span><span class="p">][</span><span class="s2">&quot;new_dims&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_dims</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">)</span>
+            <span class="n">new_dims</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">)</span>  <span class="c1"># if sphinx based I think</span>
 
         <span class="n">reorient_T1_pipe</span> <span class="o">=</span> <span class="n">_create_reorient_pipeline</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;reorient_T1_pipe&quot;</span><span class="p">,</span> <span class="n">new_dims</span><span class="o">=</span><span class="n">new_dims</span><span class="p">)</span>
@@ -620,6 +705,14 @@
         <span class="n">crop_T2</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ExtractROI</span><span class="p">(),</span>
                              <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s1">&#39;crop&#39;</span><span class="p">),</span>
                              <span class="n">name</span><span class="o">=</span><span class="s1">&#39;crop_T2&#39;</span><span class="p">)</span>
+
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;crop&quot;</span><span class="p">),</span>
+            <span class="n">crop_T1</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
+
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;crop&quot;</span><span class="p">),</span>
+            <span class="n">crop_T2</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reorient_T1_pipe</span><span class="p">,</span>
@@ -683,16 +776,19 @@
 <span class="sd">    (by modality) and then average imgs are processed:</span>
 
 <span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
-
 <span class="sd">    - start by denoising all input images (opt: denoise_first in json)</span>
-
 <span class="sd">    - crop T1 and T2 based on individual parameters</span>
-
 <span class="sd">    - running N4biascorrection on cropped T1 and T to help T2 and T1 alignment</span>
-
 <span class="sd">    - finish by denoising all input images (opt: denoise in json))</span>
-
 <span class="sd">    - Finally, align T2 to T1</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">    - prep_T1 and prep_T2 (see :class:`_create_prep_pipeline &lt;macapype.\</span>
+<span class="sd">    pipelines.prepare._create_prep_pipeline&gt;`)</span>
+<span class="sd">    - align_T2_on_T1 (see `FLIRT &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
+<span class="sd">    interfaces/generated/nipype.interfaces.fsl.preprocess.html#flirt&gt;`_ \</span>
+<span class="sd">    for more arguments)</span>
 
 <span class="sd">    Inputs:</span>
 
@@ -792,42 +888,55 @@
 <div class="viewcode-block" id="create_long_multi_preparation_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare.create_long_multi_preparation_pipe.html#macapype.pipelines.prepare.create_long_multi_preparation_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_long_multi_preparation_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span>
                                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;long_multi_preparation_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Description: long data preparation,</span>
-<span class="sd">    each T1 and T2 is processed independantly with:</span>
+<span class="sd">    each T1 and T2 is processed independantly (mapnode) with:</span>
 
 <span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
-
 <span class="sd">    - start by denoising all input images (opt: denoise_first in json)</span>
-
 <span class="sd">    - crop T1 and T2 based on individual parameters</span>
-
 <span class="sd">    - running N4biascorrection on cropped T1 and T to help T2 and T1 alignment</span>
-
 <span class="sd">    - finish by denoising all input images (opt: denoise in json))</span>
-
 <span class="sd">    - processed T1s and T2s are averaged (by modality)</span>
-
 <span class="sd">    - Finally, align average T2 to average T1</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">    - mapnode_prep_T1 and mapnodes_prep_T2 (see \</span>
+<span class="sd">    :class:`_create_mapnode_prep_pipeline \</span>
+<span class="sd">    &lt;macapype.pipelines.prepare._create_mapnode_prep_pipeline&gt;` for arguments)</span>
+<span class="sd">    - align_T2_on_T1 (see `FLIRT &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
+<span class="sd">    interfaces/generated/nipype.interfaces.fsl.preprocess.html#flirt&gt;`_ \</span>
+<span class="sd">    for more arguments)</span>
 
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            list_T1: T1 files (from BIDSDataGrabber)</span>
 
-<span class="sd">            list_T2: T2 files</span>
+<span class="sd">            list_T1:</span>
+<span class="sd">                T1 files (from BIDSDataGrabber)</span>
 
-<span class="sd">            indiv_params (opt): dict with individuals parameters for some nodes</span>
+<span class="sd">            list_T2:</span>
+<span class="sd">                T2 files</span>
+
+<span class="sd">            indiv_params (opt):</span>
+<span class="sd">                dict with individuals parameters for some nodes</span>
 
 <span class="sd">        arguments:</span>
-<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
 
-<span class="sd">            name: pipeline name (default = &quot;long_multi_preparation_pipe&quot;)</span>
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;long_multi_preparation_pipe&quot;)</span>
 
 <span class="sd">    Outputs:</span>
 
-<span class="sd">        outputnode:</span>
-<span class="sd">            preproc_T1: preprocessed T1 file</span>
+<span class="sd">        :outputnode:</span>
 
-<span class="sd">            preproc_T2: preprocessed T2 file</span>
+<span class="sd">            preproc_T1:</span>
+<span class="sd">                preprocessed T1 file</span>
+
+<span class="sd">            preproc_T2:</span>
+<span class="sd">                preprocessed T2 file</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -912,6 +1021,50 @@
 <span class="c1"># works with only one T1</span>
 <span class="k">def</span> <span class="nf">create_short_preparation_T1_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span>
                                      <span class="n">name</span><span class="o">=</span><span class="s2">&quot;short_preparation_T1_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description: T1 only short preparation:</span>
+
+<span class="sd">    - T1s and T2s are averaged (by modality).</span>
+<span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
+<span class="sd">    - Cropped (bet_crop include alignement, and mask generation)</span>
+<span class="sd">    - denoising all images (no denoise_first)</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">    - reorient (optional; new_dims as a string (e.g. &quot;x z -y&quot;))</span>
+<span class="sd">    - bet_crop (:class:`T1xT2BET &lt;macapype.nodes.extract_brain.T1xT2BET&gt;`\</span>
+<span class="sd">    ) or crop (see `ExtractRoi &lt;https://nipype.readthedocs.io/en/0.12.1/inte\</span>
+<span class="sd">    rfaces/generated/nipype.interfaces.fsl.utils.html#extractroi&gt;`_ for \</span>
+<span class="sd">    arguments). crop is also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">    - denoise (see `DenoiseImage &lt;https://\</span>
+<span class="sd">    nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\</span>
+<span class="sd">    .ants.segmentation.html#denoiseimage&gt;`_ for arguments))</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+
+<span class="sd">            list_T1:</span>
+<span class="sd">                T1 files (from BIDSDataGrabber)</span>
+
+<span class="sd">            indiv_params (opt):</span>
+<span class="sd">                dict with individuals parameters for some nodes</span>
+
+<span class="sd">        arguments:</span>
+
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;long_multi_preparation_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+
+<span class="sd">        outputnode:</span>
+
+<span class="sd">            preproc_T1:</span>
+<span class="sd">                preprocessed T1 file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># creating pipeline</span>
     <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -1031,7 +1184,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

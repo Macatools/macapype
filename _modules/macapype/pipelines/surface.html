@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>macapype.pipelines.surface &#8212; macapype 0.2.2 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../../../_static/js/jquery-fix.js"></script>
+    <script src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../tutorial.html">Tutorial</a></li>
+                <li><a href="../../../install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+
+<form action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <h1>Source code for macapype.pipelines.surface</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+
+<span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.afni</span> <span class="k">as</span> <span class="nn">afni</span>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.freesurfer</span> <span class="k">as</span> <span class="nn">fs</span>
+
+<span class="kn">import</span> <span class="nn">macapype.nodes.register</span> <span class="k">as</span> <span class="nn">reg</span>
+<span class="kn">from</span> <span class="nn">macapype.nodes.surface</span> <span class="kn">import</span> <span class="n">Meshify</span><span class="p">,</span> <span class="n">split_LR_mask</span>
+<span class="kn">from</span> <span class="nn">macapype.utils.utils_nodes</span> <span class="kn">import</span> <span class="n">parse_key</span><span class="p">,</span> <span class="n">NodeParams</span>
+
+
+<span class="k">def</span> <span class="nf">create_split_hemi_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">params_template</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;split_hemi_pipe&quot;</span><span class="p">):</span>
+
+    <span class="n">split_hemi_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;segmented_file&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get values</span>
+
+    <span class="k">if</span> <span class="s2">&quot;cereb_template&quot;</span> <span class="ow">in</span> <span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">cereb_template_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;cereb_template&quot;</span><span class="p">]</span>
+
+        <span class="c1"># ### cereb</span>
+        <span class="c1"># Binarize cerebellum</span>
+        <span class="n">bin_cereb</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fsl</span><span class="o">.</span><span class="n">UnaryMaths</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bin_cereb&#39;</span><span class="p">)</span>
+        <span class="n">bin_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="s2">&quot;bin&quot;</span>
+
+        <span class="n">bin_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">cereb_template_file</span>
+
+        <span class="c1"># Warp cereb brainmask to subject space</span>
+        <span class="n">warp_cereb</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">reg</span><span class="o">.</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span>
+                             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;warp_cereb&#39;</span><span class="p">)</span>
+
+        <span class="n">warp_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">cereb_template_file</span>
+        <span class="n">warp_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">cereb_template_file</span>
+        <span class="n">warp_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;NN&quot;</span>
+        <span class="n">warp_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-overwrite&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bin_cereb</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">warp_cereb</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                                <span class="n">warp_cereb</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span> <span class="n">warp_cereb</span><span class="p">,</span> <span class="s2">&quot;warp&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Align cereb template</span>
+        <span class="n">align_cereb</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_cereb&#39;</span><span class="p">)</span>
+
+        <span class="n">align_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+        <span class="n">align_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">align_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">warp_cereb</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_cereb</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_cereb</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_cereb</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+    <span class="k">if</span> <span class="s2">&quot;L_hemi_template&quot;</span> <span class="ow">in</span> <span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> \
+            <span class="s2">&quot;R_hemi_template&quot;</span> <span class="ow">in</span> <span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">L_hemi_template_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;L_hemi_template&quot;</span><span class="p">]</span>
+        <span class="n">R_hemi_template_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;R_hemi_template&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Warp L hemi template brainmask to subject space</span>
+        <span class="n">warp_L_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">reg</span><span class="o">.</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span>
+                              <span class="n">name</span><span class="o">=</span><span class="s1">&#39;warp_L_hemi&#39;</span><span class="p">)</span>
+
+        <span class="n">warp_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">L_hemi_template_file</span>
+        <span class="n">warp_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">L_hemi_template_file</span>
+        <span class="n">warp_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;NN&quot;</span>
+        <span class="n">warp_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-overwrite&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                                <span class="n">warp_L_hemi</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span> <span class="n">warp_L_hemi</span><span class="p">,</span> <span class="s2">&quot;warp&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Align L hemi template</span>
+        <span class="n">align_L_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_L_hemi&#39;</span><span class="p">)</span>
+
+        <span class="n">align_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+        <span class="n">align_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">align_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">warp_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_L_hemi</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+        <span class="c1"># Warp R hemi template brainmask to subject space</span>
+        <span class="n">warp_R_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">reg</span><span class="o">.</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span>
+                              <span class="n">name</span><span class="o">=</span><span class="s1">&#39;warp_R_hemi&#39;</span><span class="p">)</span>
+
+        <span class="n">warp_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">R_hemi_template_file</span>
+        <span class="n">warp_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">R_hemi_template_file</span>
+        <span class="n">warp_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;NN&quot;</span>
+        <span class="n">warp_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-overwrite&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                                <span class="n">warp_R_hemi</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span> <span class="n">warp_R_hemi</span><span class="p">,</span> <span class="s2">&quot;warp&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Align R hemi template</span>
+        <span class="n">align_R_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_R_hemi&#39;</span><span class="p">)</span>
+
+        <span class="n">align_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+        <span class="n">align_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">align_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">warp_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_R_hemi</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+    <span class="k">elif</span> <span class="s2">&quot;LR_hemi_template&quot;</span> <span class="ow">in</span> <span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">LR_hemi_template_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;LR_hemi_template&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Warp LR hemi template brainmask to subject space</span>
+        <span class="n">warp_LR_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">reg</span><span class="o">.</span><span class="n">NwarpApplyPriors</span><span class="p">(),</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;warp_LR_hemi&#39;</span><span class="p">)</span>
+
+        <span class="n">warp_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_file</span> <span class="o">=</span> <span class="n">LR_hemi_template_file</span>
+        <span class="n">warp_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">LR_hemi_template_file</span>
+        <span class="n">warp_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="s2">&quot;NN&quot;</span>
+        <span class="n">warp_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-overwrite&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                                <span class="n">warp_LR_hemi</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
+                                <span class="n">warp_LR_hemi</span><span class="p">,</span> <span class="s2">&quot;warp&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Align LR hemi template</span>
+        <span class="n">align_LR_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;align_LR_hemi&#39;</span><span class="p">)</span>
+
+        <span class="n">align_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+        <span class="n">align_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">align_LR_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">warp_LR_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_LR_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_LR_hemi</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                                <span class="n">align_LR_hemi</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
+
+        <span class="n">split_LR</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+            <span class="n">interface</span><span class="o">=</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+                <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;LR_mask_file&quot;</span><span class="p">],</span>
+                <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;L_mask_file&quot;</span><span class="p">,</span> <span class="s2">&quot;R_mask_file&quot;</span><span class="p">],</span>
+                <span class="n">function</span><span class="o">=</span><span class="n">split_LR_mask</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;split_LR&quot;</span><span class="p">)</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_LR_hemi</span><span class="p">,</span> <span class="s2">&quot;out_file&quot;</span><span class="p">,</span>
+                                <span class="n">split_LR</span><span class="p">,</span> <span class="s1">&#39;LR_mask_file&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, could not find LR_hemi_template or L_hemi_template and </span><span class="se">\</span>
+<span class="s2">            R_hemi_template, skipping&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">exit</span><span class="p">()</span>
+
+    <span class="c1"># Using LH and RH masks to obtain hemisphere segmentation masks</span>
+    <span class="n">calc_L_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_L_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">calc_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;segmented_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;LR_hemi_template&quot;</span> <span class="ow">in</span> <span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_LR</span><span class="p">,</span> <span class="s1">&#39;L_mask_file&#39;</span><span class="p">,</span>
+                                <span class="n">calc_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">calc_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># R_hemi</span>
+    <span class="n">calc_R_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_R_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">calc_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;segmented_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;LR_hemi_template&quot;</span> <span class="ow">in</span> <span class="n">params_template</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_LR</span><span class="p">,</span> <span class="s1">&#39;R_mask_file&#39;</span><span class="p">,</span>
+                                <span class="n">calc_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">calc_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># remove cerebellum from left and right brain segmentations</span>
+    <span class="n">calc_nocb_L_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_nocb_L_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_nocb_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;(a*(not (b)))&#39;</span>
+    <span class="n">calc_nocb_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_nocb_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_cereb</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_nocb_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="n">calc_nocb_R_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_nocb_R_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_nocb_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;(a*(not (b)))&#39;</span>
+    <span class="n">calc_nocb_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_nocb_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_cereb</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_nocb_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># create L/R GM and WM no-cerebellum masks from subject brain segmentation</span>
+    <span class="n">calc_GM_nocb_L_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_GM_nocb_L_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_GM_nocb_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;iszero(a-2)&#39;</span>
+    <span class="n">calc_GM_nocb_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_nocb_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_GM_nocb_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+
+    <span class="n">calc_WM_nocb_L_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_WM_nocb_L_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_WM_nocb_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;iszero(a-3)&#39;</span>
+    <span class="n">calc_WM_nocb_L_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_nocb_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_WM_nocb_L_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+
+    <span class="n">calc_GM_nocb_R_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_GM_nocb_R_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_GM_nocb_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;iszero(a-2)&#39;</span>
+    <span class="n">calc_GM_nocb_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_nocb_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_GM_nocb_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+
+    <span class="n">calc_WM_nocb_R_hemi</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;calc_WM_nocb_R_hemi&#39;</span><span class="p">)</span>
+    <span class="n">calc_WM_nocb_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;iszero(a-3)&#39;</span>
+    <span class="n">calc_WM_nocb_R_hemi</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_nocb_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">calc_WM_nocb_R_hemi</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract Cerebellum using template mask transformed to subject space</span>
+    <span class="n">extract_cereb</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract_cereb&#39;</span><span class="p">)</span>
+    <span class="n">extract_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">extract_cereb</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_cereb</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_cereb</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_cereb</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract L.GM using template mask transformed to subject space</span>
+    <span class="n">extract_L_GM</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract_L_GM&#39;</span><span class="p">)</span>
+    <span class="n">extract_L_GM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">extract_L_GM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_L_GM</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_GM_nocb_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_L_GM</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract L.WM using template mask transformed to subject space</span>
+    <span class="n">extract_L_WM</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract_L_WM&#39;</span><span class="p">)</span>
+    <span class="n">extract_L_WM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">extract_L_WM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_L_WM</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_WM_nocb_L_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_L_WM</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract L.GM using template mask transformed to subject space</span>
+    <span class="n">extract_R_GM</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract_R_GM&#39;</span><span class="p">)</span>
+    <span class="n">extract_R_GM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">extract_R_GM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_R_GM</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_GM_nocb_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_R_GM</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract L.WM using template mask transformed to subject space</span>
+    <span class="n">extract_R_WM</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Calc</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract_R_WM&#39;</span><span class="p">)</span>
+    <span class="n">extract_R_WM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;a*b/b&#39;</span>
+    <span class="n">extract_R_WM</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s1">&#39;NIFTI_GZ&#39;</span>
+
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_R_WM</span><span class="p">,</span> <span class="s2">&quot;in_file_a&quot;</span><span class="p">)</span>
+    <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_WM_nocb_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                            <span class="n">extract_R_WM</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">split_hemi_pipe</span>
+
+
+<div class="viewcode-block" id="create_nii_to_mesh_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.surface.create_nii_to_mesh_pipe.html#macapype.pipelines.surface.create_nii_to_mesh_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_nii_to_mesh_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">params_template</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nii_to_mesh_pipe&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: basic nii to mesh pipeline after segmentation, \</span>
+<span class="sd">    split in hemisphere after removal of the subcortical structures and \</span>
+<span class="sd">    using scipy marching cube methods to compute mesh after smoothing</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">        - split_hemi_pipe (see :class:`create_split_hemi_pipe \</span>
+<span class="sd">        &lt;macapype.pipelines.surface.create_split_hemi_pipe&gt;` for arguments)</span>
+<span class="sd">        - mesh_L_GM, mesh_R_GM, mesh_L_WM, mesh_R_WM (see :class:`Meshify  \</span>
+<span class="sd">        &lt;macapype.nodes.surface.Meshify&gt;` for arguments)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># creating pipeline</span>
+    <span class="n">mesh_to_seg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;segmented_file&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># split hemi pipe (+ cerebellum)</span>
+    <span class="n">split_hemi_pipe</span> <span class="o">=</span> <span class="n">create_split_hemi_pipe</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;split_hemi_pipe&quot;</span><span class="p">),</span>
+        <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
+                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.warpinv_file&#39;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.aff_file&#39;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.inv_transfo_file&#39;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
+                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.t1_ref_file&#39;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;segmented_file&#39;</span><span class="p">,</span>
+                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.segmented_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># meshify L GM hemisphere</span>
+    <span class="n">mesh_L_GM</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Meshify</span><span class="p">(),</span>
+                           <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;mesh_L_GM&quot;</span><span class="p">),</span>
+                           <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_L_GM&quot;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;extract_L_GM.out_file&#39;</span><span class="p">,</span>
+                             <span class="n">mesh_L_GM</span><span class="p">,</span> <span class="s2">&quot;image_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># meshify R GM hemisphere</span>
+    <span class="n">mesh_R_GM</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Meshify</span><span class="p">(),</span>
+                           <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;mesh_R_GM&quot;</span><span class="p">),</span>
+                           <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_R_GM&quot;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;extract_R_GM.out_file&#39;</span><span class="p">,</span>
+                             <span class="n">mesh_R_GM</span><span class="p">,</span> <span class="s2">&quot;image_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># meshify L WM hemisphere</span>
+    <span class="n">mesh_L_WM</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Meshify</span><span class="p">(),</span>
+                           <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;mesh_L_WM&quot;</span><span class="p">),</span>
+                           <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_L_WM&quot;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;extract_L_WM.out_file&#39;</span><span class="p">,</span>
+                             <span class="n">mesh_L_WM</span><span class="p">,</span> <span class="s2">&quot;image_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># meshify R WM hemisphere</span>
+    <span class="n">mesh_R_WM</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Meshify</span><span class="p">(),</span>
+                           <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;mesh_R_WM&quot;</span><span class="p">),</span>
+                           <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_R_WM&quot;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;extract_R_WM.out_file&#39;</span><span class="p">,</span>
+                             <span class="n">mesh_R_WM</span><span class="p">,</span> <span class="s2">&quot;image_file&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mesh_to_seg_pipe</span></div>
+
+<span class="c1">###############################################################################</span>
+
+<span class="c1"># using freesurfer tools to build the mesh through tesselation</span>
+
+
+<div class="viewcode-block" id="create_nii_to_mesh_fs_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.surface.create_nii_to_mesh_fs_pipe.html#macapype.pipelines.surface.create_nii_to_mesh_fs_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_nii_to_mesh_fs_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nii_to_mesh_fs_pipe&quot;</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: surface generation using freesurfer tools</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">    - fill_wm (see `MRIFill &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
+<span class="sd">    interfaces/generated/nipype.interfaces.freesurfer.utils.html#mrifill&gt;`_) \</span>
+<span class="sd">    - also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># creating pipeline</span>
+    <span class="n">nii_to_mesh_fs_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;wm_mask_file&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_brain_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;indiv_params&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># resample everything</span>
+    <span class="n">refit_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Refit</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refit_wm&quot;</span><span class="p">)</span>
+    <span class="n">refit_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-xdel 1.0 -ydel 1.0 -zdel 1.0 -keepcen&quot;</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;wm_mask_file&#39;</span><span class="p">,</span>
+                                <span class="n">refit_wm</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># resample everything</span>
+    <span class="n">refit_reg</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">afni</span><span class="o">.</span><span class="n">Refit</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refit_reg&quot;</span><span class="p">)</span>
+    <span class="n">refit_reg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;-xdel 1.0 -ydel 1.0 -zdel 1.0 -keepcen&quot;</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;reg_brain_file&#39;</span><span class="p">,</span>
+                                <span class="n">refit_reg</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mri_convert wm to freesurfer mgz</span>
+    <span class="n">convert_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">MRIConvert</span><span class="p">(),</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;convert_wm&quot;</span><span class="p">)</span>
+    <span class="n">convert_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_type</span> <span class="o">=</span> <span class="s2">&quot;mgz&quot;</span>
+    <span class="n">convert_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">conform</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">refit_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">convert_wm</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mri_convert reg to freesurfer mgz</span>
+    <span class="n">convert_reg</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">MRIConvert</span><span class="p">(),</span>
+                          <span class="n">name</span><span class="o">=</span><span class="s2">&quot;convert_reg&quot;</span><span class="p">)</span>
+    <span class="n">convert_reg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_type</span> <span class="o">=</span> <span class="s2">&quot;mgz&quot;</span>
+    <span class="n">convert_reg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">conform</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">refit_reg</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">convert_reg</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># mri_fill</span>
+    <span class="n">fill_wm</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">MRIFill</span><span class="p">(),</span>
+                         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;fill_wm&quot;</span><span class="p">),</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fill_wm&quot;</span><span class="p">)</span>
+
+    <span class="n">fill_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="s2">&quot;filled.mgz&quot;</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">convert_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">fill_wm</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;fill_wm&quot;</span><span class="p">),</span>
+        <span class="n">fill_wm</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
+
+    <span class="c1"># pretesselate wm</span>
+    <span class="n">pretess_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">MRIPretess</span><span class="p">(),</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pretess_wm&quot;</span><span class="p">)</span>
+    <span class="n">pretess_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="mi">255</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fill_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">pretess_wm</span><span class="p">,</span> <span class="s1">&#39;in_filled&#39;</span><span class="p">)</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">convert_reg</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">pretess_wm</span><span class="p">,</span> <span class="s1">&#39;in_norm&#39;</span><span class="p">)</span>
+
+    <span class="c1"># tesselate wm lh</span>
+    <span class="n">tess_wm_lh</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">MRITessellate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tess_wm_lh&quot;</span><span class="p">)</span>
+    <span class="n">tess_wm_lh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">label_value</span> <span class="o">=</span> <span class="mi">255</span>
+    <span class="n">tess_wm_lh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="s2">&quot;lh_tess&quot;</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">pretess_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">tess_wm_lh</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># tesselate wm rh</span>
+    <span class="n">tess_wm_rh</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">MRITessellate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tess_wm_rh&quot;</span><span class="p">)</span>
+    <span class="n">tess_wm_rh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">label_value</span> <span class="o">=</span> <span class="mi">127</span>
+    <span class="n">tess_wm_rh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="s2">&quot;rh_tess&quot;</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">pretess_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">tess_wm_rh</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># ExtractMainComponent lh</span>
+    <span class="n">extract_mc_lh</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">ExtractMainComponent</span><span class="p">(),</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;extract_mc_lh&quot;</span><span class="p">)</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">tess_wm_lh</span><span class="p">,</span> <span class="s1">&#39;surface&#39;</span><span class="p">,</span>
+                                <span class="n">extract_mc_lh</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">extract_mc_lh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="s2">&quot;lh.lh_tess.maincmp&quot;</span>
+
+    <span class="c1"># ExtractMainComponent rh</span>
+    <span class="n">extract_mc_rh</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">ExtractMainComponent</span><span class="p">(),</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;extract_mc_rh&quot;</span><span class="p">)</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">tess_wm_rh</span><span class="p">,</span> <span class="s1">&#39;surface&#39;</span><span class="p">,</span>
+                                <span class="n">extract_mc_rh</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">extract_mc_rh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="s2">&quot;rh.rh_tess.maincmp&quot;</span>
+
+    <span class="c1"># SmoothTessellation lh</span>
+    <span class="n">smooth_tess_lh</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">SmoothTessellation</span><span class="p">(),</span>
+                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;smooth_tess_lh&quot;</span><span class="p">)</span>
+    <span class="n">smooth_tess_lh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">disable_estimates</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_mc_lh</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">smooth_tess_lh</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># SmoothTessellation rh</span>
+    <span class="n">smooth_tess_rh</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">SmoothTessellation</span><span class="p">(),</span>
+                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;smooth_tess_rh&quot;</span><span class="p">)</span>
+    <span class="n">smooth_tess_rh</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">disable_estimates</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">nii_to_mesh_fs_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_mc_rh</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                <span class="n">smooth_tess_rh</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nii_to_mesh_fs_pipe</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

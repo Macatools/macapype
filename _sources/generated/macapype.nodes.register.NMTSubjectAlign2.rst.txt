@@ -1,0 +1,44 @@
+﻿macapype.nodes.register.NMTSubjectAlign2
+========================================
+
+.. currentmodule:: macapype.nodes.register
+
+.. autoclass:: NMTSubjectAlign2
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NMTSubjectAlign2.__init__
+      ~NMTSubjectAlign2.aggregate_outputs
+      ~NMTSubjectAlign2.help
+      ~NMTSubjectAlign2.load_inputs_from_json
+      ~NMTSubjectAlign2.raise_exception
+      ~NMTSubjectAlign2.run
+      ~NMTSubjectAlign2.save_inputs_to_json
+      ~NMTSubjectAlign2.set_default_terminal_output
+      ~NMTSubjectAlign2.version_from_command
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NMTSubjectAlign2.always_run
+      ~NMTSubjectAlign2.can_resume
+      ~NMTSubjectAlign2.cmd
+      ~NMTSubjectAlign2.cmdline
+      ~NMTSubjectAlign2.package_directory
+      ~NMTSubjectAlign2.references_
+      ~NMTSubjectAlign2.resource_monitor
+      ~NMTSubjectAlign2.terminal_output
+      ~NMTSubjectAlign2.version
+   
+   

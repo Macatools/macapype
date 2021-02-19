@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.prepare.create_short_preparation_pipe &#8212; macapype 0.2.1 documentation</title>
+    <title>macapype.pipelines.prepare.create_short_preparation_pipe &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -76,7 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">Docker install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
@@ -85,13 +85,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#changing-parameters">Changing parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
@@ -112,7 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../pipelines.html#long-data-preparation">Long data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../pipelines.html#options">Options</a><ul>
@@ -127,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -143,9 +159,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
@@ -186,9 +204,11 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
@@ -211,32 +231,53 @@
 <dl class="py function">
 <dt id="macapype.pipelines.prepare.create_short_preparation_pipe">
 <code class="sig-prename descclassname">macapype.pipelines.prepare.</code><code class="sig-name descname">create_short_preparation_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'short_preparation_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/prepare.html#create_short_preparation_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.prepare.create_short_preparation_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: old data preparation:, T1s and T2s are averaged
-(by modality) and then average imgs are processed:</p>
+<dd><p>Description: short data preparation:</p>
 <ul class="simple">
+<li><p>T1s and T2s are averaged (by modality).</p></li>
 <li><p>reorient (opt: reorient) makes the whole pipeline more neat)</p></li>
-<li><p>bet_crop (include alignement, and mask generation)</p></li>
-<li><p>denoising all input images (opt: denoise in json))</p></li>
+<li><p>Cropped (bet_crop include alignement, and mask generation)</p></li>
+<li><p>denoising all images (no denoise_first)</p></li>
+</ul>
+<p>Params:</p>
+<ul class="simple">
+<li><p>reorient (optional; new_dims as a string (e.g. “x z -y”))</p></li>
+<li><p>bet_crop (<a class="reference internal" href="macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>    ) or crop (see <a class="reference external" href="https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi">ExtractRoi</a> for     arguments). crop is also available as <a class="reference internal" href="../indiv_params.html#indiv-params"><span class="std std-ref">indiv_params</span></a></p></li>
+<li><p>denoise (see <a class="reference external" href="https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html#denoiseimage">DenoiseImage</a> for arguments))</p></li>
 </ul>
 <p>Inputs:</p>
 <blockquote>
+<div><p>inputnode:</p>
+<blockquote>
 <div><dl class="simple">
-<dt>inputnode:</dt><dd><p>list_T1: T1 files (from BIDSDataGrabber)
-list_T2: T2 files
-indiv_params (opt): dict with individuals parameters for some nodes</p>
+<dt>list_T1:</dt><dd><p>T1 files (from BIDSDataGrabber)</p>
 </dd>
-<dt>arguments:</dt><dd><p>params: dictionary of node sub-parameters (from a json file)
-name: pipeline name (default = “long_multi_preparation_pipe”)</p>
+<dt>list_T2:</dt><dd><p>T2 files</p>
+</dd>
+<dt>indiv_params (opt):</dt><dd><p>dict with individuals parameters for some nodes</p>
 </dd>
 </dl>
 </div></blockquote>
-<p>Outputs:</p>
+<p>arguments:</p>
 <blockquote>
 <div><dl class="simple">
-<dt>outputnode:</dt><dd><p>preproc_T1: preprocessed T1 file
-preproc_T2: preprocessed T2 file</p>
+<dt>params:</dt><dd><p>dictionary of node sub-parameters (from a json file)</p>
+</dd>
+<dt>name:</dt><dd><p>pipeline name (default = “long_multi_preparation_pipe”)</p>
 </dd>
 </dl>
+</div></blockquote>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><p>outputnode:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>preproc_T1:</dt><dd><p>preprocessed T1 file</p>
+</dd>
+<dt>preproc_T2:</dt><dd><p>preprocessed T2 file</p>
+</dd>
+</dl>
+</div></blockquote>
 </div></blockquote>
 </dd></dl>
 
@@ -254,7 +295,7 @@ preproc_T2: preprocessed T2 file</p>
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

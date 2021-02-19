@@ -20,6 +20,13 @@ Data preparation (:py:mod:`macapype.pipelines.prepare`):
     create_long_single_preparation_pipe
     create_long_multi_preparation_pipe
 
+(hidden)
+
+.. autosummary::
+   :toctree: generated/
+
+    _create_prep_pipeline
+    _create_mapnode_prep_pipeline
 
 Correct bias (:py:mod:`macapype.pipelines.correct_bias`):
 
@@ -49,6 +56,7 @@ Brain extraction (:py:mod:`macapype.pipelines.extract_brain`):
    :toctree: generated/
 
     create_extract_pipe
+    create_extract_T1_pipe
 
 
 Segment (:py:mod:`macapype.pipelines.segment`):
@@ -60,6 +68,17 @@ Segment (:py:mod:`macapype.pipelines.segment`):
 
     create_old_segment_pipe
     create_segment_atropos_pipe
+
+
+Surface (:py:mod:`macapype.pipelines.surface`):
+
+.. currentmodule:: macapype.pipelines.surface
+
+.. autosummary::
+   :toctree: generated/
+
+    create_nii_to_mesh_pipe
+    create_nii_to_mesh_fs_pipe
 
 
 Full pipeline (:py:mod:`macapype.pipelines.full_pipelines`):
@@ -85,6 +104,24 @@ Full pipeline (:py:mod:`macapype.pipelines.full_pipelines`):
 Nodes
 ^^^^^^
 
+Surface (:py:mod:`macapype.nodes.surface`):
+
+.. currentmodule:: macapype.nodes.surface
+
+.. autosummary::
+   :toctree: generated/
+
+   Meshify
+
+Segment (:py:mod:`macapype.nodes.segment`):
+
+.. currentmodule:: macapype.nodes.segment
+
+.. autosummary::
+   :toctree: generated/
+
+   AtroposN4
+
 Extract brain (:py:mod:`macapype.nodes.extract_brain`):
 
 .. currentmodule:: macapype.nodes.extract_brain
@@ -93,7 +130,7 @@ Extract brain (:py:mod:`macapype.nodes.extract_brain`):
    :toctree: generated/
 
    T1xT2BET
-
+   AtlasBREX
 
 Correct bias (:py:mod:`macapype.nodes.correct_bias`):
 
@@ -113,6 +150,8 @@ Register (:py:mod:`macapype.nodes.register`):
    :toctree: generated/
 
    IterREGBET
+   NMTSubjectAlign
+   NMTSubjectAlign2
 
 
 Preproc (:py:mod:`macapype.nodes.prepare`):

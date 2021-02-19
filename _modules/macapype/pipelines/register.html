@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.register &#8212; macapype 0.2.1 documentation</title>
+    <title>macapype.pipelines.register &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -76,7 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
@@ -85,13 +85,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
@@ -112,7 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
@@ -127,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -143,9 +159,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
@@ -182,9 +200,11 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
@@ -334,13 +354,20 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="c1"># multi / indiv_params</span>
-<span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="create_register_NMT_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_register_NMT_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="n">NMT_version</span><span class="o">=</span><span class="s2">&quot;1.2&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Register template to anat with the script NMT_subject_align,</span>
-<span class="sd">        and then apply it to tissues list_priors</span>
+    <span class="sd">&quot;&quot;&quot;Description: Register template to anat with the script \</span>
+<span class="sd">    NMT_subject_align (see :class:`NMTSubjectAlign \</span>
+<span class="sd">    &lt;macapype.nodes.register.NMTSubjectAlign&gt;` and :class:`NMTSubjectAlign2 \</span>
+<span class="sd">    &lt;macapype.nodes.register.NMTSubjectAlign2&gt;` for explanations), and then \</span>
+<span class="sd">    apply it to tissues list_priors</span>
+
+<span class="sd">    Params:</span>
+<span class="sd">        - norm_intensity (see `N4BiasFieldCorrection &lt;https://\</span>
+<span class="sd">        nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\</span>
+<span class="sd">        .ants.segmentation.html#n4biasfieldcorrection&gt;`_ for arguments)) - \</span>
+<span class="sd">        also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+<span class="sd">        - NMT_version (default = 1.2; 1.3 is also accepted)</span>
 
 <span class="sd">    Inputs:</span>
 
@@ -354,6 +381,9 @@
 <span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
 
 <span class="sd">            name: pipeline name (default = &quot;register_NMT_pipe&quot;)</span>
+
+<span class="sd">            NMT_version: NMT version (default = 1.2); \</span>
+<span class="sd">            can be overwritten in params json</span>
 
 <span class="sd">    Outputs:</span>
 
@@ -501,7 +531,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

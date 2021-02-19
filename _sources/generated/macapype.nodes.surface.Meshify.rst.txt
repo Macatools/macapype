@@ -1,0 +1,37 @@
+﻿macapype.nodes.surface.Meshify
+==============================
+
+.. currentmodule:: macapype.nodes.surface
+
+.. autoclass:: Meshify
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Meshify.__init__
+      ~Meshify.aggregate_outputs
+      ~Meshify.help
+      ~Meshify.load_inputs_from_json
+      ~Meshify.run
+      ~Meshify.save_inputs_to_json
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Meshify.always_run
+      ~Meshify.can_resume
+      ~Meshify.references_
+      ~Meshify.resource_monitor
+      ~Meshify.version
+   
+   

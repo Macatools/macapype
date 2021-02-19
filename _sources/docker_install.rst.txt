@@ -2,9 +2,9 @@
 
 .. _docker_install:
 
-******
-docker
-******
+**************
+Docker install
+**************
 
 Docker allows to provide all necessary softwares in extra to macapype packages. The Docker image we provide include ANTS 2.3.1, FSL 5.0.10 and AFNI (latest version). See at the bottom of this page for docker with SPM Stand-alone.
 

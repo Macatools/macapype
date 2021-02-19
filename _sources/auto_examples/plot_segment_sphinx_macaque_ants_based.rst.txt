@@ -161,7 +161,7 @@ Data preparation
 
 
 
-**Total running time of the script:** ( 0 minutes  21.686 seconds)
+**Total running time of the script:** ( 0 minutes  18.747 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py:

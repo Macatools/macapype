@@ -1,0 +1,43 @@
+﻿macapype.nodes.segment.AtroposN4
+================================
+
+.. currentmodule:: macapype.nodes.segment
+
+.. autoclass:: AtroposN4
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AtroposN4.__init__
+      ~AtroposN4.aggregate_outputs
+      ~AtroposN4.help
+      ~AtroposN4.load_inputs_from_json
+      ~AtroposN4.raise_exception
+      ~AtroposN4.run
+      ~AtroposN4.save_inputs_to_json
+      ~AtroposN4.set_default_terminal_output
+      ~AtroposN4.version_from_command
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AtroposN4.always_run
+      ~AtroposN4.can_resume
+      ~AtroposN4.cmd
+      ~AtroposN4.cmdline
+      ~AtroposN4.references_
+      ~AtroposN4.resource_monitor
+      ~AtroposN4.terminal_output
+      ~AtroposN4.version
+   
+   

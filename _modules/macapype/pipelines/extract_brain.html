@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.extract_brain &#8212; macapype 0.2.1 documentation</title>
+    <title>macapype.pipelines.extract_brain &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -76,7 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
@@ -85,13 +85,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#unsing-only-a-t1w-image">Unsing only a T1w image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#changing-parameters">Changing parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
@@ -112,7 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#long-data-preparation">Long data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../pipelines.html#options">Options</a><ul>
@@ -127,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
 </ul>
@@ -143,9 +159,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
@@ -182,9 +200,11 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Definition of workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
@@ -223,19 +243,35 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Extract T1 brain using AtlasBrex</span>
 
+<span class="sd">    Params:</span>
+
+<span class="sd">    - norm_intensity (see `N4BiasFieldCorrection &lt;https://nipype.readthedocs\</span>
+<span class="sd">    .io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\</span>
+<span class="sd">    html#n4biasfieldcorrection&gt;`_ for arguments)</span>
+<span class="sd">    - atlas_brex (see :class:`AtlasBREX \</span>
+<span class="sd">    &lt;macapype.nodes.extract_brain.AtlasBREX&gt;` for arguments) - also \</span>
+<span class="sd">    available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            restore_T1: preprocessed (debiased/denoised) T1 file name</span>
 
-<span class="sd">            restore_T1: preprocessed (debiased/denoised)T2 file name</span>
+<span class="sd">            restore_T1:</span>
+<span class="sd">                preprocessed (debiased/denoised) T1 file name</span>
+
+<span class="sd">            restore_T2:</span>
+<span class="sd">                preprocessed (debiased/denoised)T2 file name</span>
 
 <span class="sd">        arguments:</span>
-<span class="sd">            params_template: dictionary of info about template</span>
 
-<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+<span class="sd">            params_template:</span>
+<span class="sd">                dictionary of info about template</span>
 
-<span class="sd">            name: pipeline name (default = &quot;extract_pipe&quot;)</span>
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;extract_pipe&quot;)</span>
 
 <span class="sd">    Outputs:</span>
 
@@ -299,24 +335,37 @@
     <span class="k">return</span> <span class="n">extract_pipe</span></div>
 
 
-<span class="k">def</span> <span class="nf">create_extract_T1_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
+<div class="viewcode-block" id="create_extract_T1_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.extract_brain.create_extract_T1_pipe.html#macapype.pipelines.extract_brain.create_extract_T1_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_extract_T1_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;extract_T1_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Extract T1 brain using AtlasBrex</span>
 
+<span class="sd">    Params:</span>
+
+<span class="sd">    - norm_intensity (see `N4BiasFieldCorrection &lt;https://nipype.readthedocs.\</span>
+<span class="sd">    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
+<span class="sd">    #n4biasfieldcorrection&gt;`_ for arguments)</span>
+<span class="sd">    - atlas_brex (see :class:`AtlasBREX \</span>
+<span class="sd">    &lt;macapype.nodes.extract_brain.AtlasBREX&gt;` for arguments) - also available \</span>
+<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            restore_T1: preprocessed (debiased/denoised) T1 file name</span>
 
-<span class="sd">            restore_T1: preprocessed (debiased/denoised)T2 file name</span>
+<span class="sd">            restore_T1:</span>
+<span class="sd">                preprocessed (debiased/denoised) T1 file name</span>
 
 <span class="sd">        arguments:</span>
-<span class="sd">            params_template: dictionary of info about template</span>
 
-<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+<span class="sd">            params_template:</span>
+<span class="sd">                dictionary of info about template</span>
 
-<span class="sd">            name: pipeline name (default = &quot;extract_pipe&quot;)</span>
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;extract_pipe&quot;)</span>
 
 <span class="sd">    Outputs:</span>
 
@@ -378,7 +427,7 @@
     <span class="n">extract_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;restore_T1&#39;</span><span class="p">,</span> <span class="n">mult_T1</span><span class="p">,</span> <span class="s1">&#39;in_file_a&#39;</span><span class="p">)</span>
     <span class="n">extract_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">smooth_mask</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">mult_T1</span><span class="p">,</span> <span class="s1">&#39;in_file_b&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">extract_pipe</span>
+    <span class="k">return</span> <span class="n">extract_pipe</span></div>
 </pre></div>
 
     </div>
@@ -392,7 +441,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-04.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

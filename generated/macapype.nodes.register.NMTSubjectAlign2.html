@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>macapype.nodes.register.NMTSubjectAlign2 &#8212; macapype 0.2.2 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../_static/js/jquery-fix.js"></script>
+    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_macapype.png"></span>
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorial.html">Tutorial</a></li>
+                <li><a href="../install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">Docker install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#id1">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workflows.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipelines.html#data-preparation">Data preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute.html#versionning">Versionning</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/generated/macapype.nodes.register.NMTSubjectAlign2.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Definition of workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="macapype-nodes-register-nmtsubjectalign2">
+<h1>macapype.nodes.register.NMTSubjectAlign2<a class="headerlink" href="#macapype-nodes-register-nmtsubjectalign2" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="macapype.nodes.register.NMTSubjectAlign2">
+<em class="property">class </em><code class="sig-prename descclassname">macapype.nodes.register.</code><code class="sig-name descname">NMTSubjectAlign2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">terminal_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/register.html#NMTSubjectAlign2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.register.NMTSubjectAlign2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Align NMT subject to template (NMT 1.3)</p>
+<p>Inputs:</p>
+<blockquote>
+<div><p>Mandatory:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>T1_file:</dt><dd><p>File, ‘Target file’</p>
+</dd>
+<dt>NMT_SS_file:</dt><dd><p>File, ‘Align to T1’</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>aff_file:</dt><dd><p>File, “subject image linearly transformed to the NMT template”</p>
+</dd>
+<dt>warp_file:</dt><dd><p>File, “shft_WARP”</p>
+</dd>
+<dt>warpinv_file:</dt><dd><p>File, “shft_WARPINV”</p>
+</dd>
+<dt>transfo_file:</dt><dd><p>File, “Combined Linear transform from subject to NMT”</p>
+</dd>
+<dt>inv_transfo_file:</dt><dd><p>File, “Inverse Linear Transform from NMT to subject”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt><dd><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt><dd><p>Defines if the interface can reuse partial results after interruption.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/cmd.html#module-cmd" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></a></dt><dd><p>sets base command, immutable</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></dt><dd><p><cite>command</cite> plus any arguments (args)</p>
+</dd>
+<dt><strong>terminal_output</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt><dd><p>interfaces should implement a version property</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2InputSpec</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2OutputSpec</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
+<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 71%" />
+<col style="width: 29%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>raise_exception</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>version_from_command</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="macapype.nodes.register.NMTSubjectAlign2.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">terminal_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.register.NMTSubjectAlign2.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses must implement __init__</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#macapype.nodes.register.NMTSubjectAlign2.__init__" title="macapype.nodes.register.NMTSubjectAlign2.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command, terminal_output])</p></td>
+<td><p>Subclasses must implement __init__</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
+<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag, cmd])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></p></td>
+<td><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></p></td>
+<td><p>Defines if the interface can reuse partial results after interruption.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></p></td>
+<td><p>sets base command, immutable</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></p></td>
+<td><p><cite>command</cite> plus any arguments (args) validates arguments and generates command line</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></p></td>
+<td><p>interfaces should implement a version property</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
