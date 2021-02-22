@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
@@ -259,9 +264,10 @@
 <span class="c1"># SPM based segmentation (from: Régis Trapeau) (-soft SPM or SPM12)</span>
 <div class="viewcode-block" id="create_full_spm_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_spm_subpipes</span><span class="p">(</span>
         <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_spm_subpipes&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Description: SPM based segmentation pipeline from T1w and T2w images \</span>
-<span class="sd">    in template space (main difference with the ANTS based pipeline, \</span>
-<span class="sd">    in subject space)</span>
+    <span class="sd">&quot;&quot;&quot; Description: SPM based segmentation pipeline from T1w and T2w images</span>
+<span class="sd">    in template space</span>
+
+<span class="sd">    Processing steps:</span>
 
 <span class="sd">    - Data preparation (short, with betcrop or crop)</span>
 <span class="sd">    - debias using T1xT2BiasFieldCorrection (using mask is betcrop)</span>
@@ -418,9 +424,11 @@
 <span class="c1"># SPM based, but only T1 is available (-soft SPM_T1)</span>
 <div class="viewcode-block" id="create_full_T1_spm_subpipes"><a class="viewcode-back" href="../../../generated/macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes">[docs]</a><span class="k">def</span> <span class="nf">create_full_T1_spm_subpipes</span><span class="p">(</span>
         <span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_T1_spm_subpipes&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Description: SPM based segmentation pipeline from T1w image only.\</span>
+    <span class="sd">&quot;&quot;&quot; Description: SPM based segmentation pipeline from T1w image only.</span>
 <span class="sd">    This is fact the same as create_full_spm_subpipes, where T2 is \</span>
 <span class="sd">    replaced by T1</span>
+
+<span class="sd">    Processing steps:</span>
 
 
 <span class="sd">    - Data preparation (short, with betcrop or crop) on T1 (2 times)</span>
@@ -1155,7 +1163,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

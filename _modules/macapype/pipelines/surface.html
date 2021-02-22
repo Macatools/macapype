@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
@@ -236,8 +241,48 @@
 <span class="kn">from</span> <span class="nn">macapype.utils.utils_nodes</span> <span class="kn">import</span> <span class="n">parse_key</span><span class="p">,</span> <span class="n">NodeParams</span>
 
 
-<span class="k">def</span> <span class="nf">create_split_hemi_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">params_template</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;split_hemi_pipe&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="_create_split_hemi_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.surface._create_split_hemi_pipe.html#macapype.pipelines.surface._create_split_hemi_pipe">[docs]</a><span class="k">def</span> <span class="nf">_create_split_hemi_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">params_template</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;split_hemi_pipe&quot;</span><span class="p">):</span>
 
+    <span class="sd">&quot;&quot;&quot;Description: Split segmentated tissus according hemisheres after \</span>
+<span class="sd">    removal of cortical structure</span>
+
+<span class="sd">    Processing steps:</span>
+
+<span class="sd">    - TODO</span>
+
+<span class="sd">    Params:</span>
+
+<span class="sd">        - None so far</span>
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+
+<span class="sd">            warpinv_file:</span>
+<span class="sd">                non-linear transformation (from NMT_subject_align)</span>
+
+<span class="sd">            inv_transfo_file:</span>
+<span class="sd">                inverse transformation</span>
+
+<span class="sd">            aff_file:</span>
+<span class="sd">                affine transformation file</span>
+
+<span class="sd">            t1_ref_file:</span>
+<span class="sd">                preprocessd T1</span>
+
+<span class="sd">            segmented_file:</span>
+<span class="sd">                from atropos segmentation, with all the tissues segmented</span>
+
+<span class="sd">        arguments:</span>
+
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;split_hemi_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">split_hemi_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
     <span class="c1"># creating inputnode</span>
@@ -535,22 +580,54 @@
     <span class="n">split_hemi_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">calc_WM_nocb_R_hemi</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                             <span class="n">extract_R_WM</span><span class="p">,</span> <span class="s2">&quot;in_file_b&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">split_hemi_pipe</span>
+    <span class="k">return</span> <span class="n">split_hemi_pipe</span></div>
 
 
 <div class="viewcode-block" id="create_nii_to_mesh_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.surface.create_nii_to_mesh_pipe.html#macapype.pipelines.surface.create_nii_to_mesh_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_nii_to_mesh_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">params_template</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nii_to_mesh_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: basic nii to mesh pipeline after segmentation, \</span>
-<span class="sd">    split in hemisphere after removal of the subcortical structures and \</span>
-<span class="sd">    using scipy marching cube methods to compute mesh after smoothing</span>
+<span class="sd">    Description: basic nii to mesh pipeline after segmentation</span>
+
+<span class="sd">    Processing steps:</span>
+
+<span class="sd">    - split in hemisphere after removal of the subcortical structures</span>
+<span class="sd">    - using scipy marching cube methods to compute mesh</span>
+<span class="sd">    - some smoothing (using brain-slam)</span>
 
 <span class="sd">    Params:</span>
 
-<span class="sd">        - split_hemi_pipe (see :class:`create_split_hemi_pipe \</span>
-<span class="sd">        &lt;macapype.pipelines.surface.create_split_hemi_pipe&gt;` for arguments)</span>
+<span class="sd">        - split_hemi_pipe (see :class:`_create_split_hemi_pipe \</span>
+<span class="sd">        &lt;macapype.pipelines.surface._create_split_hemi_pipe&gt;` for arguments)</span>
 <span class="sd">        - mesh_L_GM, mesh_R_GM, mesh_L_WM, mesh_R_WM (see :class:`Meshify  \</span>
 <span class="sd">        &lt;macapype.nodes.surface.Meshify&gt;` for arguments)</span>
 
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+
+<span class="sd">            warpinv_file:</span>
+<span class="sd">                non-linear transformation (from NMT_subject_align)</span>
+
+<span class="sd">            inv_transfo_file:</span>
+<span class="sd">                inverse transformation</span>
+
+<span class="sd">            aff_file:</span>
+<span class="sd">                affine transformation file</span>
+
+<span class="sd">            t1_ref_file:</span>
+<span class="sd">                preprocessd T1</span>
+
+<span class="sd">            segmented_file:</span>
+<span class="sd">                from atropos segmentation, with all the tissues segmented</span>
+
+<span class="sd">        arguments:</span>
+
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;nii_to_mesh_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># creating pipeline</span>
     <span class="n">mesh_to_seg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -565,18 +642,18 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># split hemi pipe (+ cerebellum)</span>
-    <span class="n">split_hemi_pipe</span> <span class="o">=</span> <span class="n">create_split_hemi_pipe</span><span class="p">(</span>
+    <span class="n">split_hemi_pipe</span> <span class="o">=</span> <span class="n">_create_split_hemi_pipe</span><span class="p">(</span>
         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;split_hemi_pipe&quot;</span><span class="p">),</span>
         <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">)</span>
 
     <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;warpinv_file&#39;</span><span class="p">,</span>
                              <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.warpinv_file&#39;</span><span class="p">)</span>
 
-    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
-                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.aff_file&#39;</span><span class="p">)</span>
-
     <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
                              <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.inv_transfo_file&#39;</span><span class="p">)</span>
+
+    <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;aff_file&#39;</span><span class="p">,</span>
+                             <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.aff_file&#39;</span><span class="p">)</span>
 
     <span class="n">mesh_to_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;t1_ref_file&#39;</span><span class="p">,</span>
                              <span class="n">split_hemi_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.t1_ref_file&#39;</span><span class="p">)</span>
@@ -618,11 +695,9 @@
 
     <span class="k">return</span> <span class="n">mesh_to_seg_pipe</span></div>
 
+
 <span class="c1">###############################################################################</span>
-
 <span class="c1"># using freesurfer tools to build the mesh through tesselation</span>
-
-
 <div class="viewcode-block" id="create_nii_to_mesh_fs_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.surface.create_nii_to_mesh_fs_pipe.html#macapype.pipelines.surface.create_nii_to_mesh_fs_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_nii_to_mesh_fs_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nii_to_mesh_fs_pipe&quot;</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -633,6 +708,30 @@
 <span class="sd">    - fill_wm (see `MRIFill &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
 <span class="sd">    interfaces/generated/nipype.interfaces.freesurfer.utils.html#mrifill&gt;`_) \</span>
 <span class="sd">    - also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
+
+
+<span class="sd">    Inputs:</span>
+
+<span class="sd">        inputnode:</span>
+
+<span class="sd">            wm_mask_file:</span>
+<span class="sd">                segmented white matter mask (binary) in template space</span>
+
+<span class="sd">            reg_brain_file:</span>
+<span class="sd">                preprocessd T1, registered to template</span>
+
+<span class="sd">            indiv_params (opt):</span>
+<span class="sd">                dict with individuals parameters for some nodes</span>
+
+<span class="sd">        arguments:</span>
+
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
+
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;nii_to_mesh_fs_pipe&quot;)</span>
+
+<span class="sd">    Outputs:</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># creating pipeline</span>
@@ -765,7 +864,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

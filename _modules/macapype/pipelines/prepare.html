@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
@@ -570,10 +575,13 @@
 <span class="c1"># choices between the 3 main pipelines: &quot;short&quot;, &quot;long_single&quot; et &quot;long_multi&quot;</span>
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="create_short_preparation_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_short_preparation_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description: short data preparation:</span>
+    <span class="sd">&quot;&quot;&quot;Description: short data preparation (average, reorient, crop/betcrop \</span>
+<span class="sd">    and denoise)</span>
+
+<span class="sd">    Processing steps;</span>
 
 <span class="sd">    - T1s and T2s are averaged (by modality).</span>
-<span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
+<span class="sd">    - reorient (opt) makes the whole pipeline more neat)</span>
 <span class="sd">    - Cropped (bet_crop include alignement, and mask generation)</span>
 <span class="sd">    - denoising all images (no denoise_first)</span>
 
@@ -772,10 +780,13 @@
 
 <div class="viewcode-block" id="create_long_single_preparation_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare.create_long_single_preparation_pipe.html#macapype.pipelines.prepare.create_long_single_preparation_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_long_single_preparation_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span>
                                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;long_single_preparation_pipe&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description: Short data preparation, T1s and T2s are averaged</span>
-<span class="sd">    (by modality) and then average imgs are processed:</span>
+    <span class="sd">&quot;&quot;&quot;Description: Long data preparation, T1s and T2s are averaged</span>
+<span class="sd">    (by modality) and then average imgs are processed.</span>
 
-<span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
+<span class="sd">    Processing Steps:</span>
+
+<span class="sd">    - average imgs (by modality).</span>
+<span class="sd">    - reorient (opt) makes the whole pipeline more neat)</span>
 <span class="sd">    - start by denoising all input images (opt: denoise_first in json)</span>
 <span class="sd">    - crop T1 and T2 based on individual parameters</span>
 <span class="sd">    - running N4biascorrection on cropped T1 and T to help T2 and T1 alignment</span>
@@ -887,8 +898,10 @@
 
 <div class="viewcode-block" id="create_long_multi_preparation_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.prepare.create_long_multi_preparation_pipe.html#macapype.pipelines.prepare.create_long_multi_preparation_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_long_multi_preparation_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">,</span>
                                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;long_multi_preparation_pipe&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description: long data preparation,</span>
-<span class="sd">    each T1 and T2 is processed independantly (mapnode) with:</span>
+    <span class="sd">&quot;&quot;&quot;Description: Long data preparation, each T1 and T2 is processed \</span>
+<span class="sd">    independantly (mapnode).</span>
+
+<span class="sd">    Processing steps:</span>
 
 <span class="sd">    - reorient (opt: reorient) makes the whole pipeline more neat)</span>
 <span class="sd">    - start by denoising all input images (opt: denoise_first in json)</span>
@@ -1184,7 +1197,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

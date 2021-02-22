@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
@@ -231,10 +236,12 @@
 <dl class="py function">
 <dt id="macapype.pipelines.prepare.create_long_single_preparation_pipe">
 <code class="sig-prename descclassname">macapype.pipelines.prepare.</code><code class="sig-name descname">create_long_single_preparation_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'long_single_preparation_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/prepare.html#create_long_single_preparation_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.prepare.create_long_single_preparation_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: Short data preparation, T1s and T2s are averaged
-(by modality) and then average imgs are processed:</p>
+<dd><p>Description: Long data preparation, T1s and T2s are averaged
+(by modality) and then average imgs are processed.</p>
+<p>Processing Steps:</p>
 <ul class="simple">
-<li><p>reorient (opt: reorient) makes the whole pipeline more neat)</p></li>
+<li><p>average imgs (by modality).</p></li>
+<li><p>reorient (opt) makes the whole pipeline more neat)</p></li>
 <li><p>start by denoising all input images (opt: denoise_first in json)</p></li>
 <li><p>crop T1 and T2 based on individual parameters</p></li>
 <li><p>running N4biascorrection on cropped T1 and T to help T2 and T1 alignment</p></li>
@@ -282,7 +289,7 @@ preproc_T2: preprocessed T2 file</p>
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

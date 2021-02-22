@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../install.html#testing-the-install">Testing the install</a></li>
@@ -242,9 +247,11 @@
         <span class="n">wm_prob_file</span><span class="p">,</span> <span class="n">csf_prob_file</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Registration of template (NMT or other) according to Regis:</span>
+
 <span class="sd">    - The iterative FLIRT is between NMT_SS and subject&#39;s anat after a quick</span>
 <span class="sd">    skull-stripping but the anat is more and more refined to corresponds to the</span>
 <span class="sd">    brain</span>
+
 <span class="sd">    - there is also a FNIRT done once, for comparison of the quality of the</span>
 <span class="sd">    template on the subject&#39;s brain</span>
 
@@ -356,11 +363,16 @@
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="create_register_NMT_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_register_NMT_pipe</span><span class="p">(</span><span class="n">params_template</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">,</span> <span class="n">NMT_version</span><span class="o">=</span><span class="s2">&quot;1.2&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description: Register template to anat with the script \</span>
-<span class="sd">    NMT_subject_align (see :class:`NMTSubjectAlign \</span>
+    <span class="sd">&quot;&quot;&quot;Description: Register template to anat with the script NMT_subject_align</span>
+
+<span class="sd">    Processing steps:</span>
+
+<span class="sd">    - Bias correction (norm_intensity)</span>
+<span class="sd">    - Deoblique (Refit with deoblique option)</span>
+<span class="sd">    - NMT_subject_align (see :class:`NMTSubjectAlign \</span>
 <span class="sd">    &lt;macapype.nodes.register.NMTSubjectAlign&gt;` and :class:`NMTSubjectAlign2 \</span>
-<span class="sd">    &lt;macapype.nodes.register.NMTSubjectAlign2&gt;` for explanations), and then \</span>
-<span class="sd">    apply it to tissues list_priors</span>
+<span class="sd">    &lt;macapype.nodes.register.NMTSubjectAlign2&gt;` for explanations)</span>
+<span class="sd">    - apply it to tissues list_priors (NwarpApplyPriors and Allineate)</span>
 
 <span class="sd">    Params:</span>
 <span class="sd">        - norm_intensity (see `N4BiasFieldCorrection &lt;https://\</span>
@@ -372,27 +384,38 @@
 <span class="sd">    Inputs:</span>
 
 <span class="sd">        inputnode:</span>
-<span class="sd">            T1: T1 file name</span>
-<span class="sd">            indiv_params: dict with individuals parameters for some nodes</span>
+
+<span class="sd">            T1:</span>
+<span class="sd">                T1 file name</span>
+
+<span class="sd">            indiv_params:</span>
+<span class="sd">                dict with individuals parameters for some nodes</span>
 
 <span class="sd">        arguments:</span>
-<span class="sd">            params_template: dictionary of info about template</span>
 
-<span class="sd">            params: dictionary of node sub-parameters (from a json file)</span>
+<span class="sd">            params_template:</span>
+<span class="sd">                dictionary of info about template</span>
 
-<span class="sd">            name: pipeline name (default = &quot;register_NMT_pipe&quot;)</span>
+<span class="sd">            params:</span>
+<span class="sd">                dictionary of node sub-parameters (from a json file)</span>
 
-<span class="sd">            NMT_version: NMT version (default = 1.2); \</span>
-<span class="sd">            can be overwritten in params json</span>
+<span class="sd">            name:</span>
+<span class="sd">                pipeline name (default = &quot;register_NMT_pipe&quot;)</span>
+
+<span class="sd">            NMT_version:</span>
+<span class="sd">                NMT version (default = 1.2); can be overwritten in params json</span>
 
 <span class="sd">    Outputs:</span>
 
 <span class="sd">        norm_intensity.output_image:</span>
 <span class="sd">            filled mask after erode</span>
+
 <span class="sd">        align_seg_csf.out_file:</span>
 <span class="sd">            csf template tissue in subject space</span>
+
 <span class="sd">        align_seg_gm.out_file:</span>
 <span class="sd">            grey matter template tissue in subject space</span>
+
 <span class="sd">        align_seg_wm.out_file:</span>
 <span class="sd">            white matter template tissue in subject space</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -531,7 +554,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

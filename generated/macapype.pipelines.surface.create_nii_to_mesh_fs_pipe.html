@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
@@ -236,6 +241,30 @@
 <ul class="simple">
 <li><p>fill_wm (see <a class="reference external" href="https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.freesurfer.utils.html#mrifill">MRIFill</a>)     - also available as <a class="reference internal" href="../indiv_params.html#indiv-params"><span class="std std-ref">indiv_params</span></a></p></li>
 </ul>
+<p>Inputs:</p>
+<blockquote>
+<div><p>inputnode:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>wm_mask_file:</dt><dd><p>segmented white matter mask (binary) in template space</p>
+</dd>
+<dt>reg_brain_file:</dt><dd><p>preprocessd T1, registered to template</p>
+</dd>
+<dt>indiv_params (opt):</dt><dd><p>dict with individuals parameters for some nodes</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>params:</dt><dd><p>dictionary of node sub-parameters (from a json file)</p>
+</dd>
+<dt>name:</dt><dd><p>pipeline name (default = “nii_to_mesh_fs_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p>Outputs:</p>
 </dd></dl>
 
 </div>
@@ -252,7 +281,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

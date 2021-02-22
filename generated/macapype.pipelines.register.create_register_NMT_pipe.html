@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
@@ -231,7 +236,14 @@
 <dl class="py function">
 <dt id="macapype.pipelines.register.create_register_NMT_pipe">
 <code class="sig-prename descclassname">macapype.pipelines.register.</code><code class="sig-name descname">create_register_NMT_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'register_NMT_pipe'</span></em>, <em class="sig-param"><span class="n">NMT_version</span><span class="o">=</span><span class="default_value">'1.2'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/register.html#create_register_NMT_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.register.create_register_NMT_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: Register template to anat with the script     NMT_subject_align (see <a class="reference internal" href="macapype.nodes.register.NMTSubjectAlign.html#macapype.nodes.register.NMTSubjectAlign" title="macapype.nodes.register.NMTSubjectAlign"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign</span></code></a> and <a class="reference internal" href="macapype.nodes.register.NMTSubjectAlign2.html#macapype.nodes.register.NMTSubjectAlign2" title="macapype.nodes.register.NMTSubjectAlign2"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2</span></code></a> for explanations), and then     apply it to tissues list_priors</p>
+<dd><p>Description: Register template to anat with the script NMT_subject_align</p>
+<p>Processing steps:</p>
+<ul class="simple">
+<li><p>Bias correction (norm_intensity)</p></li>
+<li><p>Deoblique (Refit with deoblique option)</p></li>
+<li><p>NMT_subject_align (see <a class="reference internal" href="macapype.nodes.register.NMTSubjectAlign.html#macapype.nodes.register.NMTSubjectAlign" title="macapype.nodes.register.NMTSubjectAlign"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign</span></code></a> and <a class="reference internal" href="macapype.nodes.register.NMTSubjectAlign2.html#macapype.nodes.register.NMTSubjectAlign2" title="macapype.nodes.register.NMTSubjectAlign2"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2</span></code></a> for explanations)</p></li>
+<li><p>apply it to tissues list_priors (NwarpApplyPriors and Allineate)</p></li>
+</ul>
 <dl class="simple">
 <dt>Params:</dt><dd><ul class="simple">
 <li><p>norm_intensity (see <a class="reference external" href="https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html#n4biasfieldcorrection">N4BiasFieldCorrection</a> for arguments)) -         also available as <a class="reference internal" href="../indiv_params.html#indiv-params"><span class="std std-ref">indiv_params</span></a></p></li>
@@ -241,16 +253,28 @@
 </dl>
 <p>Inputs:</p>
 <blockquote>
-<div><dl>
-<dt>inputnode:</dt><dd><p>T1: T1 file name
-indiv_params: dict with individuals parameters for some nodes</p>
+<div><p>inputnode:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>T1:</dt><dd><p>T1 file name</p>
 </dd>
-<dt>arguments:</dt><dd><p>params_template: dictionary of info about template</p>
-<p>params: dictionary of node sub-parameters (from a json file)</p>
-<p>name: pipeline name (default = “register_NMT_pipe”)</p>
-<p>NMT_version: NMT version (default = 1.2);             can be overwritten in params json</p>
+<dt>indiv_params:</dt><dd><p>dict with individuals parameters for some nodes</p>
 </dd>
 </dl>
+</div></blockquote>
+<p>arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>params_template:</dt><dd><p>dictionary of info about template</p>
+</dd>
+<dt>params:</dt><dd><p>dictionary of node sub-parameters (from a json file)</p>
+</dd>
+<dt>name:</dt><dd><p>pipeline name (default = “register_NMT_pipe”)</p>
+</dd>
+<dt>NMT_version:</dt><dd><p>NMT version (default = 1.2); can be overwritten in params json</p>
+</dd>
+</dl>
+</div></blockquote>
 </div></blockquote>
 <p>Outputs:</p>
 <blockquote>
@@ -281,7 +305,7 @@ indiv_params: dict with individuals parameters for some nodes</p>
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

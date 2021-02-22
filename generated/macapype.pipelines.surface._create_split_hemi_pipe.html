@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.nodes.register.NMTSubjectAlign2 &#8212; macapype 0.2.2 documentation</title>
+    <title>macapype.pipelines.surface._create_split_hemi_pipe &#8212; macapype 0.2.2 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -184,7 +184,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/generated/macapype.nodes.register.NMTSubjectAlign2.rst.txt"
+  <a href="../_sources/generated/macapype.pipelines.surface._create_split_hemi_pipe.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -231,181 +231,50 @@
       </div>
     <div class="col-md-9 content">
       
-  <div class="section" id="macapype-nodes-register-nmtsubjectalign2">
-<h1>macapype.nodes.register.NMTSubjectAlign2<a class="headerlink" href="#macapype-nodes-register-nmtsubjectalign2" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="macapype.nodes.register.NMTSubjectAlign2">
-<em class="property">class </em><code class="sig-prename descclassname">macapype.nodes.register.</code><code class="sig-name descname">NMTSubjectAlign2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">terminal_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/nodes/register.html#NMTSubjectAlign2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.nodes.register.NMTSubjectAlign2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: Align NMT subject to template (NMT 1.3)</p>
+  <div class="section" id="macapype-pipelines-surface-create-split-hemi-pipe">
+<h1>macapype.pipelines.surface._create_split_hemi_pipe<a class="headerlink" href="#macapype-pipelines-surface-create-split-hemi-pipe" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="macapype.pipelines.surface._create_split_hemi_pipe">
+<code class="sig-prename descclassname">macapype.pipelines.surface.</code><code class="sig-name descname">_create_split_hemi_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'split_hemi_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/surface.html#_create_split_hemi_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.surface._create_split_hemi_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Split segmentated tissus according hemisheres after     removal of cortical structure</p>
+<p>Processing steps:</p>
+<ul class="simple">
+<li><p>TODO</p></li>
+</ul>
+<p>Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>None so far</p></li>
+</ul>
+</div></blockquote>
 <p>Inputs:</p>
 <blockquote>
-<div><p>Mandatory:</p>
+<div><p>inputnode:</p>
 <blockquote>
 <div><dl class="simple">
-<dt>T1_file:</dt><dd><p>File, ‘Target file’</p>
+<dt>warpinv_file:</dt><dd><p>non-linear transformation (from NMT_subject_align)</p>
 </dd>
-<dt>NMT_SS_file:</dt><dd><p>File, ‘Align to T1’</p>
+<dt>inv_transfo_file:</dt><dd><p>inverse transformation</p>
+</dd>
+<dt>aff_file:</dt><dd><p>affine transformation file</p>
+</dd>
+<dt>t1_ref_file:</dt><dd><p>preprocessd T1</p>
+</dd>
+<dt>segmented_file:</dt><dd><p>from atropos segmentation, with all the tissues segmented</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>params:</dt><dd><p>dictionary of node sub-parameters (from a json file)</p>
+</dd>
+<dt>name:</dt><dd><p>pipeline name (default = “split_hemi_pipe”)</p>
 </dd>
 </dl>
 </div></blockquote>
 </div></blockquote>
 <p>Outputs:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>aff_file:</dt><dd><p>File, “subject image linearly transformed to the NMT template”</p>
-</dd>
-<dt>warp_file:</dt><dd><p>File, “shft_WARP”</p>
-</dd>
-<dt>warpinv_file:</dt><dd><p>File, “shft_WARPINV”</p>
-</dd>
-<dt>transfo_file:</dt><dd><p>File, “Combined Linear transform from subject to NMT”</p>
-</dd>
-<dt>inv_transfo_file:</dt><dd><p>File, “Inverse Linear Transform from NMT to subject”</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></dt><dd><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></dt><dd><p>Defines if the interface can reuse partial results after interruption.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/cmd.html#module-cmd" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></a></dt><dd><p>sets base command, immutable</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></dt><dd><p><cite>command</cite> plus any arguments (args)</p>
-</dd>
-<dt><strong>terminal_output</strong></dt><dd></dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></dt><dd><p>interfaces should implement a version property</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
-<td><p>Collate expected outputs and apply output traits validation.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
-<td><p>Prints class help</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></p></td>
-<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2InputSpec</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
-<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_spec</span></code></p></td>
-<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">NMTSubjectAlign2OutputSpec</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
-<td><p>Execute this interface.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
-<td><p>A convenient way to save current inputs to a JSON file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
-<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 71%" />
-<col style="width: 29%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>raise_exception</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>version_from_command</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt id="macapype.nodes.register.NMTSubjectAlign2.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">terminal_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#macapype.nodes.register.NMTSubjectAlign2.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Subclasses must implement __init__</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#macapype.nodes.register.NMTSubjectAlign2.__init__" title="macapype.nodes.register.NMTSubjectAlign2.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([command, terminal_output])</p></td>
-<td><p>Subclasses must implement __init__</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
-<td><p>Collate expected outputs and apply output traits validation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
-<td><p>Prints class help</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
-<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_exception</span></code>(runtime)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
-<td><p>Execute this interface.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
-<td><p>A convenient way to save current inputs to a JSON file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default_terminal_output</span></code>(output_type)</p></td>
-<td><p>Set the default terminal output for CommandLine Interfaces.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version_from_command</span></code>([flag, cmd])</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></p></td>
-<td><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></p></td>
-<td><p>Defines if the interface can reuse partial results after interruption.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmd</span></code></p></td>
-<td><p>sets base command, immutable</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmdline</span></code></p></td>
-<td><p><cite>command</cite> plus any arguments (args) validates arguments and generates command line</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">package_directory</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">references_</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminal_output</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></p></td>
-<td><p>interfaces should implement a version property</p></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

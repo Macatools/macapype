@@ -2,15 +2,15 @@
 
 .. _install:
 
-**************
+************
 Installation
-**************
+************
 
 Dependancies
-#############
+############
 
 External software dependancies
--------------------------------
+------------------------------
 
 Macapype relies heavily on other neuroimaging Softwares, predominentyly:
 
@@ -38,12 +38,12 @@ for frioul users, here is what should be added at the end of your .bash_personal
     export FSLOUTPUTTYPE
 
 Python packages dependancies
------------------------------
+----------------------------
 
 Macapype relies on python packages. Here we provide installations using Anaconda
 
 Creating environment with all packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
 
@@ -54,13 +54,13 @@ In case you have access to a conda environment, here is the procedure to initial
     $ conda activate macapype_env
 
 Install macapype package
-#########################
+########################
 
 from github
-^^^^^^^^^^^^
+-----------
 
 Using git
----------
+~~~~~~~~~
 
 .. code:: bash
 
@@ -69,14 +69,14 @@ Using git
     $ python setup.py develop --user
 
 Using pip
----------
+~~~~~~~~~
 
 .. code:: bash
 
     $ pip install git+https://github.com/Macatools/macapype
 
 from pypi
-^^^^^^^^^^
+---------
 
 Macapype is available on * `pypi.org <https://pypi.org/project/macapype/>`_:
 
@@ -87,8 +87,8 @@ If 'pip' package is installed on your system, you can install the lastest stable
     $ pip install macapype
 
 
-Using conda
-^^^^^^^^^^^^
+From conda
+-----------
 
 Macapype is also available on `Anaconda cloud <https://anaconda.org/macatools/macapype>`_:
 
@@ -102,7 +102,7 @@ If 'conda' (Anaconda, or miniconda) is installed on your system, you can type:
 use "pip install macapype" or "git clone https://github.com/Macatools/macapype.git" till further notice
 
 Testing the install
-####################
+###################
 
 
 .. code:: bash

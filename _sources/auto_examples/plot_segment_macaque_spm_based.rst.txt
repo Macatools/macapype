@@ -280,7 +280,7 @@ segmentation results
 
 
 
-**Total running time of the script:** ( 0 minutes  29.683 seconds)
+**Total running time of the script:** ( 0 minutes  30.606 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_macaque_spm_based.py:

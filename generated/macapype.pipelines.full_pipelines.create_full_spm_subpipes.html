@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
@@ -231,7 +236,9 @@
 <dl class="py function">
 <dt id="macapype.pipelines.full_pipelines.create_full_spm_subpipes">
 <code class="sig-prename descclassname">macapype.pipelines.full_pipelines.</code><code class="sig-name descname">create_full_spm_subpipes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'full_spm_subpipes'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/full_pipelines.html#create_full_spm_subpipes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.full_pipelines.create_full_spm_subpipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: SPM based segmentation pipeline from T1w and T2w images     in template space (main difference with the ANTS based pipeline,     in subject space)</p>
+<dd><p>Description: SPM based segmentation pipeline from T1w and T2w images
+in template space</p>
+<p>Processing steps:</p>
 <ul class="simple">
 <li><p>Data preparation (short, with betcrop or crop)</p></li>
 <li><p>debias using T1xT2BiasFieldCorrection (using mask is betcrop)</p></li>
@@ -298,7 +305,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

@@ -69,8 +69,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-install">Testing the install</a></li>
@@ -231,14 +236,48 @@
 <dl class="py function">
 <dt id="macapype.pipelines.surface.create_nii_to_mesh_pipe">
 <code class="sig-prename descclassname">macapype.pipelines.surface.</code><code class="sig-name descname">create_nii_to_mesh_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">params_template</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'nii_to_mesh_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/surface.html#create_nii_to_mesh_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.surface.create_nii_to_mesh_pipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: basic nii to mesh pipeline after segmentation,     split in hemisphere after removal of the subcortical structures and     using scipy marching cube methods to compute mesh after smoothing</p>
+<dd><p>Description: basic nii to mesh pipeline after segmentation</p>
+<p>Processing steps:</p>
+<ul class="simple">
+<li><p>split in hemisphere after removal of the subcortical structures</p></li>
+<li><p>using scipy marching cube methods to compute mesh</p></li>
+<li><p>some smoothing (using brain-slam)</p></li>
+</ul>
 <p>Params:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>split_hemi_pipe (see <code class="xref py py-class docutils literal notranslate"><span class="pre">create_split_hemi_pipe</span></code> for arguments)</p></li>
+<li><p>split_hemi_pipe (see <a class="reference internal" href="macapype.pipelines.surface._create_split_hemi_pipe.html#macapype.pipelines.surface._create_split_hemi_pipe" title="macapype.pipelines.surface._create_split_hemi_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">_create_split_hemi_pipe</span></code></a> for arguments)</p></li>
 <li><p>mesh_L_GM, mesh_R_GM, mesh_L_WM, mesh_R_WM (see <a class="reference internal" href="macapype.nodes.surface.Meshify.html#macapype.nodes.surface.Meshify" title="macapype.nodes.surface.Meshify"><code class="xref py py-class docutils literal notranslate"><span class="pre">Meshify</span></code></a> for arguments)</p></li>
 </ul>
 </div></blockquote>
+<p>Inputs:</p>
+<blockquote>
+<div><p>inputnode:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>warpinv_file:</dt><dd><p>non-linear transformation (from NMT_subject_align)</p>
+</dd>
+<dt>inv_transfo_file:</dt><dd><p>inverse transformation</p>
+</dd>
+<dt>aff_file:</dt><dd><p>affine transformation file</p>
+</dd>
+<dt>t1_ref_file:</dt><dd><p>preprocessd T1</p>
+</dd>
+<dt>segmented_file:</dt><dd><p>from atropos segmentation, with all the tissues segmented</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>params:</dt><dd><p>dictionary of node sub-parameters (from a json file)</p>
+</dd>
+<dt>name:</dt><dd><p>pipeline name (default = “nii_to_mesh_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p>Outputs:</p>
 </dd></dl>
 
 </div>
@@ -255,7 +294,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-19.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
