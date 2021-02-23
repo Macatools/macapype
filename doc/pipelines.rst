@@ -1,10 +1,11 @@
 .. _pipelines:
 
 Pipelines
-__________________
+_________
+.. _data_prep:
 
-Data preparation:
------------------
+Data preparation
+----------------
 
 Short data preparation
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -37,9 +38,9 @@ Long data preparation
 
 In some cases, you may want some processing done prior to the alignement, if T1 and T2 are very different.
 
-In this case, after aligning and averaging by modality (all T1s -> average_T1), you may crop, debias (N4) and denoise each image (average_T1 and average T2) indendantly before aligning average_T2 to average_T1 (create_long_single_data_preparation_pipe)
+In this case, after aligning and averaging by modality (all T1s -> average_T1), you may crop, debias (N4) and denoise each image (average_T1 and average T2) indendantly before aligning average_T2 to average_T1 (:class:`long single data preparation <macapype.pipelines.prepare.create_long_single_preparation_pipe>`)
 
-But in a very specific case, where the data of multiple sessions have been acquired with different settings (e.g. antenna contrast), you may have even all multiple modality data preprocessed (reorient, cropped, debiased, denoised) indendantly before being averaged and aligned by modality, and then av_T2 aligned to av_T1 (long_multi_data_preparation)
+But in a very specific case, where the data of multiple sessions have been acquired with different settings (e.g. antenna contrast), you may have even all multiple modality data preprocessed (reorient, cropped, debiased, denoised) indendantly before being averaged and aligned by modality, and then av_T2 aligned to av_T1 (:class:`long multi data preparation <macapype.pipelines.prepare.create_long_multi_preparation_pipe>`)
 
 .. _long_prep:
 .. |logo3| image:: ./img/long_single_preparation_pipe/graph.png

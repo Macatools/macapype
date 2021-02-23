@@ -18,19 +18,35 @@ def create_extract_pipe(params_template, params={}, name="extract_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex
 
+    Params:
+
+    - norm_intensity (see `N4BiasFieldCorrection <https://nipype.readthedocs\
+    .io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\
+    html#n4biasfieldcorrection>`_ for arguments)
+    - atlas_brex (see :class:`AtlasBREX \
+    <macapype.nodes.extract_brain.AtlasBREX>` for arguments) - also \
+    available as :ref:`indiv_params <indiv_params>`
+
     Inputs:
 
         inputnode:
-            restore_T1: preprocessed (debiased/denoised) T1 file name
 
-            restore_T1: preprocessed (debiased/denoised)T2 file name
+            restore_T1:
+                preprocessed (debiased/denoised) T1 file name
+
+            restore_T2:
+                preprocessed (debiased/denoised)T2 file name
 
         arguments:
-            params_template: dictionary of info about template
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of info about template
 
-            name: pipeline name (default = "extract_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "extract_pipe")
 
     Outputs:
 
@@ -99,19 +115,32 @@ def create_extract_T1_pipe(params_template, params={},
     """
     Description: Extract T1 brain using AtlasBrex
 
+    Params:
+
+    - norm_intensity (see `N4BiasFieldCorrection <https://nipype.readthedocs.\
+    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
+    #n4biasfieldcorrection>`_ for arguments)
+    - atlas_brex (see :class:`AtlasBREX \
+    <macapype.nodes.extract_brain.AtlasBREX>` for arguments) - also available \
+    as :ref:`indiv_params <indiv_params>`
+
     Inputs:
 
         inputnode:
-            restore_T1: preprocessed (debiased/denoised) T1 file name
 
-            restore_T1: preprocessed (debiased/denoised)T2 file name
+            restore_T1:
+                preprocessed (debiased/denoised) T1 file name
 
         arguments:
-            params_template: dictionary of info about template
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of info about template
 
-            name: pipeline name (default = "extract_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "extract_pipe")
 
     Outputs:
 

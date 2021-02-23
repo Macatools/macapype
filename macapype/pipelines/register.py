@@ -17,9 +17,11 @@ def create_iterative_register_pipe(
         wm_prob_file, csf_prob_file, n_iter, name="register_pipe"):
     """
     Registration of template (NMT or other) according to Regis:
+
     - The iterative FLIRT is between NMT_SS and subject's anat after a quick
     skull-stripping but the anat is more and more refined to corresponds to the
     brain
+
     - there is also a FNIRT done once, for comparison of the quality of the
     template on the subject's brain
 
@@ -129,35 +131,61 @@ def create_iterative_register_pipe(
 
 
 ###############################################################################
-# multi / indiv_params
-###############################################################################
 def create_register_NMT_pipe(params_template, params={},
                              name="register_NMT_pipe", NMT_version="1.2"):
-    """
-    Description: Register template to anat with the script NMT_subject_align,
-        and then apply it to tissues list_priors
+    """Description: Register template to anat with the script NMT_subject_align
+
+    Processing steps:
+
+    - Bias correction (norm_intensity)
+    - Deoblique (Refit with deoblique option)
+    - NMT_subject_align (see :class:`NMTSubjectAlign \
+    <macapype.nodes.register.NMTSubjectAlign>` and :class:`NMTSubjectAlign2 \
+    <macapype.nodes.register.NMTSubjectAlign2>` for explanations)
+    - apply it to tissues list_priors (NwarpApplyPriors and Allineate)
+
+    Params:
+        - norm_intensity (see `N4BiasFieldCorrection <https://\
+        nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\
+        .ants.segmentation.html#n4biasfieldcorrection>`_ for arguments)) - \
+        also available as :ref:`indiv_params <indiv_params>`
+        - NMT_version (default = 1.2; 1.3 is also accepted)
 
     Inputs:
 
         inputnode:
-            T1: T1 file name
-            indiv_params: dict with individuals parameters for some nodes
+
+            T1:
+                T1 file name
+
+            indiv_params:
+                dict with individuals parameters for some nodes
 
         arguments:
-            params_template: dictionary of info about template
 
-            params: dictionary of node sub-parameters (from a json file)
+            params_template:
+                dictionary of info about template
 
-            name: pipeline name (default = "register_NMT_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "register_NMT_pipe")
+
+            NMT_version:
+                NMT version (default = 1.2); can be overwritten in params json
 
     Outputs:
 
         norm_intensity.output_image:
             filled mask after erode
+
         align_seg_csf.out_file:
             csf template tissue in subject space
+
         align_seg_gm.out_file:
             grey matter template tissue in subject space
+
         align_seg_wm.out_file:
             white matter template tissue in subject space
     """

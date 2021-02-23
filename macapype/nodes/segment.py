@@ -96,7 +96,7 @@ class AtroposN4InputSpec(CommandLineInputSpec):
 
     brainmask_file = File(
         exists=True,
-        desc='brain_file',
+        desc='brainmask_file',
         mandatory=True, position=2, argstr="-x %s")
 
     numberOfClasses = traits.Int(
@@ -130,18 +130,39 @@ class AtroposN4OutputSpec(TraitedSpec):
 
 
 class AtroposN4(CommandLine):
-    """
-    Description:
-        Wrap of antsAtroposN4.sh
-        Requires PATH to ANTS Scripts added
-
+    """Description: Wrap of antsAtroposN4.sh
 
     Inputs:
+
+        Mandatory:
+
+            dimension
+                Int, default=3 , 'Dimension'
+
+            brain_file
+                File, 'brain_file'
+
+            brainmask_file
+                File, 'brainmask_file'
+
+            numberOfClasses
+                Int, default=3, 'numberOfClasses'
+
+            priors
+                List of Files, 'priors'
+
+            template_file
+                String, default="tmp_%02d_allineate.nii.gz", 'template_file'
+
+        Optional:
+
+            out_pref:
+                String, default = "segment_", "output prefix"
 
     Outputs:
 
         brain_file:
-            type = File, exists=True, desc="extracted brain from AtroposN4.sh"
+            File, "extracted brain from AtroposN4.sh"
 
     """
     input_spec = AtroposN4InputSpec

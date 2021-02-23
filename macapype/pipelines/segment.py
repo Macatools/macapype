@@ -6,7 +6,7 @@ import nipype.interfaces.spm as spm
 
 from ..nodes.segment import AtroposN4, BinaryFillHoles
 
-from ..utils.misc import get_elem, merge_3_elem_to_list
+from ..utils.misc import gunzip, get_elem, merge_3_elem_to_list
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
 
@@ -14,6 +14,12 @@ from ..utils.utils_spm import set_spm
 def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     """
     Description: Segmentation with ANTS atropos script
+
+    Params:
+        - Atropos (see :class:`AtroposN4 <macapype.nodes.segment.AtroposN4>`)
+        - threshold_gm, threshold_wm, threshold_csf (see `Threshold \
+        <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.\
+        interfaces.fsl.maths.html#threshold>`_ for arguments)
 
     Inputs:
 
@@ -106,6 +112,20 @@ def create_old_segment_pipe(params_template, params={},
         - Apply morphological opening on the union mask
         - Fill holes
 
+    Params:
+
+    - segment (see `Segment <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.spm.preprocess.html#segment>`_)
+    - threshold_gm, threshold_wm, threshold_csf (see `Threshold \
+    <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.\
+    interfaces.fsl.maths.html#threshold>`_ for arguments) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    - dilate_mask (see `DilateMask <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.maths.html#dilateimage>`_)
+    - erode_mask (see `ErodeMask <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.maths.html#erodeimage>`_)
+
+
     Inputs:
 
         inputnode:
@@ -139,7 +159,16 @@ def create_old_segment_pipe(params_template, params={},
         name='inputnode'
     )
 
-    assert set_spm(), "Error, SPM was not found, cannot run Regis pipeline"
+    assert set_spm(), \
+        "Error, SPM was not found, cannot run SPM old segment pipeline"
+
+    unzip = pe.Node(
+        interface=niu.Function(input_names=['zipped_file'],
+                               output_names=["unzipped_file"],
+                               function=gunzip),
+        name="unzip")
+
+    be_pipe.connect(inputnode, 'T1', unzip, 'zipped_file')
 
     # Segment in to 6 tissues
     segment = NodeParams(spm.Segment(),
@@ -150,7 +179,7 @@ def create_old_segment_pipe(params_template, params={},
                                        params_template["template_wm"],
                                        params_template["template_csf"]]
 
-    be_pipe.connect(inputnode, 'T1', segment, 'data')
+    be_pipe.connect(unzip, 'unzipped_file', segment, 'data')
 
     # Threshold GM, WM and CSF
     thd_nodes = {}

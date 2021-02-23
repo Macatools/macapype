@@ -45,14 +45,26 @@ def get_first_elem(elem):
         return elem
 
 
-def gunzip(filename):
+def gunzip(zipped_file):
     import subprocess
+    import shutil
+    import os
 
-    if filename[-3:] == ".gz":
-        subprocess.check_output("gunzip " + filename, shell=True)
+    head, tail = os.path.split(zipped_file)
+
+    dest = os.path.abspath(tail)
+
+    shutil.copy(zipped_file, dest)
+
+    if zipped_file[-3:] == ".gz":
+        subprocess.check_output("gunzip " + dest, shell=True)
     else:
         ValueError("Non GZip file given")
-    return filename[:-3]
+
+    print(os.listdir(os.path.abspath("")))
+
+    unzipped_file = dest[:-3]
+    return unzipped_file
 
 
 def merge_3_elem_to_list(elem1, elem2, elem3):

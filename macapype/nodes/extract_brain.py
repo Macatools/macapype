@@ -143,7 +143,7 @@ class T1xT2BET(FSLCommand):
                 Suffix for T2w to T1w registration (\"-in-T1w\" if not
                 specified)
             n
-                n = the number of iterations BET will be run to find center of
+                the number of iterations BET will be run to find center of
                 gravity (n=1 if option -n is absent)
             m
                 Will output the BET mask at the format
@@ -312,52 +312,45 @@ class AtlasBREXOutputSpec(TraitedSpec):
 
 class AtlasBREX(CommandLine):
     """
-    Description:
-        Atlas based BrainExtraction
+    Description: Atlas based BrainExtraction
 
     Inputs:
 
-        script_atlas_BREX:
-        type = File, exists=True, desc='atlasBREX script',,
-            mandatory=True, position=0, argstr="%s"
+        Mandatory:
 
-        NMT_SS_file:
-        type = File, exists=True,
-        desc='Skullstriped version of the template',
-            mandatory=True, position=1, argstr="-b %s"
+            script_atlas_BREX:
+                File, 'atlasBREX script'
 
-        NMT_file:
-        type = File, exists=True, desc='template img',
-        mandatory=True, position=2, argstr="-nb %s"
+            NMT_SS_file:
+                File, 'Skullstriped version of the template',
 
-        t1_restored_file:
-        type = File, exists=True, desc='T1 image to map',
-            mandatory=True, position=3, argstr="-h %s"
+            NMT_file:
+                File, 'template img'
 
-        f:
-        type = Float, default = 0.5, usedefault=True, desc='f', position=4,
-        argstr="-f %f", mandatory=True
+            t1_restored_file:
+                File, 'T1 image to map'
 
-        reg : type = Enum, default = 1,0,2,3, usedefault=True,
-        desc="Method: 0 = FNIRT w/ bending, \
+            f:
+                Float, default = 0.5, f
+
+
+            reg :
+
+                Enum, default = 1,0,2,3, "Method: 0 = FNIRT w/ bending, \
                 1 (default) = FNIRT membrane-energy regularization, \
                 2 = ANTs/SyN w/, \
-                3 = w/o N4Bias",
-            position=5, argstr="-reg %d", mandatory=True
+                3 = w/o N4Bias"
 
-        w:
-        type = String, default = "10,10,10", usedefault=True, desc="w",
-        position=6, argstr="-w %s", mandatory=True
+            w:
+                String, default = "10,10,10", "w"
 
-        msk:
-        type = String, default = "a,0,0", usedefault=True, desc="msk",
-        position=7, argstr="-msk %s", mandatory=True)
-
+            msk:
+                String, default = "a,0,0", "msk",
 
     Outputs:
 
         brain_file:
-            type = File, exists=True, desc="extracted brain from atlas_brex"
+            File, "extracted brain from atlas_brex"
 
     """
     input_spec = AtlasBREXInputSpec

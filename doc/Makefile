@@ -45,6 +45,12 @@ clean:
 	rm -rf generated/*
 	rm -rf modules/*
 
+clean_no_plot:
+	rm -rf $(BUILDDIR)/*
+	rm -rf generated/*
+	rm -rf modules/*
+
+
 html-noplot:
 	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
@@ -140,7 +146,7 @@ install:
 	# --depth 1 is a speed optimization since we don't need the
 	# history prior to the last commit
 	# -b gh-pages fetches only the branch for the gh-pages
-	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/macatools/macapype _build/macapype.github.io
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 git@github.com:Macatools/macapype.git _build/macapype.github.io
 	touch _build/macapype.github.io/.nojekyll
 	make html
 	cd _build/ && \

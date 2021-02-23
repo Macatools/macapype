@@ -2,6 +2,48 @@ from nipype.interfaces.base import TraitedSpec, SimpleInterface
 from nipype.interfaces.base import traits, File
 
 
+def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
+
+    import os
+
+    import nibabel as nib
+    import numpy as np
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(LR_mask_file)
+
+    LR_mask_img = nib.load(LR_mask_file)
+
+    LR_mask_data = LR_mask_img.get_fdata()
+
+    # L_mask
+    L_mask_data = np.zeros(shape=LR_mask_data.shape)
+
+    L_mask_data[LR_mask_data == left_index] = 1
+
+    L_mask_file = os.path.abspath("L_mask"+ext)
+
+    nib.save(
+        nib.Nifti1Image(L_mask_data, affine=LR_mask_img.affine,
+                        header=LR_mask_img.header),
+        L_mask_file)
+
+    # R_mask
+    R_mask_data = np.zeros(shape=LR_mask_data.shape)
+
+    R_mask_data[LR_mask_data == right_index] = 1
+
+    R_mask_file = os.path.abspath("R_mask"+ext)
+
+    nib.save(
+        nib.Nifti1Image(R_mask_data, affine=LR_mask_img.affine,
+                        header=LR_mask_img.header),
+        R_mask_file)
+
+    return L_mask_file, R_mask_file
+
+
 class MeshifyInputSpec(TraitedSpec):
     image_file = File(
         exists=True, desc='input file', mandatory=True)
@@ -27,7 +69,9 @@ class MeshifyOutputSpec(TraitedSpec):
 
 
 class Meshify(SimpleInterface):
-    """ Create a Gifti mesh from a binary Nifti image """
+    """
+    Definition: Create a Gifti mesh from a binary Nifti image
+    """
     _cmd = 'fslorient'
     input_spec = MeshifyInputSpec
     output_spec = MeshifyOutputSpec

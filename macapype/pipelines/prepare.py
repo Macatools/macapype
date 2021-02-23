@@ -50,7 +50,7 @@ def _create_reorient_pipeline(name="reorient_pipe",
 def _create_mapnode_reorient_pipeline(name="reorient_pipe",
                                       new_dims=("x", "z", "-y")):
     """
-    By kepkee:
+    By kepkee (mapnode):
     fslswapdim image_bad x z -y image_good
     fslorient -deleteorient image_good.nii.gz;
     fslorient -setqformcode 1 image_good.nii.gz
@@ -80,6 +80,27 @@ def _create_mapnode_reorient_pipeline(name="reorient_pipe",
 
 
 def _create_prep_pipeline(params, name="prep_pipeline"):
+    """Description: hidden function for sequence of preprocessing
+
+    Params:
+
+    - reorient (new dims as a string (e.g. "x z -y"))
+    - denoise_first (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
+    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
+    #denoiseimage>`_ for arguments)) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    - crop (see `ExtractROI <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi>`_ \
+    for arguments) - also available as :ref:`indiv_params <indiv_params>`
+    - norm_intensity (see `N4BiasFieldCorrection <https://nipype.readthedocs.\
+    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\
+    html#n4biasfieldcorrection>`_ for arguments) - also available as \
+    :ref:`indiv_params <indiv_params>`
+    - denoise (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
+    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
+    #denoiseimage>`_ for arguments)) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    """
 
     # init pipeline
     prep_pipeline = pe.Workflow(name=name)
@@ -113,7 +134,7 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
         # denoise with Ants package
         # (taking into account whether reorient has been performed or not)
         denoise_first = NodeParams(interface=DenoiseImage(),
-                                   params=parse_key(params, "denoise"),
+                                   params=parse_key(params, "denoise_first"),
                                    name="denoise")
 
         if "reorient" in params.keys():
@@ -187,6 +208,28 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
 
 
 def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
+
+    """Description: hidden function for sequence of preprocessing (mapnode)
+
+    Params: (Warning: **all arguments are in lists**)
+
+    - reorient (new dims as a string (e.g. "x z -y"))
+    - denoise_first (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
+    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
+    #denoiseimage>`_ for arguments)) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    - crop (see `ExtractROI <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi>`_ \
+    for arguments) - also available as :ref:`indiv_params <indiv_params>`
+    - norm_intensity (see `N4BiasFieldCorrection <https://nipype.readthedocs.\
+    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\
+    html#n4biasfieldcorrection>`_ for arguments) - also available as \
+    :ref:`indiv_params <indiv_params>`
+    - denoise (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
+    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
+    #denoiseimage>`_ for arguments)) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    """
 
     # init pipeline
     mapnode_prep_pipeline = pe.Workflow(name=name)
@@ -302,32 +345,57 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
 # choices between the 3 main pipelines: "short", "long_single" et "long_multi"
 ###############################################################################
 def create_short_preparation_pipe(params, name="short_preparation_pipe"):
-    """Description: old data preparation:, T1s and T2s are averaged
-    (by modality) and then average imgs are processed:
+    """Description: short data preparation (average, reorient, crop/betcrop \
+    and denoise)
 
-    - reorient (opt: reorient) makes the whole pipeline more neat)
+    Processing steps;
 
-    - bet_crop (include alignement, and mask generation)
+    - T1s and T2s are averaged (by modality).
+    - reorient (opt) makes the whole pipeline more neat)
+    - Cropped (bet_crop include alignement, and mask generation)
+    - denoising all images (no denoise_first)
 
-    - denoising all input images (opt: denoise in json))
+    Params:
 
+    - reorient (optional; new_dims as a string (e.g. "x z -y"))
+    - bet_crop (:class:`T1xT2BET <macapype.nodes.extract_brain.T1xT2BET>`\
+    ) or crop (see `ExtractRoi <https://nipype.readthedocs.io/en/0.12.1/inte\
+    rfaces/generated/nipype.interfaces.fsl.utils.html#extractroi>`_ for \
+    arguments). crop is also available as :ref:`indiv_params <indiv_params>`
+    - denoise (see `DenoiseImage <https://\
+    nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\
+    .ants.segmentation.html#denoiseimage>`_ for arguments))
 
     Inputs:
 
         inputnode:
-            list_T1: T1 files (from BIDSDataGrabber)
-            list_T2: T2 files
-            indiv_params (opt): dict with individuals parameters for some nodes
+
+            list_T1:
+                T1 files (from BIDSDataGrabber)
+
+            list_T2:
+                T2 files
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
         arguments:
-            params: dictionary of node sub-parameters (from a json file)
-            name: pipeline name (default = "long_multi_preparation_pipe")
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "long_multi_preparation_pipe")
 
     Outputs:
 
         outputnode:
-            preproc_T1: preprocessed T1 file
-            preproc_T2: preprocessed T2 file
+
+            preproc_T1:
+                preprocessed T1 file
+
+            preproc_T2:
+                preprocessed T2 file
     """
 
     # creating pipeline
@@ -361,7 +429,7 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
             new_dims = tuple(params["reorient"]["new_dims"].split())
 
         else:
-            new_dims = ("x", "z", "-y")
+            new_dims = ("x", "z", "-y")  # if sphinx based I think
 
         reorient_T1_pipe = _create_reorient_pipeline(
             name="reorient_T1_pipe", new_dims=new_dims)
@@ -415,6 +483,14 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         crop_T2 = NodeParams(fsl.ExtractROI(),
                              params=parse_key(params, 'crop'),
                              name='crop_T2')
+
+        data_preparation_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "crop"),
+            crop_T1, 'indiv_params')
+
+        data_preparation_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "crop"),
+            crop_T2, 'indiv_params')
 
         if "reorient" in params.keys():
             data_preparation_pipe.connect(reorient_T1_pipe,
@@ -474,20 +550,26 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
 
 def create_long_single_preparation_pipe(params,
                                         name="long_single_preparation_pipe"):
-    """Description: Short data preparation, T1s and T2s are averaged
-    (by modality) and then average imgs are processed:
+    """Description: Long data preparation, T1s and T2s are averaged
+    (by modality) and then average imgs are processed.
 
-    - reorient (opt: reorient) makes the whole pipeline more neat)
+    Processing Steps:
 
+    - average imgs (by modality).
+    - reorient (opt) makes the whole pipeline more neat)
     - start by denoising all input images (opt: denoise_first in json)
-
     - crop T1 and T2 based on individual parameters
-
     - running N4biascorrection on cropped T1 and T to help T2 and T1 alignment
-
     - finish by denoising all input images (opt: denoise in json))
-
     - Finally, align T2 to T1
+
+    Params:
+
+    - prep_T1 and prep_T2 (see :class:`_create_prep_pipeline <macapype.\
+    pipelines.prepare._create_prep_pipeline>`)
+    - align_T2_on_T1 (see `FLIRT <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.preprocess.html#flirt>`_ \
+    for more arguments)
 
     Inputs:
 
@@ -586,43 +668,58 @@ def create_long_single_preparation_pipe(params,
 
 def create_long_multi_preparation_pipe(params,
                                        name="long_multi_preparation_pipe"):
-    """Description: long data preparation,
-    each T1 and T2 is processed independantly with:
+    """Description: Long data preparation, each T1 and T2 is processed \
+    independantly (mapnode).
+
+    Processing steps:
 
     - reorient (opt: reorient) makes the whole pipeline more neat)
-
     - start by denoising all input images (opt: denoise_first in json)
-
     - crop T1 and T2 based on individual parameters
-
     - running N4biascorrection on cropped T1 and T to help T2 and T1 alignment
-
     - finish by denoising all input images (opt: denoise in json))
-
     - processed T1s and T2s are averaged (by modality)
-
     - Finally, align average T2 to average T1
+
+    Params:
+
+    - mapnode_prep_T1 and mapnodes_prep_T2 (see \
+    :class:`_create_mapnode_prep_pipeline \
+    <macapype.pipelines.prepare._create_mapnode_prep_pipeline>` for arguments)
+    - align_T2_on_T1 (see `FLIRT <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.fsl.preprocess.html#flirt>`_ \
+    for more arguments)
 
     Inputs:
 
         inputnode:
-            list_T1: T1 files (from BIDSDataGrabber)
 
-            list_T2: T2 files
+            list_T1:
+                T1 files (from BIDSDataGrabber)
 
-            indiv_params (opt): dict with individuals parameters for some nodes
+            list_T2:
+                T2 files
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
 
         arguments:
-            params: dictionary of node sub-parameters (from a json file)
 
-            name: pipeline name (default = "long_multi_preparation_pipe")
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "long_multi_preparation_pipe")
 
     Outputs:
 
-        outputnode:
-            preproc_T1: preprocessed T1 file
+        :outputnode:
 
-            preproc_T2: preprocessed T2 file
+            preproc_T1:
+                preprocessed T1 file
+
+            preproc_T2:
+                preprocessed T2 file
 
     """
 
@@ -707,6 +804,50 @@ def create_long_multi_preparation_pipe(params,
 # works with only one T1
 def create_short_preparation_T1_pipe(params,
                                      name="short_preparation_T1_pipe"):
+    """Description: T1 only short preparation:
+
+    - T1s and T2s are averaged (by modality).
+    - reorient (opt: reorient) makes the whole pipeline more neat)
+    - Cropped (bet_crop include alignement, and mask generation)
+    - denoising all images (no denoise_first)
+
+    Params:
+
+    - reorient (optional; new_dims as a string (e.g. "x z -y"))
+    - bet_crop (:class:`T1xT2BET <macapype.nodes.extract_brain.T1xT2BET>`\
+    ) or crop (see `ExtractRoi <https://nipype.readthedocs.io/en/0.12.1/inte\
+    rfaces/generated/nipype.interfaces.fsl.utils.html#extractroi>`_ for \
+    arguments). crop is also available as :ref:`indiv_params <indiv_params>`
+    - denoise (see `DenoiseImage <https://\
+    nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\
+    .ants.segmentation.html#denoiseimage>`_ for arguments))
+
+    Inputs:
+
+        inputnode:
+
+            list_T1:
+                T1 files (from BIDSDataGrabber)
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+        arguments:
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "long_multi_preparation_pipe")
+
+    Outputs:
+
+        outputnode:
+
+            preproc_T1:
+                preprocessed T1 file
+
+    """
 
     # creating pipeline
     data_preparation_pipe = pe.Workflow(name=name)

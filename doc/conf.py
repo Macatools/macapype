@@ -162,6 +162,16 @@ latex_elements = {
     # 'figure_align': 'htbp',
 }
 
+latex_elements = {
+    'papersize': 'a4paper',
+    'pointsize': '12pt',
+    'preamble': r'''
+    \usepackage[none]{hyphenat}
+    \usepackage[document]{ragged2e}
+    '''
+}
+
+
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).

@@ -7,7 +7,7 @@
     {
         "crop":
         {
-            "args": "51 125 42 146 195 115"
+            "args": "should be defined in indiv"
         }
     },
     "debias":
@@ -49,6 +49,13 @@
         {
             "kernel_shape": "sphere",
             "kernel_size": 2
+        }
+    },
+    "nii_to_mesh_fs_pipe":
+    {
+        "fill_wm":
+        {
+            "args": "should be defined in indiv"
         }
     }
 }
