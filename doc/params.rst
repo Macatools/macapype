@@ -8,3 +8,6 @@ Here is an example of the params.json corresponding to :class:`segment_pnh_spm_b
 .. include:: ../workflows/params_segment_macaque_spm_based.json
    :literal:
 
+
+All the params spefications are in each function of the API, as well the spefications available for :ref:`Individual Parameters <indiv_params>`.
+

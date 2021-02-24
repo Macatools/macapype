@@ -77,7 +77,8 @@ from macapype.utils.misc import show_files, get_first_elem
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                          acquisitions, reconstructions, params_file, indiv_params_file,
-                         wf_name="test_pipeline_single", mask_file = None):
+                         wf_name="test_pipeline_single", mask_file=None,
+                         nprocs=4):
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -175,7 +176,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
          wf_name += "_mask"
 
     soft = soft.lower().split("_")
-    assert "spm" in soft or "ants" in soft, \
+    assert "spm" in soft or "spm12" in soft or "ants" in soft, \
         "error with {}, should be among [spm12, spm, ants]".format(soft)
 
     # main_workflow
@@ -221,10 +222,10 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
     if not "test" in soft:
-        if "seq" in soft:
+        if "seq" in soft or nprocs==0:
             main_workflow.run()
         else:
-            main_workflow.run(plugin='MultiProc', plugin_args={'n_procs' : 4})
+            main_workflow.run(plugin='MultiProc', plugin_args={'n_procs' : nprocs})
 
 
 if __name__ == '__main__':
@@ -250,10 +251,13 @@ if __name__ == '__main__':
                         default=None, help="Records")
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
-    parser.add_argument("-indiv_params", "-indiv", dest="indiv_params_file", type=str,
-                        help="Individual parameters json file", required=False)
+    parser.add_argument("-indiv_params", "-indiv", dest="indiv_params_file",
+                        type=str, help="Individual parameters json file",
+                        required=False)
     parser.add_argument("-mask", dest="mask_file", type=str,
                         help="precomputed mask file", required=False)
+    parser.add_argument("-nprocs", dest="nprocs", type=int,
+                        help="number of processes to allocate", required=False)
 
     args = parser.parse_args()
 
@@ -269,5 +273,6 @@ if __name__ == '__main__':
         reconstructions=args.rec,
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file,
-        mask_file=args.mask_file)
+        mask_file=args.mask_file
+        nprocs=args.nprocs)
 

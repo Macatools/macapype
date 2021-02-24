@@ -82,6 +82,8 @@ How to run workflows
 
         * with _test to see if the full pipeline is coherent (will only generate the graph.dot and graph.png)
 
+        * with _seq to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 0
+
     * -params: a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
 .. code:: bash
@@ -103,3 +105,11 @@ How to run workflows
         * warning: the mask should be in the same space as the data.
 
         * only works with -soft ANTS so far
+
+    * -nprocs : an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype
+
+        * typically equals to the number of subjects*session (i.e. iterables).
+
+        * can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)
+
+        * default = 4 if unspecified ; if
