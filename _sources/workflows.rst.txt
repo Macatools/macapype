@@ -2,62 +2,6 @@
 
 .. _workflows:
 
-************************
-Definition of workflows
-************************
-
-SPM-based pipelines:
-~~~~~~~~~~~~~~~~~~~~~
-
-Using T1w and T2w images
-************************
-
-:class:`full SPM pipeline <macapype.pipelines.full_pipelines.create_full_spm_subpipes>`, with the processing sequence:
-
-* :class:`Data preparation <macapype.pipelines.prepare.create_short_preparation_pipe.>`
-* :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`
-* :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
-* :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
-
-
-Using only a T1w image
-***********************
-:class:`full SPM T1 pipeline <macapype.pipelines.full_pipelines.create_full_spm_T1_subpipes>`, with the processing sequence:
-
-* :class:`Data preparation <macapype.pipelines.prepare.create_short_preparation_pipe.>`
-* :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>` but the T1w replaces the T2w
-* :class:`IterREGBET <macapype.nodes.register.IterREGBET>`
-* :class:`ANTS non linear registration and FSL Apply XFM to tranform images to the template`
-* :class:`old_segment SPM based pipeline <macapype.pipelines.segment.create_old_segment_pipe>`
-
-
-ANTS-based pipelines:
-~~~~~~~~~~~~~~~~~~~~~
-
-Using T1w and T2w images
-************************
-
-:class:`full ANTS pipeline <macapype.pipelines.full_pipelines.create_full_ants_subpipes>`, with the processing sequence :
-
-* :class:`Short data preparation <macapype.pipelines.prepare.create_short_preparation_pipe>` or :class:`Long single data preparation <macapype.pipelines.prepare.create_long_single_preparation_pipe>` or :class:`Long multi data preparation <macapype.pipelines.prepare.create_long_multi_preparation_pipe>`
-
-(See :ref:`Pipelines <pipelines>` for more details)
-
-* :class:`Brain extraction pipeline <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`
-    - :class:`debias pipeline <macapype.pipelines.correct_bias.create_correct_bias_pipe>` (similar to :class:`T1xT2BiasFieldCorrection <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`, but all steps are nipype nodes)
-    - :class:`extract brain pipeline <macapype.pipelines.macapype.pipelines.extract_brain.create_extract_pipe>` (using Atlax-Brex)
-
-* :class:`Brain segment from mask <macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe>` :
-    - :class:`masked debias pipeline <macapype.pipelines.correct_bias.create_masked_correct_bias_pipe>`
-    - :class:`register pipeline <macapype.pipelines.register.create_register_NMT_pipe>` from template (NMT) to subject space
-    - :class:`segmentation pipeline <macapype.pipelines.segment.create_segment_atropos_pipe>` in subject space with Atropos
-
-Using only T1w images
-************************
-
-:class:`full ANTS T1 pipeline <macapype.pipelines.full_pipelines.create_full_ants_T1_subpipes>`, with the processing sequence :
-
-
 ********************
 How to run workflows
 ********************
@@ -82,6 +26,8 @@ How to run workflows
 
         * with _test to see if the full pipeline is coherent (will only generate the graph.dot and graph.png)
 
+        * with _seq to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 0)
+
     * -params: a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
 .. code:: bash
@@ -94,12 +40,20 @@ How to run workflows
 
     * -sub (-subjects), -ses (-sessions), -acq (-acquisions), -rec (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator.
 
-.. code:: bash
+    .. code:: bash
 
-    $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -sub Apache Baron -ses 01 -rec mean
+        $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -sub Apache Baron -ses 01 -rec mean
 
     * -mask allows to specify a precomputed binary mask file (skipping brain extraction). The bets usage of this option if precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified.
 
         * warning: the mask should be in the same space as the data.
 
         * only works with -soft ANTS so far
+
+    * -nprocs : an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype
+
+        * typically equals to the number of subjects*session (i.e. iterables).
+
+        * can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)
+
+        * default = 4 if unspecified ; if is put to 0, then the sequential processing is used (equivalent to -soft with _seq, see before)

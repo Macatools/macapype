@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Definition of workflows &#8212; macapype 0.2.2 documentation</title>
+    <title>How to run workflows &#8212; macapype 0.2.2.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -89,20 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Definition of workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#spm-based-pipelines">SPM-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-only-a-t1w-image">Using only a T1w image</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#ants-based-pipelines">ANTS-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-only-t1w-images">Using only T1w images</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
@@ -134,6 +121,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#spm-based-pipelines">SPM-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#ants-based-pipelines">ANTS-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#id2">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
@@ -167,20 +164,7 @@
       aria-labelledby="dLabelLocalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Definition of workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#spm-based-pipelines">SPM-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-only-a-t1w-image">Using only a T1w image</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#ants-based-pipelines">ANTS-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-only-t1w-images">Using only T1w images</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
@@ -224,20 +208,7 @@
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Definition of workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#spm-based-pipelines">SPM-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-only-a-t1w-image">Using only a T1w image</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#ants-based-pipelines">ANTS-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-only-t1w-images">Using only T1w images</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
@@ -257,69 +228,8 @@
       </div>
     <div class="col-md-9 content">
       
-  <div class="section" id="definition-of-workflows">
-<span id="workflows"></span><h1>Definition of workflows<a class="headerlink" href="#definition-of-workflows" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="spm-based-pipelines">
-<h2>SPM-based pipelines:<a class="headerlink" href="#spm-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="using-t1w-and-t2w-images">
-<h3>Using T1w and T2w images<a class="headerlink" href="#using-t1w-and-t2w-images" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_spm_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">SPM</span> <span class="pre">pipeline</span></code></a>, with the processing sequence:</p>
-<ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></p></li>
-<li><p><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a></p></li>
-<li><p><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></p></li>
-<li><p><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></p></li>
-</ul>
-</div>
-<div class="section" id="using-only-a-t1w-image">
-<h3>Using only a T1w image<a class="headerlink" href="#using-only-a-t1w-image" title="Permalink to this headline">¶</a></h3>
-<p><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">SPM</span> <span class="pre">T1</span> <span class="pre">pipeline</span></code>, with the processing sequence:</p>
-<ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></p></li>
-<li><p><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a> but the T1w replaces the T2w</p></li>
-<li><p><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ANTS</span> <span class="pre">non</span> <span class="pre">linear</span> <span class="pre">registration</span> <span class="pre">and</span> <span class="pre">FSL</span> <span class="pre">Apply</span> <span class="pre">XFM</span> <span class="pre">to</span> <span class="pre">tranform</span> <span class="pre">images</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">template</span></code></p></li>
-<li><p><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></p></li>
-</ul>
-</div>
-</div>
-<div class="section" id="ants-based-pipelines">
-<h2>ANTS-based pipelines:<a class="headerlink" href="#ants-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Using T1w and T2w images<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_ants_subpipes.html#macapype.pipelines.full_pipelines.create_full_ants_subpipes" title="macapype.pipelines.full_pipelines.create_full_ants_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">ANTS</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> or <a class="reference internal" href="generated/macapype.pipelines.prepare.create_long_single_preparation_pipe.html#macapype.pipelines.prepare.create_long_single_preparation_pipe" title="macapype.pipelines.prepare.create_long_single_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Long</span> <span class="pre">single</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> or <a class="reference internal" href="generated/macapype.pipelines.prepare.create_long_multi_preparation_pipe.html#macapype.pipelines.prepare.create_long_multi_preparation_pipe" title="macapype.pipelines.prepare.create_long_multi_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Long</span> <span class="pre">multi</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a></p></li>
-</ul>
-<p>(See <a class="reference internal" href="pipelines.html#pipelines"><span class="std std-ref">Pipelines</span></a> for more details)</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_extraction_pipe.html#macapype.pipelines.full_pipelines.create_brain_extraction_pipe" title="macapype.pipelines.full_pipelines.create_brain_extraction_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">extraction</span> <span class="pre">pipeline</span></code></a></dt><dd><ul>
-<li><p><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">debias</span> <span class="pre">pipeline</span></code></a> (similar to <a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a>, but all steps are nipype nodes)</p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">extract</span> <span class="pre">brain</span> <span class="pre">pipeline</span></code> (using Atlax-Brex)</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe.html#macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe" title="macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brain</span> <span class="pre">segment</span> <span class="pre">from</span> <span class="pre">mask</span></code></a> :</dt><dd><ul>
-<li><p><a class="reference internal" href="generated/macapype.pipelines.correct_bias.create_masked_correct_bias_pipe.html#macapype.pipelines.correct_bias.create_masked_correct_bias_pipe" title="macapype.pipelines.correct_bias.create_masked_correct_bias_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">masked</span> <span class="pre">debias</span> <span class="pre">pipeline</span></code></a></p></li>
-<li><p><a class="reference internal" href="generated/macapype.pipelines.register.create_register_NMT_pipe.html#macapype.pipelines.register.create_register_NMT_pipe" title="macapype.pipelines.register.create_register_NMT_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">register</span> <span class="pre">pipeline</span></code></a> from template (NMT) to subject space</p></li>
-<li><p><a class="reference internal" href="generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe" title="macapype.pipelines.segment.create_segment_atropos_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">segmentation</span> <span class="pre">pipeline</span></code></a> in subject space with Atropos</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</div>
-<div class="section" id="using-only-t1w-images">
-<h3>Using only T1w images<a class="headerlink" href="#using-only-t1w-images" title="Permalink to this headline">¶</a></h3>
-<p><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">ANTS</span> <span class="pre">T1</span> <span class="pre">pipeline</span></code>, with the processing sequence :</p>
-</div>
-</div>
-</div>
-<div class="section" id="how-to-run-workflows">
-<h1>How to run workflows<a class="headerlink" href="#how-to-run-workflows" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="how-to-run-workflows">
+<span id="workflows"></span><h1>How to run workflows<a class="headerlink" href="#how-to-run-workflows" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>the main file is located in workflows and is called segment_pnh.py and should be called like a python script:</p></li>
 </ul>
@@ -338,6 +248,7 @@
 <div><ul class="simple">
 <li><p>with _T1 at the end if only T1w (and not T2w) are available</p></li>
 <li><p>with _test to see if the full pipeline is coherent (will only generate the graph.dot and graph.png)</p></li>
+<li><p>with _seq to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 0)</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -356,18 +267,31 @@
 <li><p>-indiv or -indiv_params : a json file overwriting the default parameters (both macapype default and parameters specified in -params json file) for specific subjects/sessions. See <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a> for more details</p></li>
 <li><p>-sub (-subjects), -ses (-sessions), -acq (-acquisions), -rec (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator.</p></li>
 </ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -sub Apache Baron -ses <span class="m">01</span> -rec mean
+</pre></div>
+</div>
+<ul>
+<li><p>-mask allows to specify a precomputed binary mask file (skipping brain extraction). The bets usage of this option if precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>warning: the mask should be in the same space as the data.</p></li>
+<li><p>only works with -soft ANTS so far</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>-nprocs : an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>typically equals to the number of subjects*session (i.e. iterables).</p></li>
+<li><p>can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)</p></li>
+<li><p>default = 4 if unspecified ; if is put to 0, then the sequential processing is used (equivalent to -soft with _seq, see before)</p></li>
+</ul>
 </div></blockquote>
 </li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -sub Apache Baron -ses <span class="m">01</span> -rec mean
-
-* -mask allows to specify a precomputed binary mask file <span class="o">(</span>skipping brain extraction<span class="o">)</span>. The bets usage of this option <span class="k">if</span> precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask <span class="k">for</span> segmentation. Better <span class="k">if</span> only one subject*session is specified.
-
-    * warning: the mask should be in the same space as the data.
-
-    * only works with -soft ANTS so far
-</pre></div>
-</div>
+</div></blockquote>
+</li>
+</ul>
 </div>
 
 
@@ -382,7 +306,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>

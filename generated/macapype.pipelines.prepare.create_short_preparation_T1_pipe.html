@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview: module code &#8212; macapype 0.2.2.1 documentation</title>
+    <title>macapype.pipelines.prepare.create_short_preparation_T1_pipe &#8212; macapype 0.2.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -178,7 +178,11 @@
             
             
             
-              <li class="hidden-sm"></li>
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/generated/macapype.pipelines.prepare.create_short_preparation_T1_pipe.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
             
           </ul>
 
@@ -222,24 +226,60 @@
       </div>
     <div class="col-md-9 content">
       
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="macapype/nodes/correct_bias.html">macapype.nodes.correct_bias</a></li>
-<li><a href="macapype/nodes/extract_brain.html">macapype.nodes.extract_brain</a></li>
-<li><a href="macapype/nodes/prepare.html">macapype.nodes.prepare</a></li>
-<li><a href="macapype/nodes/register.html">macapype.nodes.register</a></li>
-<li><a href="macapype/nodes/segment.html">macapype.nodes.segment</a></li>
-<li><a href="macapype/nodes/surface.html">macapype.nodes.surface</a></li>
-<li><a href="macapype/pipelines/correct_bias.html">macapype.pipelines.correct_bias</a></li>
-<li><a href="macapype/pipelines/extract_brain.html">macapype.pipelines.extract_brain</a></li>
-<li><a href="macapype/pipelines/full_pipelines.html">macapype.pipelines.full_pipelines</a></li>
-<li><a href="macapype/pipelines/prepare.html">macapype.pipelines.prepare</a></li>
-<li><a href="macapype/pipelines/register.html">macapype.pipelines.register</a></li>
-<li><a href="macapype/pipelines/segment.html">macapype.pipelines.segment</a></li>
-<li><a href="macapype/pipelines/surface.html">macapype.pipelines.surface</a></li>
-<li><a href="macapype/utils/utils_tests.html">macapype.utils.utils_tests</a></li>
-<li><a href="nipype/interfaces/base/core.html">nipype.interfaces.base.core</a></li>
-<li><a href="nipype/interfaces/fsl/base.html">nipype.interfaces.fsl.base</a></li>
+  <div class="section" id="macapype-pipelines-prepare-create-short-preparation-t1-pipe">
+<h1>macapype.pipelines.prepare.create_short_preparation_T1_pipe<a class="headerlink" href="#macapype-pipelines-prepare-create-short-preparation-t1-pipe" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="macapype.pipelines.prepare.create_short_preparation_T1_pipe">
+<code class="sig-prename descclassname">macapype.pipelines.prepare.</code><code class="sig-name descname">create_short_preparation_T1_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'short_preparation_T1_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/prepare.html#create_short_preparation_T1_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.prepare.create_short_preparation_T1_pipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: T1 only short preparation</p>
+<p>Processing steps:</p>
+<ul class="simple">
+<li><p>T1s and T2s are averaged (by modality).</p></li>
+<li><p>reorient (opt: reorient) makes the whole pipeline more neat)</p></li>
+<li><p>Cropped (bet_crop include alignement, and mask generation)</p></li>
+<li><p>denoising all images (no denoise_first)</p></li>
 </ul>
+<p>Params:</p>
+<ul class="simple">
+<li><p>reorient (optional; new_dims as a string (e.g. “x z -y”))</p></li>
+<li><p>bet_crop (<a class="reference internal" href="macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>    ) or crop (see <a class="reference external" href="https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi">ExtractRoi</a> for     arguments). crop is also available as <a class="reference internal" href="../indiv_params.html#indiv-params"><span class="std std-ref">indiv_params</span></a></p></li>
+<li><p>denoise (see <a class="reference external" href="https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.html#denoiseimage">DenoiseImage</a> for arguments))</p></li>
+</ul>
+<p>Inputs:</p>
+<blockquote>
+<div><p>inputnode:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>list_T1:</dt><dd><p>T1 files (from BIDSDataGrabber)</p>
+</dd>
+<dt>indiv_params (opt):</dt><dd><p>dict with individuals parameters for some nodes</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>params:</dt><dd><p>dictionary of node sub-parameters (from a json file)</p>
+</dd>
+<dt>name:</dt><dd><p>pipeline name (default = “long_multi_preparation_pipe”)</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p>Outputs:</p>
+<blockquote>
+<div><p>outputnode:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>preproc_T1:</dt><dd><p>preprocessed T1 file</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
 
     </div>
       

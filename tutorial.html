@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tutorial &#8212; macapype 0.2.2 documentation</title>
+    <title>Tutorial &#8212; macapype 0.2.2.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -89,20 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#spm-based-pipelines">SPM-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-only-a-t1w-image">Using only a T1w image</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#ants-based-pipelines">ANTS-based pipelines:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="workflows.html#id1">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workflows.html#using-only-t1w-images">Using only T1w images</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
@@ -134,6 +121,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#spm-based-pipelines">SPM-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#ants-based-pipelines">ANTS-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#id2">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
@@ -167,8 +164,7 @@
       aria-labelledby="dLabelLocalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
@@ -224,8 +220,7 @@
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Definition of workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html#how-to-run-workflows">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
@@ -384,7 +379,7 @@ to load inputs from a dictionnary. It is particularly useful if multiple inputs 
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-22.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
