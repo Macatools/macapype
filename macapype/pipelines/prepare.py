@@ -804,7 +804,9 @@ def create_long_multi_preparation_pipe(params,
 # works with only one T1
 def create_short_preparation_T1_pipe(params,
                                      name="short_preparation_T1_pipe"):
-    """Description: T1 only short preparation:
+    """Description: T1 only short preparation
+
+    Processing steps:
 
     - T1s and T2s are averaged (by modality).
     - reorient (opt: reorient) makes the whole pipeline more neat)

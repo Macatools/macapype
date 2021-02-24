@@ -76,9 +76,9 @@ from macapype.utils.misc import show_files, get_first_elem
 ###############################################################################
 
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
-                         acquisitions, reconstructions, params_file, indiv_params_file,
-                         wf_name="test_pipeline_single", mask_file=None,
-                         nprocs=4):
+                         acquisitions, reconstructions, params_file,
+                         indiv_params_file, mask_file, nprocs,
+                         wf_name="test_pipeline_single"):
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -221,6 +221,9 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
+    if nprocs is None:
+        nprocs = 4
+
     if not "test" in soft:
         if "seq" in soft or nprocs==0:
             main_workflow.run()
@@ -273,6 +276,6 @@ if __name__ == '__main__':
         reconstructions=args.rec,
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file,
-        mask_file=args.mask_file
+        mask_file=args.mask_file,
         nprocs=args.nprocs)
 
