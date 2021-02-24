@@ -9,6 +9,42 @@ API Documentation
 Pipelines
 ^^^^^^^^^^
 
+----
+
+**Full pipelines** (:py:mod:`macapype.pipelines.full_pipelines`):
+
+.. currentmodule:: macapype.pipelines.full_pipelines
+
+*SPM based*:
+
+.. autosummary::
+   :nosignatures:
+   :toctree: generated/
+
+    create_full_spm_subpipes
+    create_full_T1_spm_subpipes
+
+*ANTS based*:
+
+.. autosummary::
+   :nosignatures:
+   :toctree: generated/
+
+    create_full_ants_subpipes
+    create_full_T1_ants_subpipes
+
+*ANTS based (intermediate pipelines)
+
+.. autosummary::
+   :nosignatures:
+   :toctree: generated/
+
+    create_brain_extraction_pipe
+    create_brain_segment_from_mask_pipe
+
+    create_brain_extraction_T1_pipe
+    create_brain_segment_from_mask_T1_pipe
+
 **Data preparation** (:py:mod:`macapype.pipelines.prepare`):
 
 .. currentmodule:: macapype.pipelines.prepare
@@ -18,6 +54,8 @@ Pipelines
    :toctree: generated/
 
     create_short_preparation_pipe
+    create_short_preparation_T1_pipe
+
     create_long_single_preparation_pipe
     create_long_multi_preparation_pipe
 
@@ -103,34 +141,6 @@ Pipelines
 
     _create_split_hemi_pipe
 
-----
-
-**Full pipelines** (:py:mod:`macapype.pipelines.full_pipelines`):
-
-.. currentmodule:: macapype.pipelines.full_pipelines
-
-*SPM based*:
-
-.. autosummary::
-   :nosignatures:
-   :toctree: generated/
-
-    create_full_spm_subpipes
-    create_full_T1_spm_subpipes
-
-*ANTS based*:
-
-.. autosummary::
-   :nosignatures:
-   :toctree: generated/
-
-    create_brain_extraction_pipe
-    create_brain_segment_from_mask_pipe
-    create_full_ants_subpipes
-
-    create_brain_extraction_T1_pipe
-    create_brain_segment_from_mask_T1_pipe
-    create_full_T1_ants_subpipes
 ----
 
 Nodes
