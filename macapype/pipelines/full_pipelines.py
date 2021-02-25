@@ -675,6 +675,21 @@ def create_full_ants_subpipes(
                          'segment_atropos_pipe.seg_at.segmented_file',
                          nii_to_mesh_pipe, "inputnode.segmented_file")
 
+    elif "nii_to_mesh_fs_pipe" in params.keys():
+        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
+            params=parse_key(params, "nii_to_mesh_fs_pipe"))
+
+        seg_pipe.connect(brain_extraction_pipe,
+                         'correct_bias_pipe.restore_T1.out_file',
+                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.threshold_wm.out_file',
+                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
+
     return seg_pipe
 
 ###############################################################################
