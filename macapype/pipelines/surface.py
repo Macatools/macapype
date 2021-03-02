@@ -513,11 +513,18 @@ def create_nii_to_mesh_fs_pipe(params, name="nii_to_mesh_fs_pipe"):
                                       'indiv_params']),
         name='inputnode')
 
+    # bin_wm
+    bin_wm = pe.Node(interface=fsl.UnaryMaths(), name="bin_wm")
+    bin_wm.inputs.operation = "fillh"
+
+    nii_to_mesh_fs_pipe.connect(inputnode, 'wm_mask_file',
+                                bin_wm, 'in_file')
+
     # resample everything
     refit_wm = pe.Node(interface=afni.Refit(), name="refit_wm")
     refit_wm.inputs.args = "-xdel 1.0 -ydel 1.0 -zdel 1.0 -keepcen"
 
-    nii_to_mesh_fs_pipe.connect(inputnode, 'wm_mask_file',
+    nii_to_mesh_fs_pipe.connect(bin_wm, 'out_file',
                                 refit_wm, 'in_file')
 
     # resample everything

@@ -5,12 +5,9 @@
     },
     "short_preparation_pipe":
     {
-        "bet_crop":
+        "crop":
         {
-            "m": true,
-            "aT2": true,
-            "c": 10,
-            "n": 2
+            "args": "should be defined in indiv"
         }
     },
     "brain_extraction_pipe":
@@ -97,5 +94,9 @@
     },
     "nii_to_mesh_fs_pipe":
     {
+        "fill_wm":
+        {
+            "args": "should be defined in indiv"
+        }
     }
 }
