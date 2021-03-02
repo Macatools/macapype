@@ -42,7 +42,10 @@
         "threshold_csf":
         {
             "thresh": 0.5
-        },
+        }
+    },
+    "beautify_seg_mask_pipe":
+    {
         "dilate_mask":
         {
             "kernel_shape": "sphere",

@@ -77,6 +77,18 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
         'T2': {
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]
+        },
+        'FLAIR': {
+            "datatype": "anat", "suffix": "FLAIR",
+            "extension": ["nii", ".nii.gz"]
+        },
+        'MD': {
+            "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
+            "extension": ["nii", ".nii.gz"]
+        },
+        'b0mean': {
+            "datatype": "dwi", "acquisition": "b0mean", "suffix": "dwi",
+            "extension": ["nii", ".nii.gz"]
         }
     }
 

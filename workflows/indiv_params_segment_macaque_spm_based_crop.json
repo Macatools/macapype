@@ -12,8 +12,29 @@
                 "args": "-CV 132 116 128 -PV 128 145 114"
             }
         }
+    },
+    "sub-Bretzel":
+    {
+        "ses-postIschemia":
+        {
+            "crop":
+            {
+                "args": "50 78 21 94 101 83"
+            },
+            "fill_wm":
+            {
+                "args": "-CV 127 114 153 -PV 127 157 109"
+            }
+        }
+    },
+    "sub-Isidor":
+    {
+        "ses-postIschemia":
+        {
+            "crop":
+            {
+                "args": "52 152 36 197 173 120"
+            }
+        }
     }
 }
-
-
-

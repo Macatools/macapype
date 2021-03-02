@@ -62,7 +62,8 @@ from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
     create_full_ants_subpipes,
     create_full_T1_spm_subpipes,
-    create_full_T1_ants_subpipes,)
+    create_full_T1_ants_subpipes,
+    create_transfo_pipe)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource)
@@ -185,17 +186,17 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
     if "spm" in soft or "spm12" in soft:
         if "t1" in soft:
-            segment_pnh = create_full_T1_spm_subpipes(
+            segment_pnh_pipe = create_full_T1_spm_subpipes(
                 params_template=params_template, params=params)
         else:
-            segment_pnh = create_full_spm_subpipes(
+            segment_pnh_pipe = create_full_spm_subpipes(
                 params_template=params_template, params=params)
     elif "ants" in soft:
         if "t1" in soft:
-            segment_pnh = create_full_T1_ants_subpipes(
+            segment_pnh_pipe = create_full_T1_ants_subpipes(
                 params_template=params_template, params=params)
         else:
-            segment_pnh = create_full_ants_subpipes(
+            segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template, params=params,
                 mask_file=mask_file)
 
@@ -206,17 +207,49 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                                                     reconstructions)
 
         main_workflow.connect(datasource, "indiv_params",
-                              segment_pnh,'inputnode.indiv_params')
+                              segment_pnh_pipe,'inputnode.indiv_params')
     else:
         datasource = create_datasource(data_dir, subjects, sessions,
                                        acquisitions, reconstructions)
 
-    main_workflow.connect(datasource, 'T1', segment_pnh, 'inputnode.list_T1')
+    main_workflow.connect(datasource, 'T1',
+                          segment_pnh_pipe, 'inputnode.list_T1')
 
     if not "t1" in soft:
         main_workflow.connect(datasource, 'T2', 
-                              segment_pnh, 'inputnode.list_T2')
+                              segment_pnh_pipe, 'inputnode.list_T2')
 
+    if "flair" in soft:
+        transfo_pipe = create_transfo_pipe(params=params,
+                                           params_template=params_template)
+
+        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
+                              transfo_pipe, 'inputnode.SS_T1')
+
+        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_brain_file",
+                              transfo_pipe, 'inputnode.orig_T1')
+
+        main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
+                              transfo_pipe, 'inputnode.lin_transfo_file')
+
+        main_workflow.connect(segment_pnh_pipe, "reg.inv_transfo_file",
+                              transfo_pipe, 'inputnode.inv_lin_transfo_file')
+
+        main_workflow.connect(segment_pnh_pipe,
+                              "old_segment_pipe.outputnode.threshold_wm",
+                              transfo_pipe, 'inputnode.threshold_wm')
+
+        main_workflow.connect(datasource, ('FLAIR', get_first_elem),
+                              transfo_pipe, 'inputnode.FLAIR')
+
+        main_workflow.connect(datasource, ('MD', get_first_elem),
+                              transfo_pipe, 'inputnode.MD')
+
+        main_workflow.connect(datasource, ('b0mean', get_first_elem),
+                              transfo_pipe, 'inputnode.b0mean')
+
+        #main_workflow.connect(datasource, "indiv_params",
+                              #segment_pnh_pipe,'inputnode.indiv_params')
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -228,7 +261,8 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         if "seq" in soft or nprocs==0:
             main_workflow.run()
         else:
-            main_workflow.run(plugin='MultiProc', plugin_args={'n_procs' : nprocs})
+            main_workflow.run(plugin='MultiProc',
+                              plugin_args={'n_procs' : nprocs})
 
 
 if __name__ == '__main__':

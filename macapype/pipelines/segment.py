@@ -203,15 +203,16 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
         thd_nodes[tissue] = tmp_node
 
     outputnode = pe.Node(
-        niu.IdentityInterface(
-            fields=["threshold_gm", "threshold_wm", "threshold_csf"]),
+
+        niu.IdentityInterface(fields=['threshold_gm', 'threshold_wm',
+                                      'threshold_csf']),
         name='outputnode')
 
-    segment_pipe.connect(thd_nodes["gm"], 'out_file',
+    segment_pipe.connect(thd_nodes['gm'], 'out_file',
                          outputnode, 'threshold_gm')
-    segment_pipe.connect(thd_nodes["wm"], 'out_file',
+    segment_pipe.connect(thd_nodes['wm'], 'out_file',
                          outputnode, 'threshold_wm')
-    segment_pipe.connect(thd_nodes["csf"], 'out_file',
+    segment_pipe.connect(thd_nodes['csf'], 'out_file',
                          outputnode, 'threshold_csf')
 
     return segment_pipe
@@ -224,14 +225,11 @@ def create_old_segment_pipe(params_template, params={},
                             name="old_segment_pipe"):
     """
     Description: Extract brain using tissues masks output by SPM's old_segment
-        function:
+
+    Function:
 
         - Segment the T1 using given priors;
         - Threshold GM, WM and CSF maps;
-        - Compute union of those 3 tissues;
-        - Apply morphological opening on the union mask
-        - Fill holes
-
     Params:
 
     - segment (see `Segment <https://nipype.readthedocs.io/en/0.12.1/\
@@ -318,17 +316,69 @@ def create_old_segment_pipe(params_template, params={},
 
         thd_nodes[tissue] = tmp_node
 
+    # Creating output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(fields=['threshold_gm', 'threshold_wm',
+                                      'threshold_csf']),
+        name='outputnode')
+
+    be_pipe.connect(thd_nodes['gm'], 'out_file',
+                    outputnode, 'threshold_gm')
+    be_pipe.connect(thd_nodes['wm'], 'out_file',
+                    outputnode, 'threshold_wm')
+    be_pipe.connect(thd_nodes['csf'], 'out_file',
+                    outputnode, 'threshold_csf')
+
+    return be_pipe
+
+
+def create_beautify_seg_mask_pipe(params={}, name="beautify_seg_mask_pipe"):
+
+    """
+    Description: beautification of the mask
+
+    #TODO To be added if required (was in old_segment before)
+
+    Function:
+
+        - Compute union of those 3 tissues;
+        - Apply morphological opening on the union mask
+        - Fill holes
+
+    Inputs:
+
+        mask_gm, mask_wm:
+            binary mask for grey matter and white matter
+    Outputs:
+
+        fill_holes.out_file:
+            filled mask after erode
+
+        fill_holes_dil.out_file
+            filled mask after dilate
+    """
+
+    # creating pipeline
+    be_pipe = pe.Workflow(name=name)
+
+    # Creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['mask_gm', 'mask_wm', 'mask_csf'
+                                      'indiv_params']),
+        name='inputnode'
+    )
+
     # Compute union of the 3 tissues
     # Done with 2 fslmaths as it seems to hard to do it
     wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
     wmgm_union.inputs.operation = "add"
-    be_pipe.connect(thd_nodes['gm'], 'out_file', wmgm_union, 'in_file')
-    be_pipe.connect(thd_nodes['wm'], 'out_file', wmgm_union, 'operand_file')
+    be_pipe.connect(inputnode, 'mask_gm', wmgm_union, 'in_file')
+    be_pipe.connect(inputnode, 'mask_wm', wmgm_union, 'operand_file')
 
     tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
     tissues_union.inputs.operation = "add"
     be_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    be_pipe.connect(thd_nodes['csf'], 'out_file',
+    be_pipe.connect(inputnode, 'mask_gm', 'out_file',
                     tissues_union, 'operand_file')
 
     # Opening
@@ -338,6 +388,10 @@ def create_old_segment_pipe(params_template, params={},
 
     dilate_mask.inputs.operation = "mean"  # Arbitrary operation
     be_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
+
+    # fill holes of dilate_mask
+    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
+    be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
 
     # Eroding mask
     erode_mask = NodeParams(fsl.ErodeImage(),
@@ -350,6 +404,7 @@ def create_old_segment_pipe(params_template, params={},
     fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
     be_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
+<<<<<<< HEAD
     # fill holes of dilate_mask
     fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
     be_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
@@ -363,4 +418,6 @@ def create_old_segment_pipe(params_template, params={},
     be_pipe.connect(thd_nodes["gm"], 'out_file', outputnode, 'threshold_gm')
     be_pipe.connect(thd_nodes["wm"], 'out_file', outputnode, 'threshold_wm')
     be_pipe.connect(thd_nodes["csf"], 'out_file', outputnode, 'threshold_csf')
+=======
+>>>>>>> d47cdef... flake8
     return be_pipe
