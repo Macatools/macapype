@@ -17,6 +17,7 @@ def load_test_data(name, path_to=""):
                 "NMT_v1.2": "QBTrmKNDrNs5E49",
                 "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
                 "NMT_v1.3": "qmBSE4prcXYLE94",
+                "NMT_v2.0_asym": "wBxS65AHSpRGXsR",
                 "NMT_FSL": "ajAtB7qgaPAmKyJ",
                 "inia19": "WZo9wZdreTMwfQA",
                 "marmotemplate": "5xzm7DJD9kB99gG",
@@ -112,7 +113,11 @@ def format_template(data_path, template_name):
     print(template_dict)
 
     for key, value in template_dict.items():
-        template_dict[key] = op.join(data_path, value)
+        template_file = op.join(data_path, value)
+        assert op.exists(template_file), "Error, file {} is missing".format(
+            template_file)
+
+        template_dict[key] = template_file
 
     return template_dict
 

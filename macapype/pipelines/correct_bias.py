@@ -3,7 +3,6 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 
-from ..utils.misc import print_val
 from ..utils.utils_nodes import NodeParams, parse_key
 
 
@@ -43,10 +42,10 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
 
     Outputs:
 
-        restore_T1.out_file:
+        outputnode.debiased_T1:
             T1 after bias correction
 
-        restore_T2.out_file
+        outputnode.debiased_T2:
             T2 after bias correction
     """
     # creating pipeline
@@ -78,7 +77,7 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
     norm_mult.inputs.operation = "div"
 
     correct_bias_pipe.connect(mult_T1_T2, 'out_file', norm_mult, 'in_file')
-    correct_bias_pipe.connect(meanbrainval, ('out_stat', print_val),
+    correct_bias_pipe.connect(meanbrainval, 'out_stat',
                               norm_mult, 'operand_value')
 
     # smooth
@@ -159,25 +158,36 @@ def create_correct_bias_pipe(params={}, name="correct_bias_pipe"):
 
     correct_bias_pipe.connect(bias, 'out_file', smooth_bias, 'in_file')
 
-    # restore_T1
-    restore_T1 = pe.Node(fsl.BinaryMaths(), name='restore_T1')
-    restore_T1.inputs.operation = "div"
-    restore_T1.inputs.output_datatype = "float"
+    # debiased_T1
+    debiased_T1 = pe.Node(fsl.BinaryMaths(), name='debiased_T1')
+    debiased_T1.inputs.operation = "div"
+    debiased_T1.inputs.output_datatype = "float"
 
     correct_bias_pipe.connect(inputnode, 'preproc_T1',
-                              restore_T1, 'in_file')
+                              debiased_T1, 'in_file')
     correct_bias_pipe.connect(smooth_bias, 'out_file',
-                              restore_T1, 'operand_file')
+                              debiased_T1, 'operand_file')
 
-    # restore_T2
-    restore_T2 = pe.Node(fsl.BinaryMaths(), name='restore_T2')
-    restore_T2.inputs.operation = "div"
-    restore_T2.inputs.output_datatype = "float"
+    # debiased_T2
+    debiased_T2 = pe.Node(fsl.BinaryMaths(), name='debiased_T2')
+    debiased_T2.inputs.operation = "div"
+    debiased_T2.inputs.output_datatype = "float"
 
     correct_bias_pipe.connect(inputnode, 'preproc_T2',
-                              restore_T2, 'in_file')
+                              debiased_T2, 'in_file')
     correct_bias_pipe.connect(smooth_bias, 'out_file',
-                              restore_T2, 'operand_file')
+                              debiased_T2, 'operand_file')
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["debiased_T1", "debiased_T2"]),
+        name='outputnode')
+
+    correct_bias_pipe.connect(debiased_T1, 'out_file',
+                              outputnode, 'debiased_T1')
+    correct_bias_pipe.connect(debiased_T2, 'out_file',
+                              outputnode, 'debiased_T2')
 
     return correct_bias_pipe
 
@@ -222,17 +232,18 @@ def create_masked_correct_bias_pipe(params={},
 
     Outputs:
 
-        restore_T1.out_file:
+        outputnode.debiased_T1:
             T1 after bias correction
 
-        restore_T2.out_file
+        outputnode.debiased_T2:
             T2 after bias correction
 
-        restore_mask_T1.out_file:
+        outputnode.mask_debiased_T1:
             Masked T1 after bias correction
 
-        restore_mask_T2.out_file:
+        outputnode.mask_debiased_T2:
             Masked T2 after bias correction
+
     """
 
     # creating pipeline
@@ -276,7 +287,7 @@ def create_masked_correct_bias_pipe(params={},
 
     masked_correct_bias_pipe.connect(mask_mult, 'out_file',
                                      norm_mult, 'in_file')
-    masked_correct_bias_pipe.connect(meanbrainval, ('out_stat', print_val),
+    masked_correct_bias_pipe.connect(meanbrainval, 'out_stat',
                                      norm_mult, 'operand_value')
 
     # smooth
@@ -382,40 +393,57 @@ def create_masked_correct_bias_pipe(params={},
     masked_correct_bias_pipe.connect(bias, 'out_file',
                                      smooth_bias, 'in_file')
 
-    # restore_T1
-    restore_T1 = pe.Node(fsl.BinaryMaths(), name='restore_T1')
-    restore_T1.inputs.operation = "div"
-    restore_T1.inputs.output_datatype = "float"
+    # debiased_T1
+    debiased_T1 = pe.Node(fsl.BinaryMaths(), name='debiased_T1')
+    debiased_T1.inputs.operation = "div"
+    debiased_T1.inputs.output_datatype = "float"
 
     masked_correct_bias_pipe.connect(inputnode, 'preproc_T1',
-                                     restore_T1, 'in_file')
+                                     debiased_T1, 'in_file')
     masked_correct_bias_pipe.connect(smooth_bias, 'out_file',
-                                     restore_T1, 'operand_file')
+                                     debiased_T1, 'operand_file')
 
-    # restore_T2
-    restore_T2 = pe.Node(fsl.BinaryMaths(), name='restore_T2')
-    restore_T2.inputs.operation = "div"
-    restore_T2.inputs.output_datatype = "float"
+    # debiased_T2
+    debiased_T2 = pe.Node(fsl.BinaryMaths(), name='debiased_T2')
+    debiased_T2.inputs.operation = "div"
+    debiased_T2.inputs.output_datatype = "float"
 
     masked_correct_bias_pipe.connect(inputnode, 'preproc_T2',
-                                     restore_T2, 'in_file')
+                                     debiased_T2, 'in_file')
     masked_correct_bias_pipe.connect(smooth_bias, 'out_file',
-                                     restore_T2, 'operand_file')
+                                     debiased_T2, 'operand_file')
 
-    # restore_mask_T1
-    restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
+    # mask_debiased_T1
+    mask_debiased_T1 = pe.Node(fsl.ApplyMask(), name='mask_debiased_T1')
 
-    masked_correct_bias_pipe.connect(restore_T1, 'out_file',
-                                     restore_mask_T1, 'in_file')
+    masked_correct_bias_pipe.connect(debiased_T1, 'out_file',
+                                     mask_debiased_T1, 'in_file')
     masked_correct_bias_pipe.connect(inputnode, 'brain_mask',
-                                     restore_mask_T1, 'mask_file')
+                                     mask_debiased_T1, 'mask_file')
 
-    # restore_mask_T2
-    restore_mask_T2 = pe.Node(fsl.ApplyMask(), name='restore_mask_T2')
+    # mask_debiased_T2
+    mask_debiased_T2 = pe.Node(fsl.ApplyMask(), name='mask_debiased_T2')
 
-    masked_correct_bias_pipe.connect(restore_T2, 'out_file',
-                                     restore_mask_T2, 'in_file')
+    masked_correct_bias_pipe.connect(debiased_T2, 'out_file',
+                                     mask_debiased_T2, 'in_file')
     masked_correct_bias_pipe.connect(inputnode, 'brain_mask',
-                                     restore_mask_T2, 'mask_file')
+                                     mask_debiased_T2, 'mask_file')
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["debiased_T1", "debiased_T2", "mask_debiased_T1",
+                    "mask_debiased_T2"]),
+        name='outputnode')
+
+    masked_correct_bias_pipe.connect(debiased_T1, 'out_file', outputnode,
+                                     'debiased_T1')
+    masked_correct_bias_pipe.connect(debiased_T2, 'out_file', outputnode,
+                                     'debiased_T2')
+
+    masked_correct_bias_pipe.connect(mask_debiased_T1, 'out_file', outputnode,
+                                     'mask_debiased_T1')
+    masked_correct_bias_pipe.connect(mask_debiased_T2, 'out_file', outputnode,
+                                     'mask_debiased_T2')
 
     return masked_correct_bias_pipe

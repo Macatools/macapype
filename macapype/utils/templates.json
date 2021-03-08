@@ -33,6 +33,26 @@
         "LR_hemi_template": "supplemental_masks/NMT_LR_brainmask.nii.gz",
         "cereb_template": "supplemental_masks/NMT_cerebellum_mask.nii.gz"
     },
+    "NMT_v2.0_asym_05mm":
+    {
+        "template_head": "NMT_v2.0_asym_05mm.nii.gz",
+        "template_brain": "NMT_v2.0_asym_05mm_SS.nii.gz",
+
+        "template_seg": "NMT_v2.0_asym_05mm_segmentation.nii.gz",
+
+        "LR_hemi_template": "supplemental_masks/NMT_v2.0_asym_05mm_LR_brainmask.nii.gz",
+        "cereb_template": "supplemental_masks/NMT_v2.0_asym_05mm_cerebellum_mask.nii.gz"
+    },
+    "NMT_v2.0_asym":
+    {
+        "template_head": "NMT_v20_asym.nii.gz",
+        "template_brain": "NMT_v20_asym_SS.nii.gz",
+
+        "template_seg": "NMT_v20_asym_segmentation.nii.gz",
+
+        "LR_hemi_template": "supplemental_masks/NMT_v20_asym_LR_brainmask.nii.gz",
+        "cereb_template": "supplemental_masks/NMT_v20_asym_cerebellum_mask.nii.gz"
+    },
     "inia19":
     {
         "template_head": "inia19-t1.nii",

@@ -22,6 +22,40 @@ def print_nii_data(nii_file):
     return nii_file
 
 
+def split_indexed_mask(nii_file, background_val=0):
+
+    import os
+    import nibabel as nib
+    import numpy as np
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    nii = nib.load(nii_file)
+
+    nii_data = nii.get_data()
+
+    list_split_files = []
+
+    for index in np.unique(nii_data):
+        if index == background_val:
+            continue
+
+        split_file = os.path.abspath("{}_{}{}".format(fname, index, ext))
+
+        split_data = np.zeros(shape=nii_data.shape)
+        split_data[nii_data == index] = 1
+
+        nib.save(nib.Nifti1Image(split_data,
+                                 header=nii.header,
+                                 affine=nii.affine),
+                 split_file)
+
+        list_split_files.append(split_file)
+
+    return list_split_files
+
+
 def get_elem(list_elem, index_elem):
     assert isinstance(list_elem, list), 'Error, list_elem should be a list'
     assert 0 <= index_elem and index_elem <= len(list_elem),\

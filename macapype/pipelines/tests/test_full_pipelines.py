@@ -11,6 +11,10 @@ data_path = make_tmp_dir()
 def test_create_full_ants_subpipes_no_args():
 
     params = {
+        "general":
+        {
+            "template_name": "NMT_v2.0_asym"
+        },
         "short_preparation_pipe":
         {
             "bet_crop":
@@ -41,7 +45,8 @@ def test_create_full_ants_subpipes_no_args():
     }
 
     # params template
-    template_name = 'NMT_v1.2'
+    template_name = params["general"]["template_name"]
+
     template_dir = load_test_data(template_name, data_path)
     params_template = format_template(template_dir, template_name)
 
@@ -54,14 +59,17 @@ def test_create_full_ants_subpipes_no_args():
 
     segment_pnh.write_graph(graph2use="colored")
     assert op.exists(
-        op.join(
-            data_path, "test_create_full_ants_subpipes_no_args",
-            "graph.png"))
+        op.join(data_path, "test_create_full_ants_subpipes_no_args",
+                "graph.png"))
 
 
 def test_create_full_ants_subpipes_no_subpipes():
 
     params = {
+        "general":
+        {
+            "template_name": "NMT_v2.0_asym"
+        },
         "short_preparation_pipe":
         {
         },
@@ -74,7 +82,8 @@ def test_create_full_ants_subpipes_no_subpipes():
     }
 
     # params template
-    template_name = 'NMT_v1.2'
+    template_name = params["general"]["template_name"]
+
     template_dir = load_test_data(template_name, data_path)
     params_template = format_template(template_dir, template_name)
 
@@ -95,6 +104,10 @@ def test_create_full_ants_subpipes_no_subpipes():
 def test_create_full_ants_subpipes():
 
     params = {
+        "general":
+        {
+            "template_name": "NMT_v2.0_asym"
+        },
         "short_preparation_pipe":
         {
             "bet_crop":
@@ -189,7 +202,8 @@ def test_create_full_ants_subpipes():
     }
 
     # params template
-    template_name = 'NMT_v1.2'
+    template_name = params["general"]["template_name"]
+
     template_dir = load_test_data(template_name, data_path)
     params_template = format_template(template_dir, template_name)
 
