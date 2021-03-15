@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "NMT_v1.3"
+        "template_name": "NMT_v2.0_asym"
     },
     "short_preparation_pipe":
     {
@@ -78,7 +78,7 @@
             "Atropos":
             {
                 "dimension": 3,
-                "numberOfClasses": 3
+                "numberOfClasses": 5
             },
             "threshold_gm":
             {
@@ -93,8 +93,5 @@
                 "thresh": 0.5
             }
         }
-    },
-    "nii_to_mesh_fs_pipe":
-    {
     }
 }

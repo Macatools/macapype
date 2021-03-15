@@ -15,7 +15,8 @@ from .prepare import (create_short_preparation_pipe,
                       create_short_preparation_T1_pipe)
 
 from .segment import (create_old_segment_pipe,
-                      create_segment_atropos_pipe)
+                      create_segment_atropos_pipe,
+                      create_segment_atropos_seg_pipe)
 
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
@@ -181,7 +182,7 @@ def create_full_spm_subpipes(
         seg_pipe.connect(reg, 'warp_file',
                          nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
 
-        seg_pipe.connect(old_segment_pipe, 'threshold_wm.out_file',
+        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
                          nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
 
         seg_pipe.connect(inputnode, 'indiv_params',
@@ -404,9 +405,9 @@ def create_brain_extraction_pipe(params_template, params={},
         params_template=params_template,
         params=parse_key(params, "extract_pipe"))
 
-    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T1.out_file",
+    brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T1",
                                   extract_pipe, "inputnode.restore_T1")
-    brain_extraction_pipe.connect(correct_bias_pipe, "restore_T2.out_file",
+    brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T2",
                                   extract_pipe, "inputnode.restore_T2")
     brain_extraction_pipe.connect(inputnode, "indiv_params",
                                   extract_pipe, "inputnode.indiv_params")
@@ -414,7 +415,8 @@ def create_brain_extraction_pipe(params_template, params={},
 
 
 def create_brain_segment_from_mask_pipe(
-        params_template, params={}, name="brain_segment_from_mask_pipe"):
+        params_template, params={}, name="brain_segment_from_mask_pipe",
+        NMT_version="v1.3"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
     computed mask with NMT Atlas and atropos segment.
 
@@ -484,29 +486,42 @@ def create_brain_segment_from_mask_pipe(
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
         params_template=params_template,
-        params=parse_key(params, "register_NMT_pipe"))
+        params=parse_key(params, "register_NMT_pipe"), NMT_version=NMT_version)
 
     brain_segment_pipe.connect(
-        masked_correct_bias_pipe, 'restore_mask_T1.out_file',
+        masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
         register_NMT_pipe, "inputnode.T1")
     brain_segment_pipe.connect(
         inputnode, 'indiv_params',
         register_NMT_pipe, "inputnode.indiv_params")
 
     # ants Atropos
-    segment_atropos_pipe = create_segment_atropos_pipe(
-        params=parse_key(params, "segment_atropos_pipe"))
+
+    if NMT_version == "v2.0":
+
+        segment_atropos_pipe = create_segment_atropos_seg_pipe(
+            params=parse_key(params, "segment_atropos_pipe"))
+
+        brain_segment_pipe.connect(
+            register_NMT_pipe, 'align_seg.out_file', segment_atropos_pipe,
+            "inputnode.seg_file")
+    else:
+        segment_atropos_pipe = create_segment_atropos_pipe(
+            params=parse_key(params, "segment_atropos_pipe"))
+
+        brain_segment_pipe.connect(
+            register_NMT_pipe, 'align_seg_csf.out_file', segment_atropos_pipe,
+            "inputnode.csf_prior_file")
+        brain_segment_pipe.connect(
+            register_NMT_pipe, 'align_seg_gm.out_file', segment_atropos_pipe,
+            "inputnode.gm_prior_file")
+        brain_segment_pipe.connect(
+            register_NMT_pipe, 'align_seg_wm.out_file', segment_atropos_pipe,
+            "inputnode.wm_prior_file")
 
     brain_segment_pipe.connect(
         register_NMT_pipe, 'norm_intensity.output_image',
         segment_atropos_pipe, "inputnode.brain_file")
-    brain_segment_pipe.connect(
-        register_NMT_pipe, 'align_seg_csf.out_file', segment_atropos_pipe,
-        "inputnode.csf_prior_file")
-    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
-                               segment_atropos_pipe, "inputnode.gm_prior_file")
-    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
-                               segment_atropos_pipe, "inputnode.wm_prior_file")
 
     return brain_segment_pipe
 
@@ -628,9 +643,19 @@ def create_full_ants_subpipes(
     if "brain_segment_pipe" not in params.keys():
         return seg_pipe
 
+    if params["general"]["template_name"].split("_")[0] == "NMT":
+        print("found NMT template")
+        NMT_version = params["general"]["template_name"].split("_")[1]
+    else:
+        print("Not NMT template, NMT version used by default for processing")
+        NMT_version = "v1.3"
+
+    print("NMT_version:", NMT_version)
+
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
         params_template=params_template,
-        params=parse_key(params, "brain_segment_pipe"))
+        params=parse_key(params, "brain_segment_pipe"),
+        NMT_version=NMT_version)
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      brain_segment_pipe, 'inputnode.preproc_T1')
@@ -672,7 +697,7 @@ def create_full_ants_subpipes(
                          nii_to_mesh_pipe, 'inputnode.aff_file')
 
         seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.seg_at.segmented_file',
+                         'segment_atropos_pipe.outputnode.segmented_file',
                          nii_to_mesh_pipe, "inputnode.segmented_file")
 
     elif "nii_to_mesh_fs_pipe" in params.keys():
@@ -680,11 +705,11 @@ def create_full_ants_subpipes(
             params=parse_key(params, "nii_to_mesh_fs_pipe"))
 
         seg_pipe.connect(brain_extraction_pipe,
-                         'correct_bias_pipe.restore_T1.out_file',
+                         'correct_bias_pipe.outputnode.debiased_T1',
                          nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
 
         seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.threshold_wm.out_file',
+                         'segment_atropos_pipe.outputnode.threshold_wm',
                          nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
 
         seg_pipe.connect(inputnode, 'indiv_params',

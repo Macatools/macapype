@@ -5,7 +5,8 @@ import pytest
 
 from macapype.nodes.extract_brain import T1xT2BET
 
-from macapype.utils.utils_tests import load_test_data, make_tmp_dir
+from macapype.utils.utils_tests import (load_test_data, format_template,
+                                        make_tmp_dir)
 from macapype.utils.utils_nodes import NodeParams
 
 
@@ -24,6 +25,15 @@ def test_server_amubox():
 def test_load_test_data():
     with pytest.raises(AssertionError):
         load_test_data("do_not_exists")
+
+
+def test_load_test_data_dataset():
+
+    template_name = "NMT_v2.0_asym"
+    nmt_dir = load_test_data(name=template_name)
+    params_template = format_template(nmt_dir, template_name)
+
+    assert len(params_template) != 0
 
 
 def test_data_test_macaque():

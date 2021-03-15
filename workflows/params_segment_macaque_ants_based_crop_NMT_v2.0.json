@@ -1,16 +1,13 @@
 {
     "general":
     {
-        "template_name": "NMT_v1.3"
+        "template_name": "NMT_v2.0_asym"
     },
     "short_preparation_pipe":
     {
-        "bet_crop":
+        "crop":
         {
-            "m": true,
-            "aT2": true,
-            "c": 10,
-            "n": 2
+            "args": "should be defined in indiv"
         }
     },
     "brain_extraction_pipe":
@@ -78,7 +75,7 @@
             "Atropos":
             {
                 "dimension": 3,
-                "numberOfClasses": 3
+                "numberOfClasses": 5
             },
             "threshold_gm":
             {
