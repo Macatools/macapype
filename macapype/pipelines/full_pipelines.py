@@ -16,13 +16,15 @@ from .prepare import (create_short_preparation_pipe,
                       create_long_single_preparation_pipe)
 
 from .segment import (create_old_segment_pipe,
+                      create_native_old_segment_pipe,
                       create_segment_atropos_pipe,
-                      create_segment_atropos_seg_pipe)
+                      create_segment_atropos_seg_pipe,
+                      create_mask_from_seg_pipe)
 
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
 
-from .register import create_register_NMT_pipe
+from .register import create_register_NMT_pipe, create_native_iter_reg_pipe
 
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
@@ -176,6 +178,7 @@ def create_full_spm_subpipes(
     else:
         return seg_pipe
 
+    # not mandatory
     if "nii_to_mesh_fs_pipe" in params.keys():
         nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
             params=parse_key(params, "nii_to_mesh_fs_pipe"))
@@ -188,6 +191,192 @@ def create_full_spm_subpipes(
 
         seg_pipe.connect(inputnode, 'indiv_params',
                          nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
+
+    # not mandatory
+    if "mask_from_seg_pipe" in params.keys():
+        mask_from_seg_pipe = create_mask_from_seg_pipe(
+            params=parse_key(params, "mask_from_seg_pipe"))
+
+        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_csf',
+                         mask_from_seg_pipe, 'inputnode.mask_csf')
+
+        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
+                         mask_from_seg_pipe, 'inputnode.mask_wm')
+
+        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_gm',
+                         mask_from_seg_pipe, 'inputnode.mask_gm')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         mask_from_seg_pipe, 'inputnode.indiv_params')
+
+    return seg_pipe
+
+
+def create_full_native_spm_subpipes(
+        params_template, params={}, name='full_native_spm_subpipes'):
+    """ Description: SPM based segmentation pipeline from T1w and T2w images
+    in template space
+
+    Processing steps:
+
+    - Data preparation (short, with betcrop or crop)
+    - debias using T1xT2BiasFieldCorrection (using mask is betcrop)
+    - registration to template file with IterREGBET
+    - SPM segmentation the old way (SPM8, not dartel based)
+
+    Params:
+
+    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
+    <macapype.pipelines.prepare.create_short_preparation_pipe>`)
+    - debias (see :class:`T1xT2BiasFieldCorrection \
+    <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`) - also available \
+    as :ref:`indiv_params <indiv_params>`
+    - reg (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>`) - \
+    also available as :ref:`indiv_params <indiv_params>`
+    - native_old_segment_pipe (see :class:`create_native_old_segment_pipe \
+    <macapype.pipelines.segment.create_old_segment_pipe>`)
+
+    Inputs:
+
+        inputnode:
+
+            list_T1:
+                T1 file names
+
+            list_T2:
+                T2 file names
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+
+        arguments:
+
+            params_template:
+                dict of template files containing brain_template and priors \
+            (list of template based segmented tissues)
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_spm_subpipes")
+
+    Outputs:
+
+            old_segment_pipe.thresh_gm.out_file:
+                segmented grey matter in template space
+
+            old_segment_pipe.thresh_wm.out_file:
+                segmented white matter in template space
+
+            old_segment_pipe.thresh_csf.out_file:
+                segmented csf in template space
+    """
+
+    print("Full pipeline name: ", name)
+
+    # Creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['list_T1', 'list_T2', 'indiv_params']),
+        name='inputnode'
+    )
+
+    # preprocessing
+    if 'short_preparation_pipe' in params.keys():
+
+        data_preparation_pipe = create_short_preparation_pipe(
+            params=parse_key(params, "short_preparation_pipe"))
+    else:
+        print("Error, short_preparation_pipe was not \
+            found in params, skipping")
+        return seg_pipe
+
+    seg_pipe.connect(inputnode, 'list_T1',
+                     data_preparation_pipe, 'inputnode.list_T1')
+    seg_pipe.connect(inputnode, 'list_T2',
+                     data_preparation_pipe, 'inputnode.list_T2')
+    seg_pipe.connect(inputnode, 'indiv_params',
+                     data_preparation_pipe, 'inputnode.indiv_params')
+
+    # Bias correction of cropped images
+    debias = NodeParams(T1xT2BiasFieldCorrection(),
+                        params=parse_key(params, "debias"),
+                        name='debias')
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     debias, 't1_file')
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
+                     debias, 't2_file')
+    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
+                     debias, 'indiv_params')
+
+    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
+        seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
+                         debias, 'b')
+    else:
+        debias.inputs.bet = 1
+
+    if "native_iter_reg_pipe" in params.keys():
+        native_reg_pipe = create_native_iter_reg_pipe(
+            params_template,
+            params=parse_key(params, "native_iter_reg_pipe"))
+
+        seg_pipe.connect(debias, 't1_debiased_brain_file',
+                         native_reg_pipe, 'inputnode.t1_debiased_brain_file')
+
+        seg_pipe.connect(debias, 't1_debiased_file',
+                         native_reg_pipe, 'inputnode.t1_debiased_file')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         native_reg_pipe, 'inputnode.indiv_params')
+    else:
+        return seg_pipe
+
+    # Compute brain mask using old_segment of SPM and postprocessing on
+    # tissues' masks
+    if "native_old_segment_pipe" in params.keys():
+
+        native_old_segment_pipe = create_native_old_segment_pipe(
+            params_template,
+            params=parse_key(params, "native_old_segment_pipe"))
+
+        seg_pipe.connect(debias, 't1_debiased_file',
+                         native_old_segment_pipe, 'inputnode.T1')
+
+        seg_pipe.connect(native_reg_pipe, 'register_csf_to_nat.out_file',
+                         native_old_segment_pipe, 'inputnode.native_csf')
+
+        seg_pipe.connect(native_reg_pipe, 'register_wm_to_nat.out_file',
+                         native_old_segment_pipe, 'inputnode.native_wm')
+
+        seg_pipe.connect(native_reg_pipe, 'register_gm_to_nat.out_file',
+                         native_old_segment_pipe, 'inputnode.native_gm')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         native_old_segment_pipe, 'inputnode.indiv_params')
+
+    else:
+        return seg_pipe
+
+    if "mask_from_seg_pipe" in params.keys():
+        mask_from_seg_pipe = create_mask_from_seg_pipe(
+            params=parse_key(params, "mask_from_seg_pipe"))
+
+        seg_pipe.connect(native_old_segment_pipe, 'outputnode.threshold_csf',
+                         mask_from_seg_pipe, 'inputnode.mask_csf')
+
+        seg_pipe.connect(native_old_segment_pipe, 'outputnode.threshold_wm',
+                         mask_from_seg_pipe, 'inputnode.mask_wm')
+
+        seg_pipe.connect(native_old_segment_pipe, 'outputnode.threshold_gm',
+                         mask_from_seg_pipe, 'inputnode.mask_gm')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         mask_from_seg_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
 

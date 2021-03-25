@@ -60,6 +60,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
+    create_full_native_spm_subpipes,
     create_full_ants_subpipes,
     create_full_T1_spm_subpipes,
     create_full_T1_ants_subpipes,
@@ -189,8 +190,13 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
             segment_pnh_pipe = create_full_T1_spm_subpipes(
                 params_template=params_template, params=params)
         else:
-            segment_pnh_pipe = create_full_spm_subpipes(
-                params_template=params_template, params=params)
+            if 'native' in soft:
+                segment_pnh_pipe = create_full_native_spm_subpipes(
+                    params_template=params_template, params=params)
+            else:
+                segment_pnh_pipe = create_full_spm_subpipes(
+                    params_template=params_template, params=params)
+
     elif "ants" in soft:
         if "t1" in soft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
