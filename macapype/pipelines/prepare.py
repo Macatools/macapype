@@ -956,3 +956,143 @@ def create_short_preparation_T1_pipe(params,
                                   outputnode, 'preproc_T1')
 
     return data_preparation_pipe
+
+
+###############################################################################
+def create_short_preparation_FLAIR_pipe(params,
+                                        name="short_preparation_FLAIR_pipe"):
+    """Description: apply transfo on FLAIR and MD (no reorient so far)
+
+    Processing steps;
+
+    - coreg FLAIR on T1
+    - init coreg FA on SS_T1
+    - coreg FA on T1 using bbr and native_wm
+    - apply coreg transfo on MD
+
+    Params:
+
+    Inputs:
+
+        inputnode:
+
+            orig_T1:
+                T1 files (from BIDSDataGrabber)
+
+            SS_T1:
+                After Skull strip
+
+            FLAIR:
+                FLAIR file
+
+            MD:
+                MD file
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+        arguments:
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "long_multi_preparation_pipe")
+
+    Outputs:
+
+        outputnode:
+
+            coreg_FLAIR:
+                preprocessed FLAIR file
+
+            coreg_MD:
+                preprocessed MD file
+
+    """
+
+    # creating pipeline
+    data_preparation_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['orig_T1', 'SS_T1', 'FLAIR', 'MD',
+                                      'b0mean', 'native_wm_mask']),
+        name='inputnode'
+    )
+
+    # align FLAIR on avg T1
+    align_FLAIR_on_T1 = pe.Node(fsl.FLIRT(), name="align_FLAIR_on_T1")
+    align_FLAIR_on_T1.inputs.dof = 6
+    align_FLAIR_on_T1.inputs.cost = "mutualinfo"
+    align_FLAIR_on_T1.inputs.cost_func = "mutualinfo"
+
+    data_preparation_pipe.connect(inputnode, 'orig_T1',
+                                  align_FLAIR_on_T1, 'reference')
+
+    data_preparation_pipe.connect(inputnode, 'FLAIR',
+                                  align_FLAIR_on_T1, 'in_file')
+
+    # init_align_b0mean_on_T1
+    init_align_b0mean_on_T1 = pe.Node(fsl.FLIRT(),
+                                      name="init_align_b0mean_on_T1")
+    init_align_b0mean_on_T1.inputs.dof = 6
+
+    data_preparation_pipe.connect(inputnode, 'orig_T1',
+                                  init_align_b0mean_on_T1, 'reference')
+    data_preparation_pipe.connect(inputnode, 'b0mean',
+                                  init_align_b0mean_on_T1, 'in_file')
+
+    # align_b0mean_on_T1
+    align_b0mean_on_T1 = pe.Node(fsl.FLIRT(), name="align_b0mean_on_T1")
+    align_b0mean_on_T1.inputs.dof = 6
+    align_b0mean_on_T1.inputs.cost = "bbr"
+
+    data_preparation_pipe.connect(inputnode, 'orig_T1',
+                                  align_b0mean_on_T1, 'reference')
+    data_preparation_pipe.connect(inputnode, 'b0mean',
+                                  align_b0mean_on_T1, 'in_file')
+    data_preparation_pipe.connect(inputnode, 'native_wm_mask',
+                                  align_b0mean_on_T1, 'wm_seg')
+    data_preparation_pipe.connect(init_align_b0mean_on_T1, 'out_matrix_file',
+                                  align_b0mean_on_T1, 'in_matrix_file')
+
+    # Apply transfo computed on b0 on MD (init)
+    align_MD_on_T1_with_b0 = pe.Node(fsl.ApplyXFM(),
+                                     name="align_MD_on_T1_with_b0")
+
+    data_preparation_pipe.connect(inputnode, 'SS_T1',
+                                  align_MD_on_T1_with_b0, 'reference')
+    data_preparation_pipe.connect(inputnode, 'MD',
+                                  align_MD_on_T1_with_b0, 'in_file')
+    data_preparation_pipe.connect(init_align_b0mean_on_T1, 'out_matrix_file',
+                                  align_MD_on_T1_with_b0, 'in_matrix_file')
+
+    # Apply transfo computed on b0 on MD (second_flirt with GM)
+    align_better_MD_on_T1_with_b0 = pe.Node(
+        fsl.ApplyXFM(), name="align_better_MD_on_T1_with_b0")
+
+    data_preparation_pipe.connect(inputnode, 'SS_T1',
+                                  align_better_MD_on_T1_with_b0, 'reference')
+    data_preparation_pipe.connect(inputnode, 'MD',
+                                  align_better_MD_on_T1_with_b0, 'in_file')
+    data_preparation_pipe.connect(align_b0mean_on_T1, 'out_matrix_file',
+                                  align_better_MD_on_T1_with_b0,
+                                  'in_matrix_file')
+
+    # Creating output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=['coreg_FLAIR', 'coreg_MD', 'coreg_better_MD']),
+        name='outputnode')
+
+    data_preparation_pipe.connect(align_FLAIR_on_T1, 'out_file',
+                                  outputnode, 'coreg_FLAIR')
+
+    data_preparation_pipe.connect(align_MD_on_T1_with_b0, 'out_file',
+                                  outputnode, 'coreg_MD')
+
+    data_preparation_pipe.connect(align_better_MD_on_T1_with_b0, 'out_file',
+                                  outputnode, 'coreg_better_MD')
+
+    return data_preparation_pipe
