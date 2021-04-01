@@ -49,6 +49,13 @@
         {
             "kernel_shape": "sphere",
             "kernel_size": 2
+        },
+        "merge_indexed_mask":
+        {
+            "index_csf": 1,
+            "index_gm": 2,
+            "index_wm": 3
         }
+
     }
 }

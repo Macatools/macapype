@@ -4,7 +4,7 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import AtroposN4, BinaryFillHoles
+from ..nodes.segment import AtroposN4, BinaryFillHoles, merge_masks
 
 from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list,
                           split_indexed_mask)
@@ -340,9 +340,7 @@ def create_native_old_segment_pipe(params_template, params={},
 
         - Segment the T1 using given priors;
         - Threshold GM, WM and CSF maps;
-        - Compute union of those 3 tissues;
-        - Apply morphological opening on the union mask
-        - Fill holes
+        - Compute union of those 3 tissues with indexes;
 
     Params:
 
@@ -352,10 +350,6 @@ def create_native_old_segment_pipe(params_template, params={},
     <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.\
     interfaces.fsl.maths.html#threshold>`_ for arguments) - also available \
     as :ref:`indiv_params <indiv_params>`
-    - dilate_mask (see `DilateMask <https://nipype.readthedocs.io/en/0.12.1/\
-    interfaces/generated/nipype.interfaces.fsl.maths.html#dilateimage>`_)
-    - erode_mask (see `ErodeMask <https://nipype.readthedocs.io/en/0.12.1/\
-    interfaces/generated/nipype.interfaces.fsl.maths.html#erodeimage>`_)
 
 
     Inputs:
@@ -526,5 +520,20 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     # fill holes of erode_mask
     fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
     seg_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
+
+    # merge to index
+    merge_indexed_mask = NodeParams(
+        interface=niu.Function(input_names=["mask_csf_file", "mask_wm_file",
+                                            "mask_gm_file", "index_csf",
+                                            "index_gm", "index_wm"],
+                               output_names=['indexed_mask'],
+                               function=merge_masks),
+        params=parse_key(params, "merge_indexed_mask"),
+        name="merge_indexed_mask")
+
+    seg_pipe.connect(inputnode, 'mask_gm', merge_indexed_mask, "mask_gm_file")
+    seg_pipe.connect(inputnode, 'mask_wm', merge_indexed_mask, "mask_wm_file")
+    seg_pipe.connect(inputnode, 'mask_csf',
+                     merge_indexed_mask, "mask_csf_file")
 
     return seg_pipe
