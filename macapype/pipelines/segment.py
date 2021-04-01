@@ -486,7 +486,7 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
 
     # Creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['mask_gm', 'mask_wm', 'mask_csf'
+        niu.IdentityInterface(fields=['mask_gm', 'mask_wm', 'mask_csf',
                                       'indiv_params']),
         name='inputnode'
     )
@@ -501,10 +501,10 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
     tissues_union.inputs.operation = "add"
     seg_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    seg_pipe.connect(inputnode, 'mask_gm', 'out_file',
+    seg_pipe.connect(inputnode, 'mask_csf',
                      tissues_union, 'operand_file')
 
-    # Opening
+    # Opening (dilating) mask
     dilate_mask = NodeParams(fsl.DilateImage(),
                              params=parse_key(params, "dilate_mask"),
                              name="dilate_mask")
@@ -526,9 +526,5 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     # fill holes of erode_mask
     fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
     seg_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
-
-    # fill holes of dilate_mask
-    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
-    seg_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
 
     return seg_pipe

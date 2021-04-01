@@ -1018,6 +1018,25 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
+    if "mask_from_seg_pipe" in params.keys():
+        mask_from_seg_pipe = create_mask_from_seg_pipe(
+            params=parse_key(params, "mask_from_seg_pipe"))
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_csf',
+                         mask_from_seg_pipe, 'inputnode.mask_csf')
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_wm',
+                         mask_from_seg_pipe, 'inputnode.mask_wm')
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_gm',
+                         mask_from_seg_pipe, 'inputnode.mask_gm')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         mask_from_seg_pipe, 'inputnode.indiv_params')
+
     if 'nii_to_mesh_pipe' in params.keys():
 
         nii_to_mesh_pipe = create_nii_to_mesh_pipe(
