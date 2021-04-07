@@ -60,12 +60,14 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
+    create_full_native_spm_subpipes,
     create_full_ants_subpipes,
     create_full_T1_spm_subpipes,
     create_full_T1_ants_subpipes,
     create_transfo_pipe)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
+                                       create_datasource_indiv_params_FLAIR,
                                        create_datasource)
 
 from macapype.utils.utils_tests import load_test_data, format_template
@@ -189,8 +191,13 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
             segment_pnh_pipe = create_full_T1_spm_subpipes(
                 params_template=params_template, params=params)
         else:
-            segment_pnh_pipe = create_full_spm_subpipes(
-                params_template=params_template, params=params)
+            if 'native' in soft:
+                segment_pnh_pipe = create_full_native_spm_subpipes(
+                    params_template=params_template, params=params)
+            else:
+                segment_pnh_pipe = create_full_spm_subpipes(
+                    params_template=params_template, params=params)
+
     elif "ants" in soft:
         if "t1" in soft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
@@ -201,10 +208,15 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 mask_file=mask_file)
 
     if indiv_params:
-        datasource = create_datasource_indiv_params(data_dir, indiv_params,
-                                                    subjects, sessions,
-                                                    acquisitions,
-                                                    reconstructions)
+
+        if "flair" in soft:
+            datasource = create_datasource_indiv_params_FLAIR(
+                data_dir, indiv_params, subjects, sessions, acquisitions,
+                reconstructions)
+        else:
+            datasource = create_datasource_indiv_params(
+                data_dir, indiv_params, subjects, sessions, acquisitions,
+                reconstructions)
 
         main_workflow.connect(datasource, "indiv_params",
                               segment_pnh_pipe,'inputnode.indiv_params')

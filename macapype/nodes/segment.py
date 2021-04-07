@@ -215,6 +215,57 @@ class AtroposN4(CommandLine):
         return outputs
 
 
+def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
+                index_gm=2, index_wm=3):
+
+    import nibabel as nib
+    import numpy as np
+    import os.path as op
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    # csf (and init indexed_mask)
+    path, fname, ext = split_f(mask_csf_file)
+
+    mask_csf = nib.load(mask_csf_file)
+
+    mask_csf_data = mask_csf.get_data()
+
+    indexed_mask_data = np.zeros(shape=mask_csf_data.shape)
+
+    indexed_mask_data[mask_csf_data == 1] = index_csf
+
+    # gm
+    mask_gm = nib.load(mask_gm_file)
+
+    mask_gm_data = mask_gm.get_data()
+
+    assert np.all(indexed_mask_data.shape == mask_gm_data.shape)
+
+    indexed_mask_data[mask_gm_data == 1] = index_gm
+
+    # wm
+    mask_wm = nib.load(mask_wm_file)
+
+    mask_wm_data = mask_wm.get_data()
+
+    assert np.all(indexed_mask_data.shape == mask_wm_data.shape)
+
+    indexed_mask_data[mask_wm_data == 1] = index_wm
+
+    # creating indexed_mask
+    indexed_mask = nib.Nifti1Image(dataobj=indexed_mask_data,
+                                   affine=mask_csf.affine,
+                                   header=mask_csf.header)
+
+    # saving indexed_mask_file
+    indexed_mask_file = op.abspath("indexed_mask"+ext)
+
+    nib.save(indexed_mask, indexed_mask_file)
+
+    return indexed_mask_file
+
+
 if __name__ == '__main__':
     # path_to = "/hpc/crise/meunier.d"
     path_to = "/hpc/crise/meunier.d/Data/Primavoice/test_pipeline_kepkee_crop"

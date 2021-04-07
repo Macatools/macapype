@@ -1,29 +1,23 @@
 {
     "general":
     {
-        "template_name": "inia19"
+        "template_name": "NMT_v1.3"
     },
     "short_preparation_pipe":
     {
-        "bet_crop":
+        "crop":
         {
-            "m": true,
-            "aT2": true,
-            "c": 10,
-            "n": 2
+            "args": "should be defined in indiv"
         }
     },
     "debias":
     {
         "s": 4
     },
-    "reg":
+    "native_iter_reg_pipe":
     {
-        "n": 2,
-        "m": "ref",
-        "dof": 12
     },
-    "old_segment_pipe":
+    "native_old_segment_pipe":
     {
         "segment":
         {
@@ -55,6 +49,13 @@
         {
             "kernel_shape": "sphere",
             "kernel_size": 2
+        },
+        "merge_indexed_mask":
+        {
+            "index_csf": 1,
+            "index_gm": 2,
+            "index_wm": 3
         }
+
     }
 }
