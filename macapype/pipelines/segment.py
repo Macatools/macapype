@@ -485,17 +485,38 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
         name='inputnode'
     )
 
+    # bin_gm
+    bin_gm = pe.Node(interface=fsl.UnaryMaths(), name="bin_gm")
+    bin_gm.inputs.operation = "fillh"
+
+    seg_pipe.connect(inputnode, 'mask_gm',
+                                bin_gm, 'in_file')
+
+    # bin_csf
+    bin_csf = pe.Node(interface=fsl.UnaryMaths(), name="bin_csf")
+    bin_csf.inputs.operation = "fillh"
+
+    seg_pipe.connect(inputnode, 'mask_csf',
+                                bin_csf, 'in_file')
+
+    # bin_wm
+    bin_wm = pe.Node(interface=fsl.UnaryMaths(), name="bin_wm")
+    bin_wm.inputs.operation = "fillh"
+
+    seg_pipe.connect(inputnode, 'mask_wm',
+                                bin_wm, 'in_file')
+
     # Compute union of the 3 tissues
     # Done with 2 fslmaths as it seems to hard to do it
     wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
     wmgm_union.inputs.operation = "add"
-    seg_pipe.connect(inputnode, 'mask_gm', wmgm_union, 'in_file')
-    seg_pipe.connect(inputnode, 'mask_wm', wmgm_union, 'operand_file')
+    seg_pipe.connect(bin_gm, 'out_file', wmgm_union, 'in_file')
+    seg_pipe.connect(bin_wm, 'out_file', wmgm_union, 'operand_file')
 
     tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
     tissues_union.inputs.operation = "add"
     seg_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    seg_pipe.connect(inputnode, 'mask_csf',
+    seg_pipe.connect(bin_csf, 'out_file',
                      tissues_union, 'operand_file')
 
     # Opening (dilating) mask
@@ -531,9 +552,9 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
         params=parse_key(params, "merge_indexed_mask"),
         name="merge_indexed_mask")
 
-    seg_pipe.connect(inputnode, 'mask_gm', merge_indexed_mask, "mask_gm_file")
-    seg_pipe.connect(inputnode, 'mask_wm', merge_indexed_mask, "mask_wm_file")
-    seg_pipe.connect(inputnode, 'mask_csf',
+    seg_pipe.connect(bin_gm, 'out_file', merge_indexed_mask, "mask_gm_file")
+    seg_pipe.connect(bin_wm, 'out_file', merge_indexed_mask, "mask_wm_file")
+    seg_pipe.connect(bin_csf, 'out_file',
                      merge_indexed_mask, "mask_csf_file")
 
     return seg_pipe
