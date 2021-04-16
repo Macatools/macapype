@@ -203,16 +203,18 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
         thd_nodes[tissue] = tmp_node
 
     outputnode = pe.Node(
-
-        niu.IdentityInterface(fields=['threshold_gm', 'threshold_wm',
-                                      'threshold_csf']),
+        niu.IdentityInterface(
+            fields=["segmented_file", "threshold_gm", "threshold_wm",
+                    "threshold_csf"]),
         name='outputnode')
 
-    segment_pipe.connect(thd_nodes['gm'], 'out_file',
+    segment_pipe.connect(seg_at, 'segmented_file',
+                         outputnode, 'segmented_file')
+    segment_pipe.connect(thd_nodes["gm"], 'out_file',
                          outputnode, 'threshold_gm')
-    segment_pipe.connect(thd_nodes['wm'], 'out_file',
+    segment_pipe.connect(thd_nodes["wm"], 'out_file',
                          outputnode, 'threshold_wm')
-    segment_pipe.connect(thd_nodes['csf'], 'out_file',
+    segment_pipe.connect(thd_nodes["csf"], 'out_file',
                          outputnode, 'threshold_csf')
 
     return segment_pipe

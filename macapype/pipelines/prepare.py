@@ -985,9 +985,6 @@ def create_short_preparation_FLAIR_pipe(params,
             FLAIR:
                 FLAIR file
 
-            MD:
-                MD file
-
             indiv_params (opt):
                 dict with individuals parameters for some nodes
 
@@ -1006,9 +1003,6 @@ def create_short_preparation_FLAIR_pipe(params,
             coreg_FLAIR:
                 preprocessed FLAIR file
 
-            coreg_MD:
-                preprocessed MD file
-
     """
 
     # creating pipeline
@@ -1016,8 +1010,7 @@ def create_short_preparation_FLAIR_pipe(params,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['orig_T1', 'SS_T1', 'FLAIR', 'MD',
-                                      'b0mean', 'native_wm_mask']),
+        niu.IdentityInterface(fields=['orig_T1', 'SS_T1', 'FLAIR']),
         name='inputnode'
     )
 
@@ -1032,6 +1025,79 @@ def create_short_preparation_FLAIR_pipe(params,
 
     data_preparation_pipe.connect(inputnode, 'FLAIR',
                                   align_FLAIR_on_T1, 'in_file')
+
+    # Creating output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=['coreg_FLAIR']),
+        name='outputnode')
+
+    data_preparation_pipe.connect(align_FLAIR_on_T1, 'out_file',
+                                  outputnode, 'coreg_FLAIR')
+
+    return data_preparation_pipe
+
+
+def create_short_preparation_MD_pipe(params,
+                                     name="short_preparation_MD_pipe"):
+    """Description: apply transfo on MD (no reorient so far)
+
+    Processing steps;
+
+    - init coreg b0mean on SS_T1
+    - coreg b0mean on T1 using bbr and native_wm
+    - apply coreg transfo on MD
+
+    Params:
+
+    Inputs:
+
+        inputnode:
+
+            orig_T1:
+                T1 files (from BIDSDataGrabber)
+
+            SS_T1:
+                After Skull strip
+
+            MD:
+                MD file
+
+            b0mean:
+                B0 mean file
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+        arguments:
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "long_multi_preparation_pipe")
+
+    Outputs:
+
+        outputnode:
+
+            coreg_MD:
+                preprocessed MD file with init
+
+            coreg_better_MD:
+                preprocessed MD file with init and flirt
+
+    """
+
+    # creating pipeline
+    data_preparation_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['orig_T1', 'SS_T1', 'MD',
+                                      'b0mean', 'native_wm_mask']),
+        name='inputnode'
+    )
 
     # init_align_b0mean_on_T1
     init_align_b0mean_on_T1 = pe.Node(fsl.FLIRT(),
@@ -1083,11 +1149,8 @@ def create_short_preparation_FLAIR_pipe(params,
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['coreg_FLAIR', 'coreg_MD', 'coreg_better_MD']),
+            fields=['coreg_MD', 'coreg_better_MD']),
         name='outputnode')
-
-    data_preparation_pipe.connect(align_FLAIR_on_T1, 'out_file',
-                                  outputnode, 'coreg_FLAIR')
 
     data_preparation_pipe.connect(align_MD_on_T1_with_b0, 'out_file',
                                   outputnode, 'coreg_MD')
