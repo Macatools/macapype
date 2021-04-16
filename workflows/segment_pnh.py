@@ -68,7 +68,8 @@ from macapype.pipelines.full_pipelines import (
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource_indiv_params_FLAIR,
-                                       create_datasource)
+                                       create_datasource,
+                                       create_datasink)
 
 from macapype.utils.utils_tests import load_test_data, format_template
 
@@ -262,6 +263,12 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         #main_workflow.connect(datasource, "indiv_params",
                               #segment_pnh_pipe,'inputnode.indiv_params')
+
+    data_sink = create_datasink("derivatives")
+    data_sink.inputs.base_dir = data_dir
+
+    main_workflow.connect(segment_pnh_pipe, 'mask_from_seg_pipe.merge_indexed_mask'),
+                              datasink, 'anat.@indexed_mask')
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
