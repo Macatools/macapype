@@ -3,63 +3,53 @@
 """
 import os
 import os.path as op
-from os import makedirs
+
 import shutil
+import json
+
+
+def _download_data_zip(data_zip, name):
+
+    json_data = op.join(op.dirname(op.abspath(__file__)),
+                        "data_test_servers.json")
+
+    data_dict = json.load(open(json_data))
+
+    for key, cloud_elem in data_dict.items():
+        print(key)
+
+        data_dir = cloud_elem["data_dir"]
+
+        if name not in data_dir.keys():
+
+            print("{} not found in {}".format(name, key))
+            continue
+
+        server = cloud_elem["server"]
+
+        if "cloud_format" in list(cloud_elem.keys()):
+            oc_path = cloud_elem["cloud_format"].format(server, data_dir[name])
+        elif "cloud_format_3" in list(cloud_elem.keys()):
+            oc_path = cloud_elem["cloud_format_3"].format(server,
+                                                          data_dir[name], name)
+
+        os.system("wget --no-check-certificate  \
+            --content-disposition \"{}\" -O {} ".format(oc_path, data_zip))
+
+        if op.exists(data_zip):
+            print("Ok for download {} with {}".format(data_zip, key))
+            print("Quitting download function")
+
+            return data_zip
+
+    assert op.exists(data_zip),\
+        "Error, data_zip = {} not found ".format(data_zip)
+
+    return data_zip
 
 
 def load_test_data(name, path_to=""):
     """ Load test data, template and needed scripts """
-
-    data_dict = {
-        "INT": {
-            "server": "cloud.int.univ-amu.fr",
-            "data_dir": {
-                "NMT_v1.2": "QBTrmKNDrNs5E49",
-                "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
-                "NMT_v1.3": "qmBSE4prcXYLE94",
-                "NMT_v2.0_asym": "wBxS65AHSpRGXsR",
-                "NMT_FSL": "ajAtB7qgaPAmKyJ",
-                "inia19": "WZo9wZdreTMwfQA",
-                "marmotemplate": "5xzm7DJD9kB99gG",
-                "haiko89_template": "N9yXkSgXNbKF26z",
-                "data_test_macaque": "SgG7bBMXao9Kfon",
-                "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
-                "data_test_marmo": "pW4nQr46QSzSysg"},
-            "cloud_format": "https://{}/index.php/s/{}/download"},
-
-        "AMUBOX": {
-            "server": "https://amubox.univ-amu.fr",
-            "data_dir": {
-                "data_test_macaque": "RDxdxzmX89xcABG",
-                "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
-                "NMT_v1.2": "5YnwNf3Jr7Qsc8H"},
-            "cloud_format": "{}/public.php?service=files&t={}&download"}}
-
-    def _download_data_zip(data_zip, name):
-
-        for key, cloud_elem in data_dict.items():
-            print(key)
-
-            data_dir = cloud_elem["data_dir"]
-
-            if name not in data_dir.keys():
-
-                print("{} not found in {}".format(name, key))
-                continue
-
-            server = cloud_elem["server"]
-            oc_path = cloud_elem["cloud_format"].format(server, data_dir[name])
-
-            os.system("wget --no-check-certificate  \
-                --content-disposition \"{}\" -O {} ".format(oc_path, data_zip))
-
-            if op.exists(data_zip):
-                print("Ok for download {} with {}, \
-                      quitting download function".format(data_zip, key))
-                return
-
-        assert op.exists(data_zip),\
-            "Error, data_zip = {} not found ".format(data_zip)
 
     if path_to == "":
         path_to = op.expanduser("~")
@@ -69,7 +59,7 @@ def load_test_data(name, path_to=""):
     data_dirpath = op.join(path_to, "data_macapype")
 
     try:
-        makedirs(data_dirpath)
+        os.makedirs(data_dirpath)
     except OSError:
         print("data_dirpath {} already exists".format(data_dirpath))
 
@@ -100,7 +90,7 @@ def format_template(data_path, template_name):
 
     import json
 
-    json_template = op.join(os.path.dirname(os.path.abspath(__file__)),
+    json_template = op.join(op.dirname(op.abspath(__file__)),
                             "templates.json")
 
     template_path_dict = json.load(open(json_template))
@@ -124,7 +114,7 @@ def format_template(data_path, template_name):
 
 def make_tmp_dir():
     tmp_dir = "/tmp/test_macapype"
-    if os.path.exists(tmp_dir):
+    if op.exists(tmp_dir):
         shutil.rmtree(tmp_dir)
     os.makedirs(tmp_dir)
     os.chdir(tmp_dir)
