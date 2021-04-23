@@ -60,5 +60,9 @@
             "kernel_shape": "sphere",
             "kernel_size": 2
         }
+    },
+    "regex_subs":
+    {
+        "FLAIR_flirt": "preproc-coreg_FLAIR"
     }
 }

@@ -64,11 +64,12 @@ from macapype.pipelines.full_pipelines import (
     create_full_ants_subpipes,
     create_full_T1_spm_subpipes,
     create_full_T1_ants_subpipes,
-    create_transfo_pipe)
+    create_transfo_FLAIR_pipe,
+    create_transfo_MD_pipe)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
-                                       create_datasource_indiv_params_FLAIR,
-                                       create_datasource)
+                                       create_datasource,
+                                       create_datasink)
 
 from macapype.utils.utils_tests import load_test_data, format_template
 
@@ -81,7 +82,10 @@ from macapype.utils.misc import show_files, get_first_elem
 def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                          acquisitions, reconstructions, params_file,
                          indiv_params_file, mask_file, nprocs,
-                         wf_name="test_pipeline_single"):
+                         wf_name="test_pipeline_single",
+                         deriv=True):
+
+    # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
 
     Arguments
@@ -178,28 +182,30 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     if mask_file is not None:
          wf_name += "_mask"
 
-    soft = soft.lower().split("_")
-    assert "spm" in soft or "spm12" in soft or "ants" in soft, \
-        "error with {}, should be among [spm12, spm, ants]".format(soft)
+    ssoft = soft.lower().split("_")
+
+    assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
+        "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
     # main_workflow
     main_workflow = pe.Workflow(name= wf_name)
+
     main_workflow.base_dir = process_dir
 
-    if "spm" in soft or "spm12" in soft:
-        if "t1" in soft:
+    if "spm" in ssoft or "spm12" in ssoft:
+        if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_spm_subpipes(
                 params_template=params_template, params=params)
         else:
-            if 'native' in soft:
+            if 'native' in ssoft:
                 segment_pnh_pipe = create_full_native_spm_subpipes(
                     params_template=params_template, params=params)
             else:
                 segment_pnh_pipe = create_full_spm_subpipes(
                     params_template=params_template, params=params)
 
-    elif "ants" in soft:
-        if "t1" in soft:
+    elif "ants" in ssoft:
+        if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
                 params_template=params_template, params=params)
         else:
@@ -207,61 +213,130 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 params_template=params_template, params=params,
                 mask_file=mask_file)
 
-    if indiv_params:
+    # list of all required outputs
+    output_query = {}
 
-        if "flair" in soft:
-            datasource = create_datasource_indiv_params_FLAIR(
-                data_dir, indiv_params, subjects, sessions, acquisitions,
-                reconstructions)
-        else:
-            datasource = create_datasource_indiv_params(
-                data_dir, indiv_params, subjects, sessions, acquisitions,
-                reconstructions)
+    # T1 (mandatory, always added)
+    output_query['T1'] = {
+            "datatype": "anat", "suffix": "T1w",
+            "extension": ["nii", ".nii.gz"]
+        }
+
+    # T2 is optional, if "_T1" is added in the -soft arg
+    if not 't1' in ssoft:
+        output_query['T2'] = {
+            "datatype": "anat", "suffix": "T2w",
+            "extension": ["nii", ".nii.gz"]}
+
+    # FLAIR is optional, if "_FLAIR" is added in the -soft arg
+    if 'flair' in ssoft:
+        output_query['FLAIR'] = {
+            "datatype": "anat", "suffix": "FLAIR",
+            "extension": ["nii", ".nii.gz"]}
+
+    # MD and b0mean are optional, if "_MD" is added in the -soft arg
+    if 'md' in ssoft:
+        output_query['MD'] =  {
+            "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
+            "extension": ["nii", ".nii.gz"]}
+
+        output_query['b0mean'] = {
+            "datatype": "dwi", "acquisition": "b0mean", "suffix": "dwi",
+            "extension": ["nii", ".nii.gz"]}
+
+    # indiv_params
+    if indiv_params:
+        datasource = create_datasource_indiv_params(
+            output_query, data_dir, indiv_params, subjects, sessions,
+            acquisitions, reconstructions)
 
         main_workflow.connect(datasource, "indiv_params",
                               segment_pnh_pipe,'inputnode.indiv_params')
     else:
-        datasource = create_datasource(data_dir, subjects, sessions,
-                                       acquisitions, reconstructions)
+        datasource = create_datasource(
+            output_query, data_dir, subjects,  sessions, acquisitions,
+            reconstructions)
 
     main_workflow.connect(datasource, 'T1',
                           segment_pnh_pipe, 'inputnode.list_T1')
 
-    if not "t1" in soft:
+    if not "t1" in ssoft:
         main_workflow.connect(datasource, 'T2', 
                               segment_pnh_pipe, 'inputnode.list_T2')
 
-    if "flair" in soft:
-        transfo_pipe = create_transfo_pipe(params=params,
-                                           params_template=params_template)
+    if "flair" in ssoft:
+
+        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=params,
+                                        params_template=params_template)
 
         main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
-                              transfo_pipe, 'inputnode.SS_T1')
+                              transfo_FLAIR_pipe, 'inputnode.SS_T1')
 
         main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_brain_file",
-                              transfo_pipe, 'inputnode.orig_T1')
+                              transfo_FLAIR_pipe, 'inputnode.orig_T1')
 
         main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
-                              transfo_pipe, 'inputnode.lin_transfo_file')
-
-        main_workflow.connect(segment_pnh_pipe, "reg.inv_transfo_file",
-                              transfo_pipe, 'inputnode.inv_lin_transfo_file')
-
-        main_workflow.connect(segment_pnh_pipe,
-                              "old_segment_pipe.outputnode.threshold_wm",
-                              transfo_pipe, 'inputnode.threshold_wm')
+                              transfo_FLAIR_pipe, 'inputnode.lin_transfo_file')
 
         main_workflow.connect(datasource, ('FLAIR', get_first_elem),
-                              transfo_pipe, 'inputnode.FLAIR')
+                              transfo_FLAIR_pipe, 'inputnode.FLAIR')
+
+    if 'md' in ssoft:
+
+        transfo_MD_pipe = create_transfo_MD_pipe(params=params,
+                                        params_template=params_template)
+
+        main_workflow.connect(segment_pnh_pipe,
+                                "old_segment_pipe.outputnode.threshold_wm",
+                                transfo_MD_pipe, 'inputnode.threshold_wm')
 
         main_workflow.connect(datasource, ('MD', get_first_elem),
-                              transfo_pipe, 'inputnode.MD')
+                                transfo_MD_pipe, 'inputnode.MD')
 
         main_workflow.connect(datasource, ('b0mean', get_first_elem),
-                              transfo_pipe, 'inputnode.b0mean')
+                                transfo_MD_pipe, 'inputnode.b0mean')
 
-        #main_workflow.connect(datasource, "indiv_params",
-                              #segment_pnh_pipe,'inputnode.indiv_params')
+        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
+                            transfo_MD_pipe, 'inputnode.SS_T1')
+
+        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_brain_file",
+                            transfo_MD_pipe, 'inputnode.orig_T1')
+
+        main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
+                            transfo_MD_pipe, 'inputnode.lin_transfo_file')
+
+        main_workflow.connect(segment_pnh_pipe, "reg.inv_transfo_file",
+                            transfo_MD_pipe, 'inputnode.inv_lin_transfo_file')
+
+    if deriv:
+
+        datasink_name = os.path.join("derivatives", "macapype_{}".format(soft))
+
+        datasink = create_datasink(iterables=datasource.iterables,
+                                   name=datasink_name,
+                                   params_regex_subs = params["regex_subs"])
+
+        datasink.inputs.base_directory = process_dir
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+            datasink, '@segmented_brain_mask')
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.brain_mask',
+            datasink, '@brain_mask')
+
+        if 'spm' in ssoft and not 'native' in ssoft:
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.norm_T1',
+                datasink, '@norm_T1')
+
+        if 'flair' in ssoft :
+
+            main_workflow.connect(
+                transfo_FLAIR_pipe, 'outputnode.norm_FLAIR',
+                datasink, '@norm_flair')
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -269,8 +344,8 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     if nprocs is None:
         nprocs = 4
 
-    if not "test" in soft:
-        if "seq" in soft or nprocs==0:
+    if not "test" in ssoft:
+        if "seq" in ssoft or nprocs==0:
             main_workflow.run()
         else:
             main_workflow.run(plugin='MultiProc',
@@ -307,6 +382,9 @@ if __name__ == '__main__':
                         help="precomputed mask file", required=False)
     parser.add_argument("-nprocs", dest="nprocs", type=int,
                         help="number of processes to allocate", required=False)
+    parser.add_argument("-deriv", dest="deriv", action='store_true',
+                        help="output derivatives in BIDS orig directory",
+                        required=False)
 
     args = parser.parse_args()
 
@@ -323,5 +401,6 @@ if __name__ == '__main__':
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file,
         mask_file=args.mask_file,
-        nprocs=args.nprocs)
+        nprocs=args.nprocs,
+        deriv=args.deriv)
 

@@ -1,3 +1,6 @@
+import os.path as op
+
+import json
 
 from bids.layout import BIDSLayout
 
@@ -7,7 +10,7 @@ import nipype.pipeline.engine as pe
 from .utils_nodes import BIDSDataGrabberParams
 
 
-def create_datasource(data_dir, subjects=None, sessions=None,
+def create_datasource(output_query, data_dir, subjects=None, sessions=None,
                       acquisitions=None, reconstructions=None):
     """ Create a datasource node that have iterables following BIDS format """
     bids_datasource = pe.Node(
@@ -16,16 +19,7 @@ def create_datasource(data_dir, subjects=None, sessions=None,
     )
 
     bids_datasource.inputs.base_dir = data_dir
-    bids_datasource.inputs.output_query = {
-        'T1': {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]
-        },
-        'T2': {
-            "datatype": "anat", "suffix": "T2w",
-            "extension": ["nii", ".nii.gz"]
-        }
-    }
+    bids_datasource.inputs.output_query = output_query
 
     layout = BIDSLayout(data_dir)
 
@@ -57,9 +51,9 @@ def create_datasource(data_dir, subjects=None, sessions=None,
     return bids_datasource
 
 
-def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
-                                   sessions=None, acquisitions=None,
-                                   reconstructions=None):
+def create_datasource_indiv_params(output_query, data_dir, indiv_params,
+                                   subjects=None, sessions=None,
+                                   acquisitions=None, reconstructions=None):
     """ Create a datasource node that have iterables following BIDS format,
     including a indiv_params file"""
 
@@ -69,16 +63,7 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
     )
 
     bids_datasource.inputs.base_dir = data_dir
-    bids_datasource.inputs.output_query = {
-        'T1': {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]
-        },
-        'T2': {
-            "datatype": "anat", "suffix": "T2w",
-            "extension": ["nii", ".nii.gz"]
-        }
-    }
+    bids_datasource.inputs.output_query = output_query
 
     layout = BIDSLayout(data_dir)
 
@@ -108,64 +93,36 @@ def create_datasource_indiv_params(data_dir, indiv_params, subjects=None,
     return bids_datasource
 
 
-def create_datasource_indiv_params_FLAIR(data_dir, indiv_params, subjects=None,
-                                         sessions=None, acquisitions=None,
-                                         reconstructions=None):
-    """ Create a datasource node that have iterables following BIDS format,
-    including a indiv_params file"""
+def create_datasink(iterables, name="output", params_regex_subs={}):
+    """
+    Description: reformating relevant outputs
+    """
 
-    bids_datasource = pe.Node(
-        interface=BIDSDataGrabberParams(indiv_params),
-        name='bids_datasource'
-    )
+    print("Datasink name: ", name)
 
-    bids_datasource.inputs.base_dir = data_dir
-    bids_datasource.inputs.output_query = {
-        'T1': {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]
-        },
-        'T2': {
-            "datatype": "anat", "suffix": "T2w",
-            "extension": ["nii", ".nii.gz"]
-        },
-        'FLAIR': {
-            "datatype": "anat", "suffix": "FLAIR",
-            "extension": ["nii", ".nii.gz"]
-        },
-        'MD': {
-            "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
-            "extension": ["nii", ".nii.gz"]
-        },
-        'b0mean': {
-            "datatype": "dwi", "acquisition": "b0mean", "suffix": "dwi",
-            "extension": ["nii", ".nii.gz"]
-        }
-    }
+    datasink = pe.Node(nio.DataSink(container=name),
+                       name='datasink')
 
-    layout = BIDSLayout(data_dir)
+    subjFolders = [
+        ('_session_%s_subject_%s' % (ses, sub),
+         'sub-%s/ses-%s/anat' % (sub, ses)) for ses in iterables[1][1]
+        for sub in iterables[0][1]]
 
-    # Verbose
-    print("BIDS layout:", layout)
-    print("\t", layout.get_subjects())
-    print("\t", layout.get_sessions())
+    datasink.inputs.substitutions = subjFolders
 
-    if subjects is None:
-        subjects = layout.get_subjects()
+    json_regex_subs = op.join(op.dirname(op.abspath(__file__)),
+                              "regex_subs.json")
 
-    if sessions is None:
-        sessions = layout.get_sessions()
+    dict_regex_subs = json.load(open(json_regex_subs))
 
-    iterables = []
-    iterables.append(('subject', subjects))
-    iterables.append(('session', sessions))
+    dict_regex_subs.update(params_regex_subs)
 
-    if acquisitions is not None:
-        iterables.append(('acquisition', acquisitions))
+    print(dict_regex_subs)
 
-    if reconstructions is not None:
-        iterables.append(('reconstruction', reconstructions))
+    regex_subs = [(key, value) for key, value in dict_regex_subs.items()]
 
-    bids_datasource.iterables = iterables
+    print(regex_subs)
 
-    return bids_datasource
+    datasink.inputs.regexp_substitutions = regex_subs
+
+    return datasink

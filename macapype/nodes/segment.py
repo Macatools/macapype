@@ -259,7 +259,7 @@ def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
                                    header=mask_csf.header)
 
     # saving indexed_mask_file
-    indexed_mask_file = op.abspath("indexed_mask"+ext)
+    indexed_mask_file = op.abspath(fname+"_indexed_mask"+ext)
 
     nib.save(indexed_mask, indexed_mask_file)
 
