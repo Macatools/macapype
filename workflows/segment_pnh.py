@@ -273,11 +273,14 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=params,
                                         params_template=params_template)
 
-        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
-                              transfo_FLAIR_pipe, 'inputnode.SS_T1')
+        if "t1" in ssoft:
+            main_workflow.connect(segment_pnh_pipe, "short_preparation_pipe.outputnode.preproc_T1",
+                                transfo_FLAIR_pipe, 'inputnode.orig_T1')
 
-        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_brain_file",
-                              transfo_FLAIR_pipe, 'inputnode.orig_T1')
+        else:
+            main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
+                                transfo_FLAIR_pipe, 'inputnode.orig_T1')
+
 
         main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
                               transfo_FLAIR_pipe, 'inputnode.lin_transfo_file')

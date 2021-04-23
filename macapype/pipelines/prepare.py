@@ -979,9 +979,6 @@ def create_short_preparation_FLAIR_pipe(params,
             orig_T1:
                 T1 files (from BIDSDataGrabber)
 
-            SS_T1:
-                After Skull strip
-
             FLAIR:
                 FLAIR file
 
@@ -1010,7 +1007,7 @@ def create_short_preparation_FLAIR_pipe(params,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['orig_T1', 'SS_T1', 'FLAIR']),
+        niu.IdentityInterface(fields=['orig_T1', 'FLAIR']),
         name='inputnode'
     )
 
