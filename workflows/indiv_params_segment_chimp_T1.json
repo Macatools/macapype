@@ -1,0 +1,15 @@
+{
+    "sub-Justin":
+    {
+        "ses-01":
+        {
+            "short_preparation_T1_pipe":
+            {
+                "crop":
+                    {
+                        "args": "80 165 60 240 25 165"
+                    }
+            }
+        }
+    }
+}

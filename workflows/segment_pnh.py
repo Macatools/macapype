@@ -69,7 +69,11 @@ from macapype.pipelines.full_pipelines import (
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource,
+<<<<<<< HEAD
                                        create_datasink)
+=======
+                                       create_datasource_indiv_params_noT1)
+>>>>>>> 1934f28... added Juna_Chimp template
 
 from macapype.utils.utils_tests import load_test_data, format_template
 

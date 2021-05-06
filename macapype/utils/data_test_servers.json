@@ -1,0 +1,34 @@
+{
+    "INT": {
+        "server": "cloud.int.univ-amu.fr",
+        "data_dir": {
+            "NMT_v1.2": "QBTrmKNDrNs5E49",
+            "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
+            "NMT_v1.3": "qmBSE4prcXYLE94",
+            "NMT_v2.0_asym": "wBxS65AHSpRGXsR",
+            "NMT_FSL": "ajAtB7qgaPAmKyJ",
+            "inia19": "WZo9wZdreTMwfQA",
+            "marmotemplate": "5xzm7DJD9kB99gG",
+            "haiko89_template": "N9yXkSgXNbKF26z",
+            "data_test_macaque": "SgG7bBMXao9Kfon",
+            "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
+            "data_test_marmo": "pW4nQr46QSzSysg"},
+        "cloud_format": "https://{}/index.php/s/{}/download"},
+
+    "AMUBOX": {
+        "server": "https://amubox.univ-amu.fr",
+        "data_dir": {
+            "data_test_macaque": "RDxdxzmX89xcABG",
+            "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
+            "NMT_v1.2": "5YnwNf3Jr7Qsc8H"},
+        "cloud_format": "{}/public.php?service=files&t={}&download"},
+
+    "ZENODO": {
+        "server": "https://zenodo.org",
+        "data_dir": {
+            "Juna_Chimp_T1_1mm_skull.nii.gz": "4683381",
+            "Juna_Chimp": "4738619"
+            },
+        "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"
+    }
+}
