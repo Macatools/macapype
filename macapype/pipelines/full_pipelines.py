@@ -1,7 +1,7 @@
 
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
-from nipype.interfaces import ants
+
 from nipype.interfaces import fsl
 
 from ..utils.utils_nodes import NodeParams
@@ -526,11 +526,13 @@ def create_full_T1_spm_subpipes(
                      reg, 'indiv_params')
 
     # Subject to _template (ants)
+    """
     nonlin_reg = NodeParams(ants.RegistrationSynQuick(),
                             params=parse_key(params, "nonlin_reg"),
                             name='nonlin_reg')
     nonlin_reg.inputs.fixed_image = params_template["template_brain"]
     seg_pipe.connect(reg, "warp_file", nonlin_reg, "moving_image")
+
 
     # Transform T1 (fsl)
     transform_msk = NodeParams(fsl.ApplyXFM(),
@@ -539,6 +541,7 @@ def create_full_T1_spm_subpipes(
     seg_pipe.connect(nonlin_reg, "out_matrix", transform_msk, "in_matrix_file")
     seg_pipe.connect(debias, "debiased_mask_file", transform_msk, "in_file")
     seg_pipe.connect(debias, "t1_debiased_file", transform_msk, "reference")
+    """
 
     # Compute brain mask using old_segment of SPM and postprocessing on
     # tissues' masks
@@ -547,11 +550,25 @@ def create_full_T1_spm_subpipes(
         old_segment_pipe = create_old_segment_pipe(
             params_template, params=parse_key(params, "old_segment_pipe"))
 
-        seg_pipe.connect(nonlin_reg, 'warped_image',
+        seg_pipe.connect(reg, "warp_file",
                          old_segment_pipe, 'inputnode.T1')
 
         seg_pipe.connect(inputnode, 'indiv_params',
                          old_segment_pipe, 'inputnode.indiv_params')
+
+    # not mandatory
+    if "nii_to_mesh_fs_pipe" in params.keys():
+        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
+            params=parse_key(params, "nii_to_mesh_fs_pipe"))
+
+        seg_pipe.connect(reg, 'warp_file',
+                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
+
+        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
+                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
 
@@ -640,7 +657,7 @@ def create_transfo_FLAIR_pipe(params_template, params={},
     # Creating input node
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['SS_T1', 'orig_T1', 'FLAIR', 'lin_transfo_file']),
+            fields=['orig_T1', 'FLAIR', 'lin_transfo_file']),
         name='inputnode'
     )
 
@@ -649,8 +666,6 @@ def create_transfo_FLAIR_pipe(params_template, params={},
 
     transfo_pipe.connect(inputnode, 'orig_T1',
                          data_preparation_pipe, 'inputnode.orig_T1')
-    transfo_pipe.connect(inputnode, 'SS_T1',
-                         data_preparation_pipe, 'inputnode.SS_T1')
     transfo_pipe.connect(inputnode, 'FLAIR',
                          data_preparation_pipe, 'inputnode.FLAIR')
 
@@ -1429,6 +1444,11 @@ def create_full_T1_ants_subpipes(params_template, params={},
         name='inputnode'
     )
 
+    # output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask']),
+        name='outputnode')
+
     # preprocessing (perform preparation pipe with only T1)
     if 'short_preparation_T1_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_T1_pipe(
@@ -1457,6 +1477,10 @@ def create_full_T1_ants_subpipes(params_template, params={},
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_extraction_pipe, 'inputnode.indiv_params')
 
+    seg_pipe.connect(brain_extraction_pipe,
+                     "extract_pipe.smooth_mask.out_file",
+                     outputnode, "brain_mask")
+
     # full_segment (restarting from the avg_align files)
     if "brain_segment_T1_pipe" not in params.keys():
         return seg_pipe
@@ -1472,5 +1496,42 @@ def create_full_T1_ants_subpipes(params_template, params={},
                      brain_segment_pipe, "inputnode.brain_mask")
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
+
+    seg_pipe.connect(brain_segment_pipe,
+                     'segment_atropos_pipe.outputnode.segmented_file',
+                     outputnode, 'segmented_brain_mask')
+
+    if "mask_from_seg_pipe" in params.keys():
+        mask_from_seg_pipe = create_mask_from_seg_pipe(
+            params=parse_key(params, "mask_from_seg_pipe"))
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_csf',
+                         mask_from_seg_pipe, 'inputnode.mask_csf')
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_wm',
+                         mask_from_seg_pipe, 'inputnode.mask_wm')
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_gm',
+                         mask_from_seg_pipe, 'inputnode.mask_gm')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         mask_from_seg_pipe, 'inputnode.indiv_params')
+
+    if "nii_to_mesh_fs_pipe" in params.keys():
+        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
+            params=parse_key(params, "nii_to_mesh_fs_pipe"))
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
+
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_wm',
+                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
+
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
