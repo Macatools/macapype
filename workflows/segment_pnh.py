@@ -69,11 +69,7 @@ from macapype.pipelines.full_pipelines import (
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
                                        create_datasource,
-<<<<<<< HEAD
                                        create_datasink)
-=======
-                                       create_datasource_indiv_params_noT1)
->>>>>>> 1934f28... added Juna_Chimp template
 
 from macapype.utils.utils_tests import load_test_data, format_template
 
@@ -319,9 +315,13 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         datasink_name = os.path.join("derivatives", "macapype_{}".format(soft))
 
-        datasink = create_datasink(iterables=datasource.iterables,
-                                   name=datasink_name,
-                                   params_regex_subs = params["regex_subs"])
+        if "regex_subs" in params.values():
+            datasink = create_datasink(iterables=datasource.iterables,
+                                       name=datasink_name,
+                                       params_regex_subs = params["regex_subs"])
+        else:
+            datasink = create_datasink(iterables=datasource.iterables,
+                                       name=datasink_name)
 
         datasink.inputs.base_directory = process_dir
 
