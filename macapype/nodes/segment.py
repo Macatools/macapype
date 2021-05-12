@@ -190,6 +190,13 @@ class AtroposN4(CommandLine):
                 new_value.append(os.path.split(prior_file)[1])
 
             value = new_value
+
+        elif name == 'out_pref':
+
+            pth, fname, ext = split_f(self.inputs.brain_file)
+            value = fname+'_'
+            self.inputs.out_pref = value
+
         return super(AtroposN4, self)._format_arg(name, spec, value)
 
     def _list_outputs(self):
@@ -202,12 +209,18 @@ class AtroposN4(CommandLine):
         outputs['segmented_file'] = os.path.abspath(
             self.inputs.out_pref + "Segmentation.nii.gz")
 
+        print(self.inputs.out_pref)
+        print(self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
+
         seg_files = glob.glob(
             self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
 
+        print(seg_files)
+        print(self.inputs.priors)
+
         assert len(seg_files) == len(self.inputs.priors), \
-            "Error, there should {} SegmentationPosteriors".format(
-                len(self.inputs.priors))
+            "Error, there should {} SegmentationPosteriors ({})".format(
+                len(self.inputs.priors), len(seg_files) )
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in seg_files]

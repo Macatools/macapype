@@ -8,7 +8,7 @@ import pytest
 from macapype.nodes.extract_brain import T1xT2BET
 
 from macapype.utils.utils_tests import (load_test_data, format_template,
-                                        make_tmp_dir, _download_data_zip)
+                                        make_tmp_dir)
 from macapype.utils.utils_nodes import NodeParams
 
 
@@ -78,15 +78,6 @@ def test_zenodo_server():
     os.remove(download_file)
 
 
-def test_zenodo_download_data_zip():
-
-    name = "Juna_Chimp"
-    data_zip = os.path.abspath(name)
-    file_name = _download_data_zip(data_zip, name)
-    assert os.path.exists(file_name)
-    os.remove(file_name)
-
-
 def test_load_test_data_zenodo():
 
     tmp_path = make_tmp_dir()
@@ -107,5 +98,4 @@ if __name__ == '__main__':
     # test_data_test_macaque()
 
     test_zenodo_server()
-    test_zenodo_download_data_zip()
     test_load_test_data_zenodo()

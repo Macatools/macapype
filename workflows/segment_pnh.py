@@ -62,7 +62,6 @@ from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
     create_full_native_spm_subpipes,
     create_full_ants_subpipes,
-    create_full_T1_spm_subpipes,
     create_full_T1_ants_subpipes,
     create_transfo_FLAIR_pipe,
     create_transfo_MD_pipe)
@@ -193,16 +192,12 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     main_workflow.base_dir = process_dir
 
     if "spm" in ssoft or "spm12" in ssoft:
-        if "t1" in ssoft:
-            segment_pnh_pipe = create_full_T1_spm_subpipes(
+        if 'native' in ssoft:
+            segment_pnh_pipe = create_full_native_spm_subpipes(
                 params_template=params_template, params=params)
         else:
-            if 'native' in ssoft:
-                segment_pnh_pipe = create_full_native_spm_subpipes(
-                    params_template=params_template, params=params)
-            else:
-                segment_pnh_pipe = create_full_spm_subpipes(
-                    params_template=params_template, params=params)
+            segment_pnh_pipe = create_full_spm_subpipes(
+                params_template=params_template, params=params)
 
     elif "ants" in ssoft:
         if "t1" in ssoft:
@@ -262,6 +257,10 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
     if not "t1" in ssoft:
         main_workflow.connect(datasource, 'T2', 
+                              segment_pnh_pipe, 'inputnode.list_T2')
+    elif "t1" in ssoft and "spm" in ssoft:
+        # cheating using T2 as T1
+        main_workflow.connect(datasource, 'T1',
                               segment_pnh_pipe, 'inputnode.list_T2')
 
     if "flair" in ssoft:

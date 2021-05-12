@@ -406,173 +406,6 @@ def create_full_native_spm_subpipes(
 
     return seg_pipe
 
-
-###############################################################################
-# SPM based, but only T1 is available (-soft SPM_T1)
-def create_full_T1_spm_subpipes(
-        params_template, params={}, name='full_T1_spm_subpipes'):
-    """ Description: SPM based segmentation pipeline from T1w image only.
-    This is fact the same as create_full_spm_subpipes, where T2 is \
-    replaced by T1
-
-    Processing steps:
-
-
-    - Data preparation (short, with betcrop or crop) on T1 (2 times)
-    - debias using T1xT2BiasFieldCorrection (using mask is betcrop)
-    - registration to template file with IterREGBET
-    - SPM segmentation the old way (SPM8, not dartel based)
-
-    Params:
-
-    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
-    <macapype.pipelines.prepare.create_short_preparation_pipe>`)
-    - debias (see :class:`T1xT2BiasFieldCorrection \
-    <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`)
-    - reg (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>`)
-    - old_segment_pipe (see :class:`create_old_segment_pipe \
-    <macapype.pipelines.segment.create_old_segment_pipe>`)
-
-    Inputs:
-
-        inputnode:
-
-            list_T1:
-                T1 file names
-
-            indiv_params (opt):
-                dict with individuals parameters for some nodes
-
-
-        arguments:
-
-            params_template:
-                dict of template files containing brain_template and priors \
-                (list of template based segmented tissues)
-
-            params:
-                dictionary of node sub-parameters (from a json file)
-
-            name:
-                pipeline name (default = "full_spm_subpipes")
-
-    Outputs:
-
-            old_segment_pipe.thresh_gm.out_file:
-                segmented grey matter in template space
-
-            old_segment_pipe.thresh_wm.out_file:
-                segmented white matter in template space
-
-            old_segment_pipe.thresh_csf.out_file:
-                segmented csf in template space
-    """
-
-    print("Full pipeline name: ", name)
-
-    # Creating pipeline
-    seg_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['list_T1', 'indiv_params']),
-        name='inputnode'
-    )
-
-    # preprocessing
-    if 'short_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_short_preparation_pipe(
-            params=parse_key(params, "short_preparation_pipe"))
-    else:
-        print("Error, short_preparation_pipe was not \
-            found in params, skipping")
-        return seg_pipe
-
-    seg_pipe.connect(inputnode, 'list_T1',
-                     data_preparation_pipe, 'inputnode.list_T1')
-    seg_pipe.connect(inputnode, 'list_T1',
-                     data_preparation_pipe, 'inputnode.list_T2')
-    seg_pipe.connect(inputnode, 'indiv_params',
-                     data_preparation_pipe, 'inputnode.indiv_params')
-
-    # Bias correction of cropped images
-    debias = NodeParams(T1xT2BiasFieldCorrection(),
-                        params=parse_key(params, "debias"),
-                        name='debias')
-
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     debias, 't1_file')
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     debias, 't2_file')
-    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
-                     debias, 'indiv_params')
-
-    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
-        seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
-                         debias, 'b')
-    else:
-        debias.inputs.bet = 1
-
-    # Iterative registration to the INIA19 template
-    reg = NodeParams(IterREGBET(),
-                     params=parse_key(params, "reg"),
-                     name='reg')
-    reg.inputs.refb_file = params_template["template_brain"]
-    seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
-    seg_pipe.connect(debias, 't1_debiased_brain_file',
-                     reg, 'inb_file')
-
-    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
-                     reg, 'indiv_params')
-
-    # Subject to _template (ants)
-    """
-    nonlin_reg = NodeParams(ants.RegistrationSynQuick(),
-                            params=parse_key(params, "nonlin_reg"),
-                            name='nonlin_reg')
-    nonlin_reg.inputs.fixed_image = params_template["template_brain"]
-    seg_pipe.connect(reg, "warp_file", nonlin_reg, "moving_image")
-
-
-    # Transform T1 (fsl)
-    transform_msk = NodeParams(fsl.ApplyXFM(),
-                               params=parse_key(params, "transform_mask"),
-                               name='transform_others')
-    seg_pipe.connect(nonlin_reg, "out_matrix", transform_msk, "in_matrix_file")
-    seg_pipe.connect(debias, "debiased_mask_file", transform_msk, "in_file")
-    seg_pipe.connect(debias, "t1_debiased_file", transform_msk, "reference")
-    """
-
-    # Compute brain mask using old_segment of SPM and postprocessing on
-    # tissues' masks
-    if "old_segment_pipe" in params.keys():
-
-        old_segment_pipe = create_old_segment_pipe(
-            params_template, params=parse_key(params, "old_segment_pipe"))
-
-        seg_pipe.connect(reg, "warp_file",
-                         old_segment_pipe, 'inputnode.T1')
-
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         old_segment_pipe, 'inputnode.indiv_params')
-
-    # not mandatory
-    if "nii_to_mesh_fs_pipe" in params.keys():
-        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
-            params=parse_key(params, "nii_to_mesh_fs_pipe"))
-
-        seg_pipe.connect(reg, 'warp_file',
-                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
-
-        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
-                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
-
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
-
-    return seg_pipe
-
-
 # SPM with Flair
 def create_transfo_FLAIR_pipe(params_template, params={},
                               name='transfo_FLAIR_pipe'):
@@ -1178,10 +1011,6 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
-    seg_pipe.connect(brain_segment_pipe,
-                     'segment_atropos_pipe.outputnode.segmented_file',
-                     outputnode, 'segmented_brain_mask')
-
     if "mask_from_seg_pipe" in params.keys():
         mask_from_seg_pipe = create_mask_from_seg_pipe(
             params=parse_key(params, "mask_from_seg_pipe"))
@@ -1200,6 +1029,9 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(inputnode, 'indiv_params',
                          mask_from_seg_pipe, 'inputnode.indiv_params')
+
+        seg_pipe.connect(mask_from_seg_pipe, 'merge_indexed_mask.indexed_mask',
+                         outputnode, 'segmented_brain_mask')
 
     if 'nii_to_mesh_pipe' in params.keys():
 
@@ -1478,7 +1310,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
                      brain_extraction_pipe, 'inputnode.indiv_params')
 
     seg_pipe.connect(brain_extraction_pipe,
-                     "extract_pipe.smooth_mask.out_file",
+                     "extract_T1_pipe.smooth_mask.out_file",
                      outputnode, "brain_mask")
 
     # full_segment (restarting from the avg_align files)
@@ -1496,10 +1328,6 @@ def create_full_T1_ants_subpipes(params_template, params={},
                      brain_segment_pipe, "inputnode.brain_mask")
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
-
-    seg_pipe.connect(brain_segment_pipe,
-                     'segment_atropos_pipe.outputnode.segmented_file',
-                     outputnode, 'segmented_brain_mask')
 
     if "mask_from_seg_pipe" in params.keys():
         mask_from_seg_pipe = create_mask_from_seg_pipe(
@@ -1519,6 +1347,9 @@ def create_full_T1_ants_subpipes(params_template, params={},
 
         seg_pipe.connect(inputnode, 'indiv_params',
                          mask_from_seg_pipe, 'inputnode.indiv_params')
+
+        seg_pipe.connect(mask_from_seg_pipe, 'merge_indexed_mask.indexed_mask',
+                         outputnode, 'segmented_brain_mask')
 
     if "nii_to_mesh_fs_pipe" in params.keys():
         nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
