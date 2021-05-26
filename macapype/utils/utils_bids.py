@@ -93,7 +93,7 @@ def create_datasource_indiv_params(output_query, data_dir, indiv_params,
     return bids_datasource
 
 
-def create_datasink(iterables, name="output", params_regex_subs={}):
+def create_datasink(iterables, name="output", params_subs = {}, params_regex_subs={}):
     """
     Description: reformating relevant outputs
     """
@@ -108,6 +108,22 @@ def create_datasink(iterables, name="output", params_regex_subs={}):
          'sub-%s/ses-%s/anat' % (sub, ses)) for ses in iterables[1][1]
         for sub in iterables[0][1]]
 
+
+    json_subs = op.join(op.dirname(op.abspath(__file__)),
+                              "subs.json")
+
+    dict_subs = json.load(open(json_subs))
+
+    dict_subs.update(params_subs)
+
+    print(dict_subs)
+
+    subs = [(key, value) for key, value in dict_subs.items()]
+
+    subjFolders.extend(subs)
+
+    print(subjFolders)
+
     datasink.inputs.substitutions = subjFolders
 
     json_regex_subs = op.join(op.dirname(op.abspath(__file__)),
@@ -120,6 +136,9 @@ def create_datasink(iterables, name="output", params_regex_subs={}):
     print(dict_regex_subs)
 
     regex_subs = [(key, value) for key, value in dict_regex_subs.items()]
+
+    #regex_subs.append((r'acq-[0-9a-zA-Z]*_', r''))
+    #regex_subs.append((r'run-[0-9]*_', r''))
 
     print(regex_subs)
 

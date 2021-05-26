@@ -315,12 +315,20 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         datasink_name = os.path.join("derivatives", "macapype_{}".format(soft))
 
         if "regex_subs" in params.values():
-            datasink = create_datasink(iterables=datasource.iterables,
-                                       name=datasink_name,
-                                       params_regex_subs = params["regex_subs"])
+            params_regex_subs = params["regex_subs"]
         else:
-            datasink = create_datasink(iterables=datasource.iterables,
-                                       name=datasink_name)
+            params_regex_subs={}
+
+
+        if "subs" in params.values():
+            params_subs = params["rsubs"]
+        else:
+            params_subs={}
+
+        datasink = create_datasink(iterables=datasource.iterables,
+                                   name=datasink_name,
+                                   params_subs=params_subs,
+                                   params_regex_subs=params_regex_subs)
 
         datasink.inputs.base_directory = process_dir
 
