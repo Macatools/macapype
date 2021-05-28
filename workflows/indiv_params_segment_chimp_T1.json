@@ -3,12 +3,9 @@
     {
         "ses-01":
         {
-            "short_preparation_T1_pipe":
+            "crop":
             {
-                "crop":
-                    {
-                        "args": "80 165 60 240 25 165"
-                    }
+                "args": "80 165 60 240 25 165"
             }
         }
     }

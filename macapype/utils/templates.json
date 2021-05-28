@@ -96,8 +96,8 @@
         "template_head": "Juna_Chimp_T1_05mm_skull.nii.gz",
         "template_brain": "Juna_Chimp_T1_05mm_skull_stripped.nii.gz",
 
-        "template_gm": "Juna_Chimp_T1_GM_TPMasked.nii.gz",
-        "template_wm": "Juna_Chimp_T1_WM_TPMasked.nii.gz",
+        "template_gm": "Juna_Chimp_T1_GM_TPM.nii.gz",
+        "template_wm": "Juna_Chimp_T1_WM_TPM.nii.gz",
         "template_csf": "Juna_Chimp_T1_CSF_TPM.nii.gz"
     }
 }
