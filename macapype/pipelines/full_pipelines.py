@@ -406,6 +406,7 @@ def create_full_native_spm_subpipes(
 
     return seg_pipe
 
+
 # SPM with Flair
 def create_transfo_FLAIR_pipe(params_template, params={},
                               name='transfo_FLAIR_pipe'):

@@ -218,8 +218,9 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
                          outputnode, 'threshold_csf')
 
     return segment_pipe
+
 ###############################################################################
-# old segment (originally from SPM8)
+# old segment, originally from SPM8
 ###############################################################################
 
 

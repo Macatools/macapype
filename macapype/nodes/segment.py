@@ -220,7 +220,8 @@ class AtroposN4(CommandLine):
 
         assert len(seg_files) == len(self.inputs.priors), \
             "Error, there should {} SegmentationPosteriors ({})".format(
-                len(self.inputs.priors), len(seg_files) )
+                len(self.inputs.priors),
+                len(seg_files))
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in seg_files]

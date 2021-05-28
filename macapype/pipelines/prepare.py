@@ -860,12 +860,6 @@ def create_short_preparation_T1_pipe(params,
         name='inputnode'
     )
 
-    parse_params = pe.Node(ParseParams(), name="parse_params")
-    parse_params.inputs.key = name
-
-    data_preparation_pipe.connect(inputnode, "indiv_params",
-                                  parse_params, "params")
-
     # average if multiple T1
     av_T1 = pe.Node(
         niu.Function(input_names=['list_img'],
@@ -931,7 +925,7 @@ def create_short_preparation_T1_pipe(params,
                                           crop_T1, 'in_file')
 
         data_preparation_pipe.connect(
-            parse_params, ('parsed_params', parse_key, "crop"),
+            inputnode, ("indiv_params", parse_key, "crop"),
             crop_T1, 'indiv_params')
 
     # denoise with Ants package
