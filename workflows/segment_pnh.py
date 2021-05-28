@@ -357,9 +357,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         else:
             main_workflow.run(plugin='MultiProc',
                               plugin_args={'n_procs' : nprocs})
-
-
-if __name__ == '__main__':
+def main():
 
     # Command line parser
     parser = argparse.ArgumentParser(
@@ -411,3 +409,5 @@ if __name__ == '__main__':
         nprocs=args.nprocs,
         deriv=args.deriv)
 
+if __name__ == '__main__':
+    main()
