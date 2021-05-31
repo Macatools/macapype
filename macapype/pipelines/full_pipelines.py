@@ -1227,7 +1227,6 @@ def create_brain_segment_from_mask_T1_pipe(
 
     return brain_segment_pipe
 
-
 # -soft ANTS_T1
 def create_full_T1_ants_subpipes(params_template, params={},
                                  name="full_T1_ants_subpipes"):
