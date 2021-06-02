@@ -36,7 +36,9 @@ from macapype.utils.misc import parse_key, list_input_files
 
 
 ###############################################################################
-# SPM based segmentation (from: Régis Trapeau) (-soft SPM or SPM12)
+# SPM based segmentation (from: Régis Trapeau)
+# -soft SPM or SPM_T1
+###############################################################################
 def create_full_spm_subpipes(
         params_template, params={}, name='full_spm_subpipes'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -227,6 +229,10 @@ def create_full_spm_subpipes(
     return seg_pipe
 
 
+###############################################################################
+# SPM based segmentation (from: Régis Trapeau)
+# -soft SPM_native or SPM_T1_native
+###############################################################################
 def create_full_native_spm_subpipes(
         params_template, params={}, name='full_native_spm_subpipes'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -407,7 +413,10 @@ def create_full_native_spm_subpipes(
     return seg_pipe
 
 
-# SPM with Flair
+###############################################################################
+# FLAIR after SPM based segmentation
+# -soft SPM_FLAIR or SPM_T1_FLAIR
+###############################################################################
 def create_transfo_FLAIR_pipe(params_template, params={},
                               name='transfo_FLAIR_pipe'):
     """ Description: apply tranformation to FLAIR, MD and FA if necssary
@@ -659,9 +668,8 @@ def create_transfo_MD_pipe(params_template, params={},
 
 ###############################################################################
 # ANTS based segmentation (from Kepkee Loh / Julien Sein)
+# (-soft ANTS)
 ###############################################################################
-
-
 def create_brain_extraction_pipe(params_template, params={},
                                  name="brain_extraction_pipe"):
     """ Description: Brain extraction with atlas-brex after debiasing
@@ -846,7 +854,6 @@ def create_brain_segment_from_mask_pipe(
     return brain_segment_pipe
 
 
-# (-soft ANTS)
 def create_full_ants_subpipes(
         params_template, params={}, name="full_ants_subpipes", mask_file=None):
     """Description: Segment T1 (using T2 for bias correction) .
@@ -1079,11 +1086,11 @@ def create_full_ants_subpipes(
 
     return seg_pipe
 
+
 ###############################################################################
 # ANTS based segmentation for adrien baboons (T1 without T2)
+# -soft ANTS_T1
 ###############################################################################
-
-
 # same as above, but replacing biascorrection with N4biascorrection
 # in brain extraction and brain segmentation
 def create_brain_extraction_T1_pipe(params_template, params={},
@@ -1198,10 +1205,14 @@ def create_brain_segment_from_mask_T1_pipe(
     brain_segment_pipe.connect(inputnode, 'brain_mask',
                                restore_mask_T1, 'mask_file')
 
+    NMT_version = "v1.3"
+
+    print("NMT_version:", NMT_version)
+
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
         params_template=params_template,
-        params=parse_key(params, "register_NMT_pipe"))
+        params=parse_key(params, "register_NMT_pipe"), NMT_version=NMT_version)
 
     brain_segment_pipe.connect(
         restore_mask_T1, 'out_file',
@@ -1227,7 +1238,7 @@ def create_brain_segment_from_mask_T1_pipe(
 
     return brain_segment_pipe
 
-# -soft ANTS_T1
+
 def create_full_T1_ants_subpipes(params_template, params={},
                                  name="full_T1_ants_subpipes"):
     """Description: Full pipeline to segment T1 (with no T2).
