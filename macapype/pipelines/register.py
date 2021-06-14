@@ -244,7 +244,7 @@ def create_native_iter_reg_pipe(params_template, params={},
 
 ###############################################################################
 def create_register_NMT_pipe(params_template, params={},
-                             name="register_NMT_pipe", NMT_version="v1.2"):
+                             name="register_NMT_pipe", NMT_version="v1.3"):
     """Description: Register template to anat with the script NMT_subject_align
 
     Processing steps:
