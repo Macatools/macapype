@@ -153,8 +153,8 @@ echo -rigid_body -giant_move -suffix _rigid -dset2_strip None -dset1_strip None 
 
 align_epi_anat.py -dset1 $dset -dset2 $base -overwrite -dset1to2 -cost lpa \
     -rigid_body -giant_move -suffix _rigid -dset2_strip None -dset1_strip None -master_dset1 $base
-3dAFNItoNIFTI -prefix ${dsetprefix}_rigid.nii.gz ${dsetprefix}_rigid+tlrc
-rm ${dsetprefix}_rigid+tlrc.*
+3dAFNItoNIFTI -prefix ${dsetprefix}_rigid.nii.gz ${dsetprefix}_rigid+orig
+rm ${dsetprefix}_rigid+orig*
 
 #QC output of rigid-body alignment
 #@chauffeur_afni -ulay ${dsetprefix}_rigid.nii.gz -prefix qc/${dsetprefix}_rigid -do_clean
@@ -175,8 +175,8 @@ echo -suffix _aff -dset2_strip None -dset1_strip None -master_dset1 $base -cost 
 align_epi_anat.py -dset1 ${dsetprefix}_rigid.nii.gz -dset2 $base -overwrite -dset1to2 \
      -suffix _aff -dset2_strip None -dset1_strip None -master_dset1 $base -cost lpa
 #
-3dAFNItoNIFTI -prefix ${dsetprefix}_affine.nii.gz ${dsetprefix}_rigid_aff+tlrc
-rm ${dsetprefix}_rigid_aff+tlrc.*
+3dAFNItoNIFTI -prefix ${dsetprefix}_affine.nii.gz ${dsetprefix}_rigid_aff+orig
+rm ${dsetprefix}_rigid_aff+orig.*
 
 #QC output of affine alignment
 #@chauffeur_afni -ulay ${dsetprefix}_affine.nii.gz -prefix qc/${dsetprefix}_affine -do_clean
