@@ -3,6 +3,7 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 from nipype.interfaces import fsl
+from nipype.interfaces import ants
 
 from ..utils.utils_nodes import NodeParams
 
