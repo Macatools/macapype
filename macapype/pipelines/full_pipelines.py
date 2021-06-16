@@ -767,8 +767,7 @@ def create_brain_extraction_pipe(params_template, params={},
             inputnode, ('indiv_params', parse_key, "N4debias"),
             N4debias_T1, "indiv_params")
 
-        brain_extraction_pipe.connect(N4debias_T1,
-                                      "smooth_mask.output_image",
+        brain_extraction_pipe.connect(N4debias_T1, "output_image",
                                       outputnode, "debiased_T1")
 
         # N4 intensity normalization over T2
@@ -784,8 +783,7 @@ def create_brain_extraction_pipe(params_template, params={},
             N4debias_T2, "indiv_params")
 
 
-        brain_extraction_pipe.connect(N4debias_T2,
-                                      "smooth_mask.output_image",
+        brain_extraction_pipe.connect(N4debias_T2, "output_image",
                                       outputnode, "debiased_T2")
 
         # brain extraction
