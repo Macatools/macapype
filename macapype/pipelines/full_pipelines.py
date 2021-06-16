@@ -1065,11 +1065,11 @@ def create_full_ants_subpipes(
     if mask_file is None:
 
         seg_pipe.connect(brain_extraction_pipe,
-                         "output_node.brain_mask",
+                         "outputnode.brain_mask",
                          brain_segment_pipe, "inputnode.brain_mask")
 
         seg_pipe.connect(brain_extraction_pipe,
-                         "output_node.brain_mask",
+                         "outputnode.brain_mask",
                          outputnode, "brain_mask")
 
     else:
