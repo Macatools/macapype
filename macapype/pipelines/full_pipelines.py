@@ -722,12 +722,13 @@ def create_brain_extraction_pipe(params_template, params={},
 
     # output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['debiased_T1', 'debiased_T2', "brain_mask"]),
+        niu.IdentityInterface(fields=['debiased_T1', 'debiased_T2',
+                                      "brain_mask"]),
         name='outputnode')
 
-    assert not ("correct_bias_pipe" in params.keys() and "N4debias" in \
-        params.keys()), "error, only one of correct_bias_pipe or N4debias \
-        should be present"
+    assert not ("correct_bias_pipe" in params.keys() and "N4debias" in
+                params.keys()), "error, only one of correct_bias_pipe or N4debias \
+                should be present"
 
     if "correct_bias_pipe" in params.keys():
         # Correct_bias_T1_T2
@@ -735,26 +736,32 @@ def create_brain_extraction_pipe(params_template, params={},
             params=parse_key(params, "correct_bias_pipe"))
 
         brain_extraction_pipe.connect(inputnode, 'preproc_T1',
-                                    correct_bias_pipe, 'inputnode.preproc_T1')
+                                      correct_bias_pipe,
+                                      'inputnode.preproc_T1')
         brain_extraction_pipe.connect(inputnode, 'preproc_T2',
-                                    correct_bias_pipe, 'inputnode.preproc_T2')
+                                      correct_bias_pipe,
+                                      'inputnode.preproc_T2')
 
-        brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T1",
-                                    outputnode, "debiased_T1")
-        brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T2",
-                                    outputnode, "debiased_T2")
+        brain_extraction_pipe.connect(correct_bias_pipe,
+                                      "outputnode.debiased_T1",
+                                      outputnode, "debiased_T1")
+        brain_extraction_pipe.connect(correct_bias_pipe,
+                                      "outputnode.debiased_T2",
+                                      outputnode, "debiased_T2")
 
         # brain extraction
         extract_pipe = create_extract_pipe(
             params_template=params_template,
             params=parse_key(params, "extract_pipe"))
 
-        brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T1",
-                                    extract_pipe, "inputnode.restore_T1")
-        brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T2",
-                                    extract_pipe, "inputnode.restore_T2")
+        brain_extraction_pipe.connect(correct_bias_pipe,
+                                      "outputnode.debiased_T1",
+                                      extract_pipe, "inputnode.restore_T1")
+        brain_extraction_pipe.connect(correct_bias_pipe,
+                                      "outputnode.debiased_T2",
+                                      extract_pipe, "inputnode.restore_T2")
         brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                    extract_pipe, "inputnode.indiv_params")
+                                      extract_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_pipe,
                                       "smooth_mask.out_file",
@@ -762,15 +769,15 @@ def create_brain_extraction_pipe(params_template, params={},
 
     elif "N4debias" in params.keys():
 
-        print ("Found N4debias")
+        print("Found N4debias")
 
         # N4 intensity normalization over T1
         N4debias_T1 = NodeParams(ants.N4BiasFieldCorrection(),
-                                    params=parse_key(params, "N4debias"),
-                                    name='N4debias_T1')
+                                 params=parse_key(params, "N4debias"),
+                                 name='N4debias_T1')
 
         brain_extraction_pipe.connect(inputnode, 'preproc_T1',
-                                N4debias_T1, "input_image")
+                                      N4debias_T1, "input_image")
 
         brain_extraction_pipe.connect(
             inputnode, ('indiv_params', parse_key, "N4debias"),
@@ -791,7 +798,6 @@ def create_brain_extraction_pipe(params_template, params={},
             inputnode, ('indiv_params', parse_key, "N4debias"),
             N4debias_T2, "indiv_params")
 
-
         brain_extraction_pipe.connect(N4debias_T2, "output_image",
                                       outputnode, "debiased_T2")
 
@@ -801,11 +807,11 @@ def create_brain_extraction_pipe(params_template, params={},
             params=parse_key(params, "extract_pipe"))
 
         brain_extraction_pipe.connect(N4debias_T1, "output_image",
-                                    extract_pipe, "inputnode.restore_T1")
+                                      extract_pipe, "inputnode.restore_T1")
         brain_extraction_pipe.connect(N4debias_T2, "output_image",
-                                    extract_pipe, "inputnode.restore_T2")
+                                      extract_pipe, "inputnode.restore_T2")
         brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                    extract_pipe, "inputnode.indiv_params")
+                                      extract_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_pipe,
                                       "smooth_mask.out_file",
