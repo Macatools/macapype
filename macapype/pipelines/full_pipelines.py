@@ -760,7 +760,7 @@ def create_brain_extraction_pipe(params_template, params={},
                                     params=parse_key(params, "N4debias"),
                                     name='N4debias_T1')
 
-        brain_extraction_pipe.connect(inputnode, 'T1',
+        brain_extraction_pipe.connect(inputnode, 'preproc_T1',
                                 N4debias_T1, "input_image")
 
         brain_extraction_pipe.connect(
@@ -775,7 +775,7 @@ def create_brain_extraction_pipe(params_template, params={},
                                  params=parse_key(params, "N4debias"),
                                  name='N4debias_T2')
 
-        brain_extraction_pipe.connect(inputnode, 'T2',
+        brain_extraction_pipe.connect(inputnode, 'preproc_T2',
                                       N4debias_T2, "input_image")
 
         brain_extraction_pipe.connect(
