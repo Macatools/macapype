@@ -99,5 +99,13 @@
         "template_gm": "Juna_Chimp_T1_GM_TPM.nii.gz",
         "template_wm": "Juna_Chimp_T1_WM_TPM.nii.gz",
         "template_csf": "Juna_Chimp_T1_CSF_TPM.nii.gz"
+    },
+    "MBM_v3.0.1":{
+        "template_head": "template_T1w.nii.gz",
+        "template_brain": "template_T1w_brain.nii.gz",
+
+        "template_gm": "segmentation_three_types_prob_1_gray.nii.gz",
+        "template_wm": "segmentation_three_types_prob_2_white.nii.gz",
+        "template_csf": "segmentation_three_types_prob_3_csf.nii.gz"
     }
 }

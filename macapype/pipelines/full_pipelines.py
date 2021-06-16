@@ -719,29 +719,31 @@ def create_brain_extraction_pipe(params_template, params={},
                                       'indiv_params']),
         name='inputnode')
 
-    if "correct_bias_pipe" in params.keys():
-        # Correct_bias_T1_T2
-        correct_bias_pipe = create_correct_bias_pipe(
-            params=parse_key(params, "correct_bias_pipe"))
+    #if "correct_bias_pipe" in params.keys():
+        ## Correct_bias_T1_T2
+        #correct_bias_pipe = create_correct_bias_pipe(
+            #params=parse_key(params, "correct_bias_pipe"))
 
-        brain_extraction_pipe.connect(inputnode, 'preproc_T1',
-                                    correct_bias_pipe, 'inputnode.preproc_T1')
-        brain_extraction_pipe.connect(inputnode, 'preproc_T2',
-                                    correct_bias_pipe, 'inputnode.preproc_T2')
+        #brain_extraction_pipe.connect(inputnode, 'preproc_T1',
+                                    #correct_bias_pipe, 'inputnode.preproc_T1')
+        #brain_extraction_pipe.connect(inputnode, 'preproc_T2',
+                                    #correct_bias_pipe, 'inputnode.preproc_T2')
 
-        # brain extraction
-        extract_pipe = create_extract_pipe(
-            params_template=params_template,
-            params=parse_key(params, "extract_pipe"))
+        ## brain extraction
+        #extract_pipe = create_extract_pipe(
+            #params_template=params_template,
+            #params=parse_key(params, "extract_pipe"))
 
-        brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T1",
-                                    extract_pipe, "inputnode.restore_T1")
-        brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T2",
-                                    extract_pipe, "inputnode.restore_T2")
-        brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                    extract_pipe, "inputnode.indiv_params")
+        #brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T1",
+                                    #extract_pipe, "inputnode.restore_T1")
+        #brain_extraction_pipe.connect(correct_bias_pipe, "outputnode.debiased_T2",
+                                    #extract_pipe, "inputnode.restore_T2")
+        #brain_extraction_pipe.connect(inputnode, "indiv_params",
+                                    #extract_pipe, "inputnode.indiv_params")
 
-    elif "N4debias" in params.keys():
+    if "N4debias" in params.keys():
+
+        print ("Found N4debias")
 
         # N4 intensity normalization over T1
         N4debias_T1 = NodeParams(ants.N4BiasFieldCorrection(),
