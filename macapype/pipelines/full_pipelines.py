@@ -725,8 +725,8 @@ def create_brain_extraction_pipe(params_template, params={},
         niu.IdentityInterface(fields=['debiased_T1', 'debiased_T2', "brain_mask"]),
         name='outputnode')
 
-    assert "correct_bias_pipe" in params.keys() and "N4debias" in \
-        params.keys(), "error, only one of correct_bias_pipe or N4debias \
+    assert not ("correct_bias_pipe" in params.keys() and "N4debias" in \
+        params.keys()), "error, only one of correct_bias_pipe or N4debias \
         should be present"
 
     if "correct_bias_pipe" in params.keys():
