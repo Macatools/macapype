@@ -302,7 +302,7 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
 
     nrm = traits.Enum(1, 2, desc="nrm", argstr="-nrm %d")
 
-    vox = traits.Int(desc="vox", argstr="-vox %d")
+    vox = traits.Int(desc="vox",  argstr="-vox %d")
 
 
 class AtlasBREXOutputSpec(TraitedSpec):
