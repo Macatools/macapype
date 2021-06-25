@@ -1035,8 +1035,8 @@ def create_short_preparation_MD_pipe(params,
 
     Processing steps;
 
-    - init coreg b0mean on SS_T1
-    - coreg b0mean on T1 using bbr and native_wm
+    - init coreg b0mean on SS_T2
+    - coreg b0mean on T2 using bbr and native_wm
     - apply coreg transfo on MD
 
     Params:
@@ -1045,10 +1045,10 @@ def create_short_preparation_MD_pipe(params,
 
         inputnode:
 
-            orig_T1:
-                T1 files (from BIDSDataGrabber)
+            orig_T2:
+                T2 files (from BIDSDataGrabber)
 
-            SS_T1:
+            SS_T2:
                 After Skull strip
 
             MD:
@@ -1085,56 +1085,56 @@ def create_short_preparation_MD_pipe(params,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['orig_T1', 'SS_T1', 'MD',
+        niu.IdentityInterface(fields=['orig_T2', 'SS_T2', 'MD',
                                       'b0mean', 'native_wm_mask']),
         name='inputnode'
     )
 
-    # init_align_b0mean_on_T1
-    init_align_b0mean_on_T1 = pe.Node(fsl.FLIRT(),
-                                      name="init_align_b0mean_on_T1")
-    init_align_b0mean_on_T1.inputs.dof = 6
+    # init_align_b0mean_on_T2
+    init_align_b0mean_on_T2 = pe.Node(fsl.FLIRT(),
+                                      name="init_align_b0mean_on_T2")
+    init_align_b0mean_on_T2.inputs.dof = 6
 
-    data_preparation_pipe.connect(inputnode, 'orig_T1',
-                                  init_align_b0mean_on_T1, 'reference')
+    data_preparation_pipe.connect(inputnode, 'orig_T2',
+                                  init_align_b0mean_on_T2, 'reference')
     data_preparation_pipe.connect(inputnode, 'b0mean',
-                                  init_align_b0mean_on_T1, 'in_file')
+                                  init_align_b0mean_on_T2, 'in_file')
 
-    # align_b0mean_on_T1
-    align_b0mean_on_T1 = pe.Node(fsl.FLIRT(), name="align_b0mean_on_T1")
-    align_b0mean_on_T1.inputs.dof = 6
-    align_b0mean_on_T1.inputs.cost = "bbr"
+    # align_b0mean_on_T2
+    align_b0mean_on_T2 = pe.Node(fsl.FLIRT(), name="align_b0mean_on_T2")
+    align_b0mean_on_T2.inputs.dof = 6
+    align_b0mean_on_T2.inputs.cost = "bbr"
 
-    data_preparation_pipe.connect(inputnode, 'orig_T1',
-                                  align_b0mean_on_T1, 'reference')
+    data_preparation_pipe.connect(inputnode, 'orig_T2',
+                                  align_b0mean_on_T2, 'reference')
     data_preparation_pipe.connect(inputnode, 'b0mean',
-                                  align_b0mean_on_T1, 'in_file')
+                                  align_b0mean_on_T2, 'in_file')
     data_preparation_pipe.connect(inputnode, 'native_wm_mask',
-                                  align_b0mean_on_T1, 'wm_seg')
-    data_preparation_pipe.connect(init_align_b0mean_on_T1, 'out_matrix_file',
-                                  align_b0mean_on_T1, 'in_matrix_file')
+                                  align_b0mean_on_T2, 'wm_seg')
+    data_preparation_pipe.connect(init_align_b0mean_on_T2, 'out_matrix_file',
+                                  align_b0mean_on_T2, 'in_matrix_file')
 
     # Apply transfo computed on b0 on MD (init)
-    align_MD_on_T1_with_b0 = pe.Node(fsl.ApplyXFM(),
-                                     name="align_MD_on_T1_with_b0")
+    align_MD_on_T2_with_b0 = pe.Node(fsl.ApplyXFM(),
+                                     name="align_MD_on_T2_with_b0")
 
-    data_preparation_pipe.connect(inputnode, 'SS_T1',
-                                  align_MD_on_T1_with_b0, 'reference')
+    data_preparation_pipe.connect(inputnode, 'SS_T2',
+                                  align_MD_on_T2_with_b0, 'reference')
     data_preparation_pipe.connect(inputnode, 'MD',
-                                  align_MD_on_T1_with_b0, 'in_file')
-    data_preparation_pipe.connect(init_align_b0mean_on_T1, 'out_matrix_file',
-                                  align_MD_on_T1_with_b0, 'in_matrix_file')
+                                  align_MD_on_T2_with_b0, 'in_file')
+    data_preparation_pipe.connect(init_align_b0mean_on_T2, 'out_matrix_file',
+                                  align_MD_on_T2_with_b0, 'in_matrix_file')
 
     # Apply transfo computed on b0 on MD (second_flirt with GM)
-    align_better_MD_on_T1_with_b0 = pe.Node(
-        fsl.ApplyXFM(), name="align_better_MD_on_T1_with_b0")
+    align_better_MD_on_T2_with_b0 = pe.Node(
+        fsl.ApplyXFM(), name="align_better_MD_on_T2_with_b0")
 
-    data_preparation_pipe.connect(inputnode, 'SS_T1',
-                                  align_better_MD_on_T1_with_b0, 'reference')
+    data_preparation_pipe.connect(inputnode, 'SS_T2',
+                                  align_better_MD_on_T2_with_b0, 'reference')
     data_preparation_pipe.connect(inputnode, 'MD',
-                                  align_better_MD_on_T1_with_b0, 'in_file')
-    data_preparation_pipe.connect(align_b0mean_on_T1, 'out_matrix_file',
-                                  align_better_MD_on_T1_with_b0,
+                                  align_better_MD_on_T2_with_b0, 'in_file')
+    data_preparation_pipe.connect(align_b0mean_on_T2, 'out_matrix_file',
+                                  align_better_MD_on_T2_with_b0,
                                   'in_matrix_file')
 
     # Creating output node
@@ -1143,10 +1143,10 @@ def create_short_preparation_MD_pipe(params,
             fields=['coreg_MD', 'coreg_better_MD']),
         name='outputnode')
 
-    data_preparation_pipe.connect(align_MD_on_T1_with_b0, 'out_file',
+    data_preparation_pipe.connect(align_MD_on_T2_with_b0, 'out_file',
                                   outputnode, 'coreg_MD')
 
-    data_preparation_pipe.connect(align_better_MD_on_T1_with_b0, 'out_file',
+    data_preparation_pipe.connect(align_better_MD_on_T2_with_b0, 'out_file',
                                   outputnode, 'coreg_better_MD')
 
     return data_preparation_pipe
