@@ -614,7 +614,7 @@ def create_transfo_MD_pipe(params_template, params={},
     # Creating input node
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['SS_T1', 'orig_T1', 'MD', 'b0mean',
+            fields=['SS_T2', 'orig_T2', 'MD', 'b0mean',
                     'threshold_wm', 'lin_transfo_file',
                     'inv_lin_transfo_file']),
         name='inputnode'
@@ -634,10 +634,10 @@ def create_transfo_MD_pipe(params_template, params={},
     data_preparation_pipe = create_short_preparation_MD_pipe(
         params=parse_key(params, "short_preparation_pipe"))
 
-    transfo_pipe.connect(inputnode, 'orig_T1',
-                         data_preparation_pipe, 'inputnode.orig_T1')
-    transfo_pipe.connect(inputnode, 'SS_T1',
-                         data_preparation_pipe, 'inputnode.SS_T1')
+    transfo_pipe.connect(inputnode, 'orig_T2',
+                         data_preparation_pipe, 'inputnode.orig_T2')
+    transfo_pipe.connect(inputnode, 'SS_T2',
+                         data_preparation_pipe, 'inputnode.SS_T2')
     transfo_pipe.connect(inputnode, 'MD',
                          data_preparation_pipe, 'inputnode.MD')
     transfo_pipe.connect(inputnode, 'b0mean',

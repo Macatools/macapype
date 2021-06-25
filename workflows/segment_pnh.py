@@ -298,11 +298,11 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         main_workflow.connect(datasource, ('b0mean', get_first_elem),
                                 transfo_MD_pipe, 'inputnode.b0mean')
 
-        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
-                            transfo_MD_pipe, 'inputnode.SS_T1')
+        main_workflow.connect(segment_pnh_pipe, "debias.t2_debiased_file",
+                            transfo_MD_pipe, 'inputnode.orig_T2')
 
-        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_brain_file",
-                            transfo_MD_pipe, 'inputnode.orig_T1')
+        main_workflow.connect(segment_pnh_pipe, "debias.t2_debiased_brain_file",
+                            transfo_MD_pipe, 'inputnode.SS_T2')
 
         main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
                             transfo_MD_pipe, 'inputnode.lin_transfo_file')
