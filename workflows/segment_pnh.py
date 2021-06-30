@@ -200,9 +200,14 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 params_template=params_template, params=params)
 
     elif "ants" in ssoft:
+        if "template" in ssoft:
+            space="template"
+        else:
+            space="native"
+
         if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template=params_template, params=params)
+                params_template=params_template, params=params, space=space)
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template, params=params,

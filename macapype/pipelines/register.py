@@ -244,7 +244,7 @@ def create_native_iter_reg_pipe(params_template, params={},
 
 ###############################################################################
 def create_register_NMT_pipe(params_template, params={},
-                             name="register_NMT_pipe", NMT_version="v1.3"):
+                             name="register_NMT_pipe", NMT_version="v1.3", space="native"):
     """Description: Register template to anat with the script NMT_subject_align
 
     Processing steps:
@@ -343,6 +343,9 @@ def create_register_NMT_pipe(params_template, params={},
 
     register_NMT_pipe.connect(deoblique, 'out_file',
                               NMT_subject_align, "T1_file")
+
+    if space=="template":
+        return register_NMT_pipe
 
     if NMT_version.split(".")[0] == "v1":
 
