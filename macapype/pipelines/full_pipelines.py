@@ -931,8 +931,113 @@ def create_brain_segment_from_mask_pipe(
     return brain_segment_pipe
 
 
+def create_brain_segment_from_mask_template_pipe(
+        params_template, params={}, name="brain_segment_from_mask_template_pipe",
+        NMT_version="v1.3"):
+    """ Description: Segment T1 (using T2 for bias correction) and a previously
+    computed mask with NMT Atlas and atropos segment.
+
+    Params:
+
+    - masked_correct_bias_pipe (see :class:`create_masked_correct_bias_pipe \
+    <macapype.pipelines.correct_bias.create_masked_correct_bias_pipe>`)
+    - register_NMT_pipe (see :class:`create_register_NMT_pipe \
+    <macapype.pipelines.register.create_register_NMT_pipe>`)
+    - segment_atropos_pipe (see :class:`create_segment_atropos_pipe \
+    <macapype.pipelines.segment.create_segment_atropos_pipe>`)
+
+    Inputs:
+
+        inputnode:
+
+            preproc_T1:
+                preprocessed T1 file name
+
+            preproc_T2:
+                preprocessed T2 file name
+
+            brain_mask:
+                a mask computed for the same T1/T2 images
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+
+        arguments:
+
+            params_template:
+                dictionary of template files
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
+
+    Outputs:
+
+    """
+    # creating pipeline
+    brain_segment_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=['preproc_T1', 'preproc_T2', 'brain_mask', 'indiv_params']),
+        name='inputnode')
+
+    # correcting for bias T1/T2, but this time with a mask
+    masked_correct_bias_pipe = create_masked_correct_bias_pipe(
+        params=parse_key(params, "masked_correct_bias_pipe"))
+
+    brain_segment_pipe.connect(
+        inputnode, 'preproc_T1',
+        masked_correct_bias_pipe, "inputnode.preproc_T1")
+    brain_segment_pipe.connect(
+        inputnode, 'preproc_T2',
+        masked_correct_bias_pipe, "inputnode.preproc_T2")
+    brain_segment_pipe.connect(
+        inputnode, 'brain_mask',
+        masked_correct_bias_pipe, "inputnode.brain_mask")
+
+    # register NMT template, template mask and priors to subject T1
+    register_NMT_pipe = create_register_NMT_pipe(
+        params_template=params_template,
+        params=parse_key(params, "register_NMT_pipe"), NMT_version=NMT_version,
+        space="template")
+
+    brain_segment_pipe.connect(
+        masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
+        register_NMT_pipe, "inputnode.T1")
+    brain_segment_pipe.connect(
+        inputnode, 'indiv_params',
+        register_NMT_pipe, "inputnode.indiv_params")
+
+    # ants Atropos
+
+    # ants Atropos
+    segment_atropos_pipe = create_segment_atropos_pipe(
+        params=parse_key(params, "segment_atropos_template_pipe"))
+
+    segment_atropos_pipe.inputs.inputnode.csf_prior_file = \
+        params_template["template_csf"],
+
+    segment_atropos_pipe.inputs.inputnode.gm_prior_file = \
+        params_template["template_gm"]
+
+    segment_atropos_pipe.inputs.inputnode.wm_prior_file = \
+        params_template["template_wm"]
+
+    brain_segment_pipe.connect(
+        register_NMT_pipe, 'NMT_subject_align.aff_file',
+        segment_atropos_pipe, "inputnode.brain_file")
+
+    return brain_segment_pipe
+
+
 def create_full_ants_subpipes(
-        params_template, params={}, name="full_ants_subpipes", mask_file=None):
+        params_template, params={}, name="full_ants_subpipes", mask_file=None,
+        space="native"):
     """Description: Segment T1 (using T2 for bias correction) .
 
     Params:
@@ -1067,10 +1172,17 @@ def create_full_ants_subpipes(
 
     print("NMT_version:", NMT_version)
 
-    brain_segment_pipe = create_brain_segment_from_mask_pipe(
-        params_template=params_template,
-        params=parse_key(params, "brain_segment_pipe"),
-        NMT_version=NMT_version)
+    if space=="native":
+
+        brain_segment_pipe = create_brain_segment_from_mask_pipe(
+            params_template=params_template,
+            params=parse_key(params, "brain_segment_pipe"),
+            NMT_version=NMT_version)
+    else:
+        brain_segment_pipe = create_brain_segment_from_mask_template_pipe(
+            params_template=params_template,
+            params=parse_key(params, "brain_segment_pipe"),
+            NMT_version=NMT_version)
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      brain_segment_pipe, 'inputnode.preproc_T1')
@@ -1083,9 +1195,24 @@ def create_full_ants_subpipes(
                          "outputnode.brain_mask",
                          brain_segment_pipe, "inputnode.brain_mask")
 
-        seg_pipe.connect(brain_extraction_pipe,
-                         "outputnode.brain_mask",
-                         outputnode, "brain_mask")
+
+        pad_mask = pe.Node(niu.Function(input_names=['cropped_img_file',
+                                                     'orig_img_file',
+                                                     'indiv_crop'],
+                                        output_names=['padded_img_file'],
+                                        function=padding_cropped_img),
+                           name="pad_mask")
+
+
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
+                         pad_mask,"cropped_img_file")
+
+        seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                         pad_mask,"orig_img_file")
+
+        seg_pipe.connect(inputnode, "indiv_params", pad_mask,"indiv_crop")
+
+        seg_pipe.connect(pad_mask,"padded_img_file", outputnode, "brain_mask")
 
     else:
         # TODO this is weird

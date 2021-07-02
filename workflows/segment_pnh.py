@@ -211,7 +211,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template, params=params,
-                mask_file=mask_file)
+                mask_file=mask_file, space=space)
 
     # list of all required outputs
     output_query = {}
@@ -337,13 +337,15 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         datasink.inputs.base_directory = process_dir
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-            datasink, '@segmented_brain_mask')
+        if "brain_extraction_pipe" in params.values():
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.brain_mask',
+                datasink, '@brain_mask')
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.brain_mask',
-            datasink, '@brain_mask')
+        if "brain_segment_pipe" in params.values():
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+                datasink, '@segmented_brain_mask')
 
         if 'spm' in ssoft and not 'native' in ssoft:
 
