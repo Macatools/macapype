@@ -426,6 +426,11 @@ class NMTSubjectAlign2InputSpec(CommandLineInputSpec):
         desc='Align to T1',
         mandatory=True, position=1, argstr="-r %s")
 
+    afni_ext = traits.Enum("tlrc", "orig",
+        exists=True,
+        desc='Afni extension',
+        mandatory=True, position=2,
+        usedefault=True, argstr="-e %s")
 
 class NMTSubjectAlign2OutputSpec(TraitedSpec):
 

@@ -9,13 +9,14 @@ from ..utils.utils_nodes import NodeParams
 
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
+from macapype.nodes.prepare import padding_cropped_img
 
 from .prepare import (create_short_preparation_pipe,
                       create_short_preparation_FLAIR_pipe,
                       create_short_preparation_MD_pipe,
                       create_short_preparation_T1_pipe,
                       create_long_multi_preparation_pipe,
-                      create_long_single_preparation_pipe)
+                      create_long_single_preparation_pipe,)
 
 from .segment import (create_old_segment_pipe,
                       create_native_old_segment_pipe,
@@ -1159,6 +1160,26 @@ def create_full_ants_subpipes(
         seg_pipe.connect(inputnode, 'indiv_params',
                          brain_extraction_pipe, 'inputnode.indiv_params')
 
+
+        print("Padding mask")
+        pad_mask = pe.Node(niu.Function(input_names=['cropped_img_file',
+                                                     'orig_img_file',
+                                                     'indiv_crop'],
+                                        output_names=['padded_img_file'],
+                                        function=padding_cropped_img),
+                           name="pad_mask")
+
+
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
+                         pad_mask,"cropped_img_file")
+
+        seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                         pad_mask,"orig_img_file")
+
+        seg_pipe.connect(inputnode, "indiv_params", pad_mask,"indiv_crop")
+
+        seg_pipe.connect(pad_mask,"padded_img_file", outputnode, "brain_mask")
+
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
         return seg_pipe
@@ -1195,30 +1216,9 @@ def create_full_ants_subpipes(
                          "outputnode.brain_mask",
                          brain_segment_pipe, "inputnode.brain_mask")
 
-
-        pad_mask = pe.Node(niu.Function(input_names=['cropped_img_file',
-                                                     'orig_img_file',
-                                                     'indiv_crop'],
-                                        output_names=['padded_img_file'],
-                                        function=padding_cropped_img),
-                           name="pad_mask")
-
-
-        seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
-                         pad_mask,"cropped_img_file")
-
-        seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
-                         pad_mask,"orig_img_file")
-
-        seg_pipe.connect(inputnode, "indiv_params", pad_mask,"indiv_crop")
-
-        seg_pipe.connect(pad_mask,"padded_img_file", outputnode, "brain_mask")
-
     else:
-        # TODO this is weird
-        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
 
-        seg_pipe.inputs.outputnode.brain_mask = mask_file
+        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
 
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')

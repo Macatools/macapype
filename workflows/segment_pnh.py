@@ -319,13 +319,13 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         datasink_name = os.path.join("derivatives", "macapype_{}".format(soft))
 
-        if "regex_subs" in params.values():
+        if "regex_subs" in params.keys():
             params_regex_subs = params["regex_subs"]
         else:
             params_regex_subs={}
 
 
-        if "subs" in params.values():
+        if "subs" in params.keys():
             params_subs = params["rsubs"]
         else:
             params_subs={}
@@ -337,12 +337,12 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         datasink.inputs.base_directory = process_dir
 
-        if "brain_extraction_pipe" in params.values():
+        if "brain_extraction_pipe" in params.keys():
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.brain_mask',
                 datasink, '@brain_mask')
 
-        if "brain_segment_pipe" in params.values():
+        if "brain_segment_pipe" in params.keys():
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.segmented_brain_mask',
                 datasink, '@segmented_brain_mask')

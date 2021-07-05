@@ -243,7 +243,7 @@ def padding_cropped_img(cropped_img_file,orig_img_file,indiv_crop):
     header_orig=orig_img.get_header()
     affine_orig=orig_img.get_affine()
 
-    new_img_data = np.zeros(shape = data_orig.shape)
+    padded_img_data = np.zeros(shape = data_orig.shape)
     fpath, fname, ext = split_f(cropped_img_file)
 
     # cropped image

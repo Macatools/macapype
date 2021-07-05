@@ -17,7 +17,7 @@ Usage:
 			Increasing this number will increase processing time. (Default = 2)
 
 Example:
-   bash NMT_subject_align -i macaque1+orig -r ../NMT.nii.gz
+   bash NMT_subject_align -i macaque1+${ext} -r ../NMT.nii.gz
 
 Dependencies:
 		AFNI
@@ -70,6 +70,9 @@ while getopts "h:i:r:a:w:" OPT
       w) #workhard optiom
 	  workhard=$OPTARG
 	  ;;
+	  e)
+      ext=$OPTARG
+      ;;
       \?) # getopts issues an error message
 	  Help >&2
 	  exit 1
@@ -153,8 +156,8 @@ echo -rigid_body -giant_move -suffix _rigid -dset2_strip None -dset1_strip None 
 
 align_epi_anat.py -dset1 $dset -dset2 $base -overwrite -dset1to2 -cost lpa \
     -rigid_body -giant_move -suffix _rigid -dset2_strip None -dset1_strip None -master_dset1 $base
-3dAFNItoNIFTI -prefix ${dsetprefix}_rigid.nii.gz ${dsetprefix}_rigid+orig
-rm ${dsetprefix}_rigid+orig*
+3dAFNItoNIFTI -prefix ${dsetprefix}_rigid.nii.gz ${dsetprefix}_rigid+${ext}
+rm ${dsetprefix}_rigid+${ext}*
 
 #QC output of rigid-body alignment
 #@chauffeur_afni -ulay ${dsetprefix}_rigid.nii.gz -prefix qc/${dsetprefix}_rigid -do_clean
@@ -175,8 +178,8 @@ echo -suffix _aff -dset2_strip None -dset1_strip None -master_dset1 $base -cost 
 align_epi_anat.py -dset1 ${dsetprefix}_rigid.nii.gz -dset2 $base -overwrite -dset1to2 \
      -suffix _aff -dset2_strip None -dset1_strip None -master_dset1 $base -cost lpa
 #
-3dAFNItoNIFTI -prefix ${dsetprefix}_affine.nii.gz ${dsetprefix}_rigid_aff+orig
-rm ${dsetprefix}_rigid_aff+orig.*
+3dAFNItoNIFTI -prefix ${dsetprefix}_affine.nii.gz ${dsetprefix}_rigid_aff+${ext}
+rm ${dsetprefix}_rigid_aff+${ext}.*
 
 #QC output of affine alignment
 #@chauffeur_afni -ulay ${dsetprefix}_affine.nii.gz -prefix qc/${dsetprefix}_affine -do_clean
@@ -310,7 +313,7 @@ if [ ! -z "$segset" ]; then
 #  just as a quality control. The two datasets should be very similar
 #3dNwarpApply -overwrite -short -nwarp \
 #   "${dsetprefix}_inv.aff12.1D INV(${dsetprefix}_WARP.nii.gz)" \
-#   -source ${dsetprefix}_warp2std.nii.gz -master ${finalmaster}+orig \
+#   -source ${dsetprefix}_warp2std.nii.gz -master ${finalmaster}+${ext} \
 #   -prefix ${dsetprefix}_iwarpback -overwrite
 
 # zeropad the warp if segmentation doesn't cover the brain and reapply the warp
@@ -318,5 +321,5 @@ if [ ! -z "$segset" ]; then
 # 3dNwarpApply -interp NN \
 #   -nwarp "${dsetprefix}_inv.aff12.1D INV(${dsetprefix}_zp_WARP.nii.gz)" \
 #   -source $segset -master $d-prefix ${dsetprefix}_seg_zp
-# 3drefit -cmap INT_CMAP ${dsetprefix}_seg_zp+orig
-# 3drefit -copytables $segset ${dsetprefix}_seg_zp+orig
+# 3drefit -cmap INT_CMAP ${dsetprefix}_seg_zp+${ext}
+# 3drefit -copytables $segset ${dsetprefix}_seg_zp+${ext}
