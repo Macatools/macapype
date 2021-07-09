@@ -82,7 +82,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                          acquisitions, reconstructions, params_file,
                          indiv_params_file, mask_file, nprocs,
                          wf_name="test_pipeline_single",
-                         deriv=True):
+                         deriv=False, pad=False):
 
     # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
@@ -194,7 +194,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
     if "spm" in ssoft or "spm12" in ssoft:
         if 'native' in ssoft:
             segment_pnh_pipe = create_full_native_spm_subpipes(
-                params_template=params_template, params=params)
+                params_template=params_template, params=params, pad=pad)
         else:
             segment_pnh_pipe = create_full_spm_subpipes(
                 params_template=params_template, params=params)
@@ -211,7 +211,7 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template, params=params,
-                mask_file=mask_file, space=space)
+                mask_file=mask_file, space=space, pad=pad)
 
     # list of all required outputs
     output_query = {}
@@ -303,8 +303,8 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
         main_workflow.connect(datasource, ('b0mean', get_first_elem),
                                 transfo_MD_pipe, 'inputnode.b0mean')
 
-        main_workflow.connect(segment_pnh_pipe, "debias.t2_debiased_file",
-                            transfo_MD_pipe, 'inputnode.orig_T2')
+        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
+                            transfo_MD_pipe, 'inputnode.orig_T1')
 
         main_workflow.connect(segment_pnh_pipe, "debias.t2_debiased_brain_file",
                             transfo_MD_pipe, 'inputnode.SS_T2')
@@ -337,15 +337,19 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         datasink.inputs.base_directory = process_dir
 
-        if "brain_extraction_pipe" in params.keys():
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.brain_mask',
-                datasink, '@brain_mask')
+        if "brain_extraction_pipe" in params.keys()\
+            or 'debias' in params.keys():
 
-        if "brain_segment_pipe" in params.keys():
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-                datasink, '@segmented_brain_mask')
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.brain_mask',
+                    datasink, '@brain_mask')
+
+        if "brain_segment_pipe" in params.keys() \
+            or 'native_old_segment_pipe' in params.keys() :
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+                    datasink, '@segmented_brain_mask')
 
         if 'spm' in ssoft and not 'native' in ssoft:
 
@@ -404,6 +408,9 @@ def main():
     parser.add_argument("-deriv", dest="deriv", action='store_true',
                         help="output derivatives in BIDS orig directory",
                         required=False)
+    parser.add_argument("-pad", dest="pad", action='store_true',
+                        help="padding mask and seg_mask",
+                        required=False)
 
     args = parser.parse_args()
 
@@ -421,7 +428,8 @@ def main():
         indiv_params_file=args.indiv_params_file,
         mask_file=args.mask_file,
         nprocs=args.nprocs,
-        deriv=args.deriv)
+        deriv=args.deriv,
+        pad=args.pad)
 
 if __name__ == '__main__':
     main()

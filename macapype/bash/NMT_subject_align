@@ -50,7 +50,7 @@ HELP
 }
 segset=""
 workhard=2
-while getopts "h:i:r:a:w:" OPT
+while getopts "h:i:r:a:w:e:" OPT
   do
   case $OPT in
 

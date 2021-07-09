@@ -2,12 +2,14 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
+
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import AtroposN4, BinaryFillHoles, merge_masks
+from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
+                             split_indexed_mask)
 
-from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list,
-                          split_indexed_mask)
+from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list)
+
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
 
@@ -116,7 +118,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     return segment_pipe
 
 
-def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
+def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
+                                space="native"):
     """
     Description: Segmentation with ANTS atropos script
 
@@ -223,8 +226,6 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
 ###############################################################################
 # old segment, originally from SPM8
 ###############################################################################
-
-
 def create_old_segment_pipe(params_template, params={},
                             name="old_segment_pipe"):
     """

@@ -226,99 +226,73 @@ def read_cropbox(cropbox_file):
 
     return crop_list
 
-def padding_cropped_img(cropped_img_file,orig_img_file,indiv_crop):
+
+def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
 
     import os
 
     import nibabel as nib
     import numpy as np
 
-
     from nipype.utils.filemanip import split_filename as split_f
 
     # orig image
-    orig_img =  nib.load(orig_img_file)
+    orig_img = nib.load(orig_img_file)
 
-    data_orig =orig_img.get_data()
-    header_orig=orig_img.get_header()
-    affine_orig=orig_img.get_affine()
+    data_orig = orig_img.get_data()
+    header_orig = orig_img.get_header()
+    affine_orig = orig_img.get_affine()
 
-    padded_img_data = np.zeros(shape = data_orig.shape)
+    padded_img_data = np.zeros(shape=data_orig.shape)
     fpath, fname, ext = split_f(cropped_img_file)
+
+    print("Padded img shape:", padded_img_data.shape)
 
     # cropped image
     cropped_img = nib.load(cropped_img_file)
     data_cropped = cropped_img.get_data()
 
+    print("Cropped img shape:", data_cropped.shape)
 
-    crop=indiv_crop['crop']['args'].split()
-    xmin=int(crop[0])
-    xmax=xmin+int(crop[1])
+    crop = indiv_crop['crop']['args'].split()
+    xmin = int(crop[0])
+    xmax = xmin + int(crop[1])
 
-    ymin=int(crop[2])
-    ymax=ymin+int(crop[3])
+    ymin = int(crop[2])
+    ymax = ymin + int(crop[3])
 
-    zmin=int(crop[4])
-    zmax=zmin+int(crop[5])
+    zmin = int(crop[4])
+    zmax = zmin + int(crop[5])
 
-    padded_img_data[xmin:xmax,ymin:ymax,zmin:zmax]=data_cropped
+    padded_img_data[xmin:xmax, ymin:ymax, zmin:zmax] = data_cropped
 
-    padded_img_file = os.path.abspath(fname+ "_padded"+ ext)
-    img_padded_res = nib.Nifti1Image(padded_img_data,affine= affine_orig, header=header_orig)
-    nib.save(img_padded_res,padded_img_file)
+    padded_img_file = os.path.abspath(fname + "_padded" + ext)
+    img_padded_res = nib.Nifti1Image(padded_img_data, affine=affine_orig,
+                                     header=header_orig)
+    nib.save(img_padded_res, padded_img_file)
 
-    #for i in range(img.shape[0]):
-        #for j in range(img.shape[1]):
-            #for k in range(img.shape[2]):
-                #if(i<xmin or i>(xmin+xdelta)):
-                    #img[i][j][k]=0
-                #if(j<ymin or j>(ymin+ydelta)):
-                    #img[i][j][k]=0
-                #if(k<zmin or k>(zmin+zdelta)):
-                    #img[i][j][k]=0
     return padded_img_file
+
 
 if __name__ == '__main__':
 
-#-------------Test Main Clem---------------#
-    #8034
     data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/results/ucdavis"
 
-    orig_file = os.path.join(data_path, "sub-032139/ses-001/anat/sub-032139_ses-001_run-1_T1w.nii.gz")
+    orig_file = os.path.join(data_path, "sub-032139/ses-001/anat/\
+                             sub-032139_ses-001_run-1_T1w.nii.gz")
 
-    mask_file = os.path.join(data_path, "derivatives/macapype_ANTS/sub-032139/ses-001/anat/sub-032139_ses-001_space-orig_desc-brain_mask.nii.gz")
+    mask_file = os.path.join(
+        data_path,
+        "derivatives/macapype_ANTS/sub-032139/ses-001/anat/\
+        sub-032139_ses-001_space-orig_desc-brain_mask.nii.gz")
 
-    indiv_file = os.path.join("/hpc/meca/users/essamlali.a/Packages", "indiv_params_segment_macaque_ants_based_crop.json")
-    indiv=json.load(open(indiv_file ))
+    indiv_file = os.path.join(
+        "/hpc/meca/users/essamlali.a/Packages",
+        "indiv_params_segment_macaque_ants_based_crop.json")
+    indiv = json.load(open(indiv_file))
 
-    indiv_crop=indiv['sub-032139']['ses-001']
+    indiv_crop = indiv['sub-032139']['ses-001']
 
-    res=padding_cropped_img(mask_file,orig_file,indiv_crop)
+    res = padding_cropped_img(mask_file, orig_file, indiv_crop)
 
     print(res)
-
-    ##Hermione
-    #Hermione_orig =  nib.load("../a_tester/avg_sub-Hermione_ses-01_run-02_T1w.nii.gz")
-    #Hermione_img_orig=Hermione_orig.get_data()
-    #Hermione_header=Hermione_orig.get_header()
-    #Hermione_affine=Hermione_orig.get_affine()
-    #Hermione_mask=nib.load("../a_tester/sub-Hermione_ses-01_space-orig_desc-brain_mask.nii.gz")
-    #Hermione_img_mask=Hermione_mask.get_data()
-
-    #Hermione_indiv_crop=indiv['sub-Hermione']['ses-01']
-    #Hermione_res=padding_cropped_img(Hermione_img_mask,Hermione_img_orig,Hermione_indiv_crop)
-    #Hermione_padded_res = nib.Nifti1Image(Hermione_res,affine= Hermione_affine,header=Hermione_header)
-    #nib.save(Hermione_padded_res,'Hermione_padded_res.nii.gz')
-
-    ##Marmot
-    #Marmot_orig =  nib.load("../a_tester/sub-Marmot_ses-01_run-01_T1w.nii.gz")
-    #Marmot_img_orig= Marmot_orig.get_data()
-    #Marmot_header= Marmot_orig.get_header()
-    #Marmot_affine= Marmot_orig.get_affine()
-    #Marmot_mask=nib.load("../a_tester/sub-Marmot_ses-01_space-orig_desc-brain_mask.nii.gz")
-    #Marmot_img_mask= Marmot_mask.get_data()
-
-    #Marmot_indiv_crop=indiv['sub-Marmot']['ses-01']
-    #Marmot_res=padding_cropped_img(Marmot_img_mask, Marmot_img_orig, Marmot_indiv_crop)
-    #Marmot_padded_res = nib.Nifti1Image(Marmot_res,affine= Marmot_affine,header= Marmot_header)
-    #nib.save( Marmot_padded_res,'Marmot_padded_res.nii.gz')
