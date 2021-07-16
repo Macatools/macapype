@@ -304,6 +304,8 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
 
     vox = traits.Int(desc="vox",  argstr="-vox %d")
 
+    args = traits.String(desc="args", position=-1, argstr=" %s",
+                         mandatory=False)
 
 class AtlasBREXOutputSpec(TraitedSpec):
 

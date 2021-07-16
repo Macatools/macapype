@@ -955,14 +955,12 @@ def create_short_preparation_T1_pipe(params,
 ###############################################################################
 def create_short_preparation_FLAIR_pipe(params,
                                         name="short_preparation_FLAIR_pipe"):
-    """Description: apply transfo on FLAIR and MD (no reorient so far)
+    """Description: apply transfo on FLAIR (no reorient so far)
 
     Processing steps;
 
     - coreg FLAIR on T1
-    - init coreg FA on SS_T1
-    - coreg FA on T1 using bbr and native_wm
-    - apply coreg transfo on MD
+    - apply coreg on FLAIR
 
     Params:
 
@@ -1105,7 +1103,7 @@ def create_short_preparation_MD_pipe(params,
     align_b0mean_on_T2.inputs.dof = 6
     align_b0mean_on_T2.inputs.cost = "bbr"
 
-    data_preparation_pipe.connect(inputnode, 'orig_T2',
+    data_preparation_pipe.connect(inputnode, 'SS_T2',
                                   align_b0mean_on_T2, 'reference')
     data_preparation_pipe.connect(inputnode, 'b0mean',
                                   align_b0mean_on_T2, 'in_file')

@@ -9,13 +9,14 @@ from ..utils.utils_nodes import NodeParams
 
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
+from macapype.nodes.prepare import padding_cropped_img
 
 from .prepare import (create_short_preparation_pipe,
                       create_short_preparation_FLAIR_pipe,
                       create_short_preparation_MD_pipe,
                       create_short_preparation_T1_pipe,
                       create_long_multi_preparation_pipe,
-                      create_long_single_preparation_pipe)
+                      create_long_single_preparation_pipe,)
 
 from .segment import (create_old_segment_pipe,
                       create_native_old_segment_pipe,
@@ -26,7 +27,8 @@ from .segment import (create_old_segment_pipe,
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
 
-from .register import create_register_NMT_pipe, create_native_iter_reg_pipe
+from .register import (create_register_NMT_pipe, create_native_iter_reg_pipe,
+                       create_reg_seg_pipe)
 
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
@@ -235,7 +237,9 @@ def create_full_spm_subpipes(
 # -soft SPM_native or SPM_T1_native
 ###############################################################################
 def create_full_native_spm_subpipes(
-        params_template, params={}, name='full_native_spm_subpipes'):
+        params_template, params={}, name='full_native_spm_subpipes',
+        pad=False):
+
     """ Description: SPM based segmentation pipeline from T1w and T2w images
     in template space
 
@@ -347,8 +351,31 @@ def create_full_native_spm_subpipes(
     else:
         debias.inputs.bet = 1
 
-    seg_pipe.connect(debias, 'debiased_mask_file',
-                     outputnode, 'brain_mask')
+    if pad:
+
+        print("Padding mask in native space")
+
+        pad_mask = pe.Node(
+            niu.Function(
+                input_names=['cropped_img_file', 'orig_img_file',
+                             'indiv_crop'],
+                output_names=['padded_img_file'],
+                function=padding_cropped_img),
+            name="pad_mask")
+
+        seg_pipe.connect(debias, 'debiased_mask_file',
+                         pad_mask, "cropped_img_file")
+
+        seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                         pad_mask, "orig_img_file")
+
+        seg_pipe.connect(inputnode, "indiv_params", pad_mask, "indiv_crop")
+
+        seg_pipe.connect(pad_mask, "padded_img_file",
+                         outputnode, "brain_mask")
+    else:
+        seg_pipe.connect(debias, 'debiased_mask_file',
+                         outputnode, "brain_mask")
 
     if "native_iter_reg_pipe" in params.keys():
         native_reg_pipe = create_native_iter_reg_pipe(
@@ -408,8 +435,35 @@ def create_full_native_spm_subpipes(
         seg_pipe.connect(inputnode, 'indiv_params',
                          mask_from_seg_pipe, 'inputnode.indiv_params')
 
-        seg_pipe.connect(mask_from_seg_pipe, 'merge_indexed_mask.indexed_mask',
-                         outputnode, 'segmented_brain_mask')
+        if pad:
+
+            print("Padding seg mask in native space")
+
+            pad_seg_mask = pe.Node(
+                niu.Function(
+                    input_names=['cropped_img_file', 'orig_img_file',
+                                 'indiv_crop'],
+                    output_names=['padded_img_file'],
+                    function=padding_cropped_img),
+                name="pad_seg_mask")
+
+            seg_pipe.connect(mask_from_seg_pipe,
+                             'merge_indexed_mask.indexed_mask',
+                             pad_seg_mask, "cropped_img_file")
+
+            seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                             pad_seg_mask, "orig_img_file")
+
+            seg_pipe.connect(inputnode, "indiv_params",
+                             pad_seg_mask, "indiv_crop")
+
+            seg_pipe.connect(pad_seg_mask, "padded_img_file",
+                             outputnode, "segmented_brain_mask")
+
+        else:
+            seg_pipe.connect(mask_from_seg_pipe,
+                             'merge_indexed_mask.indexed_mask',
+                             outputnode, 'segmented_brain_mask')
 
     return seg_pipe
 
@@ -615,7 +669,7 @@ def create_transfo_MD_pipe(params_template, params={},
     # Creating input node
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['SS_T2', 'orig_T2', 'MD', 'b0mean',
+            fields=['orig_T1', 'SS_T2', 'MD', 'b0mean',
                     'threshold_wm', 'lin_transfo_file',
                     'inv_lin_transfo_file']),
         name='inputnode'
@@ -635,8 +689,6 @@ def create_transfo_MD_pipe(params_template, params={},
     data_preparation_pipe = create_short_preparation_MD_pipe(
         params=parse_key(params, "short_preparation_pipe"))
 
-    transfo_pipe.connect(inputnode, 'orig_T2',
-                         data_preparation_pipe, 'inputnode.orig_T2')
     transfo_pipe.connect(inputnode, 'SS_T2',
                          data_preparation_pipe, 'inputnode.SS_T2')
     transfo_pipe.connect(inputnode, 'MD',
@@ -821,7 +873,7 @@ def create_brain_extraction_pipe(params_template, params={},
 
 def create_brain_segment_from_mask_pipe(
         params_template, params={}, name="brain_segment_from_mask_pipe",
-        NMT_version="v1.3"):
+        NMT_version="v1.3", space="native"):
     """ Description: Segment T1 (using T2 for bias correction) and a previously
     computed mask with NMT Atlas and atropos segment.
 
@@ -928,11 +980,56 @@ def create_brain_segment_from_mask_pipe(
         register_NMT_pipe, 'norm_intensity.output_image',
         segment_atropos_pipe, "inputnode.brain_file")
 
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file", "threshold_gm", "threshold_wm",
+                    "threshold_csf"]),
+        name='outputnode')
+
+    if space == 'native':
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.segmented_file',
+                                   outputnode, 'segmented_file')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_gm',
+                                   outputnode, 'threshold_gm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_wm',
+                                   outputnode, 'threshold_wm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_csf',
+                                   outputnode, 'threshold_csf')
+
+    else:
+        reg_seg_pipe = create_reg_seg_pipe()
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.segmented_file', reg_seg_pipe,
+                                   'inputnode.native_segmented_file')
+
+        brain_segment_pipe.connect(register_NMT_pipe,
+                                   'NMT_subject_align.transfo_file',
+                                   reg_seg_pipe, 'inputnode.transfo_file')
+
+        reg_seg_pipe.inputs.inputnode.ref_image = \
+            params_template['template_head']
+
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_seg',
+                                   outputnode, 'segmented_file')
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_gm',
+                                   outputnode, 'threshold_gm')
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_wm',
+                                   outputnode, 'threshold_wm')
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_csf',
+                                   outputnode, 'threshold_csf')
+
     return brain_segment_pipe
 
 
 def create_full_ants_subpipes(
-        params_template, params={}, name="full_ants_subpipes", mask_file=None):
+        params_template, params={}, name="full_ants_subpipes", mask_file=None,
+        space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
 
     Params:
@@ -1054,6 +1151,32 @@ def create_full_ants_subpipes(
         seg_pipe.connect(inputnode, 'indiv_params',
                          brain_extraction_pipe, 'inputnode.indiv_params')
 
+        if pad and space == "native":
+
+            print("Padding mask in native space")
+
+            pad_mask = pe.Node(
+                niu.Function(
+                    input_names=['cropped_img_file', 'orig_img_file',
+                                 'indiv_crop'],
+                    output_names=['padded_img_file'],
+                    function=padding_cropped_img),
+                name="pad_mask")
+
+            seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
+                             pad_mask, "cropped_img_file")
+
+            seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                             pad_mask, "orig_img_file")
+
+            seg_pipe.connect(inputnode, "indiv_params", pad_mask, "indiv_crop")
+
+            seg_pipe.connect(pad_mask, "padded_img_file",
+                             outputnode, "brain_mask")
+        else:
+            seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
+                             outputnode, "brain_mask")
+
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
         return seg_pipe
@@ -1070,7 +1193,7 @@ def create_full_ants_subpipes(
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
         params_template=params_template,
         params=parse_key(params, "brain_segment_pipe"),
-        NMT_version=NMT_version)
+        NMT_version=NMT_version, space=space)
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      brain_segment_pipe, 'inputnode.preproc_T1')
@@ -1083,39 +1206,37 @@ def create_full_ants_subpipes(
                          "outputnode.brain_mask",
                          brain_segment_pipe, "inputnode.brain_mask")
 
-        seg_pipe.connect(brain_extraction_pipe,
-                         "outputnode.brain_mask",
-                         outputnode, "brain_mask")
-
     else:
-        # TODO this is weird
-        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
 
-        seg_pipe.inputs.outputnode.brain_mask = mask_file
+        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
 
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
-    if "mask_from_seg_pipe" in params.keys():
-        mask_from_seg_pipe = create_mask_from_seg_pipe(
-            params=parse_key(params, "mask_from_seg_pipe"))
+    if pad and space == "native":
 
-        seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.outputnode.threshold_csf',
-                         mask_from_seg_pipe, 'inputnode.mask_csf')
+        print("Padding seg mask in native space")
 
-        seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.outputnode.threshold_wm',
-                         mask_from_seg_pipe, 'inputnode.mask_wm')
+        pad_seg_mask = pe.Node(
+            niu.Function(
+                input_names=['cropped_img_file', 'orig_img_file',
+                             'indiv_crop'],
+                output_names=['padded_img_file'],
+                function=padding_cropped_img),
+            name="pad_seg_mask")
 
-        seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.outputnode.threshold_gm',
-                         mask_from_seg_pipe, 'inputnode.mask_gm')
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
+                         pad_seg_mask, "cropped_img_file")
 
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         mask_from_seg_pipe, 'inputnode.indiv_params')
+        seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                         pad_seg_mask, "orig_img_file")
 
-        seg_pipe.connect(mask_from_seg_pipe, 'merge_indexed_mask.indexed_mask',
+        seg_pipe.connect(inputnode, "indiv_params", pad_seg_mask, "indiv_crop")
+
+        seg_pipe.connect(pad_seg_mask, "padded_img_file",
+                         outputnode, "segmented_brain_mask")
+    else:
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
                          outputnode, 'segmented_brain_mask')
 
     if 'nii_to_mesh_pipe' in params.keys():
@@ -1305,9 +1426,9 @@ def create_brain_segment_from_mask_T1_pipe(
     brain_segment_pipe.connect(
         register_NMT_pipe, 'norm_intensity.output_image',
         segment_atropos_pipe, "inputnode.brain_file")
-    brain_segment_pipe.connect(
-        register_NMT_pipe, 'align_seg_csf.out_file', segment_atropos_pipe,
-        "inputnode.csf_prior_file")
+    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
+                               segment_atropos_pipe,
+                               "inputnode.csf_prior_file")
     brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
                                segment_atropos_pipe, "inputnode.gm_prior_file")
     brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
@@ -1316,8 +1437,106 @@ def create_brain_segment_from_mask_T1_pipe(
     return brain_segment_pipe
 
 
+def create_brain_segment_from_mask_T1_template_pipe(
+        params_template, params={},
+        name="brain_segment_from_mask_T1_template_pipe"):
+    """
+    Description: Segment T1 from a previously computed mask.
+
+    Params:
+
+    - register_NMT_pipe (see :class:`create_register_NMT_pipe \
+    <macapype.pipelines.register.create_register_NMT_pipe>`)
+    - segment_atropos_pipe (see :class:`create_segment_atropos_pipe \
+    <macapype.pipelines.segment.create_segment_atropos_pipe>`)
+
+    Inputs:
+
+        inputnode:
+
+            preproc_T1:
+                preprocessed T1 file name
+
+            brain_mask:
+                a mask computed for the same T1/T2 images
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+
+        arguments:
+
+            params_template:
+                dictionary of template files
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
+
+    Outputs:
+
+    """
+    # creating pipeline
+    brain_segment_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=['preproc_T1', 'brain_mask', 'indiv_params']),
+        name='inputnode')
+
+    # mask T1 using brain mask and perform N4 bias correction
+
+    # restore_mask_T1
+    restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
+
+    brain_segment_pipe.connect(inputnode, 'preproc_T1',
+                               restore_mask_T1, 'in_file')
+    brain_segment_pipe.connect(inputnode, 'brain_mask',
+                               restore_mask_T1, 'mask_file')
+
+    NMT_version = "v1.3"
+
+    print("NMT_version:", NMT_version)
+
+    # register NMT template, template mask and priors to subject T1
+    register_NMT_pipe = create_register_NMT_pipe(
+        params_template=params_template,
+        params=parse_key(params, "register_NMT_pipe"), NMT_version=NMT_version,
+        space="template")
+
+    brain_segment_pipe.connect(
+        restore_mask_T1, 'out_file',
+        register_NMT_pipe, "inputnode.T1")
+    brain_segment_pipe.connect(
+        inputnode, 'indiv_params',
+        register_NMT_pipe, "inputnode.indiv_params")
+
+    # ants Atropos
+    segment_atropos_pipe = create_segment_atropos_pipe(
+        params=parse_key(params, "segment_atropos_template_pipe"))
+
+    brain_segment_pipe.connect(
+        register_NMT_pipe, 'NMT_subject_align.aff_file',
+        segment_atropos_pipe, "inputnode.brain_file")
+
+    segment_atropos_pipe.inputs.inputnode.csf_prior_file = \
+        params_template["template_csf"],
+
+    segment_atropos_pipe.inputs.inputnode.gm_prior_file = \
+        params_template["template_gm"]
+
+    segment_atropos_pipe.inputs.inputnode.wm_prior_file = \
+        params_template["template_wm"]
+
+    return brain_segment_pipe
+
+
 def create_full_T1_ants_subpipes(params_template, params={},
-                                 name="full_T1_ants_subpipes"):
+                                 name="full_T1_ants_subpipes", space="native"):
+
     """Description: Full pipeline to segment T1 (with no T2).
 
     Params:
@@ -1405,17 +1624,33 @@ def create_full_T1_ants_subpipes(params_template, params={},
     if "brain_segment_T1_pipe" not in params.keys():
         return seg_pipe
 
-    brain_segment_pipe = create_brain_segment_from_mask_T1_pipe(
-        params_template=params_template,
-        params=parse_key(params, "brain_segment_T1_pipe"))
+    if space == "native":
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     brain_segment_pipe, 'inputnode.preproc_T1')
-    seg_pipe.connect(brain_extraction_pipe,
-                     "extract_T1_pipe.smooth_mask.out_file",
-                     brain_segment_pipe, "inputnode.brain_mask")
-    seg_pipe.connect(inputnode, 'indiv_params',
-                     brain_segment_pipe, 'inputnode.indiv_params')
+        brain_segment_pipe = create_brain_segment_from_mask_T1_pipe(
+            params_template=params_template,
+            params=parse_key(params, "brain_segment_T1_pipe"))
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         brain_segment_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_T1_pipe.smooth_mask.out_file",
+                         brain_segment_pipe, "inputnode.brain_mask")
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         brain_segment_pipe, 'inputnode.indiv_params')
+
+    elif space == "template":
+
+        brain_segment_pipe = create_brain_segment_from_mask_T1_template_pipe(
+            params_template=params_template,
+            params=parse_key(params, "brain_segment_T1_template_pipe"))
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         brain_segment_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_T1_pipe.smooth_mask.out_file",
+                         brain_segment_pipe, "inputnode.brain_mask")
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         brain_segment_pipe, 'inputnode.indiv_params')
 
     if "mask_from_seg_pipe" in params.keys():
         mask_from_seg_pipe = create_mask_from_seg_pipe(

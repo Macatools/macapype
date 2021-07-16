@@ -229,6 +229,7 @@ class AtroposN4(CommandLine):
         return outputs
 
 
+###############################################################################
 def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
                 index_gm=2, index_wm=3):
 
@@ -278,6 +279,40 @@ def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
     nib.save(indexed_mask, indexed_mask_file)
 
     return indexed_mask_file
+
+
+def split_indexed_mask(nii_file, background_val=0):
+
+    import os
+    import nibabel as nib
+    import numpy as np
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    nii = nib.load(nii_file)
+
+    nii_data = nii.get_data()
+
+    list_split_files = []
+
+    for index in np.unique(nii_data):
+        if index == background_val:
+            continue
+
+        split_file = os.path.abspath("{}_{}{}".format(fname, index, ext))
+
+        split_data = np.zeros(shape=nii_data.shape)
+        split_data[nii_data == index] = 1
+
+        nib.save(nib.Nifti1Image(split_data,
+                                 header=nii.header,
+                                 affine=nii.affine),
+                 split_file)
+
+        list_split_files.append(split_file)
+
+    return list_split_files
 
 
 if __name__ == '__main__':

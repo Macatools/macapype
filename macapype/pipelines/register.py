@@ -6,6 +6,7 @@ import nipype.interfaces.afni as afni
 import nipype.interfaces.ants as ants
 
 from ..utils.misc import get_elem
+from ..nodes.segment import split_indexed_mask
 from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
@@ -447,3 +448,51 @@ def create_register_NMT_pipe(params_template, params={},
                                   align_seg, "in_matrix")  # -1Dmatrix_apply
 
     return register_NMT_pipe
+
+
+def create_reg_seg_pipe(name="reg_seg_pipe"):
+
+    reg_seg_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['native_segmented_file',
+                                      'transfo_file', 'ref_image']),
+        name='inputnode')
+
+    # align_seg
+    align_seg = pe.Node(
+        afni.Allineate(), name="align_seg", iterfield=['in_file'])
+    align_seg.inputs.final_interpolation = "nearestneighbour"
+    align_seg.inputs.overwrite = True
+    align_seg.inputs.outputtype = "NIFTI_GZ"
+
+    reg_seg_pipe.connect(inputnode, 'native_segmented_file',
+                         align_seg, "in_file")
+    reg_seg_pipe.connect(inputnode, 'ref_image', align_seg, "reference")
+    reg_seg_pipe.connect(inputnode, 'transfo_file', align_seg, "in_matrix")
+
+    # align_gm
+    split_seg_mask = pe.Node(
+        niu.Function(input_names=['nii_file'],
+                     output_names=['list_binary_masks'],
+                     function=split_indexed_mask),
+        name="split_seg_mask")
+
+    reg_seg_pipe.connect(align_seg, 'out_file',
+                         split_seg_mask, "nii_file")
+
+    outputnode = pe.Node(
+        niu.IdentityInterface(fields=['norm_seg', 'norm_gm',
+                                      'norm_wm', 'norm_csf']),
+        name='outputnode')
+
+    reg_seg_pipe.connect(align_seg, 'out_file', outputnode, "norm_seg")
+    reg_seg_pipe.connect(split_seg_mask, ('out_file', get_elem, 0),
+                         outputnode, "norm_gm")
+    reg_seg_pipe.connect(split_seg_mask, ('out_file', get_elem, 1),
+                         outputnode, "norm_wm")
+    reg_seg_pipe.connect(split_seg_mask, ('out_file', get_elem, 2),
+                         outputnode, "norm_csf")
+
+    return reg_seg_pipe

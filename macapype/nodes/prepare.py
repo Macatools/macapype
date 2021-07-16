@@ -3,6 +3,7 @@ copied from https://stackoverrun.com/fr/q/6768689
 seems was never wrapped in nipype
 """
 import os
+import json
 
 from nipype.interfaces.fsl.base import FSLCommand, FSLCommandInputSpec
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
@@ -224,3 +225,74 @@ def read_cropbox(cropbox_file):
             crop_list.append(tuple(map(int, map(float, line.strip().split()))))
 
     return crop_list
+
+
+def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
+
+    import os
+
+    import nibabel as nib
+    import numpy as np
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    # orig image
+    orig_img = nib.load(orig_img_file)
+
+    data_orig = orig_img.get_data()
+    header_orig = orig_img.get_header()
+    affine_orig = orig_img.get_affine()
+
+    padded_img_data = np.zeros(shape=data_orig.shape)
+    fpath, fname, ext = split_f(cropped_img_file)
+
+    print("Padded img shape:", padded_img_data.shape)
+
+    # cropped image
+    cropped_img = nib.load(cropped_img_file)
+    data_cropped = cropped_img.get_data()
+
+    print("Cropped img shape:", data_cropped.shape)
+
+    crop = indiv_crop['crop']['args'].split()
+    xmin = int(crop[0])
+    xmax = xmin + int(crop[1])
+
+    ymin = int(crop[2])
+    ymax = ymin + int(crop[3])
+
+    zmin = int(crop[4])
+    zmax = zmin + int(crop[5])
+
+    padded_img_data[xmin:xmax, ymin:ymax, zmin:zmax] = data_cropped
+
+    padded_img_file = os.path.abspath(fname + "_padded" + ext)
+    img_padded_res = nib.Nifti1Image(padded_img_data, affine=affine_orig,
+                                     header=header_orig)
+    nib.save(img_padded_res, padded_img_file)
+
+    return padded_img_file
+
+
+if __name__ == '__main__':
+
+    data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/results/ucdavis"
+
+    orig_file = os.path.join(data_path, "sub-032139/ses-001/anat/\
+                             sub-032139_ses-001_run-1_T1w.nii.gz")
+
+    mask_file = os.path.join(
+        data_path,
+        "derivatives/macapype_ANTS/sub-032139/ses-001/anat/\
+        sub-032139_ses-001_space-orig_desc-brain_mask.nii.gz")
+
+    indiv_file = os.path.join(
+        "/hpc/meca/users/essamlali.a/Packages",
+        "indiv_params_segment_macaque_ants_based_crop.json")
+    indiv = json.load(open(indiv_file))
+
+    indiv_crop = indiv['sub-032139']['ses-001']
+
+    res = padding_cropped_img(mask_file, orig_file, indiv_crop)
+
+    print(res)
