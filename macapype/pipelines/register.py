@@ -330,12 +330,16 @@ def create_register_NMT_pipe(params_template, params={},
 
     if NMT_version == "v1.2":
         # align subj to nmt
-        NMT_subject_align = pe.Node(NMTSubjectAlign(),
-                                    name='NMT_subject_align')
+        NMT_subject_align = NodeParams(
+            NMTSubjectAlign(), params=parse_key(params, "NMT_subject_align"),
+            name='NMT_subject_align')
+
     elif NMT_version == "v1.3" or NMT_version == "v2.0":
         # align subj to nmt
-        NMT_subject_align = pe.Node(NMTSubjectAlign2(),
-                                    name='NMT_subject_align')
+        NMT_subject_align = NodeParams(
+            NMTSubjectAlign2(), params=parse_key(params, "NMT_subject_align"),
+            name='NMT_subject_align')
+
     else:
         print("NMT_version {} is not implemented".format(NMT_version))
         exit()
