@@ -307,6 +307,7 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
     args = traits.String(desc="args", position=-1, argstr=" %s",
                          mandatory=False)
 
+
 class AtlasBREXOutputSpec(TraitedSpec):
 
     brain_file = File(
