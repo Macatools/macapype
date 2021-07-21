@@ -9,6 +9,8 @@
     "-t1-brain_thresh_fillh_indexed_mask": "_desc-brain_dseg",
 
     "T1w_roi_noise_corrected_masked_corrected_SegmentationPosteriors01_thresh_fillh_indexed_mask": "space-orig_desc-brain_dseg",
+    "SS_thresh_fillh_indexed_mask":"desc-brain_dseg",
+    "T1w_roi_noise_corrected_maths_masked_corrected_Segmentation":"desc-brain_dseg",
 
     "T1w_roi_noise_corrected_maths_brain_bin_bin": "space-orig_desc-brain_mask",
     "T1w_roi_noise_corrected_maths_masked_corrected_SegmentationPosteriors01_thresh_fillh_indexed_mask": "space-orig_desc-brain_dseg",
