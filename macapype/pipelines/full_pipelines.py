@@ -1193,7 +1193,7 @@ def create_brain_extraction_T1_pipe(params_template, params={},
     # brain extraction (with atlasbrex)
     extract_T1_pipe = create_extract_T1_pipe(
         params_template=params_template,
-        params=parse_key(params, "extract_T1_pipe"))
+        params=parse_key(params, "extract_pipe"))
 
     brain_extraction_pipe.connect(inputnode, "preproc_T1",
                                   extract_T1_pipe, "inputnode.restore_T1")
