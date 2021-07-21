@@ -60,7 +60,6 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
-    create_full_native_spm_subpipes,
     create_full_ants_subpipes,
     create_full_T1_ants_subpipes,
     create_transfo_FLAIR_pipe,
@@ -193,11 +192,13 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
     if "spm" in ssoft or "spm12" in ssoft:
         if 'native' in ssoft:
-            segment_pnh_pipe = create_full_native_spm_subpipes(
-                params_template=params_template, params=params, pad=pad)
+            space='native'
         else:
-            segment_pnh_pipe = create_full_spm_subpipes(
-                params_template=params_template, params=params)
+            space='template'
+
+        segment_pnh_pipe = create_full_spm_subpipes(
+            params_template=params_template, params=params, pad=pad,
+            space=space)
 
     elif "ants" in ssoft:
         if "template" in ssoft:
@@ -350,12 +351,6 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
                 main_workflow.connect(
                     segment_pnh_pipe, 'outputnode.segmented_brain_mask',
                     datasink, '@segmented_brain_mask')
-
-        if 'spm' in ssoft and not 'native' in ssoft:
-
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.norm_T1',
-                datasink, '@norm_T1')
 
         if 'flair' in ssoft :
 
