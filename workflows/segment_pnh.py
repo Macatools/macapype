@@ -338,19 +338,13 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         datasink.inputs.base_directory = process_dir
 
-        if "brain_extraction_pipe" in params.keys()\
-            or 'debias' in params.keys():
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.brain_mask',
+            datasink, '@brain_mask')
 
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.brain_mask',
-                    datasink, '@brain_mask')
-
-        if "brain_segment_pipe" in params.keys() \
-            or 'native_old_segment_pipe' in params.keys() :
-
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-                    datasink, '@segmented_brain_mask')
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+            datasink, '@segmented_brain_mask')
 
         if 'flair' in ssoft :
 

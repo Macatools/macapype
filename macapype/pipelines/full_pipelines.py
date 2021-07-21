@@ -1503,7 +1503,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
 
         brain_segment_pipe = create_brain_segment_from_mask_T1_template_pipe(
             params_template=params_template,
-            params=parse_key(params, "brain_segment_T1_template_pipe"))
+            params=parse_key(params, "brain_segment_pipe"))
 
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                          brain_segment_pipe, 'inputnode.preproc_T1')
