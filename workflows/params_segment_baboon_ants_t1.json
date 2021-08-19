@@ -1,11 +1,11 @@
 {
     "general":
     {
-        "template_name": "Juna_Chimp"
+        "template_name": "haiko89_template"
     },
-    "short_preparation_T1_pipe":
+    "short_preparation_pipe":
     {
-        "crop":
+        "crop_T1":
         {
             "args": "should be defined in indiv"
         },
@@ -19,20 +19,20 @@
             "args": "-r 0 --verbose 1"
         }
     },
-    "brain_extraction_T1_pipe":
+    "brain_extraction_pipe":
     {
-        "extract_T1_pipe":
+        "extract_pipe":
         {
             "atlas_brex":
             {
                 "f": 0.5,
                 "reg": 2,
-                "wrp": "1",
-                "msk": "a,0,3"
+                "msk": "a,0,0",
+                "wrp": "1"
             }
         }
     },
-    "brain_segment_T1_pipe":
+    "brain_segment_pipe":
     {
         "register_NMT_pipe":
         {
@@ -44,6 +44,10 @@
                 "convergence_threshold": 0.00000001,
                 "shrink_factor": 2,
                 "args": "-r 0 --verbose 1"
+            },
+            "NMT_subject_align":
+            {
+                "afni_ext": "orig"
             }
         },
         "segment_atropos_pipe":
@@ -65,19 +69,6 @@
             {
                 "thresh": 0.5
             }
-        }
-    },
-    "mask_from_seg_pipe":
-    {
-        "dilate_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
-        },
-        "erode_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
         }
     }
 }

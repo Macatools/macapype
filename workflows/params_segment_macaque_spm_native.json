@@ -1,0 +1,61 @@
+{
+    "general":
+    {
+        "template_name": "NMT_v1.3"
+    },
+    "short_preparation_pipe":
+    {
+        "crop_T1":
+        {
+            "args": "should be defined in indiv"
+        }
+    },
+    "debias":
+    {
+        "s": 4
+    },
+    "native_iter_reg_pipe":
+    {
+    },
+    "native_old_segment_pipe":
+    {
+        "segment":
+        {
+            "gm_output_type": [false, false, true],
+            "wm_output_type": [false, false, true],
+            "csf_output_type": [false, false, true]
+        },
+        "threshold_gm":
+        {
+            "thresh": 0.5
+        },
+        "threshold_wm":
+        {
+            "thresh": 0.5
+        },
+        "threshold_csf":
+        {
+            "thresh": 0.5
+        }
+    },
+    "mask_from_seg_pipe":
+    {
+        "dilate_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        },
+        "erode_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        },
+        "merge_indexed_mask":
+        {
+            "index_csf": 1,
+            "index_gm": 2,
+            "index_wm": 3
+        }
+
+    }
+}

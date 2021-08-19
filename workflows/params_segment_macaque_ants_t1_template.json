@@ -1,0 +1,63 @@
+{
+    "general":
+    {
+        "template_name": "NMT_v1.3"
+    },
+    "short_preparation_pipe":
+    {
+        "crop_T1":
+        {
+            "args": "should be defined in indiv"
+        }
+    },
+    "brain_extraction_pipe":
+    {
+        "extract_pipe":
+        {
+            "atlas_brex":
+            {
+                "f": 0.5,
+                "reg": 1,
+                "wrp": "10,10,10",
+                "msk": "a,0,0",
+                "dil": 2,
+                "nrm": 1
+            }
+        }
+    },
+    "brain_segment_pipe":
+    {
+        "register_NMT_pipe":
+        {
+            "norm_intensity":
+            {
+                "dimension": 3,
+                "bspline_fitting_distance": 200,
+                "n_iterations": [50, 50, 40, 30],
+                "convergence_threshold": 0.00000001,
+                "shrink_factor": 2,
+                "args": "-r 0 --verbose 1"
+            }
+        },
+        "segment_atropos_pipe":
+        {
+            "Atropos":
+            {
+                "dimension": 3,
+                "numberOfClasses": 3
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
+            }
+        }
+    }
+}

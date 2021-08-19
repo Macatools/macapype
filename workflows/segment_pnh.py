@@ -77,7 +77,7 @@ from macapype.utils.misc import show_files, get_first_elem
 
 ###############################################################################
 
-def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
+def create_main_workflow(data_dir, process_dir, soft, species, subjects, sessions,
                          acquisitions, reconstructions, params_file,
                          indiv_params_file, mask_file, nprocs,
                          wf_name="test_pipeline_single",
@@ -123,22 +123,54 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
     """
 
+    soft = soft.lower()
+
     # formating args
     data_dir = op.abspath(data_dir)
 
-    if not op.isdir(process_dir):
-        os.makedirs(process_dir)
 
+    try:
+        os.makedirs(process_dir)
+    except OSError:
+        print("process_dir {} already exists".format(process_dir))
+
+    # species
     # params
     params = {}
-    if params_file is not None:
 
-        print("Params:", params_file)
+    if params_file is None:
 
-        assert os.path.exists(params_file), "Error with file {}".format(
-            params_file)
+        if species is not None:
 
-        params = json.load(open(params_file))
+            species = species.lower()
+
+            rep_species = {"marmoset":"marmo", "chimpanzee":"chimp"}
+
+            if species in list(rep_species.keys()):
+                species = rep_species[species]
+
+            list_species = ["macaque", "marmo", "baboon", "chimp"]
+
+            assert species in list_species, \
+                "Error, species {} should in the following list {}".format(
+                    species, list_species)
+
+            package_directory = os.path.dirname(os.path.abspath(__file__))
+
+            params_file = "{}/params_segment_{}_{}.json".format(
+                package_directory, species, soft)
+
+        else:
+            print("Error, no -params or no -species was found (one or the \
+                other is mandatory)")
+            exit(-1)
+
+    print("Params:", params_file)
+
+    assert os.path.exists(params_file), "Error with file {}".format(
+        params_file)
+
+    params = json.load(open(params_file))
 
     pprint.pprint(params)
 
@@ -208,7 +240,8 @@ def create_main_workflow(data_dir, process_dir, soft, subjects, sessions,
 
         if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template=params_template, params=params, space=space)
+                params_template=params_template, params=params, space=space,
+                pad=pad)
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template, params=params,
@@ -377,6 +410,9 @@ def main():
     parser.add_argument("-soft", dest="soft", type=str,
                         help="Sofware of analysis (SPM or ANTS are defined)",
                         required=True)
+    parser.add_argument("-species", dest="species", type=str,
+                        help="Type of PNH to process",
+                        required=False)
     parser.add_argument("-subjects", "-sub", dest="sub",
                         type=str, nargs='+', help="Subjects", required=False)
     parser.add_argument("-sessions", "-ses", dest="ses",
@@ -409,6 +445,7 @@ def main():
         data_dir=args.data,
         soft=args.soft,
         process_dir=args.out,
+        species=args.species,
         subjects=args.sub,
         sessions=args.ses,
         acquisitions=args.acq,
