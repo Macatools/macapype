@@ -219,7 +219,7 @@ class AtroposN4(CommandLine):
         print(self.inputs.priors)
 
         assert len(seg_files) == len(self.inputs.priors), \
-            "Error, there should {} SegmentationPosteriors ({})".format(
+            "Error, there should be {} SegmentationPosteriors ({})".format(
                 len(self.inputs.priors),
                 len(seg_files))
 

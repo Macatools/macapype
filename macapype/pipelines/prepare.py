@@ -79,7 +79,7 @@ def _create_mapnode_reorient_pipeline(name="reorient_pipe",
     return reorient_pipe
 
 
-def _create_prep_pipeline(params, name="prep_pipeline"):
+def _create_prep_pipeline(params, name="prep_pipeline", node_suffix = ""):
     """Description: hidden function for sequence of preprocessing
 
     Params:
@@ -110,10 +110,10 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
         niu.IdentityInterface(fields=['img', 'indiv_params']),
         name='inputnode')
 
-    parse_params = pe.Node(ParseParams(), name="parse_params")
-    parse_params.inputs.key = name
+    #parse_params = pe.Node(ParseParams(), name="parse_params")
+    #parse_params.inputs.key = name
 
-    prep_pipeline.connect(inputnode, "indiv_params", parse_params, "params")
+    #prep_pipeline.connect(inputnode, "indiv_params", parse_params, "params")
 
     # Reorient if needed
     if "reorient" in params.keys():
@@ -144,12 +144,12 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
             prep_pipeline.connect(inputnode, 'img',
                                   denoise_first, 'input_image')
         prep_pipeline.connect(
-            parse_params, ('parsed_params', parse_key, "denoise_first"),
+            inputnode, ('indiv_params', parse_key, "denoise_first"),
             denoise_first, 'indiv_params')
 
     # cropping
-    crop = NodeParams(fsl.ExtractROI(), params=parse_key(params, "crop"),
-                      name='crop')
+    crop = NodeParams(fsl.ExtractROI(), params=parse_key(params, "crop"+node_suffix),
+                      name='crop'+node_suffix)
 
     if "denoise_first" in params.keys():
         prep_pipeline.connect(denoise_first, 'output_image',
@@ -161,7 +161,7 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
         prep_pipeline.connect(inputnode, 'img',
                               crop, 'in_file')
     prep_pipeline.connect(
-        parse_params, ('parsed_params', parse_key, "crop"),
+        inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
     # N4 intensity normalization with parameters from json
@@ -172,7 +172,7 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
     prep_pipeline.connect(crop, 'roi_file',
                                 norm_intensity, "input_image")
     prep_pipeline.connect(
-        parse_params, ('parsed_params', parse_key, "norm_intensity"),
+        inputnode, ('indiv_params', parse_key, "norm_intensity"),
         norm_intensity, 'indiv_params')
 
     if "denoise" in params.keys():
@@ -186,7 +186,7 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
         prep_pipeline.connect(norm_intensity, "output_image",
                               denoise, 'input_image')
         prep_pipeline.connect(
-            parse_params, ('parsed_params', parse_key, "denoise"),
+            inputnode, ('indiv_params', parse_key, "denoise"),
             denoise, 'indiv_params')
 
     # output node
@@ -207,7 +207,8 @@ def _create_prep_pipeline(params, name="prep_pipeline"):
     return prep_pipeline
 
 
-def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
+def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
+                                  node_suffix=""):
 
     """Description: hidden function for sequence of preprocessing (mapnode)
 
@@ -239,11 +240,11 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
         niu.IdentityInterface(fields=['list_img', 'indiv_params']),
         name='inputnode')
 
-    parse_params = pe.Node(ParseParams(), name="parse_params")
-    parse_params.inputs.key = name
+    #parse_params = pe.Node(ParseParams(), name="parse_params")
+    #parse_params.inputs.key = name
 
-    mapnode_prep_pipeline.connect(inputnode, "indiv_params",
-                                  parse_params, "params")
+    #mapnode_prep_pipeline.connect(inputnode, "indiv_params",
+                                  #parse_params, "params")
 
     # Reorient if needed
     if "reorient" in params.keys():
@@ -276,12 +277,12 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
             mapnode_prep_pipeline.connect(inputnode, 'list_img',
                                           denoise_first, 'input_image')
         mapnode_prep_pipeline.connect(
-            parse_params, ('parsed_params', parse_key, "denoise_first"),
+            inputnode, ("indiv_params", parse_key, "denoise_first"),
             denoise_first, 'indiv_params')
 
     # cropping
-    crop = MapNodeParams(fsl.ExtractROI(),  params=parse_key(params, "crop"),
-                         name='crop', iterfield=["in_file"])
+    crop = MapNodeParams(fsl.ExtractROI(),  params=parse_key(params, "crop"+node_suffix),
+                         name='crop', iterfield=["in_file", "args"])
 
     if "denoise_first" in params.keys():
         mapnode_prep_pipeline.connect(denoise_first, 'output_image',
@@ -293,7 +294,7 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
         mapnode_prep_pipeline.connect(inputnode, 'list_img',
                                       crop, 'in_file')
     mapnode_prep_pipeline.connect(
-        parse_params, ('parsed_params', parse_key, "crop"),
+        inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
     # N4 intensity normalization with parameters from json
@@ -305,7 +306,7 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
     mapnode_prep_pipeline.connect(crop, 'roi_file',
                                   norm_intensity, "input_image")
     mapnode_prep_pipeline.connect(
-        parse_params, ('parsed_params', parse_key, "norm_intensity"),
+        inputnode, ("indiv_params", parse_key, "norm_intensity"),
         norm_intensity, 'indiv_params')
 
     if "denoise" in params.keys():
@@ -320,7 +321,7 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline"):
         mapnode_prep_pipeline.connect(norm_intensity, "output_image",
                                       denoise, "input_image")
         mapnode_prep_pipeline.connect(
-            parse_params, ('parsed_params', parse_key, "denoise"),
+            inputnode, ("indiv_params", parse_key, "denoise"),
             denoise, 'indiv_params')
 
     # output node
@@ -442,31 +443,10 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         data_preparation_pipe.connect(av_T2, 'avg_img',
                                       reorient_T2_pipe, 'inputnode.image')
 
-    if "bet_crop" in params.keys():
-        print('bet_crop is in params')
+    if "crop_T1" in params.keys():
+        print('crop_T1 is in params')
 
-        # Brain extraction (unused) + Cropping
-        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
-                              name='bet_crop')
-
-        if "reorient" in params.keys():
-
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'reorient.out_file',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(reorient_T2_pipe,
-                                          'reorient.out_file',
-                                          bet_crop, 't2_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(av_T2, 'avg_img',
-                                          bet_crop, 't2_file')
-
-    elif "crop" in params.keys():
-        print('crop is in params')
-
-        assert "args" in params["crop"].keys(), \
+        assert "args" in params["crop_T1"].keys(), \
             "Error, args is not specified for crop node, breaking"
 
         # align avg T2 on avg T1
@@ -476,20 +456,20 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         # cropping
         # Crop bounding box for T1
         crop_T1 = NodeParams(fsl.ExtractROI(),
-                             params=parse_key(params, 'crop'),
+                             params=parse_key(params, 'crop_T1'),
                              name='crop_T1')
 
         # Crop bounding box for T2
         crop_T2 = NodeParams(fsl.ExtractROI(),
-                             params=parse_key(params, 'crop'),
+                             params=parse_key(params, 'crop_T1'),
                              name='crop_T2')
 
         data_preparation_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "crop"),
+            inputnode, ("indiv_params", parse_key, "crop_T1"),
             crop_T1, 'indiv_params')
 
         data_preparation_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "crop"),
+            inputnode, ("indiv_params", parse_key, "crop_T1"),
             crop_T2, 'indiv_params')
 
         if "reorient" in params.keys():
@@ -513,6 +493,27 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                       crop_T2, 'in_file')
+    else:
+
+        # Brain extraction (unused) + Automated Cropping
+        # default, if crop_T1 is undefined
+
+        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
+                              name='bet_crop')
+
+        if "reorient" in params.keys():
+
+            data_preparation_pipe.connect(reorient_T1_pipe,
+                                          'reorient.out_file',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(reorient_T2_pipe,
+                                          'reorient.out_file',
+                                          bet_crop, 't2_file')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          bet_crop, 't1_file')
+            data_preparation_pipe.connect(av_T2, 'avg_img',
+                                          bet_crop, 't2_file')
 
     # denoise with Ants package
     denoise_T1 = NodeParams(interface=DenoiseImage(),
@@ -522,16 +523,16 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
                             params=parse_key(params, "denoise"),
                             name="denoise_T2")
 
-    if "bet_crop" in params.keys():
-        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                                      denoise_T1, 'input_image')
-        data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
-                                      denoise_T2, 'input_image')
-
-    elif "crop" in params.keys():
+    if "crop_T1" in params.keys():
         data_preparation_pipe.connect(crop_T1, "roi_file",
                                       denoise_T1, 'input_image')
         data_preparation_pipe.connect(crop_T2, "roi_file",
+                                      denoise_T2, 'input_image')
+
+    else:
+        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                      denoise_T1, 'input_image')
+        data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
                                       denoise_T2, 'input_image')
 
     # Creating output node
@@ -612,7 +613,7 @@ def create_long_single_preparation_pipe(params,
     # list_prep_pipeline for T1 list
     prep_T1_pipe = _create_prep_pipeline(
         params=parse_key(params, "prep_T1"),
-        name="prep_T1")
+        name="prep_T1", node_suffix="_T1")
 
     long_single_preparation_pipe.connect(
         av_T1, 'avg_img', prep_T1_pipe, "inputnode.img")
@@ -634,7 +635,7 @@ def create_long_single_preparation_pipe(params,
     # list_prep_pipeline for T2 list
     prep_T2_pipe = _create_prep_pipeline(
         params=parse_key(params, "prep_T2"),
-        name="prep_T2")
+        name="prep_T2", node_suffix = "_T2")
 
     long_single_preparation_pipe.connect(
         av_T2, 'avg_img', prep_T2_pipe, "inputnode.img")
@@ -740,7 +741,7 @@ def create_long_multi_preparation_pipe(params,
     # mapnode_prep_pipeline for T1 list
     mapnode_prep_T1_pipe = _create_mapnode_prep_pipeline(
         params=parse_key(params, "mapnode_prep_T1"),
-        name="mapnode_prep_T1")
+        name="mapnode_prep_T1", node_suffix = "_T1")
 
     long_multi_preparation_pipe.connect(
         inputnode, 'list_T1', mapnode_prep_T1_pipe, "inputnode.list_img")
@@ -762,7 +763,7 @@ def create_long_multi_preparation_pipe(params,
     # mapnode_prep_pipeline for T2 list
     mapnode_prep_T2_pipe = _create_mapnode_prep_pipeline(
         params=parse_key(params, "mapnode_prep_T2"),
-        name="mapnode_prep_T2")
+        name="mapnode_prep_T2", node_suffix = "_T2")
 
     long_multi_preparation_pipe.connect(
         inputnode, 'list_T2', mapnode_prep_T2_pipe, "inputnode.list_img")
@@ -904,10 +905,10 @@ def create_short_preparation_T1_pipe(params,
             data_preparation_pipe.connect(av_T1, 'avg_img',
                                           bet_crop, 't2_file')
 
-    elif "crop" in params.keys():
-        print('crop is in params')
+    elif "crop_T1" in params.keys():
+        print('crop_T1 is in params')
 
-        assert "args" in params["crop"].keys(), \
+        assert "args" in params["crop_T1"].keys(), \
             "Error, args is not specified for crop node, breaking"
 
         # cropping
@@ -925,7 +926,7 @@ def create_short_preparation_T1_pipe(params,
                                           crop_T1, 'in_file')
 
         data_preparation_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "crop"),
+            inputnode, ("indiv_params", parse_key, "crop_T1"),
             crop_T1, 'indiv_params')
 
     # denoise with Ants package
@@ -937,7 +938,7 @@ def create_short_preparation_T1_pipe(params,
         data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
                                       denoise_T1, 'input_image')
 
-    elif "crop" in params.keys():
+    elif "crop_T1" in params.keys():
         data_preparation_pipe.connect(crop_T1, "roi_file",
                                       denoise_T1, 'input_image')
 

@@ -1,25 +1,27 @@
 {
-    "T1w_roi_noise_corrected_debiased_BET_mask": "space-orig_desc-brain_mask",
-    "T1w_roi_noise_corrected_debiased_thresh_fillh_indexed_mask": "space-orig_desc-brain_dseg",
+    "T1w_roi_noise_corrected_debiased_BET_FLIRT-to_inia19-t1-brain": "space-inia19_desc-brain_T1w",
 
-    "T1w_roi_noise_corrected_corrected_brain_bin_bin": "space-orig_desc-brain_mask",
-    "T1w_roi_noise_corrected_debiased_thresh_fillh_indexed_mask": "space-orig_desc-brain_dseg",
+    "BET_mask": "space-orig_desc-brain_mask",
 
-    "T1w_roi_noise_corrected_debiased_BET_FLIRT-to_": "space-",
-    "-t1-brain_thresh_fillh_indexed_mask": "_desc-brain_dseg",
+    "brain_bin_bin": "space-orig_desc-brain_mask",
 
-    "T1w_roi_noise_corrected_masked_corrected_SegmentationPosteriors01_thresh_fillh_indexed_mask": "space-orig_desc-brain_dseg",
-    "SS_thresh_fillh_indexed_mask":"desc-brain_dseg",
-    "T1w_roi_noise_corrected_maths_masked_corrected_Segmentation":"desc-brain_dseg",
+    "Segmentation_allineate": "space-template_desc-brain_dseg",
+    "Segmentation": "space-orig_desc-brain_dseg",
+    "indexed_mask": "space-orig_desc-brain_dseg",
+    "FLAIR_flirt_flirt": "space-inia19_FLAIR",
 
-    "T1w_roi_noise_corrected_maths_brain_bin_bin": "space-orig_desc-brain_mask",
-    "T1w_roi_noise_corrected_maths_masked_corrected_SegmentationPosteriors01_thresh_fillh_indexed_mask": "space-orig_desc-brain_dseg",
-    "T1w_roi_noise_corrected_maths_masked_corrected_Segmentation_allineate": "space-template_desc-brain_dseg",
+    "T1w_":"",
+    "roi_":"",
+    "noise_corrected_":"",
+    "corrected_":"",
+    "maths_":"",
+    "masked_":"",
+    "debiased_":"",
+    "thresh_":"",
+    "fillh_":"",
 
     "c3": "",
     "avg_": "",
-    "_padded": "",
+    "padded_": ""
 
-    "T1w_roi_noise_corrected_debiased_BET_FLIRT-to_inia19-t1-brain": "space-inia19_desc-brain_T1w",
-    "FLAIR_flirt_flirt": "space-inia19_FLAIR"
 }

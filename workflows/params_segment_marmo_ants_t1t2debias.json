@@ -1,0 +1,124 @@
+{
+    "general":
+    {
+        "template_name": "MBM_v3.0.1"
+    },
+     "short_preparation_pipe":
+    {
+        "crop_T1":
+        {
+            "args": "should be defined in indiv"
+        },
+        "norm_intensity":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
+        },
+        "denoise":
+        {
+            "shrink_factor": 1
+        }
+    },
+    "brain_extraction_pipe":
+    {
+        "correct_bias_pipe":
+        {
+            "smooth":
+            {
+                "args": "-bin -s 2"
+            },
+            "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
+            {
+                "sigma": 2
+            }
+        },
+        "extract_pipe":
+        {
+            "atlas_brex":
+            {
+                "f": 0.6,
+                "reg": 1,
+                "msk": "a,0,0",
+                "wrp": "10,10,10",
+                "dil": 4,
+                "args": "-vox 1"
+            }
+        }
+    },
+    "brain_segment_pipe":
+    {
+        "masked_correct_bias_pipe":
+        {
+            "smooth":
+            {
+                "args": "-bin -s 2"
+            },
+            "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
+            {
+                "sigma": 2
+            }
+        },
+        "register_NMT_pipe":
+        {   
+            "NMT_version":"1.3",
+            "norm_intensity":
+            {
+                "dimension": 3,
+                "bspline_fitting_distance": 200,
+                "n_iterations": [50, 50, 40, 30],
+                "convergence_threshold": 0.00000001,
+                "shrink_factor": 2,
+                "args": "-r 0 --verbose 1"
+            },
+            "NMT_subject_align":
+            {
+                "afni_ext": "orig" 
+            }
+        },
+        "segment_atropos_pipe":
+        {
+            "Atropos":
+            {
+                "dimension": 3,
+                "numberOfClasses": 3
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
+            }
+        }
+    },
+    "mask_from_seg_pipe":
+    {
+        "dilate_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        },
+        "erode_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        }
+    }
+}
