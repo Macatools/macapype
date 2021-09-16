@@ -83,6 +83,7 @@
         },
         "segment_atropos_pipe":
         {
+            "use_priors": 0.0,
             "Atropos":
             {
                 "dimension": 3,

@@ -41,13 +41,6 @@
             "thresh": 0.5
         }
     },
-    "nii_to_mesh_fs_pipe":
-    {
-        "fill_wm":
-        {
-            "args": "should be defined in indiv"
-        }
-    },
     "mask_from_seg_pipe":
     {
         "dilate_mask":

@@ -105,20 +105,18 @@ class AtroposN4InputSpec(CommandLineInputSpec):
         desc='numberOfClasses',
         mandatory=True, position=3, argstr="-c %d")
 
-    priors = traits.List(
-        File(exists=True),
-        desc='priors',
-        mandatory=True)
-
-    template_file = traits.String(
-        "tmp_%02d_allineate.nii.gz", usedefault=True,
-        exists=True,
-        desc='template_file',
-        mandatory=True, position=4, argstr="-p %s")
-
     out_pref = traits.String(
-        "segment_", usedefault=True, desc="output prefix", mandatory=False,
-        position=5,  argstr="-o %s")
+        "segment_", usedefault=True, desc="output prefix", mandatory=True,
+        position=-1,  argstr="-o %s")
+
+    priors = traits.Either(traits.List(File(exists=True)),traits.String(),
+        desc='template_file',
+        mandatory=False, position=4, argstr="-p %s")
+
+    prior_weight = traits.Float(
+        0,
+        desc='Atropos prior segmentation weight',
+        mandatory=False, position=5, argstr="-w %f")
 
 
 class AtroposN4OutputSpec(TraitedSpec):
@@ -148,16 +146,17 @@ class AtroposN4(CommandLine):
             numberOfClasses
                 Int, default=3, 'numberOfClasses'
 
-            priors
-                List of Files, 'priors'
-
-            template_file
-                String, default="tmp_%02d_allineate.nii.gz", 'template_file'
+            out_pref:
+                String, default = "segment_", "output prefix"
 
         Optional:
 
-            out_pref:
-                String, default = "segment_", "output prefix"
+            priors
+                List of Files, 'priors' (not used,
+                will be replaced by template file)
+
+            prior_weight:
+                Float, default = 0, "Atropos prior segmentation weight"
 
     Outputs:
 
@@ -176,6 +175,8 @@ class AtroposN4(CommandLine):
 
         cur_path = os.path.abspath("")
 
+        print("***** In formating args for ", name)
+
         # all the files have to be in local and
         if name == 'brain_file' or name == 'brainmask_file':
             # requires local copy
@@ -183,13 +184,18 @@ class AtroposN4(CommandLine):
             value = os.path.split(value)[1]
 
         elif name == 'priors':
+
             new_value = []
+
+            print("***** Copying prior files in cur dir:", value)
 
             for prior_file in value:
                 shutil.copy(prior_file, cur_path)
                 new_value.append(os.path.split(prior_file)[1])
 
-            value = new_value
+            print("After copying:", new_value)
+
+            value = "tmp_%02d_allineate.nii.gz"
 
         elif name == 'out_pref':
 
@@ -216,12 +222,6 @@ class AtroposN4(CommandLine):
             self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
 
         print(seg_files)
-        print(self.inputs.priors)
-
-        assert len(seg_files) == len(self.inputs.priors), \
-            "Error, there should be {} SegmentationPosteriors ({})".format(
-                len(self.inputs.priors),
-                len(seg_files))
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in seg_files]
@@ -317,32 +317,31 @@ def split_indexed_mask(nii_file, background_val=0):
 
 if __name__ == '__main__':
     # path_to = "/hpc/crise/meunier.d"
-    path_to = "/hpc/crise/meunier.d/Data/Primavoice/test_pipeline_kepkee_crop"
+    path_to = "/hpc/crise/meunier.d/Data/Data_Fred/test_Fred_dev"
 
-    seg_path = os.path.join(path_to, "segment_pnh_subpipes",
-                            "segment_devel_NMT_sub_align")
+    seg_path = os.path.join(
+        path_to, "test_pipeline_single_indiv_params_ants_t1_template",
+        "full_T1_ants_subpipes", "brain_segment_from_mask_T1_pipe")
 
     brain_file = os.path.join(
-        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache",
-        "deoblique",
-        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_\
-            corrected.nii.gz")
+        seg_path, "register_NMT_pipe",
+        "_session_01_subject_jazz", "norm_intensity",
+        "sub-jazz_ses-01_T1w_roi_noise_corrected_masked_corrected.nii.gz")
 
     brainmask_file = os.path.join(
-        seg_path, "segment_atropos_pipe", "_session_01_subject_Apache",
+        seg_path, "segment_atropos_pipe", "_session_01_subject_jazz",
         "bin_norm_intensity",
-        "sub-Apache_ses-01_T1w_cropped_noise_corrected_maths_masked_\
-            corrected_bin.nii.gz")
+        "sub-jazz_ses-01_T1w_roi_noise_corrected_masked_corrected_bin.nii.gz")
 
     priors = [os.path.join(
-        seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
-        "align_seg_csf", "NMT_segmentation_CSF_allineate.nii.gz"),
+        seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
+        "align_seg_csf", "tmp_01_allineate.nii.gz"),
               os.path.join(
-                  seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
-                  "align_seg_gm", "NMT_segmentation_GM_allineate.nii.gz"),
+                  seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
+                  "align_seg_gm", "tmp_02_allineate.nii.gz"),
               os.path.join(
-                  seg_path, "register_NMT_pipe", "_session_01_subject_Apache",
-                  "align_seg_wm", "NMT_segmentation_WM_allineate.nii.gz")]
+                  seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
+                  "align_seg_wm", "tmp_03_allineate.nii.gz")]
 
     seg_at = AtroposN4()
 
