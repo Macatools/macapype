@@ -639,6 +639,8 @@ class NwarpApplyPriors(AFNICommandBase):
         elif name == 'out_file':
             if isinstance(value, list):
                 print("A list for out_file")
+                print("out_file:", value)
+
                 for out_file in value[:1]:
                     print(out_file)
 
@@ -649,6 +651,9 @@ class NwarpApplyPriors(AFNICommandBase):
                 for i in range(1, 4):
                     new_value.append(os.path.join(cur_dir,
                                                   "tmp_%02d.nii.gz" % i))
+
+                print("after out_file:", new_value)
+
             else:
                 print("Not a list for out_file {}".format(value))
 
@@ -656,19 +661,14 @@ class NwarpApplyPriors(AFNICommandBase):
                 new_value = os.path.abspath(fname + "_Nwarp" + ext)
                 print(new_value)
 
+            self.new_value = new_value
             value = new_value
 
         return super(NwarpApplyPriors, self)._format_arg(name, spec, value)
 
     def _list_outputs(self):
         outputs = self.output_spec().get()
-        if isdefined(self.inputs.out_file):
-
-            if isinstance(self.inputs.out_file, list):
-                print([os.path.abspath(out) for out in self.inputs.out_file])
-                outputs['out_file'] = [
-                    os.path.abspath(out) for out in self.inputs.out_file]
-            else:
-                outputs['out_file'] = os.path.abspath(self.inputs.out_file)
-
+        if isdefined(self.new_value):
+            outputs['out_file'] = self.new_value
+            print(outputs['out_file'])
         return outputs

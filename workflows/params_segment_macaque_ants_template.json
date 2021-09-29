@@ -67,6 +67,7 @@
         },
         "segment_atropos_pipe":
         {
+            "use_priors": 0.0,
             "Atropos":
             {
                 "dimension": 3,
@@ -97,13 +98,6 @@
         {
             "kernel_shape": "sphere",
             "kernel_size": 2
-        }
-    },
-    "nii_to_mesh_fs_pipe":
-    {
-        "fill_wm":
-        {
-            "args": "should be defined in indiv"
         }
     }
 }

@@ -73,10 +73,12 @@
         },
         "segment_atropos_pipe":
         {
+            "use_priors": 0.0,
             "Atropos":
             {
                 "dimension": 3,
-                "numberOfClasses": 3
+                "numberOfClasses": 3,
+                "prior_weight": 1.0
             },
             "threshold_gm":
             {
@@ -90,26 +92,6 @@
             {
                 "thresh": 0.5
             }
-        }
-    },
-    "mask_from_seg_pipe":
-    {
-        "dilate_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
-        },
-        "erode_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
-        }
-    },
-    "nii_to_mesh_fs_pipe":
-    {
-        "fill_wm":
-        {
-            "args": "should be defined in indiv"
         }
     }
 }

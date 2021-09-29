@@ -824,19 +824,22 @@ def create_brain_segment_from_mask_pipe(
         segment_atropos_pipe = create_segment_atropos_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
-        brain_segment_pipe.connect(
-            register_NMT_pipe, 'align_seg_csf.out_file', segment_atropos_pipe,
-            "inputnode.csf_prior_file")
-        brain_segment_pipe.connect(
-            register_NMT_pipe, 'align_seg_gm.out_file', segment_atropos_pipe,
-            "inputnode.gm_prior_file")
-        brain_segment_pipe.connect(
-            register_NMT_pipe, 'align_seg_wm.out_file', segment_atropos_pipe,
-            "inputnode.wm_prior_file")
 
-    brain_segment_pipe.connect(
-        register_NMT_pipe, 'norm_intensity.output_image',
-        segment_atropos_pipe, "inputnode.brain_file")
+        if "use_priors" in params["segment_atropos_pipe"].keys():
+
+            brain_segment_pipe.connect(
+                register_NMT_pipe, 'align_seg_csf.out_file', segment_atropos_pipe,
+                "inputnode.csf_prior_file")
+            brain_segment_pipe.connect(
+                register_NMT_pipe, 'align_seg_gm.out_file', segment_atropos_pipe,
+                "inputnode.gm_prior_file")
+            brain_segment_pipe.connect(
+                register_NMT_pipe, 'align_seg_wm.out_file', segment_atropos_pipe,
+                "inputnode.wm_prior_file")
+
+        brain_segment_pipe.connect(
+            register_NMT_pipe, 'norm_intensity.output_image',
+            segment_atropos_pipe, "inputnode.brain_file")
 
     outputnode = pe.Node(
         niu.IdentityInterface(
@@ -1252,6 +1255,14 @@ def create_brain_segment_from_mask_T1_pipe(
             fields=['preproc_T1', 'brain_mask', 'indiv_params']),
         name='inputnode')
 
+
+    # creating outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file", "threshold_gm", "threshold_wm",
+                    "threshold_csf"]),
+        name='outputnode')
+
     # mask T1 using brain mask and perform N4 bias correction
 
     # restore_mask_T1
@@ -1285,19 +1296,16 @@ def create_brain_segment_from_mask_T1_pipe(
     brain_segment_pipe.connect(
         register_NMT_pipe, 'norm_intensity.output_image',
         segment_atropos_pipe, "inputnode.brain_file")
-    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
-                               segment_atropos_pipe,
-                               "inputnode.csf_prior_file")
-    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
-                               segment_atropos_pipe, "inputnode.gm_prior_file")
-    brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
-                               segment_atropos_pipe, "inputnode.wm_prior_file")
 
-    outputnode = pe.Node(
-        niu.IdentityInterface(
-            fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf"]),
-        name='outputnode')
+    if "use_priors" in params["segment_atropos_pipe"].keys():
+
+        brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
+                                segment_atropos_pipe,
+                                "inputnode.csf_prior_file")
+        brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
+                                segment_atropos_pipe, "inputnode.gm_prior_file")
+        brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
+                                segment_atropos_pipe, "inputnode.wm_prior_file")
 
     if space == 'native':
 
