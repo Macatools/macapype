@@ -171,16 +171,18 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
     segment_pipe.connect(inputnode, "brain_file",
                          bin_norm_intensity, "in_file")
 
-    # merging priors as a list
-    merge_3_elem = pe.Node(niu.Function(
-        input_names=['elem1', 'elem2', 'elem3'],
-        output_names=['merged_list'],
-        function=merge_3_elem_to_list), name='merge_3_elem')
+    if "use_priors" in params.keys():
 
-    # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
-    segment_pipe.connect(inputnode, 'csf_prior_file', merge_3_elem, "elem1")
-    segment_pipe.connect(inputnode, 'gm_prior_file', merge_3_elem, "elem2")
-    segment_pipe.connect(inputnode, 'wm_prior_file', merge_3_elem, "elem3")
+        # merging priors as a list
+        merge_3_elem = pe.Node(niu.Function(
+            input_names=['elem1', 'elem2', 'elem3'],
+            output_names=['merged_list'],
+            function=merge_3_elem_to_list), name='merge_3_elem')
+
+        # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
+        segment_pipe.connect(inputnode, 'csf_prior_file', merge_3_elem, "elem1")
+        segment_pipe.connect(inputnode, 'gm_prior_file', merge_3_elem, "elem2")
+        segment_pipe.connect(inputnode, 'wm_prior_file', merge_3_elem, "elem3")
 
     # Atropos
     seg_at = NodeParams(AtroposN4(),
@@ -190,8 +192,11 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
     segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
-    segment_pipe.connect(merge_3_elem, 'merged_list',
-                         seg_at, "priors")
+
+    if "use_priors" in params.keys():
+        segment_pipe.connect(merge_3_elem, 'merged_list',
+                             seg_at, "priors")
+        seg_at.inputs.prior_weight = params["use_priors"]
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
