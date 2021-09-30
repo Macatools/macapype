@@ -67,18 +67,5 @@
                 "thresh": 0.5
             }
         }
-    },
-    "mask_from_seg_pipe":
-    {
-        "dilate_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
-        },
-        "erode_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
-        }
     }
 }
