@@ -195,7 +195,7 @@ class AtroposN4(CommandLine):
 
             print("After copying:", new_value)
 
-            value = "tmp_%02d_allineate.nii.gz"
+            value = "tmp_%02d_allineate_hd.nii.gz"
 
         elif name == 'out_pref':
 
@@ -314,6 +314,19 @@ def split_indexed_mask(nii_file, background_val=0):
 
     return list_split_files
 
+def copy_header(ref_img, img_to_modify):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(img_to_modify)
+
+    modified_img = os.path.abspath(fname + "_hd" + ext)
+
+    os.system("CopyImageHeaderInformation {} {} {} 1 1 1".format(
+        ref_img, img_to_modify, modified_img))
+
+    return modified_img
 
 if __name__ == '__main__':
     # path_to = "/hpc/crise/meunier.d"
