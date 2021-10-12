@@ -6,7 +6,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 
 from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
-                             split_indexed_mask)
+                             split_indexed_mask, copy_header)
 
 from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list)
 
@@ -173,6 +173,34 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
 
     if "use_priors" in params.keys():
 
+        # copying header from img to csf_prior_file
+        copy_header_to_csf = pe.Node(niu.Function(
+            input_names=['ref_img', 'img_to_modify'],
+            output_names=['modified_img'],
+            function=copy_header), name='copy_header_to_csf')
+
+        segment_pipe.connect(inputnode, "brain_file", copy_header_to_csf, "ref_img")
+        segment_pipe.connect(inputnode, 'csf_prior_file', copy_header_to_csf, "img_to_modify")
+
+        # copying header from img to gm_prior_file
+        copy_header_to_gm = pe.Node(niu.Function(
+            input_names=['ref_img', 'img_to_modify'],
+            output_names=['modified_img'],
+            function=copy_header), name='copy_header_to_gm')
+
+        segment_pipe.connect(inputnode, "brain_file", copy_header_to_gm, "ref_img")
+        segment_pipe.connect(inputnode, 'gm_prior_file', copy_header_to_gm, "img_to_modify")
+
+
+        # copying header from img to wm_prior_file
+        copy_header_to_wm = pe.Node(niu.Function(
+            input_names=['ref_img', 'img_to_modify'],
+            output_names=['modified_img'],
+            function=copy_header), name='copy_header_to_wm')
+
+        segment_pipe.connect(inputnode, "brain_file", copy_header_to_wm, "ref_img")
+        segment_pipe.connect(inputnode, 'wm_prior_file', copy_header_to_wm, "img_to_modify")
+
         # merging priors as a list
         merge_3_elem = pe.Node(niu.Function(
             input_names=['elem1', 'elem2', 'elem3'],
@@ -180,10 +208,9 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
             function=merge_3_elem_to_list), name='merge_3_elem')
 
         # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
-        segment_pipe.connect(inputnode, 'csf_prior_file', merge_3_elem, "elem1")
-        segment_pipe.connect(inputnode, 'gm_prior_file', merge_3_elem, "elem2")
-        segment_pipe.connect(inputnode, 'wm_prior_file', merge_3_elem, "elem3")
-
+        segment_pipe.connect(copy_header_to_csf, 'modified_img', merge_3_elem, "elem1")
+        segment_pipe.connect(copy_header_to_gm, 'modified_img', merge_3_elem, "elem2")
+        segment_pipe.connect(copy_header_to_wm, 'modified_img', merge_3_elem, "elem3")
     # Atropos
     seg_at = NodeParams(AtroposN4(),
                         params=parse_key(params, "Atropos"),
