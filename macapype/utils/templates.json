@@ -33,6 +33,15 @@
         "LR_hemi_template": "supplemental_masks/NMT_LR_brainmask.nii.gz",
         "cereb_template": "supplemental_masks/NMT_cerebellum_mask.nii.gz"
     },
+    "NMT_v1.3better":
+    {
+        "template_head": "NMT.nii.gz",
+        "template_brain": "NMT_SS.nii.gz",
+
+        "template_gm": "NMT_seg_gm_better.nii.gz",
+        "template_wm": "NMT_seg_wm_better.nii.gz",
+        "template_csf": "NMT_seg_csf_better.nii.gz"
+    },
     "NMT_v2.0_asym_05mm":
     {
         "template_head": "NMT_v2.0_asym_05mm.nii.gz",
