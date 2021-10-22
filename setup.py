@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 
 
 required_packages=[
-    "nipype", "nilearn", "networkx>=2.0", "pybids", "scikit-image", "nibabel", "numpy",
+    "nipype", "nilearn", "networkx", "pybids", "scikit-image", "nibabel", "numpy",
     "brain-slam"]
 
 verstr = "unknown"

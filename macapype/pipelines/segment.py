@@ -6,7 +6,7 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 
 from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
-                             split_indexed_mask, copy_header)
+                             split_indexed_mask, copy_header, compute_5tt)
 
 from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list)
 
@@ -253,6 +253,33 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                          outputnode, 'threshold_csf')
 
     return segment_pipe
+
+def create_5tt_pipe(params = {}, name="export_5tt_pipe"):
+
+    # creating pipeline
+    export_5tt_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["gm_file", "wm_file", "csf_file"]),
+        name='inputnode')
+
+    export_5tt = pe.Node(niu.Function(
+        input_names=["gm_file", "wm_file", "csf_file"],
+        output_names = ["gen_5tt_file"],
+        function = compute_5tt), name = "export_5tt")
+
+    export_5tt_pipe.connect(inputnode, 'gm_file',
+                         export_5tt, 'gm_file')
+
+    export_5tt_pipe.connect(inputnode, 'wm_file',
+                         export_5tt, 'wm_file')
+
+    export_5tt_pipe.connect(inputnode, 'csf_file',
+                         export_5tt, 'csf_file')
+
+    return export_5tt_pipe
 
 
 ###############################################################################
