@@ -25,4 +25,8 @@ jobs:
             pip install --upgrade pygraphviz graphviz
 
       - name: Test with pytest
-        run: pytest -vv
+        run:
+            py.test --cov macapype --ignore=examples/ --ignore=run_examples/
+      - name: Flake8
+        run:
+            flake8 --count macapypepytest -vv
