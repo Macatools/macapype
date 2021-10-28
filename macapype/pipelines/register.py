@@ -310,7 +310,6 @@ def create_register_NMT_pipe(params_template, params={},
         niu.IdentityInterface(fields=['T1', 'indiv_params']),
         name='inputnode')
 
-
     if "NMT_version" in params.keys():
         NMT_version = params['NMT_version']
 

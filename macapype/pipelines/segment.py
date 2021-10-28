@@ -179,8 +179,10 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
             output_names=['modified_img'],
             function=copy_header), name='copy_header_to_csf')
 
-        segment_pipe.connect(inputnode, "brain_file", copy_header_to_csf, "ref_img")
-        segment_pipe.connect(inputnode, 'csf_prior_file', copy_header_to_csf, "img_to_modify")
+        segment_pipe.connect(inputnode, "brain_file",
+                             copy_header_to_csf, "ref_img")
+        segment_pipe.connect(inputnode, 'csf_prior_file',
+                             copy_header_to_csf, "img_to_modify")
 
         # copying header from img to gm_prior_file
         copy_header_to_gm = pe.Node(niu.Function(
@@ -188,9 +190,10 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
             output_names=['modified_img'],
             function=copy_header), name='copy_header_to_gm')
 
-        segment_pipe.connect(inputnode, "brain_file", copy_header_to_gm, "ref_img")
-        segment_pipe.connect(inputnode, 'gm_prior_file', copy_header_to_gm, "img_to_modify")
-
+        segment_pipe.connect(inputnode, "brain_file",
+                             copy_header_to_gm, "ref_img")
+        segment_pipe.connect(inputnode, 'gm_prior_file',
+                             copy_header_to_gm, "img_to_modify")
 
         # copying header from img to wm_prior_file
         copy_header_to_wm = pe.Node(niu.Function(
@@ -198,8 +201,10 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
             output_names=['modified_img'],
             function=copy_header), name='copy_header_to_wm')
 
-        segment_pipe.connect(inputnode, "brain_file", copy_header_to_wm, "ref_img")
-        segment_pipe.connect(inputnode, 'wm_prior_file', copy_header_to_wm, "img_to_modify")
+        segment_pipe.connect(inputnode, "brain_file",
+                             copy_header_to_wm, "ref_img")
+        segment_pipe.connect(inputnode, 'wm_prior_file',
+                             copy_header_to_wm, "img_to_modify")
 
         # merging priors as a list
         merge_3_elem = pe.Node(niu.Function(
@@ -208,9 +213,12 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
             function=merge_3_elem_to_list), name='merge_3_elem')
 
         # was like this before (1 -> csf, 2 -> gm, 3 -> wm, to check)
-        segment_pipe.connect(copy_header_to_csf, 'modified_img', merge_3_elem, "elem1")
-        segment_pipe.connect(copy_header_to_gm, 'modified_img', merge_3_elem, "elem2")
-        segment_pipe.connect(copy_header_to_wm, 'modified_img', merge_3_elem, "elem3")
+        segment_pipe.connect(copy_header_to_csf, 'modified_img',
+                             merge_3_elem, "elem1")
+        segment_pipe.connect(copy_header_to_gm, 'modified_img',
+                             merge_3_elem, "elem2")
+        segment_pipe.connect(copy_header_to_wm, 'modified_img',
+                             merge_3_elem, "elem3")
     # Atropos
     seg_at = NodeParams(AtroposN4(),
                         params=parse_key(params, "Atropos"),
@@ -254,7 +262,8 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
 
     return segment_pipe
 
-def create_5tt_pipe(params = {}, name="export_5tt_pipe"):
+
+def create_5tt_pipe(params={}, name="export_5tt_pipe"):
 
     # creating pipeline
     export_5tt_pipe = pe.Workflow(name=name)
@@ -265,19 +274,15 @@ def create_5tt_pipe(params = {}, name="export_5tt_pipe"):
             fields=["gm_file", "wm_file", "csf_file"]),
         name='inputnode')
 
-    export_5tt = pe.Node(niu.Function(
-        input_names=["gm_file", "wm_file", "csf_file"],
-        output_names = ["gen_5tt_file"],
-        function = compute_5tt), name = "export_5tt")
+    export_5tt = pe.Node(
+        niu.Function(input_names=["gm_file", "wm_file", "csf_file"],
+                     output_names=["gen_5tt_file"],
+                     function=compute_5tt),
+        name="export_5tt")
 
-    export_5tt_pipe.connect(inputnode, 'gm_file',
-                         export_5tt, 'gm_file')
-
-    export_5tt_pipe.connect(inputnode, 'wm_file',
-                         export_5tt, 'wm_file')
-
-    export_5tt_pipe.connect(inputnode, 'csf_file',
-                         export_5tt, 'csf_file')
+    export_5tt_pipe.connect(inputnode, 'gm_file', export_5tt, 'gm_file')
+    export_5tt_pipe.connect(inputnode, 'wm_file', export_5tt, 'wm_file')
+    export_5tt_pipe.connect(inputnode, 'csf_file', export_5tt, 'csf_file')
 
     return export_5tt_pipe
 
