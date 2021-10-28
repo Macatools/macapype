@@ -170,7 +170,13 @@ MAINTAINER David Meunier "david.meunier@univ-amu.fr"
 ######################## Python packages
   
 RUN apt-get update && apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
-#RUN apt-get install -y python3-tk
+
+RUN apt-get install -y python3-pil python3-pil.imagetk
+
+
+RUN python3 -m pip install -U pip
+RUN python3 -m pip install -U pillow
+#RUN pip3 install pillow
 
 #RUN apt-get install libx11-6 libxext6 libxt6 # matlab
 RUN pip3 install xvfbwrapper \
@@ -180,7 +186,7 @@ RUN pip3 install xvfbwrapper \
     matplotlib \
     statsmodels \
     pandas \
-    networkx==1.9 \
+    networkx\
     mock \
     prov \
     click \
