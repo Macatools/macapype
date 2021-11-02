@@ -7,7 +7,7 @@ import nipype.interfaces.ants as ants
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
-from ..utils.utils_nodes import NodeParams, MapNodeParams, ParseParams
+from ..utils.utils_nodes import NodeParams, MapNodeParams
 from ..utils.misc import parse_key
 
 from ..nodes.prepare import average_align, FslOrient
@@ -79,7 +79,7 @@ def _create_mapnode_reorient_pipeline(name="reorient_pipe",
     return reorient_pipe
 
 
-def _create_prep_pipeline(params, name="prep_pipeline", node_suffix = ""):
+def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
     """Description: hidden function for sequence of preprocessing
 
     Params:
@@ -109,11 +109,6 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix = ""):
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['img', 'indiv_params']),
         name='inputnode')
-
-    #parse_params = pe.Node(ParseParams(), name="parse_params")
-    #parse_params.inputs.key = name
-
-    #prep_pipeline.connect(inputnode, "indiv_params", parse_params, "params")
 
     # Reorient if needed
     if "reorient" in params.keys():
@@ -148,7 +143,8 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix = ""):
             denoise_first, 'indiv_params')
 
     # cropping
-    crop = NodeParams(fsl.ExtractROI(), params=parse_key(params, "crop"+node_suffix),
+    crop = NodeParams(fsl.ExtractROI(),
+                      params=parse_key(params, "crop"+node_suffix),
                       name='crop'+node_suffix)
 
     if "denoise_first" in params.keys():
@@ -240,12 +236,6 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
         niu.IdentityInterface(fields=['list_img', 'indiv_params']),
         name='inputnode')
 
-    #parse_params = pe.Node(ParseParams(), name="parse_params")
-    #parse_params.inputs.key = name
-
-    #mapnode_prep_pipeline.connect(inputnode, "indiv_params",
-                                  #parse_params, "params")
-
     # Reorient if needed
     if "reorient" in params.keys():
 
@@ -281,7 +271,8 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
             denoise_first, 'indiv_params')
 
     # cropping
-    crop = MapNodeParams(fsl.ExtractROI(),  params=parse_key(params, "crop"+node_suffix),
+    crop = MapNodeParams(fsl.ExtractROI(),
+                         params=parse_key(params, "crop"+node_suffix),
                          name='crop', iterfield=["in_file", "args"])
 
     if "denoise_first" in params.keys():
@@ -498,6 +489,13 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         # Brain extraction (unused) + Automated Cropping
         # default, if crop_T1 is undefined
 
+        if "bet_crop" not in params.keys():
+
+            params["bet_crop"] = {"m": True, "aT2": True, "c": 10, "n": 2}
+
+            print("Using default bet_crop parameters: {}".format(
+                params["bet_crop"]))
+
         bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
                               name='bet_crop')
 
@@ -635,7 +633,7 @@ def create_long_single_preparation_pipe(params,
     # list_prep_pipeline for T2 list
     prep_T2_pipe = _create_prep_pipeline(
         params=parse_key(params, "prep_T2"),
-        name="prep_T2", node_suffix = "_T2")
+        name="prep_T2", node_suffix="_T2")
 
     long_single_preparation_pipe.connect(
         av_T2, 'avg_img', prep_T2_pipe, "inputnode.img")
@@ -741,7 +739,7 @@ def create_long_multi_preparation_pipe(params,
     # mapnode_prep_pipeline for T1 list
     mapnode_prep_T1_pipe = _create_mapnode_prep_pipeline(
         params=parse_key(params, "mapnode_prep_T1"),
-        name="mapnode_prep_T1", node_suffix = "_T1")
+        name="mapnode_prep_T1", node_suffix="_T1")
 
     long_multi_preparation_pipe.connect(
         inputnode, 'list_T1', mapnode_prep_T1_pipe, "inputnode.list_img")
@@ -763,7 +761,7 @@ def create_long_multi_preparation_pipe(params,
     # mapnode_prep_pipeline for T2 list
     mapnode_prep_T2_pipe = _create_mapnode_prep_pipeline(
         params=parse_key(params, "mapnode_prep_T2"),
-        name="mapnode_prep_T2", node_suffix = "_T2")
+        name="mapnode_prep_T2", node_suffix="_T2")
 
     long_multi_preparation_pipe.connect(
         inputnode, 'list_T2', mapnode_prep_T2_pipe, "inputnode.list_img")

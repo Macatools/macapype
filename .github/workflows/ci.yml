@@ -21,12 +21,13 @@ jobs:
             pip install codecov pytest pytest-cov
             pip install -e .
             pip install flake8
-            apt-get install graphviz libgraphviz-dev
+            sudo apt-get install graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
       - name: Test with pytest
         run:
             py.test --cov macapype --ignore=examples/ --ignore=run_examples/
+
       - name: Flake8
         run:
-            flake8 --count macapypepytest -vv
+            flake8 --count macapype

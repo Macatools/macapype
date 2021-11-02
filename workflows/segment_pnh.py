@@ -358,7 +358,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         else:
             params_regex_subs={}
 
-
         if "subs" in params.keys():
             params_subs = params["rsubs"]
         else:

@@ -109,7 +109,8 @@ class AtroposN4InputSpec(CommandLineInputSpec):
         "segment_", usedefault=True, desc="output prefix", mandatory=True,
         position=-1,  argstr="-o %s")
 
-    priors = traits.Either(traits.List(File(exists=True)),traits.String(),
+    priors = traits.Either(
+        traits.List(File(exists=True)), traits.String(),
         desc='template_file',
         mandatory=False, position=4, argstr="-p %s")
 
@@ -314,6 +315,7 @@ def split_indexed_mask(nii_file, background_val=0):
 
     return list_split_files
 
+
 def copy_header(ref_img, img_to_modify):
 
     import os
@@ -327,6 +329,7 @@ def copy_header(ref_img, img_to_modify):
         ref_img, img_to_modify, modified_img))
 
     return modified_img
+
 
 if __name__ == '__main__':
     # path_to = "/hpc/crise/meunier.d"
@@ -367,6 +370,7 @@ if __name__ == '__main__':
 
     print(val)
 
+
 def compute_5tt(gm_file, wm_file, csf_file):
 
     import os
@@ -379,7 +383,7 @@ def compute_5tt(gm_file, wm_file, csf_file):
 
     print(gm_data.shape)
 
-    empty_vol = np.zeros(shape = gm_data.shape)
+    empty_vol = np.zeros(shape=gm_data.shape)
 
     wm_img = nib.load(wm_file)
     wm_data = wm_img.get_fdata()
@@ -387,11 +391,13 @@ def compute_5tt(gm_file, wm_file, csf_file):
     csf_img = nib.load(csf_file)
     csf_data = csf_img.get_fdata()
 
-    gen_5tt_data = np.stack((gm_data, empty_vol, wm_data, csf_data, empty_vol), axis = -1)
+    gen_5tt_data = np.stack((gm_data, empty_vol, wm_data, csf_data, empty_vol),
+                            axis=-1)
 
     print(gen_5tt_data.shape)
 
-    gen_5tt_img = nib.Nifti1Image(gen_5tt_data, affine = gm_img.affine, header = gm_img.header)
+    gen_5tt_img = nib.Nifti1Image(gen_5tt_data, affine=gm_img.affine,
+                                  header=gm_img.header)
 
     gen_5tt_file = os.path.abspath("gen_5tt.nii.gz")
 
