@@ -80,7 +80,7 @@ from macapype.utils.misc import show_files, get_first_elem
 def create_main_workflow(data_dir, process_dir, soft, species, subjects, sessions,
                          acquisitions, reconstructions, params_file,
                          indiv_params_file, mask_file, nprocs,
-                         wf_name="test_pipeline_single",
+                         wf_name="macapype",
                          deriv=False, pad=False):
 
     # macapype_pipeline
@@ -124,6 +124,14 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     """
 
     soft = soft.lower()
+
+    ssoft = soft.split("_")
+
+    if 'test' in ssoft:
+        ssoft2 = ssoft
+        ssoft2.remove('test')
+        print(ssoft2)
+        soft = "_".join(ssoft2)
 
     # formating args
     data_dir = op.abspath(data_dir)
@@ -176,7 +184,22 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     # indiv_params
     indiv_params = {}
-    if indiv_params_file is not None:
+
+    if indiv_params_file is None:
+
+        print("No indiv params where found, modifing pipepline to default")
+
+        if "short_preparation_pipe" in params.keys():
+            if "crop_T1" in params["short_preparation_pipe"].keys():
+                print("Deleting automated crop")
+                del params["short_preparation_pipe"]["crop_T1"]
+
+                print("New params after modification")
+                pprint.pprint(params)
+
+                wf_name+="_no_crop"
+
+    else:
 
         print("Indiv Params:", indiv_params_file)
 
@@ -187,8 +210,78 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         wf_name+="_indiv_params"
 
+        pprint.pprint(indiv_params)
 
-    pprint.pprint(indiv_params)
+        count_all_sessions=0
+        count_long_crops=0
+        count_multi_long_crops=0
+
+        for sub in indiv_params.keys():
+            for ses in indiv_params[sub].keys():
+
+                count_all_sessions+=1
+
+                print (indiv_params[sub][ses].keys())
+
+                if "crop_T1" in indiv_params[sub][ses].keys() and "crop_T2" in indiv_params[sub][ses].keys():
+
+                    count_long_crops+=1
+                    if isinstance(indiv_params[sub][ses]["crop_T1"]["args"], list) and isinstance(indiv_params[sub][ses]["crop_T2"]["args"], list):
+                        count_multi_long_crops+=1
+
+        print("count_all_sessions {}".format(count_all_sessions))
+        print("count_long_crops {}".format(count_long_crops))
+        print("count_multi_long_crops {}".format(count_multi_long_crops))
+
+        prep_pipe = "short_preparation_pipe"
+
+        if count_multi_long_crops==count_all_sessions:
+            print("**** Found list of crops for T1 and T2 for all sub/ses in indiv \
+                -> long_multi_preparation_pipe")
+
+            wf_name+="_multi_crop_T1_T2"
+
+            prep_pipe = "long_multi_preparation_pipe"
+
+        elif count_long_crops==count_all_sessions:
+
+            print("**** Found crop for T1 and crop for T2 for all sub/ses in indiv \
+                -> long_single_preparation_pipe")
+
+            wf_name+="_crop_T1_T2"
+
+            prep_pipe = "long_single_preparation_pipe"
+
+        else:
+            wf_name+="_crop_T1"
+
+            print("**** not all sub/ses have crops ")
+
+        if prep_pipe != "short_preparation_pipe":
+
+            params[prep_pipe]={
+                "prep_T1": {"crop_T1": {"args": "should be defined in indiv"}},
+                "prep_T2": {"crop_T2": {"args": "should be defined in indiv"}},
+                "align_T2_on_T1": {"dof": 6, "cost": "normmi"}}
+
+            if "norm_intensity" in params["short_preparation_pipe"].keys():
+                norm_intensity= params["short_preparation_pipe"]["norm_intensity"]
+
+                params[prep_pipe]["prep_T1"]["norm_intensity"]=norm_intensity
+                params[prep_pipe]["prep_T2"]["norm_intensity"]=norm_intensity
+
+
+            if "denoise" in params["short_preparation_pipe"].keys():
+                denoise= params["short_preparation_pipe"]["denoise"]
+
+                params[prep_pipe]["prep_T1"]["denoise"]=denoise
+                params[prep_pipe]["prep_T2"]["denoise"]=denoise
+
+            del params["short_preparation_pipe"]
+
+
+
+        pprint.pprint(params)
 
     # params_template
     assert ("general" in params.keys() and \
@@ -211,8 +304,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     if mask_file is not None:
          wf_name += "_mask"
-
-    ssoft = soft.lower().split("_")
 
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
