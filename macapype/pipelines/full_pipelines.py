@@ -36,7 +36,7 @@ from .extract_brain import (create_extract_pipe,
 
 from .surface import create_nii_to_mesh_pipe, create_nii_to_mesh_fs_pipe
 
-from macapype.utils.misc import parse_key, list_input_files
+from macapype.utils.misc import parse_key, list_input_files, show_files
 
 
 ###############################################################################
@@ -202,25 +202,25 @@ def create_full_spm_subpipes(
 
         # Compute brain mask using old_segment of SPM and postprocessing on
         # tissues' masks
-        if "old_segment_pipe" in params.keys():
+        if "native_old_segment_pipe" in params.keys():
 
             old_segment_pipe = create_native_old_segment_pipe(
                 params_template,
-                params=parse_key(params, "old_segment_pipe"))
+                params=parse_key(params, "native_old_segment_pipe"))
 
             seg_pipe.connect(debias, 't1_debiased_file',
                              old_segment_pipe, 'inputnode.T1')
 
             seg_pipe.connect(native_iter_reg_pipe,
-                             'register_csf_to_nat.out_file',
+                             ('register_csf_to_nat.out_file', show_files),
                              old_segment_pipe, 'inputnode.native_csf')
 
             seg_pipe.connect(native_iter_reg_pipe,
-                             'register_wm_to_nat.out_file',
+                             ('register_wm_to_nat.out_file', show_files),
                              old_segment_pipe, 'inputnode.native_wm')
 
             seg_pipe.connect(native_iter_reg_pipe,
-                             'register_gm_to_nat.out_file',
+                             ('register_gm_to_nat.out_file', show_files),
                              old_segment_pipe, 'inputnode.native_gm')
 
             seg_pipe.connect(inputnode, 'indiv_params',
