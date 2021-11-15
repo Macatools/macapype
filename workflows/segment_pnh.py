@@ -128,10 +128,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     ssoft = soft.split("_")
 
     if 'test' in ssoft:
-        ssoft2 = ssoft
-        ssoft2.remove('test')
-        print(ssoft2)
-        soft = "_".join(ssoft2)
+        soft = "_".join(ssoft[:-1])
 
     # formating args
     data_dir = op.abspath(data_dir)
