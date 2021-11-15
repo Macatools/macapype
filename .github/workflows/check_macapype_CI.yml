@@ -36,4 +36,4 @@ jobs:
 
       - name: Running all test pipelines
         run: |
-            python macapype/workflows/segment_pnh.py -data macapype_CI/macaque_prime-de/ -out macapype_CI/macaque_prime-de/ -soft ANTS_test -species macaque -indiv macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -deriv
+            python workflows/segment_pnh.py -data macapype_CI/macaque_prime-de/ -out macapype_CI/macaque_prime-de/ -soft ANTS_test -species macaque -indiv macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -deriv
