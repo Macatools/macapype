@@ -28,11 +28,6 @@ jobs:
             pip install --upgrade pygraphviz graphviz
 
             pip install -e .
-      - name: Download dataset
-        run: |
-            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download" -O macapype_CI.zip
-            unzip -o macapype_CI.zip -d macapype_CI
-            ls
 
       - name: Running all test pipelines
         run: |
