@@ -204,7 +204,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 print("New params after modification")
                 pprint.pprint(params)
 
-                wf_name+="_no_crop"
+                wf_name+="_bet_crop"
 
     else:
 
