@@ -208,7 +208,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     else:
 
-        assert "short_preparation_pipe" in params.keys(),
+        assert "short_preparation_pipe" in params.keys(),\
             "Error, short_preparation_pipe not found in params"
 
         prep_pipe = "short_preparation_pipe"
