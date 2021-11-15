@@ -32,4 +32,8 @@ jobs:
         run: |
             wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download" -O macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
-            ls macapype_CI
+            ls
+
+      - name: Running all test pipelines
+        run: |
+            python macapype/workflows/segment_pnh.py -data macapype_CI/macaque_prime-de/ -out macapype_CI/macaque_prime-de/ -soft ANTS_test -species macaque -indiv macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -deriv
