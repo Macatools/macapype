@@ -208,104 +208,112 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     else:
 
-        assert "short_preparation_pipe" in params.keys(), \
+        assert "short_preparation_pipe" in params.keys(),
             "Error, short_preparation_pipe not found in params"
 
         prep_pipe = "short_preparation_pipe"
+        count_all_sessions=0
+        count_T1_crops=0
+        count_long_crops=0
+        count_multi_long_crops=0
 
-            count_all_sessions=0
+        print("Indiv Params:", indiv_params_file)
 
-            count_T1_crops=0
-            count_long_crops=0
-            count_multi_long_crops=0
+        assert os.path.exists(indiv_params_file), "Error with file {}".format(
+            indiv_params_file)
 
-            print("Indiv Params:", indiv_params_file)
+        indiv_params = json.load(open(indiv_params_file))
 
-            assert os.path.exists(indiv_params_file), "Error with file {}".format(
-                indiv_params_file)
+        wf_name+="_indiv_params"
 
-            indiv_params = json.load(open(indiv_params_file))
+        pprint.pprint(indiv_params)
 
-            wf_name+="_indiv_params"
+        for sub in indiv_params.keys():
 
-            pprint.pprint(indiv_params)
+            print(sub)
+            print(sub.split("-")[1])
+            print(sub.split('-')[1] in subjects)
+            0/0
 
-            for sub in indiv_params.keys():
-                for ses in indiv_params[sub].keys():
-
-                    print(sub)
-                    print(sub.split("-")[1])
-                    print(sub.split('-')[1] in subjects)
-                    0/0
-
-                    count_all_sessions+=1
-
-                    print (indiv_params[sub][ses].keys())
-
-                    if "crop_T1" in indiv_params[sub][ses].keys()
-                        count_T1_crops+=1
-
-                        if "crop_T2" in indiv_params[sub][ses].keys() and 't1' not is ssoft:
-
-                            count_long_crops+=1
-                            if isinstance(indiv_params[sub][ses]["crop_T1"]["args"], list) and isinstance(indiv_params[sub][ses]["crop_T2"]["args"], list):
-                                count_multi_long_crops+=1
-
-            print("count_all_sessions {}".format(count_all_sessions))
-
-            print("count_T1_crops {}".format(count_T1_crops))
-            print("count_long_crops {}".format(count_long_crops))
-            print("count_multi_long_crops {}".format(count_multi_long_crops))
-
-            if count_multi_long_crops==count_all_sessions:
-                print("**** Found list of crops for T1 and T2 for all sub/ses in indiv \
-                    -> long_multi_preparation_pipe")
-
-                wf_name+="_multi_crop_T1_T2"
-
-                prep_pipe = "long_multi_preparation_pipe"
-
-            elif count_long_crops==count_all_sessions:
-
-                print("**** Found crop for T1 and crop for T2 for all sub/ses in indiv \
-                    -> long_single_preparation_pipe")
-
-                wf_name+="_crop_T1_T2"
-
-                prep_pipe = "long_single_preparation_pipe"
-
-            elif count_T1_crops==count_all_sessions:
-
-                print("**** Found crop for T1 for all sub/ses in indiv \
-                    -> keeping short_preparation_pipe")
-
-                wf_name+="_crop_T1"
-
-            else:
-                print("**** not all sub/ses have T1 and T2 crops ")
-                print("Error)
-
-            if prep_pipe != "short_preparation_pipe":
-
-                params[prep_pipe]={
-                    "prep_T1": {"crop_T1": {"args": "should be defined in indiv"}},
-                    "prep_T2": {"crop_T2": {"args": "should be defined in indiv"}},
-                    "align_T2_on_T1": {"dof": 6, "cost": "normmi"}}
-
-                if "norm_intensity" in params["short_preparation_pipe"].keys():
-                    norm_intensity= params["short_preparation_pipe"]["norm_intensity"]
-
-                    params[prep_pipe]["prep_T1"]["norm_intensity"]=norm_intensity
-                    params[prep_pipe]["prep_T2"]["norm_intensity"]=norm_intensity
+            for ses in indiv_params[sub].keys():
 
 
-                if "denoise" in params["short_preparation_pipe"].keys():
-                    denoise= params["short_preparation_pipe"]["denoise"]
+                count_all_sessions+=1
 
-                    params[prep_pipe]["prep_T1"]["denoise"]=denoise
-                    params[prep_pipe]["prep_T2"]["denoise"]=denoise
+                print (indiv_params[sub][ses].keys())
 
-                del params["short_preparation_pipe"]
+                if "crop_T1" in indiv_params[sub][ses].keys()
+                    count_T1_crops+=1
+
+                    if "crop_T2" in indiv_params[sub][ses].keys() \
+                        and 't1' not is ssoft:
+
+                        count_long_crops+=1
+
+                        if isinstance(
+                            indiv_params[sub][ses]["crop_T1"]["args"],
+                            list) and isinstance(
+                                indiv_params[sub][ses]["crop_T2"]["args"],
+                                list):
+
+                            count_multi_long_crops+=1
+
+        print("count_all_sessions {}".format(count_all_sessions))
+
+        print("count_T1_crops {}".format(count_T1_crops))
+        print("count_long_crops {}".format(count_long_crops))
+        print("count_multi_long_crops {}".format(count_multi_long_crops))
+
+        if count_multi_long_crops==count_all_sessions:
+            print("**** Found list of crops for T1 and T2 for all sub/ses \
+                in indiv -> long_multi_preparation_pipe")
+
+            wf_name+="_multi_crop_T1_T2"
+
+            prep_pipe = "long_multi_preparation_pipe"
+
+        elif count_long_crops==count_all_sessions:
+
+            print("**** Found crop for T1 and crop for T2 for all sub/ses \
+                in indiv -> long_single_preparation_pipe")
+
+            wf_name+="_crop_T1_T2"
+
+            prep_pipe = "long_single_preparation_pipe"
+
+        elif count_T1_crops==count_all_sessions:
+
+            print("**** Found crop for T1 for all sub/ses in indiv \
+                -> keeping short_preparation_pipe")
+
+            wf_name+="_crop_T1"
+
+        else:
+            print("**** not all sub/ses have T1 and T2 crops ")
+            print("Error")
+            exit(0)
+
+        if prep_pipe != "short_preparation_pipe":
+
+            params[prep_pipe]={
+                "prep_T1": {"crop_T1": {"args": "should be defined in indiv"}},
+                "prep_T2": {"crop_T2": {"args": "should be defined in indiv"}},
+                "align_T2_on_T1": {"dof": 6, "cost": "normmi"}}
+
+            if "norm_intensity" in params["short_preparation_pipe"].keys():
+                norm_intensity= params["short_preparation_pipe"]["norm_intensity"]
+
+                params[prep_pipe]["prep_T1"]["norm_intensity"]=norm_intensity
+                params[prep_pipe]["prep_T2"]["norm_intensity"]=norm_intensity
+
+
+            if "denoise" in params["short_preparation_pipe"].keys():
+                denoise= params["short_preparation_pipe"]["denoise"]
+
+                params[prep_pipe]["prep_T1"]["denoise"]=denoise
+                params[prep_pipe]["prep_T2"]["denoise"]=denoise
+
+            del params["short_preparation_pipe"]
 
         else:
             print ("Keeping crop_T1 (only T1 will be used)")
