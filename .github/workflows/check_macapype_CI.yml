@@ -27,6 +27,7 @@ jobs:
             sudo apt-get install wget zip
             pip install --upgrade pygraphviz graphviz
       - name: Download dataset
-        wget --no-check-certificate --content-disposition  . -O https://amubox.univ-amu.fr//public.php?service=files&t=3NLBXgFGdxPBRC2&download
-        unzip -o macapype_CI.zip -d .
-        ls macapype_CI
+        run:
+            wget --no-check-certificate --content-disposition  . -O https://amubox.univ-amu.fr//public.php?service=files&t=3NLBXgFGdxPBRC2&download
+            unzip -o macapype_CI.zip -d .
+            ls macapype_CI
