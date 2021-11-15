@@ -198,8 +198,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
                 params["short_preparation_pipe"]["bet_crop"] = {"m": True, "aT2": True, "c": 10, "n": 2}
 
-            print("Using default bet_crop parameters: {}".format(
-                params["bet_crop"]))
+                print("Using default bet_crop parameters: {}".format(
+                    params["short_preparation_pipe"]["bet_crop"]))
 
                 print("New params after modification")
                 pprint.pprint(params)
