@@ -19,16 +19,18 @@ jobs:
           python-version: 3.6
       - name: Install dependencies
         run: |
-            pip install codecov pytest pytest-cov
-            pip install -e .
-            pip install flake8
-            sudo apt-get install graphviz libgraphviz-dev
-
             sudo apt-get install wget zip
+
+            pip install codecov pytest pytest-cov
+            pip install flake8
+
+            sudo apt-get install graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
+
+            pip install -e .
       - name: Download dataset
         run:
-            wget --no-check-certificate --content-disposition  https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download -O macapype_CI.zip
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download" -O macapype_CI.zip
 
             unzip -o macapype_CI.zip -d .
             ls macapype_CI
