@@ -1,0 +1,28 @@
+name: Running all existing pipelines in macapype_CI.zip
+
+on:
+  release:
+    types: [published]
+
+
+  push:
+    branches:
+      - hotfix_NMT_version
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pull latest docker image
+        run:
+            docker pull docker://macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+            ls
+
+      - name: Running all test pipelines
+        run: |
+            docker run -v macapype_CI:macapype_CI macatools/macapype:latest python /root/packages/macapype/workflows/segment_pnh.py -data macapype_CI/macaque_prime-de/ -out macapype_CI/macaque_prime-de/ -soft ANTS_test -species macaque -indiv macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
