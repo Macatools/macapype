@@ -1,0 +1,32 @@
+name: Publish Python distributions to PyPI on release
+
+on:
+  release:
+    types: [published]
+
+
+  push:
+    branches:
+      - test
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+      - name: Install dependencies
+        run: |
+            pip install codecov pytest pytest-cov
+            pip install -e .
+            pip install flake8
+            sudo apt-get install graphviz libgraphviz-dev
+
+            sudo apt-get install wget zip
+            pip install --upgrade pygraphviz graphviz
+      - name: Download dataset
+        wget --no-check-certificate --content-disposition  . -O https://amubox.univ-amu.fr//public.php?service=files&t=3NLBXgFGdxPBRC2&download
+        unzip -o macapype_CI.zip -d .
+        ls macapype_CI
