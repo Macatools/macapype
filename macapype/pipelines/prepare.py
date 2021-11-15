@@ -492,7 +492,7 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         if "bet_crop" in params.keys():
 
             bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
-                                name='bet_crop')
+                                  name='bet_crop')
 
         if "reorient" in params.keys():
 
