@@ -191,8 +191,15 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         if "short_preparation_pipe" in params.keys():
             if "crop_T1" in params["short_preparation_pipe"].keys():
-                print("Deleting automated crop")
+                print("Deleting crop_T1")
                 del params["short_preparation_pipe"]["crop_T1"]
+
+                print("Adding automated bet_crop")
+
+                params["short_preparation_pipe"]["bet_crop"] = {"m": True, "aT2": True, "c": 10, "n": 2}
+
+            print("Using default bet_crop parameters: {}".format(
+                params["bet_crop"]))
 
                 print("New params after modification")
                 pprint.pprint(params)
