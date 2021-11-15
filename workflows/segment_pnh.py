@@ -242,7 +242,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
                 print (indiv_params[sub][ses].keys())
 
-                if "crop_T1" in indiv_params[sub][ses].keys()
+                if "crop_T1" in indiv_params[sub][ses].keys():
                     count_T1_crops+=1
 
                     if "crop_T2" in indiv_params[sub][ses].keys() \
