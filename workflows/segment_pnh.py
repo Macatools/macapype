@@ -230,13 +230,13 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         for sub in indiv_params.keys():
 
-            print(sub)
-            print(sub.split("-")[1])
-            print(sub.split('-')[1] in subjects)
-            0/0
+            if sub.split('-')[1] not in subjects:
+                continue
 
             for ses in indiv_params[sub].keys():
 
+                if ses.split('-')[1] not in sessions:
+                    continue
 
                 count_all_sessions+=1
 
