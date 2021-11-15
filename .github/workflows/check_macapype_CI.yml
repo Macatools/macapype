@@ -1,4 +1,4 @@
-name: Running all existing pipelines in macapype_CI.zip
+name: Running test pipeline from github version
 
 on:
   release:
