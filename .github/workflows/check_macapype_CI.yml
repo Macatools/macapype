@@ -7,7 +7,7 @@ on:
 
   push:
     branches:
-      - test
+      - hotfix_NMT_version
 jobs:
   build:
     runs-on: ubuntu-latest
