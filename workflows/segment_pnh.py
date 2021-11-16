@@ -312,10 +312,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             del params["short_preparation_pipe"]
 
-        else:
-            print ("Keeping crop_T1 (only T1 will be used)")
-            wf_name+="_only_crop_T1"
-
         pprint.pprint(params)
 
     # params_template
