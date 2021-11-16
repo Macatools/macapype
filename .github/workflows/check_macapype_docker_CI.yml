@@ -26,11 +26,9 @@ jobs:
       - name: Running all test pipelines
         run: |
             pwd
-            echo "\n"
+            echo ""
             ls macapype_CI
-            
-            echo "\n"
+            echo ""
             ls macapype_CI/macaque_prime-de
-            
-            echo "\n"
-            docker run -ti -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest python /opt/packages/macapype/workflows/segment_pnh.py -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+            echo ""
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest python /opt/packages/macapype/workflows/segment_pnh.py -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
