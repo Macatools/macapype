@@ -28,4 +28,4 @@ jobs:
             pwd
             ls macapype_CI
             ls macapype_CI/macaque_prime-de
-            docker run -v macapype_CI:/data/macapype_CI macatools/macapype:latest python /opt/packages/macapype/workflows/segment_pnh.py -data /data/macapype_CI/macaque_prime-de/ -out /data/macapype_CI/macaque_prime-de/ -soft ANTS -species macaque -indiv /data/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+            docker run -ti -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest python /opt/packages/macapype/workflows/segment_pnh.py -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
