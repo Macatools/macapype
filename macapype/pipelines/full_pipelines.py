@@ -202,29 +202,29 @@ def create_full_spm_subpipes(
 
         # Compute brain mask using old_segment of SPM and postprocessing on
         # tissues' masks
-        if "old_segment_pipe" in params.keys():
+        if "native_old_segment_pipe" in params.keys():
 
             old_segment_pipe = create_native_old_segment_pipe(
                 params_template,
-                params=parse_key(params, "old_segment_pipe"))
+                params=parse_key(params, "native_old_segment_pipe"))
 
             seg_pipe.connect(debias, 't1_debiased_file',
-                             old_segment_pipe, 'inputnode.T1')
+                             native_old_segment_pipe, 'inputnode.T1')
 
             seg_pipe.connect(native_iter_reg_pipe,
                              'register_csf_to_nat.out_file',
-                             old_segment_pipe, 'inputnode.native_csf')
+                             native_old_segment_pipe, 'inputnode.native_csf')
 
             seg_pipe.connect(native_iter_reg_pipe,
                              'register_wm_to_nat.out_file',
-                             old_segment_pipe, 'inputnode.native_wm')
+                             native_old_segment_pipe, 'inputnode.native_wm')
 
             seg_pipe.connect(native_iter_reg_pipe,
                              'register_gm_to_nat.out_file',
-                             old_segment_pipe, 'inputnode.native_gm')
+                             native_old_segment_pipe, 'inputnode.native_gm')
 
             seg_pipe.connect(inputnode, 'indiv_params',
-                             old_segment_pipe, 'inputnode.indiv_params')
+                             native_old_segment_pipe, 'inputnode.indiv_params')
 
         else:
             return seg_pipe
