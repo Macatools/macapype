@@ -3,28 +3,31 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pipelines &#8212; macapype 0.2.2.1 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Pipelines &#8212; macapype 0.2.3.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script src="_static/js/jquery-1.11.0.min.js"></script>
-    <script src="_static/js/jquery-fix.js"></script>
-    <script src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="How to contribute to the sources of the project" href="contribute.html" />
+    <link rel="next" title="External Pipelines" href="external_pipeline.html" />
     <link rel="prev" title="Pipeline examples" href="examples.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -39,7 +42,7 @@
         </button>
         <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.3.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -143,6 +146,27 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="external_pipeline.html#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="external_pipeline.html#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#fod-estimation">FOD estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#perform-streamlines-tractography">Perform streamlines tractography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#pull-request">Pull Request</a></li>
@@ -192,6 +216,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
@@ -258,6 +283,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 
@@ -270,13 +296,13 @@
 </form>
         </div>
       </div>
-    <div class="col-md-9 content">
+    <div class="body col-md-9 content" role="main">
       
-  <div class="section" id="pipelines">
+  <section id="pipelines">
 <span id="id1"></span><h1>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="spm-based-pipelines">
+<section id="spm-based-pipelines">
 <h2>SPM-based pipelines<a class="headerlink" href="#spm-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="using-t1w-and-t2w-images">
+<section id="using-t1w-and-t2w-images">
 <h3>Using T1w and T2w images<a class="headerlink" href="#using-t1w-and-t2w-images" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_spm_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">SPM</span> <span class="pre">pipeline</span></code></a>, with the processing sequence:</p>
 <ul class="simple">
@@ -285,10 +311,10 @@
 <li><p><a class="reference internal" href="generated/macapype.nodes.register.IterREGBET.html#macapype.nodes.register.IterREGBET" title="macapype.nodes.register.IterREGBET"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterREGBET</span></code></a></p></li>
 <li><p><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></p></li>
 </ul>
-</div>
-<div class="section" id="using-only-a-t1w-image">
+</section>
+<section id="using-only-a-t1w-image">
 <h3>Using only a T1w image<a class="headerlink" href="#using-only-a-t1w-image" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1_spm_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">SPM</span> <span class="pre">T1</span> <span class="pre">pipeline</span></code></a>, with the processing sequence:</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">SPM</span> <span class="pre">T1</span> <span class="pre">pipeline</span></code>, with the processing sequence:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span> <span class="pre">preparation</span></code></a> (See <a class="reference internal" href="#data-prep"><span class="std std-ref">Data preparation</span></a> for more details)</p></li>
 <li><p><a class="reference internal" href="generated/macapype.nodes.correct_bias.T1xT2BiasFieldCorrection.html#macapype.nodes.correct_bias.T1xT2BiasFieldCorrection" title="macapype.nodes.correct_bias.T1xT2BiasFieldCorrection"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BiasFieldCorrection</span></code></a> but the T1w replaces the T2w</p></li>
@@ -297,11 +323,11 @@
 <li><p><a class="reference internal" href="generated/macapype.pipelines.segment.create_old_segment_pipe.html#macapype.pipelines.segment.create_old_segment_pipe" title="macapype.pipelines.segment.create_old_segment_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">old_segment</span> <span class="pre">SPM</span> <span class="pre">based</span> <span class="pre">pipeline</span></code></a></p></li>
 </ul>
 <hr class="docutils" />
-</div>
-</div>
-<div class="section" id="ants-based-pipelines">
+</section>
+</section>
+<section id="ants-based-pipelines">
 <h2>ANTS-based pipelines<a class="headerlink" href="#ants-based-pipelines" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
+<section id="id2">
 <h3>Using T1w and T2w images<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_ants_subpipes.html#macapype.pipelines.full_pipelines.create_full_ants_subpipes" title="macapype.pipelines.full_pipelines.create_full_ants_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">ANTS</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
 <ul class="simple">
@@ -324,8 +350,8 @@
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="using-only-t1w-images">
+</section>
+<section id="using-only-t1w-images">
 <h3>Using only T1w images<a class="headerlink" href="#using-only-t1w-images" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes.html#macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes" title="macapype.pipelines.full_pipelines.create_full_T1_ants_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">full</span> <span class="pre">ANTS</span> <span class="pre">T1</span> <span class="pre">pipeline</span></code></a>, with the processing sequence :</p>
 <ul class="simple">
@@ -347,16 +373,16 @@
 </li>
 </ul>
 <hr class="docutils" />
-</div>
-</div>
-<div class="section" id="data-preparation">
+</section>
+</section>
+<section id="data-preparation">
 <h2>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="short-data-preparation">
+<section id="short-data-preparation">
 <h3>Short data preparation<a class="headerlink" href="#short-data-preparation" title="Permalink to this headline">¶</a></h3>
 <p>Short data preparation corresponds to the pipelines where T1 and T2 images are averaged by modality from the beginning, and T2 is aligned to T1, then cropped or betcropped, and denoised.</p>
 <p>The “auto”” version corresponds to <a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> with “betcrop” option (using <a class="reference internal" href="generated/macapype.nodes.extract_brain.T1xT2BET.html#macapype.nodes.extract_brain.T1xT2BET" title="macapype.nodes.extract_brain.T1xT2BET"><code class="xref py py-class docutils literal notranslate"><span class="pre">T1xT2BET</span></code></a>)</p>
 <p>The “manual” version corresponds to <a class="reference internal" href="generated/macapype.pipelines.prepare.create_short_preparation_pipe.html#macapype.pipelines.prepare.create_short_preparation_pipe" title="macapype.pipelines.prepare.create_short_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">short</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a> with “crop” option, and specify crop box in args for each subject in individual params</p>
-<table class="docutils align-center" id="short-prep">
+<span class="target" id="short-prep"></span><table class="docutils align-center">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -369,13 +395,13 @@
 </table>
 <p>The version with crop are used in <a class="reference internal" href="auto_examples/plot_segment_marmo_ants_based.html#plot-segment-marmo-ants-based"><span class="std std-ref">marmoset example</span></a>, the version with betcrop is used in both macaque examples with
 <a class="reference internal" href="auto_examples/plot_segment_macaque_spm_based.html#plot-segment-macaque-spm-based"><span class="std std-ref">SPM</span></a> and <a class="reference internal" href="auto_examples/plot_segment_macaque_ants_based.html#plot-segment-macaque-ants-based"><span class="std std-ref">ANTS</span></a></p>
-</div>
-<div class="section" id="long-data-preparation">
+</section>
+<section id="long-data-preparation">
 <h3>Long data preparation<a class="headerlink" href="#long-data-preparation" title="Permalink to this headline">¶</a></h3>
 <p>In some cases, you may want some processing done prior to the alignement, if T1 and T2 are very different.</p>
 <p>In this case, after aligning and averaging by modality (all T1s -&gt; average_T1), you may crop, debias (N4) and denoise each image (average_T1 and average T2) indendantly before aligning average_T2 to average_T1 (<a class="reference internal" href="generated/macapype.pipelines.prepare.create_long_single_preparation_pipe.html#macapype.pipelines.prepare.create_long_single_preparation_pipe" title="macapype.pipelines.prepare.create_long_single_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">long</span> <span class="pre">single</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a>)</p>
 <p>But in a very specific case, where the data of multiple sessions have been acquired with different settings (e.g. antenna contrast), you may have even all multiple modality data preprocessed (reorient, cropped, debiased, denoised) indendantly before being averaged and aligned by modality, and then av_T2 aligned to av_T1 (<a class="reference internal" href="generated/macapype.pipelines.prepare.create_long_multi_preparation_pipe.html#macapype.pipelines.prepare.create_long_multi_preparation_pipe" title="macapype.pipelines.prepare.create_long_multi_preparation_pipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">long</span> <span class="pre">multi</span> <span class="pre">data</span> <span class="pre">preparation</span></code></a>)</p>
-<table class="docutils align-center" id="long-prep">
+<span class="target" id="long-prep"></span><table class="docutils align-center">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -387,21 +413,21 @@
 </tbody>
 </table>
 <p>The short version is used for the <a class="reference internal" href="auto_examples/plot_segment_baboon_ants_based.html#plot-segment-baboon-ants-based"><span class="std std-ref">baboon example</span></a>, the long version has been tested on a data set with multiple T1s (not shown in examples).</p>
-</div>
-<div class="section" id="options">
+</section>
+<section id="options">
 <h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="reorient-sub-pipeline">
+<section id="reorient-sub-pipeline">
 <h4>Reorient sub-pipeline<a class="headerlink" href="#reorient-sub-pipeline" title="Permalink to this headline">¶</a></h4>
 <p>For all the preparation pipelines, it is possible to add at the beginning of the pipeline a “reorient” subpipelines by specifying
 An example can be found in <a class="reference internal" href="auto_examples/plot_segment_sphinx_macaque_ants_based.html#plot-segment-sphinx-macaque-ants-based"><span class="std std-ref">macaque sphinx</span></a></p>
-</div>
-<div class="section" id="denoise-and-denoise-first">
+</section>
+<section id="denoise-and-denoise-first">
 <h4>Denoise and denoise_first<a class="headerlink" href="#denoise-and-denoise-first" title="Permalink to this headline">¶</a></h4>
 <p>By default, denoising is done at the end of the preparation pipeline, on the cropped data. It is however possible to move the denoise at the beginning at the pipeline, with option denoise first. <em>N.B.:  This option is only available in long preparation (single and multi) so far</em></p>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
     </div>
@@ -415,8 +441,8 @@ An example can be found in <a class="reference internal" href="auto_examples/plo
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-24.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-11-17.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

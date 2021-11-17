@@ -1,5 +1,9 @@
 :orphan:
 
+
+
+.. _sphx_glr_auto_examples:
+
 .. _general_examples:
 
 Examples Gallery
@@ -14,13 +18,14 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of a baboon dataset with ANTS">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline">
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_baboon_ants_based_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_baboon_ants_based_thumb.png
+     :alt: Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline
 
-        :ref:`sphx_glr_auto_examples_plot_segment_baboon_ants_based.py`
+     :ref:`sphx_glr_auto_examples_plot_segment_baboon_ants_based.py`
 
 .. raw:: html
 
@@ -34,13 +39,14 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS-based pipeline">
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_ants_based_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_ants_based_thumb.png
+     :alt: Plot the results of a segmentation with ANTS-based pipeline
 
-        :ref:`sphx_glr_auto_examples_plot_segment_macaque_ants_based.py`
+     :ref:`sphx_glr_auto_examples_plot_segment_macaque_ants_based.py`
 
 .. raw:: html
 
@@ -54,13 +60,14 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with SPM">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with SPM-based pipeline T1xT2">
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_spm_based_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_spm_based_thumb.png
+     :alt: Plot the results of a segmentation with SPM-based pipeline T1xT2
 
-        :ref:`sphx_glr_auto_examples_plot_segment_macaque_spm_based.py`
+     :ref:`sphx_glr_auto_examples_plot_segment_macaque_spm_based.py`
 
 .. raw:: html
 
@@ -74,13 +81,14 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data with ANTS">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data with ANTS-based pipeline">
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_marmo_ants_based_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_marmo_ants_based_thumb.png
+     :alt: Plot the results of a segmentation of marmoset data with ANTS-based pipeline
 
-        :ref:`sphx_glr_auto_examples_plot_segment_marmo_ants_based.py`
+     :ref:`sphx_glr_auto_examples_plot_segment_marmo_ants_based.py`
 
 .. raw:: html
 
@@ -94,13 +102,14 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS">
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS-based pipeline in sphinx position">
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_macaque_ants_based_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_macaque_ants_based_thumb.png
+     :alt: Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 
-        :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py`
+     :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py`
 
 .. raw:: html
 
@@ -113,7 +122,7 @@ Examples Gallery
    /auto_examples/plot_segment_sphinx_macaque_ants_based
 .. raw:: html
 
-    <div style='clear:both'></div>
+    <div class="sphx-glr-clear"></div>
 
 
 
@@ -123,19 +132,19 @@ Examples Gallery
     :class: sphx-glr-footer-gallery
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-python
 
-    :download:`Download all examples in Python source code: auto_examples_python.zip <//home/INT/meunier.d/miniconda3/Packages/macapype/doc/auto_examples/auto_examples_python.zip>`
+    :download:`Download all examples in Python source code: auto_examples_python.zip </auto_examples/auto_examples_python.zip>`
 
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip <//home/INT/meunier.d/miniconda3/Packages/macapype/doc/auto_examples/auto_examples_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip </auto_examples/auto_examples_jupyter.zip>`
 
 
 .. only:: html
 
  .. rst-class:: sphx-glr-signature
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

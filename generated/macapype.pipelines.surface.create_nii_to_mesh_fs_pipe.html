@@ -3,26 +3,29 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.surface.create_nii_to_mesh_fs_pipe &#8212; macapype 0.2.2.1 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>macapype.pipelines.surface.create_nii_to_mesh_fs_pipe &#8212; macapype 0.2.3.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script src="../_static/js/jquery-fix.js"></script>
-    <script src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -37,7 +40,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.3.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -141,6 +144,27 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../external_pipeline.html">External Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../external_pipeline.html#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../external_pipeline.html#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#fod-estimation">FOD estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#perform-streamlines-tractography">Perform streamlines tractography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../external_pipeline.html#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../contribute.html#install-a-dev-version">Install a dev version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute.html#pull-request">Pull Request</a></li>
@@ -168,6 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 </ul>
@@ -212,6 +237,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
 </ul>
 
@@ -224,13 +250,13 @@
 </form>
         </div>
       </div>
-    <div class="col-md-9 content">
+    <div class="body col-md-9 content" role="main">
       
-  <div class="section" id="macapype-pipelines-surface-create-nii-to-mesh-fs-pipe">
+  <section id="macapype-pipelines-surface-create-nii-to-mesh-fs-pipe">
 <h1>macapype.pipelines.surface.create_nii_to_mesh_fs_pipe<a class="headerlink" href="#macapype-pipelines-surface-create-nii-to-mesh-fs-pipe" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="macapype.pipelines.surface.create_nii_to_mesh_fs_pipe">
-<code class="sig-prename descclassname">macapype.pipelines.surface.</code><code class="sig-name descname">create_nii_to_mesh_fs_pipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'nii_to_mesh_fs_pipe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/surface.html#create_nii_to_mesh_fs_pipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macapype.pipelines.surface.create_nii_to_mesh_fs_pipe" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="macapype.pipelines.surface.create_nii_to_mesh_fs_pipe">
+<span class="sig-prename descclassname"><span class="pre">macapype.pipelines.surface.</span></span><span class="sig-name descname"><span class="pre">create_nii_to_mesh_fs_pipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nii_to_mesh_fs_pipe'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/macapype/pipelines/surface.html#create_nii_to_mesh_fs_pipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#macapype.pipelines.surface.create_nii_to_mesh_fs_pipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: surface generation using freesurfer tools</p>
 <p>Params:</p>
 <ul class="simple">
@@ -262,7 +288,7 @@
 <p>Outputs:</p>
 </dd></dl>
 
-</div>
+</section>
 
 
     </div>
@@ -276,8 +302,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-02-24.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-11-17.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>
