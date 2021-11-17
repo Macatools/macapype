@@ -208,22 +208,24 @@ RUN pip3 install xvfbwrapper \
 
 
 ############################################# install macapype
-
-RUN mkdir -p /opt/packages/
-
-ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
-WORKDIR /opt/packages/
-
-RUN git clone https://github.com/macatools/macapype.git
-WORKDIR /opt/packages/macapype
-
-RUN git checkout master
-RUN python3 setup.py develop
+# 
+# RUN mkdir -p /opt/packages/
+# 
+# ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
+# WORKDIR /opt/packages/
+# 
+# RUN git clone https://github.com/macatools/macapype.git
+# WORKDIR /opt/packages/macapype
+# 
+# RUN git checkout master
+# RUN python3 setup.py develop
 
 RUN echo $(which python) && \
     echo $(which python3) && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     ln -s /usr/bin/pip3 /usr/bin/pip
+
+RUN pip install macapype && python -c "import macapype; print(macapype.__version__)"
 
 #####################################################################################################
 ############################################ extra (exemple of a line to launch) ####################
