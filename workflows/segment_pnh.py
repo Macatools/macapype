@@ -225,6 +225,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         pprint.pprint(indiv_params)
 
+        if subjects is None or sessions is None:
+            print("For whole BIDS dir, unable to assess if the indiv_params is correct;\n Running with params as it is")
+            continue
+        
+        print("Will modify params if necessary, given specified subjects and sessions;\n")
+        
         for sub in indiv_params.keys():
 
             if sub.split('-')[1] not in subjects:
