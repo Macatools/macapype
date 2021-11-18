@@ -213,7 +213,7 @@ def create_native_iter_reg_pipe(params_template, params={},
     # gm
     register_gm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_gm_to_nat")
     register_gm_to_nat.inputs.in_file = params_template["template_gm"]
-    register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
     native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
                                  register_gm_to_nat, 'reference')
@@ -223,7 +223,7 @@ def create_native_iter_reg_pipe(params_template, params={},
     # wm
     register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
     register_wm_to_nat.inputs.in_file = params_template["template_wm"]
-    register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
     native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
                                  register_wm_to_nat, 'reference')
@@ -233,7 +233,7 @@ def create_native_iter_reg_pipe(params_template, params={},
     # csf
     register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
     register_csf_to_nat.inputs.in_file = params_template["template_csf"]
-    register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
     native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
                                  register_csf_to_nat, 'reference')
