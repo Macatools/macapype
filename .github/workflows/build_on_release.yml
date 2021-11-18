@@ -9,7 +9,7 @@ on:
       - hotfix_NMT_version
 jobs:
 
-  build-n-publish:
+  build-n-publish-pypi:
     name: Build and publish Python to PyPI
     runs-on: ubuntu-18.04
 
@@ -41,6 +41,7 @@ jobs:
 
   docker-build:
     name: Build Docker image and Push to Docker Hub
+    needs: build-n-publish-pypi
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
