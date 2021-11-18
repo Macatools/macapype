@@ -481,7 +481,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     if deriv:
 
-        datasink_name = os.path.join("derivatives", wf_name)
+        datasink_name = os.path.join("derivatives", "macapype_" + soft)
 
         if "regex_subs" in params.keys():
             params_regex_subs = params["regex_subs"]
