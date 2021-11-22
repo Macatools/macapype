@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "NMT_v1.3"
+        "template_name": "NMT_v1.3better"
     },
     "short_preparation_pipe":
     {
@@ -54,7 +54,7 @@
         },
         "register_NMT_pipe":
         {
-            "NMT_version": "1.3",
+            "NMT_version": "v1.3",
             "norm_intensity":
             {
                 "dimension": 3,

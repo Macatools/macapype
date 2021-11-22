@@ -27,6 +27,7 @@
     {
         "register_NMT_pipe":
         {
+            "NMT_version": "v1.3",
             "norm_intensity":
             {
                 "dimension": 3,
