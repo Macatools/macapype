@@ -10,7 +10,7 @@ from macapype.pipelines.prepare import (create_short_preparation_pipe,
 data_path = make_tmp_dir()
 
 
-def test_create_short_auto_preparation_pipe():
+def test_create_bet_crop_short_preparation_pipe():
 
     params = {
         "short_preparation_pipe":
@@ -34,7 +34,7 @@ def test_create_short_auto_preparation_pipe():
                              "graph.png"))
 
 
-def test_create_short_auto_reorient_preparation_pipe():
+def test_create_bet_crop_reorient_short_preparation_pipe():
 
     params = {
         "short_preparation_pipe":
@@ -62,12 +62,12 @@ def test_create_short_auto_reorient_preparation_pipe():
                              "graph.png"))
 
 
-def test_create_short_manual_preparation_pipe():
+def test_create_crop_T1_short_preparation_pipe():
 
     params = {
         "short_preparation_pipe":
         {
-            "crop":
+            "crop_T1":
             {
                 "args": ""
             }

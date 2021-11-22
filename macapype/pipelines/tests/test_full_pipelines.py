@@ -72,6 +72,9 @@ def test_create_full_ants_subpipes_no_subpipes():
         },
         "short_preparation_pipe":
         {
+                "bet_crop":
+                {
+                }
         },
         "brain_extraction_pipe":
         {
