@@ -227,7 +227,7 @@ def create_full_spm_subpipes(
                 params_template,
                 params=parse_key(params, "native_old_segment_pipe"))
 
-            seg_pipe.connect(debias, 't1_debiased_file',
+            seg_pipe.connect(debias, 't1_debiased_brain_file',
                              old_segment_pipe, 'inputnode.T1')
 
             seg_pipe.connect(native_iter_reg_pipe,
