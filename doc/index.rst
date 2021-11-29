@@ -82,3 +82,4 @@ Table of contents
     examples
     pipelines
     contribute
+    brainhack
