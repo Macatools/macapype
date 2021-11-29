@@ -22,7 +22,7 @@ from macapype.utils.utils_tests import load_test_data
 # Testing plot in local
 ##############################################################################
 
-data_path = load_test_data("data_test_marmo")
+data_path = load_test_data("data_test_marmo_processed")
 
 wf_path = os.path.join(data_path, "example_segment_marmo_ants_based")
 
