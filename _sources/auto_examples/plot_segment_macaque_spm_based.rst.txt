@@ -61,7 +61,7 @@ Testing plot in local
 .. code-block:: default
 
 
-    data_path = load_test_data("data_test_macaque")
+    data_path = load_test_data("data_test_macaque_processed")
 
     # displaying results
     wf_path = os.path.join(data_path, "example_segment_macaque_spm_based")
@@ -91,8 +91,8 @@ Testing plot in local
 
  .. code-block:: none
 
-    data_dirpath /home/cordeau.m/data_macapype already exists
-    /home/cordeau.m/data_macapype/data_test_macaque Already exists, skipping download
+    data_dirpath /home/meunier.d/data_macapype already exists
+    /home/meunier.d/data_macapype/data_test_macaque_processed Already exists, skipping download
 
 
 
@@ -132,7 +132,7 @@ results of cropping
  .. code-block:: none
 
 
-    256
+    0
 
 
 
@@ -170,7 +170,7 @@ results of denoising
  .. code-block:: none
 
 
-    256
+    0
 
 
 
@@ -344,7 +344,7 @@ segmentation results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.550 seconds)
+   **Total running time of the script:** ( 0 minutes  57.220 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_macaque_spm_based.py:

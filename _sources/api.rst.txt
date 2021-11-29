@@ -22,7 +22,6 @@ Pipelines
    :toctree: generated/
 
     create_full_spm_subpipes
-    create_full_T1_spm_subpipes
 
 *ANTS based*:
 

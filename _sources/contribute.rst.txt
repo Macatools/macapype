@@ -48,6 +48,18 @@ The best way to contribute to the development of the source code is to:
 
 6. Once your are satisfied with modifications in your local remote on my_new_feature branch, create a pull request (PR) to merge your branch with the official Macatools repo (see below)
 
+To build the documentation
+##########################
+
+Same as before, + the following packages:
+
+.. code-block:: bash
+
+    pip install sphinx_gallery
+    pip install sphinx_bootstrap_theme
+    pip install numpydoc
+    
+
 Pull Request
 #############
 
