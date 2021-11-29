@@ -2,9 +2,9 @@
 
 .. _brainhack:
 
-~~~~~~~~~~
-BrainHacks
-~~~~~~~~~~
+~~~~~~
+Events
+~~~~~~
 
 BrainHack Marseille 2021
 ************************
