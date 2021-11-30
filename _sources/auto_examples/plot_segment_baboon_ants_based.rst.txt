@@ -60,7 +60,7 @@ Testing plot in local
 .. code-block:: default
 
 
-    data_path = load_test_data("data_test_baboon_processed")
+    data_path = "/home/cordeau.m/data_macapype"
 
     wf_path = os.path.join(data_path, "example_segment_baboon_ants_based_Odor")
 
@@ -80,15 +80,6 @@ Testing plot in local
    :srcset: /auto_examples/images/sphx_glr_plot_segment_baboon_ants_based_001.png
    :class: sphx-glr-single-img
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    data_dirpath /home/meunier.d/data_macapype already exists
-    /home/meunier.d/data_macapype/data_test_baboon_processed Already exists, skipping download
 
 
 
@@ -142,7 +133,7 @@ results of cropping
  .. code-block:: none
 
 
-    0
+    256
 
 
 
@@ -190,7 +181,7 @@ results of norm_intensity
  .. code-block:: none
 
 
-    0
+    256
 
 
 
@@ -240,7 +231,7 @@ results of denoising
  .. code-block:: none
 
 
-    0
+    256
 
 
 
@@ -542,7 +533,7 @@ segmentation results by tissue
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 3 minutes  51.277 seconds)
+   **Total running time of the script:** ( 0 minutes  10.541 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_baboon_ants_based.py:

@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt  # noqa
 # Testing plot in local
 ###############################################################################
 
-data_path = load_test_data("data_test_baboon_processed")
+data_path = "/home/cordeau.m/data_macapype"
 
 wf_path = os.path.join(data_path, "example_segment_baboon_ants_based_Odor")
 

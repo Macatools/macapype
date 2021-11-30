@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>External Pipelines &#8212; macapype 0.2.3.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to contribute to the sources of the project" href="contribute.html" />
+    <link rel="prev" title="Pipelines" href="pipelines.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype.png"></span>
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.3.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="auto_examples/index.html">Gallery</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#spm-based-pipelines">SPM-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#ants-based-pipelines">ANTS-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#id2">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">External Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fod-estimation">FOD estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#perform-streamlines-tractography">Perform streamlines tractography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#versionning">Versionning</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">External Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fod-estimation">FOD estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#perform-streamlines-tractography">Perform streamlines tractography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/external_pipeline.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">External Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fod-estimation">FOD estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#perform-streamlines-tractography">Perform streamlines tractography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
+</ul>
+
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="external-pipelines">
+<span id="external-pipeline"></span><h1>External Pipelines<a class="headerlink" href="#external-pipelines" title="Permalink to this headline">¶</a></h1>
+<section id="macaque-diffusion-weighted-imaging">
+<h2>Macaque diffusion weighted imaging<a class="headerlink" href="#macaque-diffusion-weighted-imaging" title="Permalink to this headline">¶</a></h2>
+<section id="how-to-create-a-whole-brain-tractogram">
+<h3>How to create a whole brain tractogram?<a class="headerlink" href="#how-to-create-a-whole-brain-tractogram" title="Permalink to this headline">¶</a></h3>
+<p>This pipeline call some commands of the MRtrix tool. You can find the documentation of MRtrix here : <a class="reference external" href="https://osf.io/pm9ba/">https://osf.io/pm9ba/</a></p>
+<section id="perform-conversion-between-different-file-types">
+<h4>Perform conversion between different file types<a class="headerlink" href="#perform-conversion-between-different-file-types" title="Permalink to this headline">¶</a></h4>
+<p>Convertion of bvecs bvals and dwi.nii files in one file .mif</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mrconvert corrected_dwi_sub-xx_ses-T1_acq-AP_dwi.nii.gz
+  -fslgrad
+  corrected_bvecs_sub-xxx_ses-T1_acq-AP_dwi.txt
+  raw_bvals_sub-xxx_ses-T1_acq-AP_dwi.txt
+  output_sub-xxx.mif
+</pre></div>
+</div>
+<p>Option: -fslgrad to reimport diffusion gradient table</p>
+</section>
+<section id="generation-of-a-whole-brain-mask-from-a-dwi-image">
+<h4>Generation of a whole brain mask from a DWI image<a class="headerlink" href="#generation-of-a-whole-brain-mask-from-a-dwi-image" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ dwi2mask
+  sub-xxx.mif
+  sub-xxx_mask.mif
+</pre></div>
+</div>
+</section>
+<section id="diffusion-tensor-estimation">
+<h4>Diffusion tensor estimation<a class="headerlink" href="#diffusion-tensor-estimation" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ dwi2tensor
+  sub-xxx.mif
+  tensor.mif
+</pre></div>
+</div>
+</section>
+<section id="maps-generation-of-tensor-derived-parameters">
+<h4>Maps Generation of tensor-derived parameters<a class="headerlink" href="#maps-generation-of-tensor-derived-parameters" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tensor2metric
+  tensor.mif
+  -fa
+  fa.mif
+</pre></div>
+</div>
+<p>Option: -fa to compute the fractional anisotropy (FA) of the diffusion tensor</p>
+</section>
+<section id="constrained-spherical-deconvolution-csd">
+<h4>Constrained spherical deconvolution (CSD)<a class="headerlink" href="#constrained-spherical-deconvolution-csd" title="Permalink to this headline">¶</a></h4>
+<p>Estimation of the impulsionnal response = diffusion signal produced by 1 fiber</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ dwi2response dhollander
+  sub-xxx.mif
+  wm.txt
+  gm.txt
+  csf.txt
+  -voxels
+  voxels.mif
+  -mask
+  sub-xxx_mask.mif
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Option: -voxels to output an image showing the final voxel selection</dt><dd><p>-mask to provide an initial mask for response voxel selection</p>
+</dd>
+</dl>
+</section>
+<section id="fod-estimation">
+<h4>FOD estimation<a class="headerlink" href="#fod-estimation" title="Permalink to this headline">¶</a></h4>
+<p>Estimate fiber orientation distributions from diffusion data using spherical deconvolution</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ dwi2fod
+  msmt_csd
+  sub-xxx.mif
+  wm.txt
+  wm.mif
+  gm.txt
+  gm.mif
+  csf.txt
+  csf.mif
+</pre></div>
+</div>
+</section>
+<section id="convertion-of-the-macaque-t1-in-mif-file">
+<h4>Convertion of the macaque T1 in .mif file<a class="headerlink" href="#convertion-of-the-macaque-t1-in-mif-file" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mrconvert
+  sub-xxx_T1.nii
+  sub-xxx_T1.mif
+</pre></div>
+</div>
+</section>
+<section id="generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">
+<h4>Generation of a volume which contain the probability to be on the gm-wm interface<a class="headerlink" href="#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface" title="Permalink to this headline">¶</a></h4>
+<p>For this step, you have to use the 5ttgen file generated by macapype. 5TT image is suitable for Anatomically-Constrained Tractography (ACT)
+(./test_pipeline_single_indiv_params_ants/full_ants_subpipes/brain_segment_from_mask_pipe/export_5tt_pipe/_session_01_subject_xx/export_5tt/gen_5tt.nii)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ 5tt2gmwmi
+  gen_5tt.nii
+  gmwmSeed.mif
+</pre></div>
+</div>
+</section>
+<section id="perform-streamlines-tractography">
+<h4>Perform streamlines tractography<a class="headerlink" href="#perform-streamlines-tractography" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tckgen
+  -act
+  gen_5tt.nii
+  -backtrack
+  -seed_gmwmi
+  gmwmSeed.mif
+  -select
+  <span class="m">1000000</span>
+  wm.mif
+  tracks_1M.tck
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Option: -act: use the Anatomically-Constrained Tractography framework during tracking; provided image must be in the 5TT (five-tissue-type) format</dt><dd><p>-backtrack: allow tracks to be truncated and re-tracked if a poor structural termination is encountered
+-seed_gmwmi: seed from the grey matter - white matter interface
+-select: set the desired number of streamlines to be selected by tckgen</p>
+</dd>
+</dl>
+</section>
+<section id="reduction-of-the-fibers-number">
+<h4>Reduction of the fibers number<a class="headerlink" href="#reduction-of-the-fibers-number" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tckedit
+  tracks_1M.tck
+  -number
+  <span class="m">200000</span>
+  smaller_tracks_200k.tck
+</pre></div>
+</div>
+<p>Option: -number: set the desired number of selected streamlines to be propagated to the output file</p>
+</section>
+<section id="estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">
+<h4>Estimation of the registration of two images together using a symmetric rigid transformation model<a class="headerlink" href="#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mrregister
+  -type rigid
+  -rigid
+  T1_to_DWI.txt
+  -transformed
+  DWI_T1_space.mif
+  fa.mif
+  T1.nii
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Option: -type rigid: the registration type</dt><dd><p>-rigid: the output text file containing the rigid transformation as a 4x4 matrix
+-transformed: image1 after registration transformed and regridded to the space of image2</p>
+</dd>
+</dl>
+</section>
+<section id="application-of-the-spatial-transformations-to-an-image">
+<h4>Application of the spatial transformations to an image<a class="headerlink" href="#application-of-the-spatial-transformations-to-an-image" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mrtransform
+  -linear
+  T1_to_DWI.txt
+  fa.mif
+  T1_DWI_space.mif
+</pre></div>
+</div>
+<p>Option: -linear: specify a linear transform to apply</p>
+</section>
+</section>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-11-30.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
