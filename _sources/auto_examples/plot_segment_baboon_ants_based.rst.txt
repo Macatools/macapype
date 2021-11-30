@@ -55,12 +55,13 @@ Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline
 Testing plot in local
 ##############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-39
+.. GENERATED FROM PYTHON SOURCE LINES 26-40
 
 .. code-block:: default
 
 
-    data_path = "/home/cordeau.m/data_macapype"
+    data_path = load_test_data("data_test_baboon_processed")
+
 
     wf_path = os.path.join(data_path, "example_segment_baboon_ants_based_Odor")
 
@@ -81,20 +82,29 @@ Testing plot in local
    :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    data_dirpath /home/cordeau.m/data_macapype already exists
+    /home/cordeau.m/data_macapype/data_test_baboon_processed Already exists, skipping download
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-42
+
+.. GENERATED FROM PYTHON SOURCE LINES 41-43
 
 Data preparation
 ##############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-46
+.. GENERATED FROM PYTHON SOURCE LINES 45-47
 
 results of cropping
 ===========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-70
+.. GENERATED FROM PYTHON SOURCE LINES 47-71
 
 .. code-block:: default
 
@@ -137,12 +147,12 @@ results of cropping
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 72-74
 
 results of norm_intensity
 ===========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-97
+.. GENERATED FROM PYTHON SOURCE LINES 74-98
 
 .. code-block:: default
 
@@ -185,12 +195,12 @@ results of norm_intensity
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-100
+.. GENERATED FROM PYTHON SOURCE LINES 99-101
 
 results of denoising
 ===========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-126
+.. GENERATED FROM PYTHON SOURCE LINES 101-127
 
 .. code-block:: default
 
@@ -235,7 +245,7 @@ results of denoising
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-152
+.. GENERATED FROM PYTHON SOURCE LINES 128-153
 
 .. code-block:: default
 
@@ -288,17 +298,17 @@ results of denoising
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-155
+.. GENERATED FROM PYTHON SOURCE LINES 154-156
 
 First part of the pipeline: brain extraction
 ##############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 158-160
 
 Correct bias results
 ==========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-182
+.. GENERATED FROM PYTHON SOURCE LINES 160-183
 
 .. code-block:: default
 
@@ -337,12 +347,12 @@ Correct bias results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-185
+.. GENERATED FROM PYTHON SOURCE LINES 184-186
 
 Brain extraction results
 ==========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-206
+.. GENERATED FROM PYTHON SOURCE LINES 186-207
 
 .. code-block:: default
 
@@ -379,12 +389,12 @@ Brain extraction results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-209
+.. GENERATED FROM PYTHON SOURCE LINES 208-210
 
 Second part of the pipeline: segmentation
 #############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-212
+.. GENERATED FROM PYTHON SOURCE LINES 210-213
 
 .. code-block:: default
 
@@ -398,12 +408,12 @@ Second part of the pipeline: segmentation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-215
+.. GENERATED FROM PYTHON SOURCE LINES 214-216
 
 debias T1xT2 and debias N4
 =============================
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-246
+.. GENERATED FROM PYTHON SOURCE LINES 216-247
 
 .. code-block:: default
 
@@ -450,12 +460,12 @@ debias T1xT2 and debias N4
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 247-249
+.. GENERATED FROM PYTHON SOURCE LINES 248-250
 
 register template to subject
 ==============================
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-272
+.. GENERATED FROM PYTHON SOURCE LINES 250-273
 
 .. code-block:: default
 
@@ -494,12 +504,12 @@ register template to subject
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-275
+.. GENERATED FROM PYTHON SOURCE LINES 274-276
 
 segmentation results by tissue
 ================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-290
+.. GENERATED FROM PYTHON SOURCE LINES 276-291
 
 .. code-block:: default
 
@@ -533,7 +543,7 @@ segmentation results by tissue
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.541 seconds)
+   **Total running time of the script:** ( 0 minutes  11.166 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_baboon_ants_based.py:

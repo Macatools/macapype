@@ -83,3 +83,4 @@ Table of contents
     pipelines
     external_pipeline
     contribute
+    brainhack

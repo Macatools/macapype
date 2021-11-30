@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.segment &#8212; macapype 0.2.3.2 documentation</title>
+    <title>macapype.pipelines.segment &#8212; macapype 0.3.dev11 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.3.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.dev11</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -166,8 +166,22 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#to-build-the-documentation">To build the documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#pull-request">Pull Request</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#channels-of-communication">Channels of communication</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../brainhack.html#during-the-event">during the event</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../brainhack.html#before-after-the-event">before/after the event</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#project-pages">Project pages:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#program">Program:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -193,6 +207,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 </ul>
 </li>
@@ -234,6 +249,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
 <form action="../../../search.html" method="get">
@@ -429,8 +445,10 @@
             <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;modified_img&#39;</span><span class="p">],</span>
             <span class="n">function</span><span class="o">=</span><span class="n">copy_header</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;copy_header_to_csf&#39;</span><span class="p">)</span>
 
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span> <span class="n">copy_header_to_csf</span><span class="p">,</span> <span class="s2">&quot;ref_img&quot;</span><span class="p">)</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;csf_prior_file&#39;</span><span class="p">,</span> <span class="n">copy_header_to_csf</span><span class="p">,</span> <span class="s2">&quot;img_to_modify&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span>
+                             <span class="n">copy_header_to_csf</span><span class="p">,</span> <span class="s2">&quot;ref_img&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;csf_prior_file&#39;</span><span class="p">,</span>
+                             <span class="n">copy_header_to_csf</span><span class="p">,</span> <span class="s2">&quot;img_to_modify&quot;</span><span class="p">)</span>
 
         <span class="c1"># copying header from img to gm_prior_file</span>
         <span class="n">copy_header_to_gm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
@@ -438,9 +456,10 @@
             <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;modified_img&#39;</span><span class="p">],</span>
             <span class="n">function</span><span class="o">=</span><span class="n">copy_header</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;copy_header_to_gm&#39;</span><span class="p">)</span>
 
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span> <span class="n">copy_header_to_gm</span><span class="p">,</span> <span class="s2">&quot;ref_img&quot;</span><span class="p">)</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;gm_prior_file&#39;</span><span class="p">,</span> <span class="n">copy_header_to_gm</span><span class="p">,</span> <span class="s2">&quot;img_to_modify&quot;</span><span class="p">)</span>
-
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span>
+                             <span class="n">copy_header_to_gm</span><span class="p">,</span> <span class="s2">&quot;ref_img&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;gm_prior_file&#39;</span><span class="p">,</span>
+                             <span class="n">copy_header_to_gm</span><span class="p">,</span> <span class="s2">&quot;img_to_modify&quot;</span><span class="p">)</span>
 
         <span class="c1"># copying header from img to wm_prior_file</span>
         <span class="n">copy_header_to_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
@@ -448,8 +467,10 @@
             <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;modified_img&#39;</span><span class="p">],</span>
             <span class="n">function</span><span class="o">=</span><span class="n">copy_header</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;copy_header_to_wm&#39;</span><span class="p">)</span>
 
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span> <span class="n">copy_header_to_wm</span><span class="p">,</span> <span class="s2">&quot;ref_img&quot;</span><span class="p">)</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;wm_prior_file&#39;</span><span class="p">,</span> <span class="n">copy_header_to_wm</span><span class="p">,</span> <span class="s2">&quot;img_to_modify&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;brain_file&quot;</span><span class="p">,</span>
+                             <span class="n">copy_header_to_wm</span><span class="p">,</span> <span class="s2">&quot;ref_img&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;wm_prior_file&#39;</span><span class="p">,</span>
+                             <span class="n">copy_header_to_wm</span><span class="p">,</span> <span class="s2">&quot;img_to_modify&quot;</span><span class="p">)</span>
 
         <span class="c1"># merging priors as a list</span>
         <span class="n">merge_3_elem</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
@@ -458,9 +479,12 @@
             <span class="n">function</span><span class="o">=</span><span class="n">merge_3_elem_to_list</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge_3_elem&#39;</span><span class="p">)</span>
 
         <span class="c1"># was like this before (1 -&gt; csf, 2 -&gt; gm, 3 -&gt; wm, to check)</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">copy_header_to_csf</span><span class="p">,</span> <span class="s1">&#39;modified_img&#39;</span><span class="p">,</span> <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem1&quot;</span><span class="p">)</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">copy_header_to_gm</span><span class="p">,</span> <span class="s1">&#39;modified_img&#39;</span><span class="p">,</span> <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem2&quot;</span><span class="p">)</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">copy_header_to_wm</span><span class="p">,</span> <span class="s1">&#39;modified_img&#39;</span><span class="p">,</span> <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem3&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">copy_header_to_csf</span><span class="p">,</span> <span class="s1">&#39;modified_img&#39;</span><span class="p">,</span>
+                             <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem1&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">copy_header_to_gm</span><span class="p">,</span> <span class="s1">&#39;modified_img&#39;</span><span class="p">,</span>
+                             <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem2&quot;</span><span class="p">)</span>
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">copy_header_to_wm</span><span class="p">,</span> <span class="s1">&#39;modified_img&#39;</span><span class="p">,</span>
+                             <span class="n">merge_3_elem</span><span class="p">,</span> <span class="s2">&quot;elem3&quot;</span><span class="p">)</span>
     <span class="c1"># Atropos</span>
     <span class="n">seg_at</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">AtroposN4</span><span class="p">(),</span>
                         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;Atropos&quot;</span><span class="p">),</span>
@@ -528,6 +552,30 @@
 
     <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;csf_file&#39;</span><span class="p">,</span>
                          <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;csf_file&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">export_5tt_pipe</span>
+
+
+<span class="k">def</span> <span class="nf">create_5tt_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">):</span>
+
+    <span class="c1"># creating pipeline</span>
+    <span class="n">export_5tt_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># creating inputnode</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;wm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;csf_file&quot;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="n">export_5tt</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;wm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;csf_file&quot;</span><span class="p">],</span>
+                     <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gen_5tt_file&quot;</span><span class="p">],</span>
+                     <span class="n">function</span><span class="o">=</span><span class="n">compute_5tt</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;export_5tt&quot;</span><span class="p">)</span>
+
+    <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;gm_file&#39;</span><span class="p">,</span> <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;gm_file&#39;</span><span class="p">)</span>
+    <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;wm_file&#39;</span><span class="p">,</span> <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;wm_file&#39;</span><span class="p">)</span>
+    <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;csf_file&#39;</span><span class="p">,</span> <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;csf_file&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">export_5tt_pipe</span>
 
@@ -885,7 +933,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-11-17.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-11-30.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>

@@ -56,7 +56,7 @@ Testing plot in local
 .. code-block:: default
 
 
-    data_path = load_test_data("data_test_sphinx_macaque")
+    data_path = load_test_data("data_test_sphinx_macaque_processed")
 
     wf_path = os.path.join(data_path, "example_segment_sphinx_macaque_ants_based")
 
@@ -85,7 +85,7 @@ Testing plot in local
  .. code-block:: none
 
     data_dirpath /home/cordeau.m/data_macapype already exists
-    /home/cordeau.m/data_macapype/data_test_sphinx_macaque Already exists, skipping download
+    /home/cordeau.m/data_macapype/data_test_sphinx_macaque_processed Already exists, skipping download
 
 
 
@@ -193,7 +193,7 @@ Data preparation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.433 seconds)
+   **Total running time of the script:** ( 0 minutes  5.364 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py:
