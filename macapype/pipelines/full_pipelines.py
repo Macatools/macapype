@@ -122,15 +122,33 @@ def create_full_spm_subpipes(
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask']),
         name='outputnode')
-
     # preprocessing
-    if 'short_preparation_pipe' in params.keys():
+    if 'long_single_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_single_preparation_pipe(
+            params=parse_key(params, "long_single_preparation_pipe"))
 
+    elif 'long_multi_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_multi_preparation_pipe(
+            params=parse_key(params, "long_multi_preparation_pipe"))
+
+    elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"))
+
     else:
-        print("Error, short_preparation_pipe was not \
-            found in params, skipping")
+        print("Error, short_preparation_pipe, long_single_preparation_pipe or\
+            long_multi_preparation_pipe was not found in params, skipping")
+
+        test_node = pe.Node(niu.Function(input_names=['list_T1', 'list_T2'],
+                                         output_names=[''],
+                                         function=list_input_files),
+                            name="test_node")
+
+        seg_pipe.connect(inputnode, 'list_T1',
+                         test_node, 'list_T1')
+        seg_pipe.connect(inputnode, 'list_T2',
+                         test_node, 'list_T2')
+
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'list_T1',
@@ -152,11 +170,11 @@ def create_full_spm_subpipes(
     seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
                      debias, 'indiv_params')
 
-    if 'crop_T1' in parse_key(params, "short_preparation_pipe"):
-        debias.inputs.bet = 1
-    else:
+    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
         seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
                          debias, 'b')
+    else:
+        debias.inputs.bet = 1
 
     if pad:
 
