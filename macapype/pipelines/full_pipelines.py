@@ -170,7 +170,7 @@ def create_full_spm_subpipes(
     seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
                      debias, 'indiv_params')
 
-    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):        
+    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
         seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
                          debias, 'b')
     else:
