@@ -210,6 +210,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     else:
 
+        indiv_params = json.load(open(indiv_params_file))
+
+        wf_name+="_indiv_params"
+
+        pprint.pprint(indiv_params)
+
         if "short_preparation_pipe" not in params.keys():
             
             print("short_preparation_pipe not found in params, not modifying preparation pipe")
@@ -226,12 +232,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             assert os.path.exists(indiv_params_file), "Error with file {}".format(
                 indiv_params_file)
-
-            indiv_params = json.load(open(indiv_params_file))
-
-            wf_name+="_indiv_params"
-
-            pprint.pprint(indiv_params)
 
             if subjects is None or sessions is None:
                 print("For whole BIDS dir, unable to assess if the indiv_params is correct")
