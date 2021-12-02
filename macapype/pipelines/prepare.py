@@ -646,6 +646,9 @@ def create_long_single_preparation_pipe(params,
                                          align_T2_on_T1, 'reference')
     long_single_preparation_pipe.connect(prep_T2_pipe, 'outputnode.prep_img',
                                          align_T2_on_T1, 'in_file')
+    long_single_preparation_pipe.connect(
+        inputnode, ("indiv_params", parse_key, "align_T2_on_T1"),
+        align_T2_on_T1, "indiv_params")
 
     # Creating output node
     outputnode = pe.Node(

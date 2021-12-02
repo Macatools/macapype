@@ -450,7 +450,8 @@ def create_native_old_segment_pipe(params_template, params={},
 
     # Creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'indiv_params', "native_T1", "inv_transfo_file"]),
+        niu.IdentityInterface(
+            fields=['T1', 'indiv_params', "native_T1", "inv_transfo_file"]),
         name='inputnode'
     )
 
@@ -481,40 +482,39 @@ def create_native_old_segment_pipe(params_template, params={},
     register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
     seg_pipe.connect(segment, 'native_gm_image',
-                                 register_gm_to_nat, 'in_file')
-    
+                     register_gm_to_nat, 'in_file')
+
     seg_pipe.connect(inputnode, 'native_T1',
-                                 register_gm_to_nat, 'reference')
-    
+                     register_gm_to_nat, 'reference')
+
     seg_pipe.connect(inputnode, 'inv_transfo_file',
-                                 register_gm_to_nat, "in_matrix_file")
+                     register_gm_to_nat, "in_matrix_file")
 
     # wm
     register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
     register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
     seg_pipe.connect(segment, 'native_wm_image',
-                                 register_wm_to_nat, 'in_file')
-    
+                     register_wm_to_nat, 'in_file')
+
     seg_pipe.connect(inputnode, 'native_T1',
-                                 register_wm_to_nat, 'reference')
-    
+                     register_wm_to_nat, 'reference')
+
     seg_pipe.connect(inputnode, 'inv_transfo_file',
-                                 register_wm_to_nat, "in_matrix_file")
+                     register_wm_to_nat, "in_matrix_file")
 
     # csf
     register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
     register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
     seg_pipe.connect(segment, 'native_csf_image',
-                                 register_csf_to_nat, 'in_file')
-    
-    seg_pipe.connect(inputnode, 'native_T1',
-                                 register_csf_to_nat, 'reference')
-    
-    seg_pipe.connect(inputnode, 'inv_transfo_file',
-                                 register_csf_to_nat, "in_matrix_file")
+                     register_csf_to_nat, 'in_file')
 
+    seg_pipe.connect(inputnode, 'native_T1',
+                     register_csf_to_nat, 'reference')
+
+    seg_pipe.connect(inputnode, 'inv_transfo_file',
+                     register_csf_to_nat, "in_matrix_file")
 
     # threshold_gm
     threshold_gm = NodeParams(fsl.Threshold(),
@@ -538,11 +538,10 @@ def create_native_old_segment_pipe(params_template, params={},
         inputnode, ('indiv_params', parse_key, "threshold_wm"),
         threshold_wm, "indiv_params")
 
-
     # threshold_csf
     threshold_csf = NodeParams(fsl.Threshold(),
-                              params=parse_key(params, "threshold_csf"),
-                              name="threshold_csf")
+                               params=parse_key(params, "threshold_csf"),
+                               name="threshold_csf")
 
     seg_pipe.connect(register_csf_to_nat, 'out_file', threshold_csf, 'in_file')
 
