@@ -476,77 +476,89 @@ def create_native_old_segment_pipe(params_template, params={},
 
     seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
 
-
-
     # gm
     register_gm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_gm_to_nat")
-    #register_gm_to_nat.inputs.in_file = params_template["template_gm"]
     register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
-    native_iter_reg_pipe.connect(segment, 'native_gm_image',
+    seg_pipe.connect(segment, 'native_gm_image',
                                  register_gm_to_nat, 'in_file')
     
-    native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
+    seg_pipe.connect(inputnode, 'native_T1',
                                  register_gm_to_nat, 'reference')
     
-    native_iter_reg_pipe.connect(inputnode, 'inv_transfo_file',
+    seg_pipe.connect(inputnode, 'inv_transfo_file',
                                  register_gm_to_nat, "in_matrix_file")
 
-    ## wm
-    #register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
-    #register_wm_to_nat.inputs.in_file = params_template["template_wm"]
-    #register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
+    # wm
+    register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
+    register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
-    #native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
-                                 #register_wm_to_nat, 'reference')
-    #native_iter_reg_pipe.connect(reg, 'inv_transfo_file',
-                                 #register_wm_to_nat, "in_matrix_file")
+    seg_pipe.connect(segment, 'native_wm_image',
+                                 register_wm_to_nat, 'in_file')
+    
+    seg_pipe.connect(inputnode, 'native_T1',
+                                 register_wm_to_nat, 'reference')
+    
+    seg_pipe.connect(inputnode, 'inv_transfo_file',
+                                 register_wm_to_nat, "in_matrix_file")
 
-    ## csf
-    #register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
-    #register_csf_to_nat.inputs.in_file = params_template["template_csf"]
-    #register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
+    # csf
+    register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
+    register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
 
-    #native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
-                                 #register_csf_to_nat, 'reference')
-    #native_iter_reg_pipe.connect(reg, 'inv_transfo_file',
-                                 #register_csf_to_nat, "in_matrix_file")
-
-
-
-
-
-
-
-
+    seg_pipe.connect(segment, 'native_csf_image',
+                                 register_csf_to_nat, 'in_file')
+    
+    seg_pipe.connect(inputnode, 'native_T1',
+                                 register_csf_to_nat, 'reference')
+    
+    seg_pipe.connect(inputnode, 'inv_transfo_file',
+                                 register_csf_to_nat, "in_matrix_file")
 
 
-    ## Threshold GM, WM and CSF
-    #thd_nodes = {}
-    #for tissue in ['gm', 'wm', 'csf']:
+    # threshold_gm
+    threshold_gm = NodeParams(fsl.Threshold(),
+                              params=parse_key(params, "threshold_gm"),
+                              name="threshold_gm")
 
-        #tmp_node = NodeParams(fsl.Threshold(),
-                              #params=parse_key(params, "threshold_" + tissue),
-                              #name="threshold_" + tissue)
+    seg_pipe.connect(register_gm_to_nat, 'out_file', threshold_gm, 'in_file')
 
-        #seg_pipe.connect(segment, 'native_' + tissue + '_image',
-                         #tmp_node, 'in_file')
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "threshold_gm"),
+        threshold_gm, "indiv_params")
 
-        #seg_pipe.connect(
-            #inputnode, ('indiv_params', parse_key, "threshold_" + tissue),
-            #tmp_node, "indiv_params")
+    # threshold_wm
+    threshold_wm = NodeParams(fsl.Threshold(),
+                              params=parse_key(params, "threshold_wm"),
+                              name="threshold_wm")
 
-        #thd_nodes[tissue] = tmp_node
+    seg_pipe.connect(register_wm_to_nat, 'out_file', threshold_wm, 'in_file')
 
-    ## outputnode
-    #outputnode = pe.Node(
-        #niu.IdentityInterface(
-            #fields=["threshold_gm", "threshold_wm", "threshold_csf"]),
-        #name='outputnode')
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "threshold_wm"),
+        threshold_wm, "indiv_params")
 
-    #seg_pipe.connect(thd_nodes["gm"], 'out_file', outputnode, 'threshold_gm')
-    #seg_pipe.connect(thd_nodes["wm"], 'out_file', outputnode, 'threshold_wm')
-    #seg_pipe.connect(thd_nodes["csf"], 'out_file', outputnode, 'threshold_csf')
+
+    # threshold_csf
+    threshold_csf = NodeParams(fsl.Threshold(),
+                              params=parse_key(params, "threshold_csf"),
+                              name="threshold_csf")
+
+    seg_pipe.connect(register_csf_to_nat, 'out_file', threshold_csf, 'in_file')
+
+    seg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "threshold_csf"),
+        threshold_csf, "indiv_params")
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["threshold_gm", "threshold_wm", "threshold_csf"]),
+        name='outputnode')
+
+    seg_pipe.connect(threshold_gm, 'out_file', outputnode, 'threshold_gm')
+    seg_pipe.connect(threshold_wm, 'out_file', outputnode, 'threshold_wm')
+    seg_pipe.connect(threshold_csf, 'out_file', outputnode, 'threshold_csf')
 
     return seg_pipe
 
