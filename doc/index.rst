@@ -5,7 +5,7 @@ Macapype
 ********
 ..
 .. .. _short_logo:
-.. .. |logo1| image:: ./img/logo/logo_macapype.png
+.. .. |logo1| image:: ./img/logo/logo_macapype_0.3.png
 ..     :scale: 100%
 ..
 .. .. table::
@@ -20,7 +20,7 @@ Macapype is an open-source multi-modal brain data analysis kit which provides **
 
 API, describing the different pipelines and nodes, can be found :ref:`here <api_documentation>`
 
-.. image:: ./img/logo/logo_macapype.png
+.. image:: ./img/logo/logo_macapype_0.3.png
     :scale: 50%
     :align: center
 
