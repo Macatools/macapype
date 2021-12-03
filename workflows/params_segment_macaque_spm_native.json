@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "NMT_v1.3better"
+        "template_name": "inia19"
     },
     "short_preparation_pipe":
     {
@@ -13,11 +13,14 @@
     "debias":
     {
         "s": 4
-    },
-    "native_iter_reg_pipe":
+    },    
+    "reg":
     {
+        "n": 2,
+        "m": "ref",
+        "dof": 12
     },
-    "native_old_segment_pipe":
+    "old_segment_pipe":
     {
         "segment":
         {
