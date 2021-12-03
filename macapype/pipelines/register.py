@@ -10,8 +10,7 @@ from ..nodes.segment import split_indexed_mask
 from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
-                              NMTSubjectAlign2, NwarpApplyPriors,
-                              IterREGBET)
+                              NMTSubjectAlign2, NwarpApplyPriors)
 
 
 def create_iterative_register_pipe(
@@ -130,117 +129,6 @@ def create_iterative_register_pipe(
                           nl_apply, 'field_file')  # iout from fnirt
 
     return register_pipe
-
-
-def create_native_iter_reg_pipe(params_template, params={},
-                                name="native_iter_reg_pipe"):
-    """
-    Description: Register template to anat with the IterREGBET and \
-    apply the transfo to gm, wm and csf priors
-
-    Processing steps:
-
-    - IterREGBET (reg) compute transformation between T1 and template T1, \
-    using skull-stripped versions of T1 and template as well
-    - apply inv transfo (template -> native) using ApplyXFM \
-    (register_csf_to_nat, register_gm_to_nat, register_wm_to_nat)
-
-    Params:
-
-        - reg (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>`) \
-    - also available as :ref:`indiv_params <indiv_params>`
-
-    Inputs:
-
-        inputnode:
-
-            t1_debiased_file:
-                debiased T1 file name
-
-            t1_debiased_file:
-                debiased skull stripped T1 file name
-
-
-        arguments:
-
-            params_template:
-                dictionary of info about template
-
-            params:
-                dictionary of node sub-parameters (from a json file)
-
-            name:
-                pipeline name (default = "native_iter_reg_pipe")
-
-    Outputs:
-
-        register_csf_to_nat.out_file:
-            csf template tissue in subject space
-
-        register_gm_to_nat.out_file:
-            grey matter template tissue in subject space
-
-        register_wm_to_nat.out_file:
-            white matter template tissue in subject space
-    """
-
-    native_iter_reg_pipe = pe.Workflow(name=name)
-
-    # creating inputnode
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['t1_debiased_file',
-                                      't1_debiased_brain_file',
-                                      'indiv_params']),
-        name='inputnode')
-
-    # Iterative registration to the INIA19 template
-    reg = NodeParams(IterREGBET(),
-                     params=parse_key(params, "reg"),
-                     name='reg')
-
-    reg.inputs.refb_file = params_template["template_brain"]
-
-    native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
-                                 reg, 'inw_file')
-    native_iter_reg_pipe.connect(inputnode, 't1_debiased_brain_file',
-                                 reg, 'inb_file')
-
-    native_iter_reg_pipe.connect(
-        inputnode, ('indiv_params', parse_key, "reg"),
-        reg, 'indiv_params')
-
-    # apply inv_transfo over the 3 tissues:
-    # gm
-    register_gm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_gm_to_nat")
-    register_gm_to_nat.inputs.in_file = params_template["template_gm"]
-    register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-
-    native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
-                                 register_gm_to_nat, 'reference')
-    native_iter_reg_pipe.connect(reg, 'inv_transfo_file',
-                                 register_gm_to_nat, "in_matrix_file")
-
-    # wm
-    register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
-    register_wm_to_nat.inputs.in_file = params_template["template_wm"]
-    register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-
-    native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
-                                 register_wm_to_nat, 'reference')
-    native_iter_reg_pipe.connect(reg, 'inv_transfo_file',
-                                 register_wm_to_nat, "in_matrix_file")
-
-    # csf
-    register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
-    register_csf_to_nat.inputs.in_file = params_template["template_csf"]
-    register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-
-    native_iter_reg_pipe.connect(inputnode, 't1_debiased_file',
-                                 register_csf_to_nat, 'reference')
-    native_iter_reg_pipe.connect(reg, 'inv_transfo_file',
-                                 register_csf_to_nat, "in_matrix_file")
-
-    return native_iter_reg_pipe
 
 
 ###############################################################################

@@ -489,15 +489,10 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         # Brain extraction (unused) + Automated Cropping
         # default, if crop_T1 is undefined
 
-        if "bet_crop" not in params.keys():
+        if "bet_crop" in params.keys():
 
-            params["bet_crop"] = {"m": True, "aT2": True, "c": 10, "n": 2}
-
-            print("Using default bet_crop parameters: {}".format(
-                params["bet_crop"]))
-
-        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
-                              name='bet_crop')
+            bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
+                                  name='bet_crop')
 
         if "reorient" in params.keys():
 
@@ -651,6 +646,9 @@ def create_long_single_preparation_pipe(params,
                                          align_T2_on_T1, 'reference')
     long_single_preparation_pipe.connect(prep_T2_pipe, 'outputnode.prep_img',
                                          align_T2_on_T1, 'in_file')
+    long_single_preparation_pipe.connect(
+        inputnode, ("indiv_params", parse_key, "align_T2_on_T1"),
+        align_T2_on_T1, "indiv_params")
 
     # Creating output node
     outputnode = pe.Node(

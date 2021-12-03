@@ -28,8 +28,7 @@ from .segment import (create_old_segment_pipe,
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
 
-from .register import (create_register_NMT_pipe, create_native_iter_reg_pipe,
-                       create_reg_seg_pipe)
+from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
@@ -122,15 +121,33 @@ def create_full_spm_subpipes(
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask']),
         name='outputnode')
-
     # preprocessing
-    if 'short_preparation_pipe' in params.keys():
+    if 'long_single_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_single_preparation_pipe(
+            params=parse_key(params, "long_single_preparation_pipe"))
 
+    elif 'long_multi_preparation_pipe' in params.keys():
+        data_preparation_pipe = create_long_multi_preparation_pipe(
+            params=parse_key(params, "long_multi_preparation_pipe"))
+
+    elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"))
+
     else:
-        print("Error, short_preparation_pipe was not \
-            found in params, skipping")
+        print("Error, short_preparation_pipe, long_single_preparation_pipe or\
+            long_multi_preparation_pipe was not found in params, skipping")
+
+        test_node = pe.Node(niu.Function(input_names=['list_T1', 'list_T2'],
+                                         output_names=[''],
+                                         function=list_input_files),
+                            name="test_node")
+
+        seg_pipe.connect(inputnode, 'list_T1',
+                         test_node, 'list_T1')
+        seg_pipe.connect(inputnode, 'list_T2',
+                         test_node, 'list_T2')
+
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'list_T1',
@@ -152,11 +169,12 @@ def create_full_spm_subpipes(
     seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
                      debias, 'indiv_params')
 
-    if 'crop_T1' in parse_key(params, "short_preparation_pipe"):
-        debias.inputs.bet = 1
-    else:
+    if 'bet_crop' in parse_key(params, "short_preparation_pipe"):
+
         seg_pipe.connect(data_preparation_pipe, 'bet_crop.mask_file',
                          debias, 'b')
+    else:
+        debias.inputs.bet = 1
 
     if pad:
 
@@ -184,82 +202,59 @@ def create_full_spm_subpipes(
         seg_pipe.connect(debias, 'debiased_mask_file',
                          outputnode, "brain_mask")
 
-    if space == "native":
+    # Iterative registration to the INIA19 template
+    reg = NodeParams(IterREGBET(),
+                     params=parse_key(params, "reg"),
+                     name='reg')
 
-        native_iter_reg_pipe = create_native_iter_reg_pipe(
-            params_template,
-            params=parse_key(params, "native_iter_reg_pipe"))
+    reg.inputs.refb_file = params_template["template_brain"]
 
-        seg_pipe.connect(debias, 't1_debiased_brain_file',
-                         native_iter_reg_pipe,
-                         'inputnode.t1_debiased_brain_file')
+    seg_pipe.connect(debias, 't1_debiased_file',
+                     reg, 'inw_file')
 
-        seg_pipe.connect(debias, 't1_debiased_file',
-                         native_iter_reg_pipe, 'inputnode.t1_debiased_file')
+    seg_pipe.connect(debias, 't1_debiased_brain_file',
+                     reg, 'inb_file')
+
+    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
+                     reg, 'indiv_params')
+
+    # Compute brain mask using old_segment of SPM and postprocessing on
+    # tissues' masks
+    if "old_segment_pipe" not in params.keys():
+        print("No segmentation, skipping")
+        return seg_pipe
+
+    if space == "template":
+
+        old_segment_pipe = create_old_segment_pipe(
+            params_template, params=parse_key(params, "old_segment_pipe"))
+
+        seg_pipe.connect(reg, 'warp_file',
+                         old_segment_pipe, 'inputnode.T1')
 
         seg_pipe.connect(inputnode, 'indiv_params',
-                         native_iter_reg_pipe, 'inputnode.indiv_params')
+                         old_segment_pipe, 'inputnode.indiv_params')
 
-        # Compute brain mask using old_segment of SPM and postprocessing on
-        # tissues' masks
-        if "old_segment_pipe" in params.keys():
+    elif space == "native":
 
-            old_segment_pipe = create_native_old_segment_pipe(
-                params_template,
-                params=parse_key(params, "old_segment_pipe"))
+        old_segment_pipe = create_native_old_segment_pipe(
+            params_template, params=parse_key(params, "old_segment_pipe"))
 
-            seg_pipe.connect(debias, 't1_debiased_file',
-                             old_segment_pipe, 'inputnode.T1')
+        seg_pipe.connect(reg, 'warp_file',
+                         old_segment_pipe, 'inputnode.T1')
 
-            seg_pipe.connect(native_iter_reg_pipe,
-                             'register_csf_to_nat.out_file',
-                             old_segment_pipe, 'inputnode.native_csf')
+        seg_pipe.connect(reg, 'inv_transfo_file',
+                         old_segment_pipe, 'inputnode.inv_transfo_file')
 
-            seg_pipe.connect(native_iter_reg_pipe,
-                             'register_wm_to_nat.out_file',
-                             old_segment_pipe, 'inputnode.native_wm')
-
-            seg_pipe.connect(native_iter_reg_pipe,
-                             'register_gm_to_nat.out_file',
-                             old_segment_pipe, 'inputnode.native_gm')
-
-            seg_pipe.connect(inputnode, 'indiv_params',
-                             old_segment_pipe, 'inputnode.indiv_params')
-
-        else:
-            return seg_pipe
-
-    elif space == 'template':
-
-        # Iterative registration to the INIA19 template
-        reg = NodeParams(IterREGBET(),
-                         params=parse_key(params, "reg"),
-                         name='reg')
-
-        reg.inputs.refb_file = params_template["template_brain"]
-
-        seg_pipe.connect(debias, 't1_debiased_file', reg, 'inw_file')
         seg_pipe.connect(debias, 't1_debiased_brain_file',
-                         reg, 'inb_file')
+                         old_segment_pipe, 'inputnode.native_T1')
 
-        seg_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
-                         reg, 'indiv_params')
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         old_segment_pipe, 'inputnode.indiv_params')
+    else:
 
-        # Compute brain mask using old_segment of SPM and postprocessing on
-        # tissues' masks
-        if "old_segment_pipe" in params.keys():
-
-            old_segment_pipe = create_old_segment_pipe(
-                params_template, params=parse_key(params, "old_segment_pipe"))
-
-            seg_pipe.connect(reg, 'warp_file',
-                             old_segment_pipe, 'inputnode.T1')
-
-            seg_pipe.connect(inputnode, 'indiv_params',
-                             old_segment_pipe, 'inputnode.indiv_params')
-
-        else:
-            return seg_pipe
+        print("Error, space={}".format(space))
+        return seg_pipe
 
     if "mask_from_seg_pipe" in params.keys():
 

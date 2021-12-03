@@ -61,8 +61,6 @@ def gunzip(zipped_file):
     else:
         ValueError("Non GZip file given")
 
-    print(os.listdir(os.path.abspath("")))
-
     unzipped_file = dest[:-3]
     return unzipped_file
 
