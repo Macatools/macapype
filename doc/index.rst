@@ -81,5 +81,6 @@ Table of contents
     tutorial
     examples
     pipelines
+    external_pipeline
     contribute
     brainhack
