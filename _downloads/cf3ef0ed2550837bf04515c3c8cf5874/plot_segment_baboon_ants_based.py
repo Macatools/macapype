@@ -26,7 +26,6 @@ import matplotlib.pyplot as plt  # noqa
 
 data_path = load_test_data("data_test_baboon_processed")
 
-
 wf_path = os.path.join(data_path, "example_segment_baboon_ants_based_Odor")
 
 graph = os.path.join(wf_path, "graph.png")

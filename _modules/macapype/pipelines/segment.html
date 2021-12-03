@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.segment &#8212; macapype 0.3.dev11 documentation</title>
+    <title>macapype.pipelines.segment &#8212; macapype 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.dev11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -528,33 +528,6 @@
 
     <span class="k">return</span> <span class="n">segment_pipe</span></div>
 
-<span class="k">def</span> <span class="nf">create_5tt_pipe</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">):</span>
-
-    <span class="c1"># creating pipeline</span>
-    <span class="n">export_5tt_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="c1"># creating inputnode</span>
-    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
-            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;wm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;csf_file&quot;</span><span class="p">]),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
-
-    <span class="n">export_5tt</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
-        <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;wm_file&quot;</span><span class="p">,</span> <span class="s2">&quot;csf_file&quot;</span><span class="p">],</span>
-        <span class="n">output_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gen_5tt_file&quot;</span><span class="p">],</span>
-        <span class="n">function</span> <span class="o">=</span> <span class="n">compute_5tt</span><span class="p">),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;export_5tt&quot;</span><span class="p">)</span>
-
-    <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;gm_file&#39;</span><span class="p">,</span>
-                         <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;gm_file&#39;</span><span class="p">)</span>
-
-    <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;wm_file&#39;</span><span class="p">,</span>
-                         <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;wm_file&#39;</span><span class="p">)</span>
-
-    <span class="n">export_5tt_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;csf_file&#39;</span><span class="p">,</span>
-                         <span class="n">export_5tt</span><span class="p">,</span> <span class="s1">&#39;csf_file&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">export_5tt_pipe</span>
-
 
 <span class="k">def</span> <span class="nf">create_5tt_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">):</span>
 
@@ -743,8 +716,8 @@
 
     <span class="c1"># Creating inputnode</span>
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="s2">&quot;native_gm&quot;</span><span class="p">,</span>
-                                      <span class="s2">&quot;native_wm&quot;</span><span class="p">,</span> <span class="s2">&quot;native_csf&quot;</span><span class="p">]),</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="s2">&quot;native_T1&quot;</span><span class="p">,</span> <span class="s2">&quot;inv_transfo_file&quot;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
     <span class="p">)</span>
 
@@ -759,42 +732,88 @@
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span> <span class="n">unzip</span><span class="p">,</span> <span class="s1">&#39;zipped_file&#39;</span><span class="p">)</span>
 
-    <span class="c1"># merging priors as a list</span>
-    <span class="n">merge_native_tissues</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
-        <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elem1&#39;</span><span class="p">,</span> <span class="s1">&#39;elem2&#39;</span><span class="p">,</span> <span class="s1">&#39;elem3&#39;</span><span class="p">],</span>
-        <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;merged_list&#39;</span><span class="p">],</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">merge_3_elem_to_list</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge_native_tissues&#39;</span><span class="p">)</span>
-
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_gm&#39;</span><span class="p">,</span> <span class="n">merge_native_tissues</span><span class="p">,</span> <span class="s2">&quot;elem1&quot;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_wm&#39;</span><span class="p">,</span> <span class="n">merge_native_tissues</span><span class="p">,</span> <span class="s2">&quot;elem2&quot;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_csf&#39;</span><span class="p">,</span> <span class="n">merge_native_tissues</span><span class="p">,</span> <span class="s2">&quot;elem3&quot;</span><span class="p">)</span>
-
     <span class="c1"># Segment in to 6 tissues</span>
     <span class="n">segment</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">spm</span><span class="o">.</span><span class="n">Segment</span><span class="p">(),</span>
                          <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;segment&quot;</span><span class="p">),</span>
                          <span class="n">name</span><span class="o">=</span><span class="s2">&quot;old_segment&quot;</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">merge_native_tissues</span><span class="p">,</span> <span class="s1">&#39;merged_list&#39;</span><span class="p">,</span>
-                     <span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;tissue_prob_maps&#39;</span><span class="p">)</span>
+    <span class="n">segment</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">tissue_prob_maps</span> <span class="o">=</span> <span class="p">[</span><span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_gm&quot;</span><span class="p">],</span>
+                                       <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_wm&quot;</span><span class="p">],</span>
+                                       <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_csf&quot;</span><span class="p">]]</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">unzip</span><span class="p">,</span> <span class="s1">&#39;unzipped_file&#39;</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Threshold GM, WM and CSF</span>
-    <span class="n">thd_nodes</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gm&#39;</span><span class="p">,</span> <span class="s1">&#39;wm&#39;</span><span class="p">,</span> <span class="s1">&#39;csf&#39;</span><span class="p">]:</span>
+    <span class="c1"># gm</span>
+    <span class="n">register_gm_to_nat</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_gm_to_nat&quot;</span><span class="p">)</span>
+    <span class="n">register_gm_to_nat</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>  <span class="c1"># for SPM segment</span>
 
-        <span class="n">tmp_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
-                              <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">),</span>
-                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;native_gm_image&#39;</span><span class="p">,</span>
+                     <span class="n">register_gm_to_nat</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
-        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;native_&#39;</span> <span class="o">+</span> <span class="n">tissue</span> <span class="o">+</span> <span class="s1">&#39;_image&#39;</span><span class="p">,</span>
-                         <span class="n">tmp_node</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_T1&#39;</span><span class="p">,</span>
+                     <span class="n">register_gm_to_nat</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
 
-        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">),</span>
-            <span class="n">tmp_node</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">register_gm_to_nat</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
 
-        <span class="n">thd_nodes</span><span class="p">[</span><span class="n">tissue</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_node</span>
+    <span class="c1"># wm</span>
+    <span class="n">register_wm_to_nat</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_wm_to_nat&quot;</span><span class="p">)</span>
+    <span class="n">register_wm_to_nat</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>  <span class="c1"># for SPM segment</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;native_wm_image&#39;</span><span class="p">,</span>
+                     <span class="n">register_wm_to_nat</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_T1&#39;</span><span class="p">,</span>
+                     <span class="n">register_wm_to_nat</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">register_wm_to_nat</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># csf</span>
+    <span class="n">register_csf_to_nat</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ApplyXFM</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;register_csf_to_nat&quot;</span><span class="p">)</span>
+    <span class="n">register_csf_to_nat</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>  <span class="c1"># for SPM segment</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;native_csf_image&#39;</span><span class="p">,</span>
+                     <span class="n">register_csf_to_nat</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_T1&#39;</span><span class="p">,</span>
+                     <span class="n">register_csf_to_nat</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">register_csf_to_nat</span><span class="p">,</span> <span class="s2">&quot;in_matrix_file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># threshold_gm</span>
+    <span class="n">threshold_gm</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
+                              <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">),</span>
+                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_gm&quot;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_gm_to_nat</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">threshold_gm</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">),</span>
+        <span class="n">threshold_gm</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+    <span class="c1"># threshold_wm</span>
+    <span class="n">threshold_wm</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
+                              <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">),</span>
+                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_wm&quot;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_wm_to_nat</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">threshold_wm</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">),</span>
+        <span class="n">threshold_wm</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+    <span class="c1"># threshold_csf</span>
+    <span class="n">threshold_csf</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
+                               <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_csf&quot;</span><span class="p">),</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_csf&quot;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_csf_to_nat</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">threshold_csf</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;threshold_csf&quot;</span><span class="p">),</span>
+        <span class="n">threshold_csf</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
 
     <span class="c1"># outputnode</span>
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
@@ -802,9 +821,9 @@
             <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_csf&quot;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s2">&quot;gm&quot;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_gm&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s2">&quot;wm&quot;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_wm&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s2">&quot;csf&quot;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_csf&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">threshold_gm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_gm&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">threshold_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_wm&#39;</span><span class="p">)</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">threshold_csf</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_csf&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">seg_pipe</span>
 
@@ -933,8 +952,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-11-30.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-12-03.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>
 </footer>

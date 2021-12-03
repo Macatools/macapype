@@ -51,10 +51,12 @@ Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 Testing plot in local
 #############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-36
+.. GENERATED FROM PYTHON SOURCE LINES 22-38
 
 .. code-block:: default
 
+
+    orig_data_path = load_test_data("data_test_sphinx_macaque")
 
     data_path = load_test_data("data_test_sphinx_macaque_processed")
 
@@ -84,29 +86,31 @@ Testing plot in local
 
  .. code-block:: none
 
-    data_dirpath /home/cordeau.m/data_macapype already exists
-    /home/cordeau.m/data_macapype/data_test_sphinx_macaque_processed Already exists, skipping download
+    data_dirpath /home/meunier.d/data_macapype already exists
+    /home/meunier.d/data_macapype/data_test_sphinx_macaque Already exists, skipping download
+    data_dirpath /home/meunier.d/data_macapype already exists
+    /home/meunier.d/data_macapype/data_test_sphinx_macaque_processed Already exists, skipping download
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-39
+.. GENERATED FROM PYTHON SOURCE LINES 39-41
 
 Data preparation
 #############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-44
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 # Reorient
 #==========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-70
+.. GENERATED FROM PYTHON SOURCE LINES 46-72
 
 .. code-block:: default
 
 
 
-    orig_T1_file = op.join(data_path, "sub-ziggy_T1w.nii")
+    orig_T1_file = op.join(orig_data_path, "sub-ziggy_T1w.nii")
 
     reoriented_T1_file = op.join(wf_path, "old_data_preparation_pipe", "reorient_T1_pipe", "swap_dim", "sub-ziggy_T1w_newdims.nii.gz")
 
@@ -142,12 +146,12 @@ Data preparation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 # Cropping and denoise
 #==========================
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-100
+.. GENERATED FROM PYTHON SOURCE LINES 75-102
 
 .. code-block:: default
 
@@ -193,7 +197,7 @@ Data preparation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.364 seconds)
+   **Total running time of the script:** ( 0 minutes  38.498 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py:
