@@ -20,6 +20,8 @@ from macapype.utils.utils_tests import load_test_data
 # Testing plot in local
 ##############################################################################
 
+orig_data_path = load_test_data("data_test_sphinx_macaque")
+
 data_path = load_test_data("data_test_sphinx_macaque_processed")
 
 wf_path = os.path.join(data_path, "example_segment_sphinx_macaque_ants_based")
@@ -43,7 +45,7 @@ plt.show()
 ##==========================
 
 
-orig_T1_file = op.join(data_path, "sub-ziggy_T1w.nii")
+orig_T1_file = op.join(orig_data_path, "sub-ziggy_T1w.nii")
 
 reoriented_T1_file = op.join(wf_path, "old_data_preparation_pipe", "reorient_T1_pipe", "swap_dim", "sub-ziggy_T1w_newdims.nii.gz")
 
