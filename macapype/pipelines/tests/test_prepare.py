@@ -94,7 +94,7 @@ def test_create_long_single_preparation_pipe():
         {
             "prep_T1":
             {
-                "crop":
+                "crop_T1":
                 {
                     "args": "should be defined in indiv"
                 },
@@ -114,7 +114,7 @@ def test_create_long_single_preparation_pipe():
             },
             "prep_T2":
             {
-                "crop":
+                "crop_T2":
                 {
                     "args": "should be defined in indiv"
                 },
@@ -160,7 +160,7 @@ def test_create_long_multi_preparation_pipe():
         {
             "mapnode_prep_T1":
             {
-                "crop":
+                "crop_T1":
                 {
                     "args": ["Should not be used, specific to all",
                              "Should not be used, specific to all"]
@@ -181,7 +181,7 @@ def test_create_long_multi_preparation_pipe():
             },
             "mapnode_prep_T2":
             {
-                "crop":
+                "crop_T2":
                 {
                     "args": ["Should not be used, specific to all"]
                 },

@@ -313,13 +313,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                         "prep_T2": {"crop_T2": {"args": "should be defined in indiv"}},
                         "align_T2_on_T1": {"dof": 6, "cost": "normmi"}}
 
-                    if "norm_intensity" in params["short_preparation_pipe"].keys():
-                        norm_intensity= params["short_preparation_pipe"]["norm_intensity"]
-
-                        params[prep_pipe]["prep_T1"]["norm_intensity"]=norm_intensity
-                        params[prep_pipe]["prep_T2"]["norm_intensity"]=norm_intensity
-
-
                     if "denoise" in params["short_preparation_pipe"].keys():
                         denoise= params["short_preparation_pipe"]["denoise"]
 
