@@ -8,15 +8,6 @@
         "crop_T1":
         {
             "args": "should be defined in indiv"
-        },
-        "norm_intensity":
-        {
-            "dimension": 3,
-            "bspline_fitting_distance": 200,
-            "n_iterations": [50, 50, 40, 30],
-            "convergence_threshold": 0.00000001,
-            "shrink_factor": 2,
-            "args": "-r 0 --verbose 1"
         }
     },
     "brain_extraction_pipe":
