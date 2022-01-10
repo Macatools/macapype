@@ -914,10 +914,7 @@ def create_short_preparation_FLAIR_pipe(params,
     )
 
     # align FLAIR on avg T1
-    align_FLAIR_on_T1 = pe.Node(fsl.FLIRT(), name="align_FLAIR_on_T1")
-    align_FLAIR_on_T1.inputs.dof = 6
-    align_FLAIR_on_T1.inputs.cost = "mutualinfo"
-    align_FLAIR_on_T1.inputs.cost_func = "mutualinfo"
+    align_FLAIR_on_T1 = NodeParams(fsl.FLIRT(), name="align_FLAIR_on_T1", params=parse_key(params, "align_FLAIR_on_T1"))
 
     data_preparation_pipe.connect(inputnode, 'orig_T1',
                                   align_FLAIR_on_T1, 'reference')
@@ -993,26 +990,26 @@ def create_short_preparation_MD_pipe(params,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['orig_T2', 'SS_T2', 'MD',
+        niu.IdentityInterface(fields=['SS_T2', 'MD',
                                       'b0mean', 'native_wm_mask']),
         name='inputnode'
     )
 
     # init_align_b0mean_on_T2
-    init_align_b0mean_on_T2 = pe.Node(fsl.FLIRT(),
-                                      name="init_align_b0mean_on_T2")
-    init_align_b0mean_on_T2.inputs.dof = 6
+    init_align_b0mean_on_T2 = NodeParams(fsl.FLIRT(),
+                                            params=parse_key(params, "init_align_b0mean_on_T2"), 
+                                            name="init_align_b0mean_on_T2")
 
-    data_preparation_pipe.connect(inputnode, 'orig_T2',
+    data_preparation_pipe.connect(inputnode, 'SS_T2',
                                   init_align_b0mean_on_T2, 'reference')
     data_preparation_pipe.connect(inputnode, 'b0mean',
                                   init_align_b0mean_on_T2, 'in_file')
 
     # align_b0mean_on_T2
-    align_b0mean_on_T2 = pe.Node(fsl.FLIRT(), name="align_b0mean_on_T2")
-    align_b0mean_on_T2.inputs.dof = 6
-    align_b0mean_on_T2.inputs.cost = "bbr"
-
+    align_b0mean_on_T2 = NodeParams(fsl.FLIRT(), 
+                                       params=parse_key(params, "align_b0mean_on_T2"),
+                                       name="align_b0mean_on_T2")
+    
     data_preparation_pipe.connect(inputnode, 'SS_T2',
                                   align_b0mean_on_T2, 'reference')
     data_preparation_pipe.connect(inputnode, 'b0mean',

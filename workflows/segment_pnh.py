@@ -73,7 +73,7 @@ from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.utils_nodes import node_output_exists
 
-from macapype.utils.misc import show_files, get_first_elem
+from macapype.utils.misc import show_files, get_first_elem, parse_key
 
 ###############################################################################
 
@@ -447,9 +447,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                               segment_pnh_pipe, 'inputnode.list_T2')
 
     if "flair" in ssoft:
-
-        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=params,
-                                        params_template=params_template)
+        
+        if "transfo_FLAIR_pipe" in params.keys():
+            print("Found transfo_FLAIR_pipe")
+            
+        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=parse_key(params, "transfo_FLAIR_pipe"),
+                                                       params_template=params_template)
 
         if "t1" in ssoft:
             main_workflow.connect(segment_pnh_pipe, "short_preparation_pipe.outputnode.preproc_T1",
@@ -468,8 +471,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     if 'md' in ssoft:
 
-        transfo_MD_pipe = create_transfo_MD_pipe(params=params,
-                                        params_template=params_template)
+        if "transfo_MD_pipe" in params.keys():
+            print("Found transfo_MD_pipe")
+            
+        transfo_MD_pipe = create_transfo_MD_pipe(params=parse_key(params, "transfo_MD_pipe"),
+                                                 params_template=params_template)
 
         main_workflow.connect(segment_pnh_pipe,
                                 "old_segment_pipe.outputnode.threshold_wm",

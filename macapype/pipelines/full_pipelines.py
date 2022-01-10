@@ -414,7 +414,7 @@ def create_transfo_FLAIR_pipe(params_template, params={},
     )
 
     data_preparation_pipe = create_short_preparation_FLAIR_pipe(
-        params=parse_key(params, "short_preparation_pipe"))
+        params=parse_key(params, "short_preparation_FLAIR_pipe"))
 
     transfo_pipe.connect(inputnode, 'orig_T1',
                          data_preparation_pipe, 'inputnode.orig_T1')
@@ -541,7 +541,7 @@ def create_transfo_MD_pipe(params_template, params={},
                          compute_native_wm, 'in_matrix_file')
 
     data_preparation_pipe = create_short_preparation_MD_pipe(
-        params=parse_key(params, "short_preparation_pipe"))
+        params=parse_key(params, "short_preparation_MD_pipe"))
 
     transfo_pipe.connect(inputnode, 'SS_T2',
                          data_preparation_pipe, 'inputnode.SS_T2')
