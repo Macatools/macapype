@@ -3,7 +3,6 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-import nipype.interfaces.ants as ants
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
@@ -85,17 +84,9 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
     Params:
 
     - reorient (new dims as a string (e.g. "x z -y"))
-    - denoise_first (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
-    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
-    #denoiseimage>`_ for arguments)) - also available \
-    as :ref:`indiv_params <indiv_params>`
     - crop (see `ExtractROI <https://nipype.readthedocs.io/en/0.12.1/\
     interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi>`_ \
     for arguments) - also available as :ref:`indiv_params <indiv_params>`
-    - norm_intensity (see `N4BiasFieldCorrection <https://nipype.readthedocs.\
-    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\
-    html#n4biasfieldcorrection>`_ for arguments) - also available as \
-    :ref:`indiv_params <indiv_params>`
     - denoise (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
     1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
     #denoiseimage>`_ for arguments)) - also available \
@@ -125,32 +116,18 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
         prep_pipeline.connect(inputnode, 'img',
                               reorient_pipe, 'inputnode.image')
 
-    if "denoise_first" in params.keys():
-        # denoise with Ants package
-        # (taking into account whether reorient has been performed or not)
-        denoise_first = NodeParams(interface=DenoiseImage(),
-                                   params=parse_key(params, "denoise_first"),
-                                   name="denoise")
-
-        if "reorient" in params.keys():
-            prep_pipeline.connect(reorient_pipe, 'reorient.out_file',
-                                  denoise_first, 'input_image')
-        else:
-            prep_pipeline.connect(inputnode, 'img',
-                                  denoise_first, 'input_image')
-        prep_pipeline.connect(
-            inputnode, ('indiv_params', parse_key, "denoise_first"),
-            denoise_first, 'indiv_params')
-
     # cropping
+    if 'crop'+node_suffix not in params.keys():
+        print("Error, crop"+node_suffix+" could be found in params")
+        print("Breaking")
+
+        exit(0)
+
     crop = NodeParams(fsl.ExtractROI(),
                       params=parse_key(params, "crop"+node_suffix),
                       name='crop'+node_suffix)
 
-    if "denoise_first" in params.keys():
-        prep_pipeline.connect(denoise_first, 'output_image',
-                              crop, 'in_file')
-    elif "reorient" in params.keys():
+    if "reorient" in params.keys():
         prep_pipeline.connect(reorient_pipe, 'reorient.out_file',
                               crop, 'in_file')
     else:
@@ -160,45 +137,26 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # N4 intensity normalization with parameters from json
-    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                params=parse_key(params, "norm_intensity"),
-                                name='norm_intensity')
+    # denoise with Ants package
+    # (taking into account whether reorient has been performed or not)
+    denoise = NodeParams(interface=DenoiseImage(),
+                         params=parse_key(params, "denoise"),
+                         name="denoise")
 
     prep_pipeline.connect(crop, 'roi_file',
-                                norm_intensity, "input_image")
+                          denoise, 'input_image')
+
     prep_pipeline.connect(
-        inputnode, ('indiv_params', parse_key, "norm_intensity"),
-        norm_intensity, 'indiv_params')
-
-    if "denoise" in params.keys():
-
-        # denoise with Ants package
-        # (taking into account whether reorient has been performed or not)
-        denoise = NodeParams(interface=DenoiseImage(),
-                             params=parse_key(params, "denoise"),
-                             name="denoise")
-
-        prep_pipeline.connect(norm_intensity, "output_image",
-                              denoise, 'input_image')
-        prep_pipeline.connect(
-            inputnode, ('indiv_params', parse_key, "denoise"),
-            denoise, 'indiv_params')
+        inputnode, ('indiv_params', parse_key, "denoise"),
+        denoise, 'indiv_params')
 
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['prep_img']),
         name='outputnode')
 
-    if "denoise" in params.keys():
-
-        prep_pipeline.connect(denoise, 'output_image',
-                              outputnode, "prep_img")
-
-    else:
-
-        prep_pipeline.connect(norm_intensity, "output_image",
-                              outputnode, "prep_img")
+    prep_pipeline.connect(denoise, 'output_image',
+                          outputnode, "prep_img")
 
     return prep_pipeline
 
@@ -211,17 +169,9 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
     Params: (Warning: **all arguments are in lists**)
 
     - reorient (new dims as a string (e.g. "x z -y"))
-    - denoise_first (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
-    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
-    #denoiseimage>`_ for arguments)) - also available \
-    as :ref:`indiv_params <indiv_params>`
     - crop (see `ExtractROI <https://nipype.readthedocs.io/en/0.12.1/\
     interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi>`_ \
     for arguments) - also available as :ref:`indiv_params <indiv_params>`
-    - norm_intensity (see `N4BiasFieldCorrection <https://nipype.readthedocs.\
-    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\
-    html#n4biasfieldcorrection>`_ for arguments) - also available as \
-    :ref:`indiv_params <indiv_params>`
     - denoise (see `DenoiseImage <https://nipype.readthedocs.io/en/0.12.\
     1/interfaces/generated/nipype.interfaces.ants.segmentation.html\
     #denoiseimage>`_ for arguments)) - also available \
@@ -251,34 +201,18 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
             mapnode_prep_pipeline.connect(inputnode, 'list_img',
                                           reorient_pipe, 'inputnode.list_img')
 
-    if "denoise_first" in params.keys():
+    if 'crop'+node_suffix not in params.keys():
+        print("Error, crop"+node_suffix+" could be found in params")
+        print("Breaking")
 
-        # denoise_first with Ants package
-        # (taking into account whether reorient has been performed or not)
-        denoise_first = MapNodeParams(
-            interface=DenoiseImage(),
-            params=parse_key(params, "denoise_first"), name="denoise_first",
-            iterfield=["input_image"])
-
-        if "reorient" in params.keys():
-            mapnode_prep_pipeline.connect(reorient_pipe, 'reorient.out_file',
-                                          denoise_first, 'input_image')
-        else:
-            mapnode_prep_pipeline.connect(inputnode, 'list_img',
-                                          denoise_first, 'input_image')
-        mapnode_prep_pipeline.connect(
-            inputnode, ("indiv_params", parse_key, "denoise_first"),
-            denoise_first, 'indiv_params')
+        exit(0)
 
     # cropping
     crop = MapNodeParams(fsl.ExtractROI(),
                          params=parse_key(params, "crop"+node_suffix),
                          name='crop', iterfield=["in_file", "args"])
 
-    if "denoise_first" in params.keys():
-        mapnode_prep_pipeline.connect(denoise_first, 'output_image',
-                                      crop, 'in_file')
-    elif "reorient" in params.keys():
+    if "reorient" in params.keys():
         mapnode_prep_pipeline.connect(reorient_pipe, 'reorient.out_file',
                                       crop, 'in_file')
     else:
@@ -288,47 +222,26 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # N4 intensity normalization with parameters from json
-    norm_intensity = MapNodeParams(ants.N4BiasFieldCorrection(),
-                                   params=parse_key(params, "norm_intensity"),
-                                   name='norm_intensity',
-                                   iterfield=['input_image'])
+    # denoise with Ants package
+    # (taking into account whether reorient has been performed or not)
+    denoise = MapNodeParams(interface=DenoiseImage(),
+                            params=parse_key(params, "denoise"),
+                            name="denoise",
+                            iterfield=["input_image"])
 
     mapnode_prep_pipeline.connect(crop, 'roi_file',
-                                  norm_intensity, "input_image")
+                                  denoise, "input_image")
     mapnode_prep_pipeline.connect(
-        inputnode, ("indiv_params", parse_key, "norm_intensity"),
-        norm_intensity, 'indiv_params')
-
-    if "denoise" in params.keys():
-
-        # denoise with Ants package
-        # (taking into account whether reorient has been performed or not)
-        denoise = MapNodeParams(interface=DenoiseImage(),
-                                params=parse_key(params, "denoise"),
-                                name="denoise",
-                                iterfield=["input_image"])
-
-        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
-                                      denoise, "input_image")
-        mapnode_prep_pipeline.connect(
-            inputnode, ("indiv_params", parse_key, "denoise"),
-            denoise, 'indiv_params')
+        inputnode, ("indiv_params", parse_key, "denoise"),
+        denoise, 'indiv_params')
 
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['prep_list_img']),
         name='outputnode')
 
-    if "denoise" in params.keys():
-
-        mapnode_prep_pipeline.connect(denoise, "output_image",
-                                      outputnode, "prep_list_img")
-
-    else:
-
-        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
-                                      outputnode, "prep_list_img")
+    mapnode_prep_pipeline.connect(denoise, "output_image",
+                                  outputnode, "prep_list_img")
 
     return mapnode_prep_pipeline
 
