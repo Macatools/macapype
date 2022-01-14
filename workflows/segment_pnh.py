@@ -447,9 +447,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                               segment_pnh_pipe, 'inputnode.list_T2')
 
     if "flair" in ssoft:
-
-        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=params,
-                                        params_template=params_template)
+        
+        if "transfo_FLAIR_pipe" in params.keys():
+            print("Found transfo_FLAIR_pipe")
+            
+        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=params=parse_key(params, "transfo_FLAIR_pipe"),
+                                                       params_template=params_template)
 
         if "t1" in ssoft:
             main_workflow.connect(segment_pnh_pipe, "short_preparation_pipe.outputnode.preproc_T1",

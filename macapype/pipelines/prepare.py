@@ -914,10 +914,7 @@ def create_short_preparation_FLAIR_pipe(params,
     )
 
     # align FLAIR on avg T1
-    align_FLAIR_on_T1 = pe.Node(fsl.FLIRT(), name="align_FLAIR_on_T1")
-    align_FLAIR_on_T1.inputs.dof = 6
-    align_FLAIR_on_T1.inputs.cost = "mutualinfo"
-    align_FLAIR_on_T1.inputs.cost_func = "mutualinfo"
+    align_FLAIR_on_T1 = pe.NodeParams(fsl.FLIRT(), name="align_FLAIR_on_T1", params=parse_key(params, "align_FLAIR_on_T1"),)
 
     data_preparation_pipe.connect(inputnode, 'orig_T1',
                                   align_FLAIR_on_T1, 'reference')
