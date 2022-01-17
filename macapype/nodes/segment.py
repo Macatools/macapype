@@ -187,20 +187,18 @@ class AtroposN4(CommandLine):
         elif name == 'priors':
 
             reg = "tmp_{}.nii.gz"
-            
-            new_value = []
 
             print("***** Copying prior files in cur dir:", value)
 
-            for i,prior_file in enumerate(value):
-                new_prior = os.path.join(cur_path, reg.format("{02d}".format(i+1))
+            for i, prior_file in enumerate(value):
+                new_prior = os.path.join(
+                    cur_path,
+                    reg.format("{:02d}".format(i+1)))
+
                 print("prior {} copied as {}".format(prior_file, new_prior))
-                shutil.copy(prior_file, )
-                new_value.append(os.path.split(prior_file)[1])
+                shutil.copy(prior_file, new_prior)
 
-            print("After copying:", new_value)
-
-            value = reg.format("%02d"))
+            value = reg.format("%02d")
             print('value = {}'.format(value))
 
         elif name == 'out_pref':
