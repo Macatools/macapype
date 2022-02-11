@@ -35,7 +35,7 @@ from .extract_brain import (create_extract_pipe,
 
 from .surface import create_nii_to_mesh_pipe, create_nii_to_mesh_fs_pipe
 
-from macapype.utils.misc import parse_key, list_input_files
+from macapype.utils.misc import parse_key, list_input_files, show_files
 
 
 ###############################################################################
