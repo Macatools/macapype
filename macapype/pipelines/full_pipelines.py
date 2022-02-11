@@ -754,7 +754,6 @@ def create_brain_extraction_pipe(params_template, params={},
 
         brain_extraction_pipe.connect(fast_T2, "restored_image",
                                       outputnode, "debiased_T2")
-
         # brain extraction
         extract_pipe = create_extract_pipe(
             params_template=params_template,
@@ -770,7 +769,6 @@ def create_brain_extraction_pipe(params_template, params={},
         brain_extraction_pipe.connect(extract_pipe,
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
-        
     else:
         print("No debias will be performed before extract_pipe")
         

@@ -430,15 +430,16 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
                                           bet_crop, 't2_file')
 
     # denoise with Ants package
-    if "denoise" in params.keys()
+    if "denoise" in params.keys():
         
         denoise_T1 = NodeParams(interface=DenoiseImage(),
                                 params=parse_key(params, "denoise"),
                                 name="denoise_T1")
+        
         denoise_T2 = NodeParams(interface=DenoiseImage(),
                                 params=parse_key(params, "denoise"),
                                 name="denoise_T2")
-
+        # inputs
         if "crop_T1" in params.keys():
             data_preparation_pipe.connect(crop_T1, "roi_file",
                                         denoise_T1, 'input_image')
@@ -451,6 +452,7 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
             data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
                                         denoise_T2, 'input_image')
 
+        # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
                                     outputnode, 'preproc_T1')
 
