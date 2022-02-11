@@ -731,7 +731,7 @@ def create_brain_extraction_pipe(params_template, params={},
                           name='N4debias_T1')
 
         brain_extraction_pipe.connect(inputnode, 'preproc_T1',
-                                      fast_T1, "input_image")
+                                      fast_T1, "in_files")
 
         brain_extraction_pipe.connect(
             inputnode, ('indiv_params', parse_key, "fast"),
@@ -746,7 +746,7 @@ def create_brain_extraction_pipe(params_template, params={},
                           name='N4debias_T2')
 
         brain_extraction_pipe.connect(inputnode, 'preproc_T2',
-                                      fast_T2, "input_image")
+                                      fast_T2, "in_files")
 
         brain_extraction_pipe.connect(
             inputnode, ('indiv_params', parse_key, "fast"),
