@@ -731,6 +731,7 @@ def create_brain_extraction_pipe(params_template, params={},
                           name='fast_T1')
 
         fast_T1.inputs.output_biascorrected = True
+        fast_T1.inputs.output_biasfield= True
         
         brain_extraction_pipe.connect(inputnode, 'preproc_T1',
                                       fast_T1, "in_files")
@@ -748,6 +749,7 @@ def create_brain_extraction_pipe(params_template, params={},
                           name='fast_T2')
 
         fast_T2.inputs.output_biascorrected = True
+        fast_T2.inputs.output_biasfield= True
         
         brain_extraction_pipe.connect(inputnode, 'preproc_T2',
                                       fast_T2, "in_files")
