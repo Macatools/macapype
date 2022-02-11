@@ -759,9 +759,9 @@ def create_brain_extraction_pipe(params_template, params={},
             params_template=params_template,
             params=parse_key(params, "extract_pipe"))
 
-        brain_extraction_pipe.connect(fast_T1, "restored_image",
+        brain_extraction_pipe.connect(fast_T1, ("restored_image", show_files),
                                       extract_pipe, "inputnode.restore_T1")
-        brain_extraction_pipe.connect(fast_T2, "restored_image",
+        brain_extraction_pipe.connect(fast_T2, ("restored_image", show_files),
                                       extract_pipe, "inputnode.restore_T2")
         brain_extraction_pipe.connect(inputnode, "indiv_params",
                                       extract_pipe, "inputnode.indiv_params")
