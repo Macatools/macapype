@@ -14,6 +14,7 @@
     "T1w_":"",
     "roi_":"",
     "noise_corrected_":"",
+    "brain_corrected_":"",
     "corrected_":"",
     "maths_":"",
     "masked_":"",
