@@ -728,7 +728,7 @@ def create_brain_extraction_pipe(params_template, params={},
         # fast over T1
         fast_T1 = NodeParams(fsl.FAST(),
                           params=parse_key(params, "fast"),
-                          name='N4debias_T1')
+                          name='fast_T1')
 
         brain_extraction_pipe.connect(inputnode, 'preproc_T1',
                                       fast_T1, "in_files")
@@ -743,7 +743,7 @@ def create_brain_extraction_pipe(params_template, params={},
         # fast over T2
         fast_T2 = NodeParams(fsl.FAST(),
                           params=parse_key(params, "fast"),
-                          name='N4debias_T2')
+                          name='fast_T2')
 
         brain_extraction_pipe.connect(inputnode, 'preproc_T2',
                                       fast_T2, "in_files")
