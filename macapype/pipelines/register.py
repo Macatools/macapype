@@ -204,21 +204,32 @@ def create_register_NMT_pipe(params_template, params={},
         print("*** Overriding NMT_version with parmas {}".format(
             params['NMT_version']))
 
-    # N4 intensity normalization over brain
-    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                params=parse_key(params, "norm_intensity"),
-                                name='norm_intensity')
+    if "norm_intensity" in params.keys():
+            
+        # N4 intensity normalization over brain
+        norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                    params=parse_key(params, "norm_intensity"),
+                                    name='norm_intensity')
 
-    register_NMT_pipe.connect(inputnode, 'T1',
-                              norm_intensity, "input_image")
+        register_NMT_pipe.connect(inputnode, 'T1',
+                                  norm_intensity, "input_image")
 
-    register_NMT_pipe.connect(
-        inputnode, ('indiv_params', parse_key, "norm_intensity"),
-        norm_intensity, "indiv_params")
-
+        register_NMT_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "norm_intensity"),
+            norm_intensity, "indiv_params")
+        
+    # deoblique (seems mandatory from NMTSubjectAlign)
     deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
-    register_NMT_pipe.connect(norm_intensity, 'output_image',
-                              deoblique, "in_file")
+        
+    if "norm_intensity" in params.keys():
+        
+        register_NMT_pipe.connect(norm_intensity, 'output_image',
+                                  deoblique, "in_file")
+
+    else:
+        
+        register_NMT_pipe.connect(inputnode, 'T1',
+                                  deoblique, "in_file")
 
     print("*** Found NMT_version {}".format(NMT_version))
 
