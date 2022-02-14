@@ -935,7 +935,7 @@ def create_brain_segment_from_mask_pipe(
                 segment_atropos_pipe, "inputnode.wm_prior_file")
 
         brain_segment_pipe.connect(
-            register_NMT_pipe, 'norm_intensity.output_image',
+            register_NMT_pipe, 'deoblique.out_file',
             segment_atropos_pipe, "inputnode.brain_file")
 
     if "export_5tt_pipe" in params.keys():
@@ -1408,7 +1408,7 @@ def create_brain_segment_from_mask_T1_pipe(
         params=parse_key(params, "segment_atropos_pipe"))
 
     brain_segment_pipe.connect(
-        register_NMT_pipe, 'norm_intensity.output_image',
+        register_NMT_pipe, 'deoblique.out_file',
         segment_atropos_pipe, "inputnode.brain_file")
 
     if "use_priors" in params["segment_atropos_pipe"].keys():
