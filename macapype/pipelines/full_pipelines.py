@@ -888,6 +888,8 @@ def create_brain_segment_from_mask_pipe(
     else:
         print("**** Error, masked_correct_bias_pipe or debias \
             should be in brain_extraction_pipe of params.json")
+        print("No T1*T2 debias will be performed")
+
 
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
@@ -903,7 +905,12 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(
             debias, 't1_debiased_brain_file',
             register_NMT_pipe, "inputnode.T1")
-
+    else:
+        
+        brain_segment_pipe.connect(
+            inputnode, 'preproc_T1',
+            register_NMT_pipe, "inputnode.T1")
+        
     brain_segment_pipe.connect(
         inputnode, 'indiv_params',
         register_NMT_pipe, "inputnode.indiv_params")
