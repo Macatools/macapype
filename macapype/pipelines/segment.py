@@ -237,7 +237,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                         name='seg_at')
 
     segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
-    segment_pipe.connect(copy_header_to_brainmask, "modified_img")
+    segment_pipe.connect(copy_header_to_brainmask, "modified_img", 
                          seg_at, "brainmask_file")
 
     if "use_priors" in params.keys():
