@@ -219,13 +219,25 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                              merge_3_elem, "elem2")
         segment_pipe.connect(copy_header_to_wm, 'modified_img',
                              merge_3_elem, "elem3")
+        
+    copy_header_to_brainmask = pe.Node(niu.Function(
+            input_names=['ref_img', 'img_to_modify'],
+            output_names=['modified_img'],
+            function=copy_header), name='copy_header_to_brainmask')
+
+    segment_pipe.connect(inputnode, "brain_file",
+                         copy_header_to_brainmask, "ref_img")
+    segment_pipe.connect(bin_norm_intensity, 'out_file',
+                         copy_header_to_brainmask, "img_to_modify"))
+    
+    
     # Atropos
     seg_at = NodeParams(AtroposN4(),
                         params=parse_key(params, "Atropos"),
                         name='seg_at')
 
     segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
-    segment_pipe.connect(bin_norm_intensity, 'out_file',
+    segment_pipe.connect(copy_header_to_brainmask, "modified_img")
                          seg_at, "brainmask_file")
 
     if "use_priors" in params.keys():
@@ -248,7 +260,8 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf"]),
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf"]),
         name='outputnode')
 
     segment_pipe.connect(seg_at, 'segmented_file',
