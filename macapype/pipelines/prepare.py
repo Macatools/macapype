@@ -3,6 +3,7 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
+import nipype.interfaces.ants as ants
 
 # TODO
 # from nipype.interfaces.niftyreg import reg
