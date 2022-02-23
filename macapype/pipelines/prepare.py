@@ -140,26 +140,83 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # denoise with Ants package
-    # (taking into account whether reorient has been performed or not)
-    denoise = NodeParams(interface=DenoiseImage(),
-                         params=parse_key(params, "denoise"),
-                         name="denoise")
+
+
+    ## N4 intensity normalization with parameters from json
+    #norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                #params=parse_key(params, "norm_intensity"),
+                                #name='norm_intensity')
+
+    #prep_pipeline.connect(crop, 'roi_file',
+                        #norm_intensity, "input_image")
+    #prep_pipeline.connect(
+        #inputnode, ('indiv_params', parse_key, "norm_intensity"),
+        #norm_intensity, 'indiv_params')
+
+
+    
+    #if "denoise" in params.keys():
+
+        ## denoise with Ants package
+        ## (taking into account whether reorient has been performed or not)
+        #denoise = NodeParams(interface=DenoiseImage(),
+                            #params=parse_key(params, "denoise"),
+                            #name="denoise")
+
+        #prep_pipeline.connect(norm_intensity, "output_image",
+                            #denoise, 'input_image')
+
+        #prep_pipeline.connect(
+            #inputnode, ('indiv_params', parse_key, "denoise"),
+            #denoise, 'indiv_params')
+
+    ## output node
+    #outputnode = pe.Node(
+        #niu.IdentityInterface(fields=['prep_img']),
+        #name='outputnode')
+
+    #prep_pipeline.connect(denoise, 'output_image',
+                        #outputnode, "prep_img")
+
+    # N4 intensity normalization with parameters from json
+    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                params=parse_key(params, "norm_intensity"),
+                                name='norm_intensity')
 
     prep_pipeline.connect(crop, 'roi_file',
-                          denoise, 'input_image')
-
+                                norm_intensity, "input_image")
     prep_pipeline.connect(
-        inputnode, ('indiv_params', parse_key, "denoise"),
-        denoise, 'indiv_params')
+        inputnode, ('indiv_params', parse_key, "norm_intensity"),
+        norm_intensity, 'indiv_params')
+
+    if "denoise" in params.keys():
+
+        # denoise with Ants package
+        # (taking into account whether reorient has been performed or not)
+        denoise = NodeParams(interface=DenoiseImage(),
+                             params=parse_key(params, "denoise"),
+                             name="denoise")
+
+        prep_pipeline.connect(norm_intensity, "output_image",
+                              denoise, 'input_image')
+        prep_pipeline.connect(
+            inputnode, ('indiv_params', parse_key, "denoise"),
+            denoise, 'indiv_params')
 
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['prep_img']),
         name='outputnode')
 
-    prep_pipeline.connect(denoise, 'output_image',
-                          outputnode, "prep_img")
+    if "denoise" in params.keys():
+
+        prep_pipeline.connect(denoise, 'output_image',
+                              outputnode, "prep_img")
+
+    else:
+
+        prep_pipeline.connect(norm_intensity, "output_image",
+                              outputnode, "prep_img")
 
     return prep_pipeline
 
@@ -225,26 +282,48 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # denoise with Ants package
-    # (taking into account whether reorient has been performed or not)
-    denoise = MapNodeParams(interface=DenoiseImage(),
-                            params=parse_key(params, "denoise"),
-                            name="denoise",
-                            iterfield=["input_image"])
+    # N4 intensity normalization with parameters from json
+    norm_intensity = MapNodeParams(ants.N4BiasFieldCorrection(),
+                                   params=parse_key(params, "norm_intensity"),
+                                   name='norm_intensity',
+                                   iterfield=['input_image'])
 
     mapnode_prep_pipeline.connect(crop, 'roi_file',
-                                  denoise, "input_image")
+                                  norm_intensity, "input_image")
     mapnode_prep_pipeline.connect(
-        inputnode, ("indiv_params", parse_key, "denoise"),
-        denoise, 'indiv_params')
+        inputnode, ("indiv_params", parse_key, "norm_intensity"),
+        norm_intensity, 'indiv_params')
+
+    if "denoise" in params.keys():
+
+        # denoise with Ants package
+        # (taking into account whether reorient has been performed or not)
+        denoise = MapNodeParams(interface=DenoiseImage(),
+                                params=parse_key(params, "denoise"),
+                                name="denoise",
+                                iterfield=["input_image"])
+
+        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
+                                      denoise, "input_image")
+        mapnode_prep_pipeline.connect(
+            inputnode, ("indiv_params", parse_key, "denoise"),
+            denoise, 'indiv_params')
 
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['prep_list_img']),
         name='outputnode')
 
-    mapnode_prep_pipeline.connect(denoise, "output_image",
-                                  outputnode, "prep_list_img")
+    if "denoise" in params.keys():
+
+        mapnode_prep_pipeline.connect(denoise, "output_image",
+                                      outputnode, "prep_list_img")
+
+    else:
+
+        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
+                                      outputnode, "prep_list_img")
+
 
     return mapnode_prep_pipeline
 
@@ -428,6 +507,20 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
                                           bet_crop, 't1_file')
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           bet_crop, 't2_file')
+
+
+
+    # N4 intensity normalization with parameters from json
+    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                params=parse_key(params, "norm_intensity"),
+                                name='norm_intensity')
+
+    prep_pipeline.connect(crop, 'roi_file',
+                                norm_intensity, "input_image")
+    prep_pipeline.connect(
+        inputnode, ('indiv_params', parse_key, "norm_intensity"),
+        norm_intensity, 'indiv_params')
+
 
     # denoise with Ants package
     if "denoise" in params.keys():
