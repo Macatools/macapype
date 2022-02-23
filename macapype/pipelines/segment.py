@@ -228,7 +228,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
     segment_pipe.connect(inputnode, "brain_file",
                          copy_header_to_brainmask, "ref_img")
     segment_pipe.connect(bin_norm_intensity, 'out_file',
-                         copy_header_to_brainmask, "img_to_modify"))
+                         copy_header_to_brainmask, "img_to_modify")
     
     
     # Atropos
