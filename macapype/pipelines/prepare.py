@@ -509,20 +509,6 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           bet_crop, 't2_file')
 
-
-
-    # N4 intensity normalization with parameters from json
-    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                params=parse_key(params, "norm_intensity"),
-                                name='norm_intensity')
-
-    prep_pipeline.connect(crop, 'roi_file',
-                                norm_intensity, "input_image")
-    prep_pipeline.connect(
-        inputnode, ('indiv_params', parse_key, "norm_intensity"),
-        norm_intensity, 'indiv_params')
-
-
     # denoise with Ants package
     if "denoise" in params.keys():
         
