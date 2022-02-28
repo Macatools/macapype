@@ -54,11 +54,13 @@ def gzip(unzipped_file):
 
     dest = os.path.abspath(tail)
 
+    print("Copying {} to {}".format(unzipped_file, dest))
     shutil.copy(unzipped_file, dest)
 
     cmd_line = "gzip {}".format(dest)
     
     print(cmdline)
+    
     subprocess.check_output(cmd_line, shell=True)
     #os.system ("gzip {}".format(dest))
     
