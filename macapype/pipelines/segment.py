@@ -6,9 +6,9 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 
 from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
-                             split_indexed_mask, copy_header, compute_5tt)
+                             split_indexed_mask, copy_header, compute_5tt, correct_datatype)
 
-from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list)
+from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
@@ -221,31 +221,49 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
         segment_pipe.connect(copy_header_to_wm, 'modified_img',
                              merge_3_elem, "elem3")
         
-    copy_header_to_brainmask = pe.Node(niu.Function(
-            input_names=['ref_img', 'img_to_modify'],
-            output_names=['modified_img'],
-            function=copy_header), name='copy_header_to_brainmask')
-
-    segment_pipe.connect(inputnode, "brain_file",
-                         copy_header_to_brainmask, "ref_img")
-    segment_pipe.connect(bin_norm_intensity, 'out_file',
-                         copy_header_to_brainmask, "img_to_modify")
-    
-    
     # Atropos
     seg_at = NodeParams(AtroposN4(),
                         params=parse_key(params, "Atropos"),
                         name='seg_at')
 
     segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
-    segment_pipe.connect(copy_header_to_brainmask, "modified_img", 
+    segment_pipe.connect(bin_norm_intensity, 'out_file', 
                          seg_at, "brainmask_file")
 
     if "use_priors" in params.keys():
         segment_pipe.connect(merge_3_elem, 'merged_list',
                              seg_at, "priors")
         seg_at.inputs.prior_weight = params["use_priors"]
-
+    
+    # correct_seg
+    
+    unzip_seg = pe.Node(
+        interface=niu.Function(input_names=['zipped_file'],
+                               output_names=["unzipped_file"],
+                               function=gunzip),
+        name="unzip_seg")
+        
+    segment_pipe.connect(
+        seg_at, 'segmented_file', unzip_seg, "zipped_file")
+    
+    correct_dt_seg = pe.Node(
+        niu.Function(input_names=["nii_file"],
+                     output_names=["correct_nii_file"],
+                     function=correct_datatype),
+        name="correct_dt_seg")
+        
+        
+    segment_pipe.connect(unzip_seg, "zipped_file", correct_dt_seg, "nii_file")
+    
+    zip_correct_seg = pe.Node(
+        interface=niu.Function(input_names=['unzipped_file'],
+                               output_names=["zipped_file"],
+                               function=gzip),
+        name="unzip_seg")
+      
+    segment_pipe.connect(correct_dt_seg, "correct_nii_file", zip_correct_seg, "unzipped_file")
+    
+    
     # Threshold GM, WM and CSF
     thd_nodes = {}
     for i, tissue in enumerate(['csf', 'gm', 'wm']):
@@ -266,7 +284,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                     "prob_csf"]),
         name='outputnode')
 
-    segment_pipe.connect(seg_at, 'segmented_file',
+    segment_pipe.connect(zip_correct_seg, 'zipped_file',
                          outputnode, 'segmented_file')
     segment_pipe.connect(thd_nodes["gm"], 'out_file',
                          outputnode, 'threshold_gm')

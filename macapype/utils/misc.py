@@ -44,7 +44,24 @@ def get_first_elem(elem):
         print("not a list")
         return elem
 
+def gzip(unzipped_file):
+    
+    import os
+    
+    head, tail = os.path.split(unzipped_file)
 
+    dest = os.path.abspath(tail)
+
+    shutil.copy(unzipped_file, dest)
+
+    os.system ("gzip {}".format(unzipped_file))
+    
+    zipped_file = dest + ".gz"
+    
+    assert os.path.exists(zipped_file), "Error, {} should exists".format(zipped_file)
+    
+    return zipped_file
+    
 def gunzip(zipped_file):
     import subprocess
     import shutil

@@ -407,3 +407,26 @@ def compute_5tt(gm_file, wm_file, csf_file):
     nib.save(gen_5tt_img, gen_5tt_file)
 
     return gen_5tt_file
+
+def correct_datatype(nii_file)
+
+    import os
+    import shutil
+    
+    from nipype.utils.filemanip import split_filename as split_f
+    
+    path, fname, ext = split_f(nii_file)
+
+    #dest = os.path.abspath(fname + ext)
+
+    #shutil.copy(nii_file, dest)
+
+    prefix = fname + "_correct"
+    
+    
+    
+    os.system("nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix)
+              
+    correct_nii_file = os.path.abspath(prefix + ".nii")
+    
+    return correct_nii_file
