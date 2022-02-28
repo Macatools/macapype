@@ -413,6 +413,8 @@ def correct_datatype(nii_file):
     import os
     import shutil
     
+    import subprocess
+    
     from nipype.utils.filemanip import split_filename as split_f
     
     path, fname, ext = split_f(nii_file)
@@ -423,11 +425,12 @@ def correct_datatype(nii_file):
 
     prefix = fname + "_correct"
     
-    os.system("nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix))
+    cmd_line = "nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix)
+    
+    subprocess.check_output(cmd_line, shell=True)
               
     correct_nii_file = os.path.abspath(prefix + ".nii")
     
     assert os.path.exists(correct_nii_file), "Error, {} should exists".format(correct_nii_file)
-    
     
     return correct_nii_file
