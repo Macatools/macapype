@@ -253,7 +253,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
         name="correct_dt_seg")
         
         
-    segment_pipe.connect(unzip_seg, "zipped_file", correct_dt_seg, "nii_file")
+    segment_pipe.connect(unzip_seg, "unzipped_file", correct_dt_seg, "nii_file")
     
     zip_correct_seg = pe.Node(
         interface=niu.Function(input_names=['unzipped_file'],
