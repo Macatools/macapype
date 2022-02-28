@@ -47,6 +47,7 @@ def get_first_elem(elem):
 def gzip(unzipped_file):
     
     import os
+    import shutil
     
     head, tail = os.path.split(unzipped_file)
 
