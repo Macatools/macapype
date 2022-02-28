@@ -408,7 +408,7 @@ def compute_5tt(gm_file, wm_file, csf_file):
 
     return gen_5tt_file
 
-def correct_datatype(nii_file)
+def correct_datatype(nii_file):
 
     import os
     import shutil
@@ -423,10 +423,11 @@ def correct_datatype(nii_file)
 
     prefix = fname + "_correct"
     
-    
-    
     os.system("nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix)
               
     correct_nii_file = os.path.abspath(prefix + ".nii")
+    
+    assert os.path.exists(correct_nii_file) "Error, {} should exists".format(correct_nii_file)
+    
     
     return correct_nii_file
