@@ -427,7 +427,7 @@ def correct_datatype(nii_file):
               
     correct_nii_file = os.path.abspath(prefix + ".nii")
     
-    assert os.path.exists(correct_nii_file) "Error, {} should exists".format(correct_nii_file)
+    assert os.path.exists(correct_nii_file), "Error, {} should exists".format(correct_nii_file)
     
     
     return correct_nii_file
