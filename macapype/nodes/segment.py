@@ -423,7 +423,7 @@ def correct_datatype(nii_file):
 
     prefix = fname + "_correct"
     
-    os.system("nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix)
+    os.system("nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix))
               
     correct_nii_file = os.path.abspath(prefix + ".nii")
     
