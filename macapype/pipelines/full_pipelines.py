@@ -1232,6 +1232,9 @@ def create_full_ants_subpipes(
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
                          outputnode, 'segmented_brain_mask')
+        
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_gm',
+                         outputnode, 'prob_gm')
 
     if 'nii_to_mesh_pipe' in params.keys():
 
