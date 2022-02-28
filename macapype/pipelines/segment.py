@@ -256,10 +256,6 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
         segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
                              tmp_node, 'in_file')
 
-        
-        segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
-                             outputnode, 'prob_' + tissue)
-
         thd_nodes[tissue] = tmp_node
 
     # creating output node
@@ -269,7 +265,6 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                     "threshold_csf", "prob_gm", "prob_wm",
                     "prob_csf"]),
         name='outputnode')
-
 
     segment_pipe.connect(seg_at, 'segmented_file',
                          outputnode, 'segmented_file')
