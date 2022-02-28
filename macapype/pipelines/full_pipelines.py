@@ -966,7 +966,8 @@ def create_brain_segment_from_mask_pipe(
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf"]),
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf"]),
         name='outputnode')
 
     if space == 'native':
@@ -983,6 +984,16 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.threshold_csf',
                                    outputnode, 'threshold_csf')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_gm',
+                                   outputnode, 'prob_gm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_wm',
+                                   outputnode, 'prob_wm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_csf',
+                                   outputnode, 'prob_csf')
+
 
     else:
         reg_seg_pipe = create_reg_seg_pipe()

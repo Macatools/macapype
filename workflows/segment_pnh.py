@@ -528,6 +528,10 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             segment_pnh_pipe, 'outputnode.segmented_brain_mask',
             datasink, '@segmented_brain_mask')
 
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.prob_gm',
+            datasink, '@prob_gm')
+
         if 'flair' in ssoft :
 
             main_workflow.connect(
