@@ -48,6 +48,7 @@ def gzip(unzipped_file):
     
     import os
     import shutil
+    import subprocess
     
     head, tail = os.path.split(unzipped_file)
 
@@ -55,7 +56,8 @@ def gzip(unzipped_file):
 
     shutil.copy(unzipped_file, dest)
 
-    os.system ("gzip {}".format(unzipped_file))
+    subprocess.check_output("gzip {}".format(unzipped_file), shell=True)
+    #os.system ("gzip {}".format(unzipped_file))
     
     zipped_file = dest + ".gz"
     
