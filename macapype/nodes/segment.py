@@ -429,7 +429,7 @@ def correct_datatype(nii_file):
     
     subprocess.check_output(cmd_line, shell=True)
               
-    correct_nii_file = os.path.abspath(prefix + ".nii")
+    correct_nii_file = os.path.abspath(prefix + ".nii.gz")
     
     assert os.path.exists(correct_nii_file), "Error, {} should exists".format(correct_nii_file)
     
