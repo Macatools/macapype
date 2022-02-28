@@ -164,14 +164,6 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                     "csf_prior_file"]),
         name='inputnode')
 
-    # creating output node
-    outputnode = pe.Node(
-        niu.IdentityInterface(
-            fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf"]),
-        name='outputnode')
-
 
     # bin_norm_intensity (a cheat from Kepkee if I understood well!)
     bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
@@ -269,6 +261,15 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                              outputnode, 'prob_' + tissue)
 
         thd_nodes[tissue] = tmp_node
+
+    # creating output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file", "threshold_gm", "threshold_wm",
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf"]),
+        name='outputnode')
+
 
     segment_pipe.connect(seg_at, 'segmented_file',
                          outputnode, 'segmented_file')
