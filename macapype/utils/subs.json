@@ -16,7 +16,8 @@
 
     "T1w_":"",
     "roi_":"",
-    "restore_brain_":"",
+    "restore_":"",
+    "brain_":"",
     "noise_corrected_":"",
     "brain_corrected_":"",
     "corrected_":"",
