@@ -540,6 +540,19 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             segment_pnh_pipe, 'outputnode.prob_csf',
             datasink, '@prob_csf')
 
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.gen_5tt',
+            datasink, '@gen_5tt')
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.debiased_brain',
+            datasink, '@debiased_brain')
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.debiased_T1',
+            datasink, '@debiased_T1')
+
+        
         if 'flair' in ssoft :
 
             main_workflow.connect(
