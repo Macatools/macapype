@@ -1088,7 +1088,7 @@ def create_full_ants_subpipes(
 
     # output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask', 'prob_gm']),
+        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm', 'prob_csf']),
         name='outputnode')
 
     # preprocessing
