@@ -8,6 +8,9 @@ import nipype.interfaces.ants as ants
 # TODO
 # from nipype.interfaces.niftyreg import reg
 
+# TODO
+# from nipype.interfaces.niftyreg import reg
+
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
 from ..utils.utils_nodes import NodeParams, MapNodeParams
