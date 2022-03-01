@@ -13,7 +13,7 @@ def test_create_full_ants_subpipes_no_args():
     params = {
         "general":
         {
-            "template_name": "NMT_v2.0_asym"
+            "template_name": "NMT_v1.3"
         },
         "short_preparation_pipe":
         {
@@ -37,7 +37,6 @@ def test_create_full_ants_subpipes_no_args():
             },
             "register_NMT_pipe":
             {
-                "NMT_version":"v1.3"
             },
             "segment_atropos_pipe":
             {
@@ -69,7 +68,7 @@ def test_create_full_ants_subpipes_no_subpipes():
     params = {
         "general":
         {
-            "template_name": "NMT_v2.0_asym"
+            "template_name": "NMT_v1.3"
         },
         "short_preparation_pipe":
         {
@@ -82,10 +81,6 @@ def test_create_full_ants_subpipes_no_subpipes():
         },
         "brain_segment_pipe":
         {
-            "register_NMT_pipe":
-            {
-                "NMT_version":"v1.3"
-            }
         }
     }
 
@@ -114,7 +109,7 @@ def test_create_full_ants_subpipes():
     params = {
         "general":
         {
-            "template_name": "NMT_v2.0_asym"
+            "template_name": "NMT_v1.3"
         },
         "short_preparation_pipe":
         {
@@ -176,7 +171,6 @@ def test_create_full_ants_subpipes():
             },
             "register_NMT_pipe":
             {
-                "NMT_version":"v1.3",
                 "NMT_subject_align":
                 {
                     "afni_ext": "orig"
