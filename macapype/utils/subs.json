@@ -16,7 +16,7 @@
     "Segmentation": "space-orig_desc-brain_dseg",
     "indexed_mask": "space-orig_desc-brain_dseg",
     "FLAIR_flirt_flirt": "space-inia19_FLAIR",
-    "_T1w":"",
+    "T1w_":"",
     "_roi":"",
     "_restore_debiased_brain":"",
     "_restore_brain":"",
