@@ -722,17 +722,18 @@ def create_brain_extraction_pipe(params_template, params={},
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
     elif "fast" in params.keys():
-        
+
         print("Found fast in params.json")
 
         # fast over T1
-        fast_T1 = NodeParams(fsl.FAST(),
-                          params=parse_key(params, "fast"),
-                          name='fast_T1')
+        fast_T1 = NodeParams(
+            fsl.FAST(),
+            params=parse_key(params, "fast"),
+            name='fast_T1')
 
         fast_T1.inputs.output_biascorrected = True
-        fast_T1.inputs.output_biasfield= True
-        
+        fast_T1.inputs.output_biasfield = True
+
         brain_extraction_pipe.connect(inputnode, 'preproc_T1',
                                       fast_T1, "in_files")
 
@@ -744,13 +745,14 @@ def create_brain_extraction_pipe(params_template, params={},
                                       outputnode, "debiased_T1")
 
         # fast over T2
-        fast_T2 = NodeParams(fsl.FAST(),
-                          params=parse_key(params, "fast"),
-                          name='fast_T2')
+        fast_T2 = NodeParams(
+            fsl.FAST(),
+            params=parse_key(params, "fast"),
+            name='fast_T2')
 
         fast_T2.inputs.output_biascorrected = True
-        fast_T2.inputs.output_biasfield= True
-        
+        fast_T2.inputs.output_biasfield = True
+
         brain_extraction_pipe.connect(inputnode, 'preproc_T2',
                                       fast_T2, "in_files")
 
@@ -777,7 +779,7 @@ def create_brain_extraction_pipe(params_template, params={},
                                       outputnode, "brain_mask")
     else:
         print("No debias will be performed before extract_pipe")
-        
+
         # brain extraction
         extract_pipe = create_extract_pipe(
             params_template=params_template,
@@ -793,8 +795,7 @@ def create_brain_extraction_pipe(params_template, params={},
         brain_extraction_pipe.connect(extract_pipe,
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
-        
-        
+
     return brain_extraction_pipe
 
 
@@ -890,7 +891,6 @@ def create_brain_segment_from_mask_pipe(
             should be in brain_extraction_pipe of params.json")
         print("No T1*T2 debias will be performed")
 
-
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
         params_template=params_template,
@@ -906,11 +906,11 @@ def create_brain_segment_from_mask_pipe(
             debias, 't1_debiased_brain_file',
             register_NMT_pipe, "inputnode.T1")
     else:
-        
+
         brain_segment_pipe.connect(
             inputnode, 'preproc_T1',
             register_NMT_pipe, "inputnode.T1")
-        
+
     brain_segment_pipe.connect(
         inputnode, 'indiv_params',
         register_NMT_pipe, "inputnode.indiv_params")
@@ -971,7 +971,7 @@ def create_brain_segment_from_mask_pipe(
         name='outputnode')
     brain_segment_pipe.connect(register_NMT_pipe, 'deoblique.out_file',
                                outputnode, 'debiased_brain')
-                               
+
     if space == 'native':
 
         brain_segment_pipe.connect(segment_atropos_pipe,
@@ -995,10 +995,9 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
-        
-        brain_segment_pipe.connect(export_5tt_pipe,'export_5tt.gen_5tt_file',
-                                   outputnode, 'gen_5tt')
 
+        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                                   outputnode, 'gen_5tt')
 
     else:
         reg_seg_pipe = create_reg_seg_pipe()
@@ -1093,7 +1092,9 @@ def create_full_ants_subpipes(
 
     # output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm', 'prob_csf', "gen_5tt", "debiased_brain", "debiased_T1"]),
+        niu.IdentityInterface(
+            fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm',
+                    'prob_csf', "gen_5tt", "debiased_brain", "debiased_T1"]),
         name='outputnode')
 
     # preprocessing
@@ -1175,9 +1176,9 @@ def create_full_ants_subpipes(
         else:
             seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
                              outputnode, "brain_mask")
-                
+
             seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
-                            outputnode, "debiased_T1")
+                             outputnode, "debiased_T1")
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
@@ -1240,13 +1241,12 @@ def create_full_ants_subpipes(
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
                          outputnode, 'segmented_brain_mask')
-        
+
         seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
                          outputnode, 'gen_5tt')
         seg_pipe.connect(brain_segment_pipe, 'outputnode.debiased_brain',
                          outputnode, "debiased_brain")
-        
-        
+
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
                          outputnode, 'prob_csf')
 

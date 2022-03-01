@@ -382,7 +382,7 @@ def compute_5tt(gm_file, wm_file, csf_file):
     import numpy as np
 
     from nipype.utils.filemanip import split_filename as split_f
-    
+
     path, fname, ext = split_f(gm_file)
 
     gm_img = nib.load(gm_file)
@@ -406,29 +406,26 @@ def compute_5tt(gm_file, wm_file, csf_file):
 
     return gen_5tt_file
 
+
 def correct_datatype(nii_file):
 
     import os
-    import shutil
-    
     import subprocess
-    
+
     from nipype.utils.filemanip import split_filename as split_f
-    
+
     path, fname, ext = split_f(nii_file)
 
-    #dest = os.path.abspath(fname + ext)
-
-    #shutil.copy(nii_file, dest)
-
     prefix = fname + "_correct"
-    
-    cmd_line = "nifti_tool -mod_hdr -mod_field datatype 8 -infiles {} -prefix {}".format(nii_file, prefix)
-    
+
+    cmd_line = "nifti_tool -mod_hdr -mod_field datatype 8 \
+        -infiles {} -prefix {}".format(nii_file, prefix)
+
     subprocess.check_output(cmd_line, shell=True)
-              
+
     correct_nii_file = os.path.abspath(prefix + ".nii")
-    
-    assert os.path.exists(correct_nii_file), "Error, {} should exists".format(correct_nii_file)
-    
+
+    assert os.path.exists(correct_nii_file), \
+        "Error, {} should exists".format(correct_nii_file)
+
     return correct_nii_file

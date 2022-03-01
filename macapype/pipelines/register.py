@@ -205,7 +205,7 @@ def create_register_NMT_pipe(params_template, params={},
             params['NMT_version']))
 
     if "norm_intensity" in params.keys():
-            
+
         # N4 intensity normalization over brain
         norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
                                     params=parse_key(params, "norm_intensity"),
@@ -217,17 +217,17 @@ def create_register_NMT_pipe(params_template, params={},
         register_NMT_pipe.connect(
             inputnode, ('indiv_params', parse_key, "norm_intensity"),
             norm_intensity, "indiv_params")
-        
+
     # deoblique (seems mandatory from NMTSubjectAlign)
     deoblique = pe.Node(afni.Refit(deoblique=True), name="deoblique")
-        
+
     if "norm_intensity" in params.keys():
-        
+
         register_NMT_pipe.connect(norm_intensity, 'output_image',
                                   deoblique, "in_file")
 
     else:
-        
+
         register_NMT_pipe.connect(inputnode, 'T1',
                                   deoblique, "in_file")
 
@@ -290,10 +290,10 @@ def create_register_NMT_pipe(params_template, params={},
 
     register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 0),
                               align_NMT, "in_file")  # -source
-    
+
     register_NMT_pipe.connect(deoblique, 'out_file',
                               align_NMT, "reference")  # -base
-    
+
     register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                               align_NMT, "in_matrix")  # -1Dmatrix_apply
 
@@ -308,10 +308,10 @@ def create_register_NMT_pipe(params_template, params={},
 
         register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
                                   align_seg_csf, "in_file")  # -source
-        
+
         register_NMT_pipe.connect(deoblique, 'out_file',
                                   align_seg_csf, "reference")  # -base
-        
+
         register_NMT_pipe.connect(
             NMT_subject_align, 'inv_transfo_file', align_seg_csf,
             "in_matrix")  # -1Dmatrix_apply

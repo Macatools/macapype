@@ -141,44 +141,6 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-
-
-    ## N4 intensity normalization with parameters from json
-    #norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                #params=parse_key(params, "norm_intensity"),
-                                #name='norm_intensity')
-
-    #prep_pipeline.connect(crop, 'roi_file',
-                        #norm_intensity, "input_image")
-    #prep_pipeline.connect(
-        #inputnode, ('indiv_params', parse_key, "norm_intensity"),
-        #norm_intensity, 'indiv_params')
-
-
-    
-    #if "denoise" in params.keys():
-
-        ## denoise with Ants package
-        ## (taking into account whether reorient has been performed or not)
-        #denoise = NodeParams(interface=DenoiseImage(),
-                            #params=parse_key(params, "denoise"),
-                            #name="denoise")
-
-        #prep_pipeline.connect(norm_intensity, "output_image",
-                            #denoise, 'input_image')
-
-        #prep_pipeline.connect(
-            #inputnode, ('indiv_params', parse_key, "denoise"),
-            #denoise, 'indiv_params')
-
-    ## output node
-    #outputnode = pe.Node(
-        #niu.IdentityInterface(fields=['prep_img']),
-        #name='outputnode')
-
-    #prep_pipeline.connect(denoise, 'output_image',
-                        #outputnode, "prep_img")
-
     # N4 intensity normalization with parameters from json
     norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
                                 params=parse_key(params, "norm_intensity"),
@@ -324,7 +286,6 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
 
         mapnode_prep_pipeline.connect(norm_intensity, "output_image",
                                       outputnode, "prep_list_img")
-
 
     return mapnode_prep_pipeline
 
@@ -511,46 +472,46 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
 
     # denoise with Ants package
     if "denoise" in params.keys():
-        
+
         denoise_T1 = NodeParams(interface=DenoiseImage(),
                                 params=parse_key(params, "denoise"),
                                 name="denoise_T1")
-        
+
         denoise_T2 = NodeParams(interface=DenoiseImage(),
                                 params=parse_key(params, "denoise"),
                                 name="denoise_T2")
         # inputs
         if "crop_T1" in params.keys():
             data_preparation_pipe.connect(crop_T1, "roi_file",
-                                        denoise_T1, 'input_image')
+                                          denoise_T1, 'input_image')
             data_preparation_pipe.connect(crop_T2, "roi_file",
-                                        denoise_T2, 'input_image')
+                                          denoise_T2, 'input_image')
 
         else:
             data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                                        denoise_T1, 'input_image')
+                                          denoise_T1, 'input_image')
             data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
-                                        denoise_T2, 'input_image')
+                                          denoise_T2, 'input_image')
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
-                                    outputnode, 'preproc_T1')
+                                      outputnode, 'preproc_T1')
 
         data_preparation_pipe.connect(denoise_T2, 'output_image',
-                                    outputnode, 'preproc_T2')
+                                      outputnode, 'preproc_T2')
     else:
-        
+
         if "crop_T1" in params.keys():
             data_preparation_pipe.connect(crop_T1, "roi_file",
-                                    outputnode, 'preproc_T1')
+                                          outputnode, 'preproc_T1')
             data_preparation_pipe.connect(crop_T2, "roi_file",
-                                    outputnode, 'preproc_T2')
+                                          outputnode, 'preproc_T2')
 
         else:
             data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                                    outputnode, 'preproc_T1')
+                                          outputnode, 'preproc_T1')
             data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
-                                    outputnode, 'preproc_T2')
+                                          outputnode, 'preproc_T2')
 
     return data_preparation_pipe
 

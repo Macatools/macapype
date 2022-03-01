@@ -1,0 +1,17 @@
+cd  Marmobrain-Manon/fast/macapype_indiv_params_crop_T1_ants/full_ants_subpipes/brain_segment_from_mask_pipe/segment_atropos_pipe/_session_03_subject_Riva/seg_at/
+
+gunzip -f sub-Riva_ses-03_rec-meannonorm_T1w_roi_restore_debiased_brain_Segmentation.nii.gz
+
+Essai avec:
+nifti_tool -mod_hdr -mod_field datatype 16 -infiles sub-Riva_ses-03_rec-meannonorm_T1w_roi_restore_debiased_brain_Segmentation.nii -prefix mod
+
+fslhd mod.nii 
+->OK 
+
+freeview mod.nii
+-> pas les differentes values
+
+MARCHE avec datatype 8:
+nifti_tool -mod_hdr -mod_field datatype 8 -infiles sub-Riva_ses-03_rec-meannonorm_T1w_roi_restore_debiased_brain_Segmentation.nii -prefix mod
+
+
