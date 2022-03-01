@@ -171,15 +171,12 @@ def test_create_full_ants_subpipes():
             },
             "register_NMT_pipe":
             {
-                "norm_intensity":
+                "NMT_version":"v1.3",
+                "NMT_subject_align":
                 {
-                    "dimension": 3,
-                    "bspline_fitting_distance": 200,
-                    "n_iterations": [50, 50, 40, 30],
-                    "convergence_threshold": 0.00000001,
-                    "shrink_factor": 2,
-                    "args": "-r 0 --verbose 1"
+                    "afni_ext": "orig"
                 }
+
             },
             "segment_atropos_pipe":
             {
