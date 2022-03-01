@@ -6,7 +6,7 @@
 
     "brain_bin_bin": "space-orig_desc-brain_mask",
     "T1w_roi_restore": "space-orig_desc-debiased_T1w",
-    "T1w_roi_restore_debiased_brain": 
+    "T1w_roi_restore_debiased_brain": "space-orig_desc-debiased_brain",
     "Segmentation_allineate": "space-template_desc-brain_dseg",
     "SegmentationPosteriors01": "space-orig_label-CSF_probseg",
     "SegmentationPosteriors02": "space-orig_label-GM_probseg",
