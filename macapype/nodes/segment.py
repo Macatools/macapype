@@ -381,28 +381,26 @@ def compute_5tt(gm_file, wm_file, csf_file):
     import nibabel as nib
     import numpy as np
 
+    from nipype.utils.filemanip import split_filename as split_f
+    
+    path, fname, ext = split_f(gm_file)
+
     gm_img = nib.load(gm_file)
     gm_data = gm_img.get_fdata()
 
-    print(gm_data.shape)
-
     empty_vol = np.zeros(shape=gm_data.shape)
 
-    wm_img = nib.load(wm_file)
-    wm_data = wm_img.get_fdata()
+    wm_data = nib.load(wm_file).get_fdata()
 
-    csf_img = nib.load(csf_file)
-    csf_data = csf_img.get_fdata()
+    csf_data = nib.load(csf_file).get_fdata()
 
     gen_5tt_data = np.stack((gm_data, empty_vol, wm_data, csf_data, empty_vol),
                             axis=-1)
 
-    print(gen_5tt_data.shape)
-
     gen_5tt_img = nib.Nifti1Image(gen_5tt_data, affine=gm_img.affine,
                                   header=gm_img.header)
 
-    gen_5tt_file = os.path.abspath("gen_5tt.nii.gz")
+    gen_5tt_file = os.path.abspath(fname + "_5tt" + ext)
 
     nib.save(gen_5tt_img, gen_5tt_file)
 
