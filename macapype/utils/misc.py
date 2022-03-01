@@ -59,7 +59,7 @@ def gzip(unzipped_file):
 
     cmd_line = "gzip {}".format(dest)
     
-    print(cmdline)
+    print(cmd_line)
     
     subprocess.check_output(cmd_line, shell=True)
     #os.system ("gzip {}".format(dest))
