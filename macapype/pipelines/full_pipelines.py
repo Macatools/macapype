@@ -967,9 +967,11 @@ def create_brain_segment_from_mask_pipe(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
                     "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf"]),
+                    "prob_csf", "gen_5tt", "cropped_debiased_brain"]),
         name='outputnode')
-
+    brain_segment_pipe.connect(register_NMT_pipe, 'deoblique.out_file',
+                               outputnode, 'cropped_debiased_brain')
+                               
     if space == 'native':
 
         brain_segment_pipe.connect(segment_atropos_pipe,
@@ -993,6 +995,9 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
+        
+        brain_segment_pipe.connect(export_5tt_pipe,'export_5tt.gen_5tt_file',
+                                   outputnode, 'gen_5tt')
 
 
     else:
@@ -1088,7 +1093,7 @@ def create_full_ants_subpipes(
 
     # output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm', 'prob_csf']),
+        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm', 'prob_csf', "gen_5tt", "cropped_debiased_brain", "cropped_debiased_T1"]),
         name='outputnode')
 
     # preprocessing
@@ -1170,6 +1175,9 @@ def create_full_ants_subpipes(
         else:
             seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
                              outputnode, "brain_mask")
+                
+            seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
+                            outputnode, "cropped_debiased_T1")
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
@@ -1232,9 +1240,20 @@ def create_full_ants_subpipes(
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
                          outputnode, 'segmented_brain_mask')
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                         outputnode, 'gen_5tt')
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.cropped_debiased_brain',
+                         outputnode, cropped_debiased_brain)
         
+        
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
+                         outputnode, 'prob_csf')
+
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_gm',
                          outputnode, 'prob_gm')
+
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
+                         outputnode, 'prob_wm')
 
     if 'nii_to_mesh_pipe' in params.keys():
 
