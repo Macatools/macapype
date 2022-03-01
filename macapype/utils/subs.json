@@ -6,8 +6,8 @@
 
     "T1w_roi_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
     "T1w_roi_restore_brain_bin_bin": "space-orig_desc-brain_mask",
-    "T1w_roi_restore_debiased_brain": "space-orig_desc-preproc_desc-brain_T1w",
-    "T1w_roi_restore": "space-orig_desc-preproc_T1w",
+    "T1w_roi_restore_debiased_brain.nii.gz": "space-orig_desc-preproc_desc-brain_T1w.nii.gz",
+    "T1w_roi_restore.nii.gz": "space-orig_desc-preproc_T1w.nii.gz",
     
     "Segmentation_allineate": "space-template_desc-brain_dseg",
     "SegmentationPosteriors01": "space-orig_label-CSF_probseg",
