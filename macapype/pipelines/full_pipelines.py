@@ -854,6 +854,14 @@ def create_brain_segment_from_mask_pipe(
             fields=['preproc_T1', 'preproc_T2', 'brain_mask', 'indiv_params']),
         name='inputnode')
 
+    # creating outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file", "threshold_gm", "threshold_wm",
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf", "gen_5tt", "debiased_brain"]),
+        name='outputnode')
+
     # correcting for bias T1/T2, but this time with a mask
     if "masked_correct_bias_pipe" in params.keys():
         masked_correct_bias_pipe = create_masked_correct_bias_pipe(
@@ -963,12 +971,6 @@ def create_brain_segment_from_mask_pipe(
                                    export_5tt_pipe, 'inputnode.csf_file')
 
     # output
-    outputnode = pe.Node(
-        niu.IdentityInterface(
-            fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf", "gen_5tt", "debiased_brain"]),
-        name='outputnode')
     brain_segment_pipe.connect(register_NMT_pipe, 'deoblique.out_file',
                                outputnode, 'debiased_brain')
 
@@ -1242,8 +1244,6 @@ def create_full_ants_subpipes(
         seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
                          outputnode, 'segmented_brain_mask')
 
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                         outputnode, 'gen_5tt')
         seg_pipe.connect(brain_segment_pipe, 'outputnode.debiased_brain',
                          outputnode, "debiased_brain")
 
@@ -1255,6 +1255,9 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
+
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                         outputnode, 'gen_5tt')
 
     if 'nii_to_mesh_pipe' in params.keys():
 
