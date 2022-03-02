@@ -1735,7 +1735,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
                      brain_extraction_pipe, 'inputnode.indiv_params')
 
     seg_pipe.connect(brain_extraction_pipe,
-                     "outputnode.brainmask",
+                     "outputnode.brain_mask",
                      outputnode, "brain_mask")
 
     seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
