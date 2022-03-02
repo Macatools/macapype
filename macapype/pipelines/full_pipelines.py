@@ -970,6 +970,11 @@ def create_brain_segment_from_mask_pipe(
                                    'outputnode.threshold_csf',
                                    export_5tt_pipe, 'inputnode.csf_file')
 
+
+        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                                   outputnode, 'gen_5tt')
+
+
     # output
     brain_segment_pipe.connect(register_NMT_pipe, 'deoblique.out_file',
                                outputnode, 'debiased_brain')
@@ -997,9 +1002,6 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
-
-        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                                   outputnode, 'gen_5tt')
 
     else:
         reg_seg_pipe = create_reg_seg_pipe()
@@ -1256,8 +1258,10 @@ def create_full_ants_subpipes(
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
 
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                         outputnode, 'gen_5tt')
+        if "export_5tt_pipe" in params["brain_segment_pipe"]:
+
+            seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                            outputnode, 'gen_5tt')
 
     if 'nii_to_mesh_pipe' in params.keys():
 
