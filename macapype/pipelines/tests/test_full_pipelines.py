@@ -81,6 +81,9 @@ def test_create_full_ants_subpipes_no_subpipes():
         },
         "brain_segment_pipe":
         {
+            "segment_atropos_pipe":
+            {
+            }
         }
     }
 
