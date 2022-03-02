@@ -1445,7 +1445,7 @@ def create_brain_extraction_T1_pipe(params_template, params={},
         brain_extraction_pipe.connect(inputnode, "indiv_params",
                                     extract_T1_pipe, "inputnode.indiv_params")
 
-        brain_extraction_pipe.connect(extract_pipe,
+        brain_extraction_pipe.connect(extract_T1_pipe,
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
 
