@@ -1379,17 +1379,17 @@ def create_brain_extraction_T1_pipe(params_template, params={},
                                       outputnode, "debiased_T1")
 
         # brain extraction
-        extract_pipe = create_extract_T1_pipe(
+        extract_T1_pipe = create_extract_T1_pipe(
             params_template=params_template,
             params=parse_key(params, "extract_pipe"))
 
         brain_extraction_pipe.connect(N4debias_T1, "output_image",
-                                      extract_pipe, "inputnode.restore_T1")
+                                      extract_T1_pipe, "inputnode.restore_T1")
 
         brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                      extract_pipe, "inputnode.indiv_params")
+                                      extract_T1_pipe, "inputnode.indiv_params")
 
-        brain_extraction_pipe.connect(extract_pipe,
+        brain_extraction_pipe.connect(extract_T1_pipe,
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
 
@@ -1417,16 +1417,16 @@ def create_brain_extraction_T1_pipe(params_template, params={},
                                       outputnode, "debiased_T1")
 
         # brain extraction
-        extract_pipe = create_extract_T1_pipe(
+        extract_T1_pipe = create_extract_T1_pipe(
             params_template=params_template,
             params=parse_key(params, "extract_pipe"))
 
         brain_extraction_pipe.connect(fast_T1, ("restored_image", show_files),
-                                      extract_pipe, "inputnode.restore_T1")
+                                      extract_T1_pipe, "inputnode.restore_T1")
         brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                      extract_pipe, "inputnode.indiv_params")
+                                      extract_T1_pipe, "inputnode.indiv_params")
 
-        brain_extraction_pipe.connect(extract_pipe,
+        brain_extraction_pipe.connect(extract_T1_pipe,
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
 
@@ -1751,7 +1751,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
         params_template=params_template,
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+    seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
                      brain_segment_pipe, 'inputnode.preproc_T1')
     seg_pipe.connect(brain_extraction_pipe,
                      "extract_T1_pipe.smooth_mask.out_file",
