@@ -5,7 +5,6 @@
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
-from nipype.interfaces import ants
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
 

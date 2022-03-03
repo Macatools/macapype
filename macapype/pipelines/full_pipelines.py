@@ -1,4 +1,7 @@
+"""
+    Gather all full pipelines
 
+"""
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -1386,8 +1389,9 @@ def create_brain_extraction_T1_pipe(params_template, params={},
         brain_extraction_pipe.connect(N4debias_T1, "output_image",
                                       extract_T1_pipe, "inputnode.restore_T1")
 
-        brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                      extract_T1_pipe, "inputnode.indiv_params")
+        brain_extraction_pipe.connect(
+            inputnode, "indiv_params",
+            extract_T1_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_T1_pipe,
                                       "smooth_mask.out_file",
@@ -1421,10 +1425,13 @@ def create_brain_extraction_T1_pipe(params_template, params={},
             params_template=params_template,
             params=parse_key(params, "extract_pipe"))
 
-        brain_extraction_pipe.connect(fast_T1, ("restored_image", show_files),
-                                      extract_T1_pipe, "inputnode.restore_T1")
-        brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                      extract_T1_pipe, "inputnode.indiv_params")
+        brain_extraction_pipe.connect(
+            fast_T1, ("restored_image", show_files),
+            extract_T1_pipe, "inputnode.restore_T1")
+
+        brain_extraction_pipe.connect(
+            inputnode, "indiv_params",
+            extract_T1_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_T1_pipe,
                                       "smooth_mask.out_file",
@@ -1440,10 +1447,13 @@ def create_brain_extraction_T1_pipe(params_template, params={},
             params_template=params_template,
             params=parse_key(params, "extract_pipe"))
 
-        brain_extraction_pipe.connect(inputnode, "preproc_T1",
-                                    extract_T1_pipe, "inputnode.restore_T1")
-        brain_extraction_pipe.connect(inputnode, "indiv_params",
-                                    extract_T1_pipe, "inputnode.indiv_params")
+        brain_extraction_pipe.connect(
+            inputnode, "preproc_T1",
+            extract_T1_pipe, "inputnode.restore_T1")
+
+        brain_extraction_pipe.connect(
+            inputnode, "indiv_params",
+            extract_T1_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_T1_pipe,
                                       "smooth_mask.out_file",
@@ -1501,13 +1511,6 @@ def create_brain_segment_from_mask_T1_pipe(
         niu.IdentityInterface(
             fields=['preproc_T1', 'brain_mask', 'indiv_params']),
         name='inputnode')
-
-    # creating outputnode
-    #outputnode = pe.Node(
-        #niu.IdentityInterface(
-            #fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    #"threshold_csf"]),
-        #name='outputnode')
 
     # creating outputnode
     outputnode = pe.Node(
@@ -1614,7 +1617,7 @@ def create_brain_segment_from_mask_T1_pipe(
 
     else:
         # TODO
-        print("!!!!!!!!!!!!!!!!!!!! Not finished yet !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print("!!!!!!!!!!!!!!!! Not finished yet !!!!!!!!!!!!!!!!!!!!!!")
         return brain_segment_pipe
 
         reg_seg_pipe = create_reg_seg_pipe()
@@ -1689,13 +1692,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
     # Creating input node (grab only T1 files)
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['list_T1', 'indiv_params']),
-        name='inputnode'
-    )
-
-    ## output node
-    #outputnode = pe.Node(
-        #niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask']),
-        #name='outputnode')
+        name='inputnode')
 
     # output node
     outputnode = pe.Node(
