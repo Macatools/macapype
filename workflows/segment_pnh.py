@@ -128,13 +128,13 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     ssoft = soft.split("_")
 
     new_ssoft = ssoft.copy()
-    
+
     if 'test' in ssoft:
         new_ssoft.remove('test')
-        
+
     if 'prep' in ssoft:
         new_ssoft.remove('prep')
-        
+
     soft = "_".join(new_ssoft)
 
     # formating args
@@ -217,9 +217,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         pprint.pprint(indiv_params)
 
         if "short_preparation_pipe" not in params.keys():
-            
+
             print("short_preparation_pipe not found in params, not modifying preparation pipe")
-            
+
         else:
 
             prep_pipe = "short_preparation_pipe"
@@ -236,11 +236,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             if subjects is None or sessions is None:
                 print("For whole BIDS dir, unable to assess if the indiv_params is correct")
                 print("Running with params as it is")
-                
+
             else:
-                    
+
                 print("Will modify params if necessary, given specified subjects and sessions;\n")
-                
+
                 for sub in indiv_params.keys():
 
                     if sub.split('-')[1] not in subjects:
@@ -324,18 +324,18 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     # prep for testing only preparation part
     if "prep" in ssoft:
         print("Found prep in soft")
-        
+
         if "brain_extraction_pipe" in params.keys():
             del params["brain_extraction_pipe"]
             print("Deleting brain_extraction_pipe")
-        
-            
+
+
         if "brain_segment_pipe" in params.keys():
             del params["brain_segment_pipe"]
             print("Deleting brain_segment_pipe")
-            
+
     pprint.pprint(params)
-            
+
     # params_template
     assert ("general" in params.keys() and \
         "template_name" in params["general"].keys()), \
@@ -395,13 +395,17 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     output_query = {}
 
     # T1 (mandatory, always added)
-    output_query['T1'] = {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]
-        }
-
     # T2 is optional, if "_T1" is added in the -soft arg
-    if not 't1' in ssoft:
+    if 't1' in ssoft:
+        output_query['T1'] = {
+            "datatype": "anat", "suffix": "T1w",
+            "extension": ["nii", ".nii.gz"]}
+
+    else:
+        output_query['T1'] = {
+            "datatype": "anat", "suffix": "T1w",
+            "extension": ["nii", ".nii.gz"]}
+
         output_query['T2'] = {
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]}
@@ -439,7 +443,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                           segment_pnh_pipe, 'inputnode.list_T1')
 
     if not "t1" in ssoft:
-        main_workflow.connect(datasource, 'T2', 
+        main_workflow.connect(datasource, 'T2',
                               segment_pnh_pipe, 'inputnode.list_T2')
     elif "t1" in ssoft and "spm" in ssoft:
         # cheating using T2 as T1
@@ -447,10 +451,10 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                               segment_pnh_pipe, 'inputnode.list_T2')
 
     if "flair" in ssoft:
-        
+
         if "transfo_FLAIR_pipe" in params.keys():
             print("Found transfo_FLAIR_pipe")
-            
+
         transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=parse_key(params, "transfo_FLAIR_pipe"),
                                                        params_template=params_template)
 
@@ -473,7 +477,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         if "transfo_MD_pipe" in params.keys():
             print("Found transfo_MD_pipe")
-            
+
         transfo_MD_pipe = create_transfo_MD_pipe(params=parse_key(params, "transfo_MD_pipe"),
                                                  params_template=params_template)
 
@@ -552,7 +556,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             segment_pnh_pipe, 'outputnode.debiased_T1',
             datasink, '@debiased_T1')
 
-        
+
         if 'flair' in ssoft :
 
             main_workflow.connect(
