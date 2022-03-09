@@ -8,7 +8,7 @@
     "T1w_roi_corrected_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
 
     "T1w_roi_restore_brain_bin_bin": "space-orig_desc-brain_mask",
-    "T1w_roi_corrected_brain_bin_bin": "space-orig_desc-brain_mask",
+    "T1w_roi_corrected_restore_brain_bin_bin": "space-orig_desc-brain_mask",
 
     "T1w_roi_restore_debiased_brain.nii.gz": "space-orig_desc-preproc_desc-brain_T1w.nii.gz",
     "T1w_roi_corrected_restore_debiased_brain.nii.gz": "space-orig_desc-preproc_desc-brain_T1w.nii.gz",
