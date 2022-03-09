@@ -958,10 +958,12 @@ def create_brain_segment_from_mask_pipe(
                 masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
                 segment_atropos_pipe, "inputnode.brain_file")
         elif "debias" in params.keys():
-            brain_segment_pipe.connect(debias, 't1_debiased_brain_file',
+            brain_segment_pipe.connect(
+                debias, 't1_debiased_brain_file',
                 segment_atropos_pipe, "inputnode.brain_file")
         else:
-            brain_segment_pipe.connect(inputnode, 'preproc_T1',
+            brain_segment_pipe.connect(
+                inputnode, 'preproc_T1',
                 segment_atropos_pipe, "inputnode.brain_file")
 
     if "export_5tt_pipe" in params.keys():
@@ -1569,7 +1571,6 @@ def create_brain_segment_from_mask_T1_pipe(
 
     brain_segment_pipe.connect(
         restore_mask_T1, 'out_file',
-        #register_NMT_pipe, 'deoblique.out_file',
         segment_atropos_pipe, "inputnode.brain_file")
 
     if "use_priors" in params["segment_atropos_pipe"].keys():
@@ -1607,7 +1608,6 @@ def create_brain_segment_from_mask_T1_pipe(
     # output prepreocessed brain T1
     brain_segment_pipe.connect(
         restore_mask_T1, 'out_file',
-        #register_NMT_pipe, 'deoblique.out_file',
         outputnode, 'debiased_brain')
 
     if space == 'native':
