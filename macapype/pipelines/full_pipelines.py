@@ -911,7 +911,6 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(
             masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
             register_NMT_pipe, "inputnode.T1")
-
     elif "debias" in params.keys():
         brain_segment_pipe.connect(
             debias, 't1_debiased_brain_file',
@@ -940,6 +939,7 @@ def create_brain_segment_from_mask_pipe(
         segment_atropos_pipe = create_segment_atropos_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
+        # linking priors if "use_priors" in params
         if "use_priors" in params["segment_atropos_pipe"].keys():
 
             brain_segment_pipe.connect(
@@ -952,10 +952,17 @@ def create_brain_segment_from_mask_pipe(
                 register_NMT_pipe, 'align_seg_wm.out_file',
                 segment_atropos_pipe, "inputnode.wm_prior_file")
 
-        brain_segment_pipe.connect(
-            debias, 't1_debiased_brain_file',
-            #register_NMT_pipe, 'deoblique.out_file',
-            segment_atropos_pipe, "inputnode.brain_file")
+        # input to segment_atropos_pipe depending on T1T2 debias step
+        if "masked_correct_bias_pipe" in params.keys():
+            brain_segment_pipe.connect(
+                masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
+                segment_atropos_pipe, "inputnode.brain_file")
+        elif "debias" in params.keys():
+            brain_segment_pipe.connect(debias, 't1_debiased_brain_file',
+                segment_atropos_pipe, "inputnode.brain_file")
+        else:
+            brain_segment_pipe.connect(inputnode, 'preproc_T1',
+                segment_atropos_pipe, "inputnode.brain_file")
 
     if "export_5tt_pipe" in params.keys():
 
@@ -978,9 +985,17 @@ def create_brain_segment_from_mask_pipe(
                                    outputnode, 'gen_5tt')
 
     # output prepreocessed brain T1
-    #brain_segment_pipe.connect(register_NMT_pipe, 'deoblique.out_file',
-    brain_segment_pipe.connect(debias, 't1_debiased_brain_file',
-                               outputnode, 'debiased_brain')
+    if "masked_correct_bias_pipe" in params.keys():
+        brain_segment_pipe.connect(
+            masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
+            outputnode, 'debiased_brain')
+    elif "debias" in params.keys():
+        brain_segment_pipe.connect(debias, 't1_debiased_brain_file',
+                                   outputnode, 'debiased_brain')
+    else:
+
+        brain_segment_pipe.connect(inputnode, 'preproc_T1',
+                                   outputnode, 'debiased_brain')
 
     if space == 'native':
 
