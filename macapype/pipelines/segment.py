@@ -7,7 +7,7 @@ import nipype.interfaces.spm as spm
 
 from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
                              split_indexed_mask, copy_header, compute_5tt,
-                             correct_datatype, check_list_vol)
+                             correct_datatype, fill_list_vol)
 
 from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list)
 
@@ -232,18 +232,18 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
 
     if "use_priors" in params.keys():
         if "Atropos" in params.keys() and "numberOfClasses" in params["Atropos"].keys():
-            check_nb_classes = pe.Node(
-                interface=niu.Function(input_names=['vol_to_check', "nb_classes"],
+            fill_nb_classes = pe.Node(
+                interface=niu.Function(input_names=['list_vol', "nb_classes"],
                                        output_names=["checked_vol"],
-                                       function=check_list_vol),
-                name="check_nb_classes")
+                                       function=fill_list_vol),
+                name="fill_nb_classes")
 
             segment_pipe.connect(merge_3_elem, 'merged_list',
-                                 check_nb_classes, "vol_to_check")
+                                 fill_nb_classes, "vol_to_check")
 
-            check_nb_classes.inputs.nb_classes = params["Atropos"]["numberOfClasses"]
+            fill_nb_classes.inputs.nb_classes = params["Atropos"]["numberOfClasses"]
 
-            segment_pipe.connect(check_nb_classes, 'checked_vol',
+            segment_pipe.connect(fill_nb_classes, 'checked_vol',
                                  seg_at, "priors")
 
         else:
