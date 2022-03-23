@@ -902,6 +902,10 @@ def create_brain_segment_from_mask_pipe(
             should be in brain_extraction_pipe of params.json")
         print("No T1*T2 debias will be performed")
 
+    if "NMT_version" in params.keys():
+        print("######################### NMT version for register_NMT_pipe AND seg_atropos")
+        NMT_version = params["NMT_version"]
+
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
         params_template=params_template,
