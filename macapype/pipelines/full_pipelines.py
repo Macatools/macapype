@@ -930,9 +930,11 @@ def create_brain_segment_from_mask_pipe(
         register_NMT_pipe, "inputnode.indiv_params")
 
     # ants Atropos
+    print("For Atropos pipe, using NMT_version = {}".format(NMT_version))
 
     if NMT_version == "v2.0":
 
+        print("######################### create_segment_atropos_seg_pipe ")
         segment_atropos_pipe = create_segment_atropos_seg_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
