@@ -234,16 +234,16 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
         if "Atropos" in params.keys() and "numberOfClasses" in params["Atropos"].keys():
             fill_nb_classes = pe.Node(
                 interface=niu.Function(input_names=['list_vol', "nb_classes"],
-                                       output_names=["checked_vol"],
+                                       output_names=["filled_list_vol"],
                                        function=fill_list_vol),
                 name="fill_nb_classes")
 
             segment_pipe.connect(merge_3_elem, 'merged_list',
-                                 fill_nb_classes, "vol_to_check")
+                                 fill_nb_classes, "list_vol")
 
             fill_nb_classes.inputs.nb_classes = params["Atropos"]["numberOfClasses"]
 
-            segment_pipe.connect(fill_nb_classes, 'checked_vol',
+            segment_pipe.connect(fill_nb_classes, 'filled_list_vol',
                                  seg_at, "priors")
 
         else:
