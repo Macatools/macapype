@@ -429,3 +429,34 @@ def correct_datatype(nii_file):
         "Error, {} should exists".format(correct_nii_file)
 
     return correct_nii_file
+
+def fill_list_vol(list_vol, nb_classes):
+
+    import nibabel as nib
+
+    assert isinstance(list_vol, list), \
+        "Error, {} should be a list..."
+
+
+    if len(list_vol) < nb_classes:
+        first_img = nib.load(list_vol[0])
+
+        data = first_img.get_fdata()
+
+        for new_img_index in range(len(list_vol), nb_classes):
+
+            new_data = np.zeros (shape = data.shape)
+            new_img_file = os.path.abspath("empty_extra_img_{}.nii.gz".format(new_img_index))
+
+            nib.save(nib.Nifti1Image(dataobj = new_data,
+                                     affine = first_img.affine,
+                                     header = first_img.header),
+                     new_img_file)
+
+            list_vol.append(new_img_file)
+
+    return list_vol
+
+
+
+
