@@ -432,12 +432,13 @@ def correct_datatype(nii_file):
 
 def fill_list_vol(list_vol, nb_classes):
 
+    import os
+
     import nibabel as nib
     import numpy as np
 
     assert isinstance(list_vol, list), \
-        "Error, {} should be a list..."
-
+        "Error, {} should be a list...".format(list_vol)
 
     if len(list_vol) < nb_classes:
         first_img = nib.load(list_vol[0])
