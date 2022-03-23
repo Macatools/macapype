@@ -433,6 +433,7 @@ def correct_datatype(nii_file):
 def fill_list_vol(list_vol, nb_classes):
 
     import nibabel as nib
+    import numpy as np
 
     assert isinstance(list_vol, list), \
         "Error, {} should be a list..."
