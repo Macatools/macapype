@@ -101,10 +101,12 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
         thd_nodes[tissue] = tmp_node
 
+    # creating output node with prob_ and threshold_
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf"]),
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf"]),
         name='outputnode')
 
     segment_pipe.connect(seg_at, 'segmented_file',
@@ -115,6 +117,12 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                          outputnode, 'threshold_wm')
     segment_pipe.connect(thd_nodes["csf"], 'out_file',
                          outputnode, 'threshold_csf')
+
+    for i, tissue in enumerate(['csf', 'gm', 'wm']):
+        segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
+                             outputnode, 'prob_' + tissue)
+
+
 
     return segment_pipe
 

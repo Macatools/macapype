@@ -941,22 +941,23 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(
             register_NMT_pipe, 'align_seg.out_file', segment_atropos_pipe,
             "inputnode.seg_file")
-    else:
-        segment_atropos_pipe = create_segment_atropos_pipe(
-            params=parse_key(params, "segment_atropos_pipe"))
 
-        # linking priors if "use_priors" in params
-        if "use_priors" in params["segment_atropos_pipe"].keys():
+    #else:
+        #segment_atropos_pipe = create_segment_atropos_pipe(
+            #params=parse_key(params, "segment_atropos_pipe"))
 
-            brain_segment_pipe.connect(
-                register_NMT_pipe, 'align_seg_csf.out_file',
-                segment_atropos_pipe, "inputnode.csf_prior_file")
-            brain_segment_pipe.connect(
-                register_NMT_pipe, 'align_seg_gm.out_file',
-                segment_atropos_pipe, "inputnode.gm_prior_file")
-            brain_segment_pipe.connect(
-                register_NMT_pipe, 'align_seg_wm.out_file',
-                segment_atropos_pipe, "inputnode.wm_prior_file")
+        ## linking priors if "use_priors" in params
+        #if "use_priors" in params["segment_atropos_pipe"].keys():
+
+            #brain_segment_pipe.connect(
+                #register_NMT_pipe, 'align_seg_csf.out_file',
+                #segment_atropos_pipe, "inputnode.csf_prior_file")
+            #brain_segment_pipe.connect(
+                #register_NMT_pipe, 'align_seg_gm.out_file',
+                #segment_atropos_pipe, "inputnode.gm_prior_file")
+            #brain_segment_pipe.connect(
+                #register_NMT_pipe, 'align_seg_wm.out_file',
+                #segment_atropos_pipe, "inputnode.wm_prior_file")
 
         # input to segment_atropos_pipe depending on T1T2 debias step
         if "masked_correct_bias_pipe" in params.keys():
@@ -972,25 +973,25 @@ def create_brain_segment_from_mask_pipe(
                 inputnode, 'preproc_T1',
                 segment_atropos_pipe, "inputnode.brain_file")
 
-    if "export_5tt_pipe" in params.keys():
+    #if "export_5tt_pipe" in params.keys():
 
-        export_5tt_pipe = create_5tt_pipe(
-            params=parse_key(params, "export_5tt_pipe"))
+        #export_5tt_pipe = create_5tt_pipe(
+            #params=parse_key(params, "export_5tt_pipe"))
 
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_gm',
-                                   export_5tt_pipe, 'inputnode.gm_file')
+        #brain_segment_pipe.connect(segment_atropos_pipe,
+                                   #'outputnode.threshold_gm',
+                                   #export_5tt_pipe, 'inputnode.gm_file')
 
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_wm',
-                                   export_5tt_pipe, 'inputnode.wm_file')
+        #brain_segment_pipe.connect(segment_atropos_pipe,
+                                   #'outputnode.threshold_wm',
+                                   #export_5tt_pipe, 'inputnode.wm_file')
 
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_csf',
-                                   export_5tt_pipe, 'inputnode.csf_file')
+        #brain_segment_pipe.connect(segment_atropos_pipe,
+                                   #'outputnode.threshold_csf',
+                                   #export_5tt_pipe, 'inputnode.csf_file')
 
-        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                                   outputnode, 'gen_5tt')
+        #brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                                   #outputnode, 'gen_5tt')
 
     # output prepreocessed brain T1
     if "masked_correct_bias_pipe" in params.keys():
