@@ -75,9 +75,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(inputnode, "brain_file",
                              copy_header_to_seg, "ref_img")
         segment_pipe.connect(inputnode, 'seg_file',
-                             copy_header_to_csf, "img_to_modify")
-
-
+                             copy_header_to_seg, "img_to_modify")
 
         # merging priors as a list
         split_seg = pe.Node(niu.Function(
