@@ -518,37 +518,41 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         datasink.inputs.base_directory = process_dir
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.brain_mask',
-            datasink, '@brain_mask')
+        if "brain_extraction_pipe" in params.keys():
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-            datasink, '@segmented_brain_mask')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.brain_mask',
+                datasink, '@brain_mask')
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.prob_wm',
-            datasink, '@prob_wm')
+        if "brain_segment_pipe" in params.keys():
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.prob_gm',
-            datasink, '@prob_gm')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+                datasink, '@segmented_brain_mask')
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.prob_csf',
-            datasink, '@prob_csf')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_wm',
+                datasink, '@prob_wm')
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.gen_5tt',
-            datasink, '@gen_5tt')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_gm',
+                datasink, '@prob_gm')
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.debiased_brain',
-            datasink, '@debiased_brain')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_csf',
+                datasink, '@prob_csf')
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.debiased_T1',
-            datasink, '@debiased_T1')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.gen_5tt',
+                datasink, '@gen_5tt')
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.debiased_brain',
+                datasink, '@debiased_brain')
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.debiased_T1',
+                datasink, '@debiased_T1')
 
 
         if 'flair' in ssoft :
