@@ -314,6 +314,11 @@ class AtlasBREXOutputSpec(TraitedSpec):
         exists=True,
         desc="extracted brain from atlas_brex")
 
+    std2high_mat = File(
+        exists=True,
+        desc="matrix transfo to template")
+
+
 
 class AtlasBREX(CommandLine):
     """
@@ -397,4 +402,7 @@ class AtlasBREX(CommandLine):
 
         path, fname, ext = split_f(self.inputs.t1_restored_file)
         outputs["brain_file"] = os.path.abspath(fname + '_brain' + ext)
+
+        outputs["std2high_mat"] = os.path.abspath("std2high.mat")
+
         return outputs
