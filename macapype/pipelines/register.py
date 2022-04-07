@@ -244,7 +244,7 @@ def create_register_NMT_pipe(params_template, params={},
         align_seg.inputs.in_file = params_template["template_seg"]
 
         register_NMT_pipe.connect(deoblique, 'out_file',
-                                  align_seg, "ref_file")
+                                  align_seg, "reference")
 
         register_NMT_pipe.connect(inputnode, 'std2high_mat',
                                   align_seg, "in_matrix")
