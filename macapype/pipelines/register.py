@@ -237,7 +237,7 @@ def create_register_NMT_pipe(params_template, params={},
 
         print("Testing new normalization node")
 
-        align_seg = Node(
+        align_seg = pe.Node(
             fsl.ApplyXFM(),
             name='align_seg')
 
