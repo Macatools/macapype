@@ -778,7 +778,7 @@ def create_brain_extraction_pipe(params_template, params={},
                                       extract_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_pipe,
-                                      "atlasbrex.std2high_mat",
+                                      "atlas_brex.std2high_mat",
                                       outputnode, "std2high_mat")
 
         brain_extraction_pipe.connect(extract_pipe,
