@@ -247,7 +247,7 @@ def create_register_NMT_pipe(params_template, params={},
                                   align_seg, "reference")
 
         register_NMT_pipe.connect(inputnode, 'std2high_mat',
-                                  align_seg, "in_matrix")
+                                  align_seg, "in_matrix_file")
 
         return register_NMT_pipe
 
