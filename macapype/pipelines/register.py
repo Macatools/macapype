@@ -195,7 +195,7 @@ def create_register_NMT_pipe(params_template, params={},
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['T1', 'indiv_params']),
+        niu.IdentityInterface(fields=['T1', 'indiv_params', 'std2high_mat']),
         name='inputnode')
 
     if "NMT_version" in params.keys():
@@ -232,6 +232,25 @@ def create_register_NMT_pipe(params_template, params={},
                                   deoblique, "in_file")
 
     print("*** Found NMT_version {}".format(NMT_version))
+
+    if NMT_version == "flirt":
+
+        print("Testing new normalization node")
+
+        align_seg = Node(
+            fsl.ApplyXFM(),
+            name='align_seg')
+
+        align_seg.inputs.in_file = params_template["template_seg"]
+
+        register_NMT_pipe.connect(deoblique, 'out_file',
+                                  align_seg, "ref_file")
+
+        register_NMT_pipe.connect(inputnode, 'std2high_mat',
+                                  align_seg, "in_matrix")
+
+        return register_NMT_pipe
+
 
     if NMT_version == "v1.2":
         # align subj to nmt

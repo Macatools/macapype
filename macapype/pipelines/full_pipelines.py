@@ -632,7 +632,7 @@ def create_brain_extraction_pipe(params_template, params={},
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['debiased_T1', 'debiased_T2',
-                                      "brain_mask"]),
+                                      "brain_mask", "std2high_mat"]),
         name='outputnode')
 
     assert not ("correct_bias_pipe" in params.keys() and "N4debias" in
@@ -778,6 +778,10 @@ def create_brain_extraction_pipe(params_template, params={},
                                       extract_pipe, "inputnode.indiv_params")
 
         brain_extraction_pipe.connect(extract_pipe,
+                                      "atlasbrex.std2high_mat",
+                                      outputnode, "std2high_mat")
+
+        brain_extraction_pipe.connect(extract_pipe,
                                       "smooth_mask.out_file",
                                       outputnode, "brain_mask")
     else:
@@ -854,7 +858,7 @@ def create_brain_segment_from_mask_pipe(
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['preproc_T1', 'preproc_T2', 'brain_mask', 'indiv_params']),
+            fields=['preproc_T1', 'preproc_T2', 'brain_mask', 'std2high_mat', 'indiv_params']),
         name='inputnode')
 
     # creating outputnode
@@ -915,12 +919,13 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(
             masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
             register_NMT_pipe, "inputnode.T1")
+
     elif "debias" in params.keys():
         brain_segment_pipe.connect(
             debias, 't1_debiased_brain_file',
             register_NMT_pipe, "inputnode.T1")
-    else:
 
+    else:
         brain_segment_pipe.connect(
             inputnode, 'preproc_T1',
             register_NMT_pipe, "inputnode.T1")
@@ -928,6 +933,12 @@ def create_brain_segment_from_mask_pipe(
     brain_segment_pipe.connect(
         inputnode, 'indiv_params',
         register_NMT_pipe, "inputnode.indiv_params")
+
+
+    brain_segment_pipe.connect(
+        inputnode, 'std2high_mat',
+        register_NMT_pipe, "inputnode.std2high_mat")
+
 
     # ants Atropos
     print("For Atropos pipe, using NMT_version = {}".format(NMT_version))
@@ -1233,6 +1244,10 @@ def create_full_ants_subpipes(
                      brain_segment_pipe, 'inputnode.preproc_T1')
     seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T2",
                      brain_segment_pipe, 'inputnode.preproc_T2')
+
+    seg_pipe.connect(brain_extraction_pipe, "outputnode.std2high_mat",
+                     brain_segment_pipe, 'inputnode.std2high_mat')
+
 
     if mask_file is None:
 
