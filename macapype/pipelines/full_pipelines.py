@@ -943,7 +943,7 @@ def create_brain_segment_from_mask_pipe(
     # ants Atropos
     print("For Atropos pipe, using NMT_version = {}".format(NMT_version))
 
-    if NMT_version == "v2.0":
+    if NMT_version == "v2.0" or NMT_version == "flirt":
 
         print("######################### create_segment_atropos_seg_pipe ")
         segment_atropos_pipe = create_segment_atropos_seg_pipe(
