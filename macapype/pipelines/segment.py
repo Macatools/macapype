@@ -63,7 +63,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     segment_pipe.connect(inputnode, "brain_file",
                          bin_norm_intensity, "in_file")
 
-
     if "use_priors" in params.keys():
 
         # copying header from img to csf_prior_file
@@ -83,7 +82,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             output_names=['list_split_files'],
             function=split_indexed_mask), name='split_seg')
 
-        segment_pipe.connect(copy_header_to_seg, 'modified_img', split_seg, "nii_file")
+        segment_pipe.connect(copy_header_to_seg, 'modified_img',
+                             split_seg, "nii_file")
 
     # Atropos
     seg_at = NodeParams(AtroposN4(),
@@ -99,7 +99,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         seg_at.inputs.prior_weight = params["use_priors"]
 
         segment_pipe.connect(split_seg, 'list_split_files',
-                            seg_at, "priors")
+                             seg_at, "priors")
 
     # on segmentation indexed mask (with labels)
     # 1 -> CSF
@@ -140,9 +140,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     for i, tissue in enumerate(['csf', 'gm', 'wm']):
         segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
                              outputnode, 'prob_' + tissue)
-
-
-
     return segment_pipe
 
 
@@ -258,20 +255,31 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                          seg_at, "brainmask_file")
 
     if "use_priors" in params.keys():
-        if "Atropos" in params.keys() and "numberOfClasses" in params["Atropos"].keys():
-            fill_nb_classes = pe.Node(
-                interface=niu.Function(input_names=['list_vol', "nb_classes"],
-                                       output_names=["filled_list_vol"],
-                                       function=fill_list_vol),
-                name="fill_nb_classes")
+        if "Atropos" in params.keys():
+            if "numberOfClasses" in params["Atropos"].keys():
+                nb_classes = params["Atropos"]["numberOfClasses"]
 
-            segment_pipe.connect(merge_3_elem, 'merged_list',
-                                 fill_nb_classes, "list_vol")
+                fill_nb_classes = pe.Node(
+                    interface=niu.Function(
+                        input_names=['list_vol', "nb_classes"],
+                        output_names=["filled_list_vol"],
+                        function=fill_list_vol),
+                    name="fill_nb_classes")
 
-            fill_nb_classes.inputs.nb_classes = params["Atropos"]["numberOfClasses"]
+                segment_pipe.connect(merge_3_elem, 'merged_list',
+                                     fill_nb_classes, "list_vol")
 
-            segment_pipe.connect(fill_nb_classes, 'filled_list_vol',
-                                 seg_at, "priors")
+                fill_nb_classes.inputs.nb_classes = nb_classes
+
+                segment_pipe.connect(fill_nb_classes, 'filled_list_vol',
+                                     seg_at, "priors")
+
+            else:
+                print("No numberOfClasses was specified, adding default (3)")
+                seg_at.inputs.numberOfClasses = 3
+
+                segment_pipe.connect(merge_3_elem, 'merged_list',
+                                     seg_at, "priors")
 
         else:
             segment_pipe.connect(merge_3_elem, 'merged_list',

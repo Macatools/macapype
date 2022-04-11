@@ -304,9 +304,6 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
 
     vox = traits.Int(desc="vox",  argstr="-vox %d")
 
-    t = traits.String("1", usedefault = True, desc = "keep temporary files",
-                      position = -2, argstr="-t %s")
-
     args = traits.String(desc="args", position=-1, argstr=" %s",
                          mandatory=False)
 
@@ -316,11 +313,6 @@ class AtlasBREXOutputSpec(TraitedSpec):
     brain_file = File(
         exists=True,
         desc="extracted brain from atlas_brex")
-
-    std2high_mat = File(
-        exists=True,
-        desc="matrix transfo to template")
-
 
 
 class AtlasBREX(CommandLine):
@@ -405,7 +397,5 @@ class AtlasBREX(CommandLine):
 
         path, fname, ext = split_f(self.inputs.t1_restored_file)
         outputs["brain_file"] = os.path.abspath(fname + '_brain' + ext)
-
-        outputs["std2high_mat"] = os.path.abspath("std2high.mat")
 
         return outputs

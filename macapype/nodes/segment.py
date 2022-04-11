@@ -430,6 +430,7 @@ def correct_datatype(nii_file):
 
     return correct_nii_file
 
+
 def fill_list_vol(list_vol, nb_classes):
 
     import os
@@ -447,18 +448,15 @@ def fill_list_vol(list_vol, nb_classes):
 
         for new_img_index in range(len(list_vol), nb_classes):
 
-            new_data = np.zeros (shape = data.shape)
-            new_img_file = os.path.abspath("empty_extra_img_{}.nii.gz".format(new_img_index))
+            new_data = np.zeros(shape=data.shape)
+            new_img_file = os.path.abspath(
+                "empty_extra_img_{}.nii.gz".format(new_img_index))
 
-            nib.save(nib.Nifti1Image(dataobj = new_data,
-                                     affine = first_img.affine,
-                                     header = first_img.header),
+            nib.save(nib.Nifti1Image(dataobj=new_data,
+                                     affine=first_img.affine,
+                                     header=first_img.header),
                      new_img_file)
 
             list_vol.append(new_img_file)
 
     return list_vol
-
-
-
-
