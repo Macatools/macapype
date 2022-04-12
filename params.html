@@ -289,6 +289,7 @@
   <section id="parameters">
 <span id="params"></span><h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
 <p>All the params spefications are in each function of the API, as well the spefications available for <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a>.</p>
+<p><strong>N.B. in the newest version of macapype, the -params can be replaced the option -species followed by the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}, and a default parameter, tested for this species, will be used. It is however still possible to use the -params option and provide a params.json for advanced users</strong></p>
 <p>Here is an example of the params.json corresponding to <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_spm_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">segment_pnh_spm_based</span> <span class="pre">pipeline</span></code></a> for macaque:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;general&quot;</span><span class="p">:</span>
@@ -353,7 +354,6 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>** N.B. in the newest version of macapype, the -params can be replaced the option -species followed by the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}, and a default parameter, tested for this species, will be used. It is however still possible to use the -params option and provide a params.json for advanced users **</p>
 </section>
 
 

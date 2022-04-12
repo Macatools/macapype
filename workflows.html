@@ -288,66 +288,58 @@
       
   <section id="how-to-run-workflows">
 <span id="workflows"></span><h1>How to run workflows<a class="headerlink" href="#how-to-run-workflows" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p>the main file is located in workflows and is called segment_pnh.py and should be called like a python script:</p></li>
-</ul>
+<p>The main file is located in workflows and is called segment_pnh.py and should be called like a python script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh.py
 </pre></div>
 </div>
-<ul>
-<li><p>all the data have to be in BIDS format to run properly (see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/index.html">BIDS specification</a> for more details)</p></li>
-<li><p>the following parameters are mandatory:</p>
-<blockquote>
-<div><ul>
+<p><strong>N.B. if you have installed the pypi version (e.g. using pip install macapype) or a docker/singularity version, you can replace the previous command by the following command:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ segment_pnh
+</pre></div>
+</div>
+<p>All the data have to be in BIDS format to run properly (see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/index.html">BIDS specification</a> for more details)</p>
+<p>The following parameters are mandatory:</p>
+<ul class="simple">
 <li><p>-data is the path to your data dataset (existing BIDS format directory)</p></li>
 <li><p>-out is the path to the output results (an existing path)</p></li>
-<li><p>-soft can be one of these : SPM or ANTS</p>
-<blockquote>
-<div><ul class="simple">
+<li><dl class="simple">
+<dt>-soft can be one of these<span class="classifier">SPM or ANTS:</span></dt><dd><ul>
 <li><p>with _T1 at the end if only T1w (and not T2w) are available</p></li>
 <li><p>with _test to see if the full pipeline is coherent (will only generate the graph.dot and graph.png)</p></li>
 <li><p>with _seq to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 0)</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 <li><p>-params: a json file specifiying the global parameters of the analysis. See <a class="reference internal" href="params.html#params"><span class="std std-ref">Parameters</span></a> for more details</p></li>
 </ul>
-</div></blockquote>
-</li>
+<p><strong>in the newest version of macapype:</strong></p>
+<ul class="simple">
+<li><p>-species (mandatory if -params is omitted) followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json
 </pre></div>
 </div>
-<ul>
-<li><p>the following parameters are optional:</p>
-<blockquote>
-<div><ul class="simple">
+<p>The following parameters are optional:</p>
+<ul class="simple">
 <li><p>-indiv or -indiv_params : a json file overwriting the default parameters (both macapype default and parameters specified in -params json file) for specific subjects/sessions. See <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a> for more details</p></li>
 <li><p>-sub (-subjects), -ses (-sessions), -acq (-acquisions), -rec (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator.</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -sub Apache Baron -ses <span class="m">01</span> -rec mean
 </pre></div>
 </div>
-<ul>
-<li><p>-mask allows to specify a precomputed binary mask file (skipping brain extraction). The bets usage of this option if precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified.</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>warning: the mask should be in the same space as the data.</p></li>
-<li><p>only works with -soft ANTS so far</p></li>
+<ul class="simple">
+<li><p>-mask allows to specify a precomputed binary mask file (skipping brain extraction). The bets usage of this option if precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified.</p></li>
 </ul>
-</div></blockquote>
-</li>
-<li><p>-nprocs : an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype</p>
-<blockquote>
-<div><ul class="simple">
+<p><strong>Warning: the mask should be in the same space as the data. And only works with -soft ANTS so far</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>-nprocs<span class="classifier">an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype</span></dt><dd><ul>
 <li><p>typically equals to the number of subjects*session (i.e. iterables).</p></li>
 <li><p>can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)</p></li>
 <li><p>default = 4 if unspecified ; if is put to 0, then the sequential processing is used (equivalent to -soft with _seq, see before)</p></li>
 </ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 </ul>
 </section>
