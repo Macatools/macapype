@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Useful tips (before processing) &#8212; macapype 0.3.0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Events" href="brainhack.html" />
+    <link rel="prev" title="How to contribute to the sources of the project" href="contribute.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype_0.3.jpg"></span>
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="auto_examples/index.html">Gallery</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="install.html">Installation</a></li>
+                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#new-multi-params">New: multi_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#macaque">Macaque:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#marmoset">Marmoset:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#baboon">Baboon:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#spm-based-pipelines">SPM-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-a-t1w-image">Using only a T1w image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#ants-based-pipelines">ANTS-based pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#id2">Using T1w and T2w images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-t1w-images">Using only T1w images</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#options">Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="external_pipeline.html#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="external_pipeline.html#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#fod-estimation">FOD estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#perform-streamlines-tractography">Perform streamlines tractography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#install-a-dev-version">Install a dev version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#to-build-the-documentation">To build the documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#pull-request">Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html#versionning">Versionning</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="brainhack.html#channels-of-communication">Channels of communication</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="brainhack.html#during-the-event">during the event</a></li>
+<li class="toctree-l4"><a class="reference internal" href="brainhack.html#before-after-the-event">before/after the event</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="brainhack.html#project-pages">Project pages:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="brainhack.html#program">Program:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/utils.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a></li>
+</ul>
+
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="useful-tips-before-processing">
+<span id="utils"></span><h1>Useful tips (before processing)<a class="headerlink" href="#useful-tips-before-processing" title="Permalink to this headline">¶</a></h1>
+<section id="how-to-orient-the-labels-your-images">
+<h2>How to orient the labels your images ?<a class="headerlink" href="#how-to-orient-the-labels-your-images" title="Permalink to this headline">¶</a></h2>
+<p>In particular, the image should be in neurological convention, i.e. left label on the right of the image in FSL coronal representation, and x values increasion from left to right.</p>
+<a class="reference internal image-reference" href="_images/wrong_orient_mark.png"><img alt="_images/wrong_orient_mark.png" class="align-center" src="_images/wrong_orient_mark.png" style="width: 961.0px; height: 370.0px;" /></a>
+<p>If is not the case, use the following procedure to swap the X-axis</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp Orig/sub-Iroquoise_ses-01_T1w.nii.gz .
+fslreorient2std sub-Iroquoise_ses-01_T1w.nii.gz sub-Iroquoise_ses-01_T1w_reorient.nii.gz
+fslorient -forceneurological sub-Iroquoise_ses-01_T1w_reorient.nii.gz
+fslswapdim sub-Iroquoise_ses-01_T1w_reorient.nii.gz -x y z sub-Iroquoise_ses-01_T1w_reorient_swapped.nii.gz
+mv sub-Iroquoise_ses-01_T1w_reorient_swapped.nii.gz sub-Iroquoise_ses-01_T1w.nii.gz
+</pre></div>
+</div>
+<p>After the labels are reoriented:</p>
+<a class="reference internal image-reference" href="_images/good_orient_mark.png"><img alt="_images/good_orient_mark.png" class="align-center" src="_images/good_orient_mark.png" style="width: 859.0px; height: 348.5px;" /></a>
+</section>
+<section id="how-to-tilt-the-orientation-of-your-images">
+<h2>How to tilt the orientation of your images ?<a class="headerlink" href="#how-to-tilt-the-orientation-of-your-images" title="Permalink to this headline">¶</a></h2>
+<section id="nudging-the-image-with-fsleyes">
+<h3>Nudging the image with FSLEyes<a class="headerlink" href="#nudging-the-image-with-fsleyes" title="Permalink to this headline">¶</a></h3>
+<section id="in-fsleyes">
+<h4>In FSLEyes<a class="headerlink" href="#in-fsleyes" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Open T1w image</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fsleyes Orig/sub-Pandore_ses-01_rec-mean_T1w.nii.gz
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/Pandore_01_Orig.png"><img alt="_images/Pandore_01_Orig.png" class="align-center" src="_images/Pandore_01_Orig.png" style="width: 957.0px; height: 488.5px;" /></a>
+<ol class="arabic simple" start="2">
+<li><p>Open Nudge Menu</p></li>
+</ol>
+<p>In the upper bar menu of FSLEyes, click on “Tools” -&gt; “Nudge”</p>
+<a class="reference internal image-reference" href="_images/Pandore_01_NudgeMenu.png"><img alt="_images/Pandore_01_NudgeMenu.png" class="align-center" src="_images/Pandore_01_NudgeMenu.png" style="width: 960.5px; height: 487.0px;" /></a>
+<ol class="arabic simple" start="3">
+<li><p>Change to World coordinates</p></li>
+</ol>
+<p>Click on “Change display Space”</p>
+<a class="reference internal image-reference" href="_images/Pandore_01_AfterChangeCoordToWorld.png"><img alt="_images/Pandore_01_AfterChangeCoordToWorld.png" class="align-center" src="_images/Pandore_01_AfterChangeCoordToWorld.png" style="width: 959.0px; height: 486.0px;" /></a>
+<ol class="arabic simple" start="4">
+<li><p>Rotate the image</p></li>
+</ol>
+<p>Should be: biggest dimension along the anterior-posterior axis (Y)
+No Left/right tilt (equilibrated)
+Facing straight when viewed from from the top</p>
+<a class="reference internal image-reference" href="_images/Pandore_01_AfterRotate.png"><img alt="_images/Pandore_01_AfterRotate.png" class="align-center" src="_images/Pandore_01_AfterRotate.png" style="width: 961.0px; height: 481.5px;" /></a>
+<ol class="arabic simple" start="5">
+<li><p>Saving the affine</p></li>
+</ol>
+<p>Click on “Save affine” in the lower menu of Nudge window, and
+!!Important!! choose  “FLIRT” for file type and save the affine under your favorite name .mat (e.g nudge_T1w.mat)</p>
+<a class="reference internal image-reference" href="_images/Pandore_01_SaveAffine.png"><img alt="_images/Pandore_01_SaveAffine.png" class="align-center" src="_images/Pandore_01_SaveAffine.png" style="width: 963.0px; height: 484.0px;" /></a>
+</section>
+<section id="apply-the-nudge-transfo-to-the-orig-image">
+<h4>Apply the nudge transfo to the Orig image<a class="headerlink" href="#apply-the-nudge-transfo-to-the-orig-image" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flirt -in sub-Pandore_ses-01_rec-mean_T1w.nii.gz -o sub-Pandore_ses-01_rec-mean_T1w_nudge.nii.gz -ref sub-Pandore_ses-01_rec-mean_T1w.nii.gz -applyxfm -init nudge_T1w.mat
+</pre></div>
+</div>
+<p>(optionally, fslreorient2std matbe also be applied)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fslreorient2std sub-Pandore_ses-01_rec-mean_T1w_nudge.nii.gz sub-Pandore_ses-01_rec-mean_T1w_nudge_std.nii.gz
+</pre></div>
+</div>
+<p>Possibly, pre-apply the align T2 -&gt; T1 before the launch of the script
+(it should be done at the beginning of the script, but better to check if the command is working properly)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flirt -in sub-Pandore_ses-01_T2w.nii.gz -ref sub-Pandore_ses-01_rec-mean_T1w.nii.gz -out sub-Pandore_ses-01_T2w_flirt.nii.gz -dof <span class="m">6</span>
+</pre></div>
+</div>
+</section>
+<section id="rename-everything-back-as-intended-in-bids">
+<h4>rename everything back as intended in BIDS<a class="headerlink" href="#rename-everything-back-as-intended-in-bids" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mv sub-Pandore_ses-01_rec-mean_T1w_nudge_std.nii.gz  sub-Pandore_ses-01_rec-mean_T1w.nii.gz
+mv sub-Pandore_ses-01_T2w_flirt.nii.gz  sub-Pandore_ses-01_T2w.nii.gz
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="how-to-compute-cropping-parameters">
+<h2>How to compute cropping parameters ?<a class="headerlink" href="#how-to-compute-cropping-parameters" title="Permalink to this headline">¶</a></h2>
+<p>All the pipeline works with a default tool for automated cropping (bet_crop node) if no indiv_params.json are provided. However, the pipeline will give much better results when cropping values are provided.</p>
+<p>Here is the different steps on how to compute crop_T1 args:</p>
+<ol class="arabic simple">
+<li><p>Open the original T1 file with FSLeyes</p></li>
+<li><p>The image should be properly oriented and properly tilted. If not, look at previous sections (label reorient and tilt).</p></li>
+<li><p>Consider the image in the middle (coronal view), and find the lowest value in x where the brain is contained (should be on the L label side, on the right side of the coronal view) and mark the value you see on the top rectangle of “Voxel location”.</p></li>
+</ol>
+<p><strong>N.B. A margin of 5-10 voxels is a good margin to ensure enclosing.</strong></p>
+<a class="reference internal image-reference" href="_images/crop_x_min_mark.png"><img alt="_images/crop_x_min_mark.png" class="align-center" src="_images/crop_x_min_mark.png" style="width: 967.5px; height: 370.5px;" /></a>
+<ol class="arabic simple" start="4">
+<li><p>Point on the other side of the coronal view, and mark the highest value enclosing the brain.</p></li>
+</ol>
+<a class="reference internal image-reference" href="_images/crop_x_max_mark.png"><img alt="_images/crop_x_max_mark.png" class="align-center" src="_images/crop_x_max_mark.png" style="width: 967.5px; height: 370.5px;" /></a>
+<p><strong>N.B. we advice you to take note as follows: for a given axis, x: xmin xmax xmax-xmin</strong></p>
+<p>For example in the case of the example:</p>
+<blockquote>
+<div><p>x: 149 361 361-149=212</p>
+</div></blockquote>
+<ol class="arabic" start="5">
+<li><p>do the same for the y and z axis, and you end up with the following values:</p>
+<blockquote>
+<div><p>x: <strong>149</strong> 361 361-149= <strong>212</strong></p>
+<p>y: <strong>88</strong> 338 338-88= <strong>250</strong></p>
+<p>z: <strong>246</strong> 413 413-246= <strong>167</strong></p>
+</div></blockquote>
+</li>
+</ol>
+<p>Then you will be able to fill and individual paramater file (for example called indiv_params.json), following the model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;sub-032140&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;ses-001&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;crop_T1&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;149 212 88 250 246 167&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>N.B. the values to be added in the args line follow exactly the order of the highlighted parameters in the previous text.It also corresponds to the parameters provided for fslroi (see https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Fslutils for more details)</strong></p>
+<p>The indiv_params.json file can be included in the command line with the -indiv option (see <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a>. section and <a class="reference internal" href="workflows.html#workflows"><span class="std std-ref">How to run workflows</span></a>. section on how to run command line)</p>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

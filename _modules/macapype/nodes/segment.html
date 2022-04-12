@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.nodes.segment &#8212; macapype 0.3.0 documentation</title>
+    <title>macapype.nodes.segment &#8212; macapype 0.3.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
@@ -37,9 +37,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype_0.3.jpg"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -171,6 +171,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../utils.html#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#channels-of-communication">Channels of communication</a><ul>
@@ -207,6 +221,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 </ul>
@@ -249,6 +264,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
@@ -452,17 +468,20 @@
 
         <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;priors&#39;</span><span class="p">:</span>
 
-            <span class="n">new_value</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">reg</span> <span class="o">=</span> <span class="s2">&quot;tmp_</span><span class="si">{}</span><span class="s2">.nii.gz&quot;</span>
 
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;***** Copying prior files in cur dir:&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">prior_file</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">prior_file</span><span class="p">,</span> <span class="n">cur_path</span><span class="p">)</span>
-                <span class="n">new_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">prior_file</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">prior_file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">new_prior</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">cur_path</span><span class="p">,</span>
+                    <span class="n">reg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:02d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After copying:&quot;</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;prior </span><span class="si">{}</span><span class="s2"> copied as </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prior_file</span><span class="p">,</span> <span class="n">new_prior</span><span class="p">))</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">prior_file</span><span class="p">,</span> <span class="n">new_prior</span><span class="p">)</span>
 
-            <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;tmp_</span><span class="si">%02d</span><span class="s2">_allineate_hd.nii.gz&quot;</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;value = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
         <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;out_pref&#39;</span><span class="p">:</span>
 
@@ -644,32 +663,85 @@
     <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+    <span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">gm_file</span><span class="p">)</span>
+
     <span class="n">gm_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">gm_file</span><span class="p">)</span>
     <span class="n">gm_data</span> <span class="o">=</span> <span class="n">gm_img</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">gm_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
     <span class="n">empty_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">gm_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-    <span class="n">wm_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">wm_file</span><span class="p">)</span>
-    <span class="n">wm_data</span> <span class="o">=</span> <span class="n">wm_img</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
+    <span class="n">wm_data</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">wm_file</span><span class="p">)</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
 
-    <span class="n">csf_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">csf_file</span><span class="p">)</span>
-    <span class="n">csf_data</span> <span class="o">=</span> <span class="n">csf_img</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
+    <span class="n">csf_data</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">csf_file</span><span class="p">)</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
 
     <span class="n">gen_5tt_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">gm_data</span><span class="p">,</span> <span class="n">empty_vol</span><span class="p">,</span> <span class="n">wm_data</span><span class="p">,</span> <span class="n">csf_data</span><span class="p">,</span> <span class="n">empty_vol</span><span class="p">),</span>
                             <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">gen_5tt_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
     <span class="n">gen_5tt_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">gen_5tt_data</span><span class="p">,</span> <span class="n">affine</span><span class="o">=</span><span class="n">gm_img</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span>
                                   <span class="n">header</span><span class="o">=</span><span class="n">gm_img</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
 
-    <span class="n">gen_5tt_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;gen_5tt.nii.gz&quot;</span><span class="p">)</span>
+    <span class="n">gen_5tt_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;_5tt&quot;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
 
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">gen_5tt_img</span><span class="p">,</span> <span class="n">gen_5tt_file</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">gen_5tt_file</span>
+
+
+<span class="k">def</span> <span class="nf">correct_datatype</span><span class="p">(</span><span class="n">nii_file</span><span class="p">):</span>
+
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+    <span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">nii_file</span><span class="p">)</span>
+
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;_correct&quot;</span>
+
+    <span class="n">cmd_line</span> <span class="o">=</span> <span class="s2">&quot;nifti_tool -mod_hdr -mod_field datatype 8 </span><span class="se">\</span>
+<span class="s2">        -infiles </span><span class="si">{}</span><span class="s2"> -prefix </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nii_file</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd_line</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">correct_nii_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;.nii&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">correct_nii_file</span><span class="p">),</span> \
+        <span class="s2">&quot;Error, </span><span class="si">{}</span><span class="s2"> should exists&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">correct_nii_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">correct_nii_file</span>
+
+
+<span class="k">def</span> <span class="nf">fill_list_vol</span><span class="p">(</span><span class="n">list_vol</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">):</span>
+
+    <span class="kn">import</span> <span class="nn">os</span>
+
+    <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">list_vol</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> \
+        <span class="s2">&quot;Error, </span><span class="si">{}</span><span class="s2"> should be a list...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">list_vol</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_vol</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">nb_classes</span><span class="p">:</span>
+        <span class="n">first_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">list_vol</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">first_img</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">new_img_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_vol</span><span class="p">),</span> <span class="n">nb_classes</span><span class="p">):</span>
+
+            <span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">new_img_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+                <span class="s2">&quot;empty_extra_img_</span><span class="si">{}</span><span class="s2">.nii.gz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_img_index</span><span class="p">))</span>
+
+            <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">dataobj</span><span class="o">=</span><span class="n">new_data</span><span class="p">,</span>
+                                     <span class="n">affine</span><span class="o">=</span><span class="n">first_img</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span>
+                                     <span class="n">header</span><span class="o">=</span><span class="n">first_img</span><span class="o">.</span><span class="n">header</span><span class="p">),</span>
+                     <span class="n">new_img_file</span><span class="p">)</span>
+
+            <span class="n">list_vol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_img_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">list_vol</span>
 </pre></div>
 
     </div>
@@ -683,7 +755,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-12-03.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

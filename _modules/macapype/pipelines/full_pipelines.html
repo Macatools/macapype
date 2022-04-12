@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.full_pipelines &#8212; macapype 0.3.0 documentation</title>
+    <title>macapype.pipelines.full_pipelines &#8212; macapype 0.3.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
@@ -37,9 +37,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype_0.3.jpg"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -171,6 +171,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../utils.html#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#channels-of-communication">Channels of communication</a><ul>
@@ -207,6 +221,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 </ul>
@@ -249,6 +264,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
@@ -264,7 +280,10 @@
     <div class="body col-md-9 content" role="main">
       
   <h1>Source code for macapype.pipelines.full_pipelines</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gather all full pipelines</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 
@@ -301,7 +320,7 @@
 
 <span class="kn">from</span> <span class="nn">.surface</span> <span class="kn">import</span> <span class="n">create_nii_to_mesh_pipe</span><span class="p">,</span> <span class="n">create_nii_to_mesh_fs_pipe</span>
 
-<span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">parse_key</span><span class="p">,</span> <span class="n">list_input_files</span>
+<span class="kn">from</span> <span class="nn">macapype.utils.misc</span> <span class="kn">import</span> <span class="n">parse_key</span><span class="p">,</span> <span class="n">list_input_files</span><span class="p">,</span> <span class="n">show_files</span>
 
 
 <span class="c1">###############################################################################</span>
@@ -680,7 +699,7 @@
     <span class="p">)</span>
 
     <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_FLAIR_pipe</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">))</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_FLAIR_pipe&quot;</span><span class="p">))</span>
 
     <span class="n">transfo_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;orig_T1&#39;</span><span class="p">,</span>
                          <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.orig_T1&#39;</span><span class="p">)</span>
@@ -807,7 +826,7 @@
                          <span class="n">compute_native_wm</span><span class="p">,</span> <span class="s1">&#39;in_matrix_file&#39;</span><span class="p">)</span>
 
     <span class="n">data_preparation_pipe</span> <span class="o">=</span> <span class="n">create_short_preparation_MD_pipe</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">))</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;short_preparation_MD_pipe&quot;</span><span class="p">))</span>
 
     <span class="n">transfo_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;SS_T2&#39;</span><span class="p">,</span>
                          <span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.SS_T2&#39;</span><span class="p">)</span>
@@ -939,20 +958,8 @@
                                       <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
                                       <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;N4debias&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;N4debias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                <span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-                <span class="s2">&quot;n_iterations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
-                <span class="s2">&quot;convergence_threshold&quot;</span><span class="p">:</span> <span class="mf">0.00000001</span><span class="p">,</span>
-                <span class="s2">&quot;shrink_factor&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-r 0 --verbose 1&quot;</span><span class="p">}</span>
-
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using default bet_crop N4debias: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">params</span><span class="p">[</span><span class="s2">&quot;N4debias&quot;</span><span class="p">]))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found N4debias in params.json&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;N4debias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found N4debias in params.json&quot;</span><span class="p">)</span>
 
         <span class="c1"># N4 intensity normalization over T1</span>
         <span class="n">N4debias_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
@@ -999,6 +1006,81 @@
         <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_pipe</span><span class="p">,</span>
                                       <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
                                       <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;fast&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found fast in params.json&quot;</span><span class="p">)</span>
+
+        <span class="c1"># fast over T1</span>
+        <span class="n">fast_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+            <span class="n">fsl</span><span class="o">.</span><span class="n">FAST</span><span class="p">(),</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fast_T1&#39;</span><span class="p">)</span>
+
+        <span class="n">fast_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_biascorrected</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">fast_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_biasfield</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                      <span class="n">fast_T1</span><span class="p">,</span> <span class="s2">&quot;in_files&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">),</span>
+            <span class="n">fast_T1</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fast_T1</span><span class="p">,</span> <span class="s2">&quot;restored_image&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">)</span>
+
+        <span class="c1"># fast over T2</span>
+        <span class="n">fast_T2</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+            <span class="n">fsl</span><span class="o">.</span><span class="n">FAST</span><span class="p">(),</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fast_T2&#39;</span><span class="p">)</span>
+
+        <span class="n">fast_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_biascorrected</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">fast_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_biasfield</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                                      <span class="n">fast_T2</span><span class="p">,</span> <span class="s2">&quot;in_files&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">),</span>
+            <span class="n">fast_T2</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fast_T2</span><span class="p">,</span> <span class="s2">&quot;restored_image&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T2&quot;</span><span class="p">)</span>
+        <span class="c1"># brain extraction</span>
+        <span class="n">extract_pipe</span> <span class="o">=</span> <span class="n">create_extract_pipe</span><span class="p">(</span>
+            <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fast_T1</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;restored_image&quot;</span><span class="p">,</span> <span class="n">show_files</span><span class="p">),</span>
+                                      <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fast_T2</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;restored_image&quot;</span><span class="p">,</span> <span class="n">show_files</span><span class="p">),</span>
+                                      <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T2&quot;</span><span class="p">)</span>
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
+                                      <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_pipe</span><span class="p">,</span>
+                                      <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No debias will be performed before extract_pipe&quot;</span><span class="p">)</span>
+
+        <span class="c1"># brain extraction</span>
+        <span class="n">extract_pipe</span> <span class="o">=</span> <span class="n">create_extract_pipe</span><span class="p">(</span>
+            <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;preproc_T1&quot;</span><span class="p">,</span>
+                                      <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;preproc_T2&quot;</span><span class="p">,</span>
+                                      <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T2&quot;</span><span class="p">)</span>
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
+                                      <span class="n">extract_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_pipe</span><span class="p">,</span>
+                                      <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">brain_extraction_pipe</span></div>
 
 
@@ -1057,46 +1139,99 @@
             <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
-    <span class="c1"># correcting for bias T1/T2, but this time with a mask</span>
-    <span class="n">masked_correct_bias_pipe</span> <span class="o">=</span> <span class="n">create_masked_correct_bias_pipe</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">))</span>
+    <span class="c1"># creating outputnode</span>
+    <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;segmented_file&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;threshold_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;prob_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;prob_wm&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;prob_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;gen_5tt&quot;</span><span class="p">,</span> <span class="s2">&quot;debiased_brain&quot;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
-    <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
-        <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.preproc_T1&quot;</span><span class="p">)</span>
-    <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
-        <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.preproc_T2&quot;</span><span class="p">)</span>
-    <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span>
-        <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_mask&quot;</span><span class="p">)</span>
+    <span class="c1"># correcting for bias T1/T2, but this time with a mask</span>
+    <span class="k">if</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">masked_correct_bias_pipe</span> <span class="o">=</span> <span class="n">create_masked_correct_bias_pipe</span><span class="p">(</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+            <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.preproc_T1&quot;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+            <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.preproc_T2&quot;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span>
+            <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_mask&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s2">&quot;debias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># Bias correction of cropped images</span>
+        <span class="n">debias</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">T1xT2BiasFieldCorrection</span><span class="p">(),</span>
+                            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;debias&quot;</span><span class="p">),</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;debias&#39;</span><span class="p">)</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                   <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_file&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">,</span>
+                                   <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span>
+                                   <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+        <span class="c1"># TODO is not used now...</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;debias&quot;</span><span class="p">),</span>
+            <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;**** Error, masked_correct_bias_pipe or debias </span><span class="se">\</span>
+<span class="s2">            should be in brain_extraction_pipe of params.json&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No T1*T2 debias will be performed&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;NMT_version&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#### NMT version for register_NMT_pipe AND seg_atropos&quot;</span><span class="p">)</span>
+        <span class="n">NMT_version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;NMT_version&quot;</span><span class="p">]</span>
 
     <span class="c1"># register NMT template, template mask and priors to subject T1</span>
     <span class="n">register_NMT_pipe</span> <span class="o">=</span> <span class="n">create_register_NMT_pipe</span><span class="p">(</span>
         <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">),</span> <span class="n">NMT_version</span><span class="o">=</span><span class="n">NMT_version</span><span class="p">)</span>
 
-    <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.mask_debiased_T1&#39;</span><span class="p">,</span>
-        <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.T1&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.mask_debiased_T1&#39;</span><span class="p">,</span>
+            <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.T1&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s2">&quot;debias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_debiased_brain_file&#39;</span><span class="p">,</span>
+            <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.T1&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+            <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.T1&quot;</span><span class="p">)</span>
+
     <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
         <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span>
         <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
 
     <span class="c1"># ants Atropos</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For Atropos pipe, using NMT_version = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v2.0&quot;</span><span class="p">:</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#### create_segment_atropos_seg_pipe &quot;</span><span class="p">)</span>
         <span class="n">segment_atropos_pipe</span> <span class="o">=</span> <span class="n">create_segment_atropos_seg_pipe</span><span class="p">(</span>
             <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">))</span>
 
         <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;align_seg.out_file&#39;</span><span class="p">,</span> <span class="n">segment_atropos_pipe</span><span class="p">,</span>
             <span class="s2">&quot;inputnode.seg_file&quot;</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#### create_segment_atropos_pipe (3 tissues) &quot;</span><span class="p">)</span>
+
         <span class="n">segment_atropos_pipe</span> <span class="o">=</span> <span class="n">create_segment_atropos_pipe</span><span class="p">(</span>
             <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">))</span>
 
+        <span class="c1"># linking priors if &quot;use_priors&quot; in params</span>
         <span class="k">if</span> <span class="s2">&quot;use_priors&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 
             <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -1109,8 +1244,18 @@
                 <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;align_seg_wm.out_file&#39;</span><span class="p">,</span>
                 <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.wm_prior_file&quot;</span><span class="p">)</span>
 
+    <span class="c1"># input to segment_atropos_pipe depending on T1T2 debias step</span>
+    <span class="k">if</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;norm_intensity.output_image&#39;</span><span class="p">,</span>
+            <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.mask_debiased_T1&#39;</span><span class="p">,</span>
+            <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_file&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;debias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_debiased_brain_file&#39;</span><span class="p">,</span>
+            <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_file&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
             <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_file&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;export_5tt_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -1130,12 +1275,21 @@
                                    <span class="s1">&#39;outputnode.threshold_csf&#39;</span><span class="p">,</span>
                                    <span class="n">export_5tt_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.csf_file&#39;</span><span class="p">)</span>
 
-    <span class="c1"># output</span>
-    <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
-            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;segmented_file&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;threshold_csf&quot;</span><span class="p">]),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">export_5tt_pipe</span><span class="p">,</span> <span class="s1">&#39;export_5tt.gen_5tt_file&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;gen_5tt&#39;</span><span class="p">)</span>
+
+    <span class="c1"># output prepreocessed brain T1</span>
+    <span class="k">if</span> <span class="s2">&quot;masked_correct_bias_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">masked_correct_bias_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.mask_debiased_T1&#39;</span><span class="p">,</span>
+            <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;debiased_brain&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;debias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">debias</span><span class="p">,</span> <span class="s1">&#39;t1_debiased_brain_file&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;debiased_brain&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;debiased_brain&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">space</span> <span class="o">==</span> <span class="s1">&#39;native&#39;</span><span class="p">:</span>
 
@@ -1151,6 +1305,15 @@
         <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
                                    <span class="s1">&#39;outputnode.threshold_csf&#39;</span><span class="p">,</span>
                                    <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_csf&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.prob_gm&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_gm&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.prob_wm&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_wm&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.prob_csf&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_csf&#39;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">reg_seg_pipe</span> <span class="o">=</span> <span class="n">create_reg_seg_pipe</span><span class="p">()</span>
@@ -1245,7 +1408,9 @@
 
     <span class="c1"># output node</span>
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;segmented_brain_mask&#39;</span><span class="p">]),</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;segmented_brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;prob_gm&#39;</span><span class="p">,</span> <span class="s1">&#39;prob_wm&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;prob_csf&#39;</span><span class="p">,</span> <span class="s2">&quot;gen_5tt&quot;</span><span class="p">,</span> <span class="s2">&quot;debiased_brain&quot;</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># preprocessing</span>
@@ -1328,6 +1493,9 @@
             <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;outputnode.brain_mask&quot;</span><span class="p">,</span>
                              <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
 
+            <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;outputnode.debiased_T1&quot;</span><span class="p">,</span>
+                             <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">)</span>
+
     <span class="c1"># full_segment (restarting from the avg_align files)</span>
     <span class="k">if</span> <span class="s2">&quot;brain_segment_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">seg_pipe</span>
@@ -1346,9 +1514,9 @@
         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">),</span>
         <span class="n">NMT_version</span><span class="o">=</span><span class="n">NMT_version</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;outputnode.debiased_T1&quot;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T2&#39;</span><span class="p">,</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;outputnode.debiased_T2&quot;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T2&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mask_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1389,6 +1557,23 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.segmented_file&#39;</span><span class="p">,</span>
                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;segmented_brain_mask&#39;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.debiased_brain&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_brain&quot;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.prob_csf&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_csf&#39;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.prob_gm&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_gm&#39;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.prob_wm&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_wm&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;export_5tt_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">]:</span>
+
+            <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.gen_5tt&#39;</span><span class="p">,</span>
+                             <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;gen_5tt&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s1">&#39;nii_to_mesh_pipe&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 
@@ -1483,15 +1668,108 @@
         <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
-    <span class="c1"># brain extraction (with atlasbrex)</span>
-    <span class="n">extract_T1_pipe</span> <span class="o">=</span> <span class="n">create_extract_T1_pipe</span><span class="p">(</span>
-        <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+    <span class="c1"># Creating output node</span>
+    <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;debiased_T1&#39;</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
-    <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;preproc_T1&quot;</span><span class="p">,</span>
-                                  <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
-    <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
-                                  <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;N4debias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found N4debias in params.json&quot;</span><span class="p">)</span>
+
+        <span class="c1"># N4 intensity normalization over T1</span>
+        <span class="n">N4debias_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
+                                 <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;N4debias&quot;</span><span class="p">),</span>
+                                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;N4debias_T1&#39;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                      <span class="n">N4debias_T1</span><span class="p">,</span> <span class="s2">&quot;input_image&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;N4debias&quot;</span><span class="p">),</span>
+            <span class="n">N4debias_T1</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">N4debias_T1</span><span class="p">,</span> <span class="s2">&quot;output_image&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">)</span>
+
+        <span class="c1"># brain extraction</span>
+        <span class="n">extract_T1_pipe</span> <span class="o">=</span> <span class="n">create_extract_T1_pipe</span><span class="p">(</span>
+            <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">N4debias_T1</span><span class="p">,</span> <span class="s2">&quot;output_image&quot;</span><span class="p">,</span>
+                                      <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
+            <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_T1_pipe</span><span class="p">,</span>
+                                      <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s2">&quot;fast&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found fast in params.json&quot;</span><span class="p">)</span>
+
+        <span class="c1"># fast over T1</span>
+        <span class="n">fast_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+            <span class="n">fsl</span><span class="o">.</span><span class="n">FAST</span><span class="p">(),</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fast_T1&#39;</span><span class="p">)</span>
+
+        <span class="n">fast_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_biascorrected</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">fast_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">output_biasfield</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span>
+                                      <span class="n">fast_T1</span><span class="p">,</span> <span class="s2">&quot;in_files&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">),</span>
+            <span class="n">fast_T1</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fast_T1</span><span class="p">,</span> <span class="s2">&quot;restored_image&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">)</span>
+
+        <span class="c1"># brain extraction</span>
+        <span class="n">extract_T1_pipe</span> <span class="o">=</span> <span class="n">create_extract_T1_pipe</span><span class="p">(</span>
+            <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">fast_T1</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;restored_image&quot;</span><span class="p">,</span> <span class="n">show_files</span><span class="p">),</span>
+            <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
+            <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_T1_pipe</span><span class="p">,</span>
+                                      <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;preproc_T1&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">)</span>
+
+        <span class="c1"># brain extraction (with atlasbrex)</span>
+        <span class="n">extract_T1_pipe</span> <span class="o">=</span> <span class="n">create_extract_T1_pipe</span><span class="p">(</span>
+            <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;extract_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;preproc_T1&quot;</span><span class="p">,</span>
+            <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.restore_T1&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span>
+            <span class="n">extract_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.indiv_params&quot;</span><span class="p">)</span>
+
+        <span class="n">brain_extraction_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">extract_T1_pipe</span><span class="p">,</span>
+                                      <span class="s2">&quot;smooth_mask.out_file&quot;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">brain_extraction_pipe</span></div>
 
 
@@ -1549,7 +1827,8 @@
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
         <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
             <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;segmented_file&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;threshold_csf&quot;</span><span class="p">]),</span>
+                    <span class="s2">&quot;threshold_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;prob_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;prob_wm&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;prob_csf&quot;</span><span class="p">,</span> <span class="s2">&quot;gen_5tt&quot;</span><span class="p">,</span> <span class="s2">&quot;debiased_brain&quot;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># mask T1 using brain mask and perform N4 bias correction</span>
@@ -1583,7 +1862,7 @@
         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">))</span>
 
     <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;norm_intensity.output_image&#39;</span><span class="p">,</span>
+        <span class="n">restore_mask_T1</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
         <span class="n">segment_atropos_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.brain_file&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;use_priors&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -1597,6 +1876,31 @@
         <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">register_NMT_pipe</span><span class="p">,</span> <span class="s1">&#39;align_seg_wm.out_file&#39;</span><span class="p">,</span>
                                    <span class="n">segment_atropos_pipe</span><span class="p">,</span>
                                    <span class="s2">&quot;inputnode.wm_prior_file&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;export_5tt_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">export_5tt_pipe</span> <span class="o">=</span> <span class="n">create_5tt_pipe</span><span class="p">(</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">))</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.threshold_gm&#39;</span><span class="p">,</span>
+                                   <span class="n">export_5tt_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.gm_file&#39;</span><span class="p">)</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.threshold_wm&#39;</span><span class="p">,</span>
+                                   <span class="n">export_5tt_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.wm_file&#39;</span><span class="p">)</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.threshold_csf&#39;</span><span class="p">,</span>
+                                   <span class="n">export_5tt_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.csf_file&#39;</span><span class="p">)</span>
+
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">export_5tt_pipe</span><span class="p">,</span> <span class="s1">&#39;export_5tt.gen_5tt_file&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;gen_5tt&#39;</span><span class="p">)</span>
+
+    <span class="c1"># output prepreocessed brain T1</span>
+    <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">restore_mask_T1</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+        <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;debiased_brain&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">space</span> <span class="o">==</span> <span class="s1">&#39;native&#39;</span><span class="p">:</span>
 
@@ -1613,7 +1917,21 @@
                                    <span class="s1">&#39;outputnode.threshold_csf&#39;</span><span class="p">,</span>
                                    <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_csf&#39;</span><span class="p">)</span>
 
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.prob_gm&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_gm&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.prob_wm&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_wm&#39;</span><span class="p">)</span>
+        <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
+                                   <span class="s1">&#39;outputnode.prob_csf&#39;</span><span class="p">,</span>
+                                   <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_csf&#39;</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># TODO</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;!!!!!!!!!!!!!!!! Not finished yet !!!!!!!!!!!!!!!!!!!!!!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">brain_segment_pipe</span>
+
         <span class="n">reg_seg_pipe</span> <span class="o">=</span> <span class="n">create_reg_seg_pipe</span><span class="p">()</span>
 
         <span class="n">brain_segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">segment_atropos_pipe</span><span class="p">,</span>
@@ -1686,12 +2004,13 @@
     <span class="c1"># Creating input node (grab only T1 files)</span>
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
         <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">]),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
-    <span class="p">)</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># output node</span>
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;segmented_brain_mask&#39;</span><span class="p">]),</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;segmented_brain_mask&#39;</span><span class="p">,</span> <span class="s1">&#39;prob_gm&#39;</span><span class="p">,</span> <span class="s1">&#39;prob_wm&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;prob_csf&#39;</span><span class="p">,</span> <span class="s2">&quot;gen_5tt&quot;</span><span class="p">,</span> <span class="s2">&quot;debiased_brain&quot;</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># preprocessing (perform preparation pipe with only T1)</span>
@@ -1725,8 +2044,11 @@
                      <span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.indiv_params&#39;</span><span class="p">)</span>
 
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span>
-                     <span class="s2">&quot;extract_T1_pipe.smooth_mask.out_file&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;outputnode.brain_mask&quot;</span><span class="p">,</span>
                      <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;brain_mask&quot;</span><span class="p">)</span>
+
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;outputnode.debiased_T1&quot;</span><span class="p">,</span>
+                     <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_T1&quot;</span><span class="p">)</span>
 
     <span class="c1"># full_segment (restarting from the avg_align files)</span>
     <span class="k">if</span> <span class="s2">&quot;brain_segment_pipe&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -1738,7 +2060,7 @@
         <span class="n">params_template</span><span class="o">=</span><span class="n">params_template</span><span class="p">,</span>
         <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">),</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">)</span>
 
-    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">data_preparation_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.preproc_T1&#39;</span><span class="p">,</span>
+    <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span> <span class="s2">&quot;outputnode.debiased_T1&quot;</span><span class="p">,</span>
                      <span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.preproc_T1&#39;</span><span class="p">)</span>
     <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_extraction_pipe</span><span class="p">,</span>
                      <span class="s2">&quot;extract_T1_pipe.smooth_mask.out_file&quot;</span><span class="p">,</span>
@@ -1772,6 +2094,23 @@
         <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.segmented_file&#39;</span><span class="p">,</span>
                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;segmented_brain_mask&#39;</span><span class="p">)</span>
 
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.debiased_brain&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;debiased_brain&quot;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.prob_csf&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_csf&#39;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.prob_gm&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_gm&#39;</span><span class="p">)</span>
+
+        <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.prob_wm&#39;</span><span class="p">,</span>
+                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_wm&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;export_5tt_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">]:</span>
+
+            <span class="n">seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brain_segment_pipe</span><span class="p">,</span> <span class="s1">&#39;outputnode.gen_5tt&#39;</span><span class="p">,</span>
+                             <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;gen_5tt&#39;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="s2">&quot;nii_to_mesh_fs_pipe&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">nii_to_mesh_fs_pipe</span> <span class="o">=</span> <span class="n">create_nii_to_mesh_fs_pipe</span><span class="p">(</span>
             <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;nii_to_mesh_fs_pipe&quot;</span><span class="p">))</span>
@@ -1800,7 +2139,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-12-03.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

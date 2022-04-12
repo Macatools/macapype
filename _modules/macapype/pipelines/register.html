@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.register &#8212; macapype 0.3.0 documentation</title>
+    <title>macapype.pipelines.register &#8212; macapype 0.3.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
@@ -37,9 +37,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype_0.3.jpg"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -171,6 +171,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../utils.html#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#channels-of-communication">Channels of communication</a><ul>
@@ -207,6 +221,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 </ul>
@@ -249,6 +264,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
@@ -470,21 +486,32 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Overriding NMT_version with parmas </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;NMT_version&#39;</span><span class="p">]))</span>
 
-    <span class="c1"># N4 intensity normalization over brain</span>
-    <span class="n">norm_intensity</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
-                                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;norm_intensity&quot;</span><span class="p">),</span>
-                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_intensity&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 
-    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span>
-                              <span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;input_image&quot;</span><span class="p">)</span>
+        <span class="c1"># N4 intensity normalization over brain</span>
+        <span class="n">norm_intensity</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">ants</span><span class="o">.</span><span class="n">N4BiasFieldCorrection</span><span class="p">(),</span>
+                                    <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;norm_intensity&quot;</span><span class="p">),</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;norm_intensity&#39;</span><span class="p">)</span>
 
-    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;norm_intensity&quot;</span><span class="p">),</span>
-        <span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span>
+                                  <span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;input_image&quot;</span><span class="p">)</span>
 
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;norm_intensity&quot;</span><span class="p">),</span>
+            <span class="n">norm_intensity</span><span class="p">,</span> <span class="s2">&quot;indiv_params&quot;</span><span class="p">)</span>
+
+    <span class="c1"># deoblique (seems mandatory from NMTSubjectAlign)</span>
     <span class="n">deoblique</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">afni</span><span class="o">.</span><span class="n">Refit</span><span class="p">(</span><span class="n">deoblique</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;deoblique&quot;</span><span class="p">)</span>
-    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
-                              <span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                                  <span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span>
+                                  <span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Found NMT_version </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
 
@@ -545,8 +572,10 @@
 
     <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                               <span class="n">align_NMT</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
-    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+
+    <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                               <span class="n">align_NMT</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+
     <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
                               <span class="n">align_NMT</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
 
@@ -561,8 +590,10 @@
 
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
                                   <span class="n">align_seg_csf</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
-        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg_csf</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
+
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span> <span class="n">align_seg_csf</span><span class="p">,</span>
             <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
@@ -576,7 +607,7 @@
 
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
                                   <span class="n">align_seg_gm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
-        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg_gm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg_gm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
@@ -590,7 +621,7 @@
 
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
                                   <span class="n">align_seg_wm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
-        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg_wm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg_wm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
@@ -606,7 +637,7 @@
 
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_masks</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
                                   <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>  <span class="c1"># -source</span>
-        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">norm_intensity</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+        <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">deoblique</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>  <span class="c1"># -base</span>
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">NMT_subject_align</span><span class="p">,</span> <span class="s1">&#39;inv_transfo_file&#39;</span><span class="p">,</span>
                                   <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>  <span class="c1"># -1Dmatrix_apply</span>
@@ -673,7 +704,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-12-03.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

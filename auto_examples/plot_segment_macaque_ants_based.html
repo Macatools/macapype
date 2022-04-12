@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Plot the results of a segmentation with ANTS-based pipeline &#8212; macapype 0.3.0 documentation</title>
+    <title>Plot the results of a segmentation with ANTS-based pipeline &#8212; macapype 0.3.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
@@ -40,7 +40,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_macapype_0.3.jpg"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -172,6 +172,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../utils.html#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../utils.html#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utils.html#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utils.html#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../brainhack.html">Events</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../brainhack.html#channels-of-communication">Channels of communication</a><ul>
@@ -208,6 +222,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brainhack.html">Events</a></li>
 </ul>
 </ul>
@@ -254,6 +269,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../brainhack.html">Events</a></li>
 </ul>
 
@@ -484,7 +500,7 @@ to download the full example code</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_plot_segment_macaque_ants_based_006.png" srcset="../_images/sphx_glr_plot_segment_macaque_ants_based_006.png" alt="plot segment macaque ants based" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  17.909 seconds)</p>
+<img src="../_images/sphx_glr_plot_segment_macaque_ants_based_006.png" srcset="../_images/sphx_glr_plot_segment_macaque_ants_based_006.png" alt="plot segment macaque ants based" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  5.526 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-segment-macaque-ants-based-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/86f71bbd0a1c3f8c4b73ce7a54f82226/plot_segment_macaque_ants_based.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_segment_macaque_ants_based.py</span></code></a></p>
@@ -510,7 +526,7 @@ to download the full example code</p>
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-12-03.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

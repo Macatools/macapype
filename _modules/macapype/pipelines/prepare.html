@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macapype.pipelines.prepare &#8212; macapype 0.3.0 documentation</title>
+    <title>macapype.pipelines.prepare &#8212; macapype 0.3.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
@@ -37,9 +37,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype.png"></span>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_macapype_0.3.jpg"></span>
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -171,6 +171,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute.html#versionning">Versionning</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../utils.html#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#in-fsleyes">In FSLEyes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils.html#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../brainhack.html#channels-of-communication">Channels of communication</a><ul>
@@ -207,6 +221,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 </ul>
@@ -249,6 +264,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../external_pipeline.html">External Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">How to contribute to the sources of the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">Useful tips (before processing)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
@@ -271,12 +287,18 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
 <span class="kn">import</span> <span class="nn">nipype.interfaces.ants</span> <span class="k">as</span> <span class="nn">ants</span>
 
+<span class="c1"># TODO</span>
+<span class="c1"># from nipype.interfaces.niftyreg import reg</span>
+
+<span class="c1"># TODO</span>
+<span class="c1"># from nipype.interfaces.niftyreg import reg</span>
+
 <span class="kn">from</span> <span class="nn">nipype.interfaces.ants.segmentation</span> <span class="kn">import</span> <span class="n">DenoiseImage</span>
 
 <span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span><span class="p">,</span> <span class="n">MapNodeParams</span>
 <span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">parse_key</span>
 
-<span class="kn">from</span> <span class="nn">..nodes.prepare</span> <span class="kn">import</span> <span class="n">average_align</span><span class="p">,</span> <span class="n">FslOrient</span>
+<span class="kn">from</span> <span class="nn">..nodes.prepare</span> <span class="kn">import</span> <span class="n">average_align</span><span class="p">,</span> <span class="n">FslOrient</span><span class="p">,</span> <span class="n">reg_aladin_dirty</span>
 <span class="kn">from</span> <span class="nn">..nodes.extract_brain</span> <span class="kn">import</span> <span class="n">T1xT2BET</span>
 
 
@@ -351,17 +373,9 @@
 <span class="sd">    Params:</span>
 
 <span class="sd">    - reorient (new dims as a string (e.g. &quot;x z -y&quot;))</span>
-<span class="sd">    - denoise_first (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
-<span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
-<span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
-<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
 <span class="sd">    - crop (see `ExtractROI &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
 <span class="sd">    interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi&gt;`_ \</span>
 <span class="sd">    for arguments) - also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
-<span class="sd">    - norm_intensity (see `N4BiasFieldCorrection &lt;https://nipype.readthedocs.\</span>
-<span class="sd">    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\</span>
-<span class="sd">    html#n4biasfieldcorrection&gt;`_ for arguments) - also available as \</span>
-<span class="sd">    :ref:`indiv_params &lt;indiv_params&gt;`</span>
 <span class="sd">    - denoise (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
 <span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
 <span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
@@ -391,32 +405,18 @@
         <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;img&#39;</span><span class="p">,</span>
                               <span class="n">reorient_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.image&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;denoise_first&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="c1"># denoise with Ants package</span>
-        <span class="c1"># (taking into account whether reorient has been performed or not)</span>
-        <span class="n">denoise_first</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
-                                   <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise_first&quot;</span><span class="p">),</span>
-                                   <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reorient_pipe</span><span class="p">,</span> <span class="s1">&#39;reorient.out_file&#39;</span><span class="p">,</span>
-                                  <span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;img&#39;</span><span class="p">,</span>
-                                  <span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
-        <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;indiv_params&#39;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;denoise_first&quot;</span><span class="p">),</span>
-            <span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
-
     <span class="c1"># cropping</span>
+    <span class="k">if</span> <span class="s1">&#39;crop&#39;</span><span class="o">+</span><span class="n">node_suffix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, crop&quot;</span><span class="o">+</span><span class="n">node_suffix</span><span class="o">+</span><span class="s2">&quot; could be found in params&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Breaking&quot;</span><span class="p">)</span>
+
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
     <span class="n">crop</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ExtractROI</span><span class="p">(),</span>
                       <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;crop&quot;</span><span class="o">+</span><span class="n">node_suffix</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;crop&#39;</span><span class="o">+</span><span class="n">node_suffix</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;denoise_first&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
-                              <span class="n">crop</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reorient_pipe</span><span class="p">,</span> <span class="s1">&#39;reorient.out_file&#39;</span><span class="p">,</span>
                               <span class="n">crop</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -477,17 +477,9 @@
 <span class="sd">    Params: (Warning: **all arguments are in lists**)</span>
 
 <span class="sd">    - reorient (new dims as a string (e.g. &quot;x z -y&quot;))</span>
-<span class="sd">    - denoise_first (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
-<span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
-<span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
-<span class="sd">    as :ref:`indiv_params &lt;indiv_params&gt;`</span>
 <span class="sd">    - crop (see `ExtractROI &lt;https://nipype.readthedocs.io/en/0.12.1/\</span>
 <span class="sd">    interfaces/generated/nipype.interfaces.fsl.utils.html#extractroi&gt;`_ \</span>
 <span class="sd">    for arguments) - also available as :ref:`indiv_params &lt;indiv_params&gt;`</span>
-<span class="sd">    - norm_intensity (see `N4BiasFieldCorrection &lt;https://nipype.readthedocs.\</span>
-<span class="sd">    io/en/0.12.1/interfaces/generated/nipype.interfaces.ants.segmentation.\</span>
-<span class="sd">    html#n4biasfieldcorrection&gt;`_ for arguments) - also available as \</span>
-<span class="sd">    :ref:`indiv_params &lt;indiv_params&gt;`</span>
 <span class="sd">    - denoise (see `DenoiseImage &lt;https://nipype.readthedocs.io/en/0.12.\</span>
 <span class="sd">    1/interfaces/generated/nipype.interfaces.ants.segmentation.html\</span>
 <span class="sd">    #denoiseimage&gt;`_ for arguments)) - also available \</span>
@@ -517,34 +509,18 @@
             <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_img&#39;</span><span class="p">,</span>
                                           <span class="n">reorient_pipe</span><span class="p">,</span> <span class="s1">&#39;inputnode.list_img&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;denoise_first&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s1">&#39;crop&#39;</span><span class="o">+</span><span class="n">node_suffix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, crop&quot;</span><span class="o">+</span><span class="n">node_suffix</span><span class="o">+</span><span class="s2">&quot; could be found in params&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Breaking&quot;</span><span class="p">)</span>
 
-        <span class="c1"># denoise_first with Ants package</span>
-        <span class="c1"># (taking into account whether reorient has been performed or not)</span>
-        <span class="n">denoise_first</span> <span class="o">=</span> <span class="n">MapNodeParams</span><span class="p">(</span>
-            <span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
-            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise_first&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise_first&quot;</span><span class="p">,</span>
-            <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input_image&quot;</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reorient_pipe</span><span class="p">,</span> <span class="s1">&#39;reorient.out_file&#39;</span><span class="p">,</span>
-                                          <span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_img&#39;</span><span class="p">,</span>
-                                          <span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
-        <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="n">inputnode</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;indiv_params&quot;</span><span class="p">,</span> <span class="n">parse_key</span><span class="p">,</span> <span class="s2">&quot;denoise_first&quot;</span><span class="p">),</span>
-            <span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;indiv_params&#39;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># cropping</span>
     <span class="n">crop</span> <span class="o">=</span> <span class="n">MapNodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">ExtractROI</span><span class="p">(),</span>
                          <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;crop&quot;</span><span class="o">+</span><span class="n">node_suffix</span><span class="p">),</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;crop&#39;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;in_file&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="s2">&quot;denoise_first&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_first</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
-                                      <span class="n">crop</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;reorient&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">mapnode_prep_pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reorient_pipe</span><span class="p">,</span> <span class="s1">&#39;reorient.out_file&#39;</span><span class="p">,</span>
                                       <span class="n">crop</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -665,6 +641,11 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
     <span class="p">)</span>
 
+    <span class="c1"># Creating output node</span>
+    <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
+
     <span class="c1"># avererge if multiple T2</span>
     <span class="n">av_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
         <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_img&#39;</span><span class="p">],</span>
@@ -775,35 +756,47 @@
                                           <span class="n">bet_crop</span><span class="p">,</span> <span class="s1">&#39;t2_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># denoise with Ants package</span>
-    <span class="n">denoise_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
-                            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise&quot;</span><span class="p">),</span>
-                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise_T1&quot;</span><span class="p">)</span>
-    <span class="n">denoise_T2</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
-                            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise&quot;</span><span class="p">),</span>
-                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise_T2&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;denoise&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 
-    <span class="k">if</span> <span class="s2">&quot;crop_T1&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">crop_T1</span><span class="p">,</span> <span class="s2">&quot;roi_file&quot;</span><span class="p">,</span>
-                                      <span class="n">denoise_T1</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
-        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">crop_T2</span><span class="p">,</span> <span class="s2">&quot;roi_file&quot;</span><span class="p">,</span>
-                                      <span class="n">denoise_T2</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
+        <span class="n">denoise_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
+                                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise&quot;</span><span class="p">),</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise_T1&quot;</span><span class="p">)</span>
 
+        <span class="n">denoise_T2</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">DenoiseImage</span><span class="p">(),</span>
+                                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;denoise&quot;</span><span class="p">),</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;denoise_T2&quot;</span><span class="p">)</span>
+        <span class="c1"># inputs</span>
+        <span class="k">if</span> <span class="s2">&quot;crop_T1&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">crop_T1</span><span class="p">,</span> <span class="s2">&quot;roi_file&quot;</span><span class="p">,</span>
+                                          <span class="n">denoise_T1</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">crop_T2</span><span class="p">,</span> <span class="s2">&quot;roi_file&quot;</span><span class="p">,</span>
+                                          <span class="n">denoise_T2</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bet_crop</span><span class="p">,</span> <span class="s2">&quot;t1_cropped_file&quot;</span><span class="p">,</span>
+                                          <span class="n">denoise_T1</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bet_crop</span><span class="p">,</span> <span class="s2">&quot;t2_cropped_file&quot;</span><span class="p">,</span>
+                                          <span class="n">denoise_T2</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
+
+        <span class="c1"># outputs</span>
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">)</span>
+
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_T2</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
+                                      <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bet_crop</span><span class="p">,</span> <span class="s2">&quot;t1_cropped_file&quot;</span><span class="p">,</span>
-                                      <span class="n">denoise_T1</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
-        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bet_crop</span><span class="p">,</span> <span class="s2">&quot;t2_cropped_file&quot;</span><span class="p">,</span>
-                                      <span class="n">denoise_T2</span><span class="p">,</span> <span class="s1">&#39;input_image&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Creating output node</span>
-    <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;preproc_T1&#39;</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">]),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;crop_T1&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">crop_T1</span><span class="p">,</span> <span class="s2">&quot;roi_file&quot;</span><span class="p">,</span>
+                                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">)</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">crop_T2</span><span class="p">,</span> <span class="s2">&quot;roi_file&quot;</span><span class="p">,</span>
+                                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">)</span>
 
-    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_T1</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
-                                  <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">)</span>
-
-    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">denoise_T2</span><span class="p">,</span> <span class="s1">&#39;output_image&#39;</span><span class="p">,</span>
-                                  <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bet_crop</span><span class="p">,</span> <span class="s2">&quot;t1_cropped_file&quot;</span><span class="p">,</span>
+                                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T1&#39;</span><span class="p">)</span>
+            <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">bet_crop</span><span class="p">,</span> <span class="s2">&quot;t2_cropped_file&quot;</span><span class="p">,</span>
+                                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;preproc_T2&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">data_preparation_pipe</span></div>
 
@@ -1266,17 +1259,42 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
     <span class="p">)</span>
 
-    <span class="c1"># align FLAIR on avg T1</span>
-    <span class="n">align_FLAIR_on_T1</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">FLIRT</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_FLAIR_on_T1&quot;</span><span class="p">)</span>
-    <span class="n">align_FLAIR_on_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dof</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">align_FLAIR_on_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="s2">&quot;mutualinfo&quot;</span>
-    <span class="n">align_FLAIR_on_T1</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cost_func</span> <span class="o">=</span> <span class="s2">&quot;mutualinfo&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;align_FLAIR_on_T1&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;in align_FLAIR_on_T1&quot;</span><span class="p">)</span>
 
-    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;orig_T1&#39;</span><span class="p">,</span>
-                                  <span class="n">align_FLAIR_on_T1</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+        <span class="c1"># align FLAIR on avg T1</span>
+        <span class="n">align_FLAIR_on_T1</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+            <span class="n">fsl</span><span class="o">.</span><span class="n">FLIRT</span><span class="p">(),</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;align_FLAIR_on_T1&quot;</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_FLAIR_on_T1&quot;</span><span class="p">)</span>
 
-    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;FLAIR&#39;</span><span class="p">,</span>
-                                  <span class="n">align_FLAIR_on_T1</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;orig_T1&#39;</span><span class="p">,</span>
+                                      <span class="n">align_FLAIR_on_T1</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;FLAIR&#39;</span><span class="p">,</span>
+                                      <span class="n">align_FLAIR_on_T1</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s2">&quot;reg_aladin_FLAIR_on_T1&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;in reg_aladin_FLAIR_on_T1&quot;</span><span class="p">)</span>
+        <span class="n">align_FLAIR_on_T1</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+            <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+                <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">],</span>
+                <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;out_file&quot;</span><span class="p">],</span>
+                <span class="n">function</span><span class="o">=</span><span class="n">reg_aladin_dirty</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;reg_aladin_FLAIR_on_T1&quot;</span><span class="p">)</span>
+
+        <span class="c1"># TODO</span>
+        <span class="c1"># align_FLAIR_on_T1 = pe.Node(reg.RegAladin(),</span>
+        <span class="c1"># name=&quot;reg_aladin_FLAIR_on_T1&quot;)</span>
+
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;orig_T1&#39;</span><span class="p">,</span>
+                                      <span class="n">align_FLAIR_on_T1</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
+
+        <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;FLAIR&#39;</span><span class="p">,</span>
+                                      <span class="n">align_FLAIR_on_T1</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no align_FLAIR_on_T1 or reg_aladin_FLAIR_on_T1, breaking&quot;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># Creating output node</span>
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
@@ -1346,25 +1364,25 @@
 
     <span class="c1"># Creating input node</span>
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;orig_T2&#39;</span><span class="p">,</span> <span class="s1">&#39;SS_T2&#39;</span><span class="p">,</span> <span class="s1">&#39;MD&#39;</span><span class="p">,</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SS_T2&#39;</span><span class="p">,</span> <span class="s1">&#39;MD&#39;</span><span class="p">,</span>
                                       <span class="s1">&#39;b0mean&#39;</span><span class="p">,</span> <span class="s1">&#39;native_wm_mask&#39;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span>
     <span class="p">)</span>
 
     <span class="c1"># init_align_b0mean_on_T2</span>
-    <span class="n">init_align_b0mean_on_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">FLIRT</span><span class="p">(),</span>
-                                      <span class="n">name</span><span class="o">=</span><span class="s2">&quot;init_align_b0mean_on_T2&quot;</span><span class="p">)</span>
-    <span class="n">init_align_b0mean_on_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dof</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">init_align_b0mean_on_T2</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+        <span class="n">fsl</span><span class="o">.</span><span class="n">FLIRT</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;init_align_b0mean_on_T2&quot;</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;init_align_b0mean_on_T2&quot;</span><span class="p">)</span>
 
-    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;orig_T2&#39;</span><span class="p">,</span>
+    <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;SS_T2&#39;</span><span class="p">,</span>
                                   <span class="n">init_align_b0mean_on_T2</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
     <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;b0mean&#39;</span><span class="p">,</span>
                                   <span class="n">init_align_b0mean_on_T2</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># align_b0mean_on_T2</span>
-    <span class="n">align_b0mean_on_T2</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">FLIRT</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_b0mean_on_T2&quot;</span><span class="p">)</span>
-    <span class="n">align_b0mean_on_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">dof</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">align_b0mean_on_T2</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="s2">&quot;bbr&quot;</span>
+    <span class="n">align_b0mean_on_T2</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+        <span class="n">fsl</span><span class="o">.</span><span class="n">FLIRT</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;align_b0mean_on_T2&quot;</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_b0mean_on_T2&quot;</span><span class="p">)</span>
 
     <span class="n">data_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;SS_T2&#39;</span><span class="p">,</span>
                                   <span class="n">align_b0mean_on_T2</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
@@ -1424,7 +1442,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Macapype Developers (macatools). Last updated on 2021-12-03.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>
