@@ -272,7 +272,7 @@ def merge_imgs(list_img_files):
                                  header=img.header)
 
     # saving indexed_mask_file
-    merged_img_file = os.path.abspath(fname + "_merged" + ext)
+    merged_img_file = op.abspath(fname + "_merged" + ext)
 
     nib.save(merged_img, merged_img_file)
 
