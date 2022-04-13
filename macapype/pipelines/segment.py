@@ -121,7 +121,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         if isinstance(index_tissue, list ):
 
             ## Merging threshold file
-            merge_list = niu.Merge(len(index_tissue))
+            merge_list = pe.Node(niu.Merge(len(index_tissue), name = "merge_list"))
 
             for index, sub_index_tissue in enumerate(index_tissue):
 
