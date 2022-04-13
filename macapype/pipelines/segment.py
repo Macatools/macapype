@@ -127,9 +127,9 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
                 tmp_node = NodeParams(fsl.Threshold(),
                                     params=parse_key(params, "threshold_" + tissue),
-                                    name="threshold_" + tissue + "_" + sub_index)
+                                    name="threshold_" + tissue + "_" + sub_index_tissue)
 
-                segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index))),
+                segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index_tissue))),
                                     tmp_node, 'in_file')
 
                 ## output to merge_list
