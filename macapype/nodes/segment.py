@@ -233,6 +233,56 @@ class AtroposN4(CommandLine):
 
 
 ###############################################################################
+
+def merge_imgs(list_img_files):
+
+    import nibabel as nib
+    import numpy as np
+    import os.path as op
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    if not instance(list_img_files, list):
+        return list_img_files
+
+    for i, img_file in enumerate(list_img_files):
+
+        if i==0:
+            path, fname, ext = split_f(img_file)
+
+            img = nib.load(img_file)
+
+            img_data = img.get_fdata()
+
+            img_affine = img.affine
+
+            img_header = img.header
+
+            new_img_data = np.zeros(shape = img_data.shape)
+
+            new_img_data[img_data != 0] = img_data[img_data != 0]
+
+        else:
+
+            img_data = nib.load(img_file).get_fdata()
+
+            assert(img_data.shape = new_img_data.shape), "Error, shapes {} != {}".format(img_data.shape = new_img_data.shape)
+
+            new_img_data[img_data != 0] = img_data[img_data != 0]
+
+    # creating indexed_mask
+    merged_img = nib.Nifti1Image(dataobj=new_img_data,
+                                   affine=img.affine,
+                                   header=img.header)
+
+    # saving indexed_mask_file
+    merged_img_file = os.path.abspath(fname + "_merged" + ext)
+
+    nib.save(merged_img, merged_img_file)
+
+    return merged_img_file
+
+
 def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
                 index_gm=2, index_wm=3):
 

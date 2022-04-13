@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
+from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks, merge_imgs,
                              split_indexed_mask, copy_header, compute_5tt,
                              correct_datatype, fill_list_vol)
 
@@ -136,8 +136,13 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 segment_pipe.connect(tmp_node, 'out_file', merge_list, 'in' + str(index+1))
 
             ## Merging files
-            merge_thres = pe.Node(fsl.Merge(), name="merge_thres_" + tissue)
-            merge_thres.inputs.dimension = 't'
+            merge_thres = pe.Node(
+                Function(
+                    input_names = ["list_img_files"],
+                    output_names = ["merged_img_file"],
+                    function = merge_imgs),
+                name="merge_thres_" + tissue)
+
 
             segment_pipe.connect(merge_list, "out", merge_thres, 'in_files')
 
@@ -145,7 +150,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
             tmp_node = pe.Node(niu.IdentityInterface(fields = ["out_file"]), name = "threshold_" + tissue)
 
-            segment_pipe.connect(merge_thres, 'merged_file', tmp_node, 'out_file')
+            segment_pipe.connect(merge_thres, 'merged_img_file', tmp_node, 'out_file')
 
             thd_nodes[tissue] = tmp_node
 
