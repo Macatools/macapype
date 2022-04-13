@@ -219,13 +219,12 @@ class AtroposN4(CommandLine):
         outputs['segmented_file'] = os.path.abspath(
             self.inputs.out_pref + "Segmentation.nii.gz")
 
-        print(self.inputs.out_pref)
-        print(self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
-
         seg_files = glob.glob(
             self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
 
         print(seg_files)
+
+        0/0
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in seg_files]

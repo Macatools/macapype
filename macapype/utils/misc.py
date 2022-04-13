@@ -33,6 +33,17 @@ def get_elem(list_elem, index_elem):
 
     return elem
 
+def get_pattern(list_elem, pattern):
+    assert isinstance(list_elem, list), 'Error, list_elem should be a list'
+
+    for elem in list_elem:
+        if pattern in elem:
+            print("Found {} in {}".format(pattern, elem))
+            return elem
+
+    assert False, "Could not find {} in {}".format(pattern, elem)
+
+
 
 def get_first_elem(elem):
     print(elem)

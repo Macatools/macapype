@@ -9,7 +9,7 @@ from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
                              split_indexed_mask, copy_header, compute_5tt,
                              correct_datatype, fill_list_vol)
 
-from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list)
+from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list, get_pattern)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
@@ -108,14 +108,21 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     # 4 -> WM
     # 5 -> ?
 
+    if "tissue_dict" in params.keys():
+        tissue_dict = params["tissue_dict"]
+    else:
+        tissue_dict = {0: 'csf', 1: 'gm', 3: 'wm'}
+
+    print("Using tissue dict {}".format(tissue_dict))
+
     thd_nodes = {}
-    for key, tissue in {0: 'csf', 1: 'gm', 3: 'wm'}.items():
+    for key, tissue in tissue_dict.items():
 
         tmp_node = NodeParams(fsl.Threshold(),
                               params=parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
-        segment_pipe.connect(seg_at, ('segmented_files', get_elem, key),
+        segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(key),
                              tmp_node, 'in_file')
 
         thd_nodes[tissue] = tmp_node
