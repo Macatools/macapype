@@ -111,7 +111,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     if "tissue_dict" in params.keys():
         tissue_dict = params["tissue_dict"]
     else:
-        tissue_dict = {0: 'csf', 1: 'gm', 3: 'wm'}
+        tissue_dict = {1: 'csf', 2: 'gm', 4: 'wm'}
 
     print("Using tissue dict {}".format(tissue_dict))
 
@@ -122,7 +122,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                               params=parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
-        segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(key),
+        segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(key))),
                              tmp_node, 'in_file')
 
         thd_nodes[tissue] = tmp_node
