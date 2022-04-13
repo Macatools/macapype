@@ -66,7 +66,6 @@ from macapype.pipelines.full_pipelines import (
     create_transfo_MD_pipe)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
-                                       create_datasource,
                                        create_datasink)
 
 from macapype.utils.utils_tests import load_test_data, format_template
@@ -511,6 +510,19 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         else:
             params_subs={}
 
+        print (datasource.iterables)
+
+
+        rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
+        rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+        rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+        rename_prob_wm.inputs.keep_ext = True
+
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.prob_wm',
+                rename_prob_wm, 'in_file')
+
         datasink = create_datasink(iterables=datasource.iterables,
                                    name=datasink_name,
                                    params_subs=params_subs,
@@ -530,9 +542,14 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 segment_pnh_pipe, 'outputnode.segmented_brain_mask',
                 datasink, '@segmented_brain_mask')
 
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.prob_wm',
+                #datasink, '@prob_wm')
+
             main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.prob_wm',
+                rename_prob_wm, 'out_file',
                 datasink, '@prob_wm')
+
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.prob_gm',
