@@ -148,14 +148,14 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
         else:
 
-        tmp_node = NodeParams(fsl.Threshold(),
-                              params=parse_key(params, "threshold_" + tissue),
-                              name="threshold_" + tissue)
+            tmp_node = NodeParams(fsl.Threshold(),
+                                params=parse_key(params, "threshold_" + tissue),
+                                name="threshold_" + tissue)
 
-        thd_nodes[tissue] = tmp_node
+            thd_nodes[tissue] = tmp_node
 
-        segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index))),
-                             tmp_node, 'in_file')
+            segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index))),
+                                tmp_node, 'in_file')
 
 
     # creating output node with prob_ and threshold_
