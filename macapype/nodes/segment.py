@@ -254,10 +254,6 @@ def merge_imgs(list_img_files):
 
             img_data = img.get_fdata()
 
-            img_affine = img.affine
-
-            img_header = img.header
-
             new_img_data = np.zeros(shape = img_data.shape)
 
             new_img_data[img_data != 0] = img_data[img_data != 0]
@@ -266,14 +262,14 @@ def merge_imgs(list_img_files):
 
             img_data = nib.load(img_file).get_fdata()
 
-            assert(img_data.shape = new_img_data.shape), "Error, shapes {} != {}".format(img_data.shape = new_img_data.shape)
+            assert img_data.shape == new_img_data.shape, "Error, shapes {} != {}".format(img_data.shape = new_img_data.shape)
 
             new_img_data[img_data != 0] = img_data[img_data != 0]
 
     # creating indexed_mask
     merged_img = nib.Nifti1Image(dataobj=new_img_data,
-                                   affine=img.affine,
-                                   header=img.header)
+                                 affine=img.affine,
+                                 header=img.header)
 
     # saving indexed_mask_file
     merged_img_file = os.path.abspath(fname + "_merged" + ext)
