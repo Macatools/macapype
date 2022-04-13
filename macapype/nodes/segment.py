@@ -242,7 +242,7 @@ def merge_imgs(list_img_files):
 
     from nipype.utils.filemanip import split_filename as split_f
 
-    if not instance(list_img_files, list):
+    if not isinstance(list_img_files, list):
         return list_img_files
 
     for i, img_file in enumerate(list_img_files):
