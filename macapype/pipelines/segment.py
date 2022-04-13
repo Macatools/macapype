@@ -136,7 +136,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 segment_pipe.connect(tmp_node, 'out_file', merge_list, 'in' + str(index+1))
 
             ## Merging files
-            merge_thres = pe.Node(fsl.Merge(), name="threshold_" + tissue)
+            merge_thres = pe.Node(fsl.Merge(), name="merge_thres_" + tissue)
             merge_thres.inputs.dimension = 't'
 
             segment_pipe.connect(merge_list, "out", merge_thres, 'in_files')
