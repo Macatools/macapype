@@ -142,9 +142,12 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             segment_pipe.connect(merge_list, "out", merge_thres, 'in_files')
 
             ## IdentityInterface for having a node with out_file
-            thd_nodes[tissue] = niu.IdentityInterface(fields = ["out_file"], name = "threshold_" + tissue)
 
-            segment_pipe.connect(merge_thres, 'merged_file', thd_nodes[tissue], 'out_file')
+            tmp_node = pe.Node(niu.IdentityInterface(fields = ["out_file"]), name = "threshold_" + tissue)
+
+            segment_pipe.connect(merge_thres, 'merged_file', tmp_node, 'out_file')
+
+            thd_nodes[tissue] = tmp_node
 
         else:
 
