@@ -137,7 +137,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
             ## Merging files
             merge_thres = pe.Node(
-                Function(
+                niu.Function(
                     input_names = ["list_img_files"],
                     output_names = ["merged_img_file"],
                     function = merge_imgs),
