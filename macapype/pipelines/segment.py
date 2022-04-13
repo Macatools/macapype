@@ -144,7 +144,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 name="merge_thres_" + tissue)
 
 
-            segment_pipe.connect(merge_list, "out", merge_thres, 'in_files')
+            segment_pipe.connect(merge_list, "out", merge_thres, 'list_img_files')
 
             ## IdentityInterface for having a node with out_file
 
