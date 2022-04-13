@@ -111,21 +111,52 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     if "tissue_dict" in params.keys():
         tissue_dict = params["tissue_dict"]
     else:
-        tissue_dict = {1: 'csf', 2: 'gm', 4: 'wm'}
+        tissue_dict = { 'csf': 1, 'gm': 2,  'wm': 4}
 
     print("Using tissue dict {}".format(tissue_dict))
 
     thd_nodes = {}
-    for key, tissue in tissue_dict.items():
+    for tissue, index_tissue  in tissue_dict.items():
+
+        if isinstance(list, index_tissue):
+
+            ## Merging threshold file
+            merge_list = niu.Merge(len(index_tissue))
+
+            for index, sub_index_tissue in enumerate(index_tissue):
+
+                tmp_node = NodeParams(fsl.Threshold(),
+                                    params=parse_key(params, "threshold_" + tissue),
+                                    name="threshold_" + tissue + "_" + sub_index)
+
+                segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index))),
+                                    tmp_node, 'in_file')
+
+                ## output to merge_list
+                segment_pipe.connect(tmp_node, 'out_file', merge_list, 'in' + str(index+1)
+
+            ## Merging files
+            merge_thres = pe.Node(fsl.Merge(), name="threshold_" + tissue)
+            merge_thres.inputs.dimension = 't'
+
+            segment_pipe.connect(merge_list, "out", merge_thres, 'in_files')
+
+            ## IdentityInterface for having a node with out_file
+            thd_nodes[tissue] = niu.IdentityInterface(fields = ["out_file"], name = "threshold_" + tissue)
+
+            segment_pipe.connect(merge_thres, 'merged_file', thd_nodes[tissue], 'out_file')
+
+        else:
 
         tmp_node = NodeParams(fsl.Threshold(),
                               params=parse_key(params, "threshold_" + tissue),
                               name="threshold_" + tissue)
 
-        segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(key))),
+        thd_nodes[tissue] = tmp_node
+
+        segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index))),
                              tmp_node, 'in_file')
 
-        thd_nodes[tissue] = tmp_node
 
     # creating output node with prob_ and threshold_
     outputnode = pe.Node(
