@@ -262,7 +262,7 @@ def merge_imgs(list_img_files):
 
             img_data = nib.load(img_file).get_fdata()
 
-            assert img_data.shape == new_img_data.shape, "Error, shapes {} != {}".format(img_data.shape = new_img_data.shape)
+            assert img_data.shape == new_img_data.shape, "Error, shapes {} != {}".format(img_data.shape, new_img_data.shape)
 
             new_img_data[img_data != 0] = img_data[img_data != 0]
 
