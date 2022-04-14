@@ -135,7 +135,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             for index, sub_index_tissue in enumerate(index_tissue):
                 segment_pipe.connect(
                     seg_at,
-                    ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index_tissue)),
+                    ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index_tissue))),
                          merge_list, 'in' + str(index+1))
 
 
@@ -170,7 +170,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             ### prob output
             segment_pipe.connect(
                 seg_at,
-                ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index_tissue)),
+                ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index_tissue))),
                  outputnode, 'prob_'+tissue)
 
             ### threshold
@@ -180,8 +180,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
             segment_pipe.connect(
                 seg_at,
-                ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index_tissue)),
-                 thresh_node, 'in_file'
+                ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index_tissue))),
+                 thresh_node, 'in_file')
 
             ### thresh output
             segment_pipe.connect(thresh_node, 'out_file',
