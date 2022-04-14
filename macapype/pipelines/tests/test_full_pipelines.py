@@ -13,7 +13,7 @@ def test_create_full_ants_subpipes_no_args():
     params = {
         "general":
         {
-            "template_name": "NMT_v1.3"
+            "template_name": "NMT_v1.3better"
         },
         "short_preparation_pipe":
         {
@@ -68,7 +68,7 @@ def test_create_full_ants_subpipes_no_subpipes():
     params = {
         "general":
         {
-            "template_name": "NMT_v1.3"
+            "template_name": "NMT_v1.3better"
         },
         "short_preparation_pipe":
         {
@@ -112,7 +112,7 @@ def test_create_full_ants_subpipes():
     params = {
         "general":
         {
-            "template_name": "NMT_v1.3"
+            "template_name": "NMT_v1.3better"
         },
         "short_preparation_pipe":
         {
