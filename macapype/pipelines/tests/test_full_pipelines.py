@@ -230,7 +230,7 @@ def test_create_full_ants_subpipes_all_default_params():
     import json
 
     species_list = ["marmo", "macaque", "baboon"]
-    soft_list = ["ants", "ants_T1", "spm"]
+    soft_list = ["ants", "ants_T1"]
 
     for soft, species in product(soft_list, species_list):
 
