@@ -230,9 +230,11 @@ def test_create_full_ants_subpipes_all_default_params():
     import json
 
     species_list = ["marmo", "macaque", "baboon"]
-    soft_list = ["ants", "ants_T1"]
+    soft_list = ["ants", "ants_t1"]
 
     for soft, species in product(soft_list, species_list):
+
+        print("Testing soft {} with species {}".format(soft, species))
 
         package_directory = op.dirname(op.abspath(__file__))
 
