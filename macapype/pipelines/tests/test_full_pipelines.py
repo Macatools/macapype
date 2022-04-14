@@ -224,49 +224,41 @@ def test_create_full_ants_subpipes():
                              "test_create_full_ants_subpipes",
                              "graph.png"))
 
-def test_create_full_ants_subpipes_all_default_params():
+def test_create_full_ants_subpipes_marmo_ants():
 
     from itertools import product
     import json
 
-    from pathlib import Path
+    species = "marmo"
+    soft = "ants"
 
-    species_list = ["marmo", "macaque", "baboon"]
-    soft_list = ["ants", "ants_t1"]
+    print("*** Testing soft {} with species {}".format(soft, species))
 
-    for soft, species in product(soft_list, species_list):
+    package_directory = op.dirname(__file__)
 
-        print("*** Testing soft {} with species {}".format(soft, species))
+    params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
+        package_directory, species, soft)
 
-        package_directory = Path(__file__).parent
+    assert op.exists(params_file), "Could not find params_file {}".format(params_file)
 
-        #package_directory = op.dirname(__file__)
+    params = json.load(open(params_file))
 
-        params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
-            package_directory, species, soft)
+    data_path = make_tmp_dir()
 
-        assert op.exists(params_file), "Could not find params_file {}".format(params_file)
+    # params template
+    template_name = params["general"]["template_name"]
 
-        params = json.load(open(params_file))
+    template_dir = load_test_data(template_name, data_path)
+    params_template = format_template(template_dir, template_name)
 
-        data_path = make_tmp_dir()
+    # running workflow
+    segment_pnh = create_full_ants_subpipes(
+        params=params, params_template=params_template,
+        name="test_create_full_ants_subpipes_all_default_params")
 
-        # params template
-        template_name = params["general"]["template_name"]
+    segment_pnh.base_dir = data_path
 
-        template_dir = load_test_data(template_name, data_path)
-        params_template = format_template(template_dir, template_name)
-
-        # running workflow
-        segment_pnh = create_full_ants_subpipes(
-            params=params, params_template=params_template,
-            name="test_create_full_ants_subpipes_all_default_params")
-
-        segment_pnh.base_dir = data_path
-
-        segment_pnh.write_graph(graph2use="colored")
-        assert op.exists(op.join(data_path,
-                                "test_create_full_ants_subpipes_all_default_params",
-                                "graph.png"))
-
-test_create_full_ants_subpipes_all_default_params()
+    segment_pnh.write_graph(graph2use="colored")
+    assert op.exists(op.join(data_path,
+                            "test_create_full_ants_subpipes_all_default_params",
+                            "graph.png"))
