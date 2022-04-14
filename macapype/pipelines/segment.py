@@ -132,7 +132,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
             # Merging as file list
             merge_list = pe.Node(niu.Merge(len(index_tissue)),
-                                 name="merge_list")
+                                 name="merge_list_" + tissue)
 
             for index, sub_index_tissue in enumerate(index_tissue):
                 segment_pipe.connect(
