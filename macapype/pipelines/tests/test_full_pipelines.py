@@ -229,6 +229,10 @@ def test_create_full_ants_subpipes_all_default_params():
     from itertools import product
     import json
 
+    from pathlib import Path
+
+    package_directory = Path(__file__).parent
+
     species_list = ["marmo", "macaque", "baboon"]
     soft_list = ["ants", "ants_t1"]
 
@@ -236,7 +240,7 @@ def test_create_full_ants_subpipes_all_default_params():
 
         print("*** Testing soft {} with species {}".format(soft, species))
 
-        package_directory = op.dirname(__file__)
+        #package_directory = op.dirname(__file__)
 
         params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
             package_directory, species, soft)
