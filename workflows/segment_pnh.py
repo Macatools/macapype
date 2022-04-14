@@ -592,18 +592,20 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 #datasink, '@prob_csf')
 
             # rename 5tt
-            rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
-            rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_desc-5tt_dseg"
-            rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
-            rename_gen_5tt.inputs.keep_ext = True
+            if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.gen_5tt',
-                rename_gen_5tt, 'in_file')
+                rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
+                rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_desc-5tt_dseg"
+                rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+                rename_gen_5tt.inputs.keep_ext = True
 
-            main_workflow.connect(
-                segment_pnh_pipe, 'rename_gen_5tt.out_file',
-                datasink, '@gen_5tt')
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.gen_5tt',
+                    rename_gen_5tt, 'in_file')
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'rename_gen_5tt.out_file',
+                    datasink, '@gen_5tt')
 
             #main_workflow.connect(
                 #segment_pnh_pipe, 'outputnode.gen_5tt',
