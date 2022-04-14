@@ -234,14 +234,14 @@ def test_create_full_ants_subpipes_all_default_params():
 
     for soft, species in product(soft_list, species_list):
 
-        print("Testing soft {} with species {}".format(soft, species))
+        print("*** Testing soft {} with species {}".format(soft, species))
 
-        package_directory = op.dirname(op.abspath(__file__))
+        package_directory = op.dirname(__file__)
 
         params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
             package_directory, species, soft)
 
-        assert op.exists(params_file)
+        assert op.exists(params_file), "Could not find params_file {}".format(params_file)
 
         params = json.load(open(params_file))
 
