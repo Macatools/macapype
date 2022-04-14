@@ -226,6 +226,7 @@ def test_create_full_ants_subpipes():
 
 def test_create_full_ants_subpipes_all_default_params():
 
+    from itertools import product
     import json
 
     species_list = ["marmo", "macaque", "baboon"]
