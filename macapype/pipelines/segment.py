@@ -126,9 +126,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     print("Using tissue dict {}".format(tissue_dict))
 
 
-    for tissue, index_tissue  in tissue_dict.items()
-
-        if isinstance(index_tissue, list ):
+    for tissue, index_tissue  in tissue_dict.items():
+        if isinstance(index_tissue, list):
 
             ## Merging threshold file
             merge_list = pe.Node(niu.Merge(len(index_tissue)), name = "merge_list")
@@ -187,9 +186,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             ### thresh output
             segment_pipe.connect(thresh_node, 'out_file',
                                  outputnode, 'threshold_'+tissue)
-
-
-
 
     #thd_nodes = {}
     #for tissue, index_tissue  in tissue_dict.items():
