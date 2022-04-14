@@ -604,7 +604,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                     rename_gen_5tt, 'in_file')
 
                 main_workflow.connect(
-                    segment_pnh_pipe, 'rename_gen_5tt.out_file',
+                    rename_gen_5tt, 'out_file',
                     datasink, '@gen_5tt')
 
             #main_workflow.connect(
