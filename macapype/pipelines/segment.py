@@ -5,11 +5,12 @@ import nipype.interfaces.fsl as fsl
 
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks, merge_imgs,
-                             split_indexed_mask, copy_header, compute_5tt,
-                             correct_datatype, fill_list_vol)
+from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
+                             merge_imgs, split_indexed_mask, copy_header,
+                             compute_5tt, correct_datatype, fill_list_vol)
 
-from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list, get_pattern)
+from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list,
+                          get_pattern)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
@@ -120,144 +121,79 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     if "tissue_dict" in params.keys():
         tissue_dict = params["tissue_dict"]
+
     else:
-        tissue_dict = { 'csf': 1, 'gm': 2,  'wm': 4}
+        tissue_dict = {'csf': 1, 'gm': 2,  'wm': 4}
 
     print("Using tissue dict {}".format(tissue_dict))
 
-
-    for tissue, index_tissue  in tissue_dict.items():
+    for tissue, index_tissue in tissue_dict.items():
         if isinstance(index_tissue, list):
 
-            ## Merging threshold file
-            merge_list = pe.Node(niu.Merge(len(index_tissue)), name = "merge_list")
+            # Merging as file list
+            merge_list = pe.Node(niu.Merge(len(index_tissue)),
+                                 name="merge_list")
 
             for index, sub_index_tissue in enumerate(index_tissue):
                 segment_pipe.connect(
                     seg_at,
-                    ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index_tissue))),
-                         merge_list, 'in' + str(index+1))
+                    ('segmented_files', get_pattern,
+                     "SegmentationPosteriors{:02d}".format(
+                         int(sub_index_tissue))),
+                    merge_list, 'in' + str(index+1))
 
-
-            ## Merging files
+            # Merging files in the same nifti
             merge_tissues = pe.Node(
                 niu.Function(
-                    input_names = ["list_img_files"],
-                    output_names = ["merged_img_file"],
-                    function = merge_imgs),
+                    input_names=["list_img_files"],
+                    output_names=["merged_img_file"],
+                    function=merge_imgs),
                 name="merge_tissues_" + tissue)
 
-            segment_pipe.connect(merge_list, "out", merge_tissues, 'list_img_files')
+            segment_pipe.connect(merge_list, "out",
+                                 merge_tissues, 'list_img_files')
 
-            ### prob output
+            # prob output
             segment_pipe.connect(merge_tissues, 'merged_img_file',
                                  outputnode, 'prob_'+tissue)
 
-            ### threshold
-            thresh_node = NodeParams(fsl.Threshold(),
-                                  params=parse_key(params, "threshold_" + tissue),
-                                  name="threshold_" + tissue)
+            # threshold
+            thresh_node = NodeParams(
+                fsl.Threshold(),
+                params=parse_key(params, "threshold_" + tissue),
+                name="threshold_" + tissue)
 
             segment_pipe.connect(merge_tissues, 'merged_img_file',
                                  thresh_node, 'in_file')
 
-            ### thresh output
+            # thresh output
             segment_pipe.connect(thresh_node, 'out_file',
                                  outputnode, 'threshold_'+tissue)
 
         else:
 
-            ### prob output
+            # prob output
             segment_pipe.connect(
                 seg_at,
-                ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index_tissue))),
-                 outputnode, 'prob_'+tissue)
+                ('segmented_files', get_pattern,
+                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
+                outputnode, 'prob_'+tissue)
 
-            ### threshold
-            thresh_node = NodeParams(fsl.Threshold(),
-                                  params=parse_key(params, "threshold_" + tissue),
-                                  name="threshold_" + tissue)
+            # threshold
+            thresh_node = NodeParams(
+                fsl.Threshold(),
+                params=parse_key(params, "threshold_" + tissue),
+                name="threshold_" + tissue)
 
             segment_pipe.connect(
                 seg_at,
-                ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index_tissue))),
-                 thresh_node, 'in_file')
+                ('segmented_files', get_pattern,
+                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
+                thresh_node, 'in_file')
 
-            ### thresh output
+            # thresh output
             segment_pipe.connect(thresh_node, 'out_file',
                                  outputnode, 'threshold_'+tissue)
-
-    #thd_nodes = {}
-    #for tissue, index_tissue  in tissue_dict.items():
-
-        #if isinstance(index_tissue, list ):
-
-            ### Merging threshold file
-            #merge_list = pe.Node(niu.Merge(len(index_tissue)), name = "merge_list")
-
-            #for index, sub_index_tissue in enumerate(index_tissue):
-
-                #tmp_node = NodeParams(fsl.Threshold(),
-                                    #params=parse_key(params, "threshold_" + tissue),
-                                    #name="threshold_" + tissue + "_" + str(sub_index_tissue))
-
-                #segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(sub_index_tissue))),
-                                    #tmp_node, 'in_file')
-
-                ### output to merge_list
-                #segment_pipe.connect(tmp_node, 'out_file', merge_list, 'in' + str(index+1))
-
-            ### Merging files
-            #merge_thres = pe.Node(
-                #niu.Function(
-                    #input_names = ["list_img_files"],
-                    #output_names = ["merged_img_file"],
-                    #function = merge_imgs),
-                #name="merge_thres_" + tissue)
-
-
-            #segment_pipe.connect(merge_list, "out", merge_thres, 'list_img_files')
-
-            ### IdentityInterface for having a node with out_file
-
-            #tmp_node = pe.Node(niu.IdentityInterface(fields = ["out_file"]), name = "threshold_" + tissue)
-
-            #segment_pipe.connect(merge_thres, 'merged_img_file', tmp_node, 'out_file')
-
-            #thd_nodes[tissue] = tmp_node
-
-        #else:
-
-            #tmp_node = NodeParams(fsl.Threshold(),
-                                #params=parse_key(params, "threshold_" + tissue),
-                                #name="threshold_" + tissue)
-
-            #thd_nodes[tissue] = tmp_node
-
-            #segment_pipe.connect(seg_at, ('segmented_files', get_pattern, "SegmentationPosteriors{:02d}".format(int(index))),
-                                #tmp_node, 'in_file')
-
-
-    ## creating output node with prob_ and threshold_
-    #outputnode = pe.Node(
-        #niu.IdentityInterface(
-            #fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    #"threshold_csf", "prob_gm", "prob_wm",
-                    #"prob_csf"]),
-        #name='outputnode')
-
-    #
-    #segment_pipe.connect(thd_nodes["gm"], 'out_file',
-                         #outputnode, 'threshold_gm')
-    #segment_pipe.connect(thd_nodes["wm"], 'out_file',
-                         #outputnode, 'threshold_wm')
-    #segment_pipe.connect(thd_nodes["csf"], 'out_file',
-                         #outputnode, 'threshold_csf')
-
-    #for i, tissue in enumerate(['csf', 'gm', 'wm']):
-        #segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
-                             #outputnode, 'prob_' + tissue)
-
 
     return segment_pipe
 
