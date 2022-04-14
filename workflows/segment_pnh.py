@@ -524,7 +524,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_wm, 'in_file')
 
         rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
-        rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+        rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-GM_probseg"
         rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
         rename_prob_gm.inputs.keep_ext = True
 
@@ -534,7 +534,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_gm, 'in_file')
 
         rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
-        rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+        rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-CSF_probseg"
         rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
         rename_prob_csf.inputs.keep_ext = True
 
