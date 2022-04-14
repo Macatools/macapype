@@ -156,10 +156,10 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             ### threshold
             thresh_node = NodeParams(fsl.Threshold(),
                                   params=parse_key(params, "threshold_" + tissue),
-                                  name="threshold_" + tissue))
+                                  name="threshold_" + tissue)
 
             segment_pipe.connect(merge_tissues, 'merged_img_file',
-                                 thresh_node, 'in_file'
+                                 thresh_node, 'in_file')
 
             ### thresh output
             segment_pipe.connect(thresh_node, 'out_file',
@@ -176,7 +176,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             ### threshold
             thresh_node = NodeParams(fsl.Threshold(),
                                   params=parse_key(params, "threshold_" + tissue),
-                                  name="threshold_" + tissue))
+                                  name="threshold_" + tissue)
 
             segment_pipe.connect(
                 seg_at,
