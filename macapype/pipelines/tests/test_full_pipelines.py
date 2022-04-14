@@ -5,9 +5,6 @@ from macapype.utils.utils_tests import (make_tmp_dir, format_template,
 from macapype.pipelines.full_pipelines import \
     create_full_ants_subpipes
 
-data_path = make_tmp_dir()
-
-
 def test_create_full_ants_subpipes_no_args():
 
     params = {
@@ -44,6 +41,8 @@ def test_create_full_ants_subpipes_no_args():
         }
     }
 
+    data_path = make_tmp_dir()
+
     # params template
     template_name = params["general"]["template_name"]
 
@@ -64,6 +63,8 @@ def test_create_full_ants_subpipes_no_args():
 
 
 def test_create_full_ants_subpipes_no_subpipes():
+
+    data_path = make_tmp_dir()
 
     params = {
         "general":
@@ -108,6 +109,8 @@ def test_create_full_ants_subpipes_no_subpipes():
 
 
 def test_create_full_ants_subpipes():
+
+    data_path = make_tmp_dir()
 
     params = {
         "general":
@@ -220,3 +223,40 @@ def test_create_full_ants_subpipes():
     assert op.exists(op.join(data_path,
                              "test_create_full_ants_subpipes",
                              "graph.png"))
+
+def test_create_full_ants_subpipes_all_default_params():
+
+    import json
+
+    species = "marmo"
+
+    soft = "ants"
+
+    package_directory = op.dirname(op.abspath(__file__))
+
+    params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
+        package_directory, species, soft)
+
+    params = json.load(open(params_file))
+
+    data_path = make_tmp_dir()
+
+    # params template
+    template_name = params["general"]["template_name"]
+
+    template_dir = load_test_data(template_name, data_path)
+    params_template = format_template(template_dir, template_name)
+
+    # running workflow
+    segment_pnh = create_full_ants_subpipes(
+        params=params, params_template=params_template,
+        name="test_create_full_ants_subpipes_all_default_params")
+
+    segment_pnh.base_dir = data_path
+
+    segment_pnh.write_graph(graph2use="colored")
+    assert op.exists(op.join(data_path,
+                             "test_create_full_ants_subpipes_all_default_params",
+                             "graph.png"))
+
+test_create_full_ants_subpipes_all_default_params()
