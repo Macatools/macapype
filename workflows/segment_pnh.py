@@ -513,31 +513,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         print (datasource.iterables)
 
 
-        rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
-        rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
-        rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
-        rename_prob_wm.inputs.keep_ext = True
-
-
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.prob_wm',
-                rename_prob_wm, 'in_file')
-
-        rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
-        rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-GM_probseg"
-        rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
-        rename_prob_gm.inputs.keep_ext = True
-
-
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.prob_gm',
-                rename_prob_gm, 'in_file')
-
-        rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
-        rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-CSF_probseg"
-        rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
-        rename_prob_csf.inputs.keep_ext = True
-
 
         main_workflow.connect(
             segment_pnh_pipe, 'outputnode.prob_csf',
@@ -561,6 +536,31 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.segmented_brain_mask',
                 datasink, '@segmented_brain_mask')
+
+            rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
+            rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+            rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+            rename_prob_wm.inputs.keep_ext = True
+
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_wm',
+                rename_prob_wm, 'in_file')
+
+            rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
+            rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-GM_probseg"
+            rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+            rename_prob_gm.inputs.keep_ext = True
+
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_gm',
+                rename_prob_gm, 'in_file')
+
+            rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
+            rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-CSF_probseg"
+            rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+            rename_prob_csf.inputs.keep_ext = True
 
             #main_workflow.connect(
                 #segment_pnh_pipe, 'outputnode.prob_wm',
@@ -586,9 +586,23 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_gm, 'out_file',
                 datasink, '@prob_gm')
 
+            rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
+            rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_desc-5tt_dseg"
+            rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+            rename_gen_5tt.inputs.keep_ext = True
+
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.gen_5tt',
+                rename_gen_5tt, 'in_file')
+
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'rename_gen_5tt.out_file',
                 datasink, '@gen_5tt')
+
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.gen_5tt',
+                #datasink, '@gen_5tt')
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.debiased_brain',
