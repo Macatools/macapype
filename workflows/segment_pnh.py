@@ -523,6 +523,26 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             segment_pnh_pipe, 'outputnode.prob_wm',
                 rename_prob_wm, 'in_file')
 
+        rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
+        rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+        rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+        rename_prob_gm.inputs.keep_ext = True
+
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.prob_gm',
+                rename_prob_gm, 'in_file')
+
+        rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
+        rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+        rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*).*"
+        rename_prob_csf.inputs.keep_ext = True
+
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.prob_csf',
+                rename_prob_csf, 'in_file')
+
         datasink = create_datasink(iterables=datasource.iterables,
                                    name=datasink_name,
                                    params_subs=params_subs,
@@ -546,18 +566,25 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 #segment_pnh_pipe, 'outputnode.prob_wm',
                 #datasink, '@prob_wm')
 
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.prob_gm',
+                #datasink, '@prob_gm')
+
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.prob_csf',
+                #datasink, '@prob_csf')
+
             main_workflow.connect(
                 rename_prob_wm, 'out_file',
                 datasink, '@prob_wm')
 
-
             main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.prob_gm',
-                datasink, '@prob_gm')
-
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.prob_csf',
+                rename_prob_csf, 'out_file',
                 datasink, '@prob_csf')
+
+            main_workflow.connect(
+                rename_prob_gm, 'out_file',
+                datasink, '@prob_gm')
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.gen_5tt',
