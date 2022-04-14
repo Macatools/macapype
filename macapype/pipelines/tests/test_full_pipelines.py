@@ -231,14 +231,14 @@ def test_create_full_ants_subpipes_all_default_params():
 
     from pathlib import Path
 
-    package_directory = Path(__file__).parent
-
     species_list = ["marmo", "macaque", "baboon"]
     soft_list = ["ants", "ants_t1"]
 
     for soft, species in product(soft_list, species_list):
 
         print("*** Testing soft {} with species {}".format(soft, species))
+
+        package_directory = Path(__file__).parent
 
         #package_directory = op.dirname(__file__)
 
