@@ -3,13 +3,20 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
+import nipype.interfaces.ants as ants
+
+# TODO
+# from nipype.interfaces.niftyreg import reg
+
+# TODO
+# from nipype.interfaces.niftyreg import reg
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
 from ..utils.utils_nodes import NodeParams, MapNodeParams
 from ..utils.misc import parse_key
 
-from ..nodes.prepare import average_align, FslOrient
+from ..nodes.prepare import average_align, FslOrient, reg_aladin_dirty
 from ..nodes.extract_brain import T1xT2BET
 
 
@@ -137,26 +144,45 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # denoise with Ants package
-    # (taking into account whether reorient has been performed or not)
-    denoise = NodeParams(interface=DenoiseImage(),
-                         params=parse_key(params, "denoise"),
-                         name="denoise")
+    # N4 intensity normalization with parameters from json
+    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
+                                params=parse_key(params, "norm_intensity"),
+                                name='norm_intensity')
 
     prep_pipeline.connect(crop, 'roi_file',
-                          denoise, 'input_image')
-
+                                norm_intensity, "input_image")
     prep_pipeline.connect(
-        inputnode, ('indiv_params', parse_key, "denoise"),
-        denoise, 'indiv_params')
+        inputnode, ('indiv_params', parse_key, "norm_intensity"),
+        norm_intensity, 'indiv_params')
+
+    if "denoise" in params.keys():
+
+        # denoise with Ants package
+        # (taking into account whether reorient has been performed or not)
+        denoise = NodeParams(interface=DenoiseImage(),
+                             params=parse_key(params, "denoise"),
+                             name="denoise")
+
+        prep_pipeline.connect(norm_intensity, "output_image",
+                              denoise, 'input_image')
+        prep_pipeline.connect(
+            inputnode, ('indiv_params', parse_key, "denoise"),
+            denoise, 'indiv_params')
 
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['prep_img']),
         name='outputnode')
 
-    prep_pipeline.connect(denoise, 'output_image',
-                          outputnode, "prep_img")
+    if "denoise" in params.keys():
+
+        prep_pipeline.connect(denoise, 'output_image',
+                              outputnode, "prep_img")
+
+    else:
+
+        prep_pipeline.connect(norm_intensity, "output_image",
+                              outputnode, "prep_img")
 
     return prep_pipeline
 
@@ -222,26 +248,47 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # denoise with Ants package
-    # (taking into account whether reorient has been performed or not)
-    denoise = MapNodeParams(interface=DenoiseImage(),
-                            params=parse_key(params, "denoise"),
-                            name="denoise",
-                            iterfield=["input_image"])
+    # N4 intensity normalization with parameters from json
+    norm_intensity = MapNodeParams(ants.N4BiasFieldCorrection(),
+                                   params=parse_key(params, "norm_intensity"),
+                                   name='norm_intensity',
+                                   iterfield=['input_image'])
 
     mapnode_prep_pipeline.connect(crop, 'roi_file',
-                                  denoise, "input_image")
+                                  norm_intensity, "input_image")
     mapnode_prep_pipeline.connect(
-        inputnode, ("indiv_params", parse_key, "denoise"),
-        denoise, 'indiv_params')
+        inputnode, ("indiv_params", parse_key, "norm_intensity"),
+        norm_intensity, 'indiv_params')
+
+    if "denoise" in params.keys():
+
+        # denoise with Ants package
+        # (taking into account whether reorient has been performed or not)
+        denoise = MapNodeParams(interface=DenoiseImage(),
+                                params=parse_key(params, "denoise"),
+                                name="denoise",
+                                iterfield=["input_image"])
+
+        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
+                                      denoise, "input_image")
+        mapnode_prep_pipeline.connect(
+            inputnode, ("indiv_params", parse_key, "denoise"),
+            denoise, 'indiv_params')
 
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['prep_list_img']),
         name='outputnode')
 
-    mapnode_prep_pipeline.connect(denoise, "output_image",
-                                  outputnode, "prep_list_img")
+    if "denoise" in params.keys():
+
+        mapnode_prep_pipeline.connect(denoise, "output_image",
+                                      outputnode, "prep_list_img")
+
+    else:
+
+        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
+                                      outputnode, "prep_list_img")
 
     return mapnode_prep_pipeline
 
@@ -311,6 +358,11 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
         niu.IdentityInterface(fields=['list_T1', 'list_T2', 'indiv_params']),
         name='inputnode'
     )
+
+    # Creating output node
+    outputnode = pe.Node(
+        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
+        name='outputnode')
 
     # avererge if multiple T2
     av_T2 = pe.Node(niu.Function(
@@ -422,35 +474,47 @@ def create_short_preparation_pipe(params, name="short_preparation_pipe"):
                                           bet_crop, 't2_file')
 
     # denoise with Ants package
-    denoise_T1 = NodeParams(interface=DenoiseImage(),
-                            params=parse_key(params, "denoise"),
-                            name="denoise_T1")
-    denoise_T2 = NodeParams(interface=DenoiseImage(),
-                            params=parse_key(params, "denoise"),
-                            name="denoise_T2")
+    if "denoise" in params.keys():
 
-    if "crop_T1" in params.keys():
-        data_preparation_pipe.connect(crop_T1, "roi_file",
-                                      denoise_T1, 'input_image')
-        data_preparation_pipe.connect(crop_T2, "roi_file",
-                                      denoise_T2, 'input_image')
+        denoise_T1 = NodeParams(interface=DenoiseImage(),
+                                params=parse_key(params, "denoise"),
+                                name="denoise_T1")
 
+        denoise_T2 = NodeParams(interface=DenoiseImage(),
+                                params=parse_key(params, "denoise"),
+                                name="denoise_T2")
+        # inputs
+        if "crop_T1" in params.keys():
+            data_preparation_pipe.connect(crop_T1, "roi_file",
+                                          denoise_T1, 'input_image')
+            data_preparation_pipe.connect(crop_T2, "roi_file",
+                                          denoise_T2, 'input_image')
+
+        else:
+            data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                          denoise_T1, 'input_image')
+            data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
+                                          denoise_T2, 'input_image')
+
+        # outputs
+        data_preparation_pipe.connect(denoise_T1, 'output_image',
+                                      outputnode, 'preproc_T1')
+
+        data_preparation_pipe.connect(denoise_T2, 'output_image',
+                                      outputnode, 'preproc_T2')
     else:
-        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                                      denoise_T1, 'input_image')
-        data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
-                                      denoise_T2, 'input_image')
 
-    # Creating output node
-    outputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
-        name='outputnode')
+        if "crop_T1" in params.keys():
+            data_preparation_pipe.connect(crop_T1, "roi_file",
+                                          outputnode, 'preproc_T1')
+            data_preparation_pipe.connect(crop_T2, "roi_file",
+                                          outputnode, 'preproc_T2')
 
-    data_preparation_pipe.connect(denoise_T1, 'output_image',
-                                  outputnode, 'preproc_T1')
-
-    data_preparation_pipe.connect(denoise_T2, 'output_image',
-                                  outputnode, 'preproc_T2')
+        else:
+            data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                          outputnode, 'preproc_T1')
+            data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
+                                          outputnode, 'preproc_T2')
 
     return data_preparation_pipe
 
@@ -913,14 +977,42 @@ def create_short_preparation_FLAIR_pipe(params,
         name='inputnode'
     )
 
-    # align FLAIR on avg T1
-    align_FLAIR_on_T1 = pe.NodeParams(fsl.FLIRT(), name="align_FLAIR_on_T1", params=parse_key(params, "align_FLAIR_on_T1"),)
+    if "align_FLAIR_on_T1" in params.keys():
+        print("in align_FLAIR_on_T1")
 
-    data_preparation_pipe.connect(inputnode, 'orig_T1',
-                                  align_FLAIR_on_T1, 'reference')
+        # align FLAIR on avg T1
+        align_FLAIR_on_T1 = NodeParams(
+            fsl.FLIRT(),
+            params=parse_key(params, "align_FLAIR_on_T1"),
+            name="align_FLAIR_on_T1")
 
-    data_preparation_pipe.connect(inputnode, 'FLAIR',
-                                  align_FLAIR_on_T1, 'in_file')
+        data_preparation_pipe.connect(inputnode, 'orig_T1',
+                                      align_FLAIR_on_T1, 'reference')
+
+        data_preparation_pipe.connect(inputnode, 'FLAIR',
+                                      align_FLAIR_on_T1, 'in_file')
+
+    elif "reg_aladin_FLAIR_on_T1" in params.keys():
+        print("in reg_aladin_FLAIR_on_T1")
+        align_FLAIR_on_T1 = pe.Node(
+            niu.Function(
+                input_names=["reference", "in_file"],
+                output_names=["out_file"],
+                function=reg_aladin_dirty),
+            name="reg_aladin_FLAIR_on_T1")
+
+        # TODO
+        # align_FLAIR_on_T1 = pe.Node(reg.RegAladin(),
+        # name="reg_aladin_FLAIR_on_T1")
+
+        data_preparation_pipe.connect(inputnode, 'orig_T1',
+                                      align_FLAIR_on_T1, 'reference')
+
+        data_preparation_pipe.connect(inputnode, 'FLAIR',
+                                      align_FLAIR_on_T1, 'in_file')
+    else:
+        print("no align_FLAIR_on_T1 or reg_aladin_FLAIR_on_T1, breaking")
+        exit(0)
 
     # Creating output node
     outputnode = pe.Node(
@@ -990,25 +1082,25 @@ def create_short_preparation_MD_pipe(params,
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['orig_T2', 'SS_T2', 'MD',
+        niu.IdentityInterface(fields=['SS_T2', 'MD',
                                       'b0mean', 'native_wm_mask']),
         name='inputnode'
     )
 
     # init_align_b0mean_on_T2
-    init_align_b0mean_on_T2 = pe.Node(fsl.FLIRT(),
-                                      name="init_align_b0mean_on_T2")
-    init_align_b0mean_on_T2.inputs.dof = 6
+    init_align_b0mean_on_T2 = NodeParams(
+        fsl.FLIRT(), params=parse_key(params, "init_align_b0mean_on_T2"),
+        name="init_align_b0mean_on_T2")
 
-    data_preparation_pipe.connect(inputnode, 'orig_T2',
+    data_preparation_pipe.connect(inputnode, 'SS_T2',
                                   init_align_b0mean_on_T2, 'reference')
     data_preparation_pipe.connect(inputnode, 'b0mean',
                                   init_align_b0mean_on_T2, 'in_file')
 
     # align_b0mean_on_T2
-    align_b0mean_on_T2 = pe.Node(fsl.FLIRT(), name="align_b0mean_on_T2")
-    align_b0mean_on_T2.inputs.dof = 6
-    align_b0mean_on_T2.inputs.cost = "bbr"
+    align_b0mean_on_T2 = NodeParams(
+        fsl.FLIRT(), params=parse_key(params, "align_b0mean_on_T2"),
+        name="align_b0mean_on_T2")
 
     data_preparation_pipe.connect(inputnode, 'SS_T2',
                                   align_b0mean_on_T2, 'reference')

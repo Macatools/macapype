@@ -66,14 +66,13 @@ from macapype.pipelines.full_pipelines import (
     create_transfo_MD_pipe)
 
 from macapype.utils.utils_bids import (create_datasource_indiv_params,
-                                       create_datasource,
                                        create_datasink)
 
 from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.utils_nodes import node_output_exists
 
-from macapype.utils.misc import show_files, get_first_elem
+from macapype.utils.misc import show_files, get_first_elem, parse_key
 
 ###############################################################################
 
@@ -128,13 +127,13 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     ssoft = soft.split("_")
 
     new_ssoft = ssoft.copy()
-    
+
     if 'test' in ssoft:
         new_ssoft.remove('test')
-        
+
     if 'prep' in ssoft:
         new_ssoft.remove('prep')
-        
+
     soft = "_".join(new_ssoft)
 
     # formating args
@@ -217,9 +216,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         pprint.pprint(indiv_params)
 
         if "short_preparation_pipe" not in params.keys():
-            
+
             print("short_preparation_pipe not found in params, not modifying preparation pipe")
-            
+
         else:
 
             prep_pipe = "short_preparation_pipe"
@@ -236,11 +235,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             if subjects is None or sessions is None:
                 print("For whole BIDS dir, unable to assess if the indiv_params is correct")
                 print("Running with params as it is")
-                
+
             else:
-                    
+
                 print("Will modify params if necessary, given specified subjects and sessions;\n")
-                
+
                 for sub in indiv_params.keys():
 
                     if sub.split('-')[1] not in subjects:
@@ -281,8 +280,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                     print("**** Found list of crops for T1 and T2 for all sub/ses \
                         in indiv -> long_multi_preparation_pipe")
 
-                    wf_name+="_multi_crop_T1_T2"
-
                     prep_pipe = "long_multi_preparation_pipe"
 
                 elif count_long_crops==count_all_sessions:
@@ -290,16 +287,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                     print("**** Found crop for T1 and crop for T2 for all sub/ses \
                         in indiv -> long_single_preparation_pipe")
 
-                    wf_name+="_crop_T1_T2"
-
                     prep_pipe = "long_single_preparation_pipe"
 
                 elif count_T1_crops==count_all_sessions:
 
                     print("**** Found crop for T1 for all sub/ses in indiv \
                         -> keeping short_preparation_pipe")
-
-                    wf_name+="_crop_T1"
 
                 else:
                     print("**** not all sub/ses have T1 and T2 crops ")
@@ -324,18 +317,18 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     # prep for testing only preparation part
     if "prep" in ssoft:
         print("Found prep in soft")
-        
+
         if "brain_extraction_pipe" in params.keys():
             del params["brain_extraction_pipe"]
             print("Deleting brain_extraction_pipe")
-        
-            
+
+
         if "brain_segment_pipe" in params.keys():
             del params["brain_segment_pipe"]
             print("Deleting brain_segment_pipe")
-            
+
     pprint.pprint(params)
-            
+
     # params_template
     assert ("general" in params.keys() and \
         "template_name" in params["general"].keys()), \
@@ -395,13 +388,17 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     output_query = {}
 
     # T1 (mandatory, always added)
-    output_query['T1'] = {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]
-        }
-
     # T2 is optional, if "_T1" is added in the -soft arg
-    if not 't1' in ssoft:
+    if 't1' in ssoft:
+        output_query['T1'] = {
+            "datatype": "anat", "suffix": "T1w",
+            "extension": ["nii", ".nii.gz"]}
+
+    else:
+        output_query['T1'] = {
+            "datatype": "anat", "suffix": "T1w",
+            "extension": ["nii", ".nii.gz"]}
+
         output_query['T2'] = {
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]}
@@ -439,7 +436,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                           segment_pnh_pipe, 'inputnode.list_T1')
 
     if not "t1" in ssoft:
-        main_workflow.connect(datasource, 'T2', 
+        main_workflow.connect(datasource, 'T2',
                               segment_pnh_pipe, 'inputnode.list_T2')
     elif "t1" in ssoft and "spm" in ssoft:
         # cheating using T2 as T1
@@ -447,11 +444,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                               segment_pnh_pipe, 'inputnode.list_T2')
 
     if "flair" in ssoft:
-        
+
+
         if "transfo_FLAIR_pipe" in params.keys():
             print("Found transfo_FLAIR_pipe")
-            
-        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=params=parse_key(params, "transfo_FLAIR_pipe"),
+
+        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=parse_key(params, "transfo_FLAIR_pipe"),
                                                        params_template=params_template)
 
         if "t1" in ssoft:
@@ -471,8 +469,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     if 'md' in ssoft:
 
-        transfo_MD_pipe = create_transfo_MD_pipe(params=params,
-                                        params_template=params_template)
+        if "transfo_MD_pipe" in params.keys():
+            print("Found transfo_MD_pipe")
+
+        transfo_MD_pipe = create_transfo_MD_pipe(params=parse_key(params, "transfo_MD_pipe"),
+                                                 params_template=params_template)
 
         main_workflow.connect(segment_pnh_pipe,
                                 "old_segment_pipe.outputnode.threshold_wm",
@@ -510,6 +511,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         else:
             params_subs={}
 
+        print (datasource.iterables)
+
         datasink = create_datasink(iterables=datasource.iterables,
                                    name=datasink_name,
                                    params_subs=params_subs,
@@ -517,13 +520,98 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         datasink.inputs.base_directory = process_dir
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.brain_mask',
-            datasink, '@brain_mask')
+        if "brain_extraction_pipe" in params.keys():
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-            datasink, '@segmented_brain_mask')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.brain_mask',
+                datasink, '@brain_mask')
+
+        if "brain_segment_pipe" in params.keys():
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.debiased_brain',
+                datasink, '@debiased_brain')
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.debiased_T1',
+                datasink, '@debiased_T1')
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+                datasink, '@segmented_brain_mask')
+
+            ### rename prob
+            rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
+            rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+            rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_wm.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_wm',
+                rename_prob_wm, 'in_file')
+
+            main_workflow.connect(
+                rename_prob_wm, 'out_file',
+                datasink, '@prob_wm')
+
+            rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
+            rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-GM_probseg"
+            rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_gm.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_gm',
+                rename_prob_gm, 'in_file')
+
+            main_workflow.connect(
+                rename_prob_gm, 'out_file',
+                datasink, '@prob_gm')
+
+            rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
+            rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-CSF_probseg"
+            rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_csf.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.prob_csf',
+                rename_prob_csf, 'in_file')
+
+            main_workflow.connect(
+                rename_prob_csf, 'out_file',
+                datasink, '@prob_csf')
+
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.prob_wm',
+                #datasink, '@prob_wm')
+
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.prob_gm',
+                #datasink, '@prob_gm')
+
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.prob_csf',
+                #datasink, '@prob_csf')
+
+            # rename 5tt
+            if "export_5tt_pipe" in params["brain_segment_pipe"]:
+
+                rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
+                rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_desc-5tt_dseg"
+                rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+                rename_gen_5tt.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.gen_5tt',
+                    rename_gen_5tt, 'in_file')
+
+                main_workflow.connect(
+                    rename_gen_5tt, 'out_file',
+                    datasink, '@gen_5tt')
+
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.gen_5tt',
+                #datasink, '@gen_5tt')
+
 
         if 'flair' in ssoft :
 

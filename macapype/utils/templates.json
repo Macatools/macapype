@@ -116,5 +116,11 @@
         "template_gm": "segmentation_three_types_prob_1_gray.nii.gz",
         "template_wm": "segmentation_three_types_prob_2_white.nii.gz",
         "template_csf": "segmentation_three_types_prob_3_csf.nii.gz"
+    },
+    "MBM_v3.0.1_6seg":{
+        "template_head": "template_T1w.nii.gz",
+        "template_brain": "template_T1w_brain.nii.gz",
+
+        "template_seg": "segmentation_six_types_seg.nii.gz"
     }
 }
