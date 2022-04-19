@@ -32,18 +32,20 @@ jobs:
       - name: Flake8
         run:
             flake8 --count macapype
-            
+
       - name: Download dataset
         run: |
             wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download" -O macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
 
       - name: Running all test pipelines
-        run: | 
+        run: |
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001 -deriv
+
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien -out /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results -soft ANTS_test -species baboon -indiv /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/indiv_params_segment_baboon_long_single_prep.json -sub Odor -ses T1 -deriv
-            
+
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien -out /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results -soft ANTS_test -species baboon -indiv /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/indiv_params_segment_baboon_multi.json -sub Odor -ses T1 -deriv
-            
+
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain -out /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results -soft ANTS_test -species marmo -indiv /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/indiv_params_segment_marmo.json -sub 8034 -ses 01 -deriv
