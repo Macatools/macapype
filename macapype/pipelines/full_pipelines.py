@@ -1222,7 +1222,7 @@ def create_full_ants_subpipes(
         print("found NMT template")
         NMT_version = params["general"]["template_name"].split("_")[1]
 
-        if NMT_version.startwith("v1.3"):
+        if NMT_version.startswith("v1.3"):
             NMT_version = "v1.3"
 
     else:
