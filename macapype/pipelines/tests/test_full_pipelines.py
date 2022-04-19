@@ -5,15 +5,13 @@ from macapype.utils.utils_tests import (make_tmp_dir, format_template,
 from macapype.pipelines.full_pipelines import \
     create_full_ants_subpipes
 
-data_path = make_tmp_dir()
-
 
 def test_create_full_ants_subpipes_no_args():
 
     params = {
         "general":
         {
-            "template_name": "NMT_v2.0_asym"
+            "template_name": "NMT_v1.3better"
         },
         "short_preparation_pipe":
         {
@@ -44,6 +42,8 @@ def test_create_full_ants_subpipes_no_args():
         }
     }
 
+    data_path = make_tmp_dir()
+
     # params template
     template_name = params["general"]["template_name"]
 
@@ -65,10 +65,12 @@ def test_create_full_ants_subpipes_no_args():
 
 def test_create_full_ants_subpipes_no_subpipes():
 
+    data_path = make_tmp_dir()
+
     params = {
         "general":
         {
-            "template_name": "NMT_v2.0_asym"
+            "template_name": "NMT_v1.3better"
         },
         "short_preparation_pipe":
         {
@@ -81,6 +83,9 @@ def test_create_full_ants_subpipes_no_subpipes():
         },
         "brain_segment_pipe":
         {
+            "segment_atropos_pipe":
+            {
+            }
         }
     }
 
@@ -106,10 +111,12 @@ def test_create_full_ants_subpipes_no_subpipes():
 
 def test_create_full_ants_subpipes():
 
+    data_path = make_tmp_dir()
+
     params = {
         "general":
         {
-            "template_name": "NMT_v2.0_asym"
+            "template_name": "NMT_v1.3better"
         },
         "short_preparation_pipe":
         {
@@ -171,15 +178,11 @@ def test_create_full_ants_subpipes():
             },
             "register_NMT_pipe":
             {
-                "norm_intensity":
+                "NMT_subject_align":
                 {
-                    "dimension": 3,
-                    "bspline_fitting_distance": 200,
-                    "n_iterations": [50, 50, 40, 30],
-                    "convergence_threshold": 0.00000001,
-                    "shrink_factor": 2,
-                    "args": "-r 0 --verbose 1"
+                    "afni_ext": "orig"
                 }
+
             },
             "segment_atropos_pipe":
             {
@@ -221,3 +224,44 @@ def test_create_full_ants_subpipes():
     assert op.exists(op.join(data_path,
                              "test_create_full_ants_subpipes",
                              "graph.png"))
+
+
+def test_create_full_ants_subpipes_marmo_ants():
+
+    import json
+
+    species = "marmo"
+    soft = "ants"
+
+    print("*** Testing soft {} with species {}".format(soft, species))
+
+    package_directory = op.dirname(__file__)
+
+    params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
+        package_directory, species, soft)
+
+    assert op.exists(params_file), \
+        "Could not find params_file {}".format(params_file)
+
+    params = json.load(open(params_file))
+
+    data_path = make_tmp_dir()
+
+    # params template
+    template_name = params["general"]["template_name"]
+
+    template_dir = load_test_data(template_name, data_path)
+    params_template = format_template(template_dir, template_name)
+
+    # running workflow
+    segment_pnh = create_full_ants_subpipes(
+        params=params, params_template=params_template,
+        name="test_create_full_ants_subpipes_all_default_params")
+
+    segment_pnh.base_dir = data_path
+
+    segment_pnh.write_graph(graph2use="colored")
+    assert op.exists(
+        op.join(data_path,
+                "test_create_full_ants_subpipes_all_default_params",
+                "graph.png"))

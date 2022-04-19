@@ -6,9 +6,11 @@ import nipype.interfaces.fsl as fsl
 import nipype.interfaces.spm as spm
 
 from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
-                             split_indexed_mask, copy_header, compute_5tt)
+                             merge_imgs, split_indexed_mask, copy_header,
+                             compute_5tt, correct_datatype, fill_list_vol)
 
-from ..utils.misc import (gunzip, get_elem, merge_3_elem_to_list)
+from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list,
+                          get_pattern)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
@@ -62,13 +64,27 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     segment_pipe.connect(inputnode, "brain_file",
                          bin_norm_intensity, "in_file")
 
-    # merging priors as a list
-    split_seg = pe.Node(niu.Function(
-        input_names=['nii_file'],
-        output_names=['list_split_files'],
-        function=split_indexed_mask), name='split_seg')
+    if "use_priors" in params.keys():
 
-    segment_pipe.connect(inputnode, 'seg_file', split_seg, "nii_file")
+        # copying header from img to csf_prior_file
+        copy_header_to_seg = pe.Node(niu.Function(
+            input_names=['ref_img', 'img_to_modify'],
+            output_names=['modified_img'],
+            function=copy_header), name='copy_header_to_seg')
+
+        segment_pipe.connect(inputnode, "brain_file",
+                             copy_header_to_seg, "ref_img")
+        segment_pipe.connect(inputnode, 'seg_file',
+                             copy_header_to_seg, "img_to_modify")
+
+        # merging priors as a list
+        split_seg = pe.Node(niu.Function(
+            input_names=['nii_file'],
+            output_names=['list_split_files'],
+            function=split_indexed_mask), name='split_seg')
+
+        segment_pipe.connect(copy_header_to_seg, 'modified_img',
+                             split_seg, "nii_file")
 
     # Atropos
     seg_at = NodeParams(AtroposN4(),
@@ -78,8 +94,13 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
-    segment_pipe.connect(split_seg, 'list_split_files',
-                         seg_at, "priors")
+
+    if "use_priors" in params.keys():
+
+        seg_at.inputs.prior_weight = params["use_priors"]
+
+        segment_pipe.connect(split_seg, 'list_split_files',
+                             seg_at, "priors")
 
     # on segmentation indexed mask (with labels)
     # 1 -> CSF
@@ -88,32 +109,91 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     # 4 -> WM
     # 5 -> ?
 
-    thd_nodes = {}
-    for key, tissue in {0: 'csf', 1: 'gm', 3: 'wm'}.items():
-
-        tmp_node = NodeParams(fsl.Threshold(),
-                              params=parse_key(params, "threshold_" + tissue),
-                              name="threshold_" + tissue)
-
-        segment_pipe.connect(seg_at, ('segmented_files', get_elem, key),
-                             tmp_node, 'in_file')
-
-        thd_nodes[tissue] = tmp_node
-
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf"]),
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf"]),
         name='outputnode')
 
     segment_pipe.connect(seg_at, 'segmented_file',
                          outputnode, 'segmented_file')
-    segment_pipe.connect(thd_nodes["gm"], 'out_file',
-                         outputnode, 'threshold_gm')
-    segment_pipe.connect(thd_nodes["wm"], 'out_file',
-                         outputnode, 'threshold_wm')
-    segment_pipe.connect(thd_nodes["csf"], 'out_file',
-                         outputnode, 'threshold_csf')
+
+    if "tissue_dict" in params.keys():
+        tissue_dict = params["tissue_dict"]
+
+    else:
+        tissue_dict = {'csf': 1, 'gm': 2,  'wm': 4}
+
+    print("Using tissue dict {}".format(tissue_dict))
+
+    for tissue, index_tissue in tissue_dict.items():
+        if isinstance(index_tissue, list):
+
+            # Merging as file list
+            merge_list = pe.Node(niu.Merge(len(index_tissue)),
+                                 name="merge_list_" + tissue)
+
+            for index, sub_index_tissue in enumerate(index_tissue):
+                segment_pipe.connect(
+                    seg_at,
+                    ('segmented_files', get_pattern,
+                     "SegmentationPosteriors{:02d}".format(
+                         int(sub_index_tissue))),
+                    merge_list, 'in' + str(index+1))
+
+            # Merging files in the same nifti
+            merge_tissues = pe.Node(
+                niu.Function(
+                    input_names=["list_img_files"],
+                    output_names=["merged_img_file"],
+                    function=merge_imgs),
+                name="merge_tissues_" + tissue)
+
+            segment_pipe.connect(merge_list, "out",
+                                 merge_tissues, 'list_img_files')
+
+            # prob output
+            segment_pipe.connect(merge_tissues, 'merged_img_file',
+                                 outputnode, 'prob_'+tissue)
+
+            # threshold
+            thresh_node = NodeParams(
+                fsl.Threshold(),
+                params=parse_key(params, "threshold_" + tissue),
+                name="threshold_" + tissue)
+
+            segment_pipe.connect(merge_tissues, 'merged_img_file',
+                                 thresh_node, 'in_file')
+
+            # thresh output
+            segment_pipe.connect(thresh_node, 'out_file',
+                                 outputnode, 'threshold_'+tissue)
+
+        else:
+
+            # prob output
+            segment_pipe.connect(
+                seg_at,
+                ('segmented_files', get_pattern,
+                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
+                outputnode, 'prob_'+tissue)
+
+            # threshold
+            thresh_node = NodeParams(
+                fsl.Threshold(),
+                params=parse_key(params, "threshold_" + tissue),
+                name="threshold_" + tissue)
+
+            segment_pipe.connect(
+                seg_at,
+                ('segmented_files', get_pattern,
+                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
+                thresh_node, 'in_file')
+
+            # thresh output
+            segment_pipe.connect(thresh_node, 'out_file',
+                                 outputnode, 'threshold_'+tissue)
 
     return segment_pipe
 
@@ -219,6 +299,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                              merge_3_elem, "elem2")
         segment_pipe.connect(copy_header_to_wm, 'modified_img',
                              merge_3_elem, "elem3")
+
     # Atropos
     seg_at = NodeParams(AtroposN4(),
                         params=parse_key(params, "Atropos"),
@@ -229,9 +310,66 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
                          seg_at, "brainmask_file")
 
     if "use_priors" in params.keys():
-        segment_pipe.connect(merge_3_elem, 'merged_list',
-                             seg_at, "priors")
+        if "Atropos" in params.keys():
+            if "numberOfClasses" in params["Atropos"].keys():
+                nb_classes = params["Atropos"]["numberOfClasses"]
+
+                fill_nb_classes = pe.Node(
+                    interface=niu.Function(
+                        input_names=['list_vol', "nb_classes"],
+                        output_names=["filled_list_vol"],
+                        function=fill_list_vol),
+                    name="fill_nb_classes")
+
+                segment_pipe.connect(merge_3_elem, 'merged_list',
+                                     fill_nb_classes, "list_vol")
+
+                fill_nb_classes.inputs.nb_classes = nb_classes
+
+                segment_pipe.connect(fill_nb_classes, 'filled_list_vol',
+                                     seg_at, "priors")
+
+            else:
+                print("No numberOfClasses was specified, adding default (3)")
+                seg_at.inputs.numberOfClasses = 3
+
+                segment_pipe.connect(merge_3_elem, 'merged_list',
+                                     seg_at, "priors")
+
+        else:
+            segment_pipe.connect(merge_3_elem, 'merged_list',
+                                 seg_at, "priors")
+
         seg_at.inputs.prior_weight = params["use_priors"]
+
+    # correct_seg (unzip /zip as nifti_tools only works on .nii)
+
+    unzip_seg = pe.Node(
+        interface=niu.Function(input_names=['zipped_file'],
+                               output_names=["unzipped_file"],
+                               function=gunzip),
+        name="unzip_seg")
+
+    segment_pipe.connect(
+        seg_at, 'segmented_file', unzip_seg, "zipped_file")
+
+    correct_dt_seg = pe.Node(
+        niu.Function(input_names=["nii_file"],
+                     output_names=["correct_nii_file"],
+                     function=correct_datatype),
+        name="correct_dt_seg")
+
+    segment_pipe.connect(unzip_seg, "unzipped_file",
+                         correct_dt_seg, "nii_file")
+
+    zip_correct_seg = pe.Node(
+        interface=niu.Function(input_names=['unzipped_file'],
+                               output_names=["zipped_file"],
+                               function=gzip),
+        name="zip_correct_seg")
+
+    segment_pipe.connect(correct_dt_seg, "correct_nii_file",
+                         zip_correct_seg, "unzipped_file")
 
     # Threshold GM, WM and CSF
     thd_nodes = {}
@@ -245,13 +383,15 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
 
         thd_nodes[tissue] = tmp_node
 
+    # creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf"]),
+                    "threshold_csf", "prob_gm", "prob_wm",
+                    "prob_csf"]),
         name='outputnode')
 
-    segment_pipe.connect(seg_at, 'segmented_file',
+    segment_pipe.connect(zip_correct_seg, 'zipped_file',
                          outputnode, 'segmented_file')
     segment_pipe.connect(thd_nodes["gm"], 'out_file',
                          outputnode, 'threshold_gm')
@@ -260,6 +400,9 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
     segment_pipe.connect(thd_nodes["csf"], 'out_file',
                          outputnode, 'threshold_csf')
 
+    for i, tissue in enumerate(['csf', 'gm', 'wm']):
+        segment_pipe.connect(seg_at, ('segmented_files', get_elem, i),
+                             outputnode, 'prob_' + tissue)
     return segment_pipe
 
 

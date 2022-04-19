@@ -63,6 +63,11 @@ Examples
 
 Several examples can be found :ref:`here <examples>`
 
+Useful tips
+***********
+
+Some useful tips to reorient and crop images :ref:`here <utils>`
+
 Contributing
 *************
 Some advices on how to contribute to the source code can be found :ref:`here <contribute>`
@@ -83,4 +88,5 @@ Table of contents
     pipelines
     external_pipeline
     contribute
+    utils
     brainhack

@@ -18,9 +18,6 @@
             "NMT_FSL": "ajAtB7qgaPAmKyJ",
             "inia19": "WZo9wZdreTMwfQA",
             "marmotemplate": "5xzm7DJD9kB99gG",
-            "haiko89_template": "N9yXkSgXNbKF26z",
-            "data_test_macaque": "SgG7bBMXao9Kfon",
-            "data_test_sphinx_macaque": "f6C48Y3QqJfD9wM",
             "data_test_marmo": "pW4nQr46QSzSysg"
                     },
         "cloud_format": "https://{}/index.php/s/{}/download"
@@ -30,10 +27,14 @@
         "data_dir": {
             "data_test_macaque": "RDxdxzmX89xcABG",
             "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
+            "inia19":"Jq5abnZDZ3smmBJ",
             "NMT_v1.2": "5YnwNf3Jr7Qsc8H",
             "NMT_v1.3better": "6DBctypBT7LsexL",
+            "NMT_v2.0_asym": "BYj6NmwB76Z4Bt2",
             "Juna_Chimp": "bwcqjKc9GXpn9yS",
-            "MBM_v3.0.1": "RMxXifHeigNkB3g"
+            "haiko89_template": "3Agb3zecnkQGCr5",
+            "MBM_v3.0.1": "RMxXifHeigNkB3g",
+            "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP"
                     },
         "cloud_format": "{}/public.php?service=files&t={}&download"
             }

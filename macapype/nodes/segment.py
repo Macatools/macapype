@@ -219,13 +219,12 @@ class AtroposN4(CommandLine):
         outputs['segmented_file'] = os.path.abspath(
             self.inputs.out_pref + "Segmentation.nii.gz")
 
-        print(self.inputs.out_pref)
-        print(self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
-
         seg_files = glob.glob(
             self.inputs.out_pref + "SegmentationPosteriors*.nii.gz")
 
         print(seg_files)
+
+        0/0
 
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in seg_files]
@@ -234,6 +233,47 @@ class AtroposN4(CommandLine):
 
 
 ###############################################################################
+
+def merge_imgs(list_img_files):
+
+    import nibabel as nib
+    import numpy as np
+    import os.path as op
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    if not isinstance(list_img_files, list):
+        return list_img_files
+
+    for i, img_file in enumerate(list_img_files):
+
+        if i == 0:
+            path, fname, ext = split_f(img_file)
+            img = nib.load(img_file)
+            img_data = img.get_fdata()
+            new_img_data = np.zeros(shape=img_data.shape)
+            new_img_data[img_data != 0] += img_data[img_data != 0]
+
+        else:
+            img_data = nib.load(img_file).get_fdata()
+            assert img_data.shape == new_img_data.shape, \
+                "Error, shapes {} != {}".format(img_data.shape,
+                                                new_img_data.shape)
+            new_img_data[img_data != 0] += img_data[img_data != 0]
+
+    # creating indexed_mask
+    merged_img = nib.Nifti1Image(dataobj=new_img_data,
+                                 affine=img.affine,
+                                 header=img.header)
+
+    # saving indexed_mask_file
+    merged_img_file = op.abspath(fname + "_merged" + ext)
+
+    nib.save(merged_img, merged_img_file)
+
+    return merged_img_file
+
+
 def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
                 index_gm=2, index_wm=3):
 
@@ -381,29 +421,82 @@ def compute_5tt(gm_file, wm_file, csf_file):
     import nibabel as nib
     import numpy as np
 
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(gm_file)
+
     gm_img = nib.load(gm_file)
     gm_data = gm_img.get_fdata()
 
-    print(gm_data.shape)
-
     empty_vol = np.zeros(shape=gm_data.shape)
 
-    wm_img = nib.load(wm_file)
-    wm_data = wm_img.get_fdata()
+    wm_data = nib.load(wm_file).get_fdata()
 
-    csf_img = nib.load(csf_file)
-    csf_data = csf_img.get_fdata()
+    csf_data = nib.load(csf_file).get_fdata()
 
     gen_5tt_data = np.stack((gm_data, empty_vol, wm_data, csf_data, empty_vol),
                             axis=-1)
 
-    print(gen_5tt_data.shape)
-
     gen_5tt_img = nib.Nifti1Image(gen_5tt_data, affine=gm_img.affine,
                                   header=gm_img.header)
 
-    gen_5tt_file = os.path.abspath("gen_5tt.nii.gz")
+    gen_5tt_file = os.path.abspath(fname + "_5tt" + ext)
 
     nib.save(gen_5tt_img, gen_5tt_file)
 
     return gen_5tt_file
+
+
+def correct_datatype(nii_file):
+
+    import os
+    import subprocess
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    prefix = fname + "_correct"
+
+    cmd_line = "nifti_tool -mod_hdr -mod_field datatype 8 \
+        -infiles {} -prefix {}".format(nii_file, prefix)
+
+    subprocess.check_output(cmd_line, shell=True)
+
+    correct_nii_file = os.path.abspath(prefix + ".nii")
+
+    assert os.path.exists(correct_nii_file), \
+        "Error, {} should exists".format(correct_nii_file)
+
+    return correct_nii_file
+
+
+def fill_list_vol(list_vol, nb_classes):
+
+    import os
+
+    import nibabel as nib
+    import numpy as np
+
+    assert isinstance(list_vol, list), \
+        "Error, {} should be a list...".format(list_vol)
+
+    if len(list_vol) < nb_classes:
+        first_img = nib.load(list_vol[0])
+
+        data = first_img.get_fdata()
+
+        for new_img_index in range(len(list_vol), nb_classes):
+
+            new_data = np.zeros(shape=data.shape)
+            new_img_file = os.path.abspath(
+                "empty_extra_img_{}.nii.gz".format(new_img_index))
+
+            nib.save(nib.Nifti1Image(dataobj=new_data,
+                                     affine=first_img.affine,
+                                     header=first_img.header),
+                     new_img_file)
+
+            list_vol.append(new_img_file)
+
+    return list_vol

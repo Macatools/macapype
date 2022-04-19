@@ -16,9 +16,7 @@ def print_nii_data(nii_file):
     import nibabel as nib
 
     data = nib.load(nii_file).get_data()
-
     print(nii_file, data)
-
     return nii_file
 
 
@@ -34,6 +32,18 @@ def get_elem(list_elem, index_elem):
     return elem
 
 
+def get_pattern(list_elem, pattern):
+
+    assert isinstance(list_elem, list), 'Error, list_elem should be a list'
+
+    for elem in list_elem:
+        if pattern in elem:
+            print("Found {} in {}".format(pattern, elem))
+            return elem
+
+    assert False, "Could not find {} in {}".format(pattern, elem)
+
+
 def get_first_elem(elem):
     print(elem)
     if isinstance(elem, list):
@@ -43,6 +53,30 @@ def get_first_elem(elem):
     else:
         print("not a list")
         return elem
+
+
+def gzip(unzipped_file):
+
+    import os
+    import shutil
+    import subprocess
+
+    head, tail = os.path.split(unzipped_file)
+
+    dest = os.path.abspath(tail)
+
+    print("Copying {} to {}".format(unzipped_file, dest))
+    shutil.copy(unzipped_file, dest)
+    cmd_line = "gzip {}".format(dest)
+
+    subprocess.check_output(cmd_line, shell=True)
+
+    zipped_file = dest + ".gz"
+
+    assert os.path.exists(zipped_file),\
+        "Error, {} should exists".format(zipped_file)
+
+    return zipped_file
 
 
 def gunzip(zipped_file):

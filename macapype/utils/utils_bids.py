@@ -21,7 +21,7 @@ def create_datasource(output_query, data_dir, subjects=None, sessions=None,
     bids_datasource.inputs.base_dir = data_dir
     bids_datasource.inputs.output_query = output_query
 
-    layout = BIDSLayout(data_dir)
+    layout = BIDSLayout(data_dir, database_path=data_dir)
 
     # Verbose
     print("BIDS layout:", layout)
