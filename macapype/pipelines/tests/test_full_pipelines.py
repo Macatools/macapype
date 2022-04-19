@@ -5,6 +5,7 @@ from macapype.utils.utils_tests import (make_tmp_dir, format_template,
 from macapype.pipelines.full_pipelines import \
     create_full_ants_subpipes
 
+
 def test_create_full_ants_subpipes_no_args():
 
     params = {
@@ -224,9 +225,9 @@ def test_create_full_ants_subpipes():
                              "test_create_full_ants_subpipes",
                              "graph.png"))
 
+
 def test_create_full_ants_subpipes_marmo_ants():
 
-    from itertools import product
     import json
 
     species = "marmo"
@@ -239,7 +240,8 @@ def test_create_full_ants_subpipes_marmo_ants():
     params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
         package_directory, species, soft)
 
-    assert op.exists(params_file), "Could not find params_file {}".format(params_file)
+    assert op.exists(params_file), \
+        "Could not find params_file {}".format(params_file)
 
     params = json.load(open(params_file))
 
@@ -259,6 +261,7 @@ def test_create_full_ants_subpipes_marmo_ants():
     segment_pnh.base_dir = data_path
 
     segment_pnh.write_graph(graph2use="colored")
-    assert op.exists(op.join(data_path,
-                            "test_create_full_ants_subpipes_all_default_params",
-                            "graph.png"))
+    assert op.exists(
+        op.join(data_path,
+                "test_create_full_ants_subpipes_all_default_params",
+                "graph.png"))
