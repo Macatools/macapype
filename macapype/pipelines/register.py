@@ -1,3 +1,5 @@
+import shutil
+
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -10,7 +12,8 @@ from ..nodes.segment import split_indexed_mask
 from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
-                              NMTSubjectAlign2, NwarpApplyPriors)
+                              NMTSubjectAlign2, NwarpApplyPriors,
+                              animal_warper)
 
 
 def create_iterative_register_pipe(
@@ -233,7 +236,20 @@ def create_register_NMT_pipe(params_template, params={},
 
     print("*** Found NMT_version {}".format(NMT_version))
 
-    if NMT_version == "v1.2":
+    print("which @animal_warper: ", shutil.which("@animal_warper"))
+
+    if shutil.which("@animal_warper") is not None:
+        # TODO AnimalWarper()
+        NMT_subject_align = NodeParams(
+            niu.Function(input_names=["T1_file", "NMT_SS_file"],
+                         output_names=["aff_file", "warp_file",
+                                       "warpinv_file", "transfo_file",
+                                       "inv_transfo_file"],
+                         function=animal_warper),
+            params=parse_key(params, "NMT_subject_align"),
+            name='NMT_subject_align')
+
+    elif NMT_version == "v1.2":
         # align subj to nmt
         NMT_subject_align = NodeParams(
             NMTSubjectAlign(), params=parse_key(params, "NMT_subject_align"),
