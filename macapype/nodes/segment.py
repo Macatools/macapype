@@ -224,8 +224,6 @@ class AtroposN4(CommandLine):
 
         print(seg_files)
 
-        0/0
-
         outputs['segmented_files'] = [os.path.abspath(
             seg_file) for seg_file in seg_files]
 
