@@ -231,7 +231,6 @@ class AtroposN4(CommandLine):
 
 
 ###############################################################################
-
 def merge_imgs(list_img_files):
 
     import nibabel as nib

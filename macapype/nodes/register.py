@@ -86,6 +86,34 @@ def interative_flirt(anat_file, anat_file_BET, template_brain_file,
     return anat_file_brain, template_to_anat_file
 
 
+# animal_warper
+def animal_warper(T1_file, NMT_SS_file):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(T1_file)
+
+    os.chdir(os.path.abspath(""))
+
+    os.system("@animal_warper -input {} -base {}".format(T1_file, NMT_SS_file))
+
+    res_path = os.path.abspath("aw_results")
+
+    aff_file = os.path.join(res_path, fname + "_ns" + ext)
+
+    warp_file = os.path.join(res_path, fname + "_shft_WARP" + ext)
+    warpinv_file = os.path.join(res_path, fname + "_shft_WARPINV" + ext)
+
+    transfo_file = os.path.join(
+        res_path, fname + "_composite_linear_to_template.1D")
+    inv_transfo_file = os.path.join(
+        res_path, fname + "_composite_linear_to_template_inv.1D")
+
+    return (aff_file, warp_file, warpinv_file,
+            transfo_file, inv_transfo_file)
+
+
 # IterREGBET
 class IterREGBETInputSpec(CommandLineInputSpec):
 
