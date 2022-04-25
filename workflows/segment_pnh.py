@@ -522,22 +522,64 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         if "brain_extraction_pipe" in params.keys():
 
+            ### rename brain_mask
+            rename_brain_mask = pe.Node(niu.Rename(), name = "rename_brain_mask")
+            rename_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_mask"
+            rename_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_brain_mask.inputs.keep_ext = True
+
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.brain_mask',
+                rename_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_brain_mask, 'out_file',
                 datasink, '@brain_mask')
 
         if "brain_segment_pipe" in params.keys():
 
+            ### rename debiased_brain
+            rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
+            rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_desc-brain_T1w"
+            rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_brain.inputs.keep_ext = True
+
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.debiased_brain',
+                rename_debiased_brain, 'in_file')
+
+            main_workflow.connect(
+                rename_debiased_brain, 'out_file',
                 datasink, '@debiased_brain')
+
+
+
+            ### rename debiased_T1
+            rename_debiased_T1 = pe.Node(niu.Rename(), name = "rename_debiased_T1")
+            rename_debiased_T1.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_T1w"
+            rename_debiased_T1.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_T1.inputs.keep_ext = True
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.debiased_T1',
+                rename_debiased_T1, 'in_file')
+
+            main_workflow.connect(
+                rename_debiased_T1, 'out_file',
                 datasink, '@debiased_T1')
+
+            ### rename segmented_brain_mask
+            rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
+            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
+            rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_segmented_brain_mask.inputs.keep_ext = True
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+                rename_segmented_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_segmented_brain_mask, 'out_file',
                 datasink, '@segmented_brain_mask')
 
             ### rename prob
