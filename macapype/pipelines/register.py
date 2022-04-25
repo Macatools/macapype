@@ -243,13 +243,15 @@ def create_register_NMT_pipe(params_template, params={},
         if NMT_version == "v1.2":
             # align subj to nmt
             NMT_subject_align = NodeParams(
-                NMTSubjectAlign(), params=parse_key(params, "NMT_subject_align"),
+                NMTSubjectAlign(),
+                params=parse_key(params, "NMT_subject_align"),
                 name='NMT_subject_align')
 
         elif NMT_version == "v1.3" or NMT_version == "v2.0":
             # align subj to nmt
             NMT_subject_align = NodeParams(
-                NMTSubjectAlign2(), params=parse_key(params, "NMT_subject_align"),
+                NMTSubjectAlign2(),
+                params=parse_key(params, "NMT_subject_align"),
                 name='NMT_subject_align')
 
         else:
@@ -260,13 +262,14 @@ def create_register_NMT_pipe(params_template, params={},
         # TODO AnimalWarper()
         NMT_subject_align = pe.Node(
             niu.Function(input_names=["T1_file", "NMT_SS_file"],
-                        output_names=["aff_file", "warp_file",
-                                      "warpinv_file", "transfo_file",
-                                      "inv_transfo_file"],
-                        function=animal_warper),
+                         output_names=["aff_file", "warp_file",
+                                       "warpinv_file", "transfo_file",
+                                       "inv_transfo_file"],
+                         function=animal_warper),
             name='NMT_subject_align')
     else:
-        print("could not find normalisation procedure, either with NMT_subject_align, or @animal_warper, breaking")
+        print("could not find normalisation procedure,\
+              either with NMT_subject_align, or @animal_warper, breaking")
         exit()
 
     NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
