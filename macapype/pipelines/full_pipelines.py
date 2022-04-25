@@ -1611,7 +1611,7 @@ def create_brain_segment_from_mask_T1_pipe(
                                     "inputnode.gm_prior_file")
             brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
                                     segment_atropos_pipe,
-                                    #"inputnode.wm_prior_file")
+                                    "inputnode.wm_prior_file")
 
     if "export_5tt_pipe" in params.keys():
 
