@@ -1581,25 +1581,37 @@ def create_brain_segment_from_mask_T1_pipe(
         inputnode, 'indiv_params',
         register_NMT_pipe, "inputnode.indiv_params")
 
+
     # ants Atropos
-    segment_atropos_pipe = create_segment_atropos_pipe(
-        params=parse_key(params, "segment_atropos_pipe"))
+    if NMT_version == "v2.0":
 
-    brain_segment_pipe.connect(
-        restore_mask_T1, 'out_file',
-        segment_atropos_pipe, "inputnode.brain_file")
+        print("#### create_segment_atropos_seg_pipe ")
+        segment_atropos_pipe = create_segment_atropos_seg_pipe(
+            params=parse_key(params, "segment_atropos_pipe"))
 
-    if "use_priors" in params["segment_atropos_pipe"].keys():
+        brain_segment_pipe.connect(
+            register_NMT_pipe, 'align_seg.out_file', segment_atropos_pipe,
+            "inputnode.seg_file")
 
-        brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
-                                   segment_atropos_pipe,
-                                   "inputnode.csf_prior_file")
-        brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
-                                   segment_atropos_pipe,
-                                   "inputnode.gm_prior_file")
-        brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
-                                   segment_atropos_pipe,
-                                   "inputnode.wm_prior_file")
+    else:
+        segment_atropos_pipe = create_segment_atropos_pipe(
+            params=parse_key(params, "segment_atropos_pipe"))
+
+        brain_segment_pipe.connect(
+            restore_mask_T1, 'out_file',
+            segment_atropos_pipe, "inputnode.brain_file")
+
+        if "use_priors" in params["segment_atropos_pipe"].keys():
+
+            brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
+                                    segment_atropos_pipe,
+                                    "inputnode.csf_prior_file")
+            brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
+                                    segment_atropos_pipe,
+                                    "inputnode.gm_prior_file")
+            brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
+                                    segment_atropos_pipe,
+                                    #"inputnode.wm_prior_file")
 
     if "export_5tt_pipe" in params.keys():
 
@@ -1650,12 +1662,7 @@ def create_brain_segment_from_mask_T1_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
-
     else:
-        # TODO
-        print("!!!!!!!!!!!!!!!! Not finished yet !!!!!!!!!!!!!!!!!!!!!!")
-        return brain_segment_pipe
-
         reg_seg_pipe = create_reg_seg_pipe()
 
         brain_segment_pipe.connect(segment_atropos_pipe,
@@ -1677,6 +1684,8 @@ def create_brain_segment_from_mask_T1_pipe(
                                    outputnode, 'threshold_wm')
         brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_csf',
                                    outputnode, 'threshold_csf')
+        # TODO
+        print("!!!!!!!!!!!!!!!! Not finished yet !!!!!!!!!!!!!!!!!!!!!!")
 
     return brain_segment_pipe
 
