@@ -1839,23 +1839,23 @@ def create_full_T1_ants_subpipes(params_template, params={},
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
 
-        #if "export_5tt_pipe" in params["brain_segment_pipe"]:
+        if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
-            #seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                             #outputnode, 'gen_5tt')
+            seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                             outputnode, 'gen_5tt')
 
-    #if "nii_to_mesh_fs_pipe" in params.keys():
-        #nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
-            #params=parse_key(params, "nii_to_mesh_fs_pipe"))
+    if "nii_to_mesh_fs_pipe" in params.keys():
+        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
+            params=parse_key(params, "nii_to_mesh_fs_pipe"))
 
-        #seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         #nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
+        seg_pipe.connect(brain_extraction_pipe, 'outputnode.debiased_T1',
+                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
 
-        #seg_pipe.connect(brain_segment_pipe,
-                         #'segment_atropos_pipe.outputnode.threshold_wm',
-                         #nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
+        seg_pipe.connect(brain_segment_pipe,
+                         'segment_atropos_pipe.outputnode.threshold_wm',
+                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
 
-        #seg_pipe.connect(inputnode, 'indiv_params',
-                         #nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
+        seg_pipe.connect(inputnode, 'indiv_params',
+                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
