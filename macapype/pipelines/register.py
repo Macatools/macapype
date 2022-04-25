@@ -388,12 +388,19 @@ def create_register_NMT_pipe(params_template, params={},
 
 def create_reg_seg_pipe(name="reg_seg_pipe"):
 
-    reg_seg_pipe = pe.Workflow(name=name)
+    reg_pipe = pe.Workflow(name=name)
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['native_segmented_file',
-                                      'transfo_file', 'ref_image']),
+        niu.IdentityInterface(fields=['native_seg',
+                                      'native_threshold_gm',
+                                      'native_threshold_wm',
+                                      'native_threshold_csf',
+                                      'native_prob_gm',
+                                      'native_prob_wm',
+                                      'native_prob_csf',
+                                      'transfo_file',
+                                      'ref_image']),
         name='inputnode')
 
     # align_seg
@@ -403,32 +410,99 @@ def create_reg_seg_pipe(name="reg_seg_pipe"):
     align_seg.inputs.overwrite = True
     align_seg.inputs.outputtype = "NIFTI_GZ"
 
-    reg_seg_pipe.connect(inputnode, 'native_segmented_file',
+    reg_pipe.connect(inputnode, 'native_seg',
                          align_seg, "in_file")
-    reg_seg_pipe.connect(inputnode, 'ref_image', align_seg, "reference")
-    reg_seg_pipe.connect(inputnode, 'transfo_file', align_seg, "in_matrix")
+    reg_pipe.connect(inputnode, 'ref_image', align_seg, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_seg, "in_matrix")
 
-    # align_gm
-    split_seg_mask = pe.Node(
-        niu.Function(input_names=['nii_file'],
-                     output_names=['list_binary_masks'],
-                     function=split_indexed_mask),
-        name="split_seg_mask")
+    # align_threshold_gm
+    align_threshold_gm = pe.Node(
+        afni.Allineate(), name="align_threshold_gm", iterfield=['in_file'])
+    align_threshold_gm.inputs.final_interpolation = "nearestneighbour"
+    align_threshold_gm.inputs.overwrite = True
+    align_threshold_gm.inputs.outputtype = "NIFTI_GZ"
 
-    reg_seg_pipe.connect(align_seg, 'out_file',
-                         split_seg_mask, "nii_file")
+    reg_pipe.connect(inputnode, 'native_threshold_gm',
+                         align_threshold_gm, "in_file")
+    reg_pipe.connect(inputnode, 'ref_image', align_threshold_gm, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_threshold_gm, "in_matrix")
+
+
+    # align_threshold_wm
+    align_threshold_wm = pe.Node(
+        afni.Allineate(), name="align_threshold_wm", iterfield=['in_file'])
+    align_threshold_wm.inputs.final_interpolation = "nearestneighbour"
+    align_threshold_wm.inputs.overwrite = True
+    align_threshold_wm.inputs.outputtype = "NIFTI_GZ"
+
+    reg_pipe.connect(inputnode, 'native_threshold_wm',
+                         align_threshold_wm, "in_file")
+    reg_pipe.connect(inputnode, 'ref_image', align_threshold_wm, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_threshold_wm, "in_matrix")
+
+
+    # align_threshold_csf
+    align_threshold_csf = pe.Node(
+        afni.Allineate(), name="align_threshold_csf", iterfield=['in_file'])
+    align_threshold_csf.inputs.final_interpolation = "nearestneighbour"
+    align_threshold_csf.inputs.overwrite = True
+    align_threshold_csf.inputs.outputtype = "NIFTI_GZ"
+
+    reg_pipe.connect(inputnode, 'native_threshold_csf',
+                         align_threshold_csf, "in_file")
+    reg_pipe.connect(inputnode, 'ref_image', align_threshold_csf, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_threshold_csf, "in_matrix")
+
+    # align_prob_gm
+    align_prob_gm = pe.Node(
+        afni.Allineate(), name="align_prob_gm", iterfield=['in_file'])
+    align_prob_gm.inputs.final_interpolation = "nearestneighbour"
+    align_prob_gm.inputs.overwrite = True
+    align_prob_gm.inputs.outputtype = "NIFTI_GZ"
+
+    reg_pipe.connect(inputnode, 'native_prob_gm',
+                         align_prob_gm, "in_file")
+    reg_pipe.connect(inputnode, 'ref_image', align_prob_gm, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_prob_gm, "in_matrix")
+
+    # align_prob_wm
+    align_prob_wm = pe.Node(
+        afni.Allineate(), name="align_prob_wm", iterfield=['in_file'])
+    align_prob_wm.inputs.final_interpolation = "nearestneighbour"
+    align_prob_wm.inputs.overwrite = True
+    align_prob_wm.inputs.outputtype = "NIFTI_GZ"
+
+    reg_pipe.connect(inputnode, 'native_prob_wm',
+                         align_prob_wm, "in_file")
+    reg_pipe.connect(inputnode, 'ref_image', align_prob_wm, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_prob_wm, "in_matrix")
+
+    # align_prob_csf
+    align_prob_csf = pe.Node(
+        afni.Allineate(), name="align_prob_csf", iterfield=['in_file'])
+    align_prob_csf.inputs.final_interpolation = "nearestneighbour"
+    align_prob_csf.inputs.overwrite = True
+    align_prob_csf.inputs.outputtype = "NIFTI_GZ"
+
+    reg_pipe.connect(inputnode, 'native_prob_csf',
+                         align_prob_csf, "in_file")
+    reg_pipe.connect(inputnode, 'ref_image', align_prob_csf, "reference")
+    reg_pipe.connect(inputnode, 'transfo_file', align_prob_csf, "in_matrix")
 
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['norm_seg', 'norm_gm',
-                                      'norm_wm', 'norm_csf']),
+        niu.IdentityInterface(fields=['norm_seg', 'norm_threshold_gm',
+                                      'norm_threshold_wm', 'norm_threshold_csf',
+                                      'norm_prob_gm', 'norm_prob_wm', 'norm_prob_csf']),
         name='outputnode')
 
-    reg_seg_pipe.connect(align_seg, 'out_file', outputnode, "norm_seg")
-    reg_seg_pipe.connect(split_seg_mask, ('out_file', get_elem, 0),
-                         outputnode, "norm_gm")
-    reg_seg_pipe.connect(split_seg_mask, ('out_file', get_elem, 1),
-                         outputnode, "norm_wm")
-    reg_seg_pipe.connect(split_seg_mask, ('out_file', get_elem, 2),
-                         outputnode, "norm_csf")
+    reg_pipe.connect(align_seg, 'out_file', outputnode, "norm_seg")
 
-    return reg_seg_pipe
+    reg_pipe.connect(align_threshold_gm, 'out_file', outputnode, "norm_threshold_gm")
+    reg_pipe.connect(align_threshold_wm, 'out_file', outputnode, "norm_threshold_wm")
+    reg_pipe.connect(align_threshold_csf, 'out_file', outputnode, "norm_threshold_csf")
+
+    reg_pipe.connect(align_prob_gm, 'out_file', outputnode, "norm_prob_gm")
+    reg_pipe.connect(align_prob_wm, 'out_file', outputnode, "norm_prob_wm")
+    reg_pipe.connect(align_prob_csf, 'out_file', outputnode, "norm_prob_csf")
+
+    return reg_pipe

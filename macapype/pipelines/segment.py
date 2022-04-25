@@ -198,8 +198,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     return segment_pipe
 
 
-def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
-                                space="native"):
+def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     """
     Description: Segmentation with ANTS atropos script
 

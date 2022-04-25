@@ -97,6 +97,7 @@ def animal_warper(T1_file, NMT_SS_file):
     os.chdir(os.path.abspath(""))
 
     cmd = "@animal_warper -input {} -base {}".format(T1_file, NMT_SS_file)
+
     print("cmd")
 
     os.system(cmd)

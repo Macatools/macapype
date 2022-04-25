@@ -1033,13 +1033,32 @@ def create_brain_segment_from_mask_pipe(
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
 
-    else:
+    elif space == "template":
         reg_seg_pipe = create_reg_seg_pipe()
 
         brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.segmented_file', reg_seg_pipe,
-                                   'inputnode.native_segmented_file')
+                                   'outputnode.segmented_file',
+                                    reg_seg_pipe, 'inputnode.native_seg')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_gm',
+                                    reg_seg_pipe, 'inputnode.native_threshold_gm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_wm',
+                                    reg_seg_pipe, 'inputnode.native_threshold_wm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_csf',
+                                    reg_seg_pipe, 'inputnode.native_threshold_csf')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_gm',
+                                    reg_seg_pipe, 'inputnode.native_prob_gm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_wm',
+                                    reg_seg_pipe, 'inputnode.native_prob_wm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_csf',
+                                    reg_seg_pipe, 'inputnode.native_prob_csf')
 
+        # other inputs
         brain_segment_pipe.connect(register_NMT_pipe,
                                    'NMT_subject_align.transfo_file',
                                    reg_seg_pipe, 'inputnode.transfo_file')
@@ -1047,14 +1066,21 @@ def create_brain_segment_from_mask_pipe(
         reg_seg_pipe.inputs.inputnode.ref_image = \
             params_template['template_head']
 
+        # output node
         brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_seg',
                                    outputnode, 'segmented_file')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_gm',
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_threshold_gm',
                                    outputnode, 'threshold_gm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_wm',
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_threshold_wm',
                                    outputnode, 'threshold_wm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_csf',
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_threshold_csf',
                                    outputnode, 'threshold_csf')
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_gm',
+                                   outputnode, 'prob_gm')
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_wm',
+                                   outputnode, 'prob_wm')
+        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_csf',
+                                   outputnode, 'prob_csf')
 
     return brain_segment_pipe
 
@@ -1684,6 +1710,16 @@ def create_brain_segment_from_mask_T1_pipe(
                                    outputnode, 'threshold_wm')
         brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_csf',
                                    outputnode, 'threshold_csf')
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_gm',
+                                   outputnode, 'prob_gm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_wm',
+                                   outputnode, 'prob_wm')
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.prob_csf',
+                                   outputnode, 'prob_csf')
         # TODO
         print("!!!!!!!!!!!!!!!! Not finished yet !!!!!!!!!!!!!!!!!!!!!!")
 

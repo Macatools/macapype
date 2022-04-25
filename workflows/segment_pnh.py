@@ -580,18 +580,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_csf, 'out_file',
                 datasink, '@prob_csf')
 
-            #main_workflow.connect(
-                #segment_pnh_pipe, 'outputnode.prob_wm',
-                #datasink, '@prob_wm')
-
-            #main_workflow.connect(
-                #segment_pnh_pipe, 'outputnode.prob_gm',
-                #datasink, '@prob_gm')
-
-            #main_workflow.connect(
-                #segment_pnh_pipe, 'outputnode.prob_csf',
-                #datasink, '@prob_csf')
-
             # rename 5tt
             if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
@@ -607,11 +595,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 main_workflow.connect(
                     rename_gen_5tt, 'out_file',
                     datasink, '@gen_5tt')
-
-            #main_workflow.connect(
-                #segment_pnh_pipe, 'outputnode.gen_5tt',
-                #datasink, '@gen_5tt')
-
 
         if 'flair' in ssoft :
 
