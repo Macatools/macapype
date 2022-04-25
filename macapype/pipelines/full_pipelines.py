@@ -1497,7 +1497,7 @@ def create_brain_extraction_T1_pipe(params_template, params={},
 
 def create_brain_segment_from_mask_T1_pipe(
         params_template, params={}, name="brain_segment_from_mask_T1_pipe",
-        space="native"):
+        space="native", NMT_version="v1.3"):
     """
     Description: Segment T1 from a previously computed mask.
 
@@ -1542,7 +1542,7 @@ def create_brain_segment_from_mask_T1_pipe(
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['preproc_T1', 'brain_mask', 'indiv_params']),
+            fields=['debiased_T1', 'brain_mask', 'indiv_params']),
         name='inputnode')
 
     # creating outputnode
@@ -1558,12 +1558,14 @@ def create_brain_segment_from_mask_T1_pipe(
     # restore_mask_T1
     restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
 
-    brain_segment_pipe.connect(inputnode, 'preproc_T1',
+    brain_segment_pipe.connect(inputnode, 'debiased_T1',
                                restore_mask_T1, 'in_file')
     brain_segment_pipe.connect(inputnode, 'brain_mask',
                                restore_mask_T1, 'mask_file')
 
-    NMT_version = "v1.3"
+    if "NMT_version" in params.keys():
+            print("#### NMT version for register_NMT_pipe AND seg_atropos")
+            NMT_version = params["NMT_version"]
 
     print("NMT_version:", NMT_version)
 
@@ -1783,7 +1785,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
     seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
-                     brain_segment_pipe, 'inputnode.preproc_T1')
+                     brain_segment_pipe, 'inputnode.debiased_T1')
     seg_pipe.connect(brain_extraction_pipe,
                      "extract_T1_pipe.smooth_mask.out_file",
                      brain_segment_pipe, "inputnode.brain_mask")
@@ -1828,23 +1830,23 @@ def create_full_T1_ants_subpipes(params_template, params={},
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
 
-        if "export_5tt_pipe" in params["brain_segment_pipe"]:
+        #if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
-            seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                             outputnode, 'gen_5tt')
+            #seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                             #outputnode, 'gen_5tt')
 
-    if "nii_to_mesh_fs_pipe" in params.keys():
-        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
-            params=parse_key(params, "nii_to_mesh_fs_pipe"))
+    #if "nii_to_mesh_fs_pipe" in params.keys():
+        #nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
+            #params=parse_key(params, "nii_to_mesh_fs_pipe"))
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
+        #seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         #nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
 
-        seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.outputnode.threshold_wm',
-                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
+        #seg_pipe.connect(brain_segment_pipe,
+                         #'segment_atropos_pipe.outputnode.threshold_wm',
+                         #nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
 
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
+        #seg_pipe.connect(inputnode, 'indiv_params',
+                         #nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
 
     return seg_pipe
