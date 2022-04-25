@@ -542,7 +542,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename prob
             rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
-            rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-WM_probseg"
+            rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-WM_probseg".format(space)
             rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_prob_wm.inputs.keep_ext = True
 
@@ -555,7 +555,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 datasink, '@prob_wm')
 
             rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
-            rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-GM_probseg"
+            rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-GM_probseg".format(space)
             rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_prob_gm.inputs.keep_ext = True
 
@@ -568,7 +568,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 datasink, '@prob_gm')
 
             rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
-            rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_label-CSF_probseg"
+            rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-CSF_probseg".format(space)
             rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_prob_csf.inputs.keep_ext = True
 
@@ -596,7 +596,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
                 rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
-                rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-orig_desc-5tt_dseg"
+                rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-5tt_dseg".format(space)
                 rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
                 rename_gen_5tt.inputs.keep_ext = True
 
