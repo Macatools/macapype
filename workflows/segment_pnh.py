@@ -606,7 +606,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.prob_gm',
-                rename_prob_gm, ('in_file', show_files))
+                rename_prob_gm, 'in_file')
 
             main_workflow.connect(
                 rename_prob_gm, 'out_file',
