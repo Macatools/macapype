@@ -44,6 +44,11 @@ def get_pattern(list_elem, pattern):
     assert False, "Could not find {} in {}".format(pattern, elem)
 
 
+def get_list_length(list_elem)
+
+    assert isinstance(list_elem, list), 'Error, list_elem should be a list'
+    return len(list_elem)
+
 def get_first_elem(elem):
     print(elem)
     if isinstance(elem, list):
