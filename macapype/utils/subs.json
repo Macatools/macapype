@@ -17,10 +17,6 @@
     "T1w_roi_corrected_restore.nii.gz": "space-orig_desc-preproc_T1w.nii.gz",
 
     "Segmentation_allineate": "space-template_desc-brain_dseg",
-    "SegmentationPosteriors01": "space-orig_label-CSF_probseg",
-    "SegmentationPosteriors02": "space-orig_label-GM_probseg",
-    "SegmentationPosteriors03": "space-orig_label-WM_probseg",
-    "Segmentation": "space-orig_desc-brain_dseg",
     "indexed_mask": "space-orig_desc-brain_dseg",
     "FLAIR_flirt_flirt": "space-inia19_FLAIR",
     "T1w_":"",

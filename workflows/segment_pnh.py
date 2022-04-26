@@ -594,7 +594,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_wm, 'in_file')
 
             main_workflow.connect(
-                rename_prob_wm, 'out_file',
+                rename_prob_wm, ('out_file', show_files),
                 datasink, '@prob_wm')
 
             ### rename prob_gm
@@ -609,7 +609,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_gm, 'in_file')
 
             main_workflow.connect(
-                rename_prob_gm, 'out_file',
+                rename_prob_gm, ('out_file', show_files),
                 datasink, '@prob_gm')
 
             ### rename prob_csf
@@ -624,7 +624,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_csf, 'in_file')
 
             main_workflow.connect(
-                rename_prob_csf, 'out_file',
+                rename_prob_csf, ('out_file', show_files),
                 datasink, '@prob_csf')
 
             # rename 5tt
