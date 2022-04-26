@@ -1590,8 +1590,8 @@ def create_brain_segment_from_mask_T1_pipe(
                                restore_mask_T1, 'mask_file')
 
     if "NMT_version" in params.keys():
-            print("#### NMT version for register_NMT_pipe AND seg_atropos")
-            NMT_version = params["NMT_version"]
+        print("#### NMT version for register_NMT_pipe AND seg_atropos")
+        NMT_version = params["NMT_version"]
 
     print("NMT_version:", NMT_version)
 
