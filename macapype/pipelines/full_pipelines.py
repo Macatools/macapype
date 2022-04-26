@@ -1607,7 +1607,6 @@ def create_brain_segment_from_mask_T1_pipe(
         inputnode, 'indiv_params',
         register_NMT_pipe, "inputnode.indiv_params")
 
-
     # ants Atropos
     if NMT_version == "v2.0":
 
@@ -1625,19 +1624,23 @@ def create_brain_segment_from_mask_T1_pipe(
 
         if "use_priors" in params["segment_atropos_pipe"].keys():
 
-            brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_csf.out_file',
-                                    segment_atropos_pipe,
-                                    "inputnode.csf_prior_file")
-            brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_gm.out_file',
-                                    segment_atropos_pipe,
-                                    "inputnode.gm_prior_file")
-            brain_segment_pipe.connect(register_NMT_pipe, 'align_seg_wm.out_file',
-                                    segment_atropos_pipe,
-                                    "inputnode.wm_prior_file")
+            brain_segment_pipe.connect(register_NMT_pipe,
+                                       'align_seg_csf.out_file',
+                                       segment_atropos_pipe,
+                                       "inputnode.csf_prior_file")
+
+            brain_segment_pipe.connect(register_NMT_pipe,
+                                       'align_seg_gm.out_file',
+                                       segment_atropos_pipe,
+                                       "inputnode.gm_prior_file")
+
+            brain_segment_pipe.connect(register_NMT_pipe,
+                                       'align_seg_wm.out_file',
+                                       segment_atropos_pipe,
+                                       "inputnode.wm_prior_file")
     # brain_file
     brain_segment_pipe.connect(restore_mask_T1, 'out_file',
                                segment_atropos_pipe, "inputnode.brain_file")
-
 
     if "export_5tt_pipe" in params.keys():
 
@@ -1688,31 +1691,39 @@ def create_brain_segment_from_mask_T1_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
-    else:
+    elif space == "template":
+
         reg_seg_pipe = create_reg_seg_pipe()
 
         brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.segmented_file', reg_seg_pipe,
+                                   'outputnode.segmented_file',
+                                   reg_seg_pipe,
                                    'inputnode.native_seg')
 
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.threshold_gm',
-                                    reg_seg_pipe, 'inputnode.native_threshold_gm')
+                                   reg_seg_pipe,
+                                   'inputnode.native_threshold_gm')
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.threshold_wm',
-                                    reg_seg_pipe, 'inputnode.native_threshold_wm')
+                                   reg_seg_pipe,
+                                   'inputnode.native_threshold_wm')
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.threshold_csf',
-                                    reg_seg_pipe, 'inputnode.native_threshold_csf')
+                                   reg_seg_pipe,
+                                   'inputnode.native_threshold_csf')
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_gm',
-                                    reg_seg_pipe, 'inputnode.native_prob_gm')
+                                   reg_seg_pipe,
+                                   'inputnode.native_prob_gm')
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_wm',
-                                    reg_seg_pipe, 'inputnode.native_prob_wm')
+                                   reg_seg_pipe,
+                                   'inputnode.native_prob_wm')
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
-                                    reg_seg_pipe, 'inputnode.native_prob_csf')
+                                   reg_seg_pipe,
+                                   'inputnode.native_prob_csf')
 
         # other inputs
         brain_segment_pipe.connect(register_NMT_pipe,
@@ -1723,13 +1734,17 @@ def create_brain_segment_from_mask_T1_pipe(
             params_template['template_head']
 
         # output node
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_seg',
+        brain_segment_pipe.connect(reg_seg_pipe,
+                                   'outputnode.norm_seg',
                                    outputnode, 'segmented_file')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_threshold_gm',
+        brain_segment_pipe.connect(reg_seg_pipe,
+                                   'outputnode.norm_threshold_gm',
                                    outputnode, 'threshold_gm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_threshold_wm',
+        brain_segment_pipe.connect(reg_seg_pipe,
+                                   'outputnode.norm_threshold_wm',
                                    outputnode, 'threshold_wm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_threshold_csf',
+        brain_segment_pipe.connect(reg_seg_pipe,
+                                   'outputnode.norm_threshold_csf',
                                    outputnode, 'threshold_csf')
         brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_gm',
                                    outputnode, 'prob_gm')
