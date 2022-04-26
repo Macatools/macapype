@@ -48,6 +48,7 @@ def get_list_length(list_elem):
     assert isinstance(list_elem, list), 'Error, list_elem should be a list'
     return len(list_elem)
 
+
 def get_first_elem(elem):
     print(elem)
     if isinstance(elem, list):
