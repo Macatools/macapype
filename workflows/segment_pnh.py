@@ -590,7 +590,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             rename_prob_wm.inputs.keep_ext = True
 
             main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.prob_wm',
+                segment_pnh_pipe, ('outputnode.prob_wm', show_files),
                 rename_prob_wm, 'in_file')
 
             main_workflow.connect(
@@ -605,7 +605,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             rename_prob_gm.inputs.keep_ext = True
 
             main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.prob_gm',
+                segment_pnh_pipe, ('outputnode.prob_gm', show_files),
                 rename_prob_gm, 'in_file')
 
             main_workflow.connect(
@@ -620,7 +620,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             rename_prob_csf.inputs.keep_ext = True
 
             main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.prob_csf',
+                segment_pnh_pipe, ('outputnode.prob_csf', show_files),
                 rename_prob_csf, 'in_file')
 
             main_workflow.connect(
@@ -637,7 +637,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_gen_5tt.inputs.keep_ext = True
 
                 main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.gen_5tt',
+                    segment_pnh_pipe, ('outputnode.gen_5tt', show_files),
                     rename_gen_5tt, 'in_file')
 
                 main_workflow.connect(
