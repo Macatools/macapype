@@ -37,30 +37,33 @@
             "s": 4
         },
         "register_NMT_pipe":
-        {   
+        {
             "NMT_subject_align":
             {
-                "afni_ext": "orig" 
+                "afni_ext": "orig"
             }
         },
         "segment_atropos_pipe":
         {
-	    "use_priors":0.0,
+            "use_priors":0.0,
+
             "Atropos":
             {
-                "dimension": 3,
-                "numberOfClasses": 6
+                "dimension": 3
             },
-	    "tissue_dict":
+
+            "tissue_dict":
             {
-		"gm": [1,2],
-		"wm": 3,
-		"csf": 4
-	    },
+                "gm": [1,2],
+                "wm": 3,
+                "csf": 4
+            },
+
             "threshold_gm":
             {
                 "thresh": 0.5
             },
+
             "threshold_wm":
             {
                 "thresh": 0.5

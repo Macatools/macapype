@@ -35,6 +35,9 @@ def test_create_full_ants_subpipes_no_args():
             },
             "register_NMT_pipe":
             {
+                "NMT_subject_align":
+                {
+                }
             },
             "segment_atropos_pipe":
             {
@@ -83,6 +86,12 @@ def test_create_full_ants_subpipes_no_subpipes():
         },
         "brain_segment_pipe":
         {
+            "register_NMT_pipe":
+            {
+                "NMT_subject_align":
+                {
+                }
+            },
             "segment_atropos_pipe":
             {
             }

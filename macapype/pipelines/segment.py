@@ -10,7 +10,7 @@ from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
                              compute_5tt, correct_datatype, fill_list_vol)
 
 from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list,
-                          get_pattern)
+                          get_pattern, get_list_length)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
@@ -102,13 +102,10 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(split_seg, 'list_split_files',
                              seg_at, "priors")
 
-    # on segmentation indexed mask (with labels)
-    # 1 -> CSF
-    # 2 -> GM
-    # 3 -> sub cortical?
-    # 4 -> WM
-    # 5 -> ?
+        segment_pipe.connect(split_seg, ('list_split_files', get_list_length),
+                             seg_at, "numberOfClasses")
 
+    # on segmentation indexed mask (with labels)
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
@@ -123,7 +120,13 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         tissue_dict = params["tissue_dict"]
 
     else:
-        tissue_dict = {'csf': 1, 'gm': 2,  'wm': 4}
+        # NMT_v2.0 (5 tissus)
+        # 1 -> CSF
+        # 2 -> GM
+        # 3 -> sub cortical?
+        # 4 -> WM
+        # 5 -> ? -> (CSF)
+        tissue_dict = {'csf': [1, 5], 'gm': [2, 3],  'wm': 4}
 
     print("Using tissue dict {}".format(tissue_dict))
 
@@ -198,8 +201,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     return segment_pipe
 
 
-def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe",
-                                space="native"):
+def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
     """
     Description: Segmentation with ANTS atropos script
 
