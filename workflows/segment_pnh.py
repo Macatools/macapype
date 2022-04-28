@@ -134,6 +134,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if 'prep' in ssoft:
         new_ssoft.remove('prep')
 
+    if 't1' in ssoft:
+        new_ssoft.remove('t1')
+
+    if 'native' in ssoft:
+        new_ssoft.remove('native')
+
+    if 'template' in ssoft:
+        new_ssoft.remove('template')
+
+
     soft = "_".join(new_ssoft)
 
     # formating args
@@ -348,8 +358,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     # soft
     wf_name += "_{}".format(soft)
 
+    if 't1' in ssoft:
+        wf_name += "_t1"
+
     if mask_file is not None:
-         wf_name += "_mask"
+        wf_name += "_mask"
 
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)

@@ -1,23 +1,35 @@
 {
     "general":
     {
-        "template_name": "NMT_v1.3better"
+        "template_name": "haiko89_template"
     },
     "short_preparation_pipe":
     {
         "crop_T1":
         {
             "args": "should be defined in indiv"
+        },
+        "norm_intensity":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
         }
     },
     "debias":
     {
         "s": 4
     },
-    "native_iter_reg_pipe":
+    "reg":
     {
+        "n": 2,
+        "m": "ref",
+        "dof": 12
     },
-    "native_old_segment_pipe":
+    "old_segment_pipe":
     {
         "segment":
         {

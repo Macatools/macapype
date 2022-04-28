@@ -35,7 +35,7 @@ def set_spm():
 
         print("Going for octave; still testing")
 
-        assert os.path.exists('/opt/spm12')
+        # assert os.path.exists('/opt/spm12')
 
         spm.SPMCommand.set_mlab_paths(
             matlab_cmd='octave --no-window-system --no-gui --braindead',
