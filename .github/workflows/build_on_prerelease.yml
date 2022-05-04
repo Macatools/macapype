@@ -88,6 +88,15 @@ jobs:
             echo ""
             ls macapype_CI/macaque_prime-de
             echo ""
+
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
 
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -sub 032140 -ses 001
