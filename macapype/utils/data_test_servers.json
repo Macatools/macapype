@@ -8,20 +8,6 @@
             },
         "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"
     },
-    "INT": {
-        "server": "cloud.int.univ-amu.fr",
-        "data_dir": {
-            "NMT_v1.2": "QBTrmKNDrNs5E49",
-            "NMT_v1.2.hemi": "SMPYKkrpiP8XrFT",
-            "NMT_v1.3": "qmBSE4prcXYLE94",
-            "NMT_v2.0_asym": "wBxS65AHSpRGXsR",
-            "NMT_FSL": "ajAtB7qgaPAmKyJ",
-            "inia19": "WZo9wZdreTMwfQA",
-            "marmotemplate": "5xzm7DJD9kB99gG",
-            "data_test_marmo": "pW4nQr46QSzSysg"
-                    },
-        "cloud_format": "https://{}/index.php/s/{}/download"
-            },
     "AMUBOX": {
         "server": "https://amubox.univ-amu.fr",
         "data_dir": {
