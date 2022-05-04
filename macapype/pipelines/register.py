@@ -203,7 +203,7 @@ def create_register_NMT_pipe(params_template, params={},
     if "NMT_version" in params.keys():
         NMT_version = params['NMT_version']
 
-        print("*** Overriding NMT_version with parmas {}".format(
+        print("*** Overriding NMT_version with params NMT_version: {}".format(
             params['NMT_version']))
 
     if "norm_intensity" in params.keys():
@@ -233,11 +233,12 @@ def create_register_NMT_pipe(params_template, params={},
         register_NMT_pipe.connect(inputnode, 'T1',
                                   deoblique, "in_file")
 
-    print("*** Found NMT_version {}".format(NMT_version))
-
     print("which @animal_warper: ", shutil.which("@animal_warper"))
 
-    if "NMT_subject_align" in params.keys():
+    if "NMT_subject_align" in params.keys() \
+            or shutil.which("@animal_warper") is None:
+
+        print("running NMT_subject_align with version {}".format(NMT_version))
 
         if NMT_version == "v1.2":
             # align subj to nmt
@@ -254,11 +255,17 @@ def create_register_NMT_pipe(params_template, params={},
                 name='NMT_subject_align')
 
         else:
-            print("NMT_version {} is not implemented".format(NMT_version))
+            print("NMT_version {} is not implemented, breaking".format(
+                NMT_version))
+
             exit()
 
     elif shutil.which("@animal_warper") is not None:
         # TODO AnimalWarper()
+
+        print("running @animal_warper with version {}".format(
+            shutil.which("@animal_warper")))
+
         NMT_subject_align = pe.Node(
             niu.Function(input_names=["T1_file", "NMT_SS_file"],
                          output_names=["aff_file", "warp_file",

@@ -1,9 +1,17 @@
 import os.path as op
 
+from itertools import product
+
+from pathlib import Path
+
 from macapype.utils.utils_tests import (make_tmp_dir, format_template,
                                         load_test_data)
 from macapype.pipelines.full_pipelines import \
-    create_full_ants_subpipes
+    (create_full_ants_subpipes, create_full_T1_ants_subpipes,
+     create_full_spm_subpipes)
+
+cwd = Path.cwd()
+data_path = make_tmp_dir()
 
 
 def test_create_full_ants_subpipes_no_args():
@@ -45,8 +53,6 @@ def test_create_full_ants_subpipes_no_args():
         }
     }
 
-    data_path = make_tmp_dir()
-
     # params template
     template_name = params["general"]["template_name"]
 
@@ -67,8 +73,6 @@ def test_create_full_ants_subpipes_no_args():
 
 
 def test_create_full_ants_subpipes_no_subpipes():
-
-    data_path = make_tmp_dir()
 
     params = {
         "general":
@@ -119,8 +123,6 @@ def test_create_full_ants_subpipes_no_subpipes():
 
 
 def test_create_full_ants_subpipes():
-
-    data_path = make_tmp_dir()
 
     params = {
         "general":
@@ -235,42 +237,140 @@ def test_create_full_ants_subpipes():
                              "graph.png"))
 
 
-def test_create_full_ants_subpipes_marmo_ants():
+def test_create_full_ants_subpipes_all_default_params():
 
+    import os
     import json
 
-    species = "marmo"
-    soft = "ants"
+    softs = ["ants"]
+    all_species = ["marmo", "macaque", 'baboon']
+    spaces = ["native", "template"]
 
-    print("*** Testing soft {} with species {}".format(soft, species))
+    for soft, species, space in product(softs, all_species, spaces):
 
-    package_directory = op.dirname(__file__)
+        print("*** Testing soft {} with species {}".format(soft, species))
 
-    params_file = "{}/../../../workflows/params_segment_{}_{}.json".format(
-        package_directory, species, soft)
+        wf_dir = (cwd / "workflows").resolve()
+        print(wf_dir)
 
-    assert op.exists(params_file), \
-        "Could not find params_file {}".format(params_file)
+        params_file = os.path.join(wf_dir,  "params_segment_{}_{}.json".format(
+            species, soft))
 
-    params = json.load(open(params_file))
+        assert op.exists(params_file), \
+            "Could not find params_file {}".format(params_file)
 
-    data_path = make_tmp_dir()
+        params = json.load(open(params_file))
 
-    # params template
-    template_name = params["general"]["template_name"]
+        # params template
+        template_name = params["general"]["template_name"]
 
-    template_dir = load_test_data(template_name, data_path)
-    params_template = format_template(template_dir, template_name)
+        template_dir = load_test_data(template_name, data_path)
+        params_template = format_template(template_dir, template_name)
 
-    # running workflow
-    segment_pnh = create_full_ants_subpipes(
-        params=params, params_template=params_template,
-        name="test_create_full_ants_subpipes_all_default_params")
+        # running workflow
+        segment_pnh = create_full_ants_subpipes(
+            params=params, params_template=params_template,
+            name="test_create_full_ants_subpipes_all_default_params")
 
-    segment_pnh.base_dir = data_path
+        segment_pnh.base_dir = data_path
 
-    segment_pnh.write_graph(graph2use="colored")
-    assert op.exists(
-        op.join(data_path,
-                "test_create_full_ants_subpipes_all_default_params",
-                "graph.png"))
+        segment_pnh.write_graph(graph2use="colored")
+        assert op.exists(
+            op.join(data_path,
+                    "test_create_full_ants_subpipes_all_default_params",
+                    "graph.png"))
+
+
+def test_create_full_ants_t1_subpipes_all_default_params():
+
+    import os
+    import json
+
+    softs = ["ants"]
+    all_species = ["marmo", "macaque", 'baboon']
+    spaces = ["native", "template"]
+
+    for soft, species, space in product(softs, all_species, spaces):
+
+        print("*** Testing soft {} with species {}".format(soft, species))
+
+        wf_dir = (cwd / "workflows").resolve()
+        print(wf_dir)
+
+        params_file = os.path.join(wf_dir,  "params_segment_{}_{}.json".format(
+            species, soft))
+
+        assert op.exists(params_file), \
+            "Could not find params_file {}".format(params_file)
+
+        params = json.load(open(params_file))
+
+        # params template
+        template_name = params["general"]["template_name"]
+
+        template_dir = load_test_data(template_name, data_path)
+        params_template = format_template(template_dir, template_name)
+
+        # running workflow
+        segment_pnh = create_full_T1_ants_subpipes(
+            params=params, params_template=params_template,
+            name="test_create_full_ants_subpipes_all_default_params")
+
+        segment_pnh.base_dir = data_path
+
+        segment_pnh.write_graph(graph2use="colored")
+        assert op.exists(
+            op.join(data_path,
+                    "test_create_full_ants_subpipes_all_default_params",
+                    "graph.png"))
+
+
+def test_create_full_spm_subpipes_all_default_params():
+
+    import os
+    import json
+
+    softs = ["spm"]
+    all_species = ["macaque", 'baboon']
+    spaces = ["native", "template"]
+
+    for soft, species, space in product(softs, all_species, spaces):
+
+        print("*** Testing soft {} with species {}".format(soft, species))
+
+        wf_dir = (cwd / "workflows").resolve()
+        print(wf_dir)
+
+        params_file = os.path.join(wf_dir,  "params_segment_{}_{}.json".format(
+            species, soft))
+
+        assert op.exists(params_file), \
+            "Could not find params_file {}".format(params_file)
+
+        params = json.load(open(params_file))
+
+        # params template
+        template_name = params["general"]["template_name"]
+
+        template_dir = load_test_data(template_name, data_path)
+        params_template = format_template(template_dir, template_name)
+
+        # running workflow
+        segment_pnh = create_full_spm_subpipes(
+            params=params, params_template=params_template, space=space,
+            name="test_create_full_ants_subpipes_all_default_params")
+
+        segment_pnh.base_dir = data_path
+
+        segment_pnh.write_graph(graph2use="colored")
+        assert op.exists(
+            op.join(data_path,
+                    "test_create_full_ants_subpipes_all_default_params",
+                    "graph.png"))
+
+
+if __name__ == '__main__':
+
+    test_create_full_spm_subpipes_all_default_params()
+    test_create_full_ants_subpipes_all_default_params()
+    test_create_full_ants_t1_subpipes_all_default_params()

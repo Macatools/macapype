@@ -88,6 +88,21 @@ jobs:
             echo ""
             ls macapype_CI/macaque_prime-de
             echo ""
+
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
 
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -sub 032140 -ses 001
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon_long_single_prep.json -sub Odor -ses T1 -deriv
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon_multi.json -sub Odor -ses T1 -deriv
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_test -species marmo -indiv /data/indiv_params_segment_marmo.json -sub 8034 -ses 01 -deriv

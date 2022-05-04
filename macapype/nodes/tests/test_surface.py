@@ -1,3 +1,6 @@
+pass
+
+"""
 import macapype.nodes.surface as surf
 import numpy as np
 import nibabel as nb
@@ -29,3 +32,5 @@ def test_meshify():
         print("Remove temporary data")
         os.remove(tmp_file)
         os.remove(tmp_file[:-4] + ".gii")
+
+"""
