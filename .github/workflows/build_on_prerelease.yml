@@ -77,7 +77,7 @@ jobs:
 
       - name: Download dataset
         run: |
-            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=3NLBXgFGdxPBRC2&download" -O macapype_CI.zip
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
 
       - name: Running all test pipelines
