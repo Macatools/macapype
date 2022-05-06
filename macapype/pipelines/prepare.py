@@ -713,8 +713,8 @@ def create_long_multi_preparation_pipe(params,
 
     # mapnode_prep_pipeline for T1 list
     mapnode_prep_T1_pipe = _create_mapnode_prep_pipeline(
-        params=parse_key(params, "mapnode_prep_T1"),
-        name="mapnode_prep_T1", node_suffix="_T1")
+        params=parse_key(params, "prep_T1"),
+        name="prep_T1", node_suffix="_T1")
 
     long_multi_preparation_pipe.connect(
         inputnode, 'list_T1', mapnode_prep_T1_pipe, "inputnode.list_img")
@@ -735,8 +735,8 @@ def create_long_multi_preparation_pipe(params,
 
     # mapnode_prep_pipeline for T2 list
     mapnode_prep_T2_pipe = _create_mapnode_prep_pipeline(
-        params=parse_key(params, "mapnode_prep_T2"),
-        name="mapnode_prep_T2", node_suffix="_T2")
+        params=parse_key(params, "prep_T2"),
+        name="prep_T2", node_suffix="_T2")
 
     long_multi_preparation_pipe.connect(
         inputnode, 'list_T2', mapnode_prep_T2_pipe, "inputnode.list_img")
