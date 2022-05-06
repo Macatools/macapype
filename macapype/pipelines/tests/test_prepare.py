@@ -158,7 +158,7 @@ def test_create_long_multi_preparation_pipe():
     params = {
         "long_multi_preparation_pipe":
         {
-            "mapnode_prep_T1":
+            "prep_T1":
             {
                 "crop_T1":
                 {
@@ -179,7 +179,7 @@ def test_create_long_multi_preparation_pipe():
                     "shrink_factor": [3, 3]
                 }
             },
-            "mapnode_prep_T2":
+            "prep_T2":
             {
                 "crop_T2":
                 {
