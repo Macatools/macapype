@@ -292,12 +292,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
                     prep_pipe = "long_multi_preparation_pipe"
 
+                    wf_name+="_long_multi"
+
                 elif count_long_crops==count_all_sessions:
 
                     print("**** Found crop for T1 and crop for T2 for all sub/ses \
                         in indiv -> long_single_preparation_pipe")
 
                     prep_pipe = "long_single_preparation_pipe"
+
+                    wf_name+="_long_single"
 
                 elif count_T1_crops==count_all_sessions:
 
