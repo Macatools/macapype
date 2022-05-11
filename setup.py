@@ -30,6 +30,8 @@ setup(
     packages=find_packages(),
     author="macatools team",
     description="Pipeline for anatomic processing for macaque",
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     license='BSD 3',
     entry_points = {
         'console_scripts': ['segment_pnh = workflows.segment_pnh:main']},
