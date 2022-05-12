@@ -113,8 +113,8 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #
 html_logo = "img/logo/logo_macapype_0.3.jpg"
 
-html_sidebars = {'**': ['localtoc.html', 'searchbox.html'],
-   'using/windows': ['windowssidebar.html', 'searchbox.html']}
+html_sidebars = {'**': ['localtoc.html'],
+   'using/windows': ['windowssidebar.html']}
 
 html_theme_options = {
     'navbar_title': 'Macapype',
@@ -163,7 +163,8 @@ latex_elements = {
 }
 
 latex_elements = {
-    'papersize': 'a4paper',
+    #'papersize': 'a4paper',
+    'papersize': 'letterpaper',
     'pointsize': '12pt',
     'preamble': r'''
     \usepackage[none]{hyphenat}
@@ -213,7 +214,7 @@ sphinx_gallery_conf = {
     'reference_url': {
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
-        'nipype': 'https://nipype.readthedocs.io/en/latest/api',
+        'nipype': 'https://nipype.readthedocs.io/en/latest',
         'macapype': 'http://macatools.github.io/macapype/'
     }
 }
