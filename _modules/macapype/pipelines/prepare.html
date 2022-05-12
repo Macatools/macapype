@@ -268,13 +268,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
-<form action="../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
         </div>
       </div>
     <div class="body col-md-9 content" role="main">
@@ -995,8 +988,8 @@
 
     <span class="c1"># mapnode_prep_pipeline for T1 list</span>
     <span class="n">mapnode_prep_T1_pipe</span> <span class="o">=</span> <span class="n">_create_mapnode_prep_pipeline</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;mapnode_prep_T1&quot;</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mapnode_prep_T1&quot;</span><span class="p">,</span> <span class="n">node_suffix</span><span class="o">=</span><span class="s2">&quot;_T1&quot;</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;prep_T1&quot;</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prep_T1&quot;</span><span class="p">,</span> <span class="n">node_suffix</span><span class="o">=</span><span class="s2">&quot;_T1&quot;</span><span class="p">)</span>
 
     <span class="n">long_multi_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
         <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T1&#39;</span><span class="p">,</span> <span class="n">mapnode_prep_T1_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.list_img&quot;</span><span class="p">)</span>
@@ -1017,8 +1010,8 @@
 
     <span class="c1"># mapnode_prep_pipeline for T2 list</span>
     <span class="n">mapnode_prep_T2_pipe</span> <span class="o">=</span> <span class="n">_create_mapnode_prep_pipeline</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;mapnode_prep_T2&quot;</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mapnode_prep_T2&quot;</span><span class="p">,</span> <span class="n">node_suffix</span><span class="o">=</span><span class="s2">&quot;_T2&quot;</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;prep_T2&quot;</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prep_T2&quot;</span><span class="p">,</span> <span class="n">node_suffix</span><span class="o">=</span><span class="s2">&quot;_T2&quot;</span><span class="p">)</span>
 
     <span class="n">long_multi_preparation_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
         <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_T2&#39;</span><span class="p">,</span> <span class="n">mapnode_prep_T2_pipe</span><span class="p">,</span> <span class="s2">&quot;inputnode.list_img&quot;</span><span class="p">)</span>
@@ -1442,7 +1435,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-05-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

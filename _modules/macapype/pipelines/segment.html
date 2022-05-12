@@ -268,13 +268,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
-<form action="../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
         </div>
       </div>
     <div class="body col-md-9 content" role="main">
@@ -288,10 +281,11 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.spm</span> <span class="k">as</span> <span class="nn">spm</span>
 
 <span class="kn">from</span> <span class="nn">..nodes.segment</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AtroposN4</span><span class="p">,</span> <span class="n">BinaryFillHoles</span><span class="p">,</span> <span class="n">merge_masks</span><span class="p">,</span>
-                             <span class="n">split_indexed_mask</span><span class="p">,</span> <span class="n">copy_header</span><span class="p">,</span> <span class="n">compute_5tt</span><span class="p">,</span>
-                             <span class="n">correct_datatype</span><span class="p">,</span> <span class="n">fill_list_vol</span><span class="p">)</span>
+                             <span class="n">merge_imgs</span><span class="p">,</span> <span class="n">split_indexed_mask</span><span class="p">,</span> <span class="n">copy_header</span><span class="p">,</span>
+                             <span class="n">compute_5tt</span><span class="p">,</span> <span class="n">correct_datatype</span><span class="p">,</span> <span class="n">fill_list_vol</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="p">(</span><span class="n">gunzip</span><span class="p">,</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">merge_3_elem_to_list</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="p">(</span><span class="n">gunzip</span><span class="p">,</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">merge_3_elem_to_list</span><span class="p">,</span>
+                          <span class="n">get_pattern</span><span class="p">,</span> <span class="n">get_list_length</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span><span class="p">,</span> <span class="n">parse_key</span>
 <span class="kn">from</span> <span class="nn">..utils.utils_spm</span> <span class="kn">import</span> <span class="n">set_spm</span>
@@ -383,26 +377,10 @@
         <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_seg</span><span class="p">,</span> <span class="s1">&#39;list_split_files&#39;</span><span class="p">,</span>
                              <span class="n">seg_at</span><span class="p">,</span> <span class="s2">&quot;priors&quot;</span><span class="p">)</span>
 
+        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_seg</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;list_split_files&#39;</span><span class="p">,</span> <span class="n">get_list_length</span><span class="p">),</span>
+                             <span class="n">seg_at</span><span class="p">,</span> <span class="s2">&quot;numberOfClasses&quot;</span><span class="p">)</span>
+
     <span class="c1"># on segmentation indexed mask (with labels)</span>
-    <span class="c1"># 1 -&gt; CSF</span>
-    <span class="c1"># 2 -&gt; GM</span>
-    <span class="c1"># 3 -&gt; sub cortical?</span>
-    <span class="c1"># 4 -&gt; WM</span>
-    <span class="c1"># 5 -&gt; ?</span>
-
-    <span class="n">thd_nodes</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;csf&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;gm&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;wm&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
-        <span class="n">tmp_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span><span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
-                              <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">),</span>
-                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
-
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">seg_at</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span>
-                             <span class="n">tmp_node</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
-
-        <span class="n">thd_nodes</span><span class="p">[</span><span class="n">tissue</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_node</span>
-
-    <span class="c1"># creating output node with prob_ and threshold_</span>
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
         <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span>
             <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;segmented_file&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_gm&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_wm&quot;</span><span class="p">,</span>
@@ -412,21 +390,93 @@
 
     <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">seg_at</span><span class="p">,</span> <span class="s1">&#39;segmented_file&#39;</span><span class="p">,</span>
                          <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;segmented_file&#39;</span><span class="p">)</span>
-    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s2">&quot;gm&quot;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
-                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_gm&#39;</span><span class="p">)</span>
-    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s2">&quot;wm&quot;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
-                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_wm&#39;</span><span class="p">)</span>
-    <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thd_nodes</span><span class="p">[</span><span class="s2">&quot;csf&quot;</span><span class="p">],</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
-                         <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_csf&#39;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;csf&#39;</span><span class="p">,</span> <span class="s1">&#39;gm&#39;</span><span class="p">,</span> <span class="s1">&#39;wm&#39;</span><span class="p">]):</span>
-        <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">seg_at</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span>
-                             <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_&#39;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;tissue_dict&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tissue_dict</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tissue_dict&quot;</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># NMT_v2.0 (5 tissus)</span>
+        <span class="c1"># 1 -&gt; CSF</span>
+        <span class="c1"># 2 -&gt; GM</span>
+        <span class="c1"># 3 -&gt; sub cortical?</span>
+        <span class="c1"># 4 -&gt; WM</span>
+        <span class="c1"># 5 -&gt; ? -&gt; (CSF)</span>
+        <span class="n">tissue_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;csf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="s1">&#39;gm&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>  <span class="s1">&#39;wm&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using tissue dict </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tissue_dict</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">tissue</span><span class="p">,</span> <span class="n">index_tissue</span> <span class="ow">in</span> <span class="n">tissue_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index_tissue</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+
+            <span class="c1"># Merging as file list</span>
+            <span class="n">merge_list</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">niu</span><span class="o">.</span><span class="n">Merge</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index_tissue</span><span class="p">)),</span>
+                                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;merge_list_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sub_index_tissue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index_tissue</span><span class="p">):</span>
+                <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                    <span class="n">seg_at</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">,</span> <span class="n">get_pattern</span><span class="p">,</span>
+                     <span class="s2">&quot;SegmentationPosteriors</span><span class="si">{:02d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                         <span class="nb">int</span><span class="p">(</span><span class="n">sub_index_tissue</span><span class="p">))),</span>
+                    <span class="n">merge_list</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+            <span class="c1"># Merging files in the same nifti</span>
+            <span class="n">merge_tissues</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+                <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+                    <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;list_img_files&quot;</span><span class="p">],</span>
+                    <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;merged_img_file&quot;</span><span class="p">],</span>
+                    <span class="n">function</span><span class="o">=</span><span class="n">merge_imgs</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;merge_tissues_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
+
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">merge_list</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span>
+                                 <span class="n">merge_tissues</span><span class="p">,</span> <span class="s1">&#39;list_img_files&#39;</span><span class="p">)</span>
+
+            <span class="c1"># prob output</span>
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">merge_tissues</span><span class="p">,</span> <span class="s1">&#39;merged_img_file&#39;</span><span class="p">,</span>
+                                 <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_&#39;</span><span class="o">+</span><span class="n">tissue</span><span class="p">)</span>
+
+            <span class="c1"># threshold</span>
+            <span class="n">thresh_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+                <span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
+
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">merge_tissues</span><span class="p">,</span> <span class="s1">&#39;merged_img_file&#39;</span><span class="p">,</span>
+                                 <span class="n">thresh_node</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+            <span class="c1"># thresh output</span>
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thresh_node</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                 <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_&#39;</span><span class="o">+</span><span class="n">tissue</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># prob output</span>
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="n">seg_at</span><span class="p">,</span>
+                <span class="p">(</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">,</span> <span class="n">get_pattern</span><span class="p">,</span>
+                 <span class="s2">&quot;SegmentationPosteriors</span><span class="si">{:02d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">index_tissue</span><span class="p">))),</span>
+                <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;prob_&#39;</span><span class="o">+</span><span class="n">tissue</span><span class="p">)</span>
+
+            <span class="c1"># threshold</span>
+            <span class="n">thresh_node</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+                <span class="n">fsl</span><span class="o">.</span><span class="n">Threshold</span><span class="p">(),</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;threshold_&quot;</span> <span class="o">+</span> <span class="n">tissue</span><span class="p">)</span>
+
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="n">seg_at</span><span class="p">,</span>
+                <span class="p">(</span><span class="s1">&#39;segmented_files&#39;</span><span class="p">,</span> <span class="n">get_pattern</span><span class="p">,</span>
+                 <span class="s2">&quot;SegmentationPosteriors</span><span class="si">{:02d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">index_tissue</span><span class="p">))),</span>
+                <span class="n">thresh_node</span><span class="p">,</span> <span class="s1">&#39;in_file&#39;</span><span class="p">)</span>
+
+            <span class="c1"># thresh output</span>
+            <span class="n">segment_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">thresh_node</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                                 <span class="n">outputnode</span><span class="p">,</span> <span class="s1">&#39;threshold_&#39;</span><span class="o">+</span><span class="n">tissue</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">segment_pipe</span>
 
 
-<div class="viewcode-block" id="create_segment_atropos_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_segment_atropos_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">,</span>
-                                <span class="n">space</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_segment_atropos_pipe"><a class="viewcode-back" href="../../../generated/macapype.pipelines.segment.create_segment_atropos_pipe.html#macapype.pipelines.segment.create_segment_atropos_pipe">[docs]</a><span class="k">def</span> <span class="nf">create_segment_atropos_pipe</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Segmentation with ANTS atropos script</span>
 
@@ -1056,7 +1106,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-05-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

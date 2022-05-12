@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Individual Parameters &#8212; macapype 0.3.0.2 documentation</title>
+    <title>macapype_users forum &#8212; macapype 0.3.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
@@ -18,8 +18,6 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" />
-    <link rel="prev" title="Parameters" href="params.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -63,7 +61,7 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
+      aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#dependancies">Dependancies</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="install.html#external-software-dependancies">External software dependancies</a></li>
@@ -94,8 +92,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Individual Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
@@ -207,15 +205,12 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"><ul class="current">
+      aria-labelledby="dLabelLocalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Individual Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#adding-indiv">Adding -indiv</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
@@ -234,7 +229,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/indiv_params.rst.txt"
+  <a href="_sources/forum.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -257,15 +252,12 @@
 <div class="container">
   <div class="row">
       <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Individual Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#adding-indiv">Adding -indiv</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
@@ -279,29 +271,48 @@
       </div>
     <div class="body col-md-9 content" role="main">
       
-  <section id="individual-parameters">
-<span id="indiv-params"></span><h1>Individual Parameters<a class="headerlink" href="#individual-parameters" title="Permalink to this headline">¶</a></h1>
-<section id="adding-indiv">
-<h2>Adding -indiv<a class="headerlink" href="#adding-indiv" title="Permalink to this headline">¶</a></h2>
-<p>You can include “-indiv indiv_params.json” in the python command, for specifiying parameters specific parameters:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft SPM -params params.json -indiv indiv_params.json
-</pre></div>
-</div>
-<p>Here is an example of the params.json corresponding to <code class="xref py py-class docutils literal notranslate"><span class="pre">segment_pnh_spm_based</span> <span class="pre">pipeline</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;sub-032195&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;ses-001&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;crop_T1&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;put your values here&quot;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+  <section id="macapype-users-forum">
+<span id="forum"></span><h1>macapype_users forum<a class="headerlink" href="#macapype-users-forum" title="Permalink to this headline">¶</a></h1>
+<section id="how-to-subscribe">
+<h2>How to subscribe ?<a class="headerlink" href="#how-to-subscribe" title="Permalink to this headline">¶</a></h2>
+<p>The macapype_users forum is located on framateam, a French non-profit organisation for using open source tools, that will not make use of your personal data. Unfortunately, the subscription process is in French langage, and can be a bit tricky for non-native French speakers. Here is a quick step by step tutorial on how to subscribe.</p>
+<section id="click-on-the-following-link">
+<h3>Click on the following link<a class="headerlink" href="#click-on-the-following-link" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe">https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe</a></p>
+<p>You should arrive on this page:</p>
+<a class="reference internal image-reference" href="_images/framateam1.jpg"><img alt="_images/framateam1.jpg" class="align-center" src="_images/framateam1.jpg" style="width: 800px;" /></a>
+</section>
+<section id="click-on-the-purple-rectangle-adresse-e-mail-et-mot-de-passe">
+<h3>Click on the purple rectangle “Adresse e-mail et mot de passe”<a class="headerlink" href="#click-on-the-purple-rectangle-adresse-e-mail-et-mot-de-passe" title="Permalink to this headline">¶</a></h3>
+<p>Then you shoud arrive on this page:</p>
+<a class="reference internal image-reference" href="_images/framateam2.jpg"><img alt="_images/framateam2.jpg" class="align-center" src="_images/framateam2.jpg" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>Fill first rectangle with your e-mail</p></li>
+<li><p>Fill second rectangle with your login</p></li>
+<li><p>Fill third rectangle with your password</p></li>
+<li><p>Click on the purple rectangle “Creer un compte”.</p></li>
+</ul>
+</section>
+<section id="you-should-be-able-to-login">
+<h3>You should be able to login<a class="headerlink" href="#you-should-be-able-to-login" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="_images/framateam3.jpg"><img alt="_images/framateam3.jpg" class="align-center" src="_images/framateam3.jpg" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>Fill first white rectangle with your login (or email adress, should work as well)</p></li>
+<li><p>Fill second rectangle with your password</p></li>
+<li><p>Click on the purple rectangle “Connexion”.</p></li>
+</ul>
+</section>
+<section id="you-should-be-able-to-access-the-forum">
+<h3>You should be able to access the forum<a class="headerlink" href="#you-should-be-able-to-access-the-forum" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://framateam.org/macapype-users/channels/town-square">https://framateam.org/macapype-users/channels/town-square</a></p>
+<p>Once you are there I should be able to add you to the relevant channels, and almost everything should be in English on the channels.</p>
+</section>
+</section>
+<section id="organisation-of-the-forum">
+<h2>Organisation of the forum<a class="headerlink" href="#organisation-of-the-forum" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/framateam4.jpg"><img alt="_images/framateam4.jpg" class="align-center" src="_images/framateam4.jpg" style="width: 800px;" /></a>
+<p>The forum is organised in channels. The main channel is called <em>“Town Square”</em>, and this is where new subscriber are registered by default. This is where some annoncement can be done.</p>
+<p>Then some specific topics can found, such <em>“Macaque segmentation”</em>, <em>“Marmoset segmentation”</em>, etc. where issues/comments for specific species can be found. The most important one may be <strong>“Processing issues”</strong>, where the users can post processing related issues.</p>
 </section>
 </section>
 

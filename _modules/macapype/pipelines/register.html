@@ -268,19 +268,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../brainhack.html">Events</a></li>
 </ul>
 
-<form action="../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
         </div>
       </div>
     <div class="body col-md-9 content" role="main">
       
   <h1>Source code for macapype.pipelines.register</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
+<span></span><span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">as</span> <span class="nn">niu</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 
 <span class="kn">import</span> <span class="nn">nipype.interfaces.fsl</span> <span class="k">as</span> <span class="nn">fsl</span>
@@ -288,11 +283,11 @@
 <span class="kn">import</span> <span class="nn">nipype.interfaces.ants</span> <span class="k">as</span> <span class="nn">ants</span>
 
 <span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">get_elem</span>
-<span class="kn">from</span> <span class="nn">..nodes.segment</span> <span class="kn">import</span> <span class="n">split_indexed_mask</span>
 <span class="kn">from</span> <span class="nn">..utils.utils_nodes</span> <span class="kn">import</span> <span class="n">NodeParams</span><span class="p">,</span> <span class="n">parse_key</span>
 
 <span class="kn">from</span> <span class="nn">..nodes.register</span> <span class="kn">import</span> <span class="p">(</span><span class="n">interative_flirt</span><span class="p">,</span> <span class="n">NMTSubjectAlign</span><span class="p">,</span>
-                              <span class="n">NMTSubjectAlign2</span><span class="p">,</span> <span class="n">NwarpApplyPriors</span><span class="p">)</span>
+                              <span class="n">NMTSubjectAlign2</span><span class="p">,</span> <span class="n">NwarpApplyPriors</span><span class="p">,</span>
+                              <span class="n">animal_warper</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">create_iterative_register_pipe</span><span class="p">(</span>
@@ -483,7 +478,7 @@
     <span class="k">if</span> <span class="s2">&quot;NMT_version&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">NMT_version</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;NMT_version&#39;</span><span class="p">]</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Overriding NMT_version with parmas </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Overriding NMT_version with params NMT_version: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;NMT_version&#39;</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="s2">&quot;norm_intensity&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -513,22 +508,49 @@
         <span class="n">register_NMT_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;T1&#39;</span><span class="p">,</span>
                                   <span class="n">deoblique</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Found NMT_version </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;which @animal_warper: &quot;</span><span class="p">,</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;@animal_warper&quot;</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v1.2&quot;</span><span class="p">:</span>
-        <span class="c1"># align subj to nmt</span>
-        <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
-            <span class="n">NMTSubjectAlign</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;NMT_subject_align&quot;</span><span class="p">),</span>
+    <span class="k">if</span> <span class="s2">&quot;NMT_subject_align&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+            <span class="ow">or</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;@animal_warper&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running NMT_subject_align with version </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v1.2&quot;</span><span class="p">:</span>
+            <span class="c1"># align subj to nmt</span>
+            <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+                <span class="n">NMTSubjectAlign</span><span class="p">(),</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;NMT_subject_align&quot;</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v1.3&quot;</span> <span class="ow">or</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v2.0&quot;</span><span class="p">:</span>
+            <span class="c1"># align subj to nmt</span>
+            <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
+                <span class="n">NMTSubjectAlign2</span><span class="p">(),</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;NMT_subject_align&quot;</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NMT_version </span><span class="si">{}</span><span class="s2"> is not implemented, breaking&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">NMT_version</span><span class="p">))</span>
+
+            <span class="n">exit</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;@animal_warper&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># TODO AnimalWarper()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running @animal_warper with version </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;@animal_warper&quot;</span><span class="p">)))</span>
+
+        <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+            <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;T1_file&quot;</span><span class="p">,</span> <span class="s2">&quot;NMT_SS_file&quot;</span><span class="p">],</span>
+                         <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;aff_file&quot;</span><span class="p">,</span> <span class="s2">&quot;warp_file&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;warpinv_file&quot;</span><span class="p">,</span> <span class="s2">&quot;transfo_file&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;inv_transfo_file&quot;</span><span class="p">],</span>
+                         <span class="n">function</span><span class="o">=</span><span class="n">animal_warper</span><span class="p">),</span>
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v1.3&quot;</span> <span class="ow">or</span> <span class="n">NMT_version</span> <span class="o">==</span> <span class="s2">&quot;v2.0&quot;</span><span class="p">:</span>
-        <span class="c1"># align subj to nmt</span>
-        <span class="n">NMT_subject_align</span> <span class="o">=</span> <span class="n">NodeParams</span><span class="p">(</span>
-            <span class="n">NMTSubjectAlign2</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">parse_key</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;NMT_subject_align&quot;</span><span class="p">),</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;NMT_subject_align&#39;</span><span class="p">)</span>
-
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NMT_version </span><span class="si">{}</span><span class="s2"> is not implemented&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NMT_version</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;could not find normalisation procedure,</span><span class="se">\</span>
+<span class="s2">              either with NMT_subject_align, or @animal_warper, breaking&quot;</span><span class="p">)</span>
         <span class="n">exit</span><span class="p">()</span>
 
     <span class="n">NMT_subject_align</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">NMT_SS_file</span> <span class="o">=</span> <span class="n">params_template</span><span class="p">[</span><span class="s2">&quot;template_brain&quot;</span><span class="p">]</span>
@@ -647,12 +669,19 @@
 
 <span class="k">def</span> <span class="nf">create_reg_seg_pipe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;reg_seg_pipe&quot;</span><span class="p">):</span>
 
-    <span class="n">reg_seg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">reg_pipe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
     <span class="c1"># creating inputnode</span>
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;native_segmented_file&#39;</span><span class="p">,</span>
-                                      <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">]),</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;native_seg&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;native_threshold_gm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;native_threshold_wm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;native_threshold_csf&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;native_prob_gm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;native_prob_wm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;native_prob_csf&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;ref_image&#39;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># align_seg</span>
@@ -662,35 +691,108 @@
     <span class="n">align_seg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">align_seg</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
 
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_segmented_file&#39;</span><span class="p">,</span>
-                         <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span> <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_seg&#39;</span><span class="p">,</span>
+                     <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span> <span class="n">align_seg</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
 
-    <span class="c1"># align_gm</span>
-    <span class="n">split_seg_mask</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nii_file&#39;</span><span class="p">],</span>
-                     <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_binary_masks&#39;</span><span class="p">],</span>
-                     <span class="n">function</span><span class="o">=</span><span class="n">split_indexed_mask</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;split_seg_mask&quot;</span><span class="p">)</span>
+    <span class="c1"># align_threshold_gm</span>
+    <span class="n">align_threshold_gm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_threshold_gm&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_threshold_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_threshold_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_threshold_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
 
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_seg</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
-                         <span class="n">split_seg_mask</span><span class="p">,</span> <span class="s2">&quot;nii_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_threshold_gm&#39;</span><span class="p">,</span>
+                     <span class="n">align_threshold_gm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_threshold_gm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">align_threshold_gm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_threshold_wm</span>
+    <span class="n">align_threshold_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_threshold_wm&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_threshold_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_threshold_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_threshold_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_threshold_wm&#39;</span><span class="p">,</span>
+                     <span class="n">align_threshold_wm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_threshold_wm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">align_threshold_wm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_threshold_csf</span>
+    <span class="n">align_threshold_csf</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_threshold_csf&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_threshold_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_threshold_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_threshold_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_threshold_csf&#39;</span><span class="p">,</span>
+                     <span class="n">align_threshold_csf</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_threshold_csf</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span>
+                     <span class="n">align_threshold_csf</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_prob_gm</span>
+    <span class="n">align_prob_gm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_prob_gm&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_prob_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_prob_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_prob_gm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_prob_gm&#39;</span><span class="p">,</span>
+                     <span class="n">align_prob_gm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_prob_gm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span> <span class="n">align_prob_gm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_prob_wm</span>
+    <span class="n">align_prob_wm</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_prob_wm&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_prob_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_prob_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_prob_wm</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_prob_wm&#39;</span><span class="p">,</span>
+                     <span class="n">align_prob_wm</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_prob_wm</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span> <span class="n">align_prob_wm</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
+
+    <span class="c1"># align_prob_csf</span>
+    <span class="n">align_prob_csf</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+        <span class="n">afni</span><span class="o">.</span><span class="n">Allineate</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;align_prob_csf&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in_file&#39;</span><span class="p">])</span>
+    <span class="n">align_prob_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">final_interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearestneighbour&quot;</span>
+    <span class="n">align_prob_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">align_prob_csf</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">outputtype</span> <span class="o">=</span> <span class="s2">&quot;NIFTI_GZ&quot;</span>
+
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;native_prob_csf&#39;</span><span class="p">,</span>
+                     <span class="n">align_prob_csf</span><span class="p">,</span> <span class="s2">&quot;in_file&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ref_image&#39;</span><span class="p">,</span> <span class="n">align_prob_csf</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;transfo_file&#39;</span><span class="p">,</span> <span class="n">align_prob_csf</span><span class="p">,</span> <span class="s2">&quot;in_matrix&quot;</span><span class="p">)</span>
 
     <span class="n">outputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
-        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;norm_seg&#39;</span><span class="p">,</span> <span class="s1">&#39;norm_gm&#39;</span><span class="p">,</span>
-                                      <span class="s1">&#39;norm_wm&#39;</span><span class="p">,</span> <span class="s1">&#39;norm_csf&#39;</span><span class="p">]),</span>
+        <span class="n">niu</span><span class="o">.</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;norm_seg&#39;</span><span class="p">,</span> <span class="s1">&#39;norm_threshold_gm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;norm_threshold_wm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;norm_threshold_csf&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;norm_prob_gm&#39;</span><span class="p">,</span> <span class="s1">&#39;norm_prob_wm&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;norm_prob_csf&#39;</span><span class="p">]),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;outputnode&#39;</span><span class="p">)</span>
 
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_seg</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_seg&quot;</span><span class="p">)</span>
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_seg_mask</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                         <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_gm&quot;</span><span class="p">)</span>
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_seg_mask</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                         <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_wm&quot;</span><span class="p">)</span>
-    <span class="n">reg_seg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">split_seg_mask</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">get_elem</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                         <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_csf&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_seg</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_seg&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">reg_seg_pipe</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_threshold_gm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                     <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_threshold_gm&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_threshold_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                     <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_threshold_wm&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_threshold_csf</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span>
+                     <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_threshold_csf&quot;</span><span class="p">)</span>
+
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_prob_gm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_prob_gm&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_prob_wm</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_prob_wm&quot;</span><span class="p">)</span>
+    <span class="n">reg_pipe</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">align_prob_csf</span><span class="p">,</span> <span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="n">outputnode</span><span class="p">,</span> <span class="s2">&quot;norm_prob_csf&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">reg_pipe</span>
 </pre></div>
 
     </div>
@@ -704,7 +806,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-05-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>

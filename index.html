@@ -95,12 +95,6 @@
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#data-preparation-ants-ants-t1-spm-spm-t1">Data preparation (ANTS, ANTS_T1, SPM, SPM_T1)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#spm-based-pipelines-spm-and-spm-t1">SPM based pipelines (SPM and SPM_T1)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="indiv_params.html#ants-based-pipelines">ANTS based pipelines</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
@@ -274,29 +268,47 @@
 <li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a></li>
 </ul>
 
-<form action="search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
         </div>
       </div>
     <div class="body col-md-9 content" role="main">
       
   <section id="macapype">
 <span id="id1"></span><h1>Macapype<a class="headerlink" href="#macapype" title="Permalink to this headline">¶</a></h1>
-<p>Macapype is an open-source multi-modal brain data analysis kit which provides <strong>Python-based pipelines</strong> for advanced multi-thread processing of MRI anatomical data of NPH brain images. Macapype is based on <a class="reference external" href="http://nipype.readthedocs.io/en/latest/#">Nipype</a>, a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common python framework.</p>
+<p>Macapype is an open-source multi-modal brain data analysis kit which provides <strong>Python-based pipelines</strong> for advanced multi-thread processing of MRI anatomical data of NPH brain images. Macapype is based on <a class="reference external" href="https://nipype.readthedocs.io/en/latest">Nipype</a>, a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common python framework.</p>
 <p>API, describing the different pipelines and nodes, can be found <a class="reference internal" href="api.html#api-documentation"><span class="std std-ref">here</span></a></p>
-<a class="reference internal image-reference" href="_images/logo_macapype_0.3.jpg"><img alt="_images/logo_macapype_0.3.jpg" class="align-center" src="_images/logo_macapype_0.3.jpg" style="width: 1024.0px; height: 1024.0px;" /></a>
+<a class="reference internal image-reference" href="_images/logo_macapype_0.3.jpg"><img alt="_images/logo_macapype_0.3.jpg" class="align-center" src="_images/logo_macapype_0.3.jpg" style="width: 600px;" /></a>
+<section id="choose-your-install">
+<h2>Choose your install<a class="headerlink" href="#choose-your-install" title="Permalink to this headline">¶</a></h2>
+<section id="git-install">
+<h3>git install<a class="headerlink" href="#git-install" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/Macatools/macapype.git
+</pre></div>
+</div>
+<p>(see <a class="reference internal" href="install.html#git-install"><span class="std std-ref">Git install</span></a>)</p>
+</section>
+<section id="pip-install">
+<h3>pip install<a class="headerlink" href="#pip-install" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install macapype
+</pre></div>
+</div>
+<p>(see <a class="reference internal" href="install.html#pip-install"><span class="std std-ref">Pypi install</span></a>)</p>
+</section>
+<section id="docker-singularity-install">
+<h3>docker/singularity install<a class="headerlink" href="#docker-singularity-install" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull macatools/macapype:latest
+</pre></div>
+</div>
+<p>(see <a class="reference internal" href="docker_install.html#docker-install"><span class="std std-ref">Docker install</span></a>)</p>
+</section>
+</section>
 <section id="ressources">
 <h2>Ressources<a class="headerlink" href="#ressources" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://docs.google.com/presentation/d/11RrcZW25MyLbc0_9T2zzhwy5RyUvcjYG4UAgzjuuv8M/edit?usp=sharing">Open Science Room OSR 2020 of OHBM congress presentation of macapype</a></p>
 </section>
 <section id="forum-macapype-users">
 <h2>Forum macapype_users<a class="headerlink" href="#forum-macapype-users" title="Permalink to this headline">¶</a></h2>
-<p>The macapype_users can be be found <a class="reference external" href="https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe">here</a> (requires a framateam/framagit account, but should be accessible with a github or bitbucket account)</p>
+<p>The macapype_users forum can be be found <a class="reference external" href="https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe">here</a> (requires a framateam/framagit account, but should be accessible with a github or bitbucket account).</p>
+<p>See the section <a class="reference internal" href="forum.html#forum"><span class="std std-ref">Forum</span></a> for more information on how to connect.</p>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -347,7 +359,6 @@
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#list-of-indiv-params-recap">List of indiv params (recap):</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
@@ -407,7 +418,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-04-12.<br/>
+        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-05-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
     </p>
   </div>
