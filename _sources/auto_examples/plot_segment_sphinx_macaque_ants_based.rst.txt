@@ -197,7 +197,7 @@ Data preparation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  39.934 seconds)
+   **Total running time of the script:** ( 0 minutes  37.341 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py:

@@ -5,16 +5,16 @@
 
 Computation times
 =================
-**06:50.384** total execution time for **auto_examples** files:
+**06:18.150** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_segment_baboon_ants_based.py` (``plot_segment_baboon_ants_based.py``)                 | 02:02.713 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_segment_baboon_ants_based.py` (``plot_segment_baboon_ants_based.py``)                 | 01:55.992 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_segment_marmo_ants_based.py` (``plot_segment_marmo_ants_based.py``)                   | 01:43.924 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_segment_marmo_ants_based.py` (``plot_segment_marmo_ants_based.py``)                   | 01:33.119 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_segment_macaque_ants_based.py` (``plot_segment_macaque_ants_based.py``)               | 01:21.234 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_segment_macaque_ants_based.py` (``plot_segment_macaque_ants_based.py``)               | 01:13.962 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_segment_macaque_spm_based.py` (``plot_segment_macaque_spm_based.py``)                 | 01:02.579 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_segment_macaque_spm_based.py` (``plot_segment_macaque_spm_based.py``)                 | 00:57.736 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py` (``plot_segment_sphinx_macaque_ants_based.py``) | 00:39.934 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py` (``plot_segment_sphinx_macaque_ants_based.py``) | 00:37.341 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
