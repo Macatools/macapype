@@ -59,6 +59,8 @@ Install macapype package
 from github
 -----------
 
+.. _git_install:
+
 Using git
 ~~~~~~~~~
 
@@ -74,6 +76,8 @@ Using pip
 .. code:: bash
 
     $ pip install git+https://github.com/Macatools/macapype
+
+.. _pip_install:
 
 from pypi
 ---------

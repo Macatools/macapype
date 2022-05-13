@@ -16,13 +16,45 @@ Macapype
 ..    +---------+
 ..
 
-Macapype is an open-source multi-modal brain data analysis kit which provides **Python-based pipelines** for advanced multi-thread processing of MRI anatomical data of NPH brain images. Macapype is based on `Nipype <http://nipype.readthedocs.io/en/latest/#>`_, a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common python framework.
+Macapype is an open-source multi-modal brain data analysis kit which provides **Python-based pipelines** for advanced multi-thread processing of MRI anatomical data of NPH brain images. Macapype is based on `Nipype <https://nipype.readthedocs.io/en/latest>`_, a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common python framework.
 
 API, describing the different pipelines and nodes, can be found :ref:`here <api_documentation>`
 
 .. image:: ./img/logo/logo_macapype_0.3.jpg
-    :scale: 50%
+    :width: 600
     :align: center
+
+
+Choose your install
+*******************
+
+git install
+-----------
+
+.. code-block:: bash
+
+    git clone https://github.com/Macatools/macapype.git
+
+(see :ref:`Git install <git_install>`)
+
+pip install
+-----------
+
+.. code-block:: bash
+
+    pip install macapype
+
+(see :ref:`Pypi install <pip_install>`)
+
+docker/singularity install
+--------------------------
+
+.. code-block:: bash
+
+    docker pull macatools/macapype:latest
+
+(see :ref:`Docker install <docker_install>`)
+
 
 Ressources
 ************
@@ -33,7 +65,9 @@ Ressources
 Forum macapype_users
 **********************
 
-The macapype_users can be be found `here <https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe>`_ (requires a framateam/framagit account, but should be accessible with a github or bitbucket account)
+The macapype_users forum can be be found `here <https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe>`_ (requires a framateam/framagit account, but should be accessible with a github or bitbucket account).
+
+See the section :ref:`Forum <forum>` for more information on how to connect.
 
 
 Installation
