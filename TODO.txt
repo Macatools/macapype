@@ -1,17 +1,27 @@
-cd  Marmobrain-Manon/fast/macapype_indiv_params_crop_T1_ants/full_ants_subpipes/brain_segment_from_mask_pipe/segment_atropos_pipe/_session_03_subject_Riva/seg_at/
-
-gunzip -f sub-Riva_ses-03_rec-meannonorm_T1w_roi_restore_debiased_brain_Segmentation.nii.gz
-
-Essai avec:
-nifti_tool -mod_hdr -mod_field datatype 16 -infiles sub-Riva_ses-03_rec-meannonorm_T1w_roi_restore_debiased_brain_Segmentation.nii -prefix mod
-
-fslhd mod.nii 
-->OK 
-
-freeview mod.nii
--> pas les differentes values
-
-MARCHE avec datatype 8:
-nifti_tool -mod_hdr -mod_field datatype 8 -infiles sub-Riva_ses-03_rec-meannonorm_T1w_roi_restore_debiased_brain_Segmentation.nii -prefix mod
 
 
+29/06/2022 Added the following issues:
+
+Road map to v0.3.2
+- -template to provide user template.
+
+19/05/2022: with params, if long_prep, do not work with ANTS_T1.
+    also with -species, problem if crop_T1 and crop_T2 is available, -soft ANTS_T1 will crash
+
+17/05/2022 Added the following issues
+
+Road map to v0.3.2
+- make use of macapype_CI.zip in the examples + build the doc at all the release
+- reframe automated definition of short_preparation_pipe based on the content indiv_params.json
+- add more command line options (in the default, but interfering with the params):
+    -no_crop if data are already cropped (see previous point)
+    -export_5tt for exporting 5tt
+- 5tt with 6 priors -> gm cortical and subcortical as 2 first tissus
+
+
+Road map to v0.4
+- better reorientation tools
+- better bet-cropping
+
+
+16/05/2022 Release v0.3.1
