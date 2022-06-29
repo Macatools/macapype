@@ -135,7 +135,7 @@ def create_iterative_register_pipe(
 
 ###############################################################################
 def create_register_NMT_pipe(params_template, params={},
-                             name="register_NMT_pipe", NMT_version="v1.3"):
+                             name="register_NMT_pipe"):
     """Description: Register template to anat with the script NMT_subject_align
 
     Processing steps:
@@ -152,7 +152,6 @@ def create_register_NMT_pipe(params_template, params={},
         nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.interfaces\
         .ants.segmentation.html#n4biasfieldcorrection>`_ for arguments)) - \
         also available as :ref:`indiv_params <indiv_params>`
-        - NMT_version (default = 1.2; 1.3 is also accepted)
 
     Inputs:
 
@@ -175,9 +174,6 @@ def create_register_NMT_pipe(params_template, params={},
             name:
                 pipeline name (default = "register_NMT_pipe")
 
-            NMT_version:
-                NMT version (default = 1.2); can be overwritten in params json
-
     Outputs:
 
         norm_intensity.output_image:
@@ -199,12 +195,6 @@ def create_register_NMT_pipe(params_template, params={},
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['T1', 'indiv_params']),
         name='inputnode')
-
-    if "NMT_version" in params.keys():
-        NMT_version = params['NMT_version']
-
-        print("*** Overriding NMT_version with params NMT_version: {}".format(
-            params['NMT_version']))
 
     if "norm_intensity" in params.keys():
 
@@ -237,6 +227,12 @@ def create_register_NMT_pipe(params_template, params={},
 
     if "NMT_subject_align" in params.keys() \
             or shutil.which("@animal_warper") is None:
+
+        if "NMT_version" in params.keys():
+            NMT_version = params['NMT_version']
+
+            print("*** Overriding NMT_version with params NMT_version: {}".format(
+                params['NMT_version']))
 
         print("running NMT_subject_align with version {}".format(NMT_version))
 
