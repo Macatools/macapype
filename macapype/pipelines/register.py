@@ -283,22 +283,26 @@ def create_register_NMT_pipe(params_template, params={},
     register_NMT_pipe.connect(deoblique, 'out_file',
                               NMT_subject_align, "T1_file")
 
-    if NMT_version.split(".")[0] == "v1":
+    # defining list priors
+    list_priors = [params_template["template_head"]]
+
+    if "template_seg" in params_template.keys():
 
         # align_masks
         # "overwrap" of NwarpApply, with specifying the outputs as wished
-        list_priors = [params_template["template_head"],
-                       params_template["template_csf"],
-                       params_template["template_gm"],
-                       params_template["template_wm"]]
+        list_priors.append(params_template["template_seg"])
 
-    elif NMT_version.split(".")[0] == "v2":
+    else:
+        if "template_csf" in params_template.keys():
+             list_priors.append(params_template["template_csf"])
 
-        # align_masks
-        # "overwrap" of NwarpApply, with specifying the outputs as wished
-        list_priors = [params_template["template_head"],
-                       params_template["template_seg"]]
+        if "template_gm" in params_template.keys():
+             list_priors.append(params_template["template_gm"])
 
+        if "template_wm" in params_template.keys():
+             list_priors.append(params_template["template_wm"])
+
+    # align_masks
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors
     align_masks.inputs.out_file = list_priors
@@ -326,54 +330,7 @@ def create_register_NMT_pipe(params_template, params={},
     register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                               align_NMT, "in_matrix")  # -1Dmatrix_apply
 
-    if NMT_version.split(".")[0] == "v1":
-
-        # seg_csf
-        align_seg_csf = pe.Node(
-            afni.Allineate(), name="align_seg_csf", iterfield=['in_file'])
-        align_seg_csf.inputs.final_interpolation = "nearestneighbour"
-        align_seg_csf.inputs.overwrite = True
-        align_seg_csf.inputs.outputtype = "NIFTI_GZ"
-
-        register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
-                                  align_seg_csf, "in_file")  # -source
-
-        register_NMT_pipe.connect(deoblique, 'out_file',
-                                  align_seg_csf, "reference")  # -base
-
-        register_NMT_pipe.connect(
-            NMT_subject_align, 'inv_transfo_file', align_seg_csf,
-            "in_matrix")  # -1Dmatrix_apply
-
-        # seg_gm
-        align_seg_gm = pe.Node(
-            afni.Allineate(), name="align_seg_gm", iterfield=['in_file'])
-        align_seg_gm.inputs.final_interpolation = "nearestneighbour"
-        align_seg_gm.inputs.overwrite = True
-        align_seg_gm.inputs.outputtype = "NIFTI_GZ"
-
-        register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 2),
-                                  align_seg_gm, "in_file")  # -source
-        register_NMT_pipe.connect(deoblique, 'out_file',
-                                  align_seg_gm, "reference")  # -base
-        register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                                  align_seg_gm, "in_matrix")  # -1Dmatrix_apply
-
-        # seg_wm
-        align_seg_wm = pe.Node(afni.Allineate(), name="align_seg_wm",
-                               iterfield=['in_file'])
-        align_seg_wm.inputs.final_interpolation = "nearestneighbour"
-        align_seg_wm.inputs.overwrite = True
-        align_seg_wm.inputs.outputtype = "NIFTI_GZ"
-
-        register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 3),
-                                  align_seg_wm, "in_file")  # -source
-        register_NMT_pipe.connect(deoblique, 'out_file',
-                                  align_seg_wm, "reference")  # -base
-        register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                                  align_seg_wm, "in_matrix")  # -1Dmatrix_apply
-
-    elif NMT_version.split(".")[0] == "v2":
+    if "template_seg" in params_template.keys():
 
         # seg
         align_seg = pe.Node(
@@ -388,6 +345,56 @@ def create_register_NMT_pipe(params_template, params={},
                                   align_seg, "reference")  # -base
         register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                                   align_seg, "in_matrix")  # -1Dmatrix_apply
+
+
+    else:
+        if "template_csf" in params_template.keys():
+            # seg_csf
+            align_seg_csf = pe.Node(
+                afni.Allineate(), name="align_seg_csf", iterfield=['in_file'])
+            align_seg_csf.inputs.final_interpolation = "nearestneighbour"
+            align_seg_csf.inputs.overwrite = True
+            align_seg_csf.inputs.outputtype = "NIFTI_GZ"
+
+            register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
+                                    align_seg_csf, "in_file")  # -source
+
+            register_NMT_pipe.connect(deoblique, 'out_file',
+                                    align_seg_csf, "reference")  # -base
+
+            register_NMT_pipe.connect(
+                NMT_subject_align, 'inv_transfo_file', align_seg_csf,
+                "in_matrix")  # -1Dmatrix_apply
+
+        if "template_gm" in params_template.keys():
+            # seg_gm
+            align_seg_gm = pe.Node(
+                afni.Allineate(), name="align_seg_gm", iterfield=['in_file'])
+            align_seg_gm.inputs.final_interpolation = "nearestneighbour"
+            align_seg_gm.inputs.overwrite = True
+            align_seg_gm.inputs.outputtype = "NIFTI_GZ"
+
+            register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 2),
+                                    align_seg_gm, "in_file")  # -source
+            register_NMT_pipe.connect(deoblique, 'out_file',
+                                    align_seg_gm, "reference")  # -base
+            register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                                    align_seg_gm, "in_matrix")  # -1Dmatrix_apply
+        if "template_wm" in params_template.keys():
+
+            # seg_wm
+            align_seg_wm = pe.Node(afni.Allineate(), name="align_seg_wm",
+                                iterfield=['in_file'])
+            align_seg_wm.inputs.final_interpolation = "nearestneighbour"
+            align_seg_wm.inputs.overwrite = True
+            align_seg_wm.inputs.outputtype = "NIFTI_GZ"
+
+            register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 3),
+                                    align_seg_wm, "in_file")  # -source
+            register_NMT_pipe.connect(deoblique, 'out_file',
+                                    align_seg_wm, "reference")  # -base
+            register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
+                                    align_seg_wm, "in_matrix")  # -1Dmatrix_apply
 
     return register_NMT_pipe
 
