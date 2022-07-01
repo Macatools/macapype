@@ -231,8 +231,8 @@ def create_register_NMT_pipe(params_template, params={},
         if "NMT_version" in params.keys():
             NMT_version = params['NMT_version']
 
-            print("*** Overriding NMT_version with params NMT_version: {}".format(
-                params['NMT_version']))
+            print("*** Overriding NMT_version with params NMT_version: \
+                {}".format(params['NMT_version']))
 
         print("running NMT_subject_align with version {}".format(NMT_version))
 
@@ -283,22 +283,21 @@ def create_register_NMT_pipe(params_template, params={},
     list_priors = [params_template["template_head"]]
 
     if "template_seg" in params_template.keys():
-
         # align_masks
-        # "overwrap" of NwarpApply, with specifying the outputs as wished
         list_priors.append(params_template["template_seg"])
 
     else:
         if "template_csf" in params_template.keys():
-             list_priors.append(params_template["template_csf"])
+            list_priors.append(params_template["template_csf"])
 
         if "template_gm" in params_template.keys():
-             list_priors.append(params_template["template_gm"])
+            list_priors.append(params_template["template_gm"])
 
         if "template_wm" in params_template.keys():
-             list_priors.append(params_template["template_wm"])
+            list_priors.append(params_template["template_wm"])
 
     # align_masks
+    # "overwrap" of NwarpApply, with specifying the outputs as wished
     align_masks = pe.Node(NwarpApplyPriors(), name='align_masks')
     align_masks.inputs.in_file = list_priors
     align_masks.inputs.out_file = list_priors
@@ -342,7 +341,6 @@ def create_register_NMT_pipe(params_template, params={},
         register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
                                   align_seg, "in_matrix")  # -1Dmatrix_apply
 
-
     else:
         if "template_csf" in params_template.keys():
             # seg_csf
@@ -353,10 +351,10 @@ def create_register_NMT_pipe(params_template, params={},
             align_seg_csf.inputs.outputtype = "NIFTI_GZ"
 
             register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 1),
-                                    align_seg_csf, "in_file")  # -source
+                                      align_seg_csf, "in_file")  # -source
 
             register_NMT_pipe.connect(deoblique, 'out_file',
-                                    align_seg_csf, "reference")  # -base
+                                      align_seg_csf, "reference")  # -base
 
             register_NMT_pipe.connect(
                 NMT_subject_align, 'inv_transfo_file', align_seg_csf,
@@ -371,26 +369,26 @@ def create_register_NMT_pipe(params_template, params={},
             align_seg_gm.inputs.outputtype = "NIFTI_GZ"
 
             register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 2),
-                                    align_seg_gm, "in_file")  # -source
+                                      align_seg_gm, "in_file")  # -source
             register_NMT_pipe.connect(deoblique, 'out_file',
-                                    align_seg_gm, "reference")  # -base
+                                      align_seg_gm, "reference")  # -base
             register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                                    align_seg_gm, "in_matrix")  # -1Dmatrix_apply
+                                      align_seg_gm, "in_matrix")
         if "template_wm" in params_template.keys():
 
             # seg_wm
             align_seg_wm = pe.Node(afni.Allineate(), name="align_seg_wm",
-                                iterfield=['in_file'])
+                                   iterfield=['in_file'])
             align_seg_wm.inputs.final_interpolation = "nearestneighbour"
             align_seg_wm.inputs.overwrite = True
             align_seg_wm.inputs.outputtype = "NIFTI_GZ"
 
             register_NMT_pipe.connect(align_masks, ('out_file', get_elem, 3),
-                                    align_seg_wm, "in_file")  # -source
+                                      align_seg_wm, "in_file")  # -source
             register_NMT_pipe.connect(deoblique, 'out_file',
-                                    align_seg_wm, "reference")  # -base
+                                      align_seg_wm, "reference")  # -base
             register_NMT_pipe.connect(NMT_subject_align, 'inv_transfo_file',
-                                    align_seg_wm, "in_matrix")  # -1Dmatrix_apply
+                                      align_seg_wm, "in_matrix")
 
     return register_NMT_pipe
 
