@@ -254,7 +254,7 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
 
     print("Cropped img shape:", data_cropped.shape)
 
-    crop = indiv_crop['crop']['args'].split()
+    crop = indiv_crop['crop_T1']['args'].split()
     xmin = int(crop[0])
     xmax = xmin + int(crop[1])
 

@@ -225,14 +225,15 @@ def create_register_NMT_pipe(params_template, params={},
 
     print("which @animal_warper: ", shutil.which("@animal_warper"))
 
-    if "NMT_subject_align" in params.keys() \
-            or shutil.which("@animal_warper") is None:
+    if "NMT_subject_align" in params.keys():
 
-        if "NMT_version" in params.keys():
-            NMT_version = params['NMT_version']
+        if "NMT_version" in params["NMT_subject_align"].keys():
+            NMT_version = params["NMT_subject_align"]['NMT_version']
+        else:
+            print("Warning, for NMT_subject_align, NMT_version is required")
+            NMT_version = "v1.3"
 
-            print("*** Overriding NMT_version with params NMT_version: \
-                {}".format(params['NMT_version']))
+        print("*** NMT_version: {}".format(NMT_version))
 
         print("running NMT_subject_align with version {}".format(NMT_version))
 
@@ -270,9 +271,12 @@ def create_register_NMT_pipe(params_template, params={},
                          function=animal_warper),
             name='NMT_subject_align')
     else:
-        print("could not find normalisation procedure,\
-              either with NMT_subject_align, or @animal_warper, breaking")
-        exit()
+        print("running default NMT_subject_align version (NMTSubjectAlign2)")
+
+        NMT_subject_align = NodeParams(
+            NMTSubjectAlign2(),
+            params=parse_key(params, "NMT_subject_align"),
+            name='NMT_subject_align')
 
     NMT_subject_align.inputs.NMT_SS_file = params_template["template_brain"]
 
