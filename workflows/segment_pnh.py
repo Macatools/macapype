@@ -78,8 +78,8 @@ from macapype.utils.misc import show_files, get_first_elem, parse_key
 
 def create_main_workflow(data_dir, process_dir, soft, species, subjects, sessions,
                          acquisitions, reconstructions, params_file,
-                         indiv_params_file, mask_file, nprocs,
-                         wf_name="macapype",
+                         indiv_params_file, mask_file, template_path,
+                         template_files, nprocs, wf_name="macapype",
                          deriv=False, pad=False):
 
     # macapype_pipeline
@@ -344,19 +344,62 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     pprint.pprint(params)
 
     # params_template
-    assert ("general" in params.keys() and \
-        "template_name" in params["general"].keys()), \
-            "Error, the params.json should contains a general/template_name"
 
-    template_name = params["general"]["template_name"]
+    if template_path is not None:
+        print(template_files)
 
-    if "general" in params.keys() and "my_path" in params["general"].keys():
-        my_path = params["general"]["my_path"]
+        params_template = {}
+
+        assert len(template_files) > 1, "Error, template_files unspecified {}".format(template_files)
+
+        template_head = os.path.join(template_path,template_files[0])
+        assert os.path.exists(template_head), "Could not find template_head {}".format(template_head)
+        params_template["template_head"] = template_head
+
+        template_brain = os.path.join(template_path,template_files[1])
+        assert os.path.exists(template_brain), "Could not find template_brain {}".format(template_brain)
+        params_template["template_brain"] = template_brain
+
+        if len(template_files) == 3:
+
+            template_seg = os.path.join(template_path,template_files[2])
+            assert os.path.exists(template_seg), "Could not find template_seg {}".format(template_seg)
+            params_template["template_seg"] = template_seg
+
+        elif len(template_files) == 5:
+
+            template_gm = os.path.join(template_path,template_files[2])
+            assert os.path.exists(template_gm), "Could not find template_gm {}".format(template_gm)
+            params_template["template_gm"] = template_gm
+
+            template_wm = os.path.join(template_path,template_files[3])
+            assert os.path.exists(template_wm), "Could not find template_wm {}".format(template_wm)
+            params_template["template_wm"] = template_wm
+
+            template_csf = os.path.join(template_path,template_files[4])
+            assert os.path.exists(template_csf), "Could not find template_csf {}".format(template_csf)
+            params_template["template_csf"] = template_csf
+
+        else:
+            print("Unknown template_files format, should be 3 or 5 files")
+            exit(-1)
+
     else:
-        my_path = ""
+        ### use template from params
+        assert ("general" in params.keys() and \
+            "template_name" in params["general"].keys()), \
+                "Error, the params.json should contains a general/template_name"
 
-    nmt_dir = load_test_data(template_name, path_to = my_path)
-    params_template = format_template(nmt_dir, template_name)
+        template_name = params["general"]["template_name"]
+
+        if "general" in params.keys() and "my_path" in params["general"].keys():
+            my_path = params["general"]["my_path"]
+        else:
+            my_path = ""
+
+        nmt_dir = load_test_data(template_name, path_to = my_path)
+        params_template = format_template(nmt_dir, template_name)
+
     print (params_template)
 
     # soft
@@ -710,14 +753,27 @@ def main():
                         required=False)
     parser.add_argument("-mask", dest="mask_file", type=str,
                         help="precomputed mask file", required=False)
+
+    parser.add_argument("-template_path", dest="template_path", type=str,
+                        help="specifies user-based template path",
+                        required=False)
+
+    parser.add_argument("-template_files", dest="template_files", type=str,
+                        nargs="+", help="specifies user-based template files \
+                            (3 or 5 are possible options)",
+                        required=False)
+
     parser.add_argument("-nprocs", dest="nprocs", type=int,
                         help="number of processes to allocate", required=False)
+
     parser.add_argument("-deriv", dest="deriv", action='store_true',
                         help="output derivatives in BIDS orig directory",
                         required=False)
+
     parser.add_argument("-pad", dest="pad", action='store_true',
                         help="padding mask and seg_mask",
                         required=False)
+
 
     args = parser.parse_args()
 
@@ -735,6 +791,8 @@ def main():
         params_file=args.params_file,
         indiv_params_file=args.indiv_params_file,
         mask_file=args.mask_file,
+        template_path=args.template_path,
+        template_files=args.template_files,
         nprocs=args.nprocs,
         deriv=args.deriv,
         pad=args.pad)

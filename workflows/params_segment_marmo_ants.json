@@ -31,7 +31,6 @@
     },
     "brain_segment_pipe":
     {
-        "NMT_version":"v2.0",
         "debias":
         {
             "s": 4

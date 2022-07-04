@@ -236,25 +236,10 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
 
     from nipype.utils.filemanip import split_filename as split_f
 
-    # orig image
-    orig_img = nib.load(orig_img_file)
+    # cropping params
+    crop = indiv_crop['crop_T1']['args'].split()
+    print("cropping params {}".format(crop))
 
-    data_orig = orig_img.get_data()
-    header_orig = orig_img.get_header()
-    affine_orig = orig_img.get_affine()
-
-    padded_img_data = np.zeros(shape=data_orig.shape)
-    fpath, fname, ext = split_f(cropped_img_file)
-
-    print("Padded img shape:", padded_img_data.shape)
-
-    # cropped image
-    cropped_img = nib.load(cropped_img_file)
-    data_cropped = cropped_img.get_data()
-
-    print("Cropped img shape:", data_cropped.shape)
-
-    crop = indiv_crop['crop']['args'].split()
     xmin = int(crop[0])
     xmax = xmin + int(crop[1])
 
@@ -264,8 +249,43 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
     zmin = int(crop[4])
     zmax = zmin + int(crop[5])
 
-    padded_img_data[xmin:xmax, ymin:ymax, zmin:zmax] = data_cropped
+    # orig image
+    orig_img = nib.load(orig_img_file)
 
+    data_orig = orig_img.get_data()
+    header_orig = orig_img.get_header()
+    affine_orig = orig_img.get_affine()
+
+    print("Orig img shape:", data_orig.shape)
+
+    # cropped image
+    cropped_img = nib.load(cropped_img_file)
+    data_cropped = cropped_img.get_data()
+
+    print("Cropped img shape:", data_cropped.shape)
+
+    if len(data_orig.shape) == 3 and len(data_cropped.shape) == 4:
+        print("Padding with 3D params on a 4D image")
+
+        padded_img_data_shape = (*data_orig.shape, data_cropped.shape[3])
+        print(padded_img_data_shape)
+
+        padded_img_data = np.zeros(shape=padded_img_data_shape)
+        print("Broscasted padded img shape:", padded_img_data_shape)
+
+        for t in range(data_cropped.shape[3]):
+            padded_img_data[xmin:xmax, ymin:ymax, zmin:zmax, t] = \
+                data_cropped[:, :, :, t]
+
+    else:
+
+        padded_img_data = np.zeros(shape=data_orig.shape)
+        print("Padded img shape:", padded_img_data.shape)
+
+        padded_img_data[xmin:xmax, ymin:ymax, zmin:zmax] = data_cropped
+
+    # saving padded image
+    fpath, fname, ext = split_f(cropped_img_file)
     padded_img_file = os.path.abspath(fname + "_padded" + ext)
     img_padded_res = nib.Nifti1Image(padded_img_data, affine=affine_orig,
                                      header=header_orig)
