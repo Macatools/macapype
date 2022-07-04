@@ -1259,7 +1259,8 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
                              pad_debiased_T1, "orig_img_file")
 
-            seg_pipe.connect(inputnode, "indiv_params", pad_debiased_T1, "indiv_crop")
+            seg_pipe.connect(inputnode, "indiv_params",
+                             pad_debiased_T1, "indiv_crop")
 
             seg_pipe.connect(pad_debiased_T1, "padded_img_file",
                              outputnode, "debiased_T1")
