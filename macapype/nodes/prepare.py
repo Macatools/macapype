@@ -271,7 +271,7 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
         print(padded_img_data_shape)
 
         padded_img_data = np.zeros(shape=padded_img_data_shape,
-                                   dtype = data_cropped.dtype)
+                                   dtype=data_cropped.dtype)
         print("Broscasted padded img shape:", padded_img_data_shape)
 
         for t in range(data_cropped.shape[3]):
@@ -281,7 +281,7 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
     else:
 
         padded_img_data = np.zeros(shape=data_orig.shape,
-                                   dtype = data_cropped.dtype)
+                                   dtype=data_cropped.dtype)
         print("Padded img shape:", padded_img_data.shape)
 
         padded_img_data[xmin:xmax, ymin:ymax, zmin:zmax] = data_cropped
