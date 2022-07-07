@@ -126,7 +126,10 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         # 3 -> sub cortical?
         # 4 -> WM
         # 5 -> ? -> (CSF)
-        tissue_dict = {'csf': [1, 5], 'gm': [2, 3],  'wm': 4}
+        #tissue_dict = {'csf': [1, 5], 'gm': [2, 3],  'wm': 4}
+
+        # MBM 3.0.1 three tissue
+        tissue_dict = {'csf': 3, 'gm': 1,  'wm': 2}
 
     print("Using tissue dict {}".format(tissue_dict))
 

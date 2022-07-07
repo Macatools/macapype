@@ -28,7 +28,7 @@
 
     Example
     ---------
-    python segment_kepkee.py -data [PATH_TO_BIDS] -out ../local_tests/ -subjects Elouk
+    python segment_pnh.py -data [PATH_TO_BIDS] -out ../local_tests/ -subjects Elouk
 
     Requirements
     --------------
