@@ -8,7 +8,7 @@ jobs:
 
   build-n-publish-pypi:
     name: Build and publish Python to PyPI
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@master
@@ -67,7 +67,7 @@ jobs:
   run-test:
     name: Running all existing pipelines in macapype_CI.zip
     needs: docker-build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Pull latest docker image
@@ -88,17 +88,14 @@ jobs:
             ls macapype_CI/macaque_prime-de
             echo ""
 
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -pad
 
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon_long_single_prep.json -sub Odor -ses T1 -deriv -pad
 
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -indiv /data/marmo-marmobrain/indiv_params_segment_marmo.json -sub 8034 -ses 01 -deriv -pad
 
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -sub 032140 -ses 001
-
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon_long_single_prep.json -sub Odor -ses T1 -deriv
-
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon_multi.json -sub Odor -ses T1 -deriv
-
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -indiv /data/marmo-marmobrain/indiv_params_segment_marmo.json -sub 8034 -ses 01 -deriv
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI
+            sudo rm -f /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI.zip
 
