@@ -199,8 +199,8 @@ def average_align(list_img):
             print(avg_data.shape)
 
             av_img_file = os.path.abspath("avg_" + fname + ext)
-            nib.save(nib.Nifti1Image(avg_data, header=img_0.get_header(),
-                                     affine=img_0.get_affine()),
+            nib.save(nib.Nifti1Image(avg_data, header=img_0.header,
+                                     affine=img_0.affine),
                      av_img_file)
 
     else:
@@ -253,8 +253,8 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
     orig_img = nib.load(orig_img_file)
 
     data_orig = orig_img.get_data()
-    header_orig = orig_img.get_header()
-    affine_orig = orig_img.get_affine()
+    header_orig = orig_img.header
+    affine_orig = orig_img.affine
 
     print("Orig img shape:", data_orig.shape)
 
