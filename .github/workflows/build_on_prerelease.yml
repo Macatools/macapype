@@ -105,7 +105,6 @@ jobs:
       - name: Running test pipeline baboon-cerimed-adrien indiv
         run: |
             docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon.json -sub Fidji -ses 01 -deriv -pad
-
       - name: Cleaning dataset
         run:
             sudo rm -rf /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI
