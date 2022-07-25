@@ -204,11 +204,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
-    ## saving real params
-    real_params_file = op.join(process_dir, wf_name, "real_params.json")
-    with open(real_params_file, 'w+') as fp:
-        json.dump(params, fp)
-
     # params_template
     if template_path is not None:
         print(template_files)
@@ -272,6 +267,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     main_workflow.base_dir = process_dir
 
+    # which soft is used
     if "spm" in ssoft or "spm12" in ssoft:
         if 'native' in ssoft:
             space='native'
@@ -563,6 +559,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+
+    # saving real params.json
+    real_params_file = op.join(process_dir, wf_name, "real_params.json")
+    with open(real_params_file, 'w+') as fp:
+        json.dump(params, fp)
 
     if nprocs is None:
         nprocs = 4

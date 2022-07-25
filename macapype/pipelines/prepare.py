@@ -798,7 +798,7 @@ def create_long_multi_preparation_pipe(params,
 
 ###############################################################################
 # works with only one T1
-def create_short_preparation_T1_pipe(params,
+def create_short_preparation_T1_pipe(params, params_template,
                                      name="short_preparation_T1_pipe"):
     """Description: T1 only short preparation
 
@@ -864,43 +864,9 @@ def create_short_preparation_T1_pipe(params,
         name="av_T1")
     data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
-    if "reorient" in params.keys():
-        print('reorient is in params')
 
-        if "new_dims" in params["reorient"].keys():
-            new_dims = tuple(params["reorient"]["new_dims"].split())
 
-        else:
-            new_dims = ("x", "z", "-y")
-
-        reorient_T1_pipe = _create_reorient_pipeline(
-            name="reorient_T1_pipe", new_dims=new_dims)
-
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      reorient_T1_pipe, 'inputnode.image')
-
-    if "bet_crop" in params.keys():
-        print('bet_crop is in params')
-
-        # Brain extraction (unused) + Cropping
-        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
-                              name='bet_crop')
-
-        if "reorient" in params.keys():
-
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'reorient.out_file',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'reorient.out_file',
-                                          bet_crop, 't2_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't1_file')
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't2_file')
-
-    elif "crop_T1" in params.keys():
+    if "crop_T1" in params.keys():
         print('crop_T1 is in params')
 
         assert "args" in params["crop_T1"].keys(), \
@@ -912,38 +878,102 @@ def create_short_preparation_T1_pipe(params,
                              params=parse_key(params, 'crop'),
                              name='crop_T1')
 
-        if "reorient" in params.keys():
-            data_preparation_pipe.connect(reorient_T1_pipe,
-                                          'reorient.out_file',
-                                          crop_T1, 'in_file')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
+        data_preparation_pipe.connect(av_T1, 'avg_img',
                                           crop_T1, 'in_file')
 
         data_preparation_pipe.connect(
             inputnode, ("indiv_params", parse_key, "crop_T1"),
             crop_T1, 'indiv_params')
 
-    # denoise with Ants package
-    denoise_T1 = NodeParams(interface=DenoiseImage(),
-                            params=parse_key(params, "denoise"),
-                            name="denoise_T1")
+    elif "bet_crop" in params.keys():
 
-    if "bet_crop" in params.keys():
-        data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                                      denoise_T1, 'input_image')
+        print('bet_crop is in params')
 
-    elif "crop_T1" in params.keys():
-        data_preparation_pipe.connect(crop_T1, "roi_file",
-                                      denoise_T1, 'input_image')
+        # Brain extraction (unused) + Cropping
+        bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
+                              name='bet_crop')
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          bet_crop, 't1_file')
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          bet_crop, 't2_file')
+
+
+    else:
+
+        crop_aladin_T1 = NodeParams(reg.RegAladin(),
+                                    params=parse_key(params, "crop_aladin_T1"),
+                                    name='crop_aladin_T1')
+
+        crop_aladin_T1.inputs.rig_only_flag = True
+        crop_aladin_T1.inputs.nosym_flag = True
+        crop_aladin_T1.inputs.ln_val = 12
+        crop_aladin_T1.inputs.lp_val = 10
+        crop_aladin_T1.inputs.smoo_r_val = 1.0
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                        crop_aladin_T1, 'flo_file')
+
+        crop_aladin_T1.inputs.ref_file = params_template["template_head"]
+
+        # compute inv transfo
+        inv_tranfo = NodeParams(
+            regutils.RegTransform(),
+            params=parse_key(params, "inv_transfo_aladin"),
+            name='inv_tranfo')
+
+        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
+                                      inv_tranfo, 'inv_aff_input')
+
+        # crop_z_T1
+        crop_z_T1 = NodeParams(fsl.RobustFOV(),
+            params=parse_key(params, "crop_z"),
+            name='crop_z_T1')
+
+        data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                      crop_z_T1, 'in_file')
 
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['preproc_T1']),
         name='outputnode')
 
-    data_preparation_pipe.connect(denoise_T1, 'output_image',
-                                  outputnode, 'preproc_T1')
+    if "denoise" in params.keys():
+
+        # denoise with Ants package
+        denoise_T1 = NodeParams(interface=DenoiseImage(),
+                                params=parse_key(params, "denoise"),
+                                name="denoise_T1")
+
+        # inputs
+        if "bet_crop" in params.keys():
+            data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                        denoise_T1, 'input_image')
+
+        elif "crop_T1" in params.keys():
+            data_preparation_pipe.connect(crop_T1, "roi_file",
+                                        denoise_T1, 'input_image')
+        else:
+
+            data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                          denoise_T1, 'input_image')
+
+        # outputs
+        data_preparation_pipe.connect(denoise_T1, 'output_image',
+                                    outputnode, 'preproc_T1')
+
+    else:
+
+        if "crop_T1" in params.keys():
+            data_preparation_pipe.connect(crop_T1, "roi_file",
+                                          outputnode, 'preproc_T1')
+        elif "bet_crop" in params.keys():
+            data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
+                                          outputnode, 'preproc_T1')
+
+        else:
+            data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                          outputnode, 'preproc_T1')
 
     return data_preparation_pipe
 

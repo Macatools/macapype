@@ -2127,7 +2127,8 @@ def create_full_T1_ants_subpipes(params_template, params={},
     # preprocessing (perform preparation pipe with only T1)
     if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_T1_pipe(
-            params=parse_key(params, "short_preparation_pipe"))
+            params=parse_key(params, "short_preparation_pipe"),
+            params_template=params_template)
 
     else:
         print("Error, short_preparation_pipe was not found in params, \
