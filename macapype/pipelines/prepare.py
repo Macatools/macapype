@@ -1,4 +1,4 @@
-
+﻿
 import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
@@ -294,7 +294,8 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
 ###############################################################################
 # choices between the 3 main pipelines: "short", "long_single" et "long_multi"
 ###############################################################################
-def create_short_preparation_pipe(params, params_template = {}, name="short_preparation_pipe"):
+def create_short_preparation_pipe(params, params_template={},
+                                  name="short_preparation_pipe"):
     """Description: short data preparation (average, reorient, crop/betcrop \
     and denoise)
 
@@ -407,11 +408,11 @@ def create_short_preparation_pipe(params, params_template = {}, name="short_prep
             crop_T2, 'indiv_params')
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                        align_T2_on_T1, 'reference')
+                                      align_T2_on_T1, 'reference')
         data_preparation_pipe.connect(av_T2, 'avg_img',
-                                        align_T2_on_T1, 'in_file')
+                                      align_T2_on_T1, 'in_file')
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                        crop_T1, 'in_file')
+                                      crop_T1, 'in_file')
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                       crop_T2, 'in_file')
@@ -435,7 +436,7 @@ def create_short_preparation_pipe(params, params_template = {}, name="short_prep
         crop_aladin_T1.inputs.smoo_r_val = 1.0
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                        crop_aladin_T1, 'flo_file')
+                                      crop_aladin_T1, 'flo_file')
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
@@ -446,10 +447,10 @@ def create_short_preparation_pipe(params, params_template = {}, name="short_prep
             name='apply_crop_aladin_T2')
 
         data_preparation_pipe.connect(av_T2, 'avg_img',
-                                        apply_crop_aladin_T2, 'flo_file')
+                                      apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
-                                        apply_crop_aladin_T2, 'trans_file')
+                                      apply_crop_aladin_T2, 'trans_file')
 
         apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
 
@@ -464,16 +465,16 @@ def create_short_preparation_pipe(params, params_template = {}, name="short_prep
 
         # crop_z_T1
         crop_z_T1 = NodeParams(fsl.RobustFOV(),
-            params=parse_key(params, "crop_z"),
-            name='crop_z_T1')
+                               params=parse_key(params, "crop_z"),
+                               name='crop_z_T1')
 
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
         # crop_z_T2
         crop_z_T2 = NodeParams(fsl.RobustFOV(),
-            params=parse_key(params, "crop_z"),
-            name='crop_z_T2')
+                               params=parse_key(params, "crop_z"),
+                               name='crop_z_T2')
 
         data_preparation_pipe.connect(apply_crop_aladin_T2, "out_file",
                                       crop_z_T2, 'in_file')
@@ -536,8 +537,6 @@ def create_short_preparation_pipe(params, params_template = {}, name="short_prep
                                           outputnode, 'preproc_T1')
             data_preparation_pipe.connect(crop_z_T2, "out_roi",
                                           outputnode, 'preproc_T2')
-
-
     return data_preparation_pipe
 
 
@@ -864,8 +863,6 @@ def create_short_preparation_T1_pipe(params, params_template,
         name="av_T1")
     data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
-
-
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
 
@@ -879,7 +876,7 @@ def create_short_preparation_T1_pipe(params, params_template,
                              name='crop_T1')
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          crop_T1, 'in_file')
+                                      crop_T1, 'in_file')
 
         data_preparation_pipe.connect(
             inputnode, ("indiv_params", parse_key, "crop_T1"),
@@ -894,13 +891,11 @@ def create_short_preparation_T1_pipe(params, params_template,
                               name='bet_crop')
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't1_file')
+                                      bet_crop, 't1_file')
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          bet_crop, 't2_file')
-
+                                      bet_crop, 't2_file')
 
     else:
-
         crop_aladin_T1 = NodeParams(reg.RegAladin(),
                                     params=parse_key(params, "crop_aladin_T1"),
                                     name='crop_aladin_T1')
@@ -912,7 +907,7 @@ def create_short_preparation_T1_pipe(params, params_template,
         crop_aladin_T1.inputs.smoo_r_val = 1.0
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                        crop_aladin_T1, 'flo_file')
+                                      crop_aladin_T1, 'flo_file')
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
@@ -927,8 +922,8 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         # crop_z_T1
         crop_z_T1 = NodeParams(fsl.RobustFOV(),
-            params=parse_key(params, "crop_z"),
-            name='crop_z_T1')
+                               params=parse_key(params, "crop_z"),
+                               name='crop_z_T1')
 
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
@@ -948,11 +943,11 @@ def create_short_preparation_T1_pipe(params, params_template,
         # inputs
         if "bet_crop" in params.keys():
             data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
-                                        denoise_T1, 'input_image')
+                                          denoise_T1, 'input_image')
 
         elif "crop_T1" in params.keys():
             data_preparation_pipe.connect(crop_T1, "roi_file",
-                                        denoise_T1, 'input_image')
+                                          denoise_T1, 'input_image')
         else:
 
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
@@ -960,7 +955,7 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
-                                    outputnode, 'preproc_T1')
+                                      outputnode, 'preproc_T1')
 
     else:
 

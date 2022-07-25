@@ -1,5 +1,4 @@
 {
-
     "ZENODO": {
         "server": "https://zenodo.org",
         "data_dir": {
@@ -23,5 +22,5 @@
             "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP"
                     },
         "cloud_format": "{}/public.php?service=files&t={}&download"
-            }
+    }
 }
