@@ -1,5 +1,4 @@
-
-{
+﻿{
     "ZENODO": {
         "server": "https://zenodo.org",
         "data_dir": {
@@ -7,7 +6,7 @@
             "Juna_Chimp": "4738619"
             },
         "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"
-    }
+    },
     "AMUBOX": {
         "server": "https://amubox.univ-amu.fr",
         "data_dir": {
