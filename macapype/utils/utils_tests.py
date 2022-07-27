@@ -90,6 +90,7 @@ def load_test_data(name, path_to=""):
 
     assert op.exists(data_zip), "Error, cannot find {}".format(data_zip)
 
+    os.system("ls -l {}".format(data_dirpath))
     print("Unzip {} to {}".format(data_zip, data_path))
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
