@@ -52,8 +52,6 @@ def test_create_full_ants_subpipes_no_args():
         op.join(data_path, "test_create_full_ants_subpipes_no_args",
                 "graph.png"))
 
-
-
 def test_create_full_ants_subpipes_all_default_params():
 
     import os

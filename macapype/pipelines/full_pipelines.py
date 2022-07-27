@@ -2178,7 +2178,6 @@ def create_full_T1_ants_subpipes(params_template, params={},
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_extraction_pipe, 'inputnode.indiv_params')
 
-
     if pad and space == "native":
 
         if "short_preparation_pipe" in params.keys():
