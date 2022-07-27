@@ -2355,11 +2355,11 @@ def create_full_T1_ants_subpipes(params_template, params={},
         seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
                          pad_debiased_brain, "orig_img_file")
 
-        seg_pipe.connect(inputnode, "indiv_params", pad_debiased_brain, "indiv_crop")
+        seg_pipe.connect(inputnode, "indiv_params",
+                         pad_debiased_brain, "indiv_crop")
 
         seg_pipe.connect(pad_debiased_brain, "padded_img_file",
                          outputnode, "debiased_brain")
-
 
         print("Padding prob_csf in native space")
         pad_prob_csf = pe.Node(
@@ -2381,8 +2381,6 @@ def create_full_T1_ants_subpipes(params_template, params={},
         seg_pipe.connect(pad_prob_csf, "padded_img_file",
                          outputnode, "prob_csf")
 
-
-
         print("Padding prob_gm in native space")
         pad_prob_gm = pe.Node(
             niu.Function(
@@ -2402,7 +2400,6 @@ def create_full_T1_ants_subpipes(params_template, params={},
 
         seg_pipe.connect(pad_prob_gm, "padded_img_file",
                          outputnode, "prob_gm")
-
 
         print("Padding prob_wm in native space")
         pad_prob_wm = pe.Node(
@@ -2424,28 +2421,28 @@ def create_full_T1_ants_subpipes(params_template, params={},
         seg_pipe.connect(pad_prob_wm, "padded_img_file",
                          outputnode, "prob_wm")
 
-
         if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
             print("Padding gen_5tt in native space")
             pad_gen_5tt = pe.Node(
                 niu.Function(
                     input_names=['cropped_img_file', 'orig_img_file',
-                                'indiv_crop'],
+                                 'indiv_crop'],
                     output_names=['padded_img_file'],
                     function=padding_cropped_img),
                 name="pad_gen_5tt")
 
             seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                            pad_gen_5tt, "cropped_img_file")
+                             pad_gen_5tt, "cropped_img_file")
 
             seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
-                            pad_gen_5tt, "orig_img_file")
+                             pad_gen_5tt, "orig_img_file")
 
-            seg_pipe.connect(inputnode, "indiv_params", pad_gen_5tt, "indiv_crop")
+            seg_pipe.connect(inputnode, "indiv_params",
+                             pad_gen_5tt, "indiv_crop")
 
             seg_pipe.connect(pad_gen_5tt, "padded_img_file",
-                            outputnode, "gen_5tt")
+                             outputnode, "gen_5tt")
 
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
