@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 import nibabel as nb
 import numpy as np
@@ -333,7 +333,7 @@ def split_indexed_mask(nii_file, background_val=0):
 
     nii = nib.load(nii_file)
 
-    nii_data = nii.get_data()
+    nii_data = nii.get_fdata()
 
     list_split_files = []
 
