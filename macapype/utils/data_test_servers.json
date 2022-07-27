@@ -1,4 +1,5 @@
-﻿{
+
+{
     "ZENODO": {
         "server": "https://zenodo.org",
         "data_dir": {
@@ -6,13 +7,7 @@
             "Juna_Chimp": "4738619"
             },
         "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"
-    },
-    "GOOGLE_DRIVE":{
-        "server":"https://drive.google.com",
-        "data_dir": {
-            "inia19":"1mbb8xB96Vm9ZY-P5jv8rXUC6lBXsG0ky"},
-        "cloud_format":"{}/uc?export=download&id={}"
-    },
+    }
     "AMUBOX": {
         "server": "https://amubox.univ-amu.fr",
         "data_dir": {
@@ -28,5 +23,5 @@
             "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP"
                     },
         "cloud_format": "{}/public.php?service=files&t={}&download"
-            }
+    }
 }

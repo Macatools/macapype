@@ -71,6 +71,7 @@ from macapype.utils.utils_bids import (create_datasource, create_datasource_indi
 from macapype.utils.utils_tests import load_test_data, format_template
 
 from macapype.utils.utils_nodes import node_output_exists
+from macapype.utils.utils_params import update_params
 
 from macapype.utils.misc import show_files, get_first_elem, parse_key
 
@@ -155,17 +156,15 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     except OSError:
         print("process_dir {} already exists".format(process_dir))
 
-    # species
-    # params
-    params = {}
-
+    #params
     if params_file is None:
 
+        # species
         if species is not None:
 
             species = species.lower()
 
-            rep_species = {"marmoset":"marmo", "chimpanzee":"chimp"}
+            rep_species = {"marmoset":"marmo", "marmouset":"marmo", "chimpanzee":"chimp"}
 
             if species in list(rep_species.keys()):
                 species = rep_species[species]
@@ -176,7 +175,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 "Error, species {} should in the following list {}".format(
                     species, list_species)
 
-            package_directory = os.path.dirname(os.path.abspath(__file__))
+            package_directory = op.dirname(op.abspath(__file__))
 
             params_file = "{}/params_segment_{}_{}.json".format(
                 package_directory, species, soft)
@@ -188,163 +187,24 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     print("Params:", params_file)
 
-    assert os.path.exists(params_file), "Error with file {}".format(
-        params_file)
+    params, indiv_params, extra_wf_name = update_params(ssoft=ssoft, subjects=subjects, sessions=sessions,
+                           params_file=params_file, indiv_params_file=indiv_params_file)
 
-    params = json.load(open(params_file))
+    wf_name += extra_wf_name
 
-    # indiv_params
-    indiv_params = {}
+    # soft
+    wf_name += "_{}".format(soft)
 
-    if indiv_params_file is None:
+    if 't1' in ssoft:
+        wf_name += "_t1"
 
-        print("No indiv params where found, modifing pipepline to default")
+    if mask_file is not None:
+        wf_name += "_mask"
 
-        if "short_preparation_pipe" in params.keys():
-            if "crop_T1" in params["short_preparation_pipe"].keys():
-                print("Deleting crop_T1")
-                del params["short_preparation_pipe"]["crop_T1"]
-
-                print("Adding automated bet_crop")
-
-                params["short_preparation_pipe"]["bet_crop"] = {"m": True, "aT2": True, "c": 10, "n": 2}
-
-                print("Using default bet_crop parameters: {}".format(
-                    params["short_preparation_pipe"]["bet_crop"]))
-
-                print("New params after modification")
-                pprint.pprint(params)
-
-                wf_name+="_bet_crop"
-
-    else:
-
-        indiv_params = json.load(open(indiv_params_file))
-
-        wf_name+="_indiv_params"
-
-        pprint.pprint(indiv_params)
-
-        if "short_preparation_pipe" not in params.keys():
-
-            print("short_preparation_pipe not found in params, not modifying preparation pipe")
-
-        else:
-
-            prep_pipe = "short_preparation_pipe"
-            count_all_sessions=0
-            count_T1_crops=0
-            count_long_crops=0
-            count_multi_long_crops=0
-
-            print("Indiv Params:", indiv_params_file)
-
-            assert os.path.exists(indiv_params_file), "Error with file {}".format(
-                indiv_params_file)
-
-            if subjects is None or sessions is None:
-                print("For whole BIDS dir, unable to assess if the indiv_params is correct")
-                print("Running with params as it is")
-
-            else:
-
-                print("Will modify params if necessary, given specified subjects and sessions;\n")
-
-                for sub in indiv_params.keys():
-
-                    if sub.split('-')[1] not in subjects:
-                        continue
-
-                    for ses in indiv_params[sub].keys():
-
-                        if ses.split('-')[1] not in sessions:
-                            continue
-
-                        count_all_sessions+=1
-
-                        print (indiv_params[sub][ses].keys())
-
-                        if "crop_T1" in indiv_params[sub][ses].keys():
-                            count_T1_crops+=1
-
-                            if "crop_T2" in indiv_params[sub][ses].keys() \
-                                and 't1' not in ssoft:
-
-                                count_long_crops+=1
-
-                                if isinstance(
-                                    indiv_params[sub][ses]["crop_T1"]["args"],
-                                    list) and isinstance(
-                                        indiv_params[sub][ses]["crop_T2"]["args"],
-                                        list):
-
-                                    count_multi_long_crops+=1
-
-                print("count_all_sessions {}".format(count_all_sessions))
-
-                print("count_T1_crops {}".format(count_T1_crops))
-                print("count_long_crops {}".format(count_long_crops))
-                print("count_multi_long_crops {}".format(count_multi_long_crops))
-
-                if count_multi_long_crops==count_all_sessions:
-                    print("**** Found list of crops for T1 and T2 for all sub/ses \
-                        in indiv -> long_multi_preparation_pipe")
-
-                    prep_pipe = "long_multi_preparation_pipe"
-
-                    wf_name+="_long_multi"
-
-                elif count_long_crops==count_all_sessions:
-
-                    print("**** Found crop for T1 and crop for T2 for all sub/ses \
-                        in indiv -> long_single_preparation_pipe")
-
-                    prep_pipe = "long_single_preparation_pipe"
-
-                    wf_name+="_long_single"
-
-                elif count_T1_crops==count_all_sessions:
-
-                    print("**** Found crop for T1 for all sub/ses in indiv \
-                        -> keeping short_preparation_pipe")
-
-                else:
-                    print("**** not all sub/ses have T1 and T2 crops ")
-                    print("Error")
-                    exit(0)
-
-                if prep_pipe != "short_preparation_pipe":
-
-                    params[prep_pipe]={
-                        "prep_T1": {"crop_T1": {"args": "should be defined in indiv"}},
-                        "prep_T2": {"crop_T2": {"args": "should be defined in indiv"}},
-                        "align_T2_on_T1": {"dof": 6, "cost": "normmi"}}
-
-                    if "denoise" in params["short_preparation_pipe"].keys():
-                        denoise= params["short_preparation_pipe"]["denoise"]
-
-                        params[prep_pipe]["prep_T1"]["denoise"]=denoise
-                        params[prep_pipe]["prep_T2"]["denoise"]=denoise
-
-                    del params["short_preparation_pipe"]
-
-    # prep for testing only preparation part
-    if "prep" in ssoft:
-        print("Found prep in soft")
-
-        if "brain_extraction_pipe" in params.keys():
-            del params["brain_extraction_pipe"]
-            print("Deleting brain_extraction_pipe")
-
-
-        if "brain_segment_pipe" in params.keys():
-            del params["brain_segment_pipe"]
-            print("Deleting brain_segment_pipe")
-
-    pprint.pprint(params)
+    assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
+        "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
     # params_template
-
     if template_path is not None:
         print(template_files)
 
@@ -402,23 +262,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     print (params_template)
 
-    # soft
-    wf_name += "_{}".format(soft)
-
-    if 't1' in ssoft:
-        wf_name += "_t1"
-
-    if mask_file is not None:
-        wf_name += "_mask"
-
-    assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
-        "error with {}, should be among [spm12, spm, ants]".format(ssoft)
-
     # main_workflow
     main_workflow = pe.Workflow(name= wf_name)
 
     main_workflow.base_dir = process_dir
 
+    # which soft is used
     if "spm" in ssoft or "spm12" in ssoft:
         if 'native' in ssoft:
             space='native'
@@ -612,8 +461,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_debiased_brain, 'out_file',
                 datasink, '@debiased_brain')
 
-
-
             ### rename debiased_T1
             rename_debiased_T1 = pe.Node(niu.Rename(), name = "rename_debiased_T1")
             rename_debiased_T1.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_T1w"
@@ -712,6 +559,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+
+    # saving real params.json
+    real_params_file = op.join(process_dir, wf_name, "real_params.json")
+    with open(real_params_file, 'w+') as fp:
+        json.dump(params, fp)
 
     if nprocs is None:
         nprocs = 4

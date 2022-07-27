@@ -5,9 +5,9 @@
     },
      "short_preparation_pipe":
     {
-        "crop_T1":
+        "crop_z":
         {
-            "args": "should be defined in indiv"
+            "brainsize": 30
         }
     },
     "brain_extraction_pipe":
