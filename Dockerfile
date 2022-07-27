@@ -225,7 +225,7 @@ RUN echo $(which python) && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     ln -s /usr/bin/pip3 /usr/bin/pip
 
-RUN  pip install macapype && python -c "import macapype; print(macapype.__version__)"
+RUN  pip install --pre macapype && python -c "import macapype; print(macapype.__version__)"
 
 #####################################################################################################
 ############################################ extra (exemple of a line to launch) ####################
