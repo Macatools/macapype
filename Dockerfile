@@ -166,6 +166,17 @@ RUN echo '{ \
     \n  ] \
     \n}' > /neurodocker/neurodocker_specs.json
 
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates cmake gcc g++ git make \
+    && git clone https://github.com/KCL-BMEIS/niftyreg.git /tmp/niftyreg-src \
+    && mkdir /tmp/niftyreg-build \
+    && cd /tmp/niftyreg-build \
+    && cmake -DCMAKE_INSTALL_PREFIX=/opt/niftyreg /tmp/niftyreg-src \
+    && make \
+    && make install
+ENV PATH=/opt/niftyreg/bin:$PATH
+
 MAINTAINER David Meunier "david.meunier@univ-amu.fr"
 ######################## Python packages
 
