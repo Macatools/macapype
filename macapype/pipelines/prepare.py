@@ -467,7 +467,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         # apply RobustFOV matrix as flirt
         align_crop_z_T2 = NodeParams(
-            fsl.ApplyXfm(apply_xfm = True),
+            fsl.ApplyXFM(apply_xfm = True),
             params=parse_key(params, "align_crop_z_T2"),
             name="align_crop_z_T2")
 
