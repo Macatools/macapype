@@ -457,7 +457,6 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
-
         # apply_T2
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
