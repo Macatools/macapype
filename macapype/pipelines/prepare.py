@@ -440,20 +440,6 @@ def create_short_preparation_pipe(params, params_template={},
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
-        # apply_T2
-        apply_crop_aladin_T2 = NodeParams(
-            regutils.RegResample(),
-            params=parse_key(params, "apply_crop_aladin_T2"),
-            name='apply_crop_aladin_T2')
-
-        data_preparation_pipe.connect(av_T2, 'avg_img',
-                                      apply_crop_aladin_T2, 'flo_file')
-
-        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
-                                      apply_crop_aladin_T2, 'trans_file')
-
-        apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
-
         # compute inv transfo
         inv_tranfo = NodeParams(
             regutils.RegTransform(),
@@ -484,10 +470,8 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       apply_crop_aladin_T2, 'trans_file')
 
-
         data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                       apply_crop_aladin_T2, 'ref_file')
-
 
     # denoise with Ants package
     if "denoise" in params.keys():
