@@ -74,11 +74,16 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 for sub in indiv_params.keys():
 
                     if sub.split('-')[1] not in subjects:
+                        print('could not find subject {} in {}'.format(
+                            sub.split('-')[1], subjects))
                         continue
 
                     for ses in indiv_params[sub].keys():
 
                         if ses.split('-')[1] not in sessions:
+
+                            print('could not find session {} in {}'.format(
+                                ses.split('-')[1], sessions))
                             continue
 
                         count_all_sessions += 1
@@ -102,38 +107,38 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                                     count_multi_long_crops += 1
 
                 print("count_all_sessions {}".format(count_all_sessions))
-
                 print("count_T1_crops {}".format(count_T1_crops))
                 print("count_long_crops {}".format(count_long_crops))
                 print("count_multi_long_crops {}".format(
                     count_multi_long_crops))
 
-                if count_multi_long_crops == count_all_sessions:
-                    print("**** Found list of crops for T1 and T2 for all sub/ses \
-                        in indiv -> long_multi_preparation_pipe")
+                if count_all_sessions:
+                    if count_multi_long_crops == count_all_sessions:
+                        print("**** Found list of crops for T1 and T2 for all sub/ses \
+                            in indiv -> long_multi_preparation_pipe")
 
-                    prep_pipe = "long_multi_preparation_pipe"
+                        prep_pipe = "long_multi_preparation_pipe"
 
-                    extra_wf_name += "_long_multi"
+                        extra_wf_name += "_long_multi"
 
-                elif count_long_crops == count_all_sessions:
+                    elif count_long_crops == count_all_sessions:
 
-                    print("**** Found crop for T1 and crop for T2 for all sub/ses \
-                        in indiv -> long_single_preparation_pipe")
+                        print("**** Found crop for T1 and crop for T2 for all sub/ses \
+                            in indiv -> long_single_preparation_pipe")
 
-                    prep_pipe = "long_single_preparation_pipe"
+                        prep_pipe = "long_single_preparation_pipe"
 
-                    extra_wf_name += "_long_single"
+                        extra_wf_name += "_long_single"
 
-                elif count_T1_crops == count_all_sessions:
+                    elif count_T1_crops == count_all_sessions:
 
-                    print("**** Found crop for T1 for all sub/ses in indiv \
-                        -> keeping short_preparation_pipe")
+                        print("**** Found crop for T1 for all sub/ses in indiv \
+                            -> keeping short_preparation_pipe")
 
-                else:
-                    print("**** not all sub/ses have T1 and T2 crops ")
-                    print("Error")
-                    exit(0)
+                    else:
+                        print("**** not all sub/ses have T1 and T2 crops ")
+                        print("Error")
+                        exit(0)
 
                 if prep_pipe == "short_preparation_pipe":
 
@@ -147,8 +152,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                     params["short_preparation_pipe"]["crop_T1"] = \
                         {"args": "should be defined in indiv"}
                 else:
-
-                    del params["short_preparation_pipe"]
 
                     params[prep_pipe] = {
                         "prep_T1": {
@@ -164,6 +167,8 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
                         params[prep_pipe]["prep_T1"]["denoise"] = denoise
                         params[prep_pipe]["prep_T2"]["denoise"] = denoise
+
+                    del params["short_preparation_pipe"]
 
     # prep for testing only preparation part
     if "prep" in ssoft:
