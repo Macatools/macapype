@@ -388,6 +388,11 @@ def create_short_preparation_pipe(params, params_template={},
         align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
         align_T2_on_T1.inputs.dof = 6
 
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'in_file')
+
         # cropping
         # Crop bounding box for T1
         crop_T1 = NodeParams(fsl.ExtractROI(),
@@ -408,10 +413,6 @@ def create_short_preparation_pipe(params, params_template={},
             crop_T2, 'indiv_params')
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      align_T2_on_T1, 'reference')
-        data_preparation_pipe.connect(av_T2, 'avg_img',
-                                      align_T2_on_T1, 'in_file')
-        data_preparation_pipe.connect(av_T1, 'avg_img',
                                       crop_T1, 'in_file')
 
         data_preparation_pipe.connect(align_T2_on_T1, "out_file",
@@ -422,6 +423,11 @@ def create_short_preparation_pipe(params, params_template={},
         # default, if crop_T1 is undefined
         bet_crop = NodeParams(T1xT2BET(), params=params["bet_crop"],
                               name='bet_crop')
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      bet_crop, 't1_file')
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      bet_crop, 't2_file')
 
     else:
 
@@ -448,26 +454,32 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
+        # align avg T2 on avg T1
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+        align_T2_on_T1.inputs.dof = 6
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'in_file')
+
         # apply reg_resample to T2
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
             params=parse_key(params, "apply_crop_aladin_T2"),
             name='apply_crop_aladin_T2')
 
-        data_preparation_pipe.connect(av_T2, 'avg_img',
+        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                       apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       apply_crop_aladin_T2, 'trans_file')
 
-        #data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                      #apply_crop_aladin_T2, 'ref_file')
-
         apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
 
         # apply RobustFOV matrix as flirt
         align_crop_z_T2 = NodeParams(
-            fsl.ApplyXFM(apply_xfm = True),
+            fsl.ApplyXFM(apply_xfm=True),
             params=parse_key(params, "align_crop_z_T2"),
             name="align_crop_z_T2")
 
