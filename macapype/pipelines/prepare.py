@@ -454,22 +454,13 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
-        # align avg T2 on avg T1
-        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-        align_T2_on_T1.inputs.dof = 6
-
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      align_T2_on_T1, 'reference')
-        data_preparation_pipe.connect(av_T2, 'avg_img',
-                                      align_T2_on_T1, 'in_file')
-
         # apply reg_resample to T2
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
             params=parse_key(params, "apply_crop_aladin_T2"),
             name='apply_crop_aladin_T2')
 
-        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+        data_preparation_pipe.connect(av_T2, 'avg_img',
                                       apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
