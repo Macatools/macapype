@@ -440,15 +440,6 @@ def create_short_preparation_pipe(params, params_template={},
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
-        # compute inv transfo
-        inv_tranfo = NodeParams(
-            regutils.RegTransform(),
-            params=parse_key(params, "inv_transfo_aladin"),
-            name='inv_tranfo')
-
-        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
-                                      inv_tranfo, 'inv_aff_input')
-
         # crop_z_T1
         crop_z_T1 = NodeParams(fsl.RobustFOV(),
                                params=parse_key(params, "crop_z"),
@@ -457,7 +448,7 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
-        # apply_T2
+        # apply reg_resample to T2
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
             params=parse_key(params, "apply_crop_aladin_T2"),
@@ -469,8 +460,34 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       apply_crop_aladin_T2, 'trans_file')
 
-        data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                      apply_crop_aladin_T2, 'ref_file')
+        #data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                      #apply_crop_aladin_T2, 'ref_file')
+
+        apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
+
+        # apply RobustFOV matrix as flirt
+        align_crop_z_T2 = NodeParams(
+            fsl.ApplyXfm(apply_xfm = True),
+            params=parse_key(params, "align_crop_z_T2"),
+            name="align_crop_z_T2")
+
+        data_preparation_pipe.connect(crop_z_T1, 'out_roi',
+                                      align_crop_z_T2, 'reference')
+
+        data_preparation_pipe.connect(crop_z_T1, 'out_transform',
+                                      align_crop_z_T2, 'in_matrix_file')
+
+        data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
+                                      align_crop_z_T2, 'in_file')
+
+        # compute inv transfo
+        inv_tranfo = NodeParams(
+            regutils.RegTransform(),
+            params=parse_key(params, "inv_transfo_aladin"),
+            name='inv_tranfo')
+
+        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
+                                      inv_tranfo, 'inv_aff_input')
 
     # denoise with Ants package
     if "denoise" in params.keys():
