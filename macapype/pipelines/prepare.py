@@ -471,13 +471,23 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
-        # crop_z_T2
-        crop_z_T2 = NodeParams(fsl.RobustFOV(),
-                               params=parse_key(params, "crop_z"),
-                               name='crop_z_T2')
 
-        data_preparation_pipe.connect(apply_crop_aladin_T2, "out_file",
-                                      crop_z_T2, 'in_file')
+        # apply_T2
+        apply_crop_aladin_T2 = NodeParams(
+            regutils.RegResample(),
+            params=parse_key(params, "apply_crop_aladin_T2"),
+            name='apply_crop_aladin_T2')
+
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      apply_crop_aladin_T2, 'flo_file')
+
+        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
+                                      apply_crop_aladin_T2, 'trans_file')
+
+
+        data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                      apply_crop_aladin_T2, 'ref_file')
+
 
     # denoise with Ants package
     if "denoise" in params.keys():
