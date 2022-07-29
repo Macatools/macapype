@@ -100,7 +100,7 @@ jobs:
 
       - name: Running test pipeline marmo-marmobrain indiv
         run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -indiv /data/marmo-marmobrain/indiv_params_segment_marmo.json -sub 8034 -ses 01 -deriv -pad
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -indiv /data/marmo-marmobrain/indiv_params_segment_marmo.json -sub Percy -ses 01 -deriv -pad
 
       - name: Running test pipeline baboon-cerimed-adrien indiv
         run: |
@@ -112,7 +112,7 @@ jobs:
 
       - name: Running test pipeline marmo-marmobrain
         run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -sub 8034 -ses 01 -deriv -pad
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -sub Percy -ses 01 -deriv -pad
 
       - name: Running test pipeline baboon-cerimed-adrien
         run: |
