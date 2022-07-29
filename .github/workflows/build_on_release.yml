@@ -93,15 +93,15 @@ jobs:
             ls macapype_CI/baboon-cerimed-adrien
             echo ""
 
-      - name: Running test pipeline macaque_prime-de indiv
+      - name: Running test pipeline macaque_prime-de
         run: |
             docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS -species macaque -sub 032140 -ses 001 -deriv -pad
 
-      - name: Running test pipeline marmo-marmobrain indiv
+      - name: Running test pipeline marmo-marmobrain
         run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub 8034 -ses 01 -deriv -pad
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad
 
-      - name: Running test pipeline baboon-cerimed-adrien indiv
+      - name: Running test pipeline baboon-cerimed-adrien
         run: |
             docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS -species baboon -sub Fidji -ses 01 -deriv -pad
 
