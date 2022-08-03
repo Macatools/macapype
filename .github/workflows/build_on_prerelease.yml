@@ -71,14 +71,20 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 1440
 
+    strategy:
+        matrix:
+            soft: [ANTS, ANTS_T1]
     steps:
-      - uses: actions/checkout@v2
       - name: Pull latest docker image
         run:
             docker pull macatools/macapype:latest
 
       - name: Download dataset
         run: |
+
+            mkdir ${{ matrix.soft }}
+            cd ${{ matrix.soft }}
+
             wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
 
@@ -96,30 +102,17 @@ jobs:
 
       - name: Running test pipeline macaque_prime-de
         run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ${{ matrix.soft }}_prep -species macaque -sub 032140 -ses 001 -deriv -pad
 
       - name: Running test pipeline marmo-marmobrain
         run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -sub Percy -ses 01 -deriv -pad
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ${{ matrix.soft }}_prep -species marmo -sub Percy -ses 01 -deriv -pad
 
       - name: Running test pipeline baboon-cerimed-adrien
         run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad
-
-      - name: Running test pipeline macaque_prime-de
-        run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -sub 032140 -ses 001 -deriv -pad
-
-      - name: Running test pipeline marmo-marmobrain
-        run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_T1_prep -species marmo -sub Percy -ses 01 -deriv -pad
-
-      - name: Running test pipeline baboon-cerimed-adrien
-        run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_T1_prep -species baboon -sub Fidji -ses 01 -deriv -pad
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ${{ matrix.soft }}_prep -species baboon -sub Fidji -ses 01 -deriv -pad
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI
-            sudo rm -f /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI.zip
+            sudo rm -rf /home/ubuntu/actions-runner/_work/macapype/macapype/${{ matrix.soft }}
 
