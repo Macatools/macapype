@@ -76,7 +76,7 @@ jobs:
         run:
             docker pull macatools/macapype:latest
 
-  run-test:
+  run-pretest:
     name: Running all existing pipelines in macapype_CI.zip
     needs: docker-download
     runs-on: self-hosted
