@@ -94,18 +94,6 @@ jobs:
             ls macapype_CI/baboon-cerimed-adrien
             echo ""
 
-      - name: Running test pipeline macaque_prime-de indiv
-        run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -indiv /data/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -pad
-
-      - name: Running test pipeline marmo-marmobrain indiv
-        run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_prep -species marmo -indiv /data/marmo-marmobrain/indiv_params_segment_marmo.json -sub Percy -ses 01 -deriv -pad
-
-      - name: Running test pipeline baboon-cerimed-adrien indiv
-        run: |
-            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -indiv /data/baboon-cerimed-adrien/indiv_params_segment_baboon.json -sub Fidji -ses 01 -deriv -pad
-
       - name: Running test pipeline macaque_prime-de
         run: |
             docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad
@@ -117,6 +105,18 @@ jobs:
       - name: Running test pipeline baboon-cerimed-adrien
         run: |
             docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad
+
+      - name: Running test pipeline macaque_prime-de
+        run: |
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_T1_prep -species macaque -sub 032140 -ses 001 -deriv -pad
+
+      - name: Running test pipeline marmo-marmobrain
+        run: |
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_T1_prep -species marmo -sub Percy -ses 01 -deriv -pad
+
+      - name: Running test pipeline baboon-cerimed-adrien
+        run: |
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_T1_prep -species baboon -sub Fidji -ses 01 -deriv -pad
 
       - name: Cleaning dataset
         run:
