@@ -182,31 +182,93 @@ def create_full_spm_subpipes(
     else:
         debias.inputs.bet = 1
 
+
     if pad:
+        if "short_preparation_pipe" in params.keys():
+            if "crop_T1" in params["short_preparation_pipe"].keys():
 
-        print("Padding mask in native space")
+                print("Padding mask in native space")
+                pad_mask = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_mask")
 
-        pad_mask = pe.Node(
-            niu.Function(
-                input_names=['cropped_img_file', 'orig_img_file',
-                             'indiv_crop'],
-                output_names=['padded_img_file'],
-                function=padding_cropped_img),
-            name="pad_mask")
+                seg_pipe.connect(brain_extraction_pipe,
+                                 'outputnode.brain_mask',
+                                 pad_mask, "cropped_img_file")
 
-        seg_pipe.connect(debias, 'debiased_mask_file',
-                         pad_mask, "cropped_img_file")
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_mask, "orig_img_file")
 
-        seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
-                         pad_mask, "orig_img_file")
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_mask, "indiv_crop")
 
-        seg_pipe.connect(inputnode, "indiv_params", pad_mask, "indiv_crop")
+                seg_pipe.connect(pad_mask, "padded_img_file",
+                                 outputnode, "brain_mask")
 
-        seg_pipe.connect(pad_mask, "padded_img_file",
-                         outputnode, "brain_mask")
+                print("Padding debiased_T1 in native space")
+                pad_debiased_T1 = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_debiased_T1")
+
+                seg_pipe.connect(brain_extraction_pipe,
+                                 'outputnode.debiased_T1',
+                                 pad_debiased_T1, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_debiased_T1, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_debiased_T1, "indiv_crop")
+
+                seg_pipe.connect(pad_debiased_T1, "padded_img_file",
+                                 outputnode, "debiased_T1")
+
+            else:
+                print("Using reg_aladin transfo to pad mask back")
+                pad_mask = pe.Node(regutils.RegResample(), name="pad_mask")
+
+                seg_pipe.connect(debias, "debiased_mask_file",
+                                 pad_mask, "flo_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_mask, "ref_file")
+
+                seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
+                                 pad_mask, "trans_file")
+
+                print("Using reg_aladin transfo to pad debiased_T1 back")
+                pad_debiased_T1 = pe.Node(regutils.RegResample(),
+                                          name="pad_debiased_T1")
+
+                seg_pipe.connect(debias, 't1_debiased_brain_file',
+                                 pad_debiased_T1, "flo_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_debiased_T1, "ref_file")
+
+                seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
+                                 pad_debiased_T1, "trans_file")
+
+                # outputnode
+                seg_pipe.connect(pad_mask, "out_file",
+                                 outputnode, "brain_mask")
+
+                seg_pipe.connect(pad_debiased_T1, "out_file",
+                                 outputnode, "debiased_T1")
     else:
-        seg_pipe.connect(debias, 'debiased_mask_file',
+        seg_pipe.connect(debias, "debiased_mask_file",
                          outputnode, "brain_mask")
+
+        seg_pipe.connect(debias, 't1_debiased_brain_file',
+                         outputnode, "debiased_T1")
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
