@@ -529,13 +529,6 @@ def create_full_spm_subpipes(
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_gm',
                          outputnode, 'prob_gm')
 
-
-
-
-
-
-
-
     if "mask_from_seg_pipe" in params.keys():
 
         mask_from_seg_pipe = create_mask_from_seg_pipe(
