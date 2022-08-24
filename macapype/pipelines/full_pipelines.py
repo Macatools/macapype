@@ -293,11 +293,12 @@ def create_full_spm_subpipes(
                                  pad_debiased_T1, "trans_file")
 
                 # outputnode
+                print("OK for outputnode brain_mask debiased_T1 debiased_brain after reg_aladin")
                 seg_pipe.connect(pad_mask, "out_file",
                                  outputnode, "brain_mask")
 
                 seg_pipe.connect(pad_debiased_T1, "out_file",
-                                 outputnode, "debiased_T1")
+                                 outputnode, "")
 
                 seg_pipe.connect(pad_debiased_brain, "out_file",
                                  outputnode, "debiased_brain")
@@ -607,20 +608,6 @@ def create_full_spm_subpipes(
             seg_pipe.connect(mask_from_seg_pipe,
                             'merge_indexed_mask.indexed_mask',
                             outputnode, 'segmented_brain_mask')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if space == 'template':
 
