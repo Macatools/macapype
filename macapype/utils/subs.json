@@ -27,6 +27,7 @@
     "_corrected":"",
     "_maths":"",
     "_masked":"",
+    "_mask":"",
     "_merged":"",
     "_debiased":"",
     "_thresh":"",
