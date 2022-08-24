@@ -445,25 +445,25 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_brain_mask, 'out_file',
                 datasink, '@brain_mask')
 
-        if "brain_segment_pipe" in params.keys():
+        elif "debias" in params.keys():
 
-            ### rename debiased_brain
-            rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
-            rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_desc-brain_T1w"
-            rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
-            rename_debiased_brain.inputs.keep_ext = True
-
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.debiased_brain',
-                rename_debiased_brain, 'in_file')
+            ### rename brain_mask
+            rename_brain_mask = pe.Node(niu.Rename(), name = "rename_brain_mask")
+            rename_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_mask"
+            rename_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_brain_mask.inputs.keep_ext = True
 
             main_workflow.connect(
-                rename_debiased_brain, 'out_file',
-                datasink, '@debiased_brain')
+                segment_pnh_pipe, 'outputnode.brain_mask',
+                rename_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_brain_mask, 'out_file',
+                datasink, '@brain_mask')
 
             ### rename debiased_T1
             rename_debiased_T1 = pe.Node(niu.Rename(), name = "rename_debiased_T1")
-            rename_debiased_T1.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_T1w"
+            rename_debiased_T1.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_T1"
             rename_debiased_T1.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_debiased_T1.inputs.keep_ext = True
 
@@ -475,19 +475,23 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_debiased_T1, 'out_file',
                 datasink, '@debiased_T1')
 
-            ### rename segmented_brain_mask
-            rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
-            rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
-            rename_segmented_brain_mask.inputs.keep_ext = True
+
+            ### rename debiased_brain
+            rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
+            rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_brain"
+            rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_brain.inputs.keep_ext = True
 
             main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-                rename_segmented_brain_mask, 'in_file')
+                segment_pnh_pipe, 'outputnode.debiased_brain',
+                rename_debiased_brain, 'in_file')
 
             main_workflow.connect(
-                rename_segmented_brain_mask, 'out_file',
-                datasink, '@segmented_brain_mask')
+                rename_debiased_brain, 'out_file',
+                datasink, '@debiased_brain')
+
+
+        if "old_segment_pipe" in params.keys():
 
             ### rename prob_wm
             print("Renaming prob_wm file")
@@ -534,22 +538,40 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 rename_prob_csf, ('out_file', show_files),
                 datasink, '@prob_csf')
 
-            # rename 5tt
-            if "export_5tt_pipe" in params["brain_segment_pipe"]:
-                print("Renaming 5tt file")
+            ## rename 5tt
+            #if "export_5tt_pipe" in params["brain_segment_pipe"]:
+                #print("Renaming 5tt file")
 
-                rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
-                rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-5tt_dseg".format(space)
-                rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
-                rename_gen_5tt.inputs.keep_ext = True
+                #rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
+                #rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-5tt_dseg".format(space)
+                #rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+                #rename_gen_5tt.inputs.keep_ext = True
 
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.gen_5tt',
-                    rename_gen_5tt, 'in_file')
+                #main_workflow.connect(
+                    #segment_pnh_pipe, 'outputnode.gen_5tt',
+                    #rename_gen_5tt, 'in_file')
 
-                main_workflow.connect(
-                    rename_gen_5tt, 'out_file',
-                    datasink, '@gen_5tt')
+                #main_workflow.connect(
+                    #rename_gen_5tt, 'out_file',
+                    #datasink, '@gen_5tt')
+
+
+
+        if "old_segment_pipe" in params.keys():
+
+            ### rename segmented_brain_mask
+            rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
+            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
+            rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_segmented_brain_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+                rename_segmented_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_segmented_brain_mask, 'out_file',
+                datasink, '@segmented_brain_mask')
 
         if 'flair' in ssoft :
 
