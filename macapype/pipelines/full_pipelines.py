@@ -125,7 +125,8 @@ def create_full_spm_subpipes(
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask',
-                                      'debiased_T1', 'debiased_brain'
+                                      #'debiased_T1', 'debiased_brain'
+                                      'debiased_T1',
                                       'prob_wm', 'prob_gm', 'prob_csf']),
         name='outputnode')
     # preprocessing
@@ -265,18 +266,18 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
                                  pad_mask, "trans_file")
 
-                print("Using reg_aladin transfo to pad debiased_brain back")
-                pad_debiased_brain = pe.Node(regutils.RegResample(),
-                                          name="pad_debiased_brain")
+                #print("Using reg_aladin transfo to pad debiased_brain back")
+                #pad_debiased_brain = pe.Node(regutils.RegResample(),
+                                          #name="pad_debiased_brain")
 
-                seg_pipe.connect(debias, 't1_debiased_brain_file',
-                                 pad_debiased_brain, "flo_file")
+                #seg_pipe.connect(debias, 't1_debiased_brain_file',
+                                 #pad_debiased_brain, "flo_file")
 
-                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
-                                 pad_debiased_brain, "ref_file")
+                #seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 #pad_debiased_brain, "ref_file")
 
-                seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
-                                 pad_debiased_brain, "trans_file")
+                #seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
+                                 #pad_debiased_brain, "trans_file")
 
 
                 print("Using reg_aladin transfo to pad debiased_T1 back")
@@ -300,8 +301,8 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_debiased_T1, "out_file",
                                  outputnode, "")
 
-                seg_pipe.connect(pad_debiased_brain, "out_file",
-                                 outputnode, "debiased_brain")
+                #seg_pipe.connect(pad_debiased_brain, "out_file",
+                                 #outputnode, "debiased_brain")
     else:
         seg_pipe.connect(debias, "debiased_mask_file",
                          outputnode, "brain_mask")

@@ -476,19 +476,19 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 datasink, '@debiased_T1')
 
 
-            ### rename debiased_brain
-            rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
-            rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_brain"
-            rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
-            rename_debiased_brain.inputs.keep_ext = True
+            #### rename debiased_brain
+            #rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
+            #rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_brain"
+            #rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            #rename_debiased_brain.inputs.keep_ext = True
 
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.debiased_brain',
-                rename_debiased_brain, 'in_file')
+            #main_workflow.connect(
+                #segment_pnh_pipe, 'outputnode.debiased_brain',
+                #rename_debiased_brain, 'in_file')
 
-            main_workflow.connect(
-                rename_debiased_brain, 'out_file',
-                datasink, '@debiased_brain')
+            #main_workflow.connect(
+                #rename_debiased_brain, 'out_file',
+                #datasink, '@debiased_brain')
 
 
         if "old_segment_pipe" in params.keys():
