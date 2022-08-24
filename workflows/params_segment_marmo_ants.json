@@ -5,6 +5,10 @@
     },
      "short_preparation_pipe":
     {
+    	"crop_T1_aladin":
+    	{
+    		"nac_flag": true
+    	},
         "crop_z":
         {
             "brainsize": 30
