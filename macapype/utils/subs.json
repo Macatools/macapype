@@ -21,6 +21,7 @@
     "FLAIR_flirt_flirt": "space-inia19_FLAIR",
     "T1w_":"",
     "_roi":"",
+    "_ROI":"",
     "_restore_debiased":"",
     "_restore":"",
     "_noise_corrected":"",
@@ -41,5 +42,4 @@
     "padded_": "",
     "BET_": "",
     "Segmentation_": ""
-
 }
