@@ -695,7 +695,8 @@ def create_native_old_segment_pipe(params_template, params={},
     # outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["threshold_gm", "threshold_wm", "threshold_csf", "prob_gm", "prob_wm", "prob_csf"]),
+            fields=["threshold_gm", "threshold_wm", "threshold_csf",
+                    "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
 
     seg_pipe.connect(threshold_gm, 'out_file', outputnode, 'threshold_gm')

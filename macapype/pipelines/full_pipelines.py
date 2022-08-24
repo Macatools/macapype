@@ -184,7 +184,6 @@ def create_full_spm_subpipes(
     else:
         debias.inputs.bet = 1
 
-
     if pad:
         if "short_preparation_pipe" in params.keys():
             if "crop_T1" in params["short_preparation_pipe"].keys():
@@ -198,7 +197,7 @@ def create_full_spm_subpipes(
                         function=padding_cropped_img),
                     name="pad_mask")
 
-                seg_pipe.connect(debias,'debiased_mask_file',
+                seg_pipe.connect(debias, 'debiased_mask_file',
                                  pad_mask, "cropped_img_file")
 
                 seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
@@ -219,7 +218,7 @@ def create_full_spm_subpipes(
                         function=padding_cropped_img),
                     name="pad_debiased_T1")
 
-                seg_pipe.connect(debias,'t1_debiased_file',
+                seg_pipe.connect(debias, 't1_debiased_file',
                                  pad_debiased_T1, "cropped_img_file")
 
                 seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
@@ -240,7 +239,7 @@ def create_full_spm_subpipes(
                         function=padding_cropped_img),
                     name="pad_debiased_brain")
 
-                seg_pipe.connect(debias,'t1_debiased_brain_file',
+                seg_pipe.connect(debias, 't1_debiased_brain_file',
                                  pad_debiased_brain, "cropped_img_file")
 
                 seg_pipe.connect(data_preparation_pipe, "av_brain.avg_img",
@@ -267,7 +266,7 @@ def create_full_spm_subpipes(
 
                 print("Using reg_aladin transfo to pad debiased_brain back")
                 pad_debiased_brain = pe.Node(regutils.RegResample(),
-                                          name="pad_debiased_brain")
+                                             name="pad_debiased_brain")
 
                 seg_pipe.connect(debias, 't1_debiased_brain_file',
                                  pad_debiased_brain, "flo_file")
@@ -292,7 +291,6 @@ def create_full_spm_subpipes(
                                  pad_debiased_T1, "trans_file")
 
                 # outputnode
-                print("OK for outputnode brain_mask debiased_T1 debiased_brain after reg_aladin")
                 seg_pipe.connect(pad_mask, "out_file",
                                  outputnode, "brain_mask")
 
@@ -400,7 +398,7 @@ def create_full_spm_subpipes(
                 print("Using reg_aladin transfo to pad prob_wm back")
 
                 pad_prob_wm = pe.Node(regutils.RegResample(),
-                                       name="pad_prob_wm")
+                                      name="pad_prob_wm")
 
                 seg_pipe.connect(old_segment_pipe, "outputnode.prob_wm",
                                  pad_prob_wm, "flo_file")
@@ -418,8 +416,6 @@ def create_full_spm_subpipes(
     else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
-
-
 
     # prob_csf
     if pad and space == "native":
@@ -474,8 +470,6 @@ def create_full_spm_subpipes(
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_csf',
                          outputnode, 'prob_csf')
 
-
-
     # prob_gm
     if pad and space == "native":
         if "short_preparation_pipe" in params.keys():
@@ -510,7 +504,7 @@ def create_full_spm_subpipes(
                 print("Using reg_aladin transfo to pad prob_gm back")
 
                 pad_prob_gm = pe.Node(regutils.RegResample(),
-                                       name="pad_prob_gm")
+                                      name="pad_prob_gm")
 
                 seg_pipe.connect(old_segment_pipe, "outputnode.prob_gm",
                                  pad_prob_gm, "flo_file")
@@ -556,23 +550,23 @@ def create_full_spm_subpipes(
                     pad_seg_mask = pe.Node(
                         niu.Function(
                             input_names=['cropped_img_file', 'orig_img_file',
-                                        'indiv_crop'],
+                                         'indiv_crop'],
                             output_names=['padded_img_file'],
                             function=padding_cropped_img),
                         name="pad_seg_mask")
 
                     seg_pipe.connect(mask_from_seg_pipe,
-                                'merge_indexed_mask.indexed_mask',
-                                    pad_seg_mask, "cropped_img_file")
+                                     'merge_indexed_mask.indexed_mask',
+                                     pad_seg_mask, "cropped_img_file")
 
                     seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
-                                    pad_seg_mask, "orig_img_file")
+                                     pad_seg_mask, "orig_img_file")
 
                     seg_pipe.connect(inputnode, "indiv_params",
-                                    pad_seg_mask, "indiv_crop")
+                                     pad_seg_mask, "indiv_crop")
 
                     seg_pipe.connect(pad_seg_mask, "padded_img_file",
-                                    outputnode, "segmented_brain_mask")
+                                     outputnode, "segmented_brain_mask")
 
                 elif "bet_crop" in params["short_preparation_pipe"].keys():
                     print("Not implemented yet")
@@ -581,26 +575,27 @@ def create_full_spm_subpipes(
                     print("Using reg_aladin transfo to pad seg_mask back")
 
                     pad_seg_mask = pe.Node(regutils.RegResample(),
-                                        name="pad_seg_mask")
+                                           name="pad_seg_mask")
 
                     seg_pipe.connect(mask_from_seg_pipe,
-                                    'merge_indexed_mask.indexed_mask',
-                                    pad_seg_mask, "flo_file")
+                                     'merge_indexed_mask.indexed_mask',
+                                     pad_seg_mask, "flo_file")
 
                     seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
-                                    pad_seg_mask, "ref_file")
+                                     pad_seg_mask, "ref_file")
 
-                    seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
-                                    pad_seg_mask, "trans_file")
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "inv_tranfo.out_file",
+                                     pad_seg_mask, "trans_file")
 
                     # outputnode
                     seg_pipe.connect(pad_seg_mask, "out_file",
-                                    outputnode, "segmented_brain_mask")
+                                     outputnode, "segmented_brain_mask")
 
         else:
             seg_pipe.connect(mask_from_seg_pipe,
-                            'merge_indexed_mask.indexed_mask',
-                            outputnode, 'segmented_brain_mask')
+                             'merge_indexed_mask.indexed_mask',
+                             outputnode, 'segmented_brain_mask')
 
     if space == 'template':
 
