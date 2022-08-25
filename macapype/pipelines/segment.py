@@ -531,7 +531,8 @@ def create_old_segment_pipe(params_template, params={},
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['threshold_gm', 'threshold_wm',
-                                      'threshold_csf']),
+                                      'threshold_csf', 'prob_gm', 'prob_wm',
+                                      'prob_csf']),
         name='outputnode')
 
     seg_pipe.connect(thd_nodes['gm'], 'out_file',
@@ -540,6 +541,13 @@ def create_old_segment_pipe(params_template, params={},
                      outputnode, 'threshold_wm')
     seg_pipe.connect(thd_nodes['csf'], 'out_file',
                      outputnode, 'threshold_csf')
+
+    seg_pipe.connect(segment, 'native_gm_image',
+                     outputnode, 'prob_gm')
+    seg_pipe.connect(segment, 'native_wm_image',
+                     outputnode, 'prob_wm')
+    seg_pipe.connect(segment, 'native_csf_image',
+                     outputnode, 'prob_csf')
 
     return seg_pipe
 
@@ -695,12 +703,17 @@ def create_native_old_segment_pipe(params_template, params={},
     # outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["threshold_gm", "threshold_wm", "threshold_csf"]),
+            fields=["threshold_gm", "threshold_wm", "threshold_csf",
+                    "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
 
     seg_pipe.connect(threshold_gm, 'out_file', outputnode, 'threshold_gm')
     seg_pipe.connect(threshold_wm, 'out_file', outputnode, 'threshold_wm')
     seg_pipe.connect(threshold_csf, 'out_file', outputnode, 'threshold_csf')
+
+    seg_pipe.connect(register_gm_to_nat, 'out_file', outputnode, 'prob_gm')
+    seg_pipe.connect(register_wm_to_nat, 'out_file', outputnode, 'prob_wm')
+    seg_pipe.connect(register_csf_to_nat, 'out_file', outputnode, 'prob_csf')
 
     return seg_pipe
 
