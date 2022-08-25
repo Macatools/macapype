@@ -531,7 +531,8 @@ def create_old_segment_pipe(params_template, params={},
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['threshold_gm', 'threshold_wm',
-                                      'threshold_csf']),
+                                      'threshold_csf', 'prob_gm', 'prob_wm',
+                                      'prob_csf']),
         name='outputnode')
 
     seg_pipe.connect(thd_nodes['gm'], 'out_file',
@@ -539,6 +540,13 @@ def create_old_segment_pipe(params_template, params={},
     seg_pipe.connect(thd_nodes['wm'], 'out_file',
                      outputnode, 'threshold_wm')
     seg_pipe.connect(thd_nodes['csf'], 'out_file',
+                     outputnode, 'threshold_csf')
+
+    seg_pipe.connect(segment, 'native_gm_image',
+                     outputnode, 'threshold_gm')
+    seg_pipe.connect(segment, 'native_wm_image',
+                     outputnode, 'threshold_wm')
+    seg_pipe.connect(segment, 'native_csf_image',
                      outputnode, 'threshold_csf')
 
     return seg_pipe
