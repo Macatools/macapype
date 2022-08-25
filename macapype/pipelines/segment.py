@@ -543,11 +543,11 @@ def create_old_segment_pipe(params_template, params={},
                      outputnode, 'threshold_csf')
 
     seg_pipe.connect(segment, 'native_gm_image',
-                     outputnode, 'threshold_gm')
+                     outputnode, 'prob_gm')
     seg_pipe.connect(segment, 'native_wm_image',
-                     outputnode, 'threshold_wm')
+                     outputnode, 'prob_wm')
     seg_pipe.connect(segment, 'native_csf_image',
-                     outputnode, 'threshold_csf')
+                     outputnode, 'prob_csf')
 
     return seg_pipe
 
