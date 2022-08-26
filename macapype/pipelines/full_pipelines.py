@@ -242,7 +242,7 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(debias, 't1_debiased_brain_file',
                                  pad_debiased_brain, "cropped_img_file")
 
-                seg_pipe.connect(data_preparation_pipe, "av_brain.avg_img",
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
                                  pad_debiased_brain, "orig_img_file")
 
                 seg_pipe.connect(inputnode, "indiv_params",
