@@ -256,9 +256,10 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
 
     import os
 
-    package_directory = os.path.dirname(os.path.abspath(__file__))
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__)))
+    package_directory = os.path.dirname(path_to_current_dir)
 
-    script_atlas_BREX = File('{}/../bash/atlasBREX.sh'.format(
+    script_atlas_BREX = File('{}/bash/atlasBREX.sh'.format(
             package_directory), usedefault=True,
         exists=True,
         desc='atlasBREX script',
@@ -399,3 +400,9 @@ class AtlasBREX(CommandLine):
         outputs["brain_file"] = os.path.abspath(fname + '_brain' + ext)
 
         return outputs
+
+
+if __name__ == '__main__':
+    ab = AtlasBREX()
+
+    print(ab.cmdline)
