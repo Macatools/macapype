@@ -5,9 +5,13 @@
     },
     "short_preparation_pipe":
     {
-        "crop_T1":
+        "crop_aladin_T1":
         {
-            "args": "should be defined in indiv"
+            "args": " -nac "
+        },
+        "crop_z_T1":
+        {
+            "brainsize": 70
         }
     },
     "debias":
