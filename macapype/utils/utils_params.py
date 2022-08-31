@@ -114,8 +114,9 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
                 if count_all_sessions:
                     if count_multi_long_crops == count_all_sessions:
-                        print("**** Found list of crops for T1 and T2 for all sub/ses \
-                            in indiv -> long_multi_preparation_pipe")
+                        print("**** Found list of crops for T1 and T2\
+                            for all sub/ses in indiv -> \
+                            long_multi_preparation_pipe")
 
                         prep_pipe = "long_multi_preparation_pipe"
 
@@ -123,8 +124,9 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
                     elif count_long_crops == count_all_sessions:
 
-                        print("**** Found crop for T1 and crop for T2 for all sub/ses \
-                            in indiv -> long_single_preparation_pipe")
+                        print("**** Found crop for T1 and crop for T2\
+                            for all sub/ses in indiv -> \
+                            long_single_preparation_pipe")
 
                         prep_pipe = "long_single_preparation_pipe"
 
@@ -132,7 +134,8 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
                     elif count_T1_crops == count_all_sessions:
 
-                        print("**** Found crop for T1 for all sub/ses in indiv \
+                        print("**** Found crop for T1 for all \
+                            sub/ses in indiv \
                             -> keeping short_preparation_pipe")
 
                     else:
