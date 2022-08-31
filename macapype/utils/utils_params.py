@@ -66,6 +66,24 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                     unable to assess if the indiv_params is correct")
                 print("Running with params as it is")
 
+                if "short_preparation_pipe" in params.keys():
+
+                    if "crop_aladin_T1" in \
+                            params["short_preparation_pipe"].keys():
+
+                        print("Deleting crop_aladin_T1")
+                        del params["short_preparation_pipe"]["crop_aladin_T1"]
+
+                    if "crop_z_T1" in \
+                            params["short_preparation_pipe"].keys():
+
+                        print("Deleting crop_z_T1")
+                        del params["short_preparation_pipe"]["crop_z_T1"]
+
+
+                    print("Adding crop_T1")
+                    params["short_preparation_pipe"]["crop_T1"] = \
+                        {"args": "should be defined in indiv"}
             else:
 
                 print("Will modify params if necessary, \
@@ -150,6 +168,12 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
                         print("Deleting crop_aladin_T1")
                         del params["short_preparation_pipe"]["crop_aladin_T1"]
+
+                    if "crop_z_T1" in \
+                            params["short_preparation_pipe"].keys():
+
+                        print("Deleting crop_z_T1")
+                        del params["short_preparation_pipe"]["crop_z_T1"]
 
                     print("Adding crop_T1")
                     params["short_preparation_pipe"]["crop_T1"] = \
