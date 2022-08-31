@@ -9,7 +9,7 @@
     	{
     		"nac_flag": true
     	},
-        "crop_z":
+        "crop_z_T1":
         {
             "brainsize": 30
         }
