@@ -64,7 +64,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             if subjects is None or sessions is None:
                 print("For whole BIDS dir, \
                     unable to assess if the indiv_params is correct")
-                print("Running with short_preparation_pipe and crop_T1 by default")
+                print("Running by default short_preparation_pipe and crop_T1")
 
                 if "short_preparation_pipe" in params.keys():
 
