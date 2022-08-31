@@ -185,10 +185,28 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 other is mandatory)")
             exit(-1)
 
-    print("Params:", params_file)
+        print("Default Params file:", params_file)
 
-    params, indiv_params, extra_wf_name = update_params(ssoft=ssoft, subjects=subjects, sessions=sessions,
-                           params_file=params_file, indiv_params_file=indiv_params_file)
+        params, indiv_params, extra_wf_name = update_params(ssoft=ssoft, subjects=subjects, sessions=sessions,
+                            params_file=params_file, indiv_params_file=indiv_params_file)
+
+    else:
+
+        # params
+        assert op.exists(params_file), "Error with file {}".format(
+            params_file)
+
+        params = json.load(open(params_file))
+
+        extra_wf_name = "_orig"
+        indiv_params = {}
+
+        # indiv_params
+        if indiv_params_file is not None:
+
+            assert op.exists(indiv_params_file), "Error with file {}".format(
+                indiv_params_file)
+            indiv_params = json.load(open(indiv_params_file))
 
     wf_name += extra_wf_name
 
