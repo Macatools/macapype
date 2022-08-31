@@ -36,7 +36,6 @@ jobs:
   run-tests:
     name: Running all existing test pipelines in macapype_CI.zip
     needs: build
-    timeout-minutes: 1440
 
     strategy:
         matrix:
