@@ -42,6 +42,7 @@ jobs:
         matrix:
             soft: [ANTS, ANTS_T1, SPM, SPM_T1, ANTS_template, ANTS_template_T1, SPM_native, SPM_native_T1]
 
+    steps:
       - name: Download dataset
         run: |
             wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
