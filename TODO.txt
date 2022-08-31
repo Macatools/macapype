@@ -1,4 +1,15 @@
 
+29/08/2022
+Bug report
+- Issue when using _spm docker versions (at least the latest rc7_spm and rc8_spm versions) with the -soft ANTS option
+
+Road map to v0.3.2:
+- replace in default params (used with -species, located in workflows) short_preparation_pipe -> preparation pipe, and modify params only if -params is not used
+
+
+24/08/2022
+Bug report
+Issues with padding, works only if short_preparation_pipe / crop_T1 (not with long preparation_prep / prep_T1 / crop in params.json)
 
 29/06/2022 Added the following issues:
 

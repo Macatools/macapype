@@ -217,19 +217,7 @@ RUN pip3 install xvfbwrapper \
     scikit-image \
     brain-slam
 
-
 ############################################# install macapype
-#
-# RUN mkdir -p /opt/packages/
-#
-# ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
-# WORKDIR /opt/packages/
-#
-# RUN git clone https://github.com/macatools/macapype.git
-# WORKDIR /opt/packages/macapype
-#
-# RUN git checkout master
-# RUN python3 setup.py develop
 
 RUN echo $(which python) && \
     echo $(which python3) && \
@@ -237,19 +225,3 @@ RUN echo $(which python) && \
     ln -s /usr/bin/pip3 /usr/bin/pip
 
 RUN  pip install --pre macapype && python -c "import macapype; print(macapype.__version__)"
-
-#####################################################################################################
-############################################ extra (exemple of a line to launch) ####################
-#####################################################################################################
-
-# using docker image on DockerHub
-# docker pull macatools/macapype:latest
-
-# docker run -ti -v /home/INT/meunier.d/Data/Data-Hackaton/Data_CIRMf_INT/PRIME-DE/site-amu:/data/macapype macatools/macapype:latest python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
-
-# Building your image from the Dockerfile
-# docker built -t macapype_docker
-
-# docker run -ti -v /home/INT/meunier.d/Data/Data-Hackaton/Data_CIRMf_INT/PRIME-DE/site-amu:/data/macapype macapype_docker python /root/packages/macapype/workflows/segment_multi_pnh_ants_based.py -data /data/macapype -out /data/macapype -params /root/packages/macapype/workflows/params_segment_pnh_ants_based_crop.json
-
-

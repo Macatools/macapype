@@ -927,8 +927,8 @@ def create_brain_extraction_pipe(params_template, params={},
         name='outputnode')
 
     assert not ("correct_bias_pipe" in params.keys() and "N4debias" in
-                params.keys()), "error, only one of correct_bias_pipe or N4debias \
-                should be present"
+                params.keys()), "error, only one of correct_bias_pipe\
+                or N4debias should be present"
 
     if "correct_bias_pipe" in params.keys():
         # Correct_bias_T1_T2
