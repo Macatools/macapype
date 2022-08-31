@@ -23,7 +23,7 @@ def set_spm():
             print("OK, SPM {} MCR version {} was found".format(
                 spm_ver, mcr_version))
 
-            spm_cmd = '{}/run_spm{}.sh /opt/mcr/{} script'.format(
+            spm_cmd = 'bash {}/run_spm{}.sh /opt/mcr/{} script'.format(
                 spm_dir, spm_ver, mcr_version)
             print(spm_cmd)
 
