@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     name: Build package, unittest and PEP8 check
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.10.5
@@ -35,6 +36,7 @@ jobs:
 
   run-tests:
     name: Running all existing test pipelines in macapype_CI.zip
+    runs-on: ubuntu-latest
     needs: build
 
     strategy:
