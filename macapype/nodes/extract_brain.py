@@ -196,8 +196,10 @@ class T1xT2BET(FSLCommand):
     input_spec = T1xT2BETInputSpec
     output_spec = T1xT2BETOutputSpec
 
-    package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'bash {}/../bash/T1xT2BET.sh'.format(package_directory)
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__))
+    package_directory = os.path.dirname(path_to_current_dir)
+
+    _cmd = 'bash {}/bash/T1xT2BET.sh'.format(package_directory)
 
     def _list_outputs(self):
 
@@ -256,7 +258,7 @@ class AtlasBREXInputSpec(CommandLineInputSpec):
 
     import os
 
-    path_to_current_dir = os.path.dirname(os.path.abspath(__file__)))
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__))
     package_directory = os.path.dirname(path_to_current_dir)
 
     script_atlas_BREX = File('{}/bash/atlasBREX.sh'.format(

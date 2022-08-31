@@ -292,8 +292,10 @@ class IterREGBET(CommandLine):
     input_spec = IterREGBETInputSpec
     output_spec = IterREGBETOutputSpec
 
-    package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'bash {}/../bash/IterREGBET.sh'.format(package_directory)
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__))
+    package_directory = os.path.dirname(path_to_current_dir)
+
+    _cmd = 'bash {}/bash/IterREGBET.sh'.format(package_directory)
 
     def _gen_filename(self, name):
         if name == "xp":
@@ -412,8 +414,10 @@ class NMTSubjectAlign(CommandLine):
     input_spec = NMTSubjectAlignInputSpec
     output_spec = NMTSubjectAlignOutputSpec
 
-    package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'tcsh -x {}/../bash/NMT_subject_align.csh'.format(package_directory)
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__))
+    package_directory = os.path.dirname(path_to_current_dir)
+
+    _cmd = 'tcsh -x {}/bash/NMT_subject_align.csh'.format(package_directory)
 
     def _list_outputs(self):
 
@@ -520,8 +524,10 @@ class NMTSubjectAlign2(CommandLine):
     input_spec = NMTSubjectAlign2InputSpec
     output_spec = NMTSubjectAlign2OutputSpec
 
-    package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'bash {}/../bash/NMT_subject_align'.format(package_directory)
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__))
+    package_directory = os.path.dirname(path_to_current_dir)
+
+    _cmd = 'bash {}/bash/NMT_subject_align'.format(package_directory)
 
     def _list_outputs(self):
 

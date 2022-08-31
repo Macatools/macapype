@@ -134,8 +134,10 @@ class CropVolume(CommandLine):
     input_spec = CropVolumeInputSpec
     output_spec = CropVolumeOutputSpec
 
-    package_directory = os.path.dirname(os.path.abspath(__file__))
-    _cmd = 'bash {}/../bash/CropVolume.sh'.format(package_directory)
+    path_to_current_dir = os.path.dirname(os.path.abspath(__file__))
+    package_directory = os.path.dirname(path_to_current_dir)
+
+    _cmd = 'bash {}/bash/CropVolume.sh'.format(package_directory)
 
     def _list_outputs(self):
 
