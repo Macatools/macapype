@@ -3,7 +3,6 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-import nipype.interfaces.ants as ants
 
 from nipype.interfaces.niftyreg import reg
 
@@ -141,17 +140,6 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # N4 intensity normalization with parameters from json
-    norm_intensity = NodeParams(ants.N4BiasFieldCorrection(),
-                                params=parse_key(params, "norm_intensity"),
-                                name='norm_intensity')
-
-    prep_pipeline.connect(crop, 'roi_file',
-                                norm_intensity, "input_image")
-    prep_pipeline.connect(
-        inputnode, ('indiv_params', parse_key, "norm_intensity"),
-        norm_intensity, 'indiv_params')
-
     if "denoise" in params.keys():
 
         # denoise with Ants package
@@ -160,7 +148,7 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
                              params=parse_key(params, "denoise"),
                              name="denoise")
 
-        prep_pipeline.connect(norm_intensity, "output_image",
+        prep_pipeline.connect(crop, 'roi_file',
                               denoise, 'input_image')
         prep_pipeline.connect(
             inputnode, ('indiv_params', parse_key, "denoise"),
@@ -178,7 +166,7 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
 
     else:
 
-        prep_pipeline.connect(norm_intensity, "output_image",
+        prep_pipeline.connect(crop, 'roi_file',
                               outputnode, "prep_img")
 
     return prep_pipeline
@@ -245,18 +233,6 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
         inputnode, ('indiv_params', parse_key, "crop"+node_suffix),
         crop, 'indiv_params')
 
-    # N4 intensity normalization with parameters from json
-    norm_intensity = MapNodeParams(ants.N4BiasFieldCorrection(),
-                                   params=parse_key(params, "norm_intensity"),
-                                   name='norm_intensity',
-                                   iterfield=['input_image'])
-
-    mapnode_prep_pipeline.connect(crop, 'roi_file',
-                                  norm_intensity, "input_image")
-    mapnode_prep_pipeline.connect(
-        inputnode, ("indiv_params", parse_key, "norm_intensity"),
-        norm_intensity, 'indiv_params')
-
     if "denoise" in params.keys():
 
         # denoise with Ants package
@@ -266,8 +242,9 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
                                 name="denoise",
                                 iterfield=["input_image"])
 
-        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
+        mapnode_prep_pipeline.connect(crop, 'roi_file',
                                       denoise, "input_image")
+
         mapnode_prep_pipeline.connect(
             inputnode, ("indiv_params", parse_key, "denoise"),
             denoise, 'indiv_params')
@@ -284,7 +261,7 @@ def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
 
     else:
 
-        mapnode_prep_pipeline.connect(norm_intensity, "output_image",
+        mapnode_prep_pipeline.connect(crop, 'roi_file',
                                       outputnode, "prep_list_img")
 
     return mapnode_prep_pipeline
@@ -461,24 +438,8 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       apply_crop_aladin_T2, 'trans_file')
 
-        apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
-
-        # apply RobustFOV matrix as flirt
-        align_crop_z_T2 = NodeParams(
-            fsl.ApplyXFM(apply_xfm=True),
-            params=parse_key(params, "align_crop_z_T2"),
-            name="align_crop_z_T2")
-
-        data_preparation_pipe.connect(
-            crop_z_T1, 'out_roi', align_crop_z_T2, 'reference')
-
-        data_preparation_pipe.connect(
-            crop_z_T1, 'out_transform',
-            align_crop_z_T2, 'in_matrix_file')
-
-        data_preparation_pipe.connect(
-            apply_crop_aladin_T2, 'out_file',
-            align_crop_z_T2, 'in_file')
+        data_preparation_pipe.connect(crop_z_T1, 'out_roi',
+                                      apply_crop_aladin_T2, 'ref_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
@@ -512,7 +473,7 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           denoise_T1, 'input_image')
 
-            data_preparation_pipe.connect(align_crop_z_T2, "out_file",
+            data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
                                           denoise_T2, 'input_image')
 
         # outputs
@@ -534,7 +495,7 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           outputnode, 'preproc_T1')
 
-            data_preparation_pipe.connect(align_crop_z_T2, "out_file",
+            data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
                                           outputnode, 'preproc_T2')
 
     return data_preparation_pipe
@@ -635,28 +596,33 @@ def create_long_single_preparation_pipe(params,
                                          prep_T2_pipe,
                                          "inputnode.indiv_params")
 
-    # align T2 on T1 - mutualinfo works better for crossmodal biased images
-    align_T2_on_T1 = NodeParams(fsl.FLIRT(),
+    align_T2_on_T1 = NodeParams(reg.RegAladin(),
                                 params=parse_key(params, "align_T2_on_T1"),
-                                name="align_T2_on_T1")
+                                name='align_T2_on_T1')
 
     long_single_preparation_pipe.connect(prep_T1_pipe, 'outputnode.prep_img',
-                                         align_T2_on_T1, 'reference')
+                                         align_T2_on_T1, 'ref_file')
     long_single_preparation_pipe.connect(prep_T2_pipe, 'outputnode.prep_img',
-                                         align_T2_on_T1, 'in_file')
-    long_single_preparation_pipe.connect(
-        inputnode, ("indiv_params", parse_key, "align_T2_on_T1"),
-        align_T2_on_T1, "indiv_params")
+                                         align_T2_on_T1, 'flo_file')
 
     # Creating output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
+        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2',
+                                      "native_T1", "native_T2"]),
         name='outputnode')
 
+    # outputnode
     long_single_preparation_pipe.connect(prep_T1_pipe, 'outputnode.prep_img',
                                          outputnode, 'preproc_T1')
-    long_single_preparation_pipe.connect(align_T2_on_T1, 'out_file',
+
+    long_single_preparation_pipe.connect(align_T2_on_T1, 'res_file',
                                          outputnode, 'preproc_T2')
+
+    long_single_preparation_pipe.connect(av_T1, 'avg_img',
+                                         outputnode, 'native_T1')
+
+    long_single_preparation_pipe.connect(av_T2, "avg_img",
+                                         outputnode, 'native_T2')
 
     return long_single_preparation_pipe
 

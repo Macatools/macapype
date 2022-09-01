@@ -46,15 +46,6 @@ def test_create_long_single_preparation_pipe():
                 {
                     "args": "should be defined in indiv"
                 },
-                "norm_intensity":
-                {
-                    "dimension": 3,
-                    "bspline_fitting_distance": 200,
-                    "n_iterations": [50, 50, 40, 30],
-                    "convergence_threshold": 0.00000001,
-                    "shrink_factor": 2,
-                    "args": "-r 0 --verbose 1"
-                },
                 "denoise":
                 {
                     "shrink_factor": 1
@@ -66,15 +57,6 @@ def test_create_long_single_preparation_pipe():
                 {
                     "args": "should be defined in indiv"
                 },
-                "norm_intensity":
-                {
-                    "dimension": 3,
-                    "bspline_fitting_distance": 200,
-                    "n_iterations": [50, 50, 40, 30],
-                    "convergence_threshold": 0.00000001,
-                    "shrink_factor": 2,
-                    "args": "-r 0 --verbose 1"
-                },
                 "denoise":
                 {
                     "shrink_factor": 1
@@ -82,8 +64,6 @@ def test_create_long_single_preparation_pipe():
             },
             "align_T2_on_T1":
             {
-                "dof": 6,
-                "cost": "normmi"
             }
         }
     }
@@ -113,15 +93,6 @@ def test_create_long_multi_preparation_pipe():
                     "args": ["Should not be used, specific to all",
                              "Should not be used, specific to all"]
                 },
-                "norm_intensity":
-                {
-                    "dimension": [3, 3],
-                    "bspline_fitting_distance": [200, 200],
-                    "n_iterations": [[50, 50, 40, 30], [50, 50, 40, 30]],
-                    "convergence_threshold": [0.00000001, 0.00000001],
-                    "shrink_factor": [2, 2],
-                    "args": ["-r 0 --verbose 1", "-r 0 --verbose 1"]
-                },
                 "denoise":
                 {
                     "shrink_factor": [3, 3]
@@ -133,15 +104,6 @@ def test_create_long_multi_preparation_pipe():
                 {
                     "args": ["Should not be used, specific to all"]
                 },
-                "norm_intensity":
-                {
-                    "dimension": [3],
-                    "bspline_fitting_distance": [200],
-                    "n_iterations": [50, 50, 40, 30],
-                    "convergence_threshold": [0.00000001],
-                    "shrink_factor": [2],
-                    "args": ["-r 0 --verbose 1"]
-                },
                 "denoise":
                 {
                     "shrink_factor": [3]
@@ -149,8 +111,6 @@ def test_create_long_multi_preparation_pipe():
             },
             "align_T2_on_T1":
             {
-                "dof": 6,
-                "cost": "normmi"
             }
         }
     }
