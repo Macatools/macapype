@@ -224,6 +224,15 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
+    # adding forced space
+    if "spm" in ssoft or "spm12" in ssoft:
+        if 'native' in ssoft:
+            wf_name += "_native"
+
+    elif "ants" in ssoft:
+        if "template" in ssoft:
+            wf_name += "_template"
+
     # params_template
     if template_path is not None:
         print(template_files)
@@ -292,8 +301,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         if 'native' in ssoft:
             space='native'
 
-            wf_name += "_native"
-
         else:
             space='template'
 
@@ -304,8 +311,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     elif "ants" in ssoft:
         if "template" in ssoft:
             space="template"
-
-            wf_name += "_template"
 
         else:
             space="native"
