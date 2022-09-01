@@ -286,8 +286,20 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         else:
             my_path = ""
 
-        nmt_dir = load_test_data(template_name, path_to = my_path)
-        params_template = format_template(nmt_dir, template_name)
+        template_dir = load_test_data(template_name, path_to = my_path)
+        params_template = format_template(template_dir, template_name)
+
+        if "template_aladin_name" in params["general"].keys():
+
+            template_aladin_name = params["general"]["template_aladin_name"]
+            template_aladin_dir = load_test_data(template_aladin_name, path_to = my_path)
+            params_template_aladin = format_template(template_aladin_dir, template_aladin_name)
+
+        else:
+            params_template_aladin = params_template
+
+
+
 
     print (params_template)
 
@@ -321,8 +333,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 pad=pad)
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
-                params_template=params_template, params=params,
-                mask_file=mask_file, space=space, pad=pad)
+                params_template=params_template,
+                params_template_aladin=params_template_aladin,
+                params=params, mask_file=mask_file, space=space, pad=pad)
 
     # list of all required outputs
     output_query = {}

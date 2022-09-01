@@ -1381,7 +1381,7 @@ def create_brain_segment_from_mask_pipe(
 
 
 def create_full_ants_subpipes(
-        params_template, params={}, name="full_ants_subpipes", mask_file=None,
+        params_template, params_template_aladin, params={}, name="full_ants_subpipes", mask_file=None,
         space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
 
@@ -1464,7 +1464,7 @@ def create_full_ants_subpipes(
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template)
+            params_template=params_template_aladin)
 
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
