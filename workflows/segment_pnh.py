@@ -138,11 +138,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if 't1' in ssoft:
         new_ssoft.remove('t1')
 
-    if 'native' in ssoft:
-        new_ssoft.remove('native')
+    #if 'native' in ssoft:
+        #new_ssoft.remove('native')
 
-    if 'template' in ssoft:
-        new_ssoft.remove('template')
+    #if 'template' in ssoft:
+        #new_ssoft.remove('template')
 
 
     soft = "_".join(new_ssoft)
@@ -541,7 +541,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename segmented_brain_mask
             rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
+            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-brain_dseg".format(space)
             rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_segmented_brain_mask.inputs.keep_ext = True
 
@@ -685,7 +685,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename segmented_brain_mask
             rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
+            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-brain_dseg".format(space)
             rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_segmented_brain_mask.inputs.keep_ext = True
 
