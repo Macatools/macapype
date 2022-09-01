@@ -224,6 +224,15 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
+    # adding forced space
+    if "spm" in ssoft or "spm12" in ssoft:
+        if 'native' in ssoft:
+            wf_name += "_native"
+
+    elif "ants" in ssoft:
+        if "template" in ssoft:
+            wf_name += "_template"
+
     # params_template
     if template_path is not None:
         print(template_files)
@@ -291,6 +300,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if "spm" in ssoft or "spm12" in ssoft:
         if 'native' in ssoft:
             space='native'
+
         else:
             space='template'
 
@@ -301,6 +311,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     elif "ants" in ssoft:
         if "template" in ssoft:
             space="template"
+
         else:
             space="native"
 
@@ -541,7 +552,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename segmented_brain_mask
             rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
+            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-brain_dseg".format(space)
             rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_segmented_brain_mask.inputs.keep_ext = True
 
@@ -685,7 +696,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename segmented_brain_mask
             rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_dseg"
+            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-brain_dseg".format(space)
             rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
             rename_segmented_brain_mask.inputs.keep_ext = True
 
