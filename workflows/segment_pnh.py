@@ -138,11 +138,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if 't1' in ssoft:
         new_ssoft.remove('t1')
 
-    #if 'native' in ssoft:
-        #new_ssoft.remove('native')
+    if 'native' in ssoft:
+        new_ssoft.remove('native')
 
-    #if 'template' in ssoft:
-        #new_ssoft.remove('template')
+    if 'template' in ssoft:
+        new_ssoft.remove('template')
 
 
     soft = "_".join(new_ssoft)
@@ -291,6 +291,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if "spm" in ssoft or "spm12" in ssoft:
         if 'native' in ssoft:
             space='native'
+
+            wf_name += "_native"
+
         else:
             space='template'
 
@@ -301,6 +304,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     elif "ants" in ssoft:
         if "template" in ssoft:
             space="template"
+
+            wf_name += "_template"
+
         else:
             space="native"
 
