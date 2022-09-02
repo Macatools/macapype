@@ -48,7 +48,8 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 # -soft SPM or SPM_T1
 ###############################################################################
 def create_full_spm_subpipes(
-        params_template, params={}, name='full_spm_subpipes',
+        params_template, params_template_aladin,
+        params={}, name='full_spm_subpipes',
         pad=False, space='template'):
 
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -140,7 +141,7 @@ def create_full_spm_subpipes(
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template)
+            params_template=params_template_aladin)
 
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
@@ -2379,9 +2380,9 @@ def create_brain_segment_from_mask_T1_pipe(
     return brain_segment_pipe
 
 
-def create_full_T1_ants_subpipes(params_template, params={},
-                                 name="full_T1_ants_subpipes", space="native",
-                                 pad=False):
+def create_full_T1_ants_subpipes(params_template, params_template_aladin,
+                                 params={}, name="full_T1_ants_subpipes",
+                                 space="native", pad=False):
 
     """Description: Full pipeline to segment T1 (with no T2).
 
@@ -2459,7 +2460,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
 
     brain_extraction_pipe = create_brain_extraction_T1_pipe(
         params=parse_key(params, "brain_extraction_pipe"),
-        params_template=params_template)
+        params_template=params_template_aladin)
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      brain_extraction_pipe, 'inputnode.preproc_T1')

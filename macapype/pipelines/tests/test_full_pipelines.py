@@ -43,6 +43,7 @@ def test_create_full_ants_subpipes_no_args():
     # running workflow
     segment_pnh = create_full_ants_subpipes(
         params=params, params_template=params_template,
+        params_template_aladin=params_template,
         name="test_create_full_ants_subpipes_no_args")
 
     segment_pnh.base_dir = data_path
@@ -86,6 +87,7 @@ def test_create_full_ants_subpipes_all_default_params():
         # running workflow
         segment_pnh = create_full_ants_subpipes(
             params=params, params_template=params_template,
+            params_template_aladin=params_template,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
@@ -130,11 +132,13 @@ def test_create_full_ants_t1_subpipes_all_default_params():
         # running workflow
         segment_pnh = create_full_T1_ants_subpipes(
             params=params, params_template=params_template,
+            params_template_aladin=params_template,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
 
         segment_pnh.write_graph(graph2use="colored")
+
         assert op.exists(
             op.join(data_path,
                     "test_create_full_ants_subpipes_all_default_params",

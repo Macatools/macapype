@@ -317,8 +317,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             space='template'
 
         segment_pnh_pipe = create_full_spm_subpipes(
-            params_template=params_template, params=params, pad=pad,
-            space=space)
+            params_template=params_template,
+            params_template_aladin=params_template_aladin,
+            params=params, pad=pad, space=space)
 
     elif "ants" in ssoft:
         if "template" in ssoft:
@@ -329,8 +330,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template=params_template, params=params, space=space,
-                pad=pad)
+                params_template=params_template,
+                params_template_aladin=params_template_aladin,
+                params=params, space=space, pad=pad)
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template,
