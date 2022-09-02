@@ -1382,7 +1382,8 @@ def create_brain_segment_from_mask_pipe(
 
 
 def create_full_ants_subpipes(
-        params_template, params_template_aladin, params={}, name="full_ants_subpipes", mask_file=None,
+        params_template, params_template_aladin, params={},
+        name="full_ants_subpipes", mask_file=None,
         space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
 
