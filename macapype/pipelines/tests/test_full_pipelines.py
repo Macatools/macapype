@@ -177,7 +177,8 @@ def test_create_full_spm_subpipes_all_default_params():
 
         # running workflow
         segment_pnh = create_full_spm_subpipes(
-            params=params, params_template=params_template, space=space,
+            params=params, params_template=params_template,
+            params_template_aladin=params_template, space=space,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
