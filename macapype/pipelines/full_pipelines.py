@@ -2461,7 +2461,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
     brain_extraction_pipe = create_brain_extraction_T1_pipe(
         params=parse_key(params, "brain_extraction_pipe"),
-        params_template=params_template_aladin)
+        params_template=params_template)
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      brain_extraction_pipe, 'inputnode.preproc_T1')
