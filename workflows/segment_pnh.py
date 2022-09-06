@@ -147,7 +147,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if 'template' in ssoft:
         new_ssoft.remove('template')
 
-
     soft = "_".join(new_ssoft)
 
     # formating args
