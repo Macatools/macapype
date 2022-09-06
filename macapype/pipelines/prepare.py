@@ -473,7 +473,7 @@ def create_short_preparation_pipe(params, params_template={},
                                params=parse_key(params, "crop_z_T2"),
                                name='crop_z_T2')
 
-        data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file'
+        data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
                                       crop_z_T2, 'in_file')
 
         ## apply RobustFOV matrix as flirt
