@@ -167,6 +167,11 @@ def create_full_spm_subpipes(
                      data_preparation_pipe, 'inputnode.indiv_params')
 
     # Bias correction of cropped images
+    if "debias" not in params.keys():
+
+        print("No debias, skipping")
+        return seg_pipe
+
     debias = NodeParams(T1xT2BiasFieldCorrection(),
                         params=parse_key(params, "debias"),
                         name='debias')

@@ -135,6 +135,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if 'prep' in ssoft:
         new_ssoft.remove('prep')
 
+    if 'noseg' in ssoft:
+        new_ssoft.remove('noseg')
+
     if 't1' in ssoft:
         new_ssoft.remove('t1')
 
@@ -143,7 +146,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     if 'template' in ssoft:
         new_ssoft.remove('template')
-
 
     soft = "_".join(new_ssoft)
 

@@ -64,21 +64,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-
-  docker-download:
-    name: Download latest Docker image
-    needs: docker-build
-    runs-on: self-hosted
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
   run-test:
     name: Running all existing pipelines in macapype_CI.zip
-    needs: docker-download
+    needs: docker-build
     runs-on: self-hosted
     timeout-minutes: 1440
 
