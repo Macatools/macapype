@@ -200,19 +200,30 @@ def update_params(ssoft=[], subjects=None, sessions=None,
     if "prep" in ssoft:
         print("Found prep in soft")
 
+        # ANTS
         if "brain_extraction_pipe" in params.keys():
             del params["brain_extraction_pipe"]
             print("Deleting brain_extraction_pipe")
 
+        # SPM
+        if "debias" in params.keys():
+            del params["debias"]
+            print("Deleting debias")
+
+
+    if "noseg" in ssoft:
+        print("Found noseg in soft")
+
+        # ANTS
         if "brain_segment_pipe" in params.keys():
             del params["brain_segment_pipe"]
             print("Deleting brain_segment_pipe")
 
-    if "noseg" in ssoft:
-        print("Found noseg in soft")
-        if "brain_segment_pipe" in params.keys():
-            del params["brain_segment_pipe"]
-            print("Deleting brain_segment_pipe")
+        # SPM
+        if "old_segment_pipe" in params.keys():
+            del params["old_segment_pipe"]
+            print("Deleting old_segment_pipe")
+
 
     print("After modif, running with params:")
     pprint.pprint(params)
