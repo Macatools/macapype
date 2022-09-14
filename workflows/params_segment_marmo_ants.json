@@ -7,7 +7,6 @@
     {
     	"crop_aladin_T1":
     	{
-    		"nac_flag": true,
             "rig_only_flag": true,
             "nosym_flag": true,
             "ln_val" : 12,
