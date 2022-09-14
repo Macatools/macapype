@@ -740,7 +740,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         json.dump(params, fp)
 
     if deriv:
-        real_params_file = op.join(datasink_name, "real_params.json")
+        real_params_file = op.join(process_dir, datasink_name, "real_params.json")
         with open(real_params_file, 'w+') as fp:
             json.dump(params, fp)
 
