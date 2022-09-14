@@ -939,12 +939,6 @@ def create_short_preparation_T1_pipe(params, params_template,
                                     params=parse_key(params, "crop_aladin_T1"),
                                     name='crop_aladin_T1')
 
-        crop_aladin_T1.inputs.rig_only_flag = True
-        crop_aladin_T1.inputs.nosym_flag = True
-        crop_aladin_T1.inputs.ln_val = 12
-        crop_aladin_T1.inputs.lp_val = 10
-        crop_aladin_T1.inputs.smoo_r_val = 1.0
-
         data_preparation_pipe.connect(av_T1, 'avg_img',
                                       crop_aladin_T1, 'flo_file')
 
