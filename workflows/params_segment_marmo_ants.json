@@ -5,7 +5,7 @@
     },
      "short_preparation_pipe":
     {
-    	"crop_T1_aladin":
+    	"crop_aladin_T1":
     	{
     		"nac_flag": true,
             "rig_only_flag": true,
