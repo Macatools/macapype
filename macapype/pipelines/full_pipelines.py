@@ -739,8 +739,8 @@ def create_full_spm_subpipes(
                     seg_pipe.connect(pad_seg_mask, "out_file",
                                      outputnode, "segmented_brain_mask")
 
-        elif "long_single_preparation_pipe" in params.keys():
-            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+            elif "long_single_preparation_pipe" in params.keys():
+                if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
                     print("Padding seg_mask in native space")
 
@@ -1823,7 +1823,6 @@ def create_full_ants_subpipes(
                     seg_pipe.connect(pad_debiased_T1, "padded_img_file",
                                      outputnode, "debiased_T1")
 
-
         else:
             seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
                              outputnode, "brain_mask")
@@ -1931,7 +1930,6 @@ def create_full_ants_subpipes(
 
                 seg_pipe.connect(pad_seg_mask, "padded_img_file",
                                  outputnode, "segmented_brain_mask")
-
 
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
@@ -2065,7 +2063,6 @@ def create_full_ants_subpipes(
 
                 seg_pipe.connect(pad_prob_csf, "padded_img_file",
                                  outputnode, "prob_csf")
-
 
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
