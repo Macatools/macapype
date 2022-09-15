@@ -1606,10 +1606,11 @@ def create_full_ants_subpipes(
                     seg_pipe.connect(pad_debiased_T1, "out_file",
                                      outputnode, "debiased_T1")
 
-            if "long_single_preparation_pipe" in params.keys():
-                if "crop_T1" in params["long_single_preparation_pipe"].keys():
+            elif "long_single_preparation_pipe" in params.keys():
+                if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
-                    print("Padding mask in native space")
+                    print("Padding mask in native space \
+                        (long_single_preparation_pipe)")
 
                     pad_mask = pe.Node(
                         niu.Function(
