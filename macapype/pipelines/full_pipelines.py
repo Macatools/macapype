@@ -306,8 +306,8 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_debiased_T1, "out_file",
                                  outputnode, "debiased_T1")
 
-        elif "short_preparation_pipe" in params.keys():
-            if "prep_T1" in params["short_preparation_pipe"].keys():
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
                 print("Padding mask in native space")
                 pad_mask = pe.Node(
@@ -485,8 +485,8 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_wm, "out_file",
                                  outputnode, "prob_wm")
 
-        elif "short_preparation_pipe" in params.keys():
-            if "prep_T1" in params["short_preparation_pipe"].keys():
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
                 print("Padding prob_wm in native space")
 
@@ -563,8 +563,8 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_csf, "out_file",
                                  outputnode, "prob_csf")
 
-        elif "short_preparation_pipe" in params.keys():
-            if "prep_T1" in params["short_preparation_pipe"].keys():
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
                 print("Padding prob_csf in native space")
 
@@ -641,8 +641,8 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_gm, "out_file",
                                  outputnode, "prob_gm")
 
-        elif "short_preparation_pipe" in params.keys():
-            if "prep_T1" in params["short_preparation_pipe"].keys():
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
                 print("Padding prob_gm in native space")
 
@@ -739,8 +739,8 @@ def create_full_spm_subpipes(
                     seg_pipe.connect(pad_seg_mask, "out_file",
                                      outputnode, "segmented_brain_mask")
 
-        elif "short_preparation_pipe" in params.keys():
-            if "prep_T1" in params["short_preparation_pipe"].keys():
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
 
                     print("Padding seg_mask in native space")
 
