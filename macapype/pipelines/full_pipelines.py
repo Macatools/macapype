@@ -259,7 +259,8 @@ def create_full_spm_subpipes(
 
             else:
                 print("Using reg_aladin transfo to pad mask back")
-                pad_mask = pe.Node(regutils.RegResample(), name="pad_mask")
+                pad_mask = pe.Node(regutils.RegResample(inter_val="NN"),
+                                   name="pad_mask")
 
                 seg_pipe.connect(debias, "debiased_mask_file",
                                  pad_mask, "flo_file")
@@ -721,8 +722,9 @@ def create_full_spm_subpipes(
                 else:
                     print("Using reg_aladin transfo to pad seg_mask back")
 
-                    pad_seg_mask = pe.Node(regutils.RegResample(),
-                                           name="pad_seg_mask")
+                    pad_seg_mask = pe.Node(
+                        regutils.RegResample(inter_val="NN"),
+                        name="pad_seg_mask")
 
                     seg_pipe.connect(mask_from_seg_pipe,
                                      'merge_indexed_mask.indexed_mask',
@@ -1737,7 +1739,7 @@ def create_full_ants_subpipes(
 
                 else:
                     print("Using reg_aladin transfo to pad mask back")
-                    pad_mask = pe.Node(regutils.RegResample(),
+                    pad_mask = pe.Node(regutils.RegResample(inter_val="NN"),
                                        name="pad_mask")
 
                     seg_pipe.connect(brain_extraction_pipe,
@@ -1888,7 +1890,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad seg_mask back")
 
-                pad_seg_mask = pe.Node(regutils.RegResample(),
+                pad_seg_mask = pe.Node(regutils.RegResample(inter_val="NN"),
                                        name="pad_seg_mask")
 
                 seg_pipe.connect(brain_segment_pipe,
@@ -2817,7 +2819,9 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
             else:
                 print("Using reg_aladin transfo to pad mask back")
-                pad_mask = pe.Node(regutils.RegResample(), name="pad_mask")
+                pad_mask = pe.Node(
+                    regutils.RegResample(inter_val="NN"),
+                    name="pad_mask")
 
                 seg_pipe.connect(brain_extraction_pipe,
                                  "outputnode.brain_mask",
@@ -2908,7 +2912,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad seg_mask back")
 
-                pad_seg_mask = pe.Node(regutils.RegResample(),
+                pad_seg_mask = pe.Node(regutils.RegResample(inter_val="NN"),
                                        name="pad_seg_mask")
 
                 seg_pipe.connect(brain_segment_pipe,
