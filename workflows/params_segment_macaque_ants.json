@@ -81,10 +81,18 @@
             {
                 "dimension": 3
             },
+            "tissue_dict":
+            {
+                "gm": [2, 3],
+                "wm": 4,
+                "csf": [1, 5]
+            },
+
             "threshold_gm":
             {
                 "thresh": 0.5
             },
+
             "threshold_wm":
             {
                 "thresh": 0.5
@@ -93,6 +101,9 @@
             {
                 "thresh": 0.5
             }
+        },
+        "export_5tt_pipe":
+        {
         }
     }
 }
