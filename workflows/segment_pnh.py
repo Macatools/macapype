@@ -108,12 +108,18 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     acquisitions: list of str (optional)
         Acquisition name to match to BIDS specification (acq-[ACQ1]...)
 
+    reconstructions: list of str (optional)
+        Reconstructions name to match to BIDS specification (rec-[ACQ1]...)
+
     indiv_params_file: path to a JSON file
         JSON file that specify some parameters of the pipeline,
         unique for the subjects/sessions.
 
     params_file: path to a JSON file
         JSON file that specify some parameters of the pipeline.
+
+    nprocs: integer
+        number of processes that will be launched by MultiProc
 
 
     Returns
