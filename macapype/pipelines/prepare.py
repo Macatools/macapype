@@ -556,12 +556,8 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           denoise_T1, 'input_image')
 
-            if "align_crop_z_T2" in params.keys():
-                data_preparation_pipe.connect(align_crop_z_T2, "out_file",
-                                              denoise_T2, 'input_image')
-            else:
-                data_preparation_pipe.connect(crop_z_T2, "out_roi",
-                                              denoise_T2, 'input_image')
+            data_preparation_pipe.connect(align_crop_z_T2, "out_file",
+                                          denoise_T2, 'input_image')
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
@@ -589,11 +585,7 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           outputnode, 'preproc_T1')
 
-            if "align_crop_z_T2" in params.keys():
-                data_preparation_pipe.connect(align_crop_z_T2, "out_file",
-                                              outputnode, 'preproc_T2')
-            else:
-                data_preparation_pipe.connect(crop_z_T2, "out_roi",
+            data_preparation_pipe.connect(align_crop_z_T2, "out_file",
                                               outputnode, 'preproc_T2')
 
     return data_preparation_pipe
