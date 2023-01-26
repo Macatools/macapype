@@ -666,7 +666,11 @@ class NwarpApplyPriors(AFNICommandBase):
 
             else:
                 print("Not a list for in_file {}".format(value))
-                shutil.copy(value, cur_dir)
+                print(os.listdir(cur_dir))
+                print(value)
+
+                if value not in os.listdir(cur_dir):
+                    shutil.copy(value, cur_dir)
 
                 path, fname, ext = split_f(value)
                 new_value = os.path.join(cur_dir, fname + ext)
