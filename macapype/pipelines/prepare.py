@@ -12,7 +12,7 @@ from nipype.interfaces.niftyreg import regutils
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
 from ..utils.utils_nodes import NodeParams, MapNodeParams
-from ..utils.misc import parse_key
+from ..utils.misc import parse_key, test_size_nii
 
 from ..nodes.prepare import average_align, FslOrient, reg_aladin_dirty
 from ..nodes.extract_brain import T1xT2BET
@@ -454,13 +454,33 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
+
+        # align avg T2 on avg T1
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+        align_T2_on_T1.inputs.dof = 6
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'in_file')
+
+        ## testing if equal shape for av_T1 and av_T2
+        test_sim_size = pe.Node(niu.Function(input_names=["nii_file1", "nii_file2"], output_names = ["same_size"], function = test_size_nii), name = "test_sim_size")
+
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      test_sim_size, 'nii_file1')
+
+        data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
+                                      test_sim_size, 'nii_file2')
+
         # apply reg_resample to T2
+
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
-            params=parse_key(params, "apply_crop_aladin_T2"),
             name='apply_crop_aladin_T2')
 
-        data_preparation_pipe.connect(av_T2, 'avg_img',
+        data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
                                       apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
@@ -468,34 +488,34 @@ def create_short_preparation_pipe(params, params_template={},
 
         apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
 
-        if "align_crop_z_T2" in params.keys():
+        print(test_sim_size.outputs.same_size)
 
-            # apply RobustFOV matrix as flirt
-            align_crop_z_T2 = NodeParams(
-                fsl.ApplyXFM(apply_xfm=True),
-                params=parse_key(params, "align_crop_z_T2"),
-                name="align_crop_z_T2")
+        ## testing if equal shape for crop_aladin_T1 and av_T2
+        test_sim_size2 = pe.Node(niu.Function(input_names=["nii_file1", "nii_file2"], output_names = ["same_size"], function = test_size_nii), name = "test_sim_size2")
 
-            data_preparation_pipe.connect(
-                crop_z_T1, 'out_roi', align_crop_z_T2, 'reference')
 
-            data_preparation_pipe.connect(
-                crop_z_T1, 'out_transform',
-                align_crop_z_T2, 'in_matrix_file')
+        data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                      test_sim_size2, 'nii_file1')
 
-            data_preparation_pipe.connect(
-                apply_crop_aladin_T2, 'out_file',
-                align_crop_z_T2, 'in_file')
+        data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
+                                      test_sim_size2, 'nii_file2')
 
-        else:
+        # apply RobustFOV matrix as flirt
+        align_crop_z_T2 = NodeParams(
+            fsl.ApplyXFM(apply_xfm=True),
+            params=parse_key(params, "align_crop_z_T2"),
+            name="align_crop_z_T2")
 
-            # crop_z_T2
-            crop_z_T2 = NodeParams(fsl.RobustFOV(),
-                                   params=parse_key(params, "crop_z_T1"),
-                                   name='crop_z_T2')
+        data_preparation_pipe.connect(
+            crop_z_T1, 'out_roi', align_crop_z_T2, 'reference')
 
-            data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                          crop_z_T2, 'in_file')
+        data_preparation_pipe.connect(
+            crop_z_T1, 'out_transform',
+            align_crop_z_T2, 'in_matrix_file')
+
+        data_preparation_pipe.connect(
+            apply_crop_aladin_T2, 'out_file',
+            align_crop_z_T2, 'in_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(

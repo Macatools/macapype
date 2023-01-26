@@ -19,6 +19,19 @@ def print_nii_data(nii_file):
     print(nii_file, data)
     return nii_file
 
+def test_size_nii(nii_file1, nii_file2):
+    import numpy as np
+    import nibabel as nib
+
+    data1 = nib.load(nii_file1).get_fdata()
+    data2 = nib.load(nii_file2).get_fdata()
+
+    print(data1.shape)
+    print(data2.shape)
+
+    print (np.all(data1.shape == data2.shape))
+
+    return np.all(data1.shape == data2.shape)
 
 def get_elem(list_elem, index_elem):
     assert isinstance(list_elem, list), 'Error, list_elem should be a list'
