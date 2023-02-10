@@ -454,13 +454,22 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
+        # align avg T2 on avg T1
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+        align_T2_on_T1.inputs.dof = 6
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'in_file')
+
         # apply reg_resample to T2
+
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
-            params=parse_key(params, "apply_crop_aladin_T2"),
             name='apply_crop_aladin_T2')
 
-        data_preparation_pipe.connect(av_T2, 'avg_img',
+        data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
                                       apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
@@ -468,34 +477,22 @@ def create_short_preparation_pipe(params, params_template={},
 
         apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
 
-        if "align_crop_z_T2" in params.keys():
+        # apply RobustFOV matrix as flirt
+        align_crop_z_T2 = NodeParams(
+            fsl.ApplyXFM(apply_xfm=True),
+            params=parse_key(params, "align_crop_z_T2"),
+            name="align_crop_z_T2")
 
-            # apply RobustFOV matrix as flirt
-            align_crop_z_T2 = NodeParams(
-                fsl.ApplyXFM(apply_xfm=True),
-                params=parse_key(params, "align_crop_z_T2"),
-                name="align_crop_z_T2")
+        data_preparation_pipe.connect(
+            crop_z_T1, 'out_roi', align_crop_z_T2, 'reference')
 
-            data_preparation_pipe.connect(
-                crop_z_T1, 'out_roi', align_crop_z_T2, 'reference')
+        data_preparation_pipe.connect(
+            crop_z_T1, 'out_transform',
+            align_crop_z_T2, 'in_matrix_file')
 
-            data_preparation_pipe.connect(
-                crop_z_T1, 'out_transform',
-                align_crop_z_T2, 'in_matrix_file')
-
-            data_preparation_pipe.connect(
-                apply_crop_aladin_T2, 'out_file',
-                align_crop_z_T2, 'in_file')
-
-        else:
-
-            # crop_z_T2
-            crop_z_T2 = NodeParams(fsl.RobustFOV(),
-                                   params=parse_key(params, "crop_z_T1"),
-                                   name='crop_z_T2')
-
-            data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                          crop_z_T2, 'in_file')
+        data_preparation_pipe.connect(
+            apply_crop_aladin_T2, 'out_file',
+            align_crop_z_T2, 'in_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
@@ -536,12 +533,8 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           denoise_T1, 'input_image')
 
-            if "align_crop_z_T2" in params.keys():
-                data_preparation_pipe.connect(align_crop_z_T2, "out_file",
-                                              denoise_T2, 'input_image')
-            else:
-                data_preparation_pipe.connect(crop_z_T2, "out_roi",
-                                              denoise_T2, 'input_image')
+            data_preparation_pipe.connect(align_crop_z_T2, "out_file",
+                                          denoise_T2, 'input_image')
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
@@ -569,12 +562,8 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           outputnode, 'preproc_T1')
 
-            if "align_crop_z_T2" in params.keys():
-                data_preparation_pipe.connect(align_crop_z_T2, "out_file",
-                                              outputnode, 'preproc_T2')
-            else:
-                data_preparation_pipe.connect(crop_z_T2, "out_roi",
-                                              outputnode, 'preproc_T2')
+            data_preparation_pipe.connect(align_crop_z_T2, "out_file",
+                                          outputnode, 'preproc_T2')
 
     return data_preparation_pipe
 
