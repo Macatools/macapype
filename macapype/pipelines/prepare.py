@@ -12,7 +12,7 @@ from nipype.interfaces.niftyreg import regutils
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
 from ..utils.utils_nodes import NodeParams, MapNodeParams
-from ..utils.misc import parse_key, test_size_nii
+from ..utils.misc import parse_key
 
 from ..nodes.prepare import average_align, FslOrient, reg_aladin_dirty
 from ..nodes.extract_brain import T1xT2BET
@@ -454,7 +454,6 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
-
         # align avg T2 on avg T1
         align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
         align_T2_on_T1.inputs.dof = 6
@@ -463,16 +462,6 @@ def create_short_preparation_pipe(params, params_template={},
                                       align_T2_on_T1, 'reference')
         data_preparation_pipe.connect(av_T2, 'avg_img',
                                       align_T2_on_T1, 'in_file')
-
-        ## testing if equal shape for av_T1 and av_T2
-        test_sim_size = pe.Node(niu.Function(input_names=["nii_file1", "nii_file2"], output_names = ["same_size"], function = test_size_nii), name = "test_sim_size")
-
-
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      test_sim_size, 'nii_file1')
-
-        data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
-                                      test_sim_size, 'nii_file2')
 
         # apply reg_resample to T2
 
@@ -487,18 +476,6 @@ def create_short_preparation_pipe(params, params_template={},
                                       apply_crop_aladin_T2, 'trans_file')
 
         apply_crop_aladin_T2.inputs.ref_file = params_template["template_head"]
-
-        print(test_sim_size.outputs.same_size)
-
-        ## testing if equal shape for crop_aladin_T1 and av_T2
-        test_sim_size2 = pe.Node(niu.Function(input_names=["nii_file1", "nii_file2"], output_names = ["same_size"], function = test_size_nii), name = "test_sim_size2")
-
-
-        data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                      test_sim_size2, 'nii_file1')
-
-        data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                      test_sim_size2, 'nii_file2')
 
         # apply RobustFOV matrix as flirt
         align_crop_z_T2 = NodeParams(
@@ -586,7 +563,7 @@ def create_short_preparation_pipe(params, params_template={},
                                           outputnode, 'preproc_T1')
 
             data_preparation_pipe.connect(align_crop_z_T2, "out_file",
-                                              outputnode, 'preproc_T2')
+                                          outputnode, 'preproc_T2')
 
     return data_preparation_pipe
 
