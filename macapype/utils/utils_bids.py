@@ -110,10 +110,17 @@ def create_datasink(iterables, name="output", params_subs={},
     print(iterables[0][1])
     print(iterables[1][1])
 
-    subjFolders = [
-        ('_session_%s_subject_%s' % (ses, sub),
-         'sub-%s/ses-%s/anat' % (sub, ses)) for ses in iterables[1][1]
-        for sub in iterables[0][1]]
+    if len(iterables) == 1:
+        if iterables[0][0] == 'subject':
+            subjFolders = [
+                ('_subject_%s' % (sub),
+                 'sub-%s/anat' % (sub)) for sub in iterables[0][1]]
+    elif len(iterables) > 1:
+        if iterables[0][0] == 'subject' and iterables[1][0] == 'session':
+            subjFolders = [
+                ('_session_%s_subject_%s' % (ses, sub),
+                'sub-%s/ses-%s/anat' % (sub, ses)) for ses in iterables[1][1]\
+                    for sub in iterables[0][1]]
 
     # subs
     json_subs = op.join(op.dirname(op.abspath(__file__)),
