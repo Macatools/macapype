@@ -105,10 +105,6 @@ def create_datasink(iterables, name="output", params_subs={},
                        name='datasink')
 
     print(iterables)
-    print(iterables[0])
-    print(iterables[1])
-    print(iterables[0][1])
-    print(iterables[1][1])
 
     if len(iterables) == 1:
         if iterables[0][0] == 'subject':
