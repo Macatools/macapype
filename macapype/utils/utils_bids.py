@@ -40,8 +40,6 @@ def create_datasource(output_query, data_dir, subjects=None, sessions=None,
     if sessions != []:
         iterables.append(('session', sessions))
 
-    print(iterables)
-
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))
 
@@ -105,6 +103,12 @@ def create_datasink(iterables, name="output", params_subs={},
 
     datasink = pe.Node(nio.DataSink(container=name),
                        name='datasink')
+
+    print(iterables)
+    print(iterables[0])
+    print(iterables[1])
+    print(iterables[0][1])
+    print(iterables[1][1])
 
     subjFolders = [
         ('_session_%s_subject_%s' % (ses, sub),
