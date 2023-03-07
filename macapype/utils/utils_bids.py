@@ -28,6 +28,8 @@ def create_datasource(output_query, data_dir, subjects=None, sessions=None,
     print("\t", layout.get_subjects())
     print("\t", layout.get_sessions())
 
+    0/0
+
     if subjects is None:
         subjects = layout.get_subjects()
 
