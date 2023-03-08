@@ -9,18 +9,15 @@
 #
 # Timestamp: 2020/12/02 18:33:44 UTC
 
-FROM ubuntu:18.04
+FROM debian:buster
 
 USER root
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
-####################################################### Using neurodocker
-
 ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8" \
     ND_ENTRYPOINT="/neurodocker/startup.sh"
-
 RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
     && apt-get update -qq \
     && apt-get install -y -q --no-install-recommends \
@@ -47,7 +44,6 @@ RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
 
 ENTRYPOINT ["/neurodocker/startup.sh"]
 
-# Install FSL
 ENV FSLDIR="/opt/fsl-5.0.10" \
     PATH="/opt/fsl-5.0.10/bin:$PATH" \
     FSLOUTPUTTYPE="NIFTI_GZ" \
@@ -91,15 +87,6 @@ RUN apt-get update -qq \
     && echo "Installing FSL conda environment ..." \
     && bash /opt/fsl-5.0.10/etc/fslconf/fslpython_install.sh -f /opt/fsl-5.0.10
 
-# ANTS
-ENV ANTSPATH="/opt/ants-2.3.1" \
-    PATH="/opt/ants-2.3.1:$PATH"
-RUN echo "Downloading ANTs ..." \
-    && mkdir -p /opt/ants-2.3.1 \
-    && curl -fsSL --retry 5 https://dl.dropbox.com/s/1xfhydsf4t4qoxg/ants-Linux-centos6_x86_64-v2.3.1.tar.gz \
-    | tar -xz -C /opt/ants-2.3.1 --strip-components 1
-
-### Install AFNI
 ENV PATH="/opt/afni-latest:$PATH" \
     AFNI_PLUGINPATH="/opt/afni-latest"
 RUN apt-get update -qq \
@@ -112,6 +99,7 @@ RUN apt-get update -qq \
            libgomp1 \
            libjpeg62 \
            libxm4 \
+           multiarch-support \
            netpbm \
            tcsh \
            xfonts-base \
@@ -137,18 +125,19 @@ RUN apt-get update -qq \
     && curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
     | tar -xz -C /opt/afni-latest --strip-components 1
 
+ENV ANTSPATH="/opt/ants-2.3.1" \
+    PATH="/opt/ants-2.3.1:$PATH"
+RUN echo "Downloading ANTs ..." \
+    && mkdir -p /opt/ants-2.3.1 \
+    && curl -fsSL --retry 5 https://dl.dropbox.com/s/1xfhydsf4t4qoxg/ants-Linux-centos6_x86_64-v2.3.1.tar.gz \
+    | tar -xz -C /opt/ants-2.3.1 --strip-components 1
+
 RUN echo '{ \
     \n  "pkg_manager": "apt", \
     \n  "instructions": [ \
     \n    [ \
     \n      "base", \
-    \n      "ubuntu:focal" \
-    \n    ], \
-    \n    [ \
-    \n      "fsl", \
-    \n      { \
-    \n        "version": "5.0.10" \
-    \n      } \
+    \n      "debian:buster" \
     \n    ], \
     \n    [ \
     \n      "ants", \
@@ -157,53 +146,26 @@ RUN echo '{ \
     \n      } \
     \n    ], \
     \n    [ \
+    \n      "fsl", \
+    \n      { \
+    \n        "version": "5.0.10" \
+    \n      } \
+    \n    ], \
+    \n    [ \
     \n      "afni", \
     \n      { \
     \n        "version": "latest" \
+    \n      } \
+    \n    ], \
+    \n    [ \
+    \n      "ants", \
+    \n      { \
+    \n        "version": "2.3.1" \
     \n      } \
     \n    ] \
     \n  ] \
     \n}' > /neurodocker/neurodocker_specs.json
 
-################################################## Install SPM12 as MCR
-
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
-     unzip xorg wget \
- && apt-get clean \
- && rm -rf \
-     /tmp/hsperfdata* \
-     /var/*/apt/*/partial \
-     /var/lib/apt/lists/* \
-     /var/log/apt/term*
-
-# Install MATLAB MCR in /opt/mcr/
-ENV MATLAB_VERSION R2019b
-ENV MCR_VERSION v97
-RUN mkdir /opt/mcr_install \
- && mkdir /opt/mcr \
- && wget --progress=bar:force -P /opt/mcr_install https://ssd.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/Release/3/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_${MATLAB_VERSION}_Update_3_glnxa64.zip \
- && unzip -q /opt/mcr_install/MATLAB_Runtime_${MATLAB_VERSION}_Update_3_glnxa64.zip -d /opt/mcr_install \
- && /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent \
- && rm -rf /opt/mcr_install /tmp/*
-
-# Install SPM Standalone in /opt/spm12/
-ENV SPM_VERSION 12
-ENV SPM_REVISION r7771
-ENV LD_LIBRARY_PATH /opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:/opt/mcr/${MCR_VERSION}/extern/bin/glnxa64
-ENV MCR_INHIBIT_CTF_LOCK 1
-ENV SPM_HTML_BROWSER 0
-# Running SPM once with "function exit" tests the succesfull installation *and*
-# extracts the ctf archive which is necessary if singularity is going to be
-# used later on, because singularity containers are read-only.
-# Also, set +x on the entrypoint for non-root container invocations
-RUN wget --no-check-certificate --progress=bar:force -P /opt https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
- && unzip -q /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt \
- && rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
- && /opt/spm${SPM_VERSION}/spm${SPM_VERSION} function exit \
- && chmod +x /opt/spm${SPM_VERSION}/spm${SPM_VERSION}
-ENV SPM_DIR /opt/spm${SPM_VERSION}
-
-######################## NiftiReg
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends \
         ca-certificates cmake gcc g++ git make \
@@ -216,10 +178,16 @@ RUN apt-get update \
 ENV PATH=/opt/niftyreg/bin:$PATH
 
 MAINTAINER David Meunier "david.meunier@univ-amu.fr"
-
 ######################## Python packages
+#
+# RUN apt-get update && apt-get install -y python3.7
+# RUN python3.7 --version
+# RUN ln -s /usr/bin/python3.7 /usr/bin/python3
 
-RUN apt-get update && apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
+RUN apt-get update && apt-get install -y python3
+RUN python3 --version
+
+RUN apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
 
 RUN apt-get install -y python3-pil python3-pil.imagetk
 
@@ -257,17 +225,10 @@ RUN pip3 install xvfbwrapper \
     brain-slam
 
 ############################################# install macapype
-RUN mkdir -p /opt/packages/
-
-ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
-WORKDIR /opt/packages/
-
-RUN git clone https://github.com/macatools/macapype.git
-WORKDIR /opt/packages/macapype
-
-RUN python3 setup.py develop
 
 RUN echo $(which python) && \
     echo $(which python3) && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     ln -s /usr/bin/pip3 /usr/bin/pip
+
+RUN  pip install --pre macapype && python -c "import macapype; print(macapype.__version__)"
