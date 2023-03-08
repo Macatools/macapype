@@ -9,6 +9,7 @@ def test_create_datasink_sub_ses():
 
     assert True
 
+
 def test_create_datasink_sub():
     iterables = [('subject', "mysub")]
     datasink = create_datasink(iterables)
