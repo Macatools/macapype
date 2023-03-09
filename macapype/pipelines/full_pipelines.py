@@ -48,7 +48,8 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 # -soft SPM or SPM_T1
 ###############################################################################
 def create_full_spm_subpipes(
-        params_template, params={}, name='full_spm_subpipes',
+        params_template, params_template_aladin,
+        params={}, name='full_spm_subpipes',
         pad=False, space='template'):
 
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -140,7 +141,7 @@ def create_full_spm_subpipes(
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template)
+            params_template=params_template_aladin)
 
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
@@ -166,6 +167,11 @@ def create_full_spm_subpipes(
                      data_preparation_pipe, 'inputnode.indiv_params')
 
     # Bias correction of cropped images
+    if "debias" not in params.keys():
+
+        print("No debias, skipping")
+        return seg_pipe
+
     debias = NodeParams(T1xT2BiasFieldCorrection(),
                         params=parse_key(params, "debias"),
                         name='debias')
@@ -253,7 +259,8 @@ def create_full_spm_subpipes(
 
             else:
                 print("Using reg_aladin transfo to pad mask back")
-                pad_mask = pe.Node(regutils.RegResample(), name="pad_mask")
+                pad_mask = pe.Node(regutils.RegResample(inter_val="NN"),
+                                   name="pad_mask")
 
                 seg_pipe.connect(debias, "debiased_mask_file",
                                  pad_mask, "flo_file")
@@ -299,6 +306,72 @@ def create_full_spm_subpipes(
 
                 seg_pipe.connect(pad_debiased_T1, "out_file",
                                  outputnode, "debiased_T1")
+
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding mask in native space")
+                pad_mask = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_mask")
+
+                seg_pipe.connect(debias, 'debiased_mask_file',
+                                 pad_mask, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_mask, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_mask, "indiv_crop")
+
+                seg_pipe.connect(pad_mask, "padded_img_file",
+                                 outputnode, "brain_mask")
+
+                print("Padding debiased_T1 in native space")
+                pad_debiased_T1 = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_debiased_T1")
+
+                seg_pipe.connect(debias, 't1_debiased_file',
+                                 pad_debiased_T1, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_debiased_T1, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_debiased_T1, "indiv_crop")
+
+                seg_pipe.connect(pad_debiased_T1, "padded_img_file",
+                                 outputnode, "debiased_T1")
+
+                print("Padding debiased_brain in native space")
+                pad_debiased_brain = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_debiased_brain")
+
+                seg_pipe.connect(debias, 't1_debiased_brain_file',
+                                 pad_debiased_brain, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_debiased_brain, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_debiased_brain, "indiv_crop")
+
+                seg_pipe.connect(pad_debiased_brain, "padded_img_file",
+                                 outputnode, "debiased_brain")
 
     else:
         seg_pipe.connect(debias, "debiased_mask_file",
@@ -413,6 +486,31 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_wm, "out_file",
                                  outputnode, "prob_wm")
 
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding prob_wm in native space")
+
+                pad_prob_wm = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_prob_wm")
+
+                seg_pipe.connect(old_segment_pipe, "outputnode.prob_wm",
+                                 pad_prob_wm, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_prob_wm, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_prob_wm, "indiv_crop")
+
+                seg_pipe.connect(pad_prob_wm, "padded_img_file",
+                                 outputnode, "prob_wm")
+
     else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
@@ -466,6 +564,31 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_csf, "out_file",
                                  outputnode, "prob_csf")
 
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding prob_csf in native space")
+
+                pad_prob_csf = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_prob_csf")
+
+                seg_pipe.connect(old_segment_pipe, "outputnode.prob_csf",
+                                 pad_prob_csf, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_prob_csf, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_prob_csf, "indiv_crop")
+
+                seg_pipe.connect(pad_prob_csf, "padded_img_file",
+                                 outputnode, "prob_csf")
+
     else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_csf',
                          outputnode, 'prob_csf')
@@ -517,6 +640,31 @@ def create_full_spm_subpipes(
 
                 # outputnode
                 seg_pipe.connect(pad_prob_gm, "out_file",
+                                 outputnode, "prob_gm")
+
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding prob_gm in native space")
+
+                pad_prob_gm = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_prob_gm")
+
+                seg_pipe.connect(old_segment_pipe, "outputnode.prob_gm",
+                                 pad_prob_gm, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_prob_gm, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_prob_gm, "indiv_crop")
+
+                seg_pipe.connect(pad_prob_gm, "padded_img_file",
                                  outputnode, "prob_gm")
 
     else:
@@ -574,8 +722,9 @@ def create_full_spm_subpipes(
                 else:
                     print("Using reg_aladin transfo to pad seg_mask back")
 
-                    pad_seg_mask = pe.Node(regutils.RegResample(),
-                                           name="pad_seg_mask")
+                    pad_seg_mask = pe.Node(
+                        regutils.RegResample(inter_val="NN"),
+                        name="pad_seg_mask")
 
                     seg_pipe.connect(mask_from_seg_pipe,
                                      'merge_indexed_mask.indexed_mask',
@@ -590,6 +739,32 @@ def create_full_spm_subpipes(
 
                     # outputnode
                     seg_pipe.connect(pad_seg_mask, "out_file",
+                                     outputnode, "segmented_brain_mask")
+
+            elif "long_single_preparation_pipe" in params.keys():
+                if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                    print("Padding seg_mask in native space")
+
+                    pad_seg_mask = pe.Node(
+                        niu.Function(
+                            input_names=['cropped_img_file', 'orig_img_file',
+                                         'indiv_crop'],
+                            output_names=['padded_img_file'],
+                            function=padding_cropped_img),
+                        name="pad_seg_mask")
+
+                    seg_pipe.connect(mask_from_seg_pipe,
+                                     'merge_indexed_mask.indexed_mask',
+                                     pad_seg_mask, "cropped_img_file")
+
+                    seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                     pad_seg_mask, "orig_img_file")
+
+                    seg_pipe.connect(inputnode, "indiv_params",
+                                     pad_seg_mask, "indiv_crop")
+
+                    seg_pipe.connect(pad_seg_mask, "padded_img_file",
                                      outputnode, "segmented_brain_mask")
 
         else:
@@ -1381,7 +1556,8 @@ def create_brain_segment_from_mask_pipe(
 
 
 def create_full_ants_subpipes(
-        params_template, params={}, name="full_ants_subpipes", mask_file=None,
+        params_template, params_template_aladin, params={},
+        name="full_ants_subpipes", mask_file=None,
         space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
 
@@ -1464,7 +1640,7 @@ def create_full_ants_subpipes(
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template)
+            params_template=params_template_aladin)
 
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
@@ -1563,7 +1739,7 @@ def create_full_ants_subpipes(
 
                 else:
                     print("Using reg_aladin transfo to pad mask back")
-                    pad_mask = pe.Node(regutils.RegResample(),
+                    pad_mask = pe.Node(regutils.RegResample(inter_val="NN"),
                                        name="pad_mask")
 
                     seg_pipe.connect(brain_extraction_pipe,
@@ -1597,6 +1773,56 @@ def create_full_ants_subpipes(
                                      outputnode, "brain_mask")
 
                     seg_pipe.connect(pad_debiased_T1, "out_file",
+                                     outputnode, "debiased_T1")
+
+            elif "long_single_preparation_pipe" in params.keys():
+                if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                    print("Padding mask in native space \
+                        (long_single_preparation_pipe)")
+
+                    pad_mask = pe.Node(
+                        niu.Function(
+                            input_names=['cropped_img_file', 'orig_img_file',
+                                         'indiv_crop'],
+                            output_names=['padded_img_file'],
+                            function=padding_cropped_img),
+                        name="pad_mask")
+
+                    seg_pipe.connect(brain_extraction_pipe,
+                                     "outputnode.brain_mask",
+                                     pad_mask, "cropped_img_file")
+
+                    seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                     pad_mask, "orig_img_file")
+
+                    seg_pipe.connect(inputnode, "indiv_params",
+                                     pad_mask, "indiv_crop")
+
+                    seg_pipe.connect(pad_mask, "padded_img_file",
+                                     outputnode, "brain_mask")
+
+                    print("Padding debiased_T1 in native space")
+
+                    pad_debiased_T1 = pe.Node(
+                        niu.Function(
+                            input_names=['cropped_img_file', 'orig_img_file',
+                                         'indiv_crop'],
+                            output_names=['padded_img_file'],
+                            function=padding_cropped_img),
+                        name="pad_debiased_T1")
+
+                    seg_pipe.connect(brain_extraction_pipe,
+                                     "outputnode.debiased_T1",
+                                     pad_debiased_T1, "cropped_img_file")
+
+                    seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                     pad_debiased_T1, "orig_img_file")
+
+                    seg_pipe.connect(inputnode, "indiv_params",
+                                     pad_debiased_T1, "indiv_crop")
+
+                    seg_pipe.connect(pad_debiased_T1, "padded_img_file",
                                      outputnode, "debiased_T1")
 
         else:
@@ -1664,7 +1890,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad seg_mask back")
 
-                pad_seg_mask = pe.Node(regutils.RegResample(),
+                pad_seg_mask = pe.Node(regutils.RegResample(inter_val="NN"),
                                        name="pad_seg_mask")
 
                 seg_pipe.connect(brain_segment_pipe,
@@ -1679,6 +1905,32 @@ def create_full_ants_subpipes(
 
                 # outputnode
                 seg_pipe.connect(pad_seg_mask, "out_file",
+                                 outputnode, "segmented_brain_mask")
+
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding seg_mask in native space")
+
+                pad_seg_mask = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_seg_mask")
+
+                seg_pipe.connect(brain_segment_pipe,
+                                 "outputnode.segmented_file",
+                                 pad_seg_mask, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_seg_mask, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_seg_mask, "indiv_crop")
+
+                seg_pipe.connect(pad_seg_mask, "padded_img_file",
                                  outputnode, "segmented_brain_mask")
 
     else:
@@ -1789,6 +2041,31 @@ def create_full_ants_subpipes(
                 seg_pipe.connect(pad_prob_csf, "out_file",
                                  outputnode, "prob_csf")
 
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding prob_csf in native space")
+
+                pad_prob_csf = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_prob_csf")
+
+                seg_pipe.connect(brain_segment_pipe, "outputnode.prob_csf",
+                                 pad_prob_csf, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_prob_csf, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_prob_csf, "indiv_crop")
+
+                seg_pipe.connect(pad_prob_csf, "padded_img_file",
+                                 outputnode, "prob_csf")
+
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
                          outputnode, 'prob_csf')
@@ -1840,6 +2117,31 @@ def create_full_ants_subpipes(
 
                 # outputnode
                 seg_pipe.connect(pad_prob_gm, "out_file",
+                                 outputnode, "prob_gm")
+
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding prob_gm in native space")
+
+                pad_prob_gm = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_prob_gm")
+
+                seg_pipe.connect(brain_segment_pipe, "outputnode.prob_gm",
+                                 pad_prob_gm, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "av_T1.avg_img",
+                                 pad_prob_gm, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_prob_gm, "indiv_crop")
+
+                seg_pipe.connect(pad_prob_gm, "padded_img_file",
                                  outputnode, "prob_gm")
 
     else:
@@ -2379,9 +2681,9 @@ def create_brain_segment_from_mask_T1_pipe(
     return brain_segment_pipe
 
 
-def create_full_T1_ants_subpipes(params_template, params={},
-                                 name="full_T1_ants_subpipes", space="native",
-                                 pad=False):
+def create_full_T1_ants_subpipes(params_template, params_template_aladin,
+                                 params={}, name="full_T1_ants_subpipes",
+                                 space="native", pad=False):
 
     """Description: Full pipeline to segment T1 (with no T2).
 
@@ -2439,7 +2741,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
     if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_T1_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template)
+            params_template=params_template_aladin)
 
     else:
         print("Error, short_preparation_pipe was not found in params, \
@@ -2517,7 +2819,9 @@ def create_full_T1_ants_subpipes(params_template, params={},
 
             else:
                 print("Using reg_aladin transfo to pad mask back")
-                pad_mask = pe.Node(regutils.RegResample(), name="pad_mask")
+                pad_mask = pe.Node(
+                    regutils.RegResample(inter_val="NN"),
+                    name="pad_mask")
 
                 seg_pipe.connect(brain_extraction_pipe,
                                  "outputnode.brain_mask",
@@ -2608,7 +2912,7 @@ def create_full_T1_ants_subpipes(params_template, params={},
             else:
                 print("Using reg_aladin transfo to pad seg_mask back")
 
-                pad_seg_mask = pe.Node(regutils.RegResample(),
+                pad_seg_mask = pe.Node(regutils.RegResample(inter_val="NN"),
                                        name="pad_seg_mask")
 
                 seg_pipe.connect(brain_segment_pipe,

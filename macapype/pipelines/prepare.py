@@ -454,13 +454,22 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                       crop_z_T1, 'in_file')
 
+        # align avg T2 on avg T1
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+        align_T2_on_T1.inputs.dof = 6
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'reference')
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'in_file')
+
         # apply reg_resample to T2
+
         apply_crop_aladin_T2 = NodeParams(
             regutils.RegResample(),
-            params=parse_key(params, "apply_crop_aladin_T2"),
             name='apply_crop_aladin_T2')
 
-        data_preparation_pipe.connect(av_T2, 'avg_img',
+        data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
                                       apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
@@ -474,14 +483,16 @@ def create_short_preparation_pipe(params, params_template={},
             params=parse_key(params, "align_crop_z_T2"),
             name="align_crop_z_T2")
 
-        data_preparation_pipe.connect(crop_z_T1, 'out_roi',
-                                      align_crop_z_T2, 'reference')
+        data_preparation_pipe.connect(
+            crop_z_T1, 'out_roi', align_crop_z_T2, 'reference')
 
-        data_preparation_pipe.connect(crop_z_T1, 'out_transform',
-                                      align_crop_z_T2, 'in_matrix_file')
+        data_preparation_pipe.connect(
+            crop_z_T1, 'out_transform',
+            align_crop_z_T2, 'in_matrix_file')
 
-        data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                      align_crop_z_T2, 'in_file')
+        data_preparation_pipe.connect(
+            apply_crop_aladin_T2, 'out_file',
+            align_crop_z_T2, 'in_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
@@ -536,20 +547,24 @@ def create_short_preparation_pipe(params, params_template={},
         if "crop_T1" in params.keys():
             data_preparation_pipe.connect(crop_T1, "roi_file",
                                           outputnode, 'preproc_T1')
+
             data_preparation_pipe.connect(crop_T2, "roi_file",
                                           outputnode, 'preproc_T2')
 
         elif "bet_crop" in params.keys():
             data_preparation_pipe.connect(bet_crop, "t1_cropped_file",
                                           outputnode, 'preproc_T1')
+
             data_preparation_pipe.connect(bet_crop, "t2_cropped_file",
                                           outputnode, 'preproc_T2')
 
         else:
             data_preparation_pipe.connect(crop_z_T1, "out_roi",
                                           outputnode, 'preproc_T1')
+
             data_preparation_pipe.connect(align_crop_z_T2, "out_file",
                                           outputnode, 'preproc_T2')
+
     return data_preparation_pipe
 
 
@@ -912,12 +927,6 @@ def create_short_preparation_T1_pipe(params, params_template,
         crop_aladin_T1 = NodeParams(reg.RegAladin(),
                                     params=parse_key(params, "crop_aladin_T1"),
                                     name='crop_aladin_T1')
-
-        crop_aladin_T1.inputs.rig_only_flag = True
-        crop_aladin_T1.inputs.nosym_flag = True
-        crop_aladin_T1.inputs.ln_val = 12
-        crop_aladin_T1.inputs.lp_val = 10
-        crop_aladin_T1.inputs.smoo_r_val = 1.0
 
         data_preparation_pipe.connect(av_T1, 'avg_img',
                                       crop_aladin_T1, 'flo_file')

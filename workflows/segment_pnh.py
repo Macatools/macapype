@@ -108,12 +108,18 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     acquisitions: list of str (optional)
         Acquisition name to match to BIDS specification (acq-[ACQ1]...)
 
+    reconstructions: list of str (optional)
+        Reconstructions name to match to BIDS specification (rec-[ACQ1]...)
+
     indiv_params_file: path to a JSON file
         JSON file that specify some parameters of the pipeline,
         unique for the subjects/sessions.
 
     params_file: path to a JSON file
         JSON file that specify some parameters of the pipeline.
+
+    nprocs: integer
+        number of processes that will be launched by MultiProc
 
 
     Returns
@@ -135,6 +141,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     if 'prep' in ssoft:
         new_ssoft.remove('prep')
 
+    if 'noseg' in ssoft:
+        new_ssoft.remove('noseg')
+
     if 't1' in ssoft:
         new_ssoft.remove('t1')
 
@@ -143,7 +152,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     if 'template' in ssoft:
         new_ssoft.remove('template')
-
 
     soft = "_".join(new_ssoft)
 
@@ -286,8 +294,20 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         else:
             my_path = ""
 
-        nmt_dir = load_test_data(template_name, path_to = my_path)
-        params_template = format_template(nmt_dir, template_name)
+        template_dir = load_test_data(template_name, path_to = my_path)
+        params_template = format_template(template_dir, template_name)
+
+        if "template_aladin_name" in params["general"].keys():
+
+            template_aladin_name = params["general"]["template_aladin_name"]
+            template_aladin_dir = load_test_data(template_aladin_name, path_to = my_path)
+            params_template_aladin = format_template(template_aladin_dir, template_aladin_name)
+
+        else:
+            params_template_aladin = params_template
+
+
+
 
     print (params_template)
 
@@ -305,8 +325,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             space='template'
 
         segment_pnh_pipe = create_full_spm_subpipes(
-            params_template=params_template, params=params, pad=pad,
-            space=space)
+            params_template=params_template,
+            params_template_aladin=params_template_aladin,
+            params=params, pad=pad, space=space)
 
     elif "ants" in ssoft:
         if "template" in ssoft:
@@ -317,12 +338,14 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template=params_template, params=params, space=space,
-                pad=pad)
+                params_template=params_template,
+                params_template_aladin=params_template_aladin,
+                params=params, space=space, pad=pad)
         else:
             segment_pnh_pipe = create_full_ants_subpipes(
-                params_template=params_template, params=params,
-                mask_file=mask_file, space=space, pad=pad)
+                params_template=params_template,
+                params_template_aladin=params_template_aladin,
+                params=params, mask_file=mask_file, space=space, pad=pad)
 
     # list of all required outputs
     output_query = {}
@@ -460,12 +483,19 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         datasink.inputs.base_directory = process_dir
 
+        if len(datasource.iterables) == 1:
+            pref_deriv = "sub-%(sub)s"
+            parse_str = r"sub-(?P<sub>\w*)_.*"
+        elif len(datasource.iterables) > 1:
+            pref_deriv = "sub-%(sub)s_ses-%(ses)s"
+            parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+
         if "brain_extraction_pipe" in params.keys():
 
             ### rename brain_mask
             rename_brain_mask = pe.Node(niu.Rename(), name = "rename_brain_mask")
-            rename_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_mask"
-            rename_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_brain_mask.inputs.format_string = pref_deriv + "_space-native_desc-brain_mask"
+            rename_brain_mask.inputs.parse_string = parse_str
             rename_brain_mask.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -480,8 +510,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename brain_mask
             rename_brain_mask = pe.Node(niu.Rename(), name = "rename_brain_mask")
-            rename_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-brain_mask"
-            rename_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_brain_mask.inputs.format_string = pref_deriv + "_space-native_desc-brain_mask"
+            rename_brain_mask.inputs.parse_string = parse_str
             rename_brain_mask.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -494,8 +524,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename debiased_T1
             rename_debiased_T1 = pe.Node(niu.Rename(), name = "rename_debiased_T1")
-            rename_debiased_T1.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_T1w"
-            rename_debiased_T1.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_T1.inputs.format_string = pref_deriv + "_space-native_desc-debiased_T1w"
+            rename_debiased_T1.inputs.parse_string = parse_str
             rename_debiased_T1.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -508,8 +538,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename debiased_brain
             rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
-            rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_desc-brain_T1w"
-            rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_brain.inputs.format_string = pref_deriv + "_space-native_desc-debiased_desc-brain_T1w"
+            rename_debiased_brain.inputs.parse_string = parse_str
             rename_debiased_brain.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -524,8 +554,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename debiased_brain
             rename_debiased_brain = pe.Node(niu.Rename(), name = "rename_debiased_brain")
-            rename_debiased_brain.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_desc-brain_T1w"
-            rename_debiased_brain.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_brain.inputs.format_string = pref_deriv + "_space-native_desc-debiased_desc-brain_T1w"
+            rename_debiased_brain.inputs.parse_string = parse_str
             rename_debiased_brain.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -538,8 +568,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename debiased_T1
             rename_debiased_T1 = pe.Node(niu.Rename(), name = "rename_debiased_T1")
-            rename_debiased_T1.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-native_desc-debiased_T1w"
-            rename_debiased_T1.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_debiased_T1.inputs.format_string = pref_deriv + "_space-native_desc-debiased_T1w"
+            rename_debiased_T1.inputs.parse_string = parse_str
             rename_debiased_T1.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -552,8 +582,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename segmented_brain_mask
             rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-brain_dseg".format(space)
-            rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_segmented_brain_mask.inputs.format_string = pref_deriv + "_space-{}_desc-brain_dseg".format(space)
+            rename_segmented_brain_mask.inputs.parse_string = parse_str
             rename_segmented_brain_mask.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -567,8 +597,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             ### rename prob_wm
             print("Renaming prob_wm file")
             rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
-            rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-WM_probseg".format(space)
-            rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_wm.inputs.format_string = pref_deriv + "_space-{}_label-WM_probseg".format(space)
+            rename_prob_wm.inputs.parse_string = parse_str
             rename_prob_wm.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -582,8 +612,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             ### rename prob_gm
             print("Renaming prob_gm file")
             rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
-            rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-GM_probseg".format(space)
-            rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_gm.inputs.format_string = pref_deriv + "_space-{}_label-GM_probseg".format(space)
+            rename_prob_gm.inputs.parse_string = parse_str
             rename_prob_gm.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -597,8 +627,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             ### rename prob_csf
             print("Renaming prob_csf file")
             rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
-            rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-CSF_probseg".format(space)
-            rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_csf.inputs.format_string = pref_deriv + "_space-{}_label-CSF_probseg".format(space)
+            rename_prob_csf.inputs.parse_string = parse_str
             rename_prob_csf.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -614,8 +644,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 print("Renaming 5tt file")
 
                 rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
-                rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-5tt_dseg".format(space)
-                rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+                rename_gen_5tt.inputs.format_string = pref_deriv + "_space-{}_desc-5tt_dseg".format(space)
+                rename_gen_5tt.inputs.parse_string = parse_str
                 rename_gen_5tt.inputs.keep_ext = True
 
                 main_workflow.connect(
@@ -631,8 +661,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             ### rename prob_wm
             print("Renaming prob_wm file")
             rename_prob_wm = pe.Node(niu.Rename(), name = "rename_prob_wm")
-            rename_prob_wm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-WM_probseg".format(space)
-            rename_prob_wm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_wm.inputs.format_string = pref_deriv + "_space-{}_label-WM_probseg".format(space)
+            rename_prob_wm.inputs.parse_string = parse_str
             rename_prob_wm.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -646,8 +676,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             ### rename prob_gm
             print("Renaming prob_gm file")
             rename_prob_gm = pe.Node(niu.Rename(), name = "rename_prob_gm")
-            rename_prob_gm.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-GM_probseg".format(space)
-            rename_prob_gm.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_gm.inputs.format_string = pref_deriv + "_space-{}_label-GM_probseg".format(space)
+            rename_prob_gm.inputs.parse_string = parse_str
             rename_prob_gm.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -661,8 +691,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             ### rename prob_csf
             print("Renaming prob_csf file")
             rename_prob_csf = pe.Node(niu.Rename(), name = "rename_prob_csf")
-            rename_prob_csf.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_label-CSF_probseg".format(space)
-            rename_prob_csf.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_prob_csf.inputs.format_string = pref_deriv + "_space-{}_label-CSF_probseg".format(space)
+            rename_prob_csf.inputs.parse_string = parse_str
             rename_prob_csf.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -678,8 +708,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 #print("Renaming 5tt file")
 
                 #rename_gen_5tt = pe.Node(niu.Rename(), name = "rename_gen_5tt")
-                #rename_gen_5tt.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-5tt_dseg".format(space)
-                #rename_gen_5tt.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+                #rename_gen_5tt.inputs.format_string = pref_deriv + "_space-{}_desc-5tt_dseg".format(space)
+                #rename_gen_5tt.inputs.parse_string = parse_str
                 #rename_gen_5tt.inputs.keep_ext = True
 
                 #main_workflow.connect(
@@ -696,8 +726,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
             ### rename segmented_brain_mask
             rename_segmented_brain_mask = pe.Node(niu.Rename(), name = "rename_segmented_brain_mask")
-            rename_segmented_brain_mask.inputs.format_string = "sub-%(sub)s_ses-%(ses)s_space-{}_desc-brain_dseg".format(space)
-            rename_segmented_brain_mask.inputs.parse_string = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
+            rename_segmented_brain_mask.inputs.format_string = pref_deriv + "_space-{}_desc-brain_dseg".format(space)
+            rename_segmented_brain_mask.inputs.parse_string = parse_str
             rename_segmented_brain_mask.inputs.keep_ext = True
 
             main_workflow.connect(
@@ -721,6 +751,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     real_params_file = op.join(process_dir, wf_name, "real_params.json")
     with open(real_params_file, 'w+') as fp:
         json.dump(params, fp)
+
+    if deriv:
+        try:
+            os.makedirs(op.join(process_dir, datasink_name))
+        except OSError:
+            print("process_dir {} already exists".format(process_dir))
+
+        real_params_file = op.join(process_dir, datasink_name, "real_params.json")
+        with open(real_params_file, 'w+') as fp:
+            json.dump(params, fp)
 
     if nprocs is None:
         nprocs = 4

@@ -1,13 +1,19 @@
 {
     "general":
     {
-        "template_name": "NMT_v2.0_asym"
+        "template_name": "NMT_v2.0_asym",
+        "template_aladin_name": "NMT_v2.0_asym"
     },
     "short_preparation_pipe":
     {
         "crop_aladin_T1":
         {
-            "args": " -nac "
+    		"nac_flag": true,
+            "rig_only_flag": true,
+            "nosym_flag": true,
+            "ln_val" : 12,
+            "lp_val": 10,
+            "smoo_r_val" : 1.0
         },
         "crop_z_T1":
         {
@@ -75,10 +81,18 @@
             {
                 "dimension": 3
             },
+            "tissue_dict":
+            {
+                "gm": [2, 3],
+                "wm": 4,
+                "csf": [1, 5]
+            },
+
             "threshold_gm":
             {
                 "thresh": 0.5
             },
+
             "threshold_wm":
             {
                 "thresh": 0.5
@@ -87,6 +101,9 @@
             {
                 "thresh": 0.5
             }
+        },
+        "export_5tt_pipe":
+        {
         }
     }
 }
