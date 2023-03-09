@@ -15,11 +15,15 @@ USER root
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
+MAINTAINER David Meunier "david.meunier@univ-amu.fr"
+
+RUN apt-get update -qq
+
+################################################## Neurodocker
 ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8" \
     ND_ENTRYPOINT="/neurodocker/startup.sh"
 RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
-    && apt-get update -qq \
     && apt-get install -y -q --no-install-recommends \
            apt-utils \
            bzip2 \
@@ -27,8 +31,6 @@ RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
            curl \
            locales \
            unzip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
     && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && dpkg-reconfigure --frontend=noninteractive locales \
     && update-locale LANG="en_US.UTF-8" \
@@ -43,94 +45,6 @@ RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
     && chmod -R 777 /neurodocker && chmod a+s /neurodocker
 
 ENTRYPOINT ["/neurodocker/startup.sh"]
-
-ENV FSLDIR="/opt/fsl-5.0.10" \
-    PATH="/opt/fsl-5.0.10/bin:$PATH" \
-    FSLOUTPUTTYPE="NIFTI_GZ" \
-    FSLMULTIFILEQUIT="TRUE" \
-    FSLTCLSH="/opt/fsl-5.0.10/bin/fsltclsh" \
-    FSLWISH="/opt/fsl-5.0.10/bin/fslwish" \
-    FSLLOCKDIR="" \
-    FSLMACHINELIST="" \
-    FSLREMOTECALL="" \
-    FSLGECUDAQ="cuda.q"
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends \
-           bc \
-           dc \
-           file \
-           libfontconfig1 \
-           libfreetype6 \
-           libgl1-mesa-dev \
-           libgl1-mesa-dri \
-           libglu1-mesa-dev \
-           libgomp1 \
-           libice6 \
-           libxcursor1 \
-           libxft2 \
-           libxinerama1 \
-           libxrandr2 \
-           libxrender1 \
-           libxt6 \
-           sudo \
-           wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo "Downloading FSL ..." \
-    && mkdir -p /opt/fsl-5.0.10 \
-    && curl -fsSL --retry 5 https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-5.0.10-centos6_64.tar.gz \
-    | tar -xz -C /opt/fsl-5.0.10 --strip-components 1 \
-    && sed -i '$iecho Some packages in this Docker container are non-free' $ND_ENTRYPOINT \
-    && sed -i '$iecho If you are considering commercial use of this container, please consult the relevant license:' $ND_ENTRYPOINT \
-    && sed -i '$iecho https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence' $ND_ENTRYPOINT \
-    && sed -i '$isource $FSLDIR/etc/fslconf/fsl.sh' $ND_ENTRYPOINT \
-    && echo "Installing FSL conda environment ..." \
-    && bash /opt/fsl-5.0.10/etc/fslconf/fslpython_install.sh -f /opt/fsl-5.0.10
-
-ENV PATH="/opt/afni-latest:$PATH" \
-    AFNI_PLUGINPATH="/opt/afni-latest"
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends \
-           ed \
-           gsl-bin \
-           libglib2.0-0 \
-           libglu1-mesa-dev \
-           libglw1-mesa \
-           libgomp1 \
-           libjpeg62 \
-           libxm4 \
-           multiarch-support \
-           netpbm \
-           tcsh \
-           xfonts-base \
-           xvfb \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://mirrors.kernel.org/debian/pool/main/libx/libxp/libxp6_1.0.2-2_amd64.deb \
-    && dpkg -i /tmp/toinstall.deb \
-    && rm /tmp/toinstall.deb \
-    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://snapshot.debian.org/archive/debian-security/20160113T213056Z/pool/updates/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb \
-    && dpkg -i /tmp/toinstall.deb \
-    && rm /tmp/toinstall.deb \
-    && apt-get install -f \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && gsl2_path="$(find / -name 'libgsl.so.19' || printf '')" \
-    && if [ -n "$gsl2_path" ]; then \
-         ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0"; \
-    fi \
-    && ldconfig \
-    && echo "Downloading AFNI ..." \
-    && mkdir -p /opt/afni-latest \
-    && curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
-    | tar -xz -C /opt/afni-latest --strip-components 1
-
-ENV ANTSPATH="/opt/ants-2.3.1" \
-    PATH="/opt/ants-2.3.1:$PATH"
-RUN echo "Downloading ANTs ..." \
-    && mkdir -p /opt/ants-2.3.1 \
-    && curl -fsSL --retry 5 https://dl.dropbox.com/s/1xfhydsf4t4qoxg/ants-Linux-centos6_x86_64-v2.3.1.tar.gz \
-    | tar -xz -C /opt/ants-2.3.1 --strip-components 1
 
 RUN echo '{ \
     \n  "pkg_manager": "apt", \
@@ -156,18 +70,125 @@ RUN echo '{ \
     \n      { \
     \n        "version": "latest" \
     \n      } \
-    \n    ], \
-    \n    [ \
-    \n      "ants", \
-    \n      { \
-    \n        "version": "2.3.1" \
-    \n      } \
-    \n    ] \
+    \n    ]\
     \n  ] \
     \n}' > /neurodocker/neurodocker_specs.json
 
-RUN apt-get update \
-    && apt-get install --yes --no-install-recommends \
+################################################## Install FSL
+ENV FSLDIR="/opt/fsl-5.0.10" \
+    PATH="/opt/fsl-5.0.10/bin:$PATH" \
+    FSLOUTPUTTYPE="NIFTI_GZ" \
+    FSLMULTIFILEQUIT="TRUE" \
+    FSLTCLSH="/opt/fsl-5.0.10/bin/fsltclsh" \
+    FSLWISH="/opt/fsl-5.0.10/bin/fslwish" \
+    FSLLOCKDIR="" \
+    FSLMACHINELIST="" \
+    FSLREMOTECALL="" \
+    FSLGECUDAQ="cuda.q"
+RUN apt-get install -y -q --no-install-recommends \
+           bc \
+           dc \
+           file \
+           libfontconfig1 \
+           libfreetype6 \
+           libgl1-mesa-dev \
+           libgl1-mesa-dri \
+           libglu1-mesa-dev \
+           libgomp1 \
+           libice6 \
+           libxcursor1 \
+           libxft2 \
+           libxinerama1 \
+           libxrandr2 \
+           libxrender1 \
+           libxt6 \
+           sudo \
+           wget \
+    && echo "Downloading FSL ..." \
+    && mkdir -p /opt/fsl-5.0.10 \
+    && curl -fsSL --retry 5 https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-5.0.10-centos6_64.tar.gz \
+    | tar -xz -C /opt/fsl-5.0.10 --strip-components 1 \
+    && sed -i '$iecho Some packages in this Docker container are non-free' $ND_ENTRYPOINT \
+    && sed -i '$iecho If you are considering commercial use of this container, please consult the relevant license:' $ND_ENTRYPOINT \
+    && sed -i '$iecho https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence' $ND_ENTRYPOINT \
+    && sed -i '$isource $FSLDIR/etc/fslconf/fsl.sh' $ND_ENTRYPOINT \
+    && echo "Installing FSL conda environment ..." \
+    && bash /opt/fsl-5.0.10/etc/fslconf/fslpython_install.sh -f /opt/fsl-5.0.10
+
+################################################## Install AFNI
+ENV PATH="/opt/afni-latest:$PATH" \
+    AFNI_PLUGINPATH="/opt/afni-latest"
+RUN apt-get install -y -q --no-install-recommends \
+           ed \
+           gsl-bin \
+           libglib2.0-0 \
+           libglu1-mesa-dev \
+           libglw1-mesa \
+           libgomp1 \
+           libjpeg62 \
+           libxm4 \
+           multiarch-support \
+           netpbm \
+           tcsh \
+           xfonts-base \
+           xvfb \
+    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://mirrors.kernel.org/debian/pool/main/libx/libxp/libxp6_1.0.2-2_amd64.deb \
+    && dpkg -i /tmp/toinstall.deb \
+    && rm /tmp/toinstall.deb \
+    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://snapshot.debian.org/archive/debian-security/20160113T213056Z/pool/updates/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb \
+    && dpkg -i /tmp/toinstall.deb \
+    && rm /tmp/toinstall.deb \
+    && apt-get install -f \
+    && gsl2_path="$(find / -name 'libgsl.so.23' || printf '')" \
+    && if [ -n "$gsl2_path" ]; then \
+         ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0"; \
+    fi \
+    && ldconfig \
+    && echo "Downloading AFNI ..." \
+    && mkdir -p /opt/afni-latest \
+    && curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
+    | tar -xz -C /opt/afni-latest --strip-components 1
+
+################################################## Install ANTS
+ENV ANTSPATH="/opt/ants-2.3.1" \
+    PATH="/opt/ants-2.3.1:$PATH"
+RUN echo "Downloading ANTs ..." \
+    && mkdir -p /opt/ants-2.3.1 \
+    && curl -fsSL --retry 5 https://dl.dropbox.com/s/1xfhydsf4t4qoxg/ants-Linux-centos6_x86_64-v2.3.1.tar.gz \
+    | tar -xz -C /opt/ants-2.3.1 --strip-components 1
+
+################################################## Install SPM12 as MCR
+RUN  apt-get -y install unzip xorg wget
+
+# Install MATLAB MCR in /opt/mcr/
+ENV MATLAB_VERSION R2019b
+ENV MCR_VERSION v97
+RUN mkdir /opt/mcr_install \
+ && mkdir /opt/mcr \
+ && wget --progress=bar:force -P /opt/mcr_install https://ssd.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/Release/3/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_${MATLAB_VERSION}_Update_3_glnxa64.zip \
+ && unzip -q /opt/mcr_install/MATLAB_Runtime_${MATLAB_VERSION}_Update_3_glnxa64.zip -d /opt/mcr_install \
+ && /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent \
+ && rm -rf /opt/mcr_install /tmp/*
+
+# Install SPM Standalone in /opt/spm12/
+ENV SPM_VERSION 12
+ENV SPM_REVISION r7771
+ENV LD_LIBRARY_PATH /opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:/opt/mcr/${MCR_VERSION}/extern/bin/glnxa64
+ENV MCR_INHIBIT_CTF_LOCK 1
+ENV SPM_HTML_BROWSER 0
+# Running SPM once with "function exit" tests the succesfull installation *and*
+# extracts the ctf archive which is necessary if singularity is going to be
+# used later on, because singularity containers are read-only.
+# Also, set +x on the entrypoint for non-root container invocations
+RUN wget --no-check-certificate --progress=bar:force -P /opt https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
+ && unzip -q /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt \
+ && rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
+ && /opt/spm${SPM_VERSION}/spm${SPM_VERSION} function exit \
+ && chmod +x /opt/spm${SPM_VERSION}/spm${SPM_VERSION}
+ENV SPM_DIR /opt/spm${SPM_VERSION}
+
+######################## NiftiReg
+RUN apt-get install --yes --no-install-recommends \
         ca-certificates cmake gcc g++ git make \
     && git clone https://github.com/KCL-BMEIS/niftyreg.git /tmp/niftyreg-src \
     && mkdir /tmp/niftyreg-build \
@@ -177,58 +198,12 @@ RUN apt-get update \
     && make install
 ENV PATH=/opt/niftyreg/bin:$PATH
 
-MAINTAINER David Meunier "david.meunier@univ-amu.fr"
-######################## Python packages
-#
-# RUN apt-get update && apt-get install -y python3.7
-# RUN python3.7 --version
-# RUN ln -s /usr/bin/python3.7 /usr/bin/python3
+################################################## Finishing
+RUN apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y python3
-RUN python3 --version
+RUN rm -rf \
+     /tmp/hsperfdata* \
+     /var/*/apt/*/partial \
+     /var/log/apt/term*
 
-RUN apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
-
-RUN apt-get install -y python3-pil python3-pil.imagetk
-
-
-RUN python3 -m pip install -U pip
-RUN python3 -m pip install -U pillow
-#RUN pip3 install pillow
-
-#RUN apt-get install libx11-6 libxext6 libxt6 # matlab
-RUN pip3 install xvfbwrapper \
-    psutil \
-    numpy \
-    scipy \
-    matplotlib \
-    statsmodels \
-    pandas \
-    networkx\
-    mock \
-    prov \
-    click \
-    funcsigs \
-    pydotplus \
-    pydot \
-    rdflib \
-    pbr \
-    nibabel==3.2.2 \
-    packaging \
-    pytest \
-    install \
-    graphviz \
-    pybids \
-    nipype \
-    nilearn \
-    scikit-image \
-    brain-slam
-
-############################################# install macapype
-
-RUN echo $(which python) && \
-    echo $(which python3) && \
-    ln -s /usr/bin/python3 /usr/bin/python && \
-    ln -s /usr/bin/pip3 /usr/bin/pip
-
-RUN  pip install --pre macapype && python -c "import macapype; print(macapype.__version__)"
