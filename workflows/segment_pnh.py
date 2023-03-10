@@ -158,9 +158,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
     # formating args
     data_dir = op.abspath(data_dir)
 
+    process_dir = op.abspath(process_dir)
 
     try:
         os.makedirs(process_dir)
+
     except OSError:
         print("process_dir {} already exists".format(process_dir))
 
@@ -200,6 +202,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     else:
 
+        # format for relative path
+        params_file = op.abspath(params_file)
+
         # params
         assert op.exists(params_file), "Error with file {}".format(
             params_file)
@@ -213,6 +218,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
         # indiv_params
         if indiv_params_file is not None:
+
+            # format for relative path
+            indiv_params_file = op.abspath(indiv_params_file)
 
             assert op.exists(indiv_params_file), "Error with file {}".format(
                 indiv_params_file)
@@ -243,6 +251,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     # params_template
     if template_path is not None:
+
+        # format for relative path
+        template_path = op.abspath(template_path)
+
+        assert os.path.exists(template_path), "Error, template_path {} do not exists".format(template_path)
+
         print(template_files)
 
         params_template = {}
