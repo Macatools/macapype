@@ -3176,7 +3176,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 else:
                     print("Using reg_aladin transfo to pad gen_5tt back")
 
-                    pad_gen_5tt = pe.Node(regutils.RegResample(),
+                    pad_gen_5tt = pe.Node(regutils.RegResample(inter_val="NN"),
                                           name="pad_gen_5tt")
 
                     seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
