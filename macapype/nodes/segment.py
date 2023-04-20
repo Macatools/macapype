@@ -424,12 +424,19 @@ def compute_5tt(gm_file, wm_file, csf_file):
 
     gm_img = nib.load(gm_file)
     gm_data = gm_img.get_fdata()
+    print(np.unique(gm_data))
+    gm_data[gm_data == 0.0] = np.nan
+    print(gm_data)
+    0/0
 
-    empty_vol = np.zeros(shape=gm_data.shape)
+    empty_vol = np.empty(shape=gm_data.shape)
+    empty_vol[:] = np.nan
 
     wm_data = nib.load(wm_file).get_fdata()
+    wm_data[wm_data == 0.0] = np.nan
 
     csf_data = nib.load(csf_file).get_fdata()
+    csf_data[wm_data == 0.0] = np.nan
 
     gen_5tt_data = np.stack((gm_data, empty_vol, wm_data, csf_data, empty_vol),
                             axis=-1)
