@@ -10,7 +10,7 @@ from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
                              compute_5tt, correct_datatype, fill_list_vol)
 
 from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list,
-                          get_pattern, get_list_length)
+                          get_pattern, get_list_length, get_index)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
