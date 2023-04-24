@@ -206,19 +206,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             segment_pipe.connect(merge_tissues, 'merged_img_file',
                                  outputnode, 'prob_'+tissue)
 
-            # threshold
-            thresh_node = NodeParams(
-                fsl.Threshold(),
-                params=parse_key(params, "threshold_" + tissue),
-                name="threshold_" + tissue)
-
-            segment_pipe.connect(merge_tissues, 'merged_img_file',
-                                 thresh_node, 'in_file')
-
-            # thresh output
-            segment_pipe.connect(thresh_node, 'out_file',
-                                 outputnode, 'threshold_'+tissue)
-
         else:
 
             # prob output
@@ -227,22 +214,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 ('segmented_files', get_pattern,
                  "SegmentationPosteriors{:02d}".format(int(index_tissue))),
                 outputnode, 'prob_'+tissue)
-
-            # threshold
-            thresh_node = NodeParams(
-                fsl.Threshold(),
-                params=parse_key(params, "threshold_" + tissue),
-                name="threshold_" + tissue)
-
-            segment_pipe.connect(
-                seg_at,
-                ('segmented_files', get_pattern,
-                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
-                thresh_node, 'in_file')
-
-            # thresh output
-            segment_pipe.connect(thresh_node, 'out_file',
-                                 outputnode, 'threshold_'+tissue)
 
     return segment_pipe
 
