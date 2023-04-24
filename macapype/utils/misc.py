@@ -32,6 +32,12 @@ def get_elem(list_elem, index_elem):
     return elem
 
 
+def get_index(list_elem, index_elem):
+    assert index_elem > 0, "Warning, index should start from 1"
+
+    return get_elem(list_elem, index_elem-1)
+
+
 def get_pattern(list_elem, pattern):
 
     assert isinstance(list_elem, list), 'Error, list_elem should be a list'
