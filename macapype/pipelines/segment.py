@@ -172,7 +172,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             # thresh output
             segment_pipe.connect(
                 split_dseg_mask, ('list_split_files', get_index,
-                                  sub_index_tissue),
+                                  index_tissue),
                 outputnode, 'threshold_'+tissue)
 
     # merging probseg

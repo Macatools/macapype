@@ -389,7 +389,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
 
     # MD and b0mean are optional, if "_MD" is added in the -soft arg
     if 'md' in ssoft:
-        output_query['MD'] =  {
+        output_query['MD'] = {
             "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
             "extension": ["nii", ".nii.gz"]}
 
