@@ -114,7 +114,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     segment_pipe.connect(seg_at, 'segmented_file',
                          split_dseg_mask, "nii_file")
-    
+
     # on segmentation indexed mask (with labels)
     outputnode = pe.Node(
         niu.IdentityInterface(
