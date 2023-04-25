@@ -10,7 +10,7 @@ from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
                              compute_5tt, correct_datatype, fill_list_vol)
 
 from ..utils.misc import (gunzip, gzip, get_elem, merge_3_elem_to_list,
-                          get_pattern, get_list_length)
+                          get_pattern, get_list_length, get_index)
 
 from ..utils.utils_nodes import NodeParams, parse_key
 from ..utils.utils_spm import set_spm
@@ -105,6 +105,16 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(split_seg, ('list_split_files', get_list_length),
                              seg_at, "numberOfClasses")
 
+    # split dseg_mask
+    split_dseg_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["list_split_files"],
+                               function=split_indexed_mask),
+        name="split_dseg_mask")
+
+    segment_pipe.connect(seg_at, 'segmented_file',
+                         split_dseg_mask, "nii_file")
+
     # on segmentation indexed mask (with labels)
     outputnode = pe.Node(
         niu.IdentityInterface(
@@ -128,6 +138,44 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     print("Using tissue dict {}".format(tissue_dict))
 
+    # merging dseg
+    for tissue, index_tissue in tissue_dict.items():
+        if isinstance(index_tissue, list):
+
+            # Merging as file list
+            merge_dseg_list = pe.Node(niu.Merge(len(index_tissue)),
+                                      name="merge_dseg_list_" + tissue)
+
+            for index, sub_index_tissue in enumerate(index_tissue):
+                segment_pipe.connect(
+                    split_dseg_mask,
+                    ('list_split_files', get_index, sub_index_tissue),
+                    merge_dseg_list, 'in' + str(index+1))
+
+            # Merging files in the same nifti
+            merge_dseg_tissues = pe.Node(
+                niu.Function(
+                    input_names=["list_img_files"],
+                    output_names=["merged_img_file"],
+                    function=merge_imgs),
+                name="merge_dseg_tissues_" + tissue)
+
+            segment_pipe.connect(merge_dseg_list, "out",
+                                 merge_dseg_tissues, 'list_img_files')
+
+            # thr output
+            segment_pipe.connect(merge_dseg_tissues, 'merged_img_file',
+                                 outputnode, 'threshold_'+tissue)
+
+        else:
+
+            # thresh output
+            segment_pipe.connect(
+                split_dseg_mask, ('list_split_files', get_index,
+                                  sub_index_tissue),
+                outputnode, 'threshold_'+tissue)
+
+    # merging probseg
     for tissue, index_tissue in tissue_dict.items():
         if isinstance(index_tissue, list):
 
@@ -158,19 +206,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             segment_pipe.connect(merge_tissues, 'merged_img_file',
                                  outputnode, 'prob_'+tissue)
 
-            # threshold
-            thresh_node = NodeParams(
-                fsl.Threshold(),
-                params=parse_key(params, "threshold_" + tissue),
-                name="threshold_" + tissue)
-
-            segment_pipe.connect(merge_tissues, 'merged_img_file',
-                                 thresh_node, 'in_file')
-
-            # thresh output
-            segment_pipe.connect(thresh_node, 'out_file',
-                                 outputnode, 'threshold_'+tissue)
-
         else:
 
             # prob output
@@ -179,22 +214,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 ('segmented_files', get_pattern,
                  "SegmentationPosteriors{:02d}".format(int(index_tissue))),
                 outputnode, 'prob_'+tissue)
-
-            # threshold
-            thresh_node = NodeParams(
-                fsl.Threshold(),
-                params=parse_key(params, "threshold_" + tissue),
-                name="threshold_" + tissue)
-
-            segment_pipe.connect(
-                seg_at,
-                ('segmented_files', get_pattern,
-                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
-                thresh_node, 'in_file')
-
-            # thresh output
-            segment_pipe.connect(thresh_node, 'out_file',
-                                 outputnode, 'threshold_'+tissue)
 
     return segment_pipe
 

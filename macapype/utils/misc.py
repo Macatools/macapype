@@ -22,7 +22,7 @@ def print_nii_data(nii_file):
 
 def get_elem(list_elem, index_elem):
     assert isinstance(list_elem, list), 'Error, list_elem should be a list'
-    assert 0 <= index_elem and index_elem <= len(list_elem),\
+    assert 0 <= index_elem and index_elem < len(list_elem),\
         ('error with index {}, does not match a list with {} elements'.format(
             index_elem, len(list_elem)))
 
@@ -30,6 +30,16 @@ def get_elem(list_elem, index_elem):
     print(elem)
 
     return elem
+
+
+def get_index(list_elem, index_elem):
+
+    assert isinstance(list_elem, list), 'Error, list_elem should be a list'
+    assert 1 <= index_elem and index_elem < len(list_elem)+1,\
+        ('error with index {}, shoud start at 1 and be smaller than {}'.format(
+            index_elem, len(list_elem)+1))
+
+    return list_elem[index_elem-1]
 
 
 def get_pattern(list_elem, pattern):
