@@ -8,7 +8,7 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces import fsl
 from nipype.interfaces import ants
 
-from nipype.interfaces.niftyreg import regutils
+from nipype.interfaces.niftyreg.regutils import RegResample
 
 from ..utils.utils_nodes import NodeParams
 
@@ -30,6 +30,7 @@ from .segment import (create_old_segment_pipe,
                       create_mask_from_seg_pipe,
                       create_5tt_pipe)
 
+
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
 
@@ -48,11 +49,11 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 # SPM based segmentation (from: Régis Trapeau)
 # -soft SPM or SPM_T1
 ###############################################################################
+
 def create_full_spm_subpipes(
         params_template, params_template_aladin,
         params={}, name='full_spm_subpipes',
         pad=False, space='template'):
-
     """ Description: SPM based segmentation pipeline from T1w and T2w images
     in template space
 
@@ -260,7 +261,7 @@ def create_full_spm_subpipes(
 
             else:
                 print("Using reg_aladin transfo to pad mask back")
-                pad_mask = pe.Node(regutils.RegResample(inter_val="NN"),
+                pad_mask = pe.Node(RegResample(inter_val="NN"),
                                    name="pad_mask")
 
                 seg_pipe.connect(debias, "debiased_mask_file",
@@ -273,7 +274,7 @@ def create_full_spm_subpipes(
                                  pad_mask, "trans_file")
 
                 print("Using reg_aladin transfo to pad debiased_brain back")
-                pad_debiased_brain = pe.Node(regutils.RegResample(),
+                pad_debiased_brain = pe.Node(RegResample(),
                                              name="pad_debiased_brain")
 
                 seg_pipe.connect(debias, 't1_debiased_brain_file',
@@ -286,7 +287,7 @@ def create_full_spm_subpipes(
                                  pad_debiased_brain, "trans_file")
 
                 print("Using reg_aladin transfo to pad debiased_T1 back")
-                pad_debiased_T1 = pe.Node(regutils.RegResample(),
+                pad_debiased_T1 = pe.Node(RegResample(),
                                           name="pad_debiased_T1")
 
                 seg_pipe.connect(debias, 't1_debiased_file',
@@ -471,7 +472,7 @@ def create_full_spm_subpipes(
             else:
                 print("Using reg_aladin transfo to pad prob_wm back")
 
-                pad_prob_wm = pe.Node(regutils.RegResample(),
+                pad_prob_wm = pe.Node(RegResample(),
                                       name="pad_prob_wm")
 
                 seg_pipe.connect(old_segment_pipe, "outputnode.prob_wm",
@@ -549,7 +550,7 @@ def create_full_spm_subpipes(
             else:
                 print("Using reg_aladin transfo to pad prob_csf back")
 
-                pad_prob_csf = pe.Node(regutils.RegResample(),
+                pad_prob_csf = pe.Node(RegResample(),
                                        name="pad_prob_csf")
 
                 seg_pipe.connect(old_segment_pipe, "outputnode.prob_csf",
@@ -627,7 +628,7 @@ def create_full_spm_subpipes(
             else:
                 print("Using reg_aladin transfo to pad prob_gm back")
 
-                pad_prob_gm = pe.Node(regutils.RegResample(),
+                pad_prob_gm = pe.Node(RegResample(),
                                       name="pad_prob_gm")
 
                 seg_pipe.connect(old_segment_pipe, "outputnode.prob_gm",
@@ -724,7 +725,7 @@ def create_full_spm_subpipes(
                     print("Using reg_aladin transfo to pad seg_mask back")
 
                     pad_seg_mask = pe.Node(
-                        regutils.RegResample(inter_val="NN"),
+                        RegResample(inter_val="NN"),
                         name="pad_seg_mask")
 
                     seg_pipe.connect(mask_from_seg_pipe,
@@ -1626,7 +1627,9 @@ def create_full_ants_subpipes(
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm',
-                    'prob_csf', "gen_5tt", "debiased_brain", "debiased_T1"]),
+                    'prob_csf', "gen_5tt", "debiased_brain", "debiased_T1",
+                    "cropped_brain_mask", "cropped_debiased_T1",
+                    "wmgm_stl", "wmgm_nii"]),
         name='outputnode')
 
     # preprocessing
@@ -1684,6 +1687,12 @@ def create_full_ants_subpipes(
         seg_pipe.connect(inputnode, 'indiv_params',
                          brain_extraction_pipe, 'inputnode.indiv_params')
 
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.brain_mask",
+                         outputnode, "cropped_brain_mask")
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         outputnode, "cropped_debiased_T1")
+
         if pad:
 
             if "short_preparation_pipe" in params.keys():
@@ -1740,7 +1749,7 @@ def create_full_ants_subpipes(
 
                 else:
                     print("Using reg_aladin transfo to pad mask back")
-                    pad_mask = pe.Node(regutils.RegResample(inter_val="NN"),
+                    pad_mask = pe.Node(RegResample(inter_val="NN"),
                                        name="pad_mask")
 
                     seg_pipe.connect(brain_extraction_pipe,
@@ -1755,7 +1764,7 @@ def create_full_ants_subpipes(
                                      pad_mask, "trans_file")
 
                     print("Using reg_aladin transfo to pad debiased_T1 back")
-                    pad_debiased_T1 = pe.Node(regutils.RegResample(),
+                    pad_debiased_T1 = pe.Node(RegResample(),
                                               name="pad_debiased_T1")
 
                     seg_pipe.connect(brain_extraction_pipe,
@@ -1891,7 +1900,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad seg_mask back")
 
-                pad_seg_mask = pe.Node(regutils.RegResample(inter_val="NN"),
+                pad_seg_mask = pe.Node(RegResample(inter_val="NN"),
                                        name="pad_seg_mask")
 
                 seg_pipe.connect(brain_segment_pipe,
@@ -1971,7 +1980,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad debiased_brain back")
 
-                pad_debiased_brain = pe.Node(regutils.RegResample(),
+                pad_debiased_brain = pe.Node(RegResample(),
                                              name="pad_debiased_brain")
 
                 seg_pipe.connect(brain_segment_pipe,
@@ -2025,7 +2034,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad prob_csf back")
 
-                pad_prob_csf = pe.Node(regutils.RegResample(),
+                pad_prob_csf = pe.Node(RegResample(),
                                        name="pad_prob_csf")
 
                 seg_pipe.connect(brain_segment_pipe, "outputnode.prob_csf",
@@ -2103,7 +2112,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad prob_gm back")
 
-                pad_prob_gm = pe.Node(regutils.RegResample(),
+                pad_prob_gm = pe.Node(RegResample(),
                                       name="pad_prob_gm")
 
                 seg_pipe.connect(brain_segment_pipe, "outputnode.prob_gm",
@@ -2181,7 +2190,7 @@ def create_full_ants_subpipes(
             else:
                 print("Using reg_aladin transfo to pad prob_wm back")
 
-                pad_prob_wm = pe.Node(regutils.RegResample(),
+                pad_prob_wm = pe.Node(RegResample(),
                                       name="pad_prob_wm")
 
                 seg_pipe.connect(brain_segment_pipe, "outputnode.prob_wm",
@@ -2235,7 +2244,7 @@ def create_full_ants_subpipes(
                 else:
                     print("Using reg_aladin transfo to pad gen_5tt back")
 
-                    pad_gen_5tt = pe.Node(regutils.RegResample(inter_val='NN'),
+                    pad_gen_5tt = pe.Node(RegResample(inter_val='NN'),
                                           name="pad_gen_5tt")
 
                     seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
@@ -2256,8 +2265,28 @@ def create_full_ants_subpipes(
             seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
                              outputnode, 'gen_5tt')
 
-    if 'nii_to_mesh_pipe' in params.keys():
+    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
 
+        nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
+            params=parse_key(params["brain_segment_pipe"],
+                             "nii2mesh_brain_pipe"))
+
+        if pad and space == "native":
+            seg_pipe.connect(pad_seg_mask, "out_file",
+                             nii2mesh_brain_pipe, 'inputnode.segmented_file')
+        else:
+            seg_pipe.connect(
+                brain_segment_pipe, "outputnode.segmented_file",
+                nii2mesh_brain_pipe, 'inputnode.segmented_file')
+
+        seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
+                         outputnode, 'wmgm_stl')
+
+        seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                         outputnode, 'wmgm_nii')
+
+    elif 'nii_to_mesh_pipe' in params.keys():
+        # kept for compatibility but nii2mesh is prefered...
         nii_to_mesh_pipe = create_nii_to_mesh_pipe(
             params_template=params_template,
             params=parse_key(params, "nii_to_mesh_pipe"))
@@ -2284,15 +2313,9 @@ def create_full_ants_subpipes(
                          'segment_atropos_pipe.outputnode.segmented_file',
                          nii_to_mesh_pipe, "inputnode.segmented_file")
 
-    elif "nii2mesh_brain_pipe" in params.keys():
-
-        nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
-            params=parse_key(params, "nii2mesh_brain_pipe"))
-
-        seg_pipe.connect(pad_seg_mask, "out_file",
-                         nii2mesh_brain_pipe, 'inputnode.segmented_file')
-
     elif "nii_to_mesh_fs_pipe" in params.keys():
+
+        # kept for compatibility but nii2mesh is prefered...
         nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
             params=parse_key(params, "nii_to_mesh_fs_pipe"))
 
@@ -2829,7 +2852,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad mask back")
                 pad_mask = pe.Node(
-                    regutils.RegResample(inter_val="NN"),
+                    RegResample(inter_val="NN"),
                     name="pad_mask")
 
                 seg_pipe.connect(brain_extraction_pipe,
@@ -2843,7 +2866,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                                  pad_mask, "trans_file")
 
                 print("Using reg_aladin transfo to pad debiased_T1 back")
-                pad_debiased_T1 = pe.Node(regutils.RegResample(),
+                pad_debiased_T1 = pe.Node(RegResample(),
                                           name="pad_debiased_T1")
 
                 seg_pipe.connect(brain_extraction_pipe,
@@ -2921,7 +2944,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad seg_mask back")
 
-                pad_seg_mask = pe.Node(regutils.RegResample(inter_val="NN"),
+                pad_seg_mask = pe.Node(RegResample(inter_val="NN"),
                                        name="pad_seg_mask")
 
                 seg_pipe.connect(brain_segment_pipe,
@@ -2975,7 +2998,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad debiased_brain back")
 
-                pad_debiased_brain = pe.Node(regutils.RegResample(),
+                pad_debiased_brain = pe.Node(RegResample(),
                                              name="pad_debiased_brain")
 
                 seg_pipe.connect(brain_segment_pipe,
@@ -3028,7 +3051,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad prob_csf back")
 
-                pad_prob_csf = pe.Node(regutils.RegResample(),
+                pad_prob_csf = pe.Node(RegResample(),
                                        name="pad_prob_csf")
 
                 seg_pipe.connect(brain_segment_pipe, "outputnode.prob_csf",
@@ -3080,7 +3103,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad prob_gm back")
 
-                pad_prob_gm = pe.Node(regutils.RegResample(),
+                pad_prob_gm = pe.Node(RegResample(),
                                       name="pad_prob_gm")
 
                 seg_pipe.connect(brain_segment_pipe, "outputnode.prob_gm",
@@ -3132,7 +3155,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             else:
                 print("Using reg_aladin transfo to pad prob_wm back")
 
-                pad_prob_wm = pe.Node(regutils.RegResample(),
+                pad_prob_wm = pe.Node(RegResample(),
                                       name="pad_prob_wm")
 
                 seg_pipe.connect(brain_segment_pipe, "outputnode.prob_wm",
@@ -3185,7 +3208,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 else:
                     print("Using reg_aladin transfo to pad gen_5tt back")
 
-                    pad_gen_5tt = pe.Node(regutils.RegResample(inter_val="NN"),
+                    pad_gen_5tt = pe.Node(RegResample(inter_val="NN"),
                                           name="pad_gen_5tt")
 
                     seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
