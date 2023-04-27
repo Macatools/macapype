@@ -7,7 +7,11 @@ import nipype.interfaces.afni as afni
 import nipype.interfaces.freesurfer as fs
 
 import macapype.nodes.register as reg
-from macapype.nodes.surface import Meshify, split_LR_mask
+
+from macapype.nodes.surface import (Meshify, split_LR_mask, wrap_nii2mesh,
+                                    keep_GCC, merge_tissues)
+
+from macapype.nodes.segment import BinaryFillHoles
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
 
@@ -628,3 +632,143 @@ def create_nii_to_mesh_fs_pipe(params, name="nii_to_mesh_fs_pipe"):
                                 smooth_tess_rh, 'in_file')
 
     return nii_to_mesh_fs_pipe
+
+
+###############################################################################
+def create_wmgm_mask_pipe(params={}, name="wmgm_mask_pipe"):
+
+    # creating pipeline
+    wmgm_mask_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["mask_gm", "mask_wm"]),
+        name='inputnode')
+
+    # bin_gm
+    bin_gm = pe.Node(interface=fsl.UnaryMaths(), name="bin_gm")
+    bin_gm.inputs.operation = "bin"
+
+    wmgm_mask_pipe.connect(inputnode, 'mask_gm', bin_gm, 'in_file')
+
+    # bin_wm
+    bin_wm = pe.Node(interface=fsl.UnaryMaths(), name="bin_wm")
+    bin_wm.inputs.operation = "bin"
+
+    wmgm_mask_pipe.connect(inputnode, 'mask_wm', bin_wm, 'in_file')
+
+    # Compute union of the 3 tissues
+    # Done with 2 fslmaths as it seems to hard to do it
+    wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
+    wmgm_union.inputs.operation = "add"
+    wmgm_union.inputs.args = "-thr 1 -bin"
+    wmgm_mask_pipe.connect(bin_gm, 'out_file', wmgm_union, 'in_file')
+    wmgm_mask_pipe.connect(bin_wm, 'out_file', wmgm_union, 'operand_file')
+    """
+    # Opening (dilating) mask
+    dilate_mask = NodeParams(fsl.DilateImage(),
+                             params=parse_key(params, "dilate_mask"),
+                             name="dilate_mask")
+
+    dilate_mask.inputs.operation = "mean"  # Arbitrary operation
+    wmgm_mask_pipe.connect(wmgm_union, 'out_file', dilate_mask, 'in_file')
+
+    # fill holes of dilate_mask
+    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
+    wmgm_mask_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
+
+    # Eroding mask
+    erode_mask = NodeParams(fsl.ErodeImage(),
+                            params=parse_key(params, "erode_mask"),
+                            name="erode_mask")
+
+    wmgm_mask_pipe.connect(fill_holes_dil, 'out_file', erode_mask, 'in_file')
+
+    # wmgm2mesh
+    wmgm2mesh = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["stl_file"],
+                               function=wrap_nii2mesh),
+        name="wmgm2mesh")
+
+    wmgm_mask_pipe.connect(erode_mask, 'out_file', wmgm2mesh, "nii_file")
+    """
+
+    # fill holes
+    keep_GCC_brain = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_GCC),
+        name="keep_GCC_brain")
+
+    wmgm_mask_pipe.connect(wmgm_union, 'out_file',
+                           keep_GCC_brain, 'nii_file')
+
+    # fill holes
+    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
+    wmgm_mask_pipe.connect(keep_GCC_brain, 'gcc_nii_file',
+                           fill_holes_dil, 'in_file')
+
+    # bin
+    bin_fill_holes_dil = pe.Node(interface=fsl.UnaryMaths(),
+                                 name="bin_fill_holes_dil")
+    bin_fill_holes_dil.inputs.operation = "bin"
+
+    wmgm_mask_pipe.connect(fill_holes_dil, 'out_file',
+                           bin_fill_holes_dil, 'in_file')
+
+    # wmgm2mesh
+    wmgm2mesh = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["stl_file"],
+                               function=wrap_nii2mesh),
+        name="wmgm2mesh")
+
+    wmgm_mask_pipe.connect(bin_fill_holes_dil, 'out_file',
+                           wmgm2mesh, "nii_file")
+
+    return wmgm_mask_pipe
+
+
+def create_nii2mesh_brain_pipe(params={},
+                               name="nii2mesh_brain_pipe"):
+
+    # creating pipeline
+    nii2mesh_brain_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file"]),
+        name='inputnode')
+
+    # merge_brain_tissues
+    merge_brain_tissues = pe.Node(
+        interface=niu.Function(input_names=["dseg_file", "keep_indexes"],
+                               output_names=["mask_file"],
+                               function=merge_tissues),
+        name="keep_GCC_brain")
+
+    merge_brain_tissues.inputs.keep_indexes = [2, 3, 4]
+
+    nii2mesh_brain_pipe.connect(inputnode, 'segmented_file',
+                                merge_brain_tissues, 'dseg_file')
+
+    # bin mask
+    bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
+    bin_mask.inputs.operation = "bin"
+
+    nii2mesh_brain_pipe.connect(merge_brain_tissues,
+                                'mask_file', bin_mask, 'in_file')
+
+    # wmgm2mesh
+    wmgm2mesh = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["stl_file"],
+                               function=wrap_nii2mesh),
+        name="wmgm2mesh")
+
+    nii2mesh_brain_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
+
+    return nii2mesh_brain_pipe
