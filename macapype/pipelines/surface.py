@@ -9,7 +9,7 @@ import nipype.interfaces.freesurfer as fs
 import macapype.nodes.register as reg
 
 from macapype.nodes.surface import (Meshify, split_LR_mask, wrap_nii2mesh,
-                                    keep_GCC, merge_tissues)
+                                    keep_gcc, merge_tissues)
 
 from macapype.nodes.segment import BinaryFillHoles
 from macapype.utils.utils_nodes import parse_key, NodeParams
@@ -699,7 +699,7 @@ def create_wmgm_mask_pipe(params={}, name="wmgm_mask_pipe"):
     keep_GCC_brain = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["gcc_nii_file"],
-                               function=keep_GCC),
+                               function=keep_gcc),
         name="keep_GCC_brain")
 
     wmgm_mask_pipe.connect(wmgm_union, 'out_file',
@@ -770,5 +770,14 @@ def create_nii2mesh_brain_pipe(params={},
         name="wmgm2mesh")
 
     nii2mesh_brain_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["wmgm_stl", "wmgm_nii"]),
+        name='outputnode')
+
+    nii2mesh_brain_pipe.connect(bin_mask, 'out_file', outputnode, "wmgm_nii")
+    nii2mesh_brain_pipe.connect(wmgm2mesh, 'stl_file', outputnode, "wmgm_stl")
 
     return nii2mesh_brain_pipe
