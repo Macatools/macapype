@@ -2,5 +2,6 @@
     "acq-[0-9a-zA-Z]*_": "",
     "run-[0-9]*_": "",
     "rec-[0-9a-zA-Z]*_": "",
+    "_[0-9]_": "_",
     "SegmentationPosteriors[0-9]*_":""
 }

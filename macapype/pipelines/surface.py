@@ -16,8 +16,8 @@ from macapype.utils.utils_nodes import parse_key, NodeParams
 
 
 def _create_split_hemi_pipe(params, params_template, name="split_hemi_pipe"):
-
-    """Description: Split segmentated tissus according hemisheres after \
+    """
+    Description: Split segmentated tissus according hemisheres after \
     removal of cortical structure
 
     Processing steps:

@@ -436,15 +436,37 @@ def create_5tt_pipe(params={}, name="export_5tt_pipe"):
             fields=["gm_file", "wm_file", "csf_file"]),
         name='inputnode')
 
+    # bin_gm
+    bin_gm = pe.Node(interface=fsl.UnaryMaths(), name="bin_gm")
+    bin_gm.inputs.operation = "bin"
+
+    export_5tt_pipe.connect(inputnode, 'gm_file',
+                            bin_gm, 'in_file')
+
+    # bin_csf
+    bin_csf = pe.Node(interface=fsl.UnaryMaths(), name="bin_csf")
+    bin_csf.inputs.operation = "bin"
+
+    export_5tt_pipe.connect(inputnode, 'csf_file',
+                            bin_csf, 'in_file')
+
+    # bin_wm
+    bin_wm = pe.Node(interface=fsl.UnaryMaths(), name="bin_wm")
+    bin_wm.inputs.operation = "bin"
+
+    export_5tt_pipe.connect(inputnode, 'wm_file',
+                            bin_wm, 'in_file')
+
+    # export_5tt
     export_5tt = pe.Node(
         niu.Function(input_names=["gm_file", "wm_file", "csf_file"],
                      output_names=["gen_5tt_file"],
                      function=compute_5tt),
         name="export_5tt")
 
-    export_5tt_pipe.connect(inputnode, 'gm_file', export_5tt, 'gm_file')
-    export_5tt_pipe.connect(inputnode, 'wm_file', export_5tt, 'wm_file')
-    export_5tt_pipe.connect(inputnode, 'csf_file', export_5tt, 'csf_file')
+    export_5tt_pipe.connect(bin_gm, 'out_file', export_5tt, 'gm_file')
+    export_5tt_pipe.connect(bin_wm, 'out_file', export_5tt, 'wm_file')
+    export_5tt_pipe.connect(bin_csf, 'out_file', export_5tt, 'csf_file')
 
     return export_5tt_pipe
 
