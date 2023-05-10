@@ -411,7 +411,7 @@ if __name__ == '__main__':
     print(val)
 
 
-def compute_5tt(gm_file, wm_file, csf_file):
+def compute_5tt(gm_file, wm_file, csf_file, background_val=0.0):
 
     import os
 
@@ -423,21 +423,30 @@ def compute_5tt(gm_file, wm_file, csf_file):
     path, fname, ext = split_f(gm_file)
 
     gm_img = nib.load(gm_file)
+
+    # gm_data = gm_img.get_fdata()
+    # gm_data[gm_data == 0.0] = background_val
+    # gm_data[gm_data > 0.0] = 1.0
+
+    # empty_vol = np.empty(shape=gm_data.shape)
+    # empty_vol[:] = background_val
+
+    # wm_data = nib.load(wm_file).get_fdata()
+    # wm_data[wm_data == 0.0] = background_val
+    # wm_data[wm_data > 0.0] = 1.0
+
+    # csf_data = nib.load(csf_file).get_fdata()
+    # csf_data[csf_data == 0.0] = background_val
+    # csf_data[csf_data > 0.0] = 1.0
+
+    gm_img = nib.load(gm_file)
     gm_data = gm_img.get_fdata()
 
-    gm_data[gm_data == 0.0] = np.nan
-    gm_data[gm_data > 0.0] = 1.0
-
-    empty_vol = np.empty(shape=gm_data.shape)
-    empty_vol[:] = np.nan
+    empty_vol = np.zeros(shape=gm_data.shape)
 
     wm_data = nib.load(wm_file).get_fdata()
-    wm_data[wm_data == 0.0] = np.nan
-    wm_data[wm_data > 0.0] = 1.0
 
     csf_data = nib.load(csf_file).get_fdata()
-    csf_data[csf_data == 0.0] = np.nan
-    csf_data[csf_data > 0.0] = 1.0
 
     gen_5tt_data = np.stack((gm_data, empty_vol, wm_data, csf_data, empty_vol),
                             axis=-1)
