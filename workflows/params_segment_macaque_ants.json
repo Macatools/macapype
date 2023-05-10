@@ -1,14 +1,13 @@
 {
     "general":
     {
-        "template_name": "NMT_v2.0_asym",
-        "template_aladin_name": "NMT_v2.0_asym"
+        "template_name": "NMT_v2.0_asym"
     },
     "short_preparation_pipe":
     {
         "crop_aladin_T1":
         {
-    		"nac_flag": true,
+    	    "nac_flag": true,
             "rig_only_flag": true,
             "nosym_flag": true,
             "ln_val" : 12,
@@ -90,6 +89,29 @@
         },
         "export_5tt_pipe":
         {
+        },
+        "nii2mesh_brain_pipe":
+        {
+            "merge_brain_tissues":
+            {
+                "keep_indexes": [2,3,4]
+            }
+        }
+    },
+    "native_to_stereo_pipe":
+    {
+        "pad_template_T1":
+        {
+            "pad_val": 20
+        },
+        "reg_T1_on_template":
+        {
+            "nac_flag": true,
+            "rig_only_flag":true,
+            "nosym_flag": true,
+            "ln_val" : 12,
+            "lp_val": 10,
+            "smoo_r_val" : 1.0
         }
     }
 }

@@ -714,3 +714,83 @@ class NwarpApplyPriors(AFNICommandBase):
             outputs['out_file'] = self.new_value
             print(outputs['out_file'])
         return outputs
+
+
+def pad_zero_mri(img_file, pad_val=10, const=0):
+
+    import os
+    import nibabel as nib
+    import numpy as np
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    if pad_val:
+
+        print("pad_val = {}, running pad_zero_mri".format(pad_val))
+
+        img = nib.load(img_file)
+        img_arr = np.array(img.dataobj)
+        img_arr_copy = np.copy(img_arr)
+
+        img_arr_copy_padded = np.pad(
+            img_arr_copy,
+            pad_width=pad_val,
+            mode='constant',
+            constant_values=const)
+
+        img_padded = nib.Nifti1Image(img_arr_copy_padded,
+                                     header=img.header,
+                                     affine=img.affine)
+        path, fname, ext = split_f(img_file)
+
+        img_padded_file = os.path.abspath("padded_" + fname + ext)
+
+        nib.save(img_padded, img_padded_file)
+
+        return img_padded_file
+
+    else:
+        print("pad_val = {}, skipping pad_zero_mri".format(pad_val))
+        return img_file
+
+
+"""
+
+def pad_zero_mri(img_file, pad_val=10):
+
+    import os
+    import nibabel as nib
+    import numpy as np
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    img = nib.load(img_file)
+    img_arr = np.array(img.dataobj)
+    img_header = img.header
+    print("Pad_val {}".format(pad_val))
+
+    print(img_arr.shape)
+
+    img_arr_padded = np.pad(
+        img_arr,
+        pad_width=pad_val,
+        mode='constant',
+        constant_values=0)
+
+    print(img_arr_padded.shape)
+
+    img_header.set_data_shape(img_arr_padded.shape)
+
+    img_padded = nib.Nifti1Image(img_arr_padded,
+                                 header=img_header,
+                                 affine=img.affine)
+
+    path, fname, ext = split_f(img_file)
+
+    img_padded_file = os.path.abspath("padded_" + fname + ext)
+
+    nib.save(img_padded, img_padded_file)
+
+    return img_padded_file
+
+"""

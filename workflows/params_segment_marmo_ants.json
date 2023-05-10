@@ -1,12 +1,14 @@
 {
     "general":
     {
-        "template_name": "MBM_v3.0.1_6seg"
+        "template_name": "MBM_v3.0.1_6seg",
+        "template_stereo_name": "bma-1_0p2mm_padded"
     },
      "short_preparation_pipe":
     {
     	"crop_aladin_T1":
     	{
+    	    "nac_flag": true,
             "rig_only_flag": true,
             "nosym_flag": true,
             "ln_val" : 12,
@@ -21,20 +23,20 @@
     "brain_extraction_pipe":
     {
         "fast":
-	{
+        {
             "args": "-l 3"
         },
         "extract_pipe":
         {
             "atlas_brex":
-	    {
+            {
                 "f": 0.62,
                 "reg": 1,
                 "msk": "b,0.5,0,0",
                 "wrp": "5,5,5",
                 "dil": 4,
-		"vox": 1
-	    }
+                "vox": 1
+            }
         }
     },
     "brain_segment_pipe":
@@ -45,10 +47,6 @@
         },
         "register_NMT_pipe":
         {
-            "NMT_subject_align":
-            {
-                "afni_ext": "orig"
-            }
         },
         "segment_atropos_pipe":
         {
@@ -64,24 +62,43 @@
                 "gm": [1,2],
                 "wm": 3,
                 "csf": 4
-            },
-
-            "threshold_gm":
-            {
-                "thresh": 0.5
-            },
-
-            "threshold_wm":
-            {
-                "thresh": 0.5
-            },
-            "threshold_csf":
-            {
-                "thresh": 0.5
             }
         },
-	"export_5tt_pipe":
-	{
-	}
+        "export_5tt_pipe":
+        {
+        },
+        "nii2mesh_brain_pipe":
+        {
+            "merge_brain_tissues":
+            {
+                "keep_indexes": [1,2,3]
+            }
+        }
+    },
+    "native_to_stereo_pipe":
+    {
+        "skull_stripped_template": true,
+        "use_T2":{},
+        "pad_template_T1":
+        {
+            "pad_val": 0
+        },
+        "reg_T1_on_template":
+        {
+            "nac_flag": true,
+            "rig_only_flag":true,
+            "nosym_flag": true,
+            "ln_val" : 12,
+            "lp_val": 10,
+            "smoo_r_val" : 1.0
+        },
+        "reg_T1_on_template2":
+        {
+            "rig_only_flag":true,
+            "nosym_flag": true,
+            "ln_val" : 17,
+            "lp_val": 15,
+            "smoo_r_val" : 1.0
+        }
     }
 }

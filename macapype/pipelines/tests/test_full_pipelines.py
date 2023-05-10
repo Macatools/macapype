@@ -44,6 +44,7 @@ def test_create_full_ants_subpipes_no_args():
     segment_pnh = create_full_ants_subpipes(
         params=params, params_template=params_template,
         params_template_aladin=params_template,
+        params_template_stereo=params_template,
         name="test_create_full_ants_subpipes_no_args")
 
     segment_pnh.base_dir = data_path
@@ -88,6 +89,7 @@ def test_create_full_ants_subpipes_all_default_params():
         segment_pnh = create_full_ants_subpipes(
             params=params, params_template=params_template,
             params_template_aladin=params_template,
+            params_template_stereo=params_template,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
