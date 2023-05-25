@@ -367,6 +367,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
             segment_pnh_pipe = create_full_T1_ants_subpipes(
                 params_template=params_template,
                 params_template_aladin=params_template_aladin,
+                params_template_stereo=params_template_stereo,
                 params=params, space=space, pad=pad)
         else:
             segment_pnh_pipe = create_full_ants_subpipes(

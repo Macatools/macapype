@@ -540,7 +540,7 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['stereo_native_T1',
                                       'padded_stereo_T1',
-                                      'transfo_native_to_stereo']),
+                                      'native_to_stereo_trans']),
         name='outputnode')
 
     # pad_stereo_T1
@@ -598,7 +598,7 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'res_file',
                          outputnode, "stereo_native_T1")
         reg_pipe.connect(compose_transfo, 'out_file',
-                         outputnode, "transfo_native_to_stereo")
+                         outputnode, "native_to_stereo_trans")
     else:
 
         # outputnode
@@ -606,6 +606,6 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
                          outputnode, "stereo_native_T1")
 
         reg_pipe.connect(reg_T1_on_template, 'aff_file',
-                         outputnode, "transfo_native_to_stereo")
+                         outputnode, "native_to_stereo_trans")
 
     return reg_pipe
