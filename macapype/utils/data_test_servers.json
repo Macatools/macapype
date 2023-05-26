@@ -19,7 +19,10 @@
             "NMT_v2.0_asym": "BYj6NmwB76Z4Bt2",
             "haiko89_template": "3Agb3zecnkQGCr5",
             "MBM_v3.0.1": "RMxXifHeigNkB3g",
-            "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP"
+            "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP",
+            "bma-1": "29qRZrnHnBxtCGB",
+            "bma-1_padded": "MqXmWWjykjeTbQo",
+            "bma-1_0p2mm_padded":"WHRfWN4XNF9RyNs"
                     },
         "cloud_format": "{}/public.php?service=files&t={}&download"
     }
