@@ -2373,7 +2373,8 @@ def create_full_ants_subpipes(
                     seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
                                      pad_gen_5tt, "flo_file")
 
-                    seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "outputnode.native_T1",
                                      pad_gen_5tt, "ref_file")
 
                     seg_pipe.connect(data_preparation_pipe,
@@ -3511,7 +3512,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                     seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
                                      pad_gen_5tt, "cropped_img_file")
 
-                    seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "outputnode.native_T1",
                                      pad_gen_5tt, "orig_img_file")
 
                     seg_pipe.connect(inputnode, "indiv_params",
@@ -3529,7 +3531,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                     seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
                                      pad_gen_5tt, "flo_file")
 
-                    seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "outputnode.native_T1",
                                      pad_gen_5tt, "ref_file")
 
                     seg_pipe.connect(data_preparation_pipe,
