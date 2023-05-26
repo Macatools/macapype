@@ -88,6 +88,24 @@
         "template_wm": "wm.nii.gz",
         "template_csf": "csf.nii.gz"
     },
+    "bma-1_padded":{
+        "template_head": "bma-1-mri_padded.nii.gz",
+        "template_brain": "bma-1-mri_padded.nii.gz",
+
+        "template_seg": "bma-1-graywhite_seg_padded.nii.gz"
+    },
+    "bma-1":{
+        "template_head": "bma-1-mri.nii.gz",
+        "template_brain": "bma-1-mri.nii.gz",
+
+        "template_seg": "bma-1-graywhite_seg.nii.gz"
+    },
+    "bma-1_0p2mm_padded":{
+        "template_head": "bma-1-mri_padded_0p2mm.nii.gz",
+        "template_brain": "bma-1-mri_padded_0p2mm.nii.gz",
+
+        "template_seg": "bma-1-graywhite_seg_padded_0p2mm.nii.gz"
+    },
     "haiko89_template":{
         "template_head": "Haiko89_Asymmetric.Template_n89.nii.gz",
         "template_brain": "Haiko89_Asymmetric.Template_n89.nii.gz",

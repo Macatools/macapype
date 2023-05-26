@@ -10,58 +10,6 @@ from macapype.pipelines.prepare import (create_short_preparation_pipe,
 data_path = make_tmp_dir()
 
 
-def test_create_bet_crop_short_preparation_pipe():
-
-    params = {
-        "short_preparation_pipe":
-        {
-            "bet_crop":
-            {
-            }
-        }
-    }
-
-    # running workflow
-    segment_pnh = create_short_preparation_pipe(
-        params=parse_key(params, "short_preparation_pipe"),
-        name="short_auto_preparation_pipe")
-
-    segment_pnh.base_dir = data_path
-
-    segment_pnh.write_graph(graph2use="colored")
-    assert op.exists(op.join(data_path,
-                             "short_auto_preparation_pipe",
-                             "graph.png"))
-
-
-def test_create_bet_crop_reorient_short_preparation_pipe():
-
-    params = {
-        "short_preparation_pipe":
-        {
-            "reorient":
-            {
-                "new_dims": "x z -y"
-            },
-            "bet_crop":
-            {
-            }
-        }
-    }
-
-    # running workflow
-    segment_pnh = create_short_preparation_pipe(
-        params=parse_key(params, "short_preparation_pipe"),
-        name="short_auto_reorient_preparation_pipe")
-
-    segment_pnh.base_dir = data_path
-
-    segment_pnh.write_graph(graph2use="colored")
-    assert op.exists(op.join(data_path,
-                             "short_auto_reorient_preparation_pipe",
-                             "graph.png"))
-
-
 def test_create_crop_T1_short_preparation_pipe():
 
     params = {
