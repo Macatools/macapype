@@ -568,19 +568,32 @@ class NwarpApplyPriorsInputSpec(CommandLineInputSpec):
         mandatory=True,
         argstr='-source %s',
         desc='the name of the dataset to be warped '
-        'can be multiple datasets')
-    warp = traits.String(
+        'can be multiple datasets',
+        position=0)
+
+    warp = traits.File(
         desc='the name of the warp dataset. '
         'multiple warps can be concatenated (make sure they exist)',
         argstr='-nwarp %s',
+        position=4,
         mandatory=True)
+
+    wtransfo = traits.File(
+        desc='1D transfo',
+        argstr=' %s',
+        position=5,
+        mandatory=True)
+
     inv_warp = traits.Bool(
         desc='After the warp specified in \'-nwarp\' is computed, invert it',
         argstr='-iwarp')
+
     master = traits.File(
         exists=True,
         desc='the name of the master dataset, which defines the output grid',
-        argstr='-master %s')
+        argstr='-master %s',
+        position=1)
+
     interp = traits.Enum(
         'wsinc5',
         'NN',
@@ -594,7 +607,9 @@ class NwarpApplyPriorsInputSpec(CommandLineInputSpec):
         'triquintic',
         desc='defines interpolation method to use during warp',
         argstr='-interp %s',
+        position=2,
         usedefault=True)
+
     ainterp = traits.Enum(
         'NN',
         'nearestneighbour',
@@ -609,11 +624,13 @@ class NwarpApplyPriorsInputSpec(CommandLineInputSpec):
         desc='specify a different interpolation method than might '
         'be used for the warp',
         argstr='-ainterp %s')
+
     out_file = traits.Either(
         File(),
         traits.List(File()),
         mandatory=True,
         argstr='-prefix %s',
+        position=3,
         desc='output image file name')
     short = traits.Bool(
         desc='Write output dataset using 16-bit short integers, rather than '

@@ -7,7 +7,7 @@
     {
         "crop_aladin_T1":
         {
-    		"nac_flag": true,
+    	    "nac_flag": true,
             "rig_only_flag": true,
             "nosym_flag": true,
             "ln_val" : 12,
@@ -17,34 +17,58 @@
         "crop_z_T1":
         {
             "brainsize": 70
+        },
+        "denoise":
+        {
+            "dimension": 3
         }
     },
     "brain_extraction_pipe":
     {
-        "fast":
+        "N4debias":
         {
-            "args": "-l 3"
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
         },
         "extract_pipe":
         {
             "atlas_brex":
             {
                 "f": 0.5,
-                "reg": 2,
-                "msk": "a,0,0",
-                "wrp": "1"
+                "reg": 1,
+                "msk": "b,0.5,0,0",
+                "wrp": "10,10,10",
+                "dil": 1
             }
 
         }
     },
     "brain_segment_pipe":
     {
-        "debias":
+        "masked_correct_bias_pipe":
         {
-            "s": 4
+            "smooth":
+            {
+                "args": "-bin -s 2"
+            },
+            "norm_smooth":
+            {
+                "op_string": "-s 2 -div %s"
+            },
+            "smooth_bias":
+            {
+                    "sigma": 2
+            }
         },
         "register_NMT_pipe":
         {
+            "deoblique":
+            {
+            },
             "norm_intensity":
             {
                 "dimension": 3,
@@ -60,20 +84,13 @@
             "use_priors": 0.0,
             "Atropos":
             {
-                "dimension": 3,
-                "numberOfClasses": 3
+                "dimension": 3
             },
-            "threshold_gm":
+            "tissue_dict":
             {
-                "thresh": 0.5
-            },
-            "threshold_wm":
-            {
-                "thresh": 0.5
-            },
-            "threshold_csf":
-            {
-                "thresh": 0.5
+                "gm": 2,
+                "wm": 3,
+                "csf": 1
             }
         },
         "export_5tt_pipe":

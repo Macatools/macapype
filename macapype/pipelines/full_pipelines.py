@@ -1344,6 +1344,7 @@ def create_brain_segment_from_mask_pipe(
         params=parse_key(params, "register_NMT_pipe"))
 
     if "masked_correct_bias_pipe" in params.keys():
+
         brain_segment_pipe.connect(
             masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
             register_NMT_pipe, "inputnode.T1")
@@ -1370,8 +1371,8 @@ def create_brain_segment_from_mask_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
         brain_segment_pipe.connect(
-            register_NMT_pipe, 'align_seg.out_file', segment_atropos_pipe,
-            "inputnode.seg_file")
+            register_NMT_pipe, 'outputnode.native_template_seg',
+            segment_atropos_pipe, "inputnode.seg_file")
 
     else:
         print("#### create_segment_atropos_pipe (3 tissues) ")
@@ -1383,20 +1384,22 @@ def create_brain_segment_from_mask_pipe(
         if "use_priors" in params["segment_atropos_pipe"].keys():
 
             brain_segment_pipe.connect(
-                register_NMT_pipe, 'align_seg_csf.out_file',
+                register_NMT_pipe, 'outputnode.native_template_csf',
                 segment_atropos_pipe, "inputnode.csf_prior_file")
             brain_segment_pipe.connect(
-                register_NMT_pipe, 'align_seg_gm.out_file',
+                register_NMT_pipe,  'outputnode.native_template_gm',
                 segment_atropos_pipe, "inputnode.gm_prior_file")
             brain_segment_pipe.connect(
-                register_NMT_pipe, 'align_seg_wm.out_file',
+                register_NMT_pipe,  'outputnode.native_template_wm',
                 segment_atropos_pipe, "inputnode.wm_prior_file")
 
     # input to segment_atropos_pipe depending on T1T2 debias step
     if "masked_correct_bias_pipe" in params.keys():
+
         brain_segment_pipe.connect(
             masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
             segment_atropos_pipe, "inputnode.brain_file")
+
     elif "debias" in params.keys():
         brain_segment_pipe.connect(
             debias, 't1_debiased_brain_file',
@@ -1428,9 +1431,11 @@ def create_brain_segment_from_mask_pipe(
 
     # output prepreocessed brain T1
     if "masked_correct_bias_pipe" in params.keys():
+
         brain_segment_pipe.connect(
             masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
             outputnode, 'debiased_brain')
+
     elif "debias" in params.keys():
         brain_segment_pipe.connect(debias, 't1_debiased_brain_file',
                                    outputnode, 'debiased_brain')
@@ -1872,6 +1877,9 @@ def create_full_ants_subpipes(
 
             seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
                              outputnode, "debiased_T1")
+    else:
+
+        outputnode.inputs.brain_mask = mask_file
 
     if "native_to_stereo_pipe" in params.keys():
 
@@ -1991,22 +1999,74 @@ def create_full_ants_subpipes(
         params_template=params_template,
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
-    seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
-                     brain_segment_pipe, 'inputnode.preproc_T1')
-    seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T2",
-                     brain_segment_pipe, 'inputnode.preproc_T2')
+    seg_pipe.connect(inputnode, 'indiv_params',
+                     brain_segment_pipe, 'inputnode.indiv_params')
 
     if mask_file is None:
+
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
+                         brain_segment_pipe, 'inputnode.preproc_T1')
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T2",
+                         brain_segment_pipe, 'inputnode.preproc_T2')
 
         seg_pipe.connect(brain_extraction_pipe,
                          "outputnode.brain_mask",
                          brain_segment_pipe, "inputnode.brain_mask")
     else:
 
-        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
+        # apply transfo to list
+        apply_crop_external_mask = pe.Node(RegResample(inter_val="NN"),
+                                           name='apply_crop_external_mask')
 
-    seg_pipe.connect(inputnode, 'indiv_params',
-                     brain_segment_pipe, 'inputnode.indiv_params')
+        apply_crop_external_mask.inputs.flo_file = mask_file
+
+        seg_pipe.connect(data_preparation_pipe,
+                         'crop_aladin_T1.aff_file',
+                         apply_crop_external_mask, "trans_file")
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.preproc_T1",
+                         apply_crop_external_mask, "ref_file")
+
+        # debias T1 and T2 by fast (default)
+        # fast over T1
+        fast_T1 = pe.Node(
+            fsl.FAST(),
+            name='fast_T1')
+
+        fast_T1.inputs.output_biascorrected = True
+        fast_T1.inputs.output_biasfield = True
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         fast_T1, "in_files")
+
+        seg_pipe.connect(fast_T1, "restored_image",
+                         outputnode, "debiased_T1")
+        # fast over T2
+        fast_T2 = pe.Node(
+            fsl.FAST(),
+            name='fast_T2')
+
+        fast_T2.inputs.output_biascorrected = True
+        fast_T2.inputs.output_biasfield = True
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
+                         fast_T2, "in_files")
+
+        seg_pipe.connect(fast_T2, "restored_image",
+                         outputnode, "debiased_T2")
+
+        # input to brain_segment_pipe
+        seg_pipe.connect(apply_crop_external_mask, "out_file",
+                         brain_segment_pipe, "inputnode.brain_mask")
+
+        seg_pipe.connect(fast_T1, "restored_image",
+                         brain_segment_pipe, 'inputnode.preproc_T1')
+
+        seg_pipe.connect(fast_T2, "restored_image",
+                         brain_segment_pipe, 'inputnode.preproc_T2')
+
+        # if in the same space a crop
+        # brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
 
     if pad and space == "native":
         if "short_preparation_pipe" in params.keys():
@@ -2131,6 +2191,32 @@ def create_full_ants_subpipes(
 
                 # outputnode
                 seg_pipe.connect(pad_debiased_brain, "out_file",
+                                 outputnode, "debiased_brain")
+
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding debiased_brain in native space")
+
+                pad_debiased_brain = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_debiased_brain")
+
+                seg_pipe.connect(brain_segment_pipe,
+                                 "outputnode.debiased_brain",
+                                 pad_debiased_brain, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                 pad_debiased_brain, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_debiased_brain, "indiv_crop")
+
+                seg_pipe.connect(pad_debiased_brain, "padded_img_file",
                                  outputnode, "debiased_brain")
 
     else:
@@ -2333,6 +2419,31 @@ def create_full_ants_subpipes(
                 seg_pipe.connect(pad_prob_wm, "out_file",
                                  outputnode, "prob_wm")
 
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding prob_wm in native space")
+
+                pad_prob_wm = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_prob_wm")
+
+                seg_pipe.connect(brain_segment_pipe, "outputnode.prob_wm",
+                                 pad_prob_wm, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                 pad_prob_wm, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_prob_wm, "indiv_crop")
+
+                seg_pipe.connect(pad_prob_wm, "padded_img_file",
+                                 outputnode, "prob_wm")
+
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
@@ -2384,6 +2495,33 @@ def create_full_ants_subpipes(
 
                     # outputnode
                     seg_pipe.connect(pad_gen_5tt, "out_file",
+                                     outputnode, "gen_5tt")
+
+            elif "long_single_preparation_pipe" in params.keys():
+                if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                    print("Padding gen_5tt in native space \
+                        (long_single_preparation_pipe)")
+
+                    pad_gen_5tt = pe.Node(
+                        niu.Function(
+                            input_names=['cropped_img_file', 'orig_img_file',
+                                         'indiv_crop'],
+                            output_names=['padded_img_file'],
+                            function=padding_cropped_img),
+                        name="pad_gen_5tt")
+
+                    seg_pipe.connect(brain_segment_pipe, "outputnode.gen_5tt",
+                                     pad_gen_5tt, "cropped_img_file")
+
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "outputnode.native_T1",
+                                     pad_gen_5tt, "orig_img_file")
+
+                    seg_pipe.connect(inputnode, "indiv_params",
+                                     pad_gen_5tt, "indiv_crop")
+
+                    seg_pipe.connect(pad_gen_5tt, "padded_img_file",
                                      outputnode, "gen_5tt")
 
         else:
@@ -2763,8 +2901,8 @@ def create_brain_segment_from_mask_T1_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
         brain_segment_pipe.connect(
-            register_NMT_pipe, 'align_seg.out_file', segment_atropos_pipe,
-            "inputnode.seg_file")
+            register_NMT_pipe, 'outputnode.native_template_seg',
+            segment_atropos_pipe, "inputnode.seg_file")
 
     else:
         segment_atropos_pipe = create_segment_atropos_pipe(
@@ -2773,17 +2911,17 @@ def create_brain_segment_from_mask_T1_pipe(
         if "use_priors" in params["segment_atropos_pipe"].keys():
 
             brain_segment_pipe.connect(register_NMT_pipe,
-                                       'align_seg_csf.out_file',
+                                       'outputnode.native_template_csf',
                                        segment_atropos_pipe,
                                        "inputnode.csf_prior_file")
 
             brain_segment_pipe.connect(register_NMT_pipe,
-                                       'align_seg_gm.out_file',
+                                       'outputnode.native_template_gm',
                                        segment_atropos_pipe,
                                        "inputnode.gm_prior_file")
 
             brain_segment_pipe.connect(register_NMT_pipe,
-                                       'align_seg_wm.out_file',
+                                       'outputnode.native_template_wm',
                                        segment_atropos_pipe,
                                        "inputnode.wm_prior_file")
     # brain_file
@@ -3342,6 +3480,33 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
                 # outputnode
                 seg_pipe.connect(pad_debiased_brain, "out_file",
+                                 outputnode, "debiased_brain")
+
+        elif "long_single_preparation_pipe" in params.keys():
+            if "prep_T1" in params["long_single_preparation_pipe"].keys():
+
+                print("Padding debiased_brain in native space \
+                    (long_single_preparation_pipe)")
+
+                pad_debiased_brain = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_debiased_brain")
+
+                seg_pipe.connect(brain_segment_pipe,
+                                 "outputnode.debiased_brain",
+                                 pad_debiased_brain, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                 pad_debiased_brain, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_debiased_brain, "indiv_crop")
+
+                seg_pipe.connect(pad_debiased_brain, "padded_img_file",
                                  outputnode, "debiased_brain")
 
     else:
