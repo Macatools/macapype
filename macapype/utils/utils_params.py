@@ -178,15 +178,18 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                     params["short_preparation_pipe"]["crop_T1"] = \
                         {"args": "should be defined in indiv"}
                 else:
+                    print("modifying prep = {}".format(prep_pipe))
 
                     params[prep_pipe] = {
                         "prep_T1": {
                             "crop_T1": {
-                                "args": "should be defined in indiv"}},
+                                "args": "should be defined in indiv"}
+                            },
                         "prep_T2": {
                             "crop_T2": {
-                                "args": "should be defined in indiv"}},
-                        "align_T2_on_T1": {"dof": 6, "cost": "normmi"}}
+                                "args": "should be defined in indiv"}
+                            }
+                        }
 
                     if "denoise" in params["short_preparation_pipe"].keys():
                         denoise = params["short_preparation_pipe"]["denoise"]
