@@ -174,7 +174,7 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             datasink, '@prob_csf')
 
         # rename 5tt
-        if "export_5tt_pipe" in params["brain_segment_pipe"]:
+        if "export_5tt_pipe" in params["brain_segment_pipe"].keys():
             rename_gen_5tt = pe.Node(niu.Rename(), name="rename_gen_5tt")
             rename_gen_5tt.inputs.format_string = \
                 pref_deriv + "_space-{}_desc-5tt_dseg".format(space)
@@ -189,39 +189,80 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_gen_5tt, 'out_file',
                 datasink, '@gen_5tt')
 
-        if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
-            print("Renaming wmgm_stl file")
+        if "nii2mesh_brain_pipe" in params["brain_segment_pipe"].keys():
 
-            rename_wmgm_stl = pe.Node(niu.Rename(),
-                                      name="rename_wmgm_stl")
-            rename_wmgm_stl.inputs.format_string = \
-                pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
-            rename_wmgm_stl.inputs.parse_string = parse_str
-            rename_wmgm_stl.inputs.keep_ext = True
+            if "native_to_stereo_pipe" in params.keys():
 
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.wmgm_stl',
-                rename_wmgm_stl, 'in_file')
+                print("Renaming stereo_wmgm_stl file")
 
-            main_workflow.connect(
-                rename_wmgm_stl, 'out_file',
-                datasink, '@wmgm_stl')
+                rename_stereo_wmgm_stl = pe.Node(niu.Rename(),
+                                                 name="rename_stereo_wmgm_stl")
+                rename_stereo_wmgm_stl.inputs.format_string = \
+                    pref_deriv + "_space-stereo_desc-wmgm_mask"
 
-            print("Renaming wmgm_nii file")
-            rename_wmgm_nii = pe.Node(niu.Rename(),
-                                      name="rename_wmgm_nii")
-            rename_wmgm_nii.inputs.format_string = \
-                pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
-            rename_wmgm_nii.inputs.parse_string = parse_str
-            rename_wmgm_nii.inputs.keep_ext = True
+                rename_stereo_wmgm_stl.inputs.parse_string = parse_str
+                rename_stereo_wmgm_stl.inputs.keep_ext = True
 
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.wmgm_nii',
-                rename_wmgm_nii, 'in_file')
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.stereo_wmgm_stl',
+                    rename_stereo_wmgm_stl, 'in_file')
 
-            main_workflow.connect(
-                rename_wmgm_nii, 'out_file',
-                datasink, '@wmgm_nii')
+                main_workflow.connect(
+                    rename_stereo_wmgm_stl, 'out_file',
+                    datasink, '@stereo_wmgm_stl')
+
+                print("Renaming stereo_wmgm_mask file")
+                rename_stereo_wmgm_mask = pe.Node(
+                    niu.Rename(), name="rename_stereo_wmgm_mask")
+
+                rename_stereo_wmgm_mask.inputs.format_string = \
+                    pref_deriv + "_space-stereo_desc-wmgm_mask"
+
+                rename_stereo_wmgm_mask.inputs.parse_string = parse_str
+                rename_stereo_wmgm_mask.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.stereo_wmgm_mask',
+                    rename_stereo_wmgm_mask, 'in_file')
+
+                main_workflow.connect(
+                    rename_stereo_wmgm_mask, 'out_file',
+                    datasink, '@stereo_wmgm_mask')
+
+            else:
+
+                print("Renaming wmgm_stl file")
+
+                rename_wmgm_stl = pe.Node(niu.Rename(),
+                                          name="rename_wmgm_stl")
+                rename_wmgm_stl.inputs.format_string = \
+                    pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
+                rename_wmgm_stl.inputs.parse_string = parse_str
+                rename_wmgm_stl.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.wmgm_stl',
+                    rename_wmgm_stl, 'in_file')
+
+                main_workflow.connect(
+                    rename_wmgm_stl, 'out_file',
+                    datasink, '@wmgm_stl')
+
+                print("Renaming wmgm_nii file")
+                rename_wmgm_mask = pe.Node(niu.Rename(),
+                                           name="rename_wmgm_mask")
+                rename_wmgm_mask.inputs.format_string = \
+                    pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
+                rename_wmgm_mask.inputs.parse_string = parse_str
+                rename_wmgm_mask.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.wmgm_mask',
+                    rename_wmgm_mask, 'in_file')
+
+                main_workflow.connect(
+                    rename_wmgm_mask, 'out_file',
+                    datasink, '@wmgm_mask')
 
     elif "old_segment_pipe" in params.keys():
 
@@ -398,25 +439,6 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_stereo_prob_csf, 'out_file',
                 datasink, '@stereo_prob_csf')
-
-            if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
-
-                print("Renaming stereo_wmgm_mask file")
-                rename_stereo_wmgm_mask = pe.Node(
-                    niu.Rename(),
-                    name="rename_stereo_wmgm_mask")
-                rename_stereo_wmgm_mask.inputs.format_string = \
-                    pref_deriv + "_space-stereo_desc-wmgm_mask"
-                rename_stereo_wmgm_mask.inputs.parse_string = parse_str
-                rename_stereo_wmgm_mask.inputs.keep_ext = True
-
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.stereo_wmgm_mask',
-                    rename_stereo_wmgm_mask, 'in_file')
-
-                main_workflow.connect(
-                    rename_stereo_wmgm_mask, 'out_file',
-                    datasink, '@stereo_wmgm_mask')
 
     if "mask_from_seg_pipe" in params.keys():
 

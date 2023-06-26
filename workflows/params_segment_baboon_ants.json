@@ -5,6 +5,8 @@
     },
     "short_preparation_pipe":
     {
+        "aladin_T2_on_T1":{},
+
         "crop_aladin_T1":
         {
     	    "nac_flag": true,
@@ -81,7 +83,7 @@
         },
         "segment_atropos_pipe":
         {
-            "use_priors": 0.0,
+            "use_priors": 0.5,
             "Atropos":
             {
                 "dimension": 3
