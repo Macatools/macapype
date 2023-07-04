@@ -355,21 +355,38 @@ def create_short_preparation_pipe(params, params_template={},
     data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
     # align avg T2 on avg T1
-    align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
-    align_T2_on_T1.inputs.dof = 6
+    if 'aladin_T2_on_T1' in params.keys():
 
-    data_preparation_pipe.connect(av_T1, 'avg_img',
-                                  align_T2_on_T1, 'reference')
+        align_T2_on_T1 = pe.Node(reg.RegAladin(), name="align_T2_on_T1")
 
-    data_preparation_pipe.connect(av_T2, 'avg_img',
-                                  align_T2_on_T1, 'in_file')
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'ref_file')
+
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'flo_file')
+
+    # align avg T2 on avg T1
+    else:
+
+        align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
+        align_T2_on_T1.inputs.dof = 6
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      align_T2_on_T1, 'reference')
+
+        data_preparation_pipe.connect(av_T2, 'avg_img',
+                                      align_T2_on_T1, 'in_file')
 
     # outputnode
     data_preparation_pipe.connect(av_T1, 'avg_img',
                                   outputnode, 'native_T1')
 
-    data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                  outputnode, 'native_T2')
+    if 'aladin_T2_on_T1' in params.keys():
+        data_preparation_pipe.connect(align_T2_on_T1, "res_file",
+                                      outputnode, 'native_T2')
+    else:
+        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                      outputnode, 'native_T2')
 
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
@@ -399,8 +416,13 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(av_T1, 'avg_img',
                                       crop_T1, 'in_file')
 
-        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                      crop_T2, 'in_file')
+        if 'aladin_T2_on_T1' in params.keys():
+            data_preparation_pipe.connect(align_T2_on_T1, "res_file",
+                                          crop_T2, 'in_file')
+
+        else:
+            data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                          crop_T2, 'in_file')
 
     else:
         print('default crop_aladin_T1 will be run')
@@ -432,8 +454,13 @@ def create_short_preparation_pipe(params, params_template={},
             regutils.RegResample(),
             name='apply_crop_aladin_T2')
 
-        data_preparation_pipe.connect(align_T2_on_T1, 'out_file',
-                                      apply_crop_aladin_T2, 'flo_file')
+        if 'aladin_T2_on_T1' in params.keys():
+            data_preparation_pipe.connect(align_T2_on_T1, "res_file",
+                                          apply_crop_aladin_T2, 'flo_file')
+
+        else:
+            data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                          apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       apply_crop_aladin_T2, 'trans_file')
