@@ -1604,11 +1604,11 @@ def create_full_ants_subpipes(
                     "masked_debiased_T1", "masked_debiased_T2",
                     "cropped_brain_mask", "cropped_debiased_T1",
                     "native_T1", "native_T2", "cropped_to_native_trans",
-                    "wmgm_stl", "wmgm_nii",
+                    "wmgm_stl", "wmgm_mask",
                     'stereo_native_T1', 'stereo_debiased_T1',
                     'stereo_brain_mask', 'stereo_segmented_brain_mask',
-                    'stereo_prob_gm', 'stereo_prob_wm',
-                    'stereo_prob_csf', "stereo_wmgm_mask",
+                    'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
+                    "stereo_wmgm_mask", "stereo_wmgm_stl",
                     "native_to_stereo_trans"]),
         name='outputnode')
 
@@ -1799,7 +1799,7 @@ def create_full_ants_subpipes(
                                      pad_masked_debiased_T2, "flo_file")
 
                     seg_pipe.connect(data_preparation_pipe,
-                                     "align_T2_on_T1.out_file",
+                                     "outputnode.native_T2",
                                      pad_masked_debiased_T2, "ref_file")
 
                     seg_pipe.connect(data_preparation_pipe,
@@ -2594,48 +2594,38 @@ def create_full_ants_subpipes(
         seg_pipe.connect(apply_stereo_seg_mask, "out_file",
                          outputnode, "stereo_segmented_brain_mask")
 
-        #if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
-
-            ## apply transfo to list
-            #apply_stereo_wmgm_mask = pe.Node(RegResample(inter_val="NN"),
-                                             #name='apply_stereo_wmgm_mask')
-
-            #seg_pipe.connect(nii2mesh_brain_pipe,
-                             #"outputnode.wmgm_nii",
-                             #apply_stereo_wmgm_mask, "flo_file")
-
-            #seg_pipe.connect(native_to_stereo_pipe,
-                             #'outputnode.native_to_stereo_trans',
-                             #apply_stereo_wmgm_mask, "trans_file")
-
-            #seg_pipe.connect(native_to_stereo_pipe,
-                             #'outputnode.padded_stereo_T1',
-                             #apply_stereo_wmgm_mask, "ref_file")
-
-            #seg_pipe.connect(apply_stereo_wmgm_mask, "out_file",
-                             #outputnode, "stereo_wmgm_mask")
-
-    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
+    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"].keys():
 
         nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
             params=parse_key(params["brain_segment_pipe"],
                              "nii2mesh_brain_pipe"))
 
-        if "native_to_stereo_pipe" in params.keys() and pad:
+        if pad:
+            if "native_to_stereo_pipe" in params.keys():
 
-            seg_pipe.connect(
-                apply_stereo_seg_mask, "out_file",
-                nii2mesh_brain_pipe, 'inputnode.segmented_file')
+                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
+                                 nii2mesh_brain_pipe,
+                                 'inputnode.segmented_file')
 
-        elif space == "native":
-            seg_pipe.connect(pad_seg_mask, "out_file",
+                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
+                                 outputnode, 'stereo_wmgm_stl')
+
+                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                                 outputnode, 'stereo_wmgm_mask')
+
+            elif space == "native":
+                seg_pipe.connect(pad_seg_mask, "out_file",
+                                 nii2mesh_brain_pipe,
+                                 'inputnode.segmented_file')
+        else:
+            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                              nii2mesh_brain_pipe, 'inputnode.segmented_file')
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
-                         outputnode, 'stereo_wmgm_mask')
+                         outputnode, 'wmgm_mask')
 
     elif 'nii_to_mesh_pipe' in params.keys():
         # kept for compatibility but nii2mesh is prefered...
@@ -2773,6 +2763,10 @@ def create_brain_extraction_T1_pipe(params_template, params={},
         # brain extraction
         brain_extraction_pipe.connect(N4debias_T1, "output_image",
                                       extract_T1_pipe, "inputnode.restore_T1")
+
+        # outputnode
+        brain_extraction_pipe.connect(N4debias_T1, "output_image",
+                                      outputnode, "debiased_T1")
 
     elif "fast" in params.keys():
 
@@ -3105,7 +3099,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                     'stereo_native_T1', 'stereo_debiased_T1',
                     'stereo_brain_mask', 'stereo_segmented_brain_mask',
                     'stereo_prob_gm', 'stereo_prob_wm',
-                    'stereo_prob_csf', "stereo_wmgm_mask",
+                    'stereo_prob_csf',
+                    "stereo_wmgm_mask", "stereo_wmgm_stl",
                     "native_to_stereo_trans"]),
         name='outputnode')
 
@@ -3715,40 +3710,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
                              outputnode, 'gen_5tt')
 
-    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
-
-        nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
-            params=parse_key(params["brain_segment_pipe"],
-                             "nii2mesh_brain_pipe"))
-
-        if pad and space == "native":
-            seg_pipe.connect(pad_seg_mask, "out_file",
-                             nii2mesh_brain_pipe, 'inputnode.segmented_file')
-        else:
-            seg_pipe.connect(
-                brain_segment_pipe, "outputnode.segmented_file",
-                nii2mesh_brain_pipe, 'inputnode.segmented_file')
-
-        seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
-                         outputnode, 'wmgm_stl')
-
-        seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
-                         outputnode, 'wmgm_nii')
-
-    elif "nii_to_mesh_fs_pipe" in params.keys():
-        nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
-            params=parse_key(params, "nii_to_mesh_fs_pipe"))
-
-        seg_pipe.connect(brain_extraction_pipe, 'outputnode.debiased_T1',
-                         nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
-
-        seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.outputnode.threshold_wm',
-                         nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
-
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
-
     if "native_to_stereo_pipe" in params.keys() and pad:
 
         # apply transfo to list
@@ -3815,25 +3776,37 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         seg_pipe.connect(apply_stereo_seg_mask, "out_file",
                          outputnode, "stereo_segmented_brain_mask")
 
-        if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
+    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
 
-            # apply transfo to list
-            apply_stereo_wmgm_mask = pe.Node(RegResample(inter_val="NN"),
-                                             name='apply_stereo_wmgm_mask')
+        nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
+            params=parse_key(params["brain_segment_pipe"],
+                             "nii2mesh_brain_pipe"))
 
-            seg_pipe.connect(nii2mesh_brain_pipe,
-                             "outputnode.wmgm_nii",
-                             apply_stereo_wmgm_mask, "flo_file")
+        if pad:
+            if "native_to_stereo_pipe" in params.keys():
 
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             apply_stereo_wmgm_mask, "trans_file")
+                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
+                                 nii2mesh_brain_pipe,
+                                 'inputnode.segmented_file')
 
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.padded_stereo_T1',
-                             apply_stereo_wmgm_mask, "ref_file")
+                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
+                                 outputnode, 'stereo_wmgm_stl')
 
-            seg_pipe.connect(apply_stereo_wmgm_mask, "out_file",
-                             outputnode, "stereo_wmgm_mask")
+                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                                 outputnode, 'stereo_wmgm_mask')
+
+            elif space == "native":
+                seg_pipe.connect(pad_seg_mask, "out_file",
+                                 nii2mesh_brain_pipe,
+                                 'inputnode.segmented_file')
+        else:
+            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                             nii2mesh_brain_pipe, 'inputnode.segmented_file')
+
+        seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
+                         outputnode, 'wmgm_stl')
+
+        seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                         outputnode, 'wmgm_mask')
 
     return seg_pipe
