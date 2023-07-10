@@ -117,9 +117,16 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
             "Error, subject should be defined as iterables"
 
         print(getattr(self.inputs, "session"))
+        if isdefined(getattr(self.inputs, "session")):
+            print("session is defined, adding")
+            keys = ("sub-" + getattr(self.inputs, "subject"),
+                    "ses-" + getattr(self.inputs, "session"))
 
-        keys = ("sub-" + getattr(self.inputs, "subject"),
-                "ses-" + getattr(self.inputs, "session"))
+        else:
+            print("no session was defined, skipping")
+            keys = ("sub-" + getattr(self.inputs, "subject"),
+                )
+
 
         print("In BIDSDataGrabberParams")
         print(self._indiv_params)
