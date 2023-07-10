@@ -113,8 +113,10 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
 
     def _set_indiv_params(self, outputs):
 
-        assert "subject" in self._infields and "session" in self._infields, \
-            "Error, subject and session should be defined as iterables"
+        assert "subject" in self._infields, \
+            "Error, subject should be defined as iterables"
+
+        print(getattr(self.inputs, "session"))
 
         keys = ("sub-" + getattr(self.inputs, "subject"),
                 "ses-" + getattr(self.inputs, "session"))
