@@ -3,7 +3,7 @@ from nipype.interfaces.io import BIDSDataGrabber
 from .misc import parse_key
 
 from nipype.interfaces.base import (TraitedSpec, traits, BaseInterface,
-                                    BaseInterfaceInputSpec)
+                                    BaseInterfaceInputSpec, isdefined)
 
 
 def node_output_exists(node, output_name):
