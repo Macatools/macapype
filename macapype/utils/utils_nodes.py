@@ -118,15 +118,12 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
 
         keys = ("sub-" + getattr(self.inputs, "subject"),
                 "ses-" + getattr(self.inputs, "session"))
-        print("In BIDSDataGrabberParams")
 
+        print("In BIDSDataGrabberParams")
         print(self._indiv_params)
 
         outputs["indiv_params"] = parse_key(self._indiv_params, keys)
-
         print(outputs["indiv_params"])
-        0/0
-
 
         return outputs
 
