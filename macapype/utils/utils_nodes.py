@@ -123,10 +123,8 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
                     "ses-" + getattr(self.inputs, "session"))
 
         else:
-            print("no session was defined, skipping")
-            keys = ("sub-" + getattr(self.inputs, "subject"),
-                )
-
+            print("no session was defined, skipping for key")
+            keys = ("sub-" + getattr(self.inputs, "subject"))
 
         print("In BIDSDataGrabberParams")
         print(self._indiv_params)
