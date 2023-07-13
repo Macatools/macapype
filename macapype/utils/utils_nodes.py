@@ -132,10 +132,6 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
         outputs["indiv_params"] = parse_key(self._indiv_params, keys)
         print(outputs["indiv_params"])
 
-        print(outputs["indiv_params"])
-        0/0
-
-
         return outputs
 
     def _list_outputs(self):
