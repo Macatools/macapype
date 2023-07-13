@@ -80,7 +80,9 @@ def create_datasource_indiv_params(output_query, data_dir, indiv_params,
 
     iterables = []
     iterables.append(('subject', subjects))
-    iterables.append(('session', sessions))
+
+    if sessions != []:
+        iterables.append(('session', sessions))
 
     if acquisitions is not None:
         iterables.append(('acquisition', acquisitions))

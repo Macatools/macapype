@@ -3,7 +3,7 @@ from nipype.interfaces.io import BIDSDataGrabber
 from .misc import parse_key
 
 from nipype.interfaces.base import (TraitedSpec, traits, BaseInterface,
-                                    BaseInterfaceInputSpec)
+                                    BaseInterfaceInputSpec, isdefined)
 
 
 def node_output_exists(node, output_name):
@@ -113,12 +113,24 @@ class BIDSDataGrabberParams(BIDSDataGrabber):
 
     def _set_indiv_params(self, outputs):
 
-        assert "subject" in self._infields and "session" in self._infields, \
-            "Error, subject and session should be defined as iterables"
+        assert "subject" in self._infields, \
+            "Error, subject should be defined as iterables"
 
-        keys = ("sub-" + getattr(self.inputs, "subject"),
-                "ses-" + getattr(self.inputs, "session"))
+        print(getattr(self.inputs, "session"))
+        if isdefined(getattr(self.inputs, "session")):
+            print("session is defined, adding")
+            keys = ("sub-" + getattr(self.inputs, "subject"),
+                    "ses-" + getattr(self.inputs, "session"))
+
+        else:
+            print("no session was defined, skipping for key")
+            keys = ("sub-" + getattr(self.inputs, "subject"))
+
+        print("In BIDSDataGrabberParams")
+        print(self._indiv_params)
+
         outputs["indiv_params"] = parse_key(self._indiv_params, keys)
+        print(outputs["indiv_params"])
 
         print(outputs["indiv_params"])
         0/0
