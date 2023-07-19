@@ -170,7 +170,7 @@ def average_align(list_img, reorient = False):
     import nipype.interfaces.fsl as fsl
 
     # should be in nipype code directly
-    from tmp_prepare import Refit
+    from macapype.nodes.tmp_prepare import Refit
 
     print("average_align:", list_img)
 
