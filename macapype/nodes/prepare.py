@@ -223,7 +223,7 @@ def average_align(list_img, reorient = False):
         reorient_img.inputs.in_file = av_img_file
         reorient_img.inputs.deoblique = True
 
-        reorient_img.inputs.orient = reorient
+        reorient_img.inputs.origin = reorient
 
         reoriented_img_file = reorient_img.run().outputs.out_file
 
