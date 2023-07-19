@@ -368,7 +368,7 @@ def average_align(list_img, reorient = False):
 
     std_img = fsl.Reorient2Std()
     std_img.inputs.in_file = reoriented_img_file
-    std_img.inputs.out_file = out_file
+    std_img.inputs.out_file = output_file
 
     standardized_img_file = std_img.run().outputs.out_file
 
