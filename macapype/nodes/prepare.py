@@ -169,6 +169,9 @@ def average_align(list_img, reorient = False):
     from nipype.utils.filemanip import split_filename as split_f
     import nipype.interfaces.fsl as fsl
 
+    # should be in nipype code directly
+    from tmp_prepare import Refit
+
     print("average_align:", list_img)
 
     if isinstance(list_img, list):
