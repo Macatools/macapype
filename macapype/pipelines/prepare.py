@@ -855,7 +855,7 @@ def create_short_preparation_T1_pipe(params, params_template,
 
     # average if multiple T1
     # average if multiple T1
-    av_T1 = pe.Node(
+    av_T1 = NodeParams(
         niu.Function(input_names=['list_img', 'reorient'],
                      output_names=['avg_img'],
                      function=average_align),
