@@ -854,12 +854,17 @@ def create_short_preparation_T1_pipe(params, params_template,
         name='outputnode')
 
     # average if multiple T1
+    # average if multiple T1
     av_T1 = pe.Node(
-        niu.Function(input_names=['list_img'],
+        niu.Function(input_names=['list_img', 'reorient'],
                      output_names=['avg_img'],
                      function=average_align),
         name="av_T1")
     data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
+
+    data_preparation_pipe.connect(inputnode,
+                                  ('indiv_params', parse_key, "av_T1"),
+                                  av_T1, 'indiv_params')
 
     data_preparation_pipe.connect(av_T1, 'avg_img',
                                   outputnode, 'native_T1')
