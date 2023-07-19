@@ -219,13 +219,10 @@ def average_align(list_img, reorient = False):
         path, fname, ext = split_f(av_img_file)
 
         # Refit
-        output_file = os.path.abspath(fname + "_reorient" + ext)
-
         reorient_img = Refit()
         reorient_img.inputs.in_file = av_img_file
         reorient_img.inputs.deoblique = True
 
-        reorient_img.inputs.out_file = output_file
         reorient_img.inputs.orient = reorient
 
         reoriented_img_file = reorient_img.run().outputs.out_file
