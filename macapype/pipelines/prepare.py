@@ -60,7 +60,7 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe"):
 
     reorient_pipe.connect(reorient_img, "out_file", std_img, 'in_file')
 
-    outputnode = pe.Node(IdentityInterface(fields=['avg_img', 'std_img']),name="outputnode")
+    outputnode = pe.Node(niu.IdentityInterface(fields=['avg_img', 'std_img']),name="outputnode")
 
     reorient_pipe.connect(std_img, 'out_file', outputnode, 'std_img')
 
