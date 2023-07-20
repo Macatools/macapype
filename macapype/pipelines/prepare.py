@@ -911,8 +911,7 @@ def create_short_preparation_T1_pipe(params, params_template,
     data_preparation_pipe.connect(inputnode, 'list_T1',
                                   av_T1, 'inputnode.list_img')
 
-    data_preparation_pipe.connect(inputnode,
-                                  ('indiv_params', parse_key, "av_T1"),
+    data_preparation_pipe.connect(inputnode, 'indiv_params',
                                   av_T1, 'inputnode.indiv_params')
 
     data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
