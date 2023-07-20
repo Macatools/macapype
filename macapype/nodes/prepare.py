@@ -169,8 +169,6 @@ def average_align(list_img, reorient = False):
     from nipype.utils.filemanip import split_filename as split_f
     import nipype.interfaces.fsl as fsl
 
-    # should be in nipype code directly
-    from macapype.nodes.tmp_prepare import Refit
 
     print("average_align:", list_img)
 
@@ -214,38 +212,7 @@ def average_align(list_img, reorient = False):
 
     assert os.path.exists(av_img_file)
 
-    if reorient:
-
-        path, fname, ext = split_f(av_img_file)
-
-        # Refit
-        reorient_img = Refit()
-        reorient_img.inputs.in_file = av_img_file
-        reorient_img.inputs.deoblique = True
-
-        reorient_img.inputs.origin = reorient
-
-        reoriented_img_file = reorient_img.run().outputs.out_file
-
-    else:
-        reoriented_img_file=av_img_file
-
-    # Reorient2std
-    assert os.path.exists(reoriented_img_file)
-
-    path, fname, ext = split_f(reoriented_img_file)
-
-    output_file = os.path.abspath(fname + "_reorient_std" + ext)
-
-    std_img = fsl.Reorient2Std()
-    std_img.inputs.in_file = reoriented_img_file
-    std_img.inputs.out_file = output_file
-
-    standardized_img_file = std_img.run().outputs.out_file
-
-    assert os.path.exists(standardized_img_file)
-
-    return standardized_img_file
+    return av_img_file
 
 
 # on the fly
