@@ -52,7 +52,7 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe"):
     reorient_img.inputs.deoblique = True
 
 
-    reorient_pipe.connect(inputnode, ('indiv_params', parse_keys, 'reorient'),
+    reorient_pipe.connect(inputnode, ('indiv_params', parse_key, 'reorient'),
                           reorient_img, 'indiv_params')
 
     # Reorient2std
