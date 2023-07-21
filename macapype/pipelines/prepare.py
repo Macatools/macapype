@@ -52,8 +52,6 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
 
     reorient_pipe.connect(average_img, 'avg_img', reorient, 'in_file')
 
-    reorient.inputs.deoblique = True
-
     reorient_pipe.connect(inputnode, ('indiv_params', parse_key, 'reorient'),
                           reorient, 'indiv_params')
 
@@ -393,6 +391,9 @@ def create_short_preparation_pipe(params, params_template={},
         name='outputnode')
 
     if "avg_reorient_pipe" in params.keys():
+
+        print("Found avg_reorient_pipe for av_T1 and av_T2")
+
         av_T1 = _create_avg_reorient_pipeline(
             name="av_T1", params=parse_key(params, "avg_reorient_pipe"))
 
