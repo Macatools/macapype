@@ -533,7 +533,11 @@ def create_short_preparation_pipe(params, params_template={},
         crop_aladin_T1.inputs.lp_val = 10
         crop_aladin_T1.inputs.smoo_r_val = 1.0
 
-        data_preparation_pipe.connect(av_T1, 'avg_img',
+        if "reorient" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
+                                      crop_aladin_T1, 'flo_file')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
                                       crop_aladin_T1, 'flo_file')
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
