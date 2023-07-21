@@ -19,7 +19,8 @@ from ..nodes.prepare import average_align, FslOrient, reg_aladin_dirty
 # should be in nipype code directly
 from ..nodes.tmp_prepare import Refit
 
-def _create_avg_reorient_pipeline(name="avg_reorient_pipe"):
+
+def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
     """
     By david:
     average_align
@@ -45,20 +46,21 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe"):
     reorient_pipe.connect(inputnode, 'list_img', average_img, 'list_img')
 
     # Refit
-    reorient_img = NodeParams(Refit(), name="reorient_img")
+    reorient = NodeParams(Refit(),
+                          params=parse_key(params, "reorient"),
+                          name="reorient")
 
-    reorient_pipe.connect(average_img, 'avg_img', reorient_img, 'in_file')
+    reorient_pipe.connect(average_img, 'avg_img', reorient, 'in_file')
 
-    reorient_img.inputs.deoblique = True
-
+    reorient.inputs.deoblique = True
 
     reorient_pipe.connect(inputnode, ('indiv_params', parse_key, 'reorient'),
-                          reorient_img, 'indiv_params')
+                          reorient, 'indiv_params')
 
     # Reorient2std
     std_img = pe.Node(fsl.Reorient2Std(), name="std_img")
 
-    reorient_pipe.connect(reorient_img, "out_file", std_img, 'in_file')
+    reorient_pipe.connect(reorient, "out_file", std_img, 'in_file')
 
     outputnode = pe.Node(niu.IdentityInterface(fields=['avg_img', 'std_img']),name="outputnode")
 
@@ -390,31 +392,60 @@ def create_short_preparation_pipe(params, params_template={},
                                       'preproc_T1', 'preproc_T2']),
         name='outputnode')
 
-    # avererge if multiple T2
-    av_T2 = pe.Node(niu.Function(
-        input_names=['list_img'],
-        output_names=['avg_img'],
-        function=average_align), name="av_T2")
-    data_preparation_pipe.connect(inputnode, 'list_T2', av_T2, 'list_img')
+    if "reorient" in params.keys():
+        av_T1 = _create_avg_reorient_pipeline(
+            name="av_T1", params=parse_key(params, "avg_reorient_pipe"))
 
-    # avererge if multiple T1
-    av_T1 = pe.Node(
-        niu.Function(input_names=['list_img'],
-                     output_names=['avg_img'],
-                     function=average_align),
-        name="av_T1")
-    data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
+        data_preparation_pipe.connect(inputnode, 'list_T1',
+                                      av_T1, 'inputnode.list_img')
+
+        data_preparation_pipe.connect(inputnode, 'indiv_params',
+                                      av_T1, 'inputnode.indiv_params')
+
+        av_T2 = _create_avg_reorient_pipeline(
+            name="av_T2", params=parse_key(params, "avg_reorient_pipe"))
+
+        data_preparation_pipe.connect(inputnode, 'list_T2',
+                                      av_T2, 'inputnode.list_img')
+
+        data_preparation_pipe.connect(inputnode, 'indiv_params',
+                                      av_T2, 'inputnode.indiv_params')
+
+    else:
+
+        # average if multiple T2
+        av_T2 = pe.Node(niu.Function(
+            input_names=['list_img'],
+            output_names=['avg_img'],
+            function=average_align), name="av_T2")
+        data_preparation_pipe.connect(inputnode, 'list_T2', av_T2, 'list_img')
+
+        # avererge if multiple T1
+        av_T1 = pe.Node(
+            niu.Function(input_names=['list_img'],
+                         output_names=['avg_img'],
+                         function=average_align),
+            name="av_T1")
+        data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
     # align avg T2 on avg T1
     if 'aladin_T2_on_T1' in params.keys():
 
         align_T2_on_T1 = pe.Node(reg.RegAladin(), name="align_T2_on_T1")
 
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      align_T2_on_T1, 'ref_file')
+        if "reorient" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
+                                          align_T2_on_T1, 'ref_file')
 
-        data_preparation_pipe.connect(av_T2, 'avg_img',
-                                      align_T2_on_T1, 'flo_file')
+            data_preparation_pipe.connect(av_T2, 'outputnode.avg_img',
+                                          align_T2_on_T1, 'flo_file')
+
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          align_T2_on_T1, 'ref_file')
+
+            data_preparation_pipe.connect(av_T2, 'avg_img',
+                                          align_T2_on_T1, 'flo_file')
 
     # align avg T2 on avg T1
     else:
@@ -422,15 +453,26 @@ def create_short_preparation_pipe(params, params_template={},
         align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
         align_T2_on_T1.inputs.dof = 6
 
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      align_T2_on_T1, 'reference')
+        if "reorient" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
+                                          align_T2_on_T1, 'reference')
 
-        data_preparation_pipe.connect(av_T2, 'avg_img',
-                                      align_T2_on_T1, 'in_file')
+            data_preparation_pipe.connect(av_T2, 'outputnode.avg_img',
+                                          align_T2_on_T1, 'in_file')
 
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          align_T2_on_T1, 'reference')
+
+            data_preparation_pipe.connect(av_T2, 'avg_img',
+                                          align_T2_on_T1, 'in_file')
     # outputnode
-    data_preparation_pipe.connect(av_T1, 'avg_img',
-                                  outputnode, 'native_T1')
+    if "reorient" in params.keys():
+        data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
+                                      outputnode, 'native_T1')
+    else:
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      outputnode, 'native_T1')
 
     if 'aladin_T2_on_T1' in params.keys():
         data_preparation_pipe.connect(align_T2_on_T1, "res_file",
@@ -464,8 +506,12 @@ def create_short_preparation_pipe(params, params_template={},
             inputnode, ("indiv_params", parse_key, "crop_T1"),
             crop_T2, 'indiv_params')
 
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      crop_T1, 'in_file')
+        if "reorient" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
+                                          crop_T1, 'in_file')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          crop_T1, 'in_file')
 
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(align_T2_on_T1, "res_file",
