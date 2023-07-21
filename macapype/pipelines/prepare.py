@@ -392,7 +392,7 @@ def create_short_preparation_pipe(params, params_template={},
                                       'preproc_T1', 'preproc_T2']),
         name='outputnode')
 
-    if "reorient" in params.keys():
+    if "avg_reorient_pipe" in params.keys():
         av_T1 = _create_avg_reorient_pipeline(
             name="av_T1", params=parse_key(params, "avg_reorient_pipe"))
 
@@ -433,7 +433,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         align_T2_on_T1 = pe.Node(reg.RegAladin(), name="align_T2_on_T1")
 
-        if "reorient" in params.keys():
+        if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
                                           align_T2_on_T1, 'ref_file')
 
@@ -453,7 +453,7 @@ def create_short_preparation_pipe(params, params_template={},
         align_T2_on_T1 = pe.Node(fsl.FLIRT(), name="align_T2_on_T1")
         align_T2_on_T1.inputs.dof = 6
 
-        if "reorient" in params.keys():
+        if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
                                           align_T2_on_T1, 'reference')
 
@@ -467,7 +467,7 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'in_file')
     # outputnode
-    if "reorient" in params.keys():
+    if "avg_reorient_pipe" in params.keys():
         data_preparation_pipe.connect(av_T1, 'outputnode.avg_img',
                                       outputnode, 'native_T1')
     else:
@@ -951,17 +951,29 @@ def create_short_preparation_T1_pipe(params, params_template,
         name='outputnode')
 
     # average if multiple T1
-    # average if multiple T1
-    av_T1 = _create_avg_reorient_pipeline("av_T1_pipe")
+    if "avg_reorient_pipe" in params.keys():
 
-    data_preparation_pipe.connect(inputnode, 'list_T1',
-                                  av_T1, 'inputnode.list_img')
+        av_T1 = _create_avg_reorient_pipeline(
+            "av_T1", params=parse_key(params, "avg_reorient_pipe"))
 
-    data_preparation_pipe.connect(inputnode, 'indiv_params',
-                                  av_T1, 'inputnode.indiv_params')
+        data_preparation_pipe.connect(inputnode, 'list_T1',
+                                      av_T1, 'inputnode.list_img')
 
-    data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                  outputnode, 'native_T1')
+        data_preparation_pipe.connect(inputnode, 'indiv_params',
+                                      av_T1, 'inputnode.indiv_params')
+
+        data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
+                                      outputnode, 'native_T1')
+    else:
+        av_T1 = pe.Node(
+            niu.Function(input_names=['list_img'],
+                         output_names=['avg_img'],
+                         function=average_align),
+            name="av_T1")
+        data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
+
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      outputnode, 'native_T1')
 
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
@@ -975,8 +987,14 @@ def create_short_preparation_T1_pipe(params, params_template,
                              params=parse_key(params, 'crop'),
                              name='crop_T1')
 
-        data_preparation_pipe.connect(av_T1,  'outputnode.std_img',
-                                      crop_T1, 'in_file')
+        if "avg_reorient_pipe" in params.keys():
+
+            data_preparation_pipe.connect(av_T1,  'outputnode.std_img',
+                                          crop_T1, 'in_file')
+        else:
+
+            data_preparation_pipe.connect(av_T1,  'avg_img',
+                                          crop_T1, 'in_file')
 
         data_preparation_pipe.connect(
             inputnode, ("indiv_params", parse_key, "crop_T1"),
@@ -987,8 +1005,14 @@ def create_short_preparation_T1_pipe(params, params_template,
                                     params=parse_key(params, "crop_aladin_T1"),
                                     name='crop_aladin_T1')
 
-        data_preparation_pipe.connect(av_T1,  'outputnode.std_img',
-                                      crop_aladin_T1, 'flo_file')
+        if "avg_reorient_pipe" in params.keys():
+
+            data_preparation_pipe.connect(av_T1,  'outputnode.std_img',
+                                          crop_aladin_T1, 'flo_file')
+        else:
+
+            data_preparation_pipe.connect(av_T1,  'avg_img',
+                                          crop_aladin_T1, 'flo_file')
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
