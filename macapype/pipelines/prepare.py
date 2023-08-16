@@ -17,7 +17,7 @@ from ..nodes.prepare import average_align, FslOrient, reg_aladin_dirty
 
 
 # should be in nipype code directly
-from ..nodes.tmp_prepare import Refit
+from ..nodes.prepare import Refit
 
 
 def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
@@ -60,7 +60,8 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
 
     reorient_pipe.connect(reorient, "out_file", std_img, 'in_file')
 
-    outputnode = pe.Node(niu.IdentityInterface(fields=['avg_img', 'std_img']),name="outputnode")
+    outputnode = pe.Node(niu.IdentityInterface(fields=['avg_img', 'std_img']),
+                         name="outputnode")
 
     reorient_pipe.connect(std_img, 'out_file', outputnode, 'std_img')
 
@@ -536,10 +537,10 @@ def create_short_preparation_pipe(params, params_template={},
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                      crop_aladin_T1, 'flo_file')
+                                          crop_aladin_T1, 'flo_file')
         else:
             data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      crop_aladin_T1, 'flo_file')
+                                          crop_aladin_T1, 'flo_file')
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
