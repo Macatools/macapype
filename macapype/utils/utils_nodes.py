@@ -48,7 +48,7 @@ class NodeParams(Node):
             return super(NodeParams, self)._check_inputs(parameter=parameter)
 
     def set_input(self, parameter, val):
-        if parameter == "indiv_params":
+        if parameter == "indiv_params" and isdefined(val):
             print("\n**** setting indiv_params for {} ****".format(self.name))
             print(val, "\n")
             self.load_inputs_from_dict(val)
