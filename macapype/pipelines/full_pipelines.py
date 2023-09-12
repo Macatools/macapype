@@ -1913,7 +1913,7 @@ def create_full_ants_subpipes(
                     params_template_stereo["template_brain"]
 
                 seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.padded_stereo_T1',
+                                 'outputnode.stereo_native_T1',
                                  outputnode, "stereo_native_T1")
 
                 ## apply stereo to native T1
