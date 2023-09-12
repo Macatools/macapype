@@ -1912,30 +1912,34 @@ def create_full_ants_subpipes(
                 native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                     params_template_stereo["template_brain"]
 
-                # apply stereo to native T1
-                apply_stereo_native_T1 = pe.Node(RegResample(pad_val=0.0),
-                                                 name='apply_stereo_native_T1')
-
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 apply_stereo_native_T1, "flo_file")
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.native_to_stereo_trans',
-                                 apply_stereo_native_T1, "trans_file")
-
                 seg_pipe.connect(native_to_stereo_pipe,
                                  'outputnode.padded_stereo_T1',
-                                 apply_stereo_native_T1, "ref_file")
-
-                # remove_nans
-                remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
-                                      name="remove_nans")
-
-                seg_pipe.connect(apply_stereo_native_T1, "out_file",
-                                 remove_nans, "in_file")
-                # outputnode
-                seg_pipe.connect(remove_nans, 'out_file',
                                  outputnode, "stereo_native_T1")
+
+                ## apply stereo to native T1
+                #apply_stereo_native_T1 = pe.Node(RegResample(pad_val=0.0),
+                                                 #name='apply_stereo_native_T1')
+
+                #seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                 #apply_stereo_native_T1, "flo_file")
+
+                #seg_pipe.connect(native_to_stereo_pipe,
+                                 #'outputnode.native_to_stereo_trans',
+                                 #apply_stereo_native_T1, "trans_file")
+
+                #seg_pipe.connect(native_to_stereo_pipe,
+                                 #'outputnode.padded_stereo_T1',
+                                 #apply_stereo_native_T1, "ref_file")
+
+                ## remove_nans
+                #remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
+                                      #name="remove_nans")
+
+                #seg_pipe.connect(apply_stereo_native_T1, "out_file",
+                                 #remove_nans, "in_file")
+                ## outputnode
+                #seg_pipe.connect(remove_nans, 'out_file',
+                                 #outputnode, "stereo_native_T1")
 
             else:
                 # full head version
