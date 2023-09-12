@@ -1913,7 +1913,7 @@ def create_full_ants_subpipes(
                     params_template_stereo["template_brain"]
 
                 # apply stereo to native T1
-                apply_stereo_native_T1 = pe.Node(RegResample(),
+                apply_stereo_native_T1 = pe.Node(RegResample(pad_val=0.0),
                                                  name='apply_stereo_native_T1')
 
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
