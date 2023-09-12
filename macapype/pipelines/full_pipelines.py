@@ -1927,8 +1927,6 @@ def create_full_ants_subpipes(
                                  'outputnode.padded_stereo_T1',
                                  apply_stereo_native_T1, "ref_file")
 
-                seg_pipe.connect(apply_stereo_native_T1, "out_file",
-                                 outputnode, "stereo_native_T1")
                 # remove_nans
                 remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
                                       name="remove_nans")
