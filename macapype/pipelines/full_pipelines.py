@@ -1917,8 +1917,10 @@ def create_full_ants_subpipes(
                                  #outputnode, "stereo_native_T1")
 
                 # apply stereo to native T1
-                apply_stereo_native_T1 = pe.Node(RegResample(pad_val=0.0),
+                apply_stereo_native_T1 = pe.Node(RegResample(),
                                                  name='apply_stereo_native_T1')
+                apply_stereo_native_T1.inputs.pad_val = 0.0
+                apply_stereo_native_T1.inputs.inter_val = "NN"
 
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                                  apply_stereo_native_T1, "flo_file")
