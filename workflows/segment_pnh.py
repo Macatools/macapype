@@ -308,6 +308,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             print("Unknown template_files format, should be 3 or 5 files")
             exit(-1)
 
+        params_template_aladin = params_template
+        params_template_stereo = params_template
+
     else:
         ### use template from params
         assert ("general" in params.keys() and \
