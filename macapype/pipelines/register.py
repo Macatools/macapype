@@ -570,7 +570,7 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
                          outputnode, "native_to_stereo_trans")
     else:
 
-        remove_nans = pe.Node(fsl.MathsCommand(nan2zeros=True),
+        remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
                               name="remove_nans")
 
         reg_pipe.connect(reg_T1_on_template, 'res_file',
