@@ -1912,10 +1912,6 @@ def create_full_ants_subpipes(
                 native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                     params_template_stereo["template_brain"]
 
-                #seg_pipe.connect(native_to_stereo_pipe,
-                                 #'outputnode.stereo_native_T1',
-                                 #outputnode, "stereo_native_T1")
-
                 # apply stereo to native T1
                 apply_stereo_native_T1 = pe.Node(RegResample(),
                                                  name='apply_stereo_native_T1')
@@ -1935,16 +1931,6 @@ def create_full_ants_subpipes(
 
                 seg_pipe.connect(apply_stereo_native_T1, "out_file",
                                  outputnode, "stereo_native_T1")
-
-                ## remove_nans
-                #remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
-                                      #name="remove_nans")
-
-                #seg_pipe.connect(apply_stereo_native_T1, "out_file",
-                                 #remove_nans, "in_file")
-                ## outputnode
-                #seg_pipe.connect(remove_nans, 'out_file',
-                                 #outputnode, "stereo_native_T1")
 
             else:
                 # full head version

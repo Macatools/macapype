@@ -50,7 +50,7 @@ class NodeParams(Node):
     def set_input(self, parameter, val):
         if parameter == "indiv_params":
             if isdefined(val):
-                print("\n**** setting indiv_params for {} ****".format(self.name))
+                print("\n* setting indiv_params for {} *".format(self.name))
                 print(val, "\n")
                 self.load_inputs_from_dict(val)
             else:
