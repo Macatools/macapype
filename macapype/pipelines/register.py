@@ -557,15 +557,26 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'aff_file',
                          compose_transfo, "comp_input")
 
-        # outputnode
+        remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
+                              name="remove_nans")
+
         reg_pipe.connect(reg_T1_on_template2, 'res_file',
+                         remove_nans, "in_file")
+        # outputnode
+        reg_pipe.connect(remove_nans, 'out_file',
                          outputnode, "stereo_native_T1")
+
         reg_pipe.connect(compose_transfo, 'out_file',
                          outputnode, "native_to_stereo_trans")
     else:
 
-        # outputnode
+        remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
+                              name="remove_nans")
+
         reg_pipe.connect(reg_T1_on_template, 'res_file',
+                         remove_nans, "in_file")
+        # outputnode
+        reg_pipe.connect(remove_nans, 'out_file',
                          outputnode, "stereo_native_T1")
 
         reg_pipe.connect(reg_T1_on_template, 'aff_file',

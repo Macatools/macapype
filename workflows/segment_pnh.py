@@ -79,11 +79,12 @@ from macapype.utils.misc import show_files, get_first_elem, parse_key
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ###############################################################################
 
-def create_main_workflow(data_dir, process_dir, soft, species, subjects, sessions,
-                         acquisitions, reconstructions, params_file,
+
+def create_main_workflow(data_dir, process_dir, soft, species, subjects,
+                         sessions, acquisitions, reconstructions, params_file,
                          indiv_params_file, mask_file, template_path,
-                         template_files, nprocs, wf_name="macapype",
-                         deriv=False, pad=False):
+                         template_files, nprocs, reorient, deriv, pad,
+                         wf_name="macapype"):
 
     # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
@@ -229,6 +230,15 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
                 indiv_params_file)
             indiv_params = json.load(open(indiv_params_file))
 
+    # modifying if reorient
+    if reorient is not None:
+        print("reorient: ", reorient)
+
+        if "short_preparation_pipe" in params.keys():
+            params["short_preparation_pipe"]["avg_reorient_pipe"] = {
+                "reorient":
+                    {"origin": reorient, "deoblique": True}}
+
     wf_name += extra_wf_name
 
     # soft
@@ -297,6 +307,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects, session
         else:
             print("Unknown template_files format, should be 3 or 5 files")
             exit(-1)
+
+        params_template_aladin = params_template
+        params_template_stereo = params_template
 
     else:
         ### use template from params
@@ -613,6 +626,9 @@ def main():
     parser.add_argument("-nprocs", dest="nprocs", type=int,
                         help="number of processes to allocate", required=False)
 
+    parser.add_argument("-reorient", dest="reorient", type=str,
+                        help="reorient initial image", required=False)
+
     parser.add_argument("-deriv", dest="deriv", action='store_true',
                         help="output derivatives in BIDS orig directory",
                         required=False)
@@ -640,6 +656,7 @@ def main():
         template_path=args.template_path,
         template_files=args.template_files,
         nprocs=args.nprocs,
+        reorient=args.reorient,
         deriv=args.deriv,
         pad=args.pad)
 
