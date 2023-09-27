@@ -99,6 +99,26 @@ def wrap_nii2mesh(nii_file):
     assert ret == 0, "Error, cmd {} did not work".format(cmd)
     return stl_file
 
+def wrap_afni_IsoSurface (nii_file):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    stl_file = os.path.abspath(fname + ".stl")
+
+    isoval=1
+    cmd = "IsoSurface -isoval {} -input {} -Tsmooth 0.1 100  -remesh 0.5 -overwrite -autocrop -o {}".format(
+        isoval, nii_file, stl_file)
+
+    ret = os.system(cmd)
+
+    print(ret)
+
+    assert ret == 0, "Error, cmd {} did not work".format(cmd)
+    return stl_file
+
 
 def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
 
