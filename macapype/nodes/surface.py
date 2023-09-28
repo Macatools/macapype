@@ -81,6 +81,26 @@ def merge_tissues(dseg_file, keep_indexes):
     return mask_file
 
 
+# ### wrapping nii2mesh
+def wrap_nii2mesh_old(nii_file):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    stl_file = os.path.abspath(fname + ".stl")
+
+    cmd = "nii2mesh_old_gcc {} {}".format(nii_file, stl_file)
+
+    ret = os.system(cmd)
+
+    print(ret)
+
+    assert ret == 0, "Error, cmd {} did not work".format(cmd)
+    return stl_file
+
+
 def wrap_nii2mesh(nii_file):
 
     import os
@@ -99,7 +119,9 @@ def wrap_nii2mesh(nii_file):
     assert ret == 0, "Error, cmd {} did not work".format(cmd)
     return stl_file
 
-def wrap_afni_IsoSurface (nii_file):
+
+# ### wrapping afni IsoSurface
+def wrap_afni_IsoSurface(nii_file):
 
     import os
     from nipype.utils.filemanip import split_filename as split_f
@@ -108,10 +130,32 @@ def wrap_afni_IsoSurface (nii_file):
 
     stl_file = os.path.abspath(fname + ".stl")
 
-    isoval=1
-    cmd = "IsoSurface -isoval {} -input {} -Tsmooth 0.1 100  -remesh 0.5 -overwrite -autocrop -o {}".format(
-        isoval, nii_file, stl_file)
+    # parameters
+    isoval = 1
+    remesh = 0.5
 
+    # Tsmooth
+    KPB = 0.1
+    NITER = 100
+
+    # remesh
+    remesh = 0.5
+
+    # options
+    overwrite = True
+    autocrop = True
+
+    # command
+    cmd = "IsoSurface "
+    cmd += "-isoval {}".format(isoval)
+    cmd += "-input {}".format(nii_file)
+    cmd += "-Tsmooth {} {}".format(KPB, NITER)
+    cmd += "-remesh {}".format(remesh)
+    if overwrite:
+        cmd += "-overwrite"
+    if autocrop:
+        cmd += "-autocrop"
+    cmd += "-o {}".format(stl_file)
     ret = os.system(cmd)
 
     print(ret)
@@ -162,6 +206,7 @@ def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
     return L_mask_file, R_mask_file
 
 
+# Meshify
 class MeshifyInputSpec(TraitedSpec):
     image_file = File(
         exists=True, desc='input file', mandatory=True)
