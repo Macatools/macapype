@@ -146,16 +146,16 @@ def wrap_afni_IsoSurface(nii_file):
     autocrop = True
 
     # command
-    cmd = "IsoSurface "
-    cmd += "-isoval {}".format(isoval)
-    cmd += "-input {}".format(nii_file)
-    cmd += "-Tsmooth {} {}".format(KPB, NITER)
-    cmd += "-remesh {}".format(remesh)
+    cmd = "IsoSurface"
+    cmd += " -isoval {}".format(isoval)
+    cmd += " -input {}".format(nii_file)
+    cmd += " -Tsmooth {} {}".format(KPB, NITER)
+    cmd += " -remesh {}".format(remesh)
     if overwrite:
-        cmd += "-overwrite"
+        cmd += " -overwrite"
     if autocrop:
-        cmd += "-autocrop"
-    cmd += "-o {}".format(stl_file)
+        cmd += " -autocrop"
+    cmd += " -o {}".format(stl_file)
     ret = os.system(cmd)
 
     print(ret)
