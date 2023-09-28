@@ -40,7 +40,7 @@ def keep_gcc(nii_file):
 
     path, fname, ext = split_f(nii_file)
 
-    gcc_nii_file = os.path.abspath("GCC_" + fname + ext)
+    gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
 
     nib.save(new_img, gcc_nii_file)
     return gcc_nii_file
