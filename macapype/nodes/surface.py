@@ -156,6 +156,9 @@ def wrap_afni_IsoSurface(nii_file):
     if autocrop:
         cmd += " -autocrop"
     cmd += " -o {}".format(stl_file)
+
+    print(cmd)
+
     ret = os.system(cmd)
 
     print(ret)
