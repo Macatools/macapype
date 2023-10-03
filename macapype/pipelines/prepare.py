@@ -569,8 +569,12 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       apply_crop_aladin_T2, 'trans_file')
 
-        data_preparation_pipe.connect(crop_z_T1, 'out_roi',
-                                      apply_crop_aladin_T2, 'ref_file')
+            if "crop_z_T1" in params.keys():
+                data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                              apply_crop_aladin_T2, 'ref_file')
+            else:
+                data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                              apply_crop_aladin_T2, 'ref_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
