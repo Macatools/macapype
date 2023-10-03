@@ -545,12 +545,13 @@ def create_short_preparation_pipe(params, params_template={},
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
         # crop_z_T1
-        crop_z_T1 = NodeParams(fsl.RobustFOV(),
-                               params=parse_key(params, "crop_z_T1"),
-                               name='crop_z_T1')
+        if "crop_z_T1" in params.keys():
+            crop_z_T1 = NodeParams(fsl.RobustFOV(),
+                                   params=parse_key(params, "crop_z_T1"),
+                                   name='crop_z_T1')
 
-        data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                      crop_z_T1, 'in_file')
+            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                          crop_z_T1, 'in_file')
 
         # apply reg_resample to T2
         apply_crop_aladin_T2 = NodeParams(
@@ -600,8 +601,12 @@ def create_short_preparation_pipe(params, params_template={},
 
         else:
 
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                          denoise_T1, 'input_image')
+            if "crop_z_T1" in params.keys():
+                data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                              outputnode, 'preproc_T1')
+            else:
+                data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                              outputnode, 'preproc_T1')
 
             data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
                                           denoise_T2, 'input_image')
@@ -622,8 +627,12 @@ def create_short_preparation_pipe(params, params_template={},
                                           outputnode, 'preproc_T2')
 
         else:
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                          outputnode, 'preproc_T1')
+            if "crop_z_T1" in params.keys():
+                data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                              outputnode, 'preproc_T1')
+            else:
+                data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                              outputnode, 'preproc_T1')
 
             data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
                                           outputnode, 'preproc_T2')
