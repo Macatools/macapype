@@ -1051,6 +1051,11 @@ def create_short_preparation_T1_pipe(params, params_template,
                 data_preparation_pipe.connect(av_T1, 'avg_img',
                                               pre_crop_z_T1, 'in_file')
 
+
+            data_preparation_pipe.connect(
+                inputnode, ("indiv_params", parse_key, "pre_crop_z_T1"),
+                pre_crop_z_T1, 'indiv_params')
+
         print('default crop_aladin_T1 will be run')
         crop_aladin_T1 = NodeParams(reg.RegAladin(),
                                     params=parse_key(params, "crop_aladin_T1"),
