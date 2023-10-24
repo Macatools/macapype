@@ -1069,6 +1069,10 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
+        data_preparation_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "crop_aladin_T1"),
+            crop_aladin_T1, 'indiv_params')
+
         # compute inv transfo
         inv_tranfo = NodeParams(
             regutils.RegTransform(),
@@ -1077,14 +1081,6 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       inv_tranfo, 'inv_aff_input')
-
-        # crop_z_T1
-        crop_z_T1 = NodeParams(fsl.RobustFOV(),
-                               params=parse_key(params, "crop_z"),
-                               name='crop_z_T1')
-
-        data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                      crop_z_T1, 'in_file')
 
     if "denoise" in params.keys():
 
@@ -1099,7 +1095,7 @@ def create_short_preparation_T1_pipe(params, params_template,
                                           denoise_T1, 'input_image')
         else:
 
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
+            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                           denoise_T1, 'input_image')
 
         # outputs
@@ -1113,7 +1109,7 @@ def create_short_preparation_T1_pipe(params, params_template,
                                           outputnode, 'preproc_T1')
 
         else:
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
+            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
                                           outputnode, 'preproc_T1')
 
     return data_preparation_pipe
