@@ -468,20 +468,6 @@ def create_short_preparation_pipe(params, params_template={},
 
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'in_file')
-    # outputnode
-    if "avg_reorient_pipe" in params.keys():
-        data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                      outputnode, 'native_T1')
-    else:
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      outputnode, 'native_T1')
-
-    if 'aladin_T2_on_T1' in params.keys():
-        data_preparation_pipe.connect(align_T2_on_T1, "res_file",
-                                      outputnode, 'native_T2')
-    else:
-        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                      outputnode, 'native_T2')
 
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
@@ -598,6 +584,25 @@ def create_short_preparation_pipe(params, params_template={},
 
         data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
                                       inv_tranfo, 'inv_aff_input')
+
+    # outputnode
+    if "pre_crop_z_T1" in params.keys():
+        data_preparation_pipe.connect(pre_crop_z_T1, "out_roi",
+                                      outputnode, 'native_T1')
+    else:
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
+                                        outputnode, 'native_T1')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                        outputnode, 'native_T1')
+
+    if 'aladin_T2_on_T1' in params.keys():
+        data_preparation_pipe.connect(align_T2_on_T1, "res_file",
+                                      outputnode, 'native_T2')
+    else:
+        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                      outputnode, 'native_T2')
 
     # denoise with Ants package
     if "denoise" in params.keys():
