@@ -999,9 +999,6 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         data_preparation_pipe.connect(inputnode, 'indiv_params',
                                       av_T1, 'inputnode.indiv_params')
-
-        data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                      outputnode, 'native_T1')
     else:
         av_T1 = pe.Node(
             niu.Function(input_names=['list_img'],
@@ -1009,9 +1006,6 @@ def create_short_preparation_T1_pipe(params, params_template,
                          function=average_align),
             name="av_T1")
         data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
-
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      outputnode, 'native_T1')
 
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
@@ -1104,6 +1098,18 @@ def create_short_preparation_T1_pipe(params, params_template,
             data_preparation_pipe.connect(
                 inputnode, ("indiv_params", parse_key, "crop_z_T1"),
                 crop_z_T1, 'indiv_params')
+
+    # outputnode
+    if "pre_crop_z_T1" in params.keys():
+        data_preparation_pipe.connect(pre_crop_z_T1, "out_roi",
+                                      outputnode, 'native_T1')
+    else:
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
+                                          outputnode, 'native_T1')
+        else:
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                          outputnode, 'native_T1')
 
     if "denoise" in params.keys():
 
