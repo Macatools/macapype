@@ -627,10 +627,10 @@ def create_short_preparation_pipe(params, params_template={},
 
             if "crop_z_T1" in params.keys():
                 data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                              outputnode, 'preproc_T1')
+                                              denoise_T1, 'input_image')
             else:
                 data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                              outputnode, 'preproc_T1')
+                                              denoise_T1, 'input_image')
 
             data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
                                           denoise_T2, 'input_image')
