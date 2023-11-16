@@ -727,7 +727,7 @@ def create_native_old_segment_pipe(params_template, params={},
     # gm
     register_gm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_gm_to_nat")
     register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-    register_gm_to_nat.inputs.interp = "nn"
+    register_gm_to_nat.inputs.interp = "nearestneighbour"
 
     register_gm_to_nat.inputs.in_file = params_template["template_gm"]
 
@@ -740,7 +740,7 @@ def create_native_old_segment_pipe(params_template, params={},
     # wm
     register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
     register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-    register_wm_to_nat.inputs.interp = "nn"
+    register_wm_to_nat.inputs.interp = "nearestneighbour"
 
     register_gm_to_nat.inputs.in_file = params_template["template_wm"]
 
@@ -753,7 +753,7 @@ def create_native_old_segment_pipe(params_template, params={},
     # csf
     register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
     register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-    register_csf_to_nat.inputs.interp = "nn"
+    register_csf_to_nat.inputs.interp = "nearestneighbour"
 
     register_gm_to_nat.inputs.in_file = params_template["template_csf"]
 
