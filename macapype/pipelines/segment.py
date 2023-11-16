@@ -901,42 +901,6 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     seg_pipe.connect(inputnode, 'mask_wm',
                                 bin_wm, 'in_file')
 
-    # Compute union of the 3 tissues
-    # Done with 2 fslmaths as it seems to hard to do it
-    wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
-    wmgm_union.inputs.operation = "add"
-    seg_pipe.connect(bin_gm, 'out_file', wmgm_union, 'in_file')
-    seg_pipe.connect(bin_wm, 'out_file', wmgm_union, 'operand_file')
-
-    tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
-    tissues_union.inputs.operation = "add"
-    seg_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    seg_pipe.connect(bin_csf, 'out_file',
-                     tissues_union, 'operand_file')
-
-    # Opening (dilating) mask
-    dilate_mask = NodeParams(fsl.DilateImage(),
-                             params=parse_key(params, "dilate_mask"),
-                             name="dilate_mask")
-
-    dilate_mask.inputs.operation = "mean"  # Arbitrary operation
-    seg_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
-
-    # fill holes of dilate_mask
-    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
-    seg_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
-
-    # Eroding mask
-    erode_mask = NodeParams(fsl.ErodeImage(),
-                            params=parse_key(params, "erode_mask"),
-                            name="erode_mask")
-
-    seg_pipe.connect(tissues_union, 'out_file', erode_mask, 'in_file')
-
-    # fill holes of erode_mask
-    fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
-    seg_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
-
     # merge to index
     merge_indexed_mask = NodeParams(
         interface=niu.Function(input_names=["mask_csf_file", "mask_wm_file",
