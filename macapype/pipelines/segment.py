@@ -773,8 +773,8 @@ def create_native_old_segment_pipe(params_template, params={},
 
     # merge_tissue_files
     merge_tissue_files = pe.Node(
-        interface=niu.Merge(3)
-        name = "merge_tissue_files")
+        interface=niu.Merge(3),
+        name="merge_tissue_files")
 
     seg_pipe.connect(register_gm_to_nat, "out_file", merge_tissue_files, 'in1')
     seg_pipe.connect(register_wm_to_nat, "out_file", merge_tissue_files, 'in2')
