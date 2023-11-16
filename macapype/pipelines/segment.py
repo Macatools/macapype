@@ -742,7 +742,7 @@ def create_native_old_segment_pipe(params_template, params={},
     register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
     register_wm_to_nat.inputs.interp = "nearestneighbour"
 
-    register_gm_to_nat.inputs.in_file = params_template["template_wm"]
+    register_wm_to_nat.inputs.in_file = params_template["template_wm"]
 
     seg_pipe.connect(inputnode, 'native_T1',
                      register_wm_to_nat, 'reference')
@@ -755,7 +755,7 @@ def create_native_old_segment_pipe(params_template, params={},
     register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
     register_csf_to_nat.inputs.interp = "nearestneighbour"
 
-    register_gm_to_nat.inputs.in_file = params_template["template_csf"]
+    register_csf_to_nat.inputs.in_file = params_template["template_csf"]
 
     seg_pipe.connect(inputnode, 'native_T1',
                      register_csf_to_nat, 'reference')
