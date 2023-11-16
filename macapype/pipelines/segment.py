@@ -786,7 +786,7 @@ def create_native_old_segment_pipe(params_template, params={},
                          params=parse_key(params, "segment"),
                          name="old_segment")
 
-    seg_pipe.connect(merge_tissue_files, "out_file",
+    seg_pipe.connect(merge_tissue_files, "out",
                      segment, "tissue_prob_maps")
 
     seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
