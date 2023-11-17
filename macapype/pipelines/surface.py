@@ -685,6 +685,7 @@ def create_nii2mesh_brain_pipe(params={},
 
     return nii2mesh_brain_pipe
 
+
 def create_IsoSurface_brain_pipe(params={},
                                  name="IsoSurface_brain_pipe"):
 
@@ -706,14 +707,14 @@ def create_IsoSurface_brain_pipe(params={},
         name="keep_GCC_brain")
 
     IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
-                                merge_brain_tissues, 'dseg_file')
+                                  merge_brain_tissues, 'dseg_file')
 
     # bin mask
     bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
     bin_mask.inputs.operation = "bin"
 
     IsoSurface_brain_pipe.connect(merge_brain_tissues,
-                                'mask_file', bin_mask, 'in_file')
+                                  'mask_file', bin_mask, 'in_file')
 
     # wmgm2mesh
     wmgm2mesh = pe.Node(
@@ -731,9 +732,7 @@ def create_IsoSurface_brain_pipe(params={},
         name='outputnode')
 
     IsoSurface_brain_pipe.connect(bin_mask, 'out_file', outputnode, "wmgm_nii")
-    IsoSurface_brain_pipe.connect(wmgm2mesh, 'stl_file', outputnode, "wmgm_stl")
+    IsoSurface_brain_pipe.connect(wmgm2mesh, 'stl_file',
+                                  outputnode, "wmgm_stl")
 
     return IsoSurface_brain_pipe
-
-
-

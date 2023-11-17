@@ -90,7 +90,7 @@
         "export_5tt_pipe":
         {
         },
-        "nii2mesh_brain_pipe":
+        "IsoSurface_brain_pipe":
         {
             "merge_brain_tissues":
             {

@@ -3876,5 +3876,4 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                          outputnode, 'wmgm_mask')
 
-
     return seg_pipe
