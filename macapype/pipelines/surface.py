@@ -9,7 +9,8 @@ import nipype.interfaces.freesurfer as fs
 import macapype.nodes.register as reg
 
 from macapype.nodes.surface import (Meshify, split_LR_mask,
-                                    wrap_nii2mesh, merge_tissues)
+                                    wrap_nii2mesh,
+                                    wrap_afni_IsoSurface, merge_tissues)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
@@ -683,3 +684,56 @@ def create_nii2mesh_brain_pipe(params={},
     nii2mesh_brain_pipe.connect(wmgm2mesh, 'stl_file', outputnode, "wmgm_stl")
 
     return nii2mesh_brain_pipe
+
+def create_IsoSurface_brain_pipe(params={},
+                                 name="IsoSurface_brain_pipe"):
+
+    # creating pipeline
+    IsoSurface_brain_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file"]),
+        name='inputnode')
+
+    # merge_brain_tissues
+    merge_brain_tissues = NodeParams(
+        interface=niu.Function(input_names=["dseg_file", "keep_indexes"],
+                               output_names=["mask_file"],
+                               function=merge_tissues),
+        params=parse_key(params, "merge_brain_tissues"),
+        name="keep_GCC_brain")
+
+    IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
+                                merge_brain_tissues, 'dseg_file')
+
+    # bin mask
+    bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
+    bin_mask.inputs.operation = "bin"
+
+    IsoSurface_brain_pipe.connect(merge_brain_tissues,
+                                'mask_file', bin_mask, 'in_file')
+
+    # wmgm2mesh
+    wmgm2mesh = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["stl_file"],
+                               function=wrap_afni_IsoSurface),
+        name="wmgm2mesh")
+
+    IsoSurface_brain_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["wmgm_stl", "wmgm_nii"]),
+        name='outputnode')
+
+    IsoSurface_brain_pipe.connect(bin_mask, 'out_file', outputnode, "wmgm_nii")
+    IsoSurface_brain_pipe.connect(wmgm2mesh, 'stl_file', outputnode, "wmgm_stl")
+
+    return IsoSurface_brain_pipe
+
+
+
