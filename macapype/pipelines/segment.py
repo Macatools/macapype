@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import (AtroposN4, BinaryFillHoles, merge_masks,
+from ..nodes.segment import (AtroposN4, merge_masks,
                              merge_imgs, split_indexed_mask, copy_header,
                              compute_5tt, fill_list_vol)
 
@@ -724,31 +724,12 @@ def create_native_old_segment_pipe(params_template, params={},
     assert set_spm(), \
         "Error, SPM was not found, cannot run SPM old segment pipeline"
 
-    unzip = pe.Node(
-        interface=niu.Function(input_names=['zipped_file'],
-                               output_names=["unzipped_file"],
-                               function=gunzip),
-        name="unzip")
-
-    seg_pipe.connect(inputnode, 'T1', unzip, 'zipped_file')
-
-    # Segment in to 6 tissues
-    segment = NodeParams(spm.Segment(),
-                         params=parse_key(params, "segment"),
-                         name="old_segment")
-
-    segment.inputs.tissue_prob_maps = [params_template["template_gm"],
-                                       params_template["template_wm"],
-                                       params_template["template_csf"]]
-
-    seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
-
     # gm
     register_gm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_gm_to_nat")
-    register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
+    register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_gm_to_nat.inputs.interp = "nearestneighbour"
 
-    seg_pipe.connect(segment, 'native_gm_image',
-                     register_gm_to_nat, 'in_file')
+    register_gm_to_nat.inputs.in_file = params_template["template_gm"]
 
     seg_pipe.connect(inputnode, 'native_T1',
                      register_gm_to_nat, 'reference')
@@ -758,10 +739,10 @@ def create_native_old_segment_pipe(params_template, params={},
 
     # wm
     register_wm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_wm_to_nat")
-    register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
+    register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_wm_to_nat.inputs.interp = "nearestneighbour"
 
-    seg_pipe.connect(segment, 'native_wm_image',
-                     register_wm_to_nat, 'in_file')
+    register_wm_to_nat.inputs.in_file = params_template["template_wm"]
 
     seg_pipe.connect(inputnode, 'native_T1',
                      register_wm_to_nat, 'reference')
@@ -771,23 +752,51 @@ def create_native_old_segment_pipe(params_template, params={},
 
     # csf
     register_csf_to_nat = pe.Node(fsl.ApplyXFM(), name="register_csf_to_nat")
-    register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM segment
+    register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_csf_to_nat.inputs.interp = "nearestneighbour"
 
-    seg_pipe.connect(segment, 'native_csf_image',
-                     register_csf_to_nat, 'in_file')
+    register_csf_to_nat.inputs.in_file = params_template["template_csf"]
 
     seg_pipe.connect(inputnode, 'native_T1',
                      register_csf_to_nat, 'reference')
 
     seg_pipe.connect(inputnode, 'inv_transfo_file',
                      register_csf_to_nat, "in_matrix_file")
+    # unzip T1
+    unzip = pe.Node(
+        interface=niu.Function(input_names=['zipped_file'],
+                               output_names=["unzipped_file"],
+                               function=gunzip),
+        name="unzip")
+
+    seg_pipe.connect(inputnode, 'T1', unzip, 'zipped_file')
+
+    # merge_tissue_files
+    merge_tissue_files = pe.Node(
+        interface=niu.Merge(3),
+        name="merge_tissue_files")
+
+    seg_pipe.connect(register_gm_to_nat, "out_file", merge_tissue_files, 'in1')
+    seg_pipe.connect(register_wm_to_nat, "out_file", merge_tissue_files, 'in2')
+    seg_pipe.connect(register_csf_to_nat, "out_file",
+                     merge_tissue_files, 'in3')
+
+    # Segment in to 6 tissues
+    segment = NodeParams(spm.Segment(),
+                         params=parse_key(params, "segment"),
+                         name="old_segment")
+
+    seg_pipe.connect(merge_tissue_files, "out",
+                     segment, "tissue_prob_maps")
+
+    seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
 
     # threshold_gm
     threshold_gm = NodeParams(fsl.Threshold(),
                               params=parse_key(params, "threshold_gm"),
                               name="threshold_gm")
 
-    seg_pipe.connect(register_gm_to_nat, 'out_file', threshold_gm, 'in_file')
+    seg_pipe.connect(segment, 'native_gm_image', threshold_gm, 'in_file')
 
     seg_pipe.connect(
         inputnode, ('indiv_params', parse_key, "threshold_gm"),
@@ -798,7 +807,7 @@ def create_native_old_segment_pipe(params_template, params={},
                               params=parse_key(params, "threshold_wm"),
                               name="threshold_wm")
 
-    seg_pipe.connect(register_wm_to_nat, 'out_file', threshold_wm, 'in_file')
+    seg_pipe.connect(segment, 'native_wm_image', threshold_wm, 'in_file')
 
     seg_pipe.connect(
         inputnode, ('indiv_params', parse_key, "threshold_wm"),
@@ -809,7 +818,7 @@ def create_native_old_segment_pipe(params_template, params={},
                                params=parse_key(params, "threshold_csf"),
                                name="threshold_csf")
 
-    seg_pipe.connect(register_csf_to_nat, 'out_file', threshold_csf, 'in_file')
+    seg_pipe.connect(segment, 'native_csf_image', threshold_csf, 'in_file')
 
     seg_pipe.connect(
         inputnode, ('indiv_params', parse_key, "threshold_csf"),
@@ -826,9 +835,9 @@ def create_native_old_segment_pipe(params_template, params={},
     seg_pipe.connect(threshold_wm, 'out_file', outputnode, 'threshold_wm')
     seg_pipe.connect(threshold_csf, 'out_file', outputnode, 'threshold_csf')
 
-    seg_pipe.connect(register_gm_to_nat, 'out_file', outputnode, 'prob_gm')
-    seg_pipe.connect(register_wm_to_nat, 'out_file', outputnode, 'prob_wm')
-    seg_pipe.connect(register_csf_to_nat, 'out_file', outputnode, 'prob_csf')
+    seg_pipe.connect(segment, 'native_gm_image', outputnode, 'prob_gm')
+    seg_pipe.connect(segment, 'native_wm_image', outputnode, 'prob_wm')
+    seg_pipe.connect(segment, 'native_csf_image', outputnode, 'prob_csf')
 
     return seg_pipe
 
@@ -891,42 +900,6 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
 
     seg_pipe.connect(inputnode, 'mask_wm',
                                 bin_wm, 'in_file')
-
-    # Compute union of the 3 tissues
-    # Done with 2 fslmaths as it seems to hard to do it
-    wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
-    wmgm_union.inputs.operation = "add"
-    seg_pipe.connect(bin_gm, 'out_file', wmgm_union, 'in_file')
-    seg_pipe.connect(bin_wm, 'out_file', wmgm_union, 'operand_file')
-
-    tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
-    tissues_union.inputs.operation = "add"
-    seg_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    seg_pipe.connect(bin_csf, 'out_file',
-                     tissues_union, 'operand_file')
-
-    # Opening (dilating) mask
-    dilate_mask = NodeParams(fsl.DilateImage(),
-                             params=parse_key(params, "dilate_mask"),
-                             name="dilate_mask")
-
-    dilate_mask.inputs.operation = "mean"  # Arbitrary operation
-    seg_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
-
-    # fill holes of dilate_mask
-    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
-    seg_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
-
-    # Eroding mask
-    erode_mask = NodeParams(fsl.ErodeImage(),
-                            params=parse_key(params, "erode_mask"),
-                            name="erode_mask")
-
-    seg_pipe.connect(tissues_union, 'out_file', erode_mask, 'in_file')
-
-    # fill holes of erode_mask
-    fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
-    seg_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
     # merge to index
     merge_indexed_mask = NodeParams(

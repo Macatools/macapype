@@ -40,7 +40,7 @@ from .extract_brain import (create_extract_pipe,
                             create_extract_T1_pipe)
 
 from .surface import (create_nii_to_mesh_pipe, create_nii_to_mesh_fs_pipe,
-                      create_nii2mesh_brain_pipe)
+                      create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files, show_files
 
@@ -2628,6 +2628,38 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                          outputnode, 'wmgm_mask')
+    elif "IsoSurface_brain_pipe" in params.keys():
+
+        IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
+            params=parse_key(params["brain_segment_pipe"],
+                             "IsoSurface_brain_pipe"))
+
+        if pad:
+            if "native_to_stereo_pipe" in params.keys():
+
+                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
+                                 IsoSurface_brain_pipe,
+                                 'inputnode.segmented_file')
+
+                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
+                                 outputnode, 'stereo_wmgm_stl')
+
+                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
+                                 outputnode, 'stereo_wmgm_mask')
+
+            elif space == "native":
+                seg_pipe.connect(pad_seg_mask, "out_file",
+                                 IsoSurface_brain_pipe,
+                                 'inputnode.segmented_file')
+        else:
+            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                             IsoSurface_brain_pipe, 'inputnode.segmented_file')
+
+        seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
+                         outputnode, 'wmgm_stl')
+
+        seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
+                         outputnode, 'wmgm_mask')
 
     elif 'nii_to_mesh_pipe' in params.keys():
         # kept for compatibility but nii2mesh is prefered...
@@ -3809,6 +3841,39 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                          outputnode, 'wmgm_stl')
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                         outputnode, 'wmgm_mask')
+
+    elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"]:
+
+        IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
+            params=parse_key(params["brain_segment_pipe"],
+                             "IsoSurface_brain_pipe"))
+
+        if pad:
+            if "native_to_stereo_pipe" in params.keys():
+
+                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
+                                 IsoSurface_brain_pipe,
+                                 'inputnode.segmented_file')
+
+                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
+                                 outputnode, 'stereo_wmgm_stl')
+
+                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
+                                 outputnode, 'stereo_wmgm_mask')
+
+            elif space == "native":
+                seg_pipe.connect(pad_seg_mask, "out_file",
+                                 IsoSurface_brain_pipe,
+                                 'inputnode.segmented_file')
+        else:
+            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                             IsoSurface_brain_pipe, 'inputnode.segmented_file')
+
+        seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
+                         outputnode, 'wmgm_stl')
+
+        seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                          outputnode, 'wmgm_mask')
 
     return seg_pipe
