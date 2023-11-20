@@ -418,9 +418,6 @@ def create_full_spm_subpipes(
         old_segment_pipe = create_native_old_segment_pipe(
             params_template, params=parse_key(params, "old_segment_pipe"))
 
-        seg_pipe.connect(reg, 'warp_file',
-                         old_segment_pipe, 'inputnode.T1')
-
         seg_pipe.connect(reg, 'inv_transfo_file',
                          old_segment_pipe, 'inputnode.inv_transfo_file')
 

@@ -717,7 +717,7 @@ def create_native_old_segment_pipe(params_template, params={},
     # Creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['T1', 'indiv_params', "native_T1", "inv_transfo_file"]),
+            fields=['indiv_params', "native_T1", "inv_transfo_file"]),
         name='inputnode'
     )
 
@@ -769,7 +769,7 @@ def create_native_old_segment_pipe(params_template, params={},
                                function=gunzip),
         name="unzip")
 
-    seg_pipe.connect(inputnode, 'T1', unzip, 'zipped_file')
+    seg_pipe.connect(inputnode, 'native_T1', unzip, 'zipped_file')
 
     # merge_tissue_files
     merge_tissue_files = pe.Node(
