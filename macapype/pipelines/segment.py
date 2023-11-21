@@ -954,6 +954,12 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
     seg_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
 
+    # bin mask
+    bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
+    bin_mask.inputs.operation = "bin"
+
+    seg_pipe.connect(fill_holes, 'out_file', bin_mask, 'in_file')
+
     # wmgm2mesh
     wmgm2mesh = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -961,6 +967,6 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
                                function=wrap_afni_IsoSurface),
         name="wmgm2mesh")
 
-    seg_pipe.connect(fill_holes, 'out_file', wmgm2mesh, "nii_file")
+    seg_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
 
     return seg_pipe
