@@ -72,7 +72,7 @@ jobs:
 
     strategy:
         matrix:
-            soft: [ANTS, ANTS_T1]
+            soft: [ANTS, ANTS_T1, SPM_native]
     steps:
       - name: Pull latest docker image
         run:
