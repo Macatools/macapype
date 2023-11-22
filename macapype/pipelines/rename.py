@@ -475,4 +475,3 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
         main_workflow.connect(
             rename_wmgm_stl, 'out_file',
             datasink, '@wmgm_stl')
-
