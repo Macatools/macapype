@@ -129,6 +129,7 @@ def create_full_spm_subpipes(
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask',
                                       'debiased_T1', 'debiased_brain',
+                                      "wmgm_stl",
                                       'prob_wm', 'prob_gm', 'prob_csf']),
         name='outputnode')
     # preprocessing
@@ -673,6 +674,8 @@ def create_full_spm_subpipes(
         seg_pipe.connect(inputnode, 'indiv_params',
                          mask_from_seg_pipe, 'inputnode.indiv_params')
 
+        seg_pipe.connect(mask_from_seg_pipe, "wmgm2mesh.stl_file",
+                         outputnode, 'wmgm_stl')
         # seg_mask
         if pad and space == "native":
             if "short_preparation_pipe" in params.keys():

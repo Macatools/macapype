@@ -458,3 +458,20 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
         main_workflow.connect(
             rename_segmented_brain_mask, 'out_file',
             datasink, '@segmented_brain_mask')
+
+        print("Renaming wmgm_stl file")
+
+        rename_wmgm_stl = pe.Node(niu.Rename(),
+                                  name="rename_wmgm_stl")
+        rename_wmgm_stl.inputs.format_string = \
+            pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
+        rename_wmgm_stl.inputs.parse_string = parse_str
+        rename_wmgm_stl.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.wmgm_stl',
+            rename_wmgm_stl, 'in_file')
+
+        main_workflow.connect(
+            rename_wmgm_stl, 'out_file',
+            datasink, '@wmgm_stl')
