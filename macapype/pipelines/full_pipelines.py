@@ -859,13 +859,10 @@ def create_full_spm_subpipes(
 
                 seg_pipe.connect(apply_stereo_seg_mask, "out_file",
                                  outputnode, "stereo_segmented_brain_mask")
-
         else:
             seg_pipe.connect(mask_from_seg_pipe,
                              'merge_indexed_mask.indexed_mask',
                              outputnode, 'segmented_brain_mask')
-
-'stereo_segmented_brain_mask'
 
     # LEGACY
     if space == 'template':
