@@ -427,10 +427,6 @@ def create_full_spm_subpipes(
                          "outputnode.stereo_native_T1",
                          outputnode, "stereo_native_T1")
 
-        seg_pipe.connect(native_to_stereo_pipe,
-                         "outputnode.native_to_stereo_trans",
-                         outputnode, "native_to_stereo_trans")
-
         if pad:
 
             # apply transfo to list
