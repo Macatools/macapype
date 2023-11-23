@@ -530,4 +530,3 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_stereo_segmented_brain_mask, 'out_file',
                 datasink, '@stereo_segmented_brain_mask')
-

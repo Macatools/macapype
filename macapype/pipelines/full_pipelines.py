@@ -133,7 +133,8 @@ def create_full_spm_subpipes(
                                       "wmgm_stl",
                                       'prob_wm', 'prob_gm', 'prob_csf',
                                       'stereo_native_T1', 'stereo_debiased_T1',
-                                      'stereo_brain_mask', 'stereo_segmented_brain_mask',
+                                      'stereo_brain_mask',
+                                      'stereo_segmented_brain_mask',
                                       "native_to_stereo_trans"]),
         name='outputnode')
     # preprocessing
