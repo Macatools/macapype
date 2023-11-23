@@ -315,6 +315,42 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_prob_csf, 'out_file',
             datasink, '@prob_csf')
 
+    if "mask_from_seg_pipe" in params.keys():
+
+        # rename segmented_brain_mask
+        rename_segmented_brain_mask = pe.Node(
+            niu.Rename(),
+            name="rename_segmented_brain_mask")
+        rename_segmented_brain_mask.inputs.format_string = \
+            pref_deriv + "_space-{}_desc-brain_dseg".format(space)
+        rename_segmented_brain_mask.inputs.parse_string = parse_str
+        rename_segmented_brain_mask.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
+            rename_segmented_brain_mask, 'in_file')
+
+        main_workflow.connect(
+            rename_segmented_brain_mask, 'out_file',
+            datasink, '@segmented_brain_mask')
+
+        print("Renaming wmgm_stl file")
+
+        rename_wmgm_stl = pe.Node(niu.Rename(),
+                                  name="rename_wmgm_stl")
+        rename_wmgm_stl.inputs.format_string = \
+            pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
+        rename_wmgm_stl.inputs.parse_string = parse_str
+        rename_wmgm_stl.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.wmgm_stl',
+            rename_wmgm_stl, 'in_file')
+
+        main_workflow.connect(
+            rename_wmgm_stl, 'out_file',
+            datasink, '@wmgm_stl')
+
     if "native_to_stereo_pipe" in params.keys():
 
         # rename stereo_native_T1
@@ -334,6 +370,41 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             datasink, '@stereo_native_T1')
 
         if "brain_extraction_pipe" in params.keys():
+            # rename stereo_brain_mask
+            rename_stereo_brain_mask = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_brain_mask")
+            rename_stereo_brain_mask.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-brain_mask"
+            rename_stereo_brain_mask.inputs.parse_string = parse_str
+            rename_stereo_brain_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_brain_mask',
+                rename_stereo_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_brain_mask, 'out_file',
+                datasink, '@stereo_brain_mask')
+
+            # rename stereo_debiased_T1
+            rename_stereo_debiased_T1 = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_debiased_T1")
+            rename_stereo_debiased_T1.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-debiased_T1w"
+            rename_stereo_debiased_T1.inputs.parse_string = parse_str
+            rename_stereo_debiased_T1.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_debiased_T1',
+                rename_stereo_debiased_T1, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_debiased_T1, 'out_file',
+                datasink, '@stereo_debiased_T1')
+
+        elif "debias" in params.keys():
             # rename stereo_brain_mask
             rename_stereo_brain_mask = pe.Node(
                 niu.Rename(),
@@ -440,38 +511,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_prob_csf, 'out_file',
                 datasink, '@stereo_prob_csf')
 
-    if "mask_from_seg_pipe" in params.keys():
+        elif "mask_from_seg_pipe" in params:
+            # rename stereo_segmented_brain_mask
+            rename_stereo_segmented_brain_mask = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_segmented_brain_mask")
 
-        # rename segmented_brain_mask
-        rename_segmented_brain_mask = pe.Node(
-            niu.Rename(),
-            name="rename_segmented_brain_mask")
-        rename_segmented_brain_mask.inputs.format_string = \
-            pref_deriv + "_space-{}_desc-brain_dseg".format(space)
-        rename_segmented_brain_mask.inputs.parse_string = parse_str
-        rename_segmented_brain_mask.inputs.keep_ext = True
+            rename_stereo_segmented_brain_mask.inputs.format_string =\
+                pref_deriv + "_space-stereo_desc-brain_dseg"
+            rename_stereo_segmented_brain_mask.inputs.parse_string = \
+                parse_str
+            rename_stereo_segmented_brain_mask.inputs.keep_ext = True
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.segmented_brain_mask',
-            rename_segmented_brain_mask, 'in_file')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_segmented_brain_mask',
+                rename_stereo_segmented_brain_mask, 'in_file')
 
-        main_workflow.connect(
-            rename_segmented_brain_mask, 'out_file',
-            datasink, '@segmented_brain_mask')
+            main_workflow.connect(
+                rename_stereo_segmented_brain_mask, 'out_file',
+                datasink, '@stereo_segmented_brain_mask')
 
-        print("Renaming wmgm_stl file")
-
-        rename_wmgm_stl = pe.Node(niu.Rename(),
-                                  name="rename_wmgm_stl")
-        rename_wmgm_stl.inputs.format_string = \
-            pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
-        rename_wmgm_stl.inputs.parse_string = parse_str
-        rename_wmgm_stl.inputs.keep_ext = True
-
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.wmgm_stl',
-            rename_wmgm_stl, 'in_file')
-
-        main_workflow.connect(
-            rename_wmgm_stl, 'out_file',
-            datasink, '@wmgm_stl')
