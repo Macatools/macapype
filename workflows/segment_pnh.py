@@ -367,6 +367,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         segment_pnh_pipe = create_full_spm_subpipes(
             params_template=params_template,
             params_template_aladin=params_template_aladin,
+            params_template_stereo=params_template_stereo,
             params=params, pad=pad, space=space)
 
     elif "ants" in ssoft:

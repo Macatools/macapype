@@ -52,6 +52,7 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 
 def create_full_spm_subpipes(
         params_template, params_template_aladin,
+        params_template_stereo,
         params={}, name='full_spm_subpipes',
         pad=False, space='template'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -130,7 +131,11 @@ def create_full_spm_subpipes(
         niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask',
                                       'debiased_T1', 'debiased_brain',
                                       "wmgm_stl",
-                                      'prob_wm', 'prob_gm', 'prob_csf']),
+                                      'prob_wm', 'prob_gm', 'prob_csf',
+                                      'stereo_native_T1', 'stereo_debiased_T1',
+                                      'stereo_brain_mask',
+                                      'stereo_segmented_brain_mask',
+                                      "native_to_stereo_trans"]),
         name='outputnode')
     # preprocessing
     if 'long_single_preparation_pipe' in params.keys():
@@ -233,6 +238,27 @@ def create_full_spm_subpipes(
 
                 seg_pipe.connect(pad_debiased_T1, "padded_img_file",
                                  outputnode, "debiased_T1")
+
+                print("Padding debiased_T2 in native space")
+                pad_debiased_T2 = pe.Node(
+                    niu.Function(
+                        input_names=['cropped_img_file', 'orig_img_file',
+                                     'indiv_crop'],
+                        output_names=['padded_img_file'],
+                        function=padding_cropped_img),
+                    name="pad_debiased_T2")
+
+                seg_pipe.connect(debias, 't2_debiased_file',
+                                 pad_debiased_T2, "cropped_img_file")
+
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T2",
+                                 pad_debiased_T2, "orig_img_file")
+
+                seg_pipe.connect(inputnode, "indiv_params",
+                                 pad_debiased_T2, "indiv_crop")
+
+                seg_pipe.connect(pad_debiased_T2, "padded_img_file",
+                                 outputnode, "debiased_T2")
 
                 print("Padding debiased_brain in native space")
                 pad_debiased_brain = pe.Node(
@@ -380,6 +406,64 @@ def create_full_spm_subpipes(
 
         seg_pipe.connect(debias, 't1_debiased_file',
                          outputnode, "debiased_T1")
+
+    if "native_to_stereo_pipe" in params.keys():
+
+        native_to_stereo_pipe = create_native_to_stereo_pipe(
+            "native_to_stereo_pipe",
+            params=parse_key(params, "native_to_stereo_pipe"))
+
+        seg_pipe.connect(native_to_stereo_pipe,
+                         'outputnode.native_to_stereo_trans',
+                         outputnode, 'native_to_stereo_trans')
+
+        # full head version
+        seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                         native_to_stereo_pipe, 'inputnode.native_T1')
+
+        native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+            params_template_stereo["template_head"]
+
+        seg_pipe.connect(native_to_stereo_pipe,
+                         "outputnode.stereo_native_T1",
+                         outputnode, "stereo_native_T1")
+
+        if pad:
+
+            # apply transfo to list
+            apply_stereo_mask = pe.Node(RegResample(inter_val="NN"),
+                                        name='apply_stereo_mask')
+
+            seg_pipe.connect(pad_mask, 'out_file',
+                             apply_stereo_mask, "flo_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                             'outputnode.native_to_stereo_trans',
+                             apply_stereo_mask, "trans_file")
+
+            seg_pipe.connect(native_to_stereo_pipe,
+                             'outputnode.padded_stereo_T1',
+                             apply_stereo_mask, "ref_file")
+
+            seg_pipe.connect(apply_stereo_mask, "out_file",
+                             outputnode, "stereo_brain_mask")
+
+            # apply transfo to list
+            apply_stereo_debiased_T1 = pe.Node(RegResample(),
+                                               name='apply_stereo_debiased_T1')
+
+            seg_pipe.connect(pad_debiased_T1, 'out_file',
+                             apply_stereo_debiased_T1, "flo_file")
+
+            seg_pipe.connect(native_to_stereo_pipe,
+                             'outputnode.native_to_stereo_trans',
+                             apply_stereo_debiased_T1, "trans_file")
+
+            seg_pipe.connect(native_to_stereo_pipe,
+                             'outputnode.padded_stereo_T1',
+                             apply_stereo_debiased_T1, "ref_file")
+
+            seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
+                             outputnode, "stereo_debiased_T1")
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
@@ -755,11 +839,29 @@ def create_full_spm_subpipes(
                     seg_pipe.connect(pad_seg_mask, "padded_img_file",
                                      outputnode, "segmented_brain_mask")
 
+            if "native_to_stereo_pipe" in params:
+
+                # apply transfo to seg_mask
+                apply_stereo_seg_mask = pe.Node(RegResample(inter_val="NN"),
+                                                name='apply_stereo_seg_mask')
+
+                seg_pipe.connect(pad_seg_mask, 'out_file',
+                                 apply_stereo_seg_mask, "flo_file")
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.native_to_stereo_trans',
+                                 apply_stereo_seg_mask, "trans_file")
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.padded_stereo_T1',
+                                 apply_stereo_seg_mask, "ref_file")
+
+                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
+                                 outputnode, "stereo_segmented_brain_mask")
         else:
             seg_pipe.connect(mask_from_seg_pipe,
                              'merge_indexed_mask.indexed_mask',
                              outputnode, 'segmented_brain_mask')
 
+    # LEGACY
     if space == 'template':
 
         # not mandatory
