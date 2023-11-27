@@ -129,6 +129,7 @@ def create_full_spm_subpipes(
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask',
+                                      'native_T1', 'native_T2'
                                       'debiased_T1', 'debiased_brain',
                                       "wmgm_stl",
                                       'prob_wm', 'prob_gm', 'prob_csf',
@@ -173,6 +174,12 @@ def create_full_spm_subpipes(
                      data_preparation_pipe, 'inputnode.list_T2')
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
+                     outputnode, 'native_T1')
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T2',
+                     outputnode, 'native_T2')
 
     # Bias correction of cropped images
     if "debias" not in params.keys():
@@ -1754,7 +1761,7 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
                      outputnode, 'native_T1')
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T2',
                      outputnode, 'native_T2')
 
     if "short_preparation_pipe" in params.keys():
