@@ -1,7 +1,8 @@
 {
     "general":
     {
-        "template_name": "inia19"
+        "template_name": "inia19",
+        "template_stereo_name": "NMT_v2.0_asym"
     },
     "short_preparation_pipe":
     {
