@@ -64,6 +64,44 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  run-pretest-spm:
+    name: Running all existing pipelines in macapype_CI.zip
+    needs: docker-build
+    runs-on: self-hosted
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            mkdir SPM_native
+            cd SPM_native
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+
+      - name: Running test pipeline macaque_prime-de
+        run: |
+            docker run -i -v /home/ubuntu/actions-runner/_work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft SPM_native -species macaque -sub 032140 -ses 001 -deriv -pad
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/ubuntu/actions-runner/_work/macapype/macapype/SPM_native
+
   run-test:
     name: Running all existing pipelines in macapype_CI.zip
     needs: docker-build
@@ -72,7 +110,7 @@ jobs:
 
     strategy:
         matrix:
-            soft: [ANTS, ANTS_T1, SPM_native]
+            soft: [ANTS, ANTS_T1]
     steps:
       - name: Pull latest docker image
         run:
