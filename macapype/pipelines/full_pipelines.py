@@ -670,25 +670,6 @@ def create_full_spm_subpipes(
             seg_pipe.connect(apply_stereo_mask, "out_file",
                              outputnode, "stereo_brain_mask")
 
-            # apply transfo to list
-            apply_stereo_debiased_T1 = pe.Node(RegResample(),
-                                               name='apply_stereo_debiased_T1')
-
-            seg_pipe.connect(pad_debiased_T1, 'out_file',
-                             apply_stereo_debiased_T1, "flo_file")
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             apply_stereo_debiased_T1, "trans_file")
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.padded_stereo_T1',
-                             apply_stereo_debiased_T1, "ref_file")
-
-            seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
-                             outputnode, "stereo_debiased_T1")
-
-
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
