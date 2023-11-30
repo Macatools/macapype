@@ -2085,6 +2085,22 @@ def create_full_ants_subpipes(
                                      "inv_tranfo.out_file",
                                      pad_debiased_T1, "trans_file")
 
+                    print("Using reg_aladin transfo to pad debiased_T2 back")
+                    pad_debiased_T2 = pe.Node(RegResample(),
+                                              name="pad_debiased_T2")
+
+                    seg_pipe.connect(brain_extraction_pipe,
+                                     "outputnode.debiased_T2",
+                                     pad_debiased_T2, "flo_file")
+
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "outputnode.native_T2",
+                                     pad_debiased_T2, "ref_file")
+
+                    seg_pipe.connect(data_preparation_pipe,
+                                     "inv_tranfo.out_file",
+                                     pad_debiased_T2, "trans_file")
+
                     print("Using reg_aladin transfo to pad \
                         masked_debiased_T1 back")
 
@@ -2126,6 +2142,9 @@ def create_full_ants_subpipes(
                                      outputnode, "brain_mask")
 
                     seg_pipe.connect(pad_debiased_T1, "out_file",
+                                     outputnode, "debiased_T1")
+
+                    seg_pipe.connect(pad_debiased_T2, "out_file",
                                      outputnode, "debiased_T1")
 
                     seg_pipe.connect(pad_masked_debiased_T1, "out_file",
@@ -2225,8 +2244,9 @@ def create_full_ants_subpipes(
                                      outputnode, "stereo_debiased_T2")
 
                     # apply stereo to debiased T1
-                    apply_stereo_debiased_T1 = pe.Node(RegResample(pad_val=0.0),
-                                                    name='apply_stereo_debiased_T1')
+                    apply_stereo_debiased_T1 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_debiased_T1')
 
                     seg_pipe.connect(pad_masked_debiased_T1, "out_file",
                                     apply_stereo_debiased_T1, "flo_file")
