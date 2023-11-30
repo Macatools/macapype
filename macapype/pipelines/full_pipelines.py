@@ -542,7 +542,7 @@ def create_full_spm_subpipes(
                     apply_stereo_debiased_T1 = pe.Node(RegResample(pad_val=0.0),
                                                        name='apply_stereo_debiased_T1')
 
-                    seg_pipe.connect(data_preparation_pipe, "outputnode.debiased_T1",
+                    seg_pipe.connect(debias, 't1_debiased_file',
                                     apply_stereo_debiased_T1, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
@@ -570,7 +570,7 @@ def create_full_spm_subpipes(
                     apply_stereo_debiased_T2 = pe.Node(RegResample(pad_val=0.0),
                                                        name='apply_stereo_debiased_T2')
 
-                    seg_pipe.connect(data_preparation_pipe, "outputnode.debiased_T2",
+                    seg_pipe.connect(debias, 't2_debiased_file',
                                     apply_stereo_debiased_T2, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
