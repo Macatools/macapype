@@ -2382,24 +2382,6 @@ def create_full_ants_subpipes(
                                 outputnode, "stereo_native_T2")
 
 
-
-
-
-
-                    pad_mask
-                    pad_debiased_T1
-                    pad_debiased_T2
-                    pad_masked_debiased_T1
-                    pad_masked_debiased_T2
-
-
-
-
-
-
-
-
-
         if "brain_extraction_pipe" in params.keys() and pad:
 
             # apply transfo to list
@@ -2496,9 +2478,6 @@ def create_full_ants_subpipes(
             # outputnode
             seg_pipe.connect(apply_stereo_masked_debiased_T2, "out_file",
                                 outputnode, "stereo_masked_debiased_T2")
-
-
-
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
