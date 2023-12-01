@@ -2262,7 +2262,7 @@ def create_full_ants_subpipes(
                                      apply_stereo_debiased_T1, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.debiased_to_stereo_trans',
+                                     'outputnode.native_to_stereo_trans',
                                      apply_stereo_debiased_T1, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
@@ -2290,7 +2290,7 @@ def create_full_ants_subpipes(
                                      apply_stereo_debiased_T2, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.debiased_to_stereo_trans',
+                                     'outputnode.native_to_stereo_trans',
                                      apply_stereo_debiased_T2, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
@@ -2429,7 +2429,7 @@ def create_full_ants_subpipes(
                                 apply_stereo_debiased_T2, "flo_file")
 
             seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.debiased_to_stereo_trans',
+                                'outputnode.native_to_stereo_trans',
                                 apply_stereo_debiased_T2, "trans_file")
 
             seg_pipe.connect(native_to_stereo_pipe,
@@ -2468,7 +2468,7 @@ def create_full_ants_subpipes(
                                 apply_stereo_masked_debiased_T2, "flo_file")
 
             seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.masked_debiased_to_stereo_trans',
+                                'outputnode.native_to_stereo_trans',
                                 apply_stereo_masked_debiased_T2, "trans_file")
 
             seg_pipe.connect(native_to_stereo_pipe,
