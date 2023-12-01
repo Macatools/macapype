@@ -1642,7 +1642,7 @@ def create_brain_segment_from_mask_pipe(
                             params=parse_key(params, "debias"),
                             name='debias')
 
-        brain_segment_pipe.conect(inputnode, 'preproc_T1',
+        brain_segment_pipe.connect(inputnode, 'preproc_T1',
                                    debias, 't1_file')
         brain_segment_pipe.connect(inputnode, 'preproc_T2',
                                    debias, 't2_file')
