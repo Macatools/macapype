@@ -2266,7 +2266,7 @@ def create_full_ants_subpipes(
                                      apply_stereo_debiased_T1, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_debiased_T1',
+                                     'outputnode.stereo_native_T1',
                                      apply_stereo_debiased_T1, "ref_file")
 
                     seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
@@ -2294,7 +2294,7 @@ def create_full_ants_subpipes(
                                      apply_stereo_debiased_T2, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_debiased_T1',
+                                     'outputnode.stereo_native_T1',
                                      apply_stereo_debiased_T2, "ref_file")
 
                     seg_pipe.connect(apply_stereo_debiased_T2, "out_file",
