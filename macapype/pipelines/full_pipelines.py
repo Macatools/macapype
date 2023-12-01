@@ -2117,7 +2117,7 @@ def create_full_ants_subpipes(
 
                     # outputnode
                     seg_pipe.connect(pad_debiased_T2, "out_file",
-                                     outputnode, "debiased_T1")
+                                     outputnode, "debiased_T2")
 
                     print("Using reg_aladin transfo to pad \
                         masked_debiased_T1 back")
