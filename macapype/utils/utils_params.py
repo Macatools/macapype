@@ -129,7 +129,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                     else:
                         count_all_sessions += 1
 
-                        indiv = indiv_params[sub][ses]
+                        indiv = indiv_params[sub]
 
                         print(indiv.keys())
 
