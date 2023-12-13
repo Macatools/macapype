@@ -61,7 +61,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             assert op.exists(indiv_params_file), "Error with file {}".format(
                 indiv_params_file)
 
-            if subjects is None or sessions is None:
+            if subjects is None:
                 print("For whole BIDS dir, \
                     unable to assess if the indiv_params is correct")
                 print("Running by default short_preparation_pipe and crop_T1")
@@ -95,13 +95,8 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                             sub.split('-')[1], subjects))
                         continue
 
-                    for ses in indiv_params[sub].keys():
-
-                        if ses.split('-')[1] not in sessions:
-
-                            print('could not find session {} in {}'.format(
-                                ses.split('-')[1], sessions))
-                            continue
+                    if len(indiv_params[sub].keys()) == 1 and
+                    indiv_params[sub].keys()[0].split('-')[0] != "ses":
 
                         count_all_sessions += 1
 
@@ -122,6 +117,36 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                                         isinstance(crop_T2_args, list):
 
                                     count_multi_long_crops += 1
+
+                    else:
+
+                        for ses in indiv_params[sub].keys():
+
+                            if ses.split('-')[1] not in sessions:
+
+                                print('could not find session {} in {}'.format(
+                                    ses.split('-')[1], sessions))
+                                continue
+
+                            count_all_sessions += 1
+
+                            indiv = indiv_params[sub][ses]
+
+                            print(indiv.keys())
+
+                            if "crop_T1" in indiv.keys():
+                                count_T1_crops += 1
+
+                                if "crop_T2" in indiv.keys() and 't1' not in ssoft:
+
+                                    count_long_crops += 1
+
+                                    crop_T1_args = indiv["crop_T1"]["args"]
+                                    crop_T2_args = indiv["crop_T2"]["args"]
+                                    if isinstance(crop_T1_args, list) and \
+                                            isinstance(crop_T2_args, list):
+
+                                        count_multi_long_crops += 1
 
                 print("count_all_sessions {}".format(count_all_sessions))
                 print("count_T1_crops {}".format(count_T1_crops))
