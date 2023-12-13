@@ -96,7 +96,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                         continue
 
                     print(len(indiv_params[sub].keys()) )
-                    print(indiv_params[sub].keys()[0].split('-')[0])
+                    print(indiv_params[sub].keys[0].split('-')[0])
                     0/0
 
                     if len(indiv_params[sub].keys()) == 1 and \
