@@ -99,6 +99,9 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
                     print(len(keys))
                     print(keys[0].split('-')[0])
+
+                    print([key.split('-')[0] == "ses" for key in keys])
+                    print(all([key.split('-')[0] == "ses" for key in keys]))
                     0/0
 
                     if len(indiv_params[sub].keys()) == 1 and \
