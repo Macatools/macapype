@@ -95,39 +95,14 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                             sub.split('-')[1], subjects))
                         continue
 
-                    keys = [key for key in indiv_params[sub].keys()]
+                    keys = [key for key in ]
 
                     print(len(keys))
                     print(keys[0].split('-')[0])
 
                     print([key.split('-')[0] == "ses" for key in keys])
-                    print(all([key.split('-')[0] == "ses" for key in keys]))
-                    0/0
 
-                    if len(indiv_params[sub].keys()) == 1 and \
-                            indiv_params[sub].keys()[0].split('-')[0] != "ses":
-
-                        count_all_sessions += 1
-
-                        indiv = indiv_params[sub][ses]
-
-                        print(indiv.keys())
-
-                        if "crop_T1" in indiv.keys():
-                            count_T1_crops += 1
-
-                            if "crop_T2" in indiv.keys() and 't1' not in ssoft:
-
-                                count_long_crops += 1
-
-                                crop_T1_args = indiv["crop_T1"]["args"]
-                                crop_T2_args = indiv["crop_T2"]["args"]
-                                if isinstance(crop_T1_args, list) and \
-                                        isinstance(crop_T2_args, list):
-
-                                    count_multi_long_crops += 1
-
-                    else:
+                    if [key.split('-')[0] == "ses" for key in indiv_params[sub].keys()]:
 
                         for ses in indiv_params[sub].keys():
 
@@ -156,6 +131,28 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                                             isinstance(crop_T2_args, list):
 
                                         count_multi_long_crops += 1
+
+                    else:
+                        count_all_sessions += 1
+
+                        indiv = indiv_params[sub][ses]
+
+                        print(indiv.keys())
+
+                        if "crop_T1" in indiv.keys():
+                            count_T1_crops += 1
+
+                            if "crop_T2" in indiv.keys() and 't1' not in ssoft:
+
+                                count_long_crops += 1
+
+                                crop_T1_args = indiv["crop_T1"]["args"]
+                                crop_T2_args = indiv["crop_T2"]["args"]
+                                if isinstance(crop_T1_args, list) and \
+                                        isinstance(crop_T2_args, list):
+
+                                    count_multi_long_crops += 1
+
 
                 print("count_all_sessions {}".format(count_all_sessions))
                 print("count_T1_crops {}".format(count_T1_crops))
