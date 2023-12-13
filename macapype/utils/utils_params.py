@@ -95,8 +95,8 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                             sub.split('-')[1], subjects))
                         continue
 
-                    if len(indiv_params[sub].keys()) == 1 and
-                    indiv_params[sub].keys()[0].split('-')[0] != "ses":
+                    if len(indiv_params[sub].keys()) == 1 and \
+                            indiv_params[sub].keys()[0].split('-')[0] != "ses":
 
                         count_all_sessions += 1
 
