@@ -127,10 +127,18 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                     extra_wf_name += "_indiv_crop"
 
                 else:
-                    print("**** not all sub/ses have T1 and T2 crops, using autocrop ")
+                    print("**** not all sub/ses have T1 and T2 crops,\
+                        using autocrop ")
 
                     extra_wf_name += "_crop_aladin"
                     return params, indiv_params, extra_wf_name
+
+            else:
+                print("**** not all sub/ses have T1 and T2 crops,\
+                    using autocrop ")
+
+                extra_wf_name += "_crop_aladin"
+                return params, indiv_params, extra_wf_name
 
             if prep_pipe == "short_preparation_pipe":
 
