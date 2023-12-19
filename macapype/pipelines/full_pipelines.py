@@ -638,6 +638,23 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(apply_stereo_native_T2, "out_file",
                                  outputnode, "stereo_native_T2")
 
+                # stereo brain mask
+                apply_stereo_mask = pe.Node(RegResample(inter_val="NN"),
+                                            name='apply_stereo_mask')
+
+                seg_pipe.connect(pad_mask, 'out_file',
+                                apply_stereo_mask, "flo_file")
+                seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.native_to_stereo_trans',
+                                apply_stereo_mask, "trans_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.padded_stereo_T1',
+                                apply_stereo_mask, "ref_file")
+
+                seg_pipe.connect(apply_stereo_mask, "out_file",
+                                outputnode, "stereo_brain_mask")
+
             else:
                 # full head version
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
