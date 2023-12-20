@@ -587,16 +587,12 @@ def create_short_preparation_pipe(params, params_template={},
                                       inv_tranfo, 'inv_aff_input')
 
     # outputnode
-    if "pre_crop_z_T1" in params.keys():
-        data_preparation_pipe.connect(pre_crop_z_T1, "out_roi",
-                                      outputnode, 'native_T1')
+    if "avg_reorient_pipe" in params.keys():
+        data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
+                                        outputnode, 'native_T1')
     else:
-        if "avg_reorient_pipe" in params.keys():
-            data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                          outputnode, 'native_T1')
-        else:
-            data_preparation_pipe.connect(av_T1, 'avg_img',
-                                          outputnode, 'native_T1')
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                        outputnode, 'native_T1')
 
     if 'aladin_T2_on_T1' in params.keys():
         data_preparation_pipe.connect(align_T2_on_T1, "res_file",
@@ -1066,16 +1062,12 @@ def create_short_preparation_T1_pipe(params, params_template,
             inputnode, ("indiv_params", parse_key, "crop_aladin_T1"),
             crop_aladin_T1, 'indiv_params')
 
-        if "pre_crop_z_T1" in params.keys():
-            data_preparation_pipe.connect(pre_crop_z_T1, "out_roi",
-                                          crop_aladin_T1, 'flo_file')
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
+                                            crop_aladin_T1, 'flo_file')
         else:
-            if "avg_reorient_pipe" in params.keys():
-                data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                              crop_aladin_T1, 'flo_file')
-            else:
-                data_preparation_pipe.connect(av_T1, 'avg_img',
-                                              crop_aladin_T1, 'flo_file')
+            data_preparation_pipe.connect(av_T1, 'avg_img',
+                                            crop_aladin_T1, 'flo_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
