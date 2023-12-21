@@ -548,28 +548,28 @@ def create_full_spm_subpipes(
                                      'inputnode.native_T1')
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                    'outputnode.stereo_native_T1',
-                                    outputnode, "stereo_debiased_T2")
+                                     'outputnode.stereo_native_T1',
+                                     outputnode, "stereo_debiased_T2")
 
                     # apply stereo to debiased T1
-                    apply_stereo_debiased_T1 = pe.Node(RegResample(pad_val=0.0),
-                                                       name='apply_stereo_debiased_T1')
+                    apply_stereo_debiased_T1 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_debiased_T1')
 
                     seg_pipe.connect(pad_masked_debiased_T1, "out_file",
-                                    apply_stereo_debiased_T1, "flo_file")
+                                     apply_stereo_debiased_T1, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                    'outputnode.native_to_stereo_trans',
-                                    apply_stereo_debiased_T1, "trans_file")
+                                     'outputnode.native_to_stereo_trans',
+                                     apply_stereo_debiased_T1, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                    'outputnode.stereo_native_T1',
-                                    apply_stereo_debiased_T1, "ref_file")
+                                     'outputnode.stereo_native_T1',
+                                     apply_stereo_debiased_T1, "ref_file")
 
                     # output
                     seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
-                                    outputnode, "stereo_debiased_T1")
-
+                                     outputnode, "stereo_debiased_T1")
 
                 else:
                     seg_pipe.connect(pad_masked_debiased_T1, "out_file",
@@ -577,34 +577,36 @@ def create_full_spm_subpipes(
                                      'inputnode.native_T1')
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                    'outputnode.stereo_native_T1',
-                                    outputnode, "stereo_debiased_T1")
+                                     'outputnode.stereo_native_T1',
+                                     outputnode, "stereo_debiased_T1")
 
                     # apply stereo to debiased T2
-                    apply_stereo_debiased_T2 = pe.Node(RegResample(pad_val=0.0),
-                                                       name='apply_stereo_debiased_T2')
+                    apply_stereo_debiased_T2 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_debiased_T2')
 
                     seg_pipe.connect(pad_masked_debiased_T2, "out_file",
-                                    apply_stereo_debiased_T2, "flo_file")
+                                     apply_stereo_debiased_T2, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                    'outputnode.native_to_stereo_trans',
-                                    apply_stereo_debiased_T2, "trans_file")
+                                     'outputnode.native_to_stereo_trans',
+                                     apply_stereo_debiased_T2, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                    'outputnode.stereo_debiased_T2',
-                                    apply_stereo_debiased_T2, "ref_file")
+                                     'outputnode.stereo_debiased_T2',
+                                     apply_stereo_debiased_T2, "ref_file")
 
                     # output
                     seg_pipe.connect(apply_stereo_debiased_T2, "out_file",
-                                    outputnode, "stereo_debiased_T2")
+                                     outputnode, "stereo_debiased_T2")
 
                 native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                     params_template_stereo["template_brain"]
 
                 # apply stereo to native T1
-                apply_stereo_native_T1 = pe.Node(RegResample(pad_val = 0.0),
-                                                 name='apply_stereo_native_T1')
+                apply_stereo_native_T1 = pe.Node(
+                    RegResample(pad_val=0.0),
+                    name='apply_stereo_native_T1')
 
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                                  apply_stereo_native_T1, "flo_file")
@@ -643,17 +645,18 @@ def create_full_spm_subpipes(
                                             name='apply_stereo_mask')
 
                 seg_pipe.connect(pad_mask, 'out_file',
-                                apply_stereo_mask, "flo_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.native_to_stereo_trans',
-                                apply_stereo_mask, "trans_file")
+                                 apply_stereo_mask, "flo_file")
 
                 seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.padded_stereo_T1',
-                                apply_stereo_mask, "ref_file")
+                                 'outputnode.native_to_stereo_trans',
+                                 apply_stereo_mask, "trans_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.padded_stereo_T1',
+                                 apply_stereo_mask, "ref_file")
 
                 seg_pipe.connect(apply_stereo_mask, "out_file",
-                                outputnode, "stereo_brain_mask")
+                                 outputnode, "stereo_brain_mask")
 
             else:
                 # full head version
@@ -682,40 +685,42 @@ def create_full_spm_subpipes(
             if pad:
 
                 # apply stereo to debiased T1
-                apply_stereo_debiased_T1 = pe.Node(RegResample(pad_val=0.0),
-                                                    name='apply_stereo_debiased_T1')
+                apply_stereo_debiased_T1 = pe.Node(
+                    RegResample(pad_val=0.0),
+                    name='apply_stereo_debiased_T1')
 
                 seg_pipe.connect(pad_masked_debiased_T1, "out_file",
-                                apply_stereo_debiased_T1, "flo_file")
+                                 apply_stereo_debiased_T1, "flo_file")
 
                 seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.native_to_stereo_trans',
-                                apply_stereo_debiased_T1, "trans_file")
+                                 'outputnode.native_to_stereo_trans',
+                                 apply_stereo_debiased_T1, "trans_file")
 
                 seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.stereo_native_T1',
-                                apply_stereo_debiased_T1, "ref_file")
+                                 'outputnode.stereo_native_T1',
+                                 apply_stereo_debiased_T1, "ref_file")
 
                 # output
                 seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
-                                outputnode, "stereo_debiased_T1")
+                                 outputnode, "stereo_debiased_T1")
 
                 # apply transfo to list
                 apply_stereo_mask = pe.Node(RegResample(inter_val="NN"),
                                             name='apply_stereo_mask')
 
                 seg_pipe.connect(pad_mask, 'out_file',
-                                apply_stereo_mask, "flo_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.native_to_stereo_trans',
-                                apply_stereo_mask, "trans_file")
+                                 apply_stereo_mask, "flo_file")
 
                 seg_pipe.connect(native_to_stereo_pipe,
-                                'outputnode.padded_stereo_T1',
-                                apply_stereo_mask, "ref_file")
+                                 'outputnode.native_to_stereo_trans',
+                                 apply_stereo_mask, "trans_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.padded_stereo_T1',
+                                 apply_stereo_mask, "ref_file")
 
                 seg_pipe.connect(apply_stereo_mask, "out_file",
-                                outputnode, "stereo_brain_mask")
+                                 outputnode, "stereo_brain_mask")
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
@@ -2412,10 +2417,10 @@ def create_full_ants_subpipes(
                                  outputnode, "masked_debiased_T1")
 
             else:
-                print("Using reg_aladin transfo to pad masked_debiased_T1 back")
+                print("Using reg_aladin transfo to pad masked_debiased_T1")
 
                 pad_masked_debiased_T1 = pe.Node(RegResample(),
-                                             name="pad_masked_debiased_T1")
+                                                 name="pad_masked_debiased_T1")
 
                 seg_pipe.connect(brain_segment_pipe,
                                  "outputnode.masked_debiased_T1",
@@ -2490,10 +2495,10 @@ def create_full_ants_subpipes(
                                  outputnode, "masked_debiased_T2")
 
             else:
-                print("Using reg_aladin transfo to pad masked_debiased_T2 back")
+                print("Using reg_aladin transfo to pad masked_debiased_T2")
 
                 pad_masked_debiased_T2 = pe.Node(RegResample(),
-                                             name="pad_masked_debiased_T2")
+                                                 name="pad_masked_debiased_T2")
 
                 seg_pipe.connect(brain_segment_pipe,
                                  "outputnode.masked_debiased_T2",
@@ -2804,7 +2809,8 @@ def create_full_ants_subpipes(
 
                     seg_pipe.connect(native_to_stereo_pipe,
                                      'outputnode.native_to_stereo_trans',
-                                     apply_stereo_masked_debiased, "trans_file")
+                                     apply_stereo_masked_debiased,
+                                     "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
                                      'outputnode.stereo_native_T1',
@@ -2920,7 +2926,7 @@ def create_full_ants_subpipes(
                              apply_stereo_native_T2, "ref_file")
 
             seg_pipe.connect(apply_stereo_native_T2, "out_file",
-                                outputnode, "stereo_native_T2")
+                             outputnode, "stereo_native_T2")
 
             if pad:
 
@@ -3940,10 +3946,10 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                                  outputnode, "masked_debiased_T1")
 
             else:
-                print("Using reg_aladin transfo to pad masked_debiased_T1 back")
+                print("Using reg_aladin transfo to pad masked_debiased_T1")
 
                 pad_masked_debiased_T1 = pe.Node(RegResample(),
-                                             name="pad_masked_debiased_T1")
+                                                 name="pad_masked_debiased_T1")
 
                 seg_pipe.connect(brain_segment_pipe,
                                  "outputnode.masked_debiased_T1",

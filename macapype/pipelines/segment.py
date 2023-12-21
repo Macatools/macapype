@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import (AtroposN4, merge_masks, BinaryFillHoles,
+from ..nodes.segment import (AtroposN4, merge_masks,
                              merge_imgs, split_indexed_mask, copy_header,
                              compute_5tt, fill_list_vol)
 
@@ -753,30 +753,25 @@ def create_native_old_segment_seg_pipe(params_template, params={},
     register_tissue_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
     register_tissue_to_nat.inputs.interp = "nearestneighbour"
 
-
     seg_pipe.connect(split_seg, 'list_split_files',
-                    register_tissue_to_nat, 'in_file')
+                     register_tissue_to_nat, 'in_file')
 
     # joining (Merge)
 
     # Segment in to 6 tissues
     segment = NodeParams(spm.Segment(),
-                        params=parse_key(params, "segment"),
-                        name="old_segment")
-
-    seg_pipe.connect(merge_tissue_files, "out",
-                    segment, "tissue_prob_maps")
+                         params=parse_key(params, "segment"),
+                         name="old_segment")
 
     seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
 
-
     segment = pe.JoinNode(interface=spm.Segment(),
-                            joinsource="register_tissue_to_nat",
-                            joinfield="tissue_prob_maps",
-                            name="old_segment")
+                          joinsource="register_tissue_to_nat",
+                          joinfield="tissue_prob_maps",
+                          name="old_segment")
 
     seg_pipe.connect(register_tissue_to_nat, "out_file",
-                    segment, "tissue_prob_maps")
+                     segment, "tissue_prob_maps")
 
     seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
 
@@ -850,7 +845,6 @@ def create_native_old_segment_pipe(params_template, params={},
 
     assert set_spm(), \
         "Error, SPM was not found, cannot run SPM old segment pipeline"
-
 
     # gm
     register_gm_to_nat = pe.Node(fsl.ApplyXFM(), name="register_gm_to_nat")

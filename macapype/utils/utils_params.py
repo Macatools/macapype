@@ -3,8 +3,10 @@ import os.path as op
 import json
 import pprint
 
+
 def update_preparation_params(ssoft=[], subjects=None, sessions=None,
-                  params=None, indiv_params=None, extra_wf_name=""):
+                              params=None, indiv_params=None,
+                              extra_wf_name=""):
 
     if "short_preparation_pipe" not in params.keys():
 
@@ -21,7 +23,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
         count_long_crops = 0
         count_multi_long_crops = 0
 
-        if subjects is None :
+        if subjects is None:
             print("For whole BIDS dir, \
                 unable to assess if the indiv_params is correct")
             print("Running by default short_preparation_pipe and crop_T1")
@@ -39,8 +41,8 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                         sub.split('-')[1], subjects))
                     continue
 
-
-                if all([key.split('-')[0] == "ses" for key in indiv_params[sub].keys()]):
+                if all([key.split('-')[0] == "ses"
+                        for key in indiv_params[sub].keys()]):
 
                     for ses in indiv_params[sub].keys():
 
@@ -90,7 +92,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                                     isinstance(crop_T2_args, list):
 
                                 count_multi_long_crops += 1
-
 
             print("count_all_sessions {}".format(count_all_sessions))
             print("count_T1_crops {}".format(count_T1_crops))
@@ -181,6 +182,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
 
         return params, indiv_params, extra_wf_name
 
+
 def update_params(ssoft=[], subjects=None, sessions=None,
                   params_file=None, indiv_params_file=None):
 
@@ -221,7 +223,9 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         pprint.pprint(indiv_params)
 
-        params, indiv_params, extra_wf_name = update_preparation_params(ssoft, subjects=subjects, sessions=sessions, indiv_params=indiv_params, params=params, extra_wf_name="")
+        params, indiv_params, extra_wf_name = update_preparation_params(
+            ssoft, subjects=subjects, sessions=sessions,
+            indiv_params=indiv_params, params=params, extra_wf_name="")
 
     # prep for testing only preparation part
     if "prep" in ssoft:

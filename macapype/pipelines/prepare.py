@@ -589,10 +589,10 @@ def create_short_preparation_pipe(params, params_template={},
     # outputnode
     if "avg_reorient_pipe" in params.keys():
         data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                        outputnode, 'native_T1')
+                                      outputnode, 'native_T1')
     else:
         data_preparation_pipe.connect(av_T1, 'avg_img',
-                                        outputnode, 'native_T1')
+                                      outputnode, 'native_T1')
 
     if 'aladin_T2_on_T1' in params.keys():
         data_preparation_pipe.connect(align_T2_on_T1, "res_file",
@@ -1064,10 +1064,10 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                            crop_aladin_T1, 'flo_file')
+                                          crop_aladin_T1, 'flo_file')
         else:
             data_preparation_pipe.connect(av_T1, 'avg_img',
-                                            crop_aladin_T1, 'flo_file')
+                                          crop_aladin_T1, 'flo_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
