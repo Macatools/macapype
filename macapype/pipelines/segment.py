@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import (AtroposN4, merge_masks, BinaryFillHoles,
+from ..nodes.segment import (AtroposN4, merge_masks,
                              merge_imgs, split_indexed_mask, copy_header,
                              compute_5tt, fill_list_vol)
 
@@ -670,6 +670,125 @@ def create_old_segment_pipe(params_template, params={},
     return seg_pipe
 
 
+def create_native_old_segment_seg_pipe(params_template, params={},
+                                       name="native_old_segment_pipe"):
+    """
+    Description: Extract brain using tissues masks output by SPM's old_segment
+        function:
+
+        - Segment the T1 using given priors;
+        - Threshold GM, WM and CSF maps;
+        - Compute union of those 3 tissues with indexes;
+
+    Params:
+
+    - segment (see `Segment <https://nipype.readthedocs.io/en/0.12.1/\
+    interfaces/generated/nipype.interfaces.spm.preprocess.html#segment>`_)
+    - threshold_gm, threshold_wm, threshold_csf (see `Threshold \
+    <https://nipype.readthedocs.io/en/0.12.1/interfaces/generated/nipype.\
+    interfaces.fsl.maths.html#threshold>`_ for arguments) - also available \
+    as :ref:`indiv_params <indiv_params>`
+
+
+    Inputs:
+
+        inputnode:
+            T1: T1 file name
+
+        arguments:
+            priors: list of file names
+
+            params: dictionary of node sub-parameters (from a json file)
+
+            name: pipeline name (default = "old_segment_pipe")
+
+    Outputs:
+
+        fill_holes.out_file:
+            filled mask after erode
+
+        fill_holes_dil.out_file
+            filled mask after dilate
+
+        threshold_gm, threshold_wm, threshold_csf.out_file:
+            resp grey matter, white matter, and csf after thresholding
+
+    """
+    # creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # Creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=['indiv_params', "native_T1", "inv_transfo_file"]),
+        name='inputnode'
+    )
+
+    assert set_spm(), \
+        "Error, SPM was not found, cannot run SPM old segment pipeline"
+
+    # unzip T1
+    unzip = pe.Node(
+        interface=niu.Function(input_names=['zipped_file'],
+                               output_names=["unzipped_file"],
+                               function=gunzip),
+        name="unzip")
+
+    seg_pipe.connect(inputnode, 'native_T1', unzip, 'zipped_file')
+
+    # merging priors as a list
+    split_seg = pe.Node(niu.Function(
+        input_names=['nii_file'],
+        output_names=['list_split_files'],
+        function=split_indexed_mask), name='split_seg')
+
+    split_seg.inputs.nii_file = params_template["template_seg"]
+
+    # tissue_to_nat
+    register_tissue_to_nat = pe.MapNode(
+        fsl.ApplyXFM(),
+        iterfield=["in_file"],
+        name="register_tissue_to_nat")
+
+    register_tissue_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+    register_tissue_to_nat.inputs.interp = "nearestneighbour"
+
+    seg_pipe.connect(split_seg, 'list_split_files',
+                     register_tissue_to_nat, 'in_file')
+
+    # joining (Merge)
+
+    # Segment in to 6 tissues
+    segment = NodeParams(spm.Segment(),
+                         params=parse_key(params, "segment"),
+                         name="old_segment")
+
+    seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
+
+    segment = pe.JoinNode(interface=spm.Segment(),
+                          joinsource="register_tissue_to_nat",
+                          joinfield="tissue_prob_maps",
+                          name="old_segment")
+
+    seg_pipe.connect(register_tissue_to_nat, "out_file",
+                     segment, "tissue_prob_maps")
+
+    seg_pipe.connect(unzip, 'unzipped_file', segment, 'data')
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["threshold_gm", "threshold_wm", "threshold_csf",
+                    "prob_gm", "prob_wm", "prob_csf"]),
+        name='outputnode')
+
+    seg_pipe.connect(segment, 'native_gm_image', outputnode, 'prob_gm')
+    seg_pipe.connect(segment, 'native_wm_image', outputnode, 'prob_wm')
+    seg_pipe.connect(segment, 'native_csf_image', outputnode, 'prob_csf')
+
+    return seg_pipe
+
+
 def create_native_old_segment_pipe(params_template, params={},
                                    name="native_old_segment_pipe"):
     """
@@ -925,40 +1044,11 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     seg_pipe.connect(bin_gm, 'out_file', wmgm_union, 'in_file')
     seg_pipe.connect(bin_wm, 'out_file', wmgm_union, 'operand_file')
 
-    tissues_union = pe.Node(fsl.BinaryMaths(), name="tissues_union")
-    tissues_union.inputs.operation = "add"
-    seg_pipe.connect(wmgm_union, 'out_file', tissues_union, 'in_file')
-    seg_pipe.connect(bin_csf, 'out_file',
-                     tissues_union, 'operand_file')
-
-    # Opening (dilating) mask
-    dilate_mask = NodeParams(fsl.DilateImage(),
-                             params=parse_key(params, "dilate_mask"),
-                             name="dilate_mask")
-
-    dilate_mask.inputs.operation = "mean"  # Arbitrary operation
-    seg_pipe.connect(tissues_union, 'out_file', dilate_mask, 'in_file')
-
-    # fill holes of dilate_mask
-    fill_holes_dil = pe.Node(BinaryFillHoles(), name="fill_holes_dil")
-    seg_pipe.connect(dilate_mask, 'out_file', fill_holes_dil, 'in_file')
-
-    # Eroding mask
-    erode_mask = NodeParams(fsl.ErodeImage(),
-                            params=parse_key(params, "erode_mask"),
-                            name="erode_mask")
-
-    seg_pipe.connect(tissues_union, 'out_file', erode_mask, 'in_file')
-
-    # fill holes of erode_mask
-    fill_holes = pe.Node(BinaryFillHoles(), name="fill_holes")
-    seg_pipe.connect(erode_mask, 'out_file', fill_holes, 'in_file')
-
     # bin mask
     bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
     bin_mask.inputs.operation = "bin"
 
-    seg_pipe.connect(fill_holes, 'out_file', bin_mask, 'in_file')
+    seg_pipe.connect(wmgm_union, 'out_file', bin_mask, 'in_file')
 
     # wmgm2mesh
     wmgm2mesh = pe.Node(

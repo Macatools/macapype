@@ -60,40 +60,40 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_debiased_T1, 'out_file',
             datasink, '@debiased_T1')
 
-        # rename debiased_brain
-        rename_debiased_brain = pe.Node(
+        # rename masked_debiased_T1
+        rename_masked_debiased_T1 = pe.Node(
             niu.Rename(),
-            name="rename_debiased_brain")
-        rename_debiased_brain.inputs.format_string = \
+            name="rename_masked_debiased_T1")
+        rename_masked_debiased_T1.inputs.format_string = \
             pref_deriv + "_space-native_desc-debiased_desc-brain_T1w"
-        rename_debiased_brain.inputs.parse_string = parse_str
-        rename_debiased_brain.inputs.keep_ext = True
+        rename_masked_debiased_T1.inputs.parse_string = parse_str
+        rename_masked_debiased_T1.inputs.keep_ext = True
 
         main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.debiased_brain',
-            rename_debiased_brain, 'in_file')
+            segment_pnh_pipe, 'outputnode.masked_debiased_T1',
+            rename_masked_debiased_T1, 'in_file')
 
         main_workflow.connect(
-            rename_debiased_brain, 'out_file',
-            datasink, '@debiased_brain')
+            rename_masked_debiased_T1, 'out_file',
+            datasink, '@masked_debiased_T1')
 
     if "brain_segment_pipe" in params.keys():
-        # rename debiased_brain
-        rename_debiased_brain = pe.Node(
+        # rename masked_debiased_T1
+        rename_masked_debiased_T1 = pe.Node(
             niu.Rename(),
-            name="rename_debiased_brain")
-        rename_debiased_brain.inputs.format_string = \
+            name="rename_masked_debiased_T1")
+        rename_masked_debiased_T1.inputs.format_string = \
             pref_deriv + "_space-native_desc-debiased_desc-brain_T1w"
-        rename_debiased_brain.inputs.parse_string = parse_str
-        rename_debiased_brain.inputs.keep_ext = True
+        rename_masked_debiased_T1.inputs.parse_string = parse_str
+        rename_masked_debiased_T1.inputs.keep_ext = True
 
         main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.debiased_brain',
-            rename_debiased_brain, 'in_file')
+            segment_pnh_pipe, 'outputnode.masked_debiased_T1',
+            rename_masked_debiased_T1, 'in_file')
 
         main_workflow.connect(
-            rename_debiased_brain, 'out_file',
-            datasink, '@debiased_brain')
+            rename_masked_debiased_T1, 'out_file',
+            datasink, '@masked_debiased_T1')
 
         # rename debiased_T1
         rename_debiased_T1 = pe.Node(niu.Rename(),
