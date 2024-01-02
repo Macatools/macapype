@@ -80,11 +80,11 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ###############################################################################
 
 
-def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
-                         subjects, sessions, acquisitions, reconstructions,
-                         params_file, indiv_params_file, mask_file,
-                         template_path, template_files, nprocs, reorient,
-                         deriv, pad, wf_name="macapype"):
+def create_main_workflow(data_dir, process_dir, soft, species, subjects,
+                         sessions, acquisitions, reconstructions, params_file,
+                         indiv_params_file, mask_file, template_path,
+                         template_files, nprocs, reorient, deriv, pad,
+                         wf_name="macapype"):
 
     # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
@@ -131,7 +131,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
 
     """
-    datatypes = [dt.lower() for dt in datatypes]
 
     soft = soft.lower()
 
@@ -147,6 +146,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
     if 'noseg' in ssoft:
         new_ssoft.remove('noseg')
+
+    if 't1' in ssoft:
+        new_ssoft.remove('t1')
 
     if 'native' in ssoft:
         new_ssoft.remove('native')
@@ -242,11 +244,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
     # soft
     wf_name += "_{}".format(soft)
 
-    if 't1' in datatypes:
+    if 't1' in ssoft:
         wf_name += "_t1"
-
-    if 't2' in datatypes:
-        wf_name += "_t2"
 
     if mask_file is not None:
         wf_name += "_mask"
@@ -378,14 +377,13 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
         else:
             space = "native"
 
-        if 't1' in datatypes and 't2' in datatypes:
+        if "t1" in ssoft:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
                 params_template=params_template,
                 params_template_aladin=params_template_aladin,
                 params_template_stereo=params_template_stereo,
                 params=params, space=space, pad=pad)
-
-        elif 't1' in datatypes:
+        else:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template,
                 params_template_aladin=params_template_aladin,
@@ -397,24 +395,28 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
     # T1 (mandatory, always added)
     # T2 is optional, if "_T1" is added in the -soft arg
-    if 't1' in datatypes:
+    if 't1' in ssoft:
         output_query['T1'] = {
             "datatype": "anat", "suffix": "T1w",
             "extension": ["nii", ".nii.gz"]}
 
-    if 't2' in datatypes:
+    else:
+        output_query['T1'] = {
+            "datatype": "anat", "suffix": "T1w",
+            "extension": ["nii", ".nii.gz"]}
+
         output_query['T2'] = {
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]}
 
     # FLAIR is optional, if "_FLAIR" is added in the -soft arg
-    if 'flair' in datatypes:
+    if 'flair' in ssoft:
         output_query['FLAIR'] = {
             "datatype": "anat", "suffix": "FLAIR",
             "extension": ["nii", ".nii.gz"]}
 
     # MD and b0mean are optional, if "_MD" is added in the -soft arg
-    if 'md' in datatypes and 'b0mean' in datatypes:
+    if 'md' in ssoft:
         output_query['MD'] = {
             "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
             "extension": ["nii", ".nii.gz"]}
@@ -436,20 +438,18 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             output_query, data_dir, subjects,  sessions, acquisitions,
             reconstructions)
 
-    if "t1" in datatypes:
-        main_workflow.connect(datasource, 'T1',
-                              segment_pnh_pipe, 'inputnode.list_T1')
+    main_workflow.connect(datasource, 'T1',
+                          segment_pnh_pipe, 'inputnode.list_T1')
 
-    if "t2" in datatypes:
+    if "t1" not in ssoft:
         main_workflow.connect(datasource, 'T2',
                               segment_pnh_pipe, 'inputnode.list_T2')
-
-    elif "t1" in datatypes and "spm" in ssoft:
+    elif "t1" in ssoft and "spm" in ssoft:
         # cheating using T2 as T1
         main_workflow.connect(datasource, 'T1',
                               segment_pnh_pipe, 'inputnode.list_T2')
 
-    if "flair" in datatypes:
+    if "flair" in ssoft:
         if "transfo_FLAIR_pipe" in params.keys():
             print("Found transfo_FLAIR_pipe")
 
@@ -457,23 +457,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             params=parse_key(params, "transfo_FLAIR_pipe"),
             params_template=params_template)
 
-        if "t1" in datatypes and "t2" in datatypes:
-            # using t1_debiased_file if T1 and T2 are available
-            main_workflow.connect(
-                segment_pnh_pipe, "debias.t1_debiased_file",
-                transfo_FLAIR_pipe, 'inputnode.orig_T1')
-
-        elif "t1" in datatypes:
-            # using preproc_T1 if only T1 are available
+        if "t1" in ssoft:
             main_workflow.connect(
                 segment_pnh_pipe,
                 "short_preparation_pipe.outputnode.preproc_T1",
                 transfo_FLAIR_pipe, 'inputnode.orig_T1')
 
         else:
-            print("Error, transfo_FLAIR_pipe not available \
-                if datatypes T1 is not available")
-            exit(-1)
+            main_workflow.connect(
+                segment_pnh_pipe, "debias.t1_debiased_file",
+                transfo_FLAIR_pipe, 'inputnode.orig_T1')
 
         main_workflow.connect(
             segment_pnh_pipe, "reg.transfo_file",
@@ -482,7 +475,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
         main_workflow.connect(datasource, ('FLAIR', get_first_elem),
                               transfo_FLAIR_pipe, 'inputnode.FLAIR')
 
-    if 'md' in datatypes and 'b0mean' in datatypes:
+    if 'md' in ssoft:
 
         if "transfo_MD_pipe" in params.keys():
             print("Found transfo_MD_pipe")
@@ -598,42 +591,27 @@ def main():
 
     parser.add_argument("-data", dest="data", type=str, required=True,
                         help="Directory containing MRI data (BIDS)")
-
     parser.add_argument("-out", dest="out", type=str,  # nargs='+',
                         help="Output dir", required=True)
-
     parser.add_argument("-soft", dest="soft", type=str,
                         help="Sofware of analysis (SPM or ANTS are defined)",
                         required=True)
-
-    parser.add_argument("-datatypes", "-d", dest="datatypes", type=str,
-                        defaut='T1', nargs='+',
-                        help="MRI Datatypes (T1, T2)",
-                        required=False)
-
     parser.add_argument("-species", dest="species", type=str,
                         help="Type of PNH to process",
                         required=False)
-
     parser.add_argument("-subjects", "-sub", dest="sub",
                         type=str, nargs='+', help="Subjects", required=False)
-
     parser.add_argument("-sessions", "-ses", dest="ses",
                         type=str, nargs='+', help="Sessions", required=False)
-
     parser.add_argument("-acquisitions", "-acq", dest="acq", type=str,
                         nargs='+', default=None, help="Acquisitions")
-
     parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+',
                         default=None, help="Records")
-
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
-
     parser.add_argument("-indiv_params", "-indiv", dest="indiv_params_file",
                         type=str, help="Individual parameters json file",
                         required=False)
-
     parser.add_argument("-mask", dest="mask_file", type=str,
                         help="precomputed mask file", required=False)
 
@@ -669,7 +647,6 @@ def main():
         soft=args.soft,
         process_dir=args.out,
         species=args.species,
-        datatypes=args.datatypes,
         subjects=args.sub,
         sessions=args.ses,
         acquisitions=args.acq,
