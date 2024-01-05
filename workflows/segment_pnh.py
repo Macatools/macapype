@@ -60,9 +60,7 @@ import nipype.interfaces.fsl as fsl
 from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
     create_full_ants_subpipes,
-    create_full_T1_ants_subpipes,
-    create_transfo_FLAIR_pipe,
-    create_transfo_MD_pipe)
+    create_full_T1_ants_subpipes)
 
 from macapype.pipelines.rename import rename_all_derivatives
 
@@ -407,22 +405,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]}
 
-    # FLAIR is optional, if "_FLAIR" is added in the -soft arg
-    if 'flair' in datatypes:
-        output_query['FLAIR'] = {
-            "datatype": "anat", "suffix": "FLAIR",
-            "extension": ["nii", ".nii.gz"]}
-
-    # MD and b0mean are optional, if "_MD" is added in the -soft arg
-    if 'md' in datatypes and 'b0mean' in datatypes:
-        output_query['MD'] = {
-            "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
-            "extension": ["nii", ".nii.gz"]}
-
-        output_query['b0mean'] = {
-            "datatype": "dwi", "acquisition": "b0mean", "suffix": "dwi",
-            "extension": ["nii", ".nii.gz"]}
-
     # indiv_params
     if indiv_params:
         datasource = create_datasource_indiv_params(
@@ -448,77 +430,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
         # cheating using T2 as T1
         main_workflow.connect(datasource, 'T1',
                               segment_pnh_pipe, 'inputnode.list_T2')
-
-    if "flair" in datatypes:
-        if "transfo_FLAIR_pipe" in params.keys():
-            print("Found transfo_FLAIR_pipe")
-
-        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(
-            params=parse_key(params, "transfo_FLAIR_pipe"),
-            params_template=params_template)
-
-        if "t1" in datatypes and "t2" in datatypes:
-            # using t1_debiased_file if T1 and T2 are available
-            main_workflow.connect(
-                segment_pnh_pipe, "debias.t1_debiased_file",
-                transfo_FLAIR_pipe, 'inputnode.orig_T1')
-
-        elif "t1" in datatypes:
-            # using preproc_T1 if only T1 are available
-            main_workflow.connect(
-                segment_pnh_pipe,
-                "short_preparation_pipe.outputnode.preproc_T1",
-                transfo_FLAIR_pipe, 'inputnode.orig_T1')
-
-        else:
-            print("Error, transfo_FLAIR_pipe not available \
-                if datatypes T1 is not available")
-            exit(-1)
-
-        main_workflow.connect(
-            segment_pnh_pipe, "reg.transfo_file",
-            transfo_FLAIR_pipe, 'inputnode.lin_transfo_file')
-
-        main_workflow.connect(datasource, ('FLAIR', get_first_elem),
-                              transfo_FLAIR_pipe, 'inputnode.FLAIR')
-
-    if 'md' in datatypes and 'b0mean' in datatypes:
-
-        if "transfo_MD_pipe" in params.keys():
-            print("Found transfo_MD_pipe")
-
-        transfo_MD_pipe = create_transfo_MD_pipe(
-            params=parse_key(params, "transfo_MD_pipe"),
-            params_template=params_template)
-
-        main_workflow.connect(
-            segment_pnh_pipe,
-            "old_segment_pipe.outputnode.threshold_wm",
-            transfo_MD_pipe, 'inputnode.threshold_wm')
-
-        main_workflow.connect(
-            datasource, ('MD', get_first_elem),
-            transfo_MD_pipe, 'inputnode.MD')
-
-        main_workflow.connect(
-            datasource, ('b0mean', get_first_elem),
-            transfo_MD_pipe, 'inputnode.b0mean')
-
-        main_workflow.connect(
-            segment_pnh_pipe, "debias.t1_debiased_file",
-            transfo_MD_pipe, 'inputnode.orig_T1')
-
-        main_workflow.connect(
-            segment_pnh_pipe, "debias.t2_debiased_brain_file",
-            transfo_MD_pipe, 'inputnode.SS_T2')
-
-        main_workflow.connect(
-            segment_pnh_pipe, "reg.transfo_file",
-            transfo_MD_pipe, 'inputnode.lin_transfo_file')
-
-        main_workflow.connect(
-            segment_pnh_pipe, "reg.inv_transfo_file",
-            transfo_MD_pipe, 'inputnode.inv_lin_transfo_file')
 
     if deriv:
 
@@ -552,12 +463,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
         rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
                                datasink, pref_deriv, parse_str, space, ssoft)
-
-        if 'flair' in ssoft:
-
-            main_workflow.connect(
-                transfo_FLAIR_pipe, 'outputnode.norm_FLAIR',
-                datasink, '@norm_flair')
 
     # running main_workflow
     main_workflow.write_graph(graph2use="colored")
