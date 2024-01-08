@@ -1396,7 +1396,7 @@ def create_brain_segment_from_mask_pipe(
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['preproc_T1', 'preproc_T2', 'brain_mask', 'indiv_params']),
+            fields=['masked_debiased_T1', 'indiv_params']),
         name='inputnode')
 
     # creating outputnode
@@ -1404,67 +1404,17 @@ def create_brain_segment_from_mask_pipe(
         niu.IdentityInterface(
             fields=["segmented_file", "threshold_gm", "threshold_wm",
                     "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf", "gen_5tt",
-                    "masked_debiased_T1", "masked_debiased_T2"]),
+                    "prob_csf", "gen_5tt"]),
         name='outputnode')
-
-    # correcting for bias T1/T2, but this time with a mask
-    if "masked_correct_bias_pipe" in params.keys():
-        masked_correct_bias_pipe = create_masked_correct_bias_pipe(
-            params=parse_key(params, "masked_correct_bias_pipe"))
-
-        brain_segment_pipe.connect(
-            inputnode, 'preproc_T1',
-            masked_correct_bias_pipe, "inputnode.preproc_T1")
-        brain_segment_pipe.connect(
-            inputnode, 'preproc_T2',
-            masked_correct_bias_pipe, "inputnode.preproc_T2")
-        brain_segment_pipe.connect(
-            inputnode, 'brain_mask',
-            masked_correct_bias_pipe, "inputnode.brain_mask")
-
-    elif "debias" in params.keys():
-        # Bias correction of cropped images
-        debias = NodeParams(T1xT2BiasFieldCorrection(),
-                            params=parse_key(params, "debias"),
-                            name='debias')
-
-        brain_segment_pipe.connect(inputnode, 'preproc_T1',
-                                   debias, 't1_file')
-        brain_segment_pipe.connect(inputnode, 'preproc_T2',
-                                   debias, 't2_file')
-        brain_segment_pipe.connect(inputnode, 'brain_mask',
-                                   debias, 'b')
-        # TODO is not used now...
-        brain_segment_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "debias"),
-            debias, 'indiv_params')
-
-    else:
-        print("**** Error, masked_correct_bias_pipe or debias \
-            should be in brain_extraction_pipe of params.json")
-        print("No T1*T2 debias will be performed")
 
     # register NMT template, template mask and priors to subject T1
     register_NMT_pipe = create_register_NMT_pipe(
         params_template=params_template,
         params=parse_key(params, "register_NMT_pipe"))
 
-    if "masked_correct_bias_pipe" in params.keys():
-
-        brain_segment_pipe.connect(
-            masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
-            register_NMT_pipe, "inputnode.T1")
-
-    elif "debias" in params.keys():
-        brain_segment_pipe.connect(
-            debias, 't1_debiased_brain_file',
-            register_NMT_pipe, "inputnode.T1")
-
-    else:
-        brain_segment_pipe.connect(
-            inputnode, 'preproc_T1',
-            register_NMT_pipe, "inputnode.T1")
+    brain_segment_pipe.connect(
+        inputnode, 'masked_debiased_T1',
+        register_NMT_pipe, "inputnode.T1")
 
     brain_segment_pipe.connect(
         inputnode, 'indiv_params',
@@ -1500,21 +1450,10 @@ def create_brain_segment_from_mask_pipe(
                 register_NMT_pipe,  'outputnode.native_template_wm',
                 segment_atropos_pipe, "inputnode.wm_prior_file")
 
-    # input to segment_atropos_pipe depending on T1T2 debias step
-    if "masked_correct_bias_pipe" in params.keys():
-
-        brain_segment_pipe.connect(
-            masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
-            segment_atropos_pipe, "inputnode.brain_file")
-
-    elif "debias" in params.keys():
-        brain_segment_pipe.connect(
-            debias, 't1_debiased_brain_file',
-            segment_atropos_pipe, "inputnode.brain_file")
-    else:
-        brain_segment_pipe.connect(
-            inputnode, 'preproc_T1',
-            segment_atropos_pipe, "inputnode.brain_file")
+    # input to segment_atropos_pipe
+    brain_segment_pipe.connect(
+        inputnode, 'masked_debiased_T1',
+        segment_atropos_pipe, "inputnode.brain_file")
 
     if "export_5tt_pipe" in params.keys():
 
@@ -1535,31 +1474,6 @@ def create_brain_segment_from_mask_pipe(
 
         brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
                                    outputnode, 'gen_5tt')
-
-    # output prepreocessed brain T1
-    if "masked_correct_bias_pipe" in params.keys():
-
-        brain_segment_pipe.connect(
-            masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
-            outputnode, 'masked_debiased_T1')
-
-        brain_segment_pipe.connect(
-            masked_correct_bias_pipe, 'outputnode.mask_debiased_T2',
-            outputnode, 'masked_debiased_T2')
-
-    elif "debias" in params.keys():
-        brain_segment_pipe.connect(debias, 't1_debiased_brain_file',
-                                   outputnode, 'masked_debiased_T1')
-
-        brain_segment_pipe.connect(debias, 't2_debiased_brain_file',
-                                   outputnode, 'masked_debiased_T2')
-    else:
-
-        brain_segment_pipe.connect(inputnode, 'preproc_T1',
-                                   outputnode, 'masked_debiased_T1')
-
-        brain_segment_pipe.connect(inputnode, 'preproc_T2',
-                                   outputnode, 'masked_debiased_T2')
 
     if space == 'native':
 
@@ -1981,6 +1895,97 @@ def create_full_ants_subpipes(
 
         outputnode.inputs.brain_mask = mask_file
 
+    # correcting for bias T1/T2, but this time with a mask
+    if "masked_correct_bias_pipe" in params.keys():
+        masked_correct_bias_pipe = create_masked_correct_bias_pipe(
+            params=parse_key(params, "masked_correct_bias_pipe"))
+
+        seg_pipe.connect(
+            brain_extraction_pipe, "outputnode.debiased_T1",
+            masked_correct_bias_pipe, "inputnode.preproc_T1")
+
+        seg_pipe.connect(
+            brain_extraction_pipe, "outputnode.debiased_T2",
+            masked_correct_bias_pipe, "inputnode.preproc_T2")
+
+        seg_pipe.connect(brain_extraction_pipe,
+                         "outputnode.brain_mask",
+                         masked_correct_bias_pipe, "inputnode.brain_mask")
+
+        # outputnode
+        seg_pipe.connect(
+            masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
+            outputnode, 'masked_debiased_T1')
+
+        seg_pipe.connect(
+            masked_correct_bias_pipe, 'outputnode.mask_debiased_T2',
+            outputnode, 'masked_debiased_T2')
+
+    elif "debias" in params.keys():
+        # Bias correction of cropped images
+        debias = NodeParams(T1xT2BiasFieldCorrection(),
+                            params=parse_key(params, "debias"),
+                            name='debias')
+
+        seg_pipe.connect(
+            brain_extraction_pipe, "outputnode.debiased_T1",
+            debias, 't1_file')
+
+        seg_pipe.connect(
+            brain_extraction_pipe, "outputnode.debiased_T2",
+            debias, 't2_file')
+
+        seg_pipe.connect(brain_extraction_pipe,
+                         "outputnode.brain_mask",
+                         debias, 'b')
+        # TODO is not used now...
+        seg_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "debias"),
+            debias, 'indiv_params')
+
+        # outputnode
+        seg_pipe.connect(debias, 't1_debiased_brain_file',
+                         outputnode, 'masked_debiased_T1')
+
+        seg_pipe.connect(debias, 't2_debiased_brain_file',
+                         outputnode, 'masked_debiased_T2')
+
+    else:
+
+        print("**** Error, masked_correct_bias_pipe or debias \
+            should be in brain_extraction_pipe of params.json")
+        print("No T1*T2 debias will be performed")
+
+        # restore_mask_T1
+        restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
+
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
+                         restore_mask_T1, 'in_file')
+
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_T1_pipe.smooth_mask.out_file",
+                         restore_mask_T1, 'mask_file')
+
+        # restore_mask_T2
+        restore_mask_T2 = pe.Node(fsl.ApplyMask(), name='restore_mask_T2')
+
+        seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T2",
+                         restore_mask_T2, 'in_file')
+
+        seg_pipe.connect(brain_extraction_pipe,
+                         "extract_T2_pipe.smooth_mask.out_file",
+                         restore_mask_T2, 'mask_file')
+
+        # output prepreocessed brain T1
+        seg_pipe.connect(
+            restore_mask_T1, 'out_file',
+            outputnode, 'masked_debiased_T1')
+
+        # output prepreocessed brain T2
+        seg_pipe.connect(
+            restore_mask_T2, 'out_file',
+            outputnode, 'masked_debiased_T2')
+
     # ###################################full_segment
     # (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
@@ -1995,14 +2000,21 @@ def create_full_ants_subpipes(
 
     if mask_file is None:
 
-        seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
-                         brain_segment_pipe, 'inputnode.preproc_T1')
-        seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T2",
-                         brain_segment_pipe, 'inputnode.preproc_T2')
+        if "masked_correct_bias_pipe" in params.keys():
+            seg_pipe.connect(
+                masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
+                brain_segment_pipe, 'inputnode.masked_debiased_T1')
 
-        seg_pipe.connect(brain_extraction_pipe,
-                         "outputnode.brain_mask",
-                         brain_segment_pipe, "inputnode.brain_mask")
+        elif "debias" in params.keys():
+            seg_pipe.connect(
+                debias, 't1_debiased_brain_file',
+                brain_segment_pipe, 'inputnode.masked_debiased_T1')
+
+        else:
+            seg_pipe.connect(
+                restore_mask_T1, 'out_file',
+                brain_segment_pipe, 'inputnode.masked_debiased_T1')
+
     else:
 
         # apply transfo to list
@@ -3168,234 +3180,6 @@ def create_brain_extraction_T1_pipe(params_template, params={},
     return brain_extraction_pipe
 
 
-def create_brain_segment_from_mask_T1_pipe(
-        params_template, params={}, name="brain_segment_from_mask_T1_pipe",
-        space="native"):
-    """
-    Description: Segment T1 from a previously computed mask.
-
-    Params:
-
-    - register_NMT_pipe (see :class:`create_register_NMT_pipe \
-    <macapype.pipelines.register.create_register_NMT_pipe>`)
-    - segment_atropos_pipe (see :class:`create_segment_atropos_pipe \
-    <macapype.pipelines.segment.create_segment_atropos_pipe>`)
-
-    Inputs:
-
-        inputnode:
-
-            preproc_T1:
-                preprocessed T1 file name
-
-            brain_mask:
-                a mask computed for the same T1/T2 images
-
-            indiv_params (opt):
-                dict with individuals parameters for some nodes
-
-
-        arguments:
-
-            params_template:
-                dictionary of template files
-
-            params:
-                dictionary of node sub-parameters (from a json file)
-
-            name:
-                pipeline name (default = "full_segment_pipe")
-
-    Outputs:
-
-    """
-    # creating pipeline
-    brain_segment_pipe = pe.Workflow(name=name)
-
-    # creating inputnode
-    inputnode = pe.Node(
-        niu.IdentityInterface(
-            fields=['debiased_T1', 'brain_mask', 'indiv_params']),
-        name='inputnode')
-
-    # creating outputnode
-    outputnode = pe.Node(
-        niu.IdentityInterface(
-            fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf", "gen_5tt", "masked_debiased_T1"]),
-        name='outputnode')
-
-    # mask T1 using brain mask and perform N4 bias correction
-
-    # restore_mask_T1
-    restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
-
-    brain_segment_pipe.connect(inputnode, 'debiased_T1',
-                               restore_mask_T1, 'in_file')
-    brain_segment_pipe.connect(inputnode, 'brain_mask',
-                               restore_mask_T1, 'mask_file')
-
-    # register NMT template, template mask and priors to subject T1
-    register_NMT_pipe = create_register_NMT_pipe(
-        params_template=params_template,
-        params=parse_key(params, "register_NMT_pipe"))
-
-    brain_segment_pipe.connect(
-        restore_mask_T1, 'out_file',
-        register_NMT_pipe, "inputnode.T1")
-    brain_segment_pipe.connect(
-        inputnode, 'indiv_params',
-        register_NMT_pipe, "inputnode.indiv_params")
-
-    # ants Atropos
-    if "template_seg" in params_template.keys():
-
-        print("#### create_segment_atropos_seg_pipe ")
-        segment_atropos_pipe = create_segment_atropos_seg_pipe(
-            params=parse_key(params, "segment_atropos_pipe"))
-
-        brain_segment_pipe.connect(
-            register_NMT_pipe, 'outputnode.native_template_seg',
-            segment_atropos_pipe, "inputnode.seg_file")
-
-    else:
-        segment_atropos_pipe = create_segment_atropos_pipe(
-            params=parse_key(params, "segment_atropos_pipe"))
-
-        if "use_priors" in params["segment_atropos_pipe"].keys():
-
-            brain_segment_pipe.connect(register_NMT_pipe,
-                                       'outputnode.native_template_csf',
-                                       segment_atropos_pipe,
-                                       "inputnode.csf_prior_file")
-
-            brain_segment_pipe.connect(register_NMT_pipe,
-                                       'outputnode.native_template_gm',
-                                       segment_atropos_pipe,
-                                       "inputnode.gm_prior_file")
-
-            brain_segment_pipe.connect(register_NMT_pipe,
-                                       'outputnode.native_template_wm',
-                                       segment_atropos_pipe,
-                                       "inputnode.wm_prior_file")
-    # brain_file
-    brain_segment_pipe.connect(restore_mask_T1, 'out_file',
-                               segment_atropos_pipe, "inputnode.brain_file")
-
-    if "export_5tt_pipe" in params.keys():
-
-        export_5tt_pipe = create_5tt_pipe(
-            params=parse_key(params, "export_5tt_pipe"))
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_gm',
-                                   export_5tt_pipe, 'inputnode.gm_file')
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_wm',
-                                   export_5tt_pipe, 'inputnode.wm_file')
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_csf',
-                                   export_5tt_pipe, 'inputnode.csf_file')
-
-        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                                   outputnode, 'gen_5tt')
-
-    # output prepreocessed brain T1
-    brain_segment_pipe.connect(
-        restore_mask_T1, 'out_file',
-        outputnode, 'masked_debiased_T1')
-
-    if space == 'native':
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.segmented_file',
-                                   outputnode, 'segmented_file')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_gm',
-                                   outputnode, 'threshold_gm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_wm',
-                                   outputnode, 'threshold_wm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_csf',
-                                   outputnode, 'threshold_csf')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_gm',
-                                   outputnode, 'prob_gm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_wm',
-                                   outputnode, 'prob_wm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_csf',
-                                   outputnode, 'prob_csf')
-    elif space == "template":
-
-        reg_seg_pipe = create_reg_seg_pipe()
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.segmented_file',
-                                   reg_seg_pipe,
-                                   'inputnode.native_seg')
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_gm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_threshold_gm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_wm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_threshold_wm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_csf',
-                                   reg_seg_pipe,
-                                   'inputnode.native_threshold_csf')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_gm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_prob_gm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_wm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_prob_wm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_csf',
-                                   reg_seg_pipe,
-                                   'inputnode.native_prob_csf')
-
-        # other inputs
-        brain_segment_pipe.connect(register_NMT_pipe,
-                                   'NMT_subject_align.transfo_file',
-                                   reg_seg_pipe, 'inputnode.transfo_file')
-
-        reg_seg_pipe.inputs.inputnode.ref_image = \
-            params_template['template_head']
-
-        # output node
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_seg',
-                                   outputnode, 'segmented_file')
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_threshold_gm',
-                                   outputnode, 'threshold_gm')
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_threshold_wm',
-                                   outputnode, 'threshold_wm')
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_threshold_csf',
-                                   outputnode, 'threshold_csf')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_gm',
-                                   outputnode, 'prob_gm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_wm',
-                                   outputnode, 'prob_wm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_csf',
-                                   outputnode, 'prob_csf')
-
-    return brain_segment_pipe
-
-
 def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                                  params_template_stereo,
                                  params={}, name="full_T1_ants_subpipes",
@@ -3450,7 +3234,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm',
-                    'prob_csf', "gen_5tt", "masked_debiased_T1", "debiased_T1",
+                    'prob_csf', "gen_5tt", "debiased_T1",
                     "masked_debiased_T1", "cropped_brain_mask",
                     "cropped_debiased_T1", "native_T1",
                     "cropped_to_native_trans",
@@ -3596,21 +3380,36 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
                          outputnode, "debiased_T1")
 
+    # mask T1 using brain mask and perform N4 bias correction
+
+    # restore_mask_T1
+    restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
+
+    seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
+                     restore_mask_T1, 'in_file')
+
+    seg_pipe.connect(brain_extraction_pipe,
+                     "extract_T1_pipe.smooth_mask.out_file",
+                     restore_mask_T1, 'mask_file')
+
+    # output prepreocessed brain T1
+    seg_pipe.connect(
+        restore_mask_T1, 'out_file',
+        outputnode, 'masked_debiased_T1')
+
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
         print("Error, brain_segment_pipe was not found in params, \
             skipping")
         return seg_pipe
 
-    brain_segment_pipe = create_brain_segment_from_mask_T1_pipe(
+    brain_segment_pipe = create_brain_segment_from_mask_pipe(
         params_template=params_template,
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
-    seg_pipe.connect(brain_extraction_pipe, "outputnode.debiased_T1",
-                     brain_segment_pipe, 'inputnode.debiased_T1')
-    seg_pipe.connect(brain_extraction_pipe,
-                     "extract_T1_pipe.smooth_mask.out_file",
-                     brain_segment_pipe, "inputnode.brain_mask")
+    seg_pipe.connect(restore_mask_T1, 'out_file',
+                     brain_segment_pipe, 'inputnode.masked_debiased_T1')
+
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 

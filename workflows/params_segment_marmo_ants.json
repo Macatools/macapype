@@ -39,12 +39,12 @@
             }
         }
     },
+    "debias":
+    {
+        "s": 4
+    },
     "brain_segment_pipe":
     {
-        "debias":
-        {
-            "s": 4
-        },
         "register_NMT_pipe":
         {
         },

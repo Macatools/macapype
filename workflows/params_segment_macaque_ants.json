@@ -44,23 +44,23 @@
 
         }
     },
+    "masked_correct_bias_pipe":
+    {
+        "smooth":
+        {
+            "args": "-bin -s 2"
+        },
+        "norm_smooth":
+        {
+            "op_string": "-s 2 -div %s"
+        },
+        "smooth_bias":
+        {
+                "sigma": 2
+        }
+    },
     "brain_segment_pipe":
     {
-        "masked_correct_bias_pipe":
-        {
-            "smooth":
-            {
-                "args": "-bin -s 2"
-            },
-            "norm_smooth":
-            {
-                "op_string": "-s 2 -div %s"
-            },
-            "smooth_bias":
-            {
-                    "sigma": 2
-            }
-        },
         "register_NMT_pipe":
         {
             "norm_intensity":
