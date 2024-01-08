@@ -1,0 +1,87 @@
+{
+    "general":
+    {
+        "template_name": "MBM_v3.0.1",
+        "template_stereo_name": "bma-1_0p2mm_padded"
+    },
+     "short_preparation_pipe":
+    {
+    	"crop_aladin_T1":
+    	{
+    	},
+        "crop_z_T1":
+        {
+            "brainsize": 30
+        }
+    },
+    "debias":
+    {
+        "s": 4
+    },
+    "reg":
+    {
+        "n": 2,
+        "m": "ref",
+        "dof": 12
+    },
+    "old_segment_pipe":
+    {
+        "segment":
+        {
+            "gm_output_type": [false, false, true],
+            "wm_output_type": [false, false, true],
+            "csf_output_type": [false, false, true]
+        },
+        "threshold_gm":
+        {
+            "thresh": 0.5
+        },
+        "threshold_wm":
+        {
+            "thresh": 0.5
+        },
+        "threshold_csf":
+        {
+            "thresh": 0.5
+        }
+    },
+    "mask_from_seg_pipe":
+    {
+        "dilate_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        },
+        "erode_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        }
+    },
+    "native_to_stereo_pipe":
+    {
+        "skull_stripped_template": true,
+        "use_T2": {},
+        "pad_template_T1":
+        {
+            "pad_val": 0
+        },
+        "reg_T1_on_template":
+        {
+            "nac_flag": true,
+            "rig_only_flag": true,
+            "nosym_flag": true,
+            "ln_val": 12,
+            "lp_val": 10,
+            "smoo_r_val": 1.0
+        },
+        "reg_T1_on_template2":
+        {
+            "rig_only_flag": true,
+            "nosym_flag": true,
+            "ln_val": 17,
+            "lp_val": 15,
+            "smoo_r_val": 1.0
+        }
+    }
+}
