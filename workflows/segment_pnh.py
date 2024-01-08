@@ -78,11 +78,11 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ###############################################################################
 
 
-def create_main_workflow(data_dir, process_dir, soft, species, subjects,
-                         sessions, acquisitions, reconstructions, params_file,
-                         indiv_params_file, mask_file, template_path,
-                         template_files, nprocs, reorient, deriv, pad,
-                         wf_name="macapype"):
+def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
+                         subjects, sessions, acquisitions, reconstructions,
+                         params_file, indiv_params_file, mask_file,
+                         template_path, template_files, nprocs, reorient,
+                         deriv, pad, wf_name="macapype"):
 
     # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
@@ -129,6 +129,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
 
     """
+    datatypes = [dt.lower() for dt in datatypes]
 
     soft = soft.lower()
 
@@ -144,9 +145,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
     if 'noseg' in ssoft:
         new_ssoft.remove('noseg')
-
-    if 't1' in ssoft:
-        new_ssoft.remove('t1')
 
     if 'native' in ssoft:
         new_ssoft.remove('native')
@@ -242,8 +240,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     # soft
     wf_name += "_{}".format(soft)
 
-    if 't1' in ssoft:
+    if 't1' in datatypes:
         wf_name += "_t1"
+
+    if 't2' in datatypes:
+        wf_name += "_t2"
 
     if mask_file is not None:
         wf_name += "_mask"
@@ -375,34 +376,31 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         else:
             space = "native"
 
-        if "t1" in ssoft:
-            segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template=params_template,
-                params_template_aladin=params_template_aladin,
-                params_template_stereo=params_template_stereo,
-                params=params, space=space, pad=pad)
-        else:
+        if 't1' in datatypes and 't2' in datatypes:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template,
                 params_template_aladin=params_template_aladin,
                 params_template_stereo=params_template_stereo,
                 params=params, mask_file=mask_file, space=space, pad=pad)
 
+        elif 't1' in datatypes:
+            segment_pnh_pipe = create_full_T1_ants_subpipes(
+                params_template=params_template,
+                params_template_aladin=params_template_aladin,
+                params_template_stereo=params_template_stereo,
+                params=params, space=space, pad=pad)
+
     # list of all required outputs
     output_query = {}
 
     # T1 (mandatory, always added)
     # T2 is optional, if "_T1" is added in the -soft arg
-    if 't1' in ssoft:
+    if 't1' in datatypes:
         output_query['T1'] = {
             "datatype": "anat", "suffix": "T1w",
             "extension": ["nii", ".nii.gz"]}
 
-    else:
-        output_query['T1'] = {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]}
-
+    if 't2' in datatypes:
         output_query['T2'] = {
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]}
@@ -420,13 +418,15 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             output_query, data_dir, subjects,  sessions, acquisitions,
             reconstructions)
 
-    main_workflow.connect(datasource, 'T1',
-                          segment_pnh_pipe, 'inputnode.list_T1')
+    if "t1" in datatypes:
+        main_workflow.connect(datasource, 'T1',
+                              segment_pnh_pipe, 'inputnode.list_T1')
 
-    if "t1" not in ssoft:
+    if "t2" in datatypes:
         main_workflow.connect(datasource, 'T2',
                               segment_pnh_pipe, 'inputnode.list_T2')
-    elif "t1" in ssoft and "spm" in ssoft:
+
+    elif "t1" in datatypes and "spm" in ssoft:
         # cheating using T2 as T1
         main_workflow.connect(datasource, 'T1',
                               segment_pnh_pipe, 'inputnode.list_T2')
@@ -503,27 +503,42 @@ def main():
 
     parser.add_argument("-data", dest="data", type=str, required=True,
                         help="Directory containing MRI data (BIDS)")
+
     parser.add_argument("-out", dest="out", type=str,  # nargs='+',
                         help="Output dir", required=True)
+
     parser.add_argument("-soft", dest="soft", type=str,
                         help="Sofware of analysis (SPM or ANTS are defined)",
                         required=True)
+
+    parser.add_argument("-datatypes", "-d", dest="datatypes", type=str,
+                        default='T1', nargs='+',
+                        help="MRI Datatypes (T1, T2)",
+                        required=False)
+
     parser.add_argument("-species", dest="species", type=str,
                         help="Type of PNH to process",
                         required=False)
+
     parser.add_argument("-subjects", "-sub", dest="sub",
                         type=str, nargs='+', help="Subjects", required=False)
+
     parser.add_argument("-sessions", "-ses", dest="ses",
                         type=str, nargs='+', help="Sessions", required=False)
+
     parser.add_argument("-acquisitions", "-acq", dest="acq", type=str,
                         nargs='+', default=None, help="Acquisitions")
+
     parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+',
                         default=None, help="Records")
+
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
+
     parser.add_argument("-indiv_params", "-indiv", dest="indiv_params_file",
                         type=str, help="Individual parameters json file",
                         required=False)
+
     parser.add_argument("-mask", dest="mask_file", type=str,
                         help="precomputed mask file", required=False)
 
@@ -559,6 +574,7 @@ def main():
         soft=args.soft,
         process_dir=args.out,
         species=args.species,
+        datatypes=args.datatypes,
         subjects=args.sub,
         sessions=args.ses,
         acquisitions=args.acq,
