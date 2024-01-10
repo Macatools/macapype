@@ -2254,9 +2254,7 @@ def create_full_ants_subpipes(
 
                     seg_pipe.connect(pad_masked_debiased_T1, "out_file",
                                      outputnode, "masked_debiased_T1")
-
         else:
-
             # outputnode
             seg_pipe.connect(restore_mask_T1, 'out_file',
                              outputnode, "masked_debiased_T1")
