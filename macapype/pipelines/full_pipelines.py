@@ -1963,7 +1963,7 @@ def create_full_ants_subpipes(
                          restore_mask_T1, 'in_file')
 
         seg_pipe.connect(brain_extraction_pipe,
-                         "extract_T1_pipe.smooth_mask.out_file",
+                         "outputnode.brain_mask",
                          restore_mask_T1, 'mask_file')
 
         # restore_mask_T2
@@ -1973,7 +1973,7 @@ def create_full_ants_subpipes(
                          restore_mask_T2, 'in_file')
 
         seg_pipe.connect(brain_extraction_pipe,
-                         "extract_T2_pipe.smooth_mask.out_file",
+                         "outputnode.brain_mask",
                          restore_mask_T2, 'mask_file')
 
         # output prepreocessed brain T1
