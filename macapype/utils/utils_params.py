@@ -236,6 +236,10 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             del params["brain_extraction_pipe"]
             print("Deleting brain_extraction_pipe")
 
+        if "masked_correct_bias_pipe" in params.keys():
+            del params["masked_correct_bias_pipe"]
+            print("Deleting masked_correct_bias_pipe")
+
         if "brain_segment_pipe" in params.keys():
             del params["brain_segment_pipe"]
             print("Deleting brain_segment_pipe")
