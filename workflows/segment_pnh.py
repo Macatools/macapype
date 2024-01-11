@@ -512,7 +512,7 @@ def main():
                         required=True)
 
     parser.add_argument("-datatypes", "-dt", dest="datatypes", type=str,
-                        default='T1', nargs='+',
+                        default=['T1'], nargs='+',
                         help="MRI Datatypes (T1, T2)",
                         required=False)
 
