@@ -403,6 +403,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_debiased_T1, 'out_file',
                 datasink, '@stereo_debiased_T1')
 
+            # rename stereo_debiased_T2
+            rename_stereo_debiased_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_debiased_T2")
+            rename_stereo_debiased_T2.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-debiased_T2w"
+            rename_stereo_debiased_T2.inputs.parse_string = parse_str
+            rename_stereo_debiased_T2.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_debiased_T2',
+                rename_stereo_debiased_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_debiased_T2, 'out_file',
+                datasink, '@stereo_debiased_T2')
+
         elif "debias" in params.keys():
             # rename stereo_brain_mask
             rename_stereo_brain_mask = pe.Node(
@@ -437,6 +454,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_stereo_debiased_T1, 'out_file',
                 datasink, '@stereo_debiased_T1')
+
+            # rename stereo_debiased_T2
+            rename_stereo_debiased_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_debiased_T2")
+            rename_stereo_debiased_T2.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-debiased_T2w"
+            rename_stereo_debiased_T2.inputs.parse_string = parse_str
+            rename_stereo_debiased_T2.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_debiased_T2',
+                rename_stereo_debiased_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_debiased_T2, 'out_file',
+                datasink, '@stereo_debiased_T2')
 
         if "brain_segment_pipe" in params.keys():
 
