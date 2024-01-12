@@ -232,13 +232,17 @@ def update_params(ssoft=[], subjects=None, sessions=None,
         print("Found prep in soft")
 
         # ANTS
-        if "brain_extraction_pipe" in params.keys():
-            del params["brain_extraction_pipe"]
-            print("Deleting brain_extraction_pipe")
+        if "extract_pipe" in params.keys():
+            del params["extract_pipe"]
+            print("Deleting extract_pipe")
 
         if "masked_correct_bias_pipe" in params.keys():
             del params["masked_correct_bias_pipe"]
             print("Deleting masked_correct_bias_pipe")
+
+        if "debias" in params.keys():
+            del params["debias"]
+            print("Deleting debias")
 
         if "brain_segment_pipe" in params.keys():
             del params["brain_segment_pipe"]
@@ -248,10 +252,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
         if "old_segment_pipe" in params.keys():
             del params["old_segment_pipe"]
             print("Deleting old_segment_pipe")
-
-        if "debias" in params.keys():
-            del params["debias"]
-            print("Deleting debias")
 
         if "mask_from_seg_pipe" in params.keys():
             del params["mask_from_seg_pipe"]

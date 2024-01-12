@@ -20,23 +20,20 @@
             "brainsize": 30
         }
     },
-    "brain_extraction_pipe":
+    "fast":
     {
-        "fast":
+        "args": "-l 3"
+    },
+    "extract_pipe":
+    {
+        "atlas_brex":
         {
-            "args": "-l 3"
-        },
-        "extract_pipe":
-        {
-            "atlas_brex":
-            {
-                "f": 0.62,
-                "reg": 1,
-                "msk": "b,0.5,0,0",
-                "wrp": "5,5,5",
-                "dil": 4,
-                "vox": 1
-            }
+            "f": 0.62,
+            "reg": 1,
+            "msk": "b,0.5,0,0",
+            "wrp": "5,5,5",
+            "dil": 4,
+            "vox": 1
         }
     },
     "debias":
