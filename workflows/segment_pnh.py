@@ -462,7 +462,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
 
         rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
-                               datasink, pref_deriv, parse_str, space, ssoft)
+                               datasink, pref_deriv, parse_str, space, ssoft,
+                               datatypes)
 
     # running main_workflow
     main_workflow.write_graph(graph2use="colored")

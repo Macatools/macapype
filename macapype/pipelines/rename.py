@@ -4,7 +4,8 @@ import nipype.interfaces.utility as niu
 
 
 def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
-                           datasink, pref_deriv, parse_str, space, ssoft):
+                           datasink, pref_deriv, parse_str, space, ssoft,
+                           datatypes):
 
     if "fast" in params or "N4debias" in params:
 
@@ -24,21 +25,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_debiased_T1, 'out_file',
             datasink, '@debiased_T1')
 
-        # rename debiased_T2
-        rename_debiased_T2 = pe.Node(niu.Rename(),
-                                     name="rename_debiased_T2")
-        rename_debiased_T2.inputs.format_string = \
-            pref_deriv + "_space-native_desc-debiased_T2w"
-        rename_debiased_T2.inputs.parse_string = parse_str
-        rename_debiased_T2.inputs.keep_ext = True
+        if 't2' in datatypes:
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.debiased_T2',
-            rename_debiased_T2, 'in_file')
+            # rename debiased_T2
+            rename_debiased_T2 = pe.Node(niu.Rename(),
+                                        name="rename_debiased_T2")
+            rename_debiased_T2.inputs.format_string = \
+                pref_deriv + "_space-native_desc-debiased_T2w"
+            rename_debiased_T2.inputs.parse_string = parse_str
+            rename_debiased_T2.inputs.keep_ext = True
 
-        main_workflow.connect(
-            rename_debiased_T2, 'out_file',
-            datasink, '@debiased_T2')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.debiased_T2',
+                rename_debiased_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_debiased_T2, 'out_file',
+                datasink, '@debiased_T2')
 
     if "extract_pipe" in params.keys():
 
@@ -77,22 +80,24 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_masked_debiased_T1, 'out_file',
             datasink, '@masked_debiased_T1')
 
-        # rename masked_debiased_T2
-        rename_masked_debiased_T2 = pe.Node(
-            niu.Rename(),
-            name="rename_masked_debiased_T2")
-        rename_masked_debiased_T2.inputs.format_string = \
-            pref_deriv + "_space-native_desc-debiased_desc-brain_T2w"
-        rename_masked_debiased_T2.inputs.parse_string = parse_str
-        rename_masked_debiased_T2.inputs.keep_ext = True
+        if 't2' in datatypes;
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.masked_debiased_T2',
-            rename_masked_debiased_T2, 'in_file')
+            # rename masked_debiased_T2
+            rename_masked_debiased_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_masked_debiased_T2")
+            rename_masked_debiased_T2.inputs.format_string = \
+                pref_deriv + "_space-native_desc-debiased_desc-brain_T2w"
+            rename_masked_debiased_T2.inputs.parse_string = parse_str
+            rename_masked_debiased_T2.inputs.keep_ext = True
 
-        main_workflow.connect(
-            rename_masked_debiased_T2, 'out_file',
-            datasink, '@masked_debiased_T2')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.masked_debiased_T2',
+                rename_masked_debiased_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_masked_debiased_T2, 'out_file',
+                datasink, '@masked_debiased_T2')
 
     if "debias" in params.keys():
 
@@ -113,22 +118,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_masked_debiased_T1, 'out_file',
             datasink, '@masked_debiased_T1')
 
-        # rename masked_debiased_T2
-        rename_masked_debiased_T2 = pe.Node(
-            niu.Rename(),
-            name="rename_masked_debiased_T2")
-        rename_masked_debiased_T2.inputs.format_string = \
-            pref_deriv + "_space-native_desc-debiased_desc-brain_T2w"
-        rename_masked_debiased_T2.inputs.parse_string = parse_str
-        rename_masked_debiased_T2.inputs.keep_ext = True
+        if 't2' in datatypes:
+            # rename masked_debiased_T2
+            rename_masked_debiased_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_masked_debiased_T2")
+            rename_masked_debiased_T2.inputs.format_string = \
+                pref_deriv + "_space-native_desc-debiased_desc-brain_T2w"
+            rename_masked_debiased_T2.inputs.parse_string = parse_str
+            rename_masked_debiased_T2.inputs.keep_ext = True
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.masked_debiased_T2',
-            rename_masked_debiased_T2, 'in_file')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.masked_debiased_T2',
+                rename_masked_debiased_T2, 'in_file')
 
-        main_workflow.connect(
-            rename_masked_debiased_T2, 'out_file',
-            datasink, '@masked_debiased_T2')
+            main_workflow.connect(
+                rename_masked_debiased_T2, 'out_file',
+                datasink, '@masked_debiased_T2')
 
         if 'extract_pipe' not in params.keys():
 
@@ -166,21 +172,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_debiased_T1, 'out_file',
                 datasink, '@debiased_T1')
 
-            # rename debiased_T2
-            rename_debiased_T2 = pe.Node(niu.Rename(),
-                                         name="rename_debiased_T2")
-            rename_debiased_T2.inputs.format_string = \
-                pref_deriv + "_space-native_desc-debiased_T2w"
-            rename_debiased_T2.inputs.parse_string = parse_str
-            rename_debiased_T2.inputs.keep_ext = True
+            if 't2' in datatypes:
 
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.debiased_T2',
-                rename_debiased_T2, 'in_file')
+                # rename debiased_T2
+                rename_debiased_T2 = pe.Node(niu.Rename(),
+                                             name="rename_debiased_T2")
+                rename_debiased_T2.inputs.format_string = \
+                    pref_deriv + "_space-native_desc-debiased_T2w"
+                rename_debiased_T2.inputs.parse_string = parse_str
+                rename_debiased_T2.inputs.keep_ext = True
 
-            main_workflow.connect(
-                rename_debiased_T2, 'out_file',
-                datasink, '@debiased_T2')
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.debiased_T2',
+                    rename_debiased_T2, 'in_file')
+
+                main_workflow.connect(
+                    rename_debiased_T2, 'out_file',
+                    datasink, '@debiased_T2')
 
     if "brain_segment_pipe" in params.keys():
         # rename segmented_brain_mask
@@ -439,21 +447,23 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_native_T1, 'out_file',
             datasink, '@stereo_native_T1')
 
-        # rename stereo_native_T2
-        rename_stereo_native_T2 = pe.Node(niu.Rename(),
-                                          name="rename_stereo_native_T2")
-        rename_stereo_native_T2.inputs.format_string = \
-            pref_deriv + "_space-stereo_T2w"
-        rename_stereo_native_T2.inputs.parse_string = parse_str
-        rename_stereo_native_T2.inputs.keep_ext = True
+        if 't2' in datatypes:
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.stereo_native_T2',
-            rename_stereo_native_T2, 'in_file')
+            # rename stereo_native_T2
+            rename_stereo_native_T2 = pe.Node(niu.Rename(),
+                                              name="rename_stereo_native_T2")
+            rename_stereo_native_T2.inputs.format_string = \
+                pref_deriv + "_space-stereo_T2w"
+            rename_stereo_native_T2.inputs.parse_string = parse_str
+            rename_stereo_native_T2.inputs.keep_ext = True
 
-        main_workflow.connect(
-            rename_stereo_native_T2, 'out_file',
-            datasink, '@stereo_native_T2')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_native_T2',
+                rename_stereo_native_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_native_T2, 'out_file',
+                datasink, '@stereo_native_T2')
 
         # rename stereo_debiased_T1
         rename_stereo_debiased_T1 = pe.Node(
@@ -472,22 +482,24 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_debiased_T1, 'out_file',
             datasink, '@stereo_debiased_T1')
 
-        # rename stereo_debiased_T2
-        rename_stereo_debiased_T2 = pe.Node(
-            niu.Rename(),
-            name="rename_stereo_debiased_T2")
-        rename_stereo_debiased_T2.inputs.format_string = \
-            pref_deriv + "_space-stereo_desc-debiased_T2w"
-        rename_stereo_debiased_T2.inputs.parse_string = parse_str
-        rename_stereo_debiased_T2.inputs.keep_ext = True
+        if 't2' in datatypes:
 
-        main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.stereo_debiased_T2',
-            rename_stereo_debiased_T2, 'in_file')
+            # rename stereo_debiased_T2
+            rename_stereo_debiased_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_debiased_T2")
+            rename_stereo_debiased_T2.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-debiased_T2w"
+            rename_stereo_debiased_T2.inputs.parse_string = parse_str
+            rename_stereo_debiased_T2.inputs.keep_ext = True
 
-        main_workflow.connect(
-            rename_stereo_debiased_T2, 'out_file',
-            datasink, '@stereo_debiased_T2')
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_debiased_T2',
+                rename_stereo_debiased_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_debiased_T2, 'out_file',
+                datasink, '@stereo_debiased_T2')
 
         if "extract_pipe" in params.keys() or "debias" in params.keys():
             # rename stereo_brain_mask
