@@ -80,7 +80,7 @@ def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_masked_debiased_T1, 'out_file',
             datasink, '@masked_debiased_T1')
 
-        if 't2' in datatypes;
+        if 't2' in datatypes:
 
             # rename masked_debiased_T2
             rename_masked_debiased_T2 = pe.Node(
