@@ -3851,25 +3851,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
                          outputnode, "stereo_debiased_T1")
 
-        # apply stereo to debiased T2
-        apply_stereo_debiased_T2 = pe.Node(RegResample(pad_val=0.0),
-                                           name='apply_stereo_debiased_T2')
-
-        seg_pipe.connect(pad_debiased_T2, "out_file",
-                         apply_stereo_debiased_T2, "flo_file")
-
-        seg_pipe.connect(native_to_stereo_pipe,
-                         'outputnode.native_to_stereo_trans',
-                         apply_stereo_debiased_T2, "trans_file")
-
-        seg_pipe.connect(native_to_stereo_pipe,
-                         'outputnode.stereo_native_T1',
-                         apply_stereo_debiased_T2, "ref_file")
-
-        # outputnode
-        seg_pipe.connect(apply_stereo_debiased_T2, "out_file",
-                         outputnode, "stereo_debiased_T2")
-
         if "extract_pipe" in params.keys() and pad:
 
             # apply transfo to list
@@ -3889,8 +3870,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             # outputnode
             seg_pipe.connect(apply_stereo_mask, "out_file",
                              outputnode, "stereo_brain_mask")
-
-
 
     # full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
