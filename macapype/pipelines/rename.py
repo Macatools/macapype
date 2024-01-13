@@ -3,9 +3,9 @@ import nipype.pipeline.engine as pe
 import nipype.interfaces.utility as niu
 
 
-def rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
-                           datasink, pref_deriv, parse_str, space, ssoft,
-                           datatypes):
+def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
+                                 datasink, pref_deriv, parse_str,
+                                 space, ssoft, datatypes):
 
     if "fast" in params or "N4debias" in params:
 

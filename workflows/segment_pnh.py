@@ -62,7 +62,7 @@ from macapype.pipelines.full_pipelines import (
     create_full_ants_subpipes,
     create_full_T1_ants_subpipes)
 
-from macapype.pipelines.rename import rename_all_derivatives
+from macapype.pipelines.rename import rename_all_brain_derivatives
 
 from macapype.utils.utils_bids import (create_datasource,
                                        create_datasource_indiv_params,
@@ -461,7 +461,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             pref_deriv = "sub-%(sub)s_ses-%(ses)s"
             parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
 
-        rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
+        rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                                datasink, pref_deriv, parse_str, space, ssoft,
                                datatypes)
 
