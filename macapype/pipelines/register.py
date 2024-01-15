@@ -538,11 +538,6 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
             inputnode, 'native_T1',
             pre_crop_z_T1, 'in_file')
 
-        if "pre_crop_z_T1" in params.keys():
-            reg_pipe.connect(
-                pre_crop_z_T1, "out_roi",
-                     reg_T1_on_template, "flo_file")
-
     # align T1 on template
     reg_T1_on_template = NodeParams(
         reg.RegAladin(),
