@@ -24,9 +24,15 @@ def test_create_full_ants_subpipes_no_args():
         "short_preparation_pipe":
         {
         },
-        "brain_extraction_pipe":
+        "fast":
+        {
+        }
+        "extract_pipe":
         {
         },
+        "debias":
+        {
+        }
         "brain_segment_pipe":
         {
             "segment_atropos_pipe":
