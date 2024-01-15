@@ -25,28 +25,24 @@
             "dimension": 3
         }
     },
-    "brain_extraction_pipe":
+    "N4debias":
     {
-        "N4debias":
+        "dimension": 3,
+        "bspline_fitting_distance": 200,
+        "n_iterations": [50, 50, 40, 30],
+        "convergence_threshold": 0.00000001,
+        "shrink_factor": 2,
+        "args": "-r 0 --verbose 1"
+    },
+    "extract_pipe":
+    {
+        "atlas_brex":
         {
-            "dimension": 3,
-            "bspline_fitting_distance": 200,
-            "n_iterations": [50, 50, 40, 30],
-            "convergence_threshold": 0.00000001,
-            "shrink_factor": 2,
-            "args": "-r 0 --verbose 1"
-        },
-        "extract_pipe":
-        {
-            "atlas_brex":
-            {
-                "f": 0.5,
-                "reg": 1,
-                "msk": "b,0.5,0,0",
-                "wrp": "10,10,10",
-                "dil": 1
-            }
-
+            "f": 0.5,
+            "reg": 1,
+            "msk": "b,0.5,0,0",
+            "wrp": "10,10,10",
+            "dil": 1
         }
     },
     "masked_correct_bias_pipe":
