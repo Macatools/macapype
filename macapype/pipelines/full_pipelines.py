@@ -134,6 +134,8 @@ def create_full_spm_subpipes(
                                       'stereo_native_T1', 'stereo_debiased_T1',
                                       'stereo_native_T2', 'stereo_debiased_T2',
                                       'stereo_brain_mask',
+                                      'stereo_prob_wm', 'stereo_prob_gm',
+                                      'stereo_prob_csf',
                                       'stereo_segmented_brain_mask',
                                       "native_to_stereo_trans"]),
         name='outputnode')
