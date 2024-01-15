@@ -531,10 +531,6 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
             name='pre_crop_z_T1')
 
         reg_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "pre_crop_z_T1"),
-            pre_crop_z_T1, 'indiv_params')
-
-        reg_pipe.connect(
             inputnode, 'native_T1',
             pre_crop_z_T1, 'in_file')
 
