@@ -1535,7 +1535,7 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
                              outputnode, 'cropped_to_native_trans')
 
-    ######################### correct bias ########################################
+    # ######################################## correct bias
     assert not ("fast" in params.keys() and "N4debias" in
                 params.keys()), "error, only one of correct_bias_pipe\
                 or N4debias should be present"

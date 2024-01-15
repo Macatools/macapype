@@ -10,8 +10,9 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
     if "fast" in params or "N4debias" in params:
 
         # rename debiased_T1
-        rename_debiased_T1 = pe.Node(niu.Rename(),
-                                        name="rename_debiased_T1")
+        rename_debiased_T1 = pe.Node(
+            niu.Rename(),
+            name="rename_debiased_T1")
         rename_debiased_T1.inputs.format_string = \
             pref_deriv + "_space-native_desc-debiased_T1w"
         rename_debiased_T1.inputs.parse_string = parse_str
@@ -28,8 +29,9 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         if 't2' in datatypes:
 
             # rename debiased_T2
-            rename_debiased_T2 = pe.Node(niu.Rename(),
-                                        name="rename_debiased_T2")
+            rename_debiased_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_debiased_T2")
             rename_debiased_T2.inputs.format_string = \
                 pref_deriv + "_space-native_desc-debiased_T2w"
             rename_debiased_T2.inputs.parse_string = parse_str
@@ -414,8 +416,9 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
             print("Renaming wmgm_stl file")
 
-            rename_wmgm_stl = pe.Node(niu.Rename(),
-                                    name="rename_wmgm_stl")
+            rename_wmgm_stl = pe.Node(
+                niu.Rename(),
+                name="rename_wmgm_stl")
             rename_wmgm_stl.inputs.format_string = \
                 pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
             rename_wmgm_stl.inputs.parse_string = parse_str

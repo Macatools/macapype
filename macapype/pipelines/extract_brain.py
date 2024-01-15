@@ -6,7 +6,6 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
-import nipype.interfaces.afni as afni
 
 from ..nodes.extract_brain import AtlasBREX
 
@@ -14,7 +13,7 @@ from ..utils.utils_nodes import NodeParams, parse_key
 
 
 def create_extract_pipe(params_template, params={},
-                           name="extract_T1_pipe"):
+                        name="extract_T1_pipe"):
     """
     Description: Extract T1 brain using AtlasBrex
 
