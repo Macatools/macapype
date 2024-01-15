@@ -32,7 +32,7 @@ def test_create_full_ants_subpipes_no_args():
         },
         "debias":
         {
-        }
+        },
         "brain_segment_pipe":
         {
             "segment_atropos_pipe":
