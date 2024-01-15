@@ -2569,7 +2569,6 @@ def create_full_ants_subpipes(
                 seg_pipe.connect(apply_stereo_native_T2, "out_file",
                                  outputnode, "stereo_native_T2")
 
-
             if pad:
 
                 # now for every skull_stripped_template pipeline
@@ -2579,7 +2578,7 @@ def create_full_ants_subpipes(
                     name='apply_stereo_debiased_T1')
 
                 seg_pipe.connect(pad_debiased_T1, 'out_file',
-                                apply_stereo_debiased_T1, "flo_file")
+                                 apply_stereo_debiased_T1, "flo_file")
 
                 seg_pipe.connect(
                     native_to_stereo_pipe,
