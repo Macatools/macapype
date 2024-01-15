@@ -3579,23 +3579,30 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                              "outputnode.stereo_native_T1",
                              outputnode, "stereo_native_T1")
 
-            # apply stereo to debiased T1
-            apply_stereo_debiased_T1 = pe.Node(RegResample(pad_val=0.0),
-                                               name='apply_stereo_debiased_T1')
+            if pad:
 
-            seg_pipe.connect(pad_debiased_T1, "out_file",
-                             apply_stereo_debiased_T1, "flo_file")
+                # apply stereo to debiased T1
+                apply_stereo_debiased_T1 = pe.Node(
+                    RegResample(pad_val=0.0),
+                    name='apply_stereo_debiased_T1')
 
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             apply_stereo_debiased_T1, "trans_file")
+                seg_pipe.connect(
+                    pad_debiased_T1, "out_file",
+                    apply_stereo_debiased_T1, "flo_file")
 
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.stereo_native_T1',
-                             apply_stereo_debiased_T1, "ref_file")
+                seg_pipe.connect(
+                    native_to_stereo_pipe,
+                    'outputnode.native_to_stereo_trans',
+                    apply_stereo_debiased_T1, "trans_file")
 
-            seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
-                             outputnode, "stereo_debiased_T1")
+                seg_pipe.connect(
+                    native_to_stereo_pipe,
+                    'outputnode.stereo_native_T1',
+                    apply_stereo_debiased_T1, "ref_file")
+
+                seg_pipe.connect(
+                    apply_stereo_debiased_T1, "out_file",
+                    outputnode, "stereo_debiased_T1")
 
     #  extract brain pipeline
     if "extract_pipe" not in params.keys():
