@@ -26,7 +26,7 @@ def test_create_full_ants_subpipes_no_args():
         },
         "fast":
         {
-        }
+        },
         "extract_pipe":
         {
         },
