@@ -3799,8 +3799,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
             print("Found skull_stripped_template in native_to_stereo_pipe")
 
-            if params["native_to_stereo_pipe"]["skull_stripped_template"]\
-                    and pad:
+            if pad:
 
                 # skull stripped version
                 print("using skull_stripped_template for stereotaxic norm")
@@ -4136,111 +4135,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     else:
         seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
-
-    if "native_to_stereo_pipe" in params.keys():
-
-        native_to_stereo_pipe = create_native_to_stereo_pipe(
-            "native_to_stereo_pipe",
-            params=parse_key(params, "native_to_stereo_pipe"))
-
-        seg_pipe.connect(native_to_stereo_pipe,
-                         'outputnode.native_to_stereo_trans',
-                         outputnode, "native_to_stereo_trans")
-
-        if "skull_stripped_template" in params["native_to_stereo_pipe"]:
-            print("Found skull_stripped_template in native_to_stereo_pipe")
-
-            if params["native_to_stereo_pipe"]["skull_stripped_template"]\
-                    and pad:
-
-                # skull stripped version
-                print("using skull_stripped_template for stereotaxic norm")
-
-                seg_pipe.connect(pad_masked_debiased_T1, "out_file",
-                                 native_to_stereo_pipe,
-                                 'inputnode.native_T1')
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_brain"]
-
-                # apply stereo to native T1
-                apply_stereo_native_T1 = pe.Node(RegResample(),
-                                                 name='apply_stereo_native_T1')
-
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 apply_stereo_native_T1, "flo_file")
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.native_to_stereo_trans',
-                                 apply_stereo_native_T1, "trans_file")
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.padded_stereo_T1',
-                                 apply_stereo_native_T1, "ref_file")
-
-                seg_pipe.connect(apply_stereo_native_T1, "out_file",
-                                 outputnode, "stereo_native_T1")
-
-            else:
-                # full head version
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 native_to_stereo_pipe, 'inputnode.native_T1')
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_head"]
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 "outputnode.stereo_native_T1",
-                                 outputnode, "stereo_native_T1")
-
-        else:
-            # full head version
-            seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                             native_to_stereo_pipe, 'inputnode.native_T1')
-
-            native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                params_template_stereo["template_head"]
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             "outputnode.stereo_native_T1",
-                             outputnode, "stereo_native_T1")
-
-        if "extract_pipe" in params.keys() and pad:
-
-            # apply transfo to list
-            apply_stereo_mask = pe.Node(RegResample(inter_val="NN"),
-                                        name='apply_stereo_mask')
-
-            seg_pipe.connect(pad_mask, 'out_file',
-                             apply_stereo_mask, "flo_file")
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             apply_stereo_mask, "trans_file")
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.padded_stereo_T1',
-                             apply_stereo_mask, "ref_file")
-
-            seg_pipe.connect(apply_stereo_mask, "out_file",
-                             outputnode, "stereo_brain_mask")
-
-            # apply transfo to list
-            apply_stereo_debiased_T1 = pe.Node(RegResample(),
-                                               name='apply_stereo_debiased_T1')
-
-            seg_pipe.connect(pad_debiased_T1, 'out_file',
-                             apply_stereo_debiased_T1, "flo_file")
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             apply_stereo_debiased_T1, "trans_file")
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.padded_stereo_T1',
-                             apply_stereo_debiased_T1, "ref_file")
-
-            seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
-                             outputnode, "stereo_debiased_T1")
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
         if pad and space == "native":
