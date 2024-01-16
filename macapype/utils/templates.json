@@ -140,5 +140,10 @@
         "template_brain": "template_T1w_brain.nii.gz",
 
         "template_seg": "segmentation_six_types_seg.nii.gz"
-    }
+    },
+    "pad40_NMT_v2.0_asym":
+        {
+        "template_head": "padded_NMT_v20_asym.nii.gz",
+        "template_brain": "padded_NMT_v20_asym.nii.gz",
+            }
 }
