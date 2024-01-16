@@ -133,6 +133,8 @@ def create_full_spm_subpipes(
                                       'prob_wm', 'prob_gm', 'prob_csf',
                                       'stereo_native_T1', 'stereo_debiased_T1',
                                       'stereo_native_T2', 'stereo_debiased_T2',
+                                      'stereo_masked_debiased_T1',
+                                      'stereo_masked_debiased_T2',
                                       'stereo_brain_mask',
                                       'stereo_prob_wm', 'stereo_prob_gm',
                                       'stereo_prob_csf',
@@ -553,7 +555,7 @@ def create_full_spm_subpipes(
                     # apply stereo to masked_debiased_T1
                     apply_stereo_masked_debiased_T1 = pe.Node(
                         RegResample(pad_val=0.0),
-                        name='apply_stereo_debiased_T1')
+                        name='apply_stereo_masked_debiased_T1')
 
                     seg_pipe.connect(
                         pad_masked_debiased_T1, "out_file",
