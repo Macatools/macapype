@@ -548,14 +548,120 @@ def create_full_spm_subpipes(
 
                     seg_pipe.connect(native_to_stereo_pipe,
                                      'outputnode.stereo_native_T1',
-                                     outputnode, "stereo_debiased_T2")
+                                     outputnode, "stereo_masked_debiased_T2")
+
+                    # apply stereo to masked_debiased_T1
+                    apply_stereo_masked_debiased_T1 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_debiased_T1')
+
+                    seg_pipe.connect(
+                        pad_masked_debiased_T1, "out_file",
+                        apply_stereo_masked_debiased_T1, "flo_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.native_to_stereo_trans',
+                        apply_stereo_masked_debiased_T1, "trans_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.stereo_native_T1',
+                        apply_stereo_masked_debiased_T1, "ref_file")
+
+                    # output
+                    seg_pipe.connect(
+                        apply_stereo_masked_debiased_T1, "out_file",
+                        outputnode, "stereo_masked_debiased_T1")
+
+                    # apply stereo to debiased_T1
+                    apply_stereo_debiased_T1 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_debiased_T1')
+
+                    seg_pipe.connect(
+                        pad_debiased_T1, "out_file",
+                        apply_stereo_debiased_T1, "flo_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.native_to_stereo_trans',
+                        apply_stereo_debiased_T1, "trans_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.stereo_native_T1',
+                        apply_stereo_debiased_T1, "ref_file")
+
+                    # output
+                    seg_pipe.connect(
+                        apply_stereo_debiased_T1, "out_file",
+                        outputnode, "stereo_debiased_T1")
+
+                    # apply stereo to debiased_T2
+                    apply_stereo_debiased_T2 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_debiased_T2')
+
+                    seg_pipe.connect(
+                        pad_debiased_T2, "out_file",
+                        apply_stereo_debiased_T2, "flo_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.native_to_stereo_trans',
+                        apply_stereo_debiased_T2, "trans_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.stereo_native_T1',
+                        apply_stereo_debiased_T2, "ref_file")
+
+                    # output
+                    seg_pipe.connect(
+                        apply_stereo_debiased_T2, "out_file",
+                        outputnode, "stereo_debiased_T2")
+
+
+                else:
+                    seg_pipe.connect(pad_masked_debiased_T1, "out_file",
+                                     native_to_stereo_pipe,
+                                     'inputnode.native_T1')
+
+                    seg_pipe.connect(native_to_stereo_pipe,
+                                     'outputnode.stereo_native_T1',
+                                     outputnode, "stereo_masked_debiased_T1")
+
+                    # apply stereo to debiased T2
+                    apply_stereo_masked_debiased_T2 = pe.Node(
+                        RegResample(pad_val=0.0),
+                        name='apply_stereo_masked_debiased_T2')
+
+                    seg_pipe.connect(
+                        pad_debiased_T2, "out_file",
+                        apply_stereo_masked_debiased_T2, "flo_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.native_to_stereo_trans',
+                        apply_stereo_masked_debiased_T2, "trans_file")
+
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.stereo_native_T1',
+                        apply_stereo_masked_debiased_T2, "ref_file")
+
+                    # output
+                    seg_pipe.connect(
+                        apply_stereo_masked_debiased_T2, "out_file",
+                        outputnode, "stereo_masked_debiased_T2")
 
                     # apply stereo to debiased T1
                     apply_stereo_debiased_T1 = pe.Node(
                         RegResample(pad_val=0.0),
                         name='apply_stereo_debiased_T1')
 
-                    seg_pipe.connect(pad_masked_debiased_T1, "out_file",
+                    seg_pipe.connect(pad_debiased_T1, "out_file",
                                      apply_stereo_debiased_T1, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
@@ -570,21 +676,12 @@ def create_full_spm_subpipes(
                     seg_pipe.connect(apply_stereo_debiased_T1, "out_file",
                                      outputnode, "stereo_debiased_T1")
 
-                else:
-                    seg_pipe.connect(pad_masked_debiased_T1, "out_file",
-                                     native_to_stereo_pipe,
-                                     'inputnode.native_T1')
-
-                    seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_native_T1',
-                                     outputnode, "stereo_debiased_T1")
-
                     # apply stereo to debiased T2
                     apply_stereo_debiased_T2 = pe.Node(
                         RegResample(pad_val=0.0),
                         name='apply_stereo_debiased_T2')
 
-                    seg_pipe.connect(pad_masked_debiased_T2, "out_file",
+                    seg_pipe.connect(pad_debiased_T2, "out_file",
                                      apply_stereo_debiased_T2, "flo_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
@@ -592,7 +689,7 @@ def create_full_spm_subpipes(
                                      apply_stereo_debiased_T2, "trans_file")
 
                     seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_debiased_T2',
+                                     'outputnode.stereo_native_T1',
                                      apply_stereo_debiased_T2, "ref_file")
 
                     # output
@@ -706,7 +803,7 @@ def create_full_spm_subpipes(
                     RegResample(pad_val=0.0),
                     name='apply_stereo_debiased_T1')
 
-                seg_pipe.connect(pad_masked_debiased_T1, "out_file",
+                seg_pipe.connect(pad_debiased_T1, "out_file",
                                  apply_stereo_debiased_T1, "flo_file")
 
                 seg_pipe.connect(native_to_stereo_pipe,
@@ -726,7 +823,7 @@ def create_full_spm_subpipes(
                     RegResample(pad_val=0.0),
                     name='apply_stereo_debiased_T2')
 
-                seg_pipe.connect(pad_masked_debiased_T2, "out_file",
+                seg_pipe.connect(pad_debiased_T2, "out_file",
                                  apply_stereo_debiased_T2, "flo_file")
 
                 seg_pipe.connect(native_to_stereo_pipe,
@@ -740,6 +837,46 @@ def create_full_spm_subpipes(
                 # output
                 seg_pipe.connect(apply_stereo_debiased_T2, "out_file",
                                  outputnode, "stereo_debiased_T2")
+
+                # apply stereo to masked_debiased T1
+                apply_stereo_masked_debiased_T1 = pe.Node(
+                    RegResample(pad_val=0.0),
+                    name='apply_stereo_masked_debiased_T1')
+
+                seg_pipe.connect(pad_masked_debiased_T1, "out_file",
+                                 apply_stereo_masked_debiased_T1, "flo_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.native_to_stereo_trans',
+                                 apply_stereo_masked_debiased_T1, "trans_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.stereo_native_T1',
+                                 apply_stereo_masked_debiased_T1, "ref_file")
+
+                # output
+                seg_pipe.connect(apply_stereo_masked_debiased_T1, "out_file",
+                                 outputnode, "stereo_masked_debiased_T1")
+
+                # apply stereo to masked_debiased T2
+                apply_stereo_masked_debiased_T2 = pe.Node(
+                    RegResample(pad_val=0.0),
+                    name='apply_stereo_masked_debiased_T2')
+
+                seg_pipe.connect(pad_masked_debiased_T2, "out_file",
+                                 apply_stereo_masked_debiased_T2, "flo_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.native_to_stereo_trans',
+                                 apply_stereo_masked_debiased_T2, "trans_file")
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 'outputnode.stereo_native_T1',
+                                 apply_stereo_masked_debiased_T2, "ref_file")
+
+                # output
+                seg_pipe.connect(apply_stereo_masked_debiased_T2, "out_file",
+                                 outputnode, "stereo_masked_debiased_T2")
 
                 # apply transfo to list
                 apply_stereo_mask = pe.Node(RegResample(inter_val="NN"),
