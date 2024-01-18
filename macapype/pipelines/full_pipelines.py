@@ -1737,8 +1737,7 @@ def create_full_ants_subpipes(
                 params.keys()), "error, only one of correct_bias_pipe\
                 or N4debias should be present"
 
-
-    if "create_correct_bias_pipe" in params.keys():
+    if "correct_bias_pipe" in params.keys():
 
         print("Found create_correct_bias_pipe in params.json")
 
