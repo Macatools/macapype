@@ -1751,10 +1751,6 @@ def create_full_ants_subpipes(
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                          correct_bias_pipe, 'inputnode.preproc_T2')
 
-        seg_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "correct_bias_pipe"),
-            correct_bias_pipe, "indiv_params")
-
         if pad:
             if "short_preparation_pipe" in params.keys():
                 if "crop_T1" in params["short_preparation_pipe"].keys():
@@ -2329,6 +2325,14 @@ def create_full_ants_subpipes(
     if "masked_correct_bias_pipe" in params.keys():
         masked_correct_bias_pipe = create_masked_correct_bias_pipe(
             params=parse_key(params, "masked_correct_bias_pipe"))
+
+        if "correct_bias_pipe" in params.keys():
+
+            seg_pipe.connect(correct_bias_pipe, "debiased_T1",
+                             masked_correct_bias_pipe, "inputnode.preproc_T1")
+
+            seg_pipe.connect(correct_bias_pipe, "debiased_T2",
+                             masked_correct_bias_pipe, "inputnode.preproc_T2")
 
         if "N4debias" in params.keys():
 
