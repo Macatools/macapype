@@ -132,6 +132,7 @@ def create_full_spm_subpipes(
                                       'debiased_T2', 'masked_debiased_T2',
                                       "wmgm_stl",
                                       'prob_wm', 'prob_gm', 'prob_csf',
+                                      'gen_5tt',
                                       'stereo_native_T1', 'stereo_debiased_T1',
                                       'stereo_native_T2', 'stereo_debiased_T2',
                                       'stereo_masked_debiased_T1',
@@ -140,6 +141,7 @@ def create_full_spm_subpipes(
                                       'stereo_prob_wm', 'stereo_prob_gm',
                                       'stereo_prob_csf',
                                       'stereo_segmented_brain_mask',
+                                      'stereo_gen_5tt',
                                       "native_to_stereo_trans"]),
         name='outputnode')
     # preprocessing
@@ -1366,6 +1368,106 @@ def create_full_spm_subpipes(
 
             seg_pipe.connect(inputnode, 'indiv_params',
                              nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
+
+    if "export_5tt_pipe" in params.keys():
+
+        export_5tt_pipe = create_5tt_pipe(
+            params=parse_key(params, "export_5tt_pipe"))
+
+        seg_pipe.connect(
+            old_segment_pipe, 'outputnode.threshold_csf',
+            export_5tt_pipe, 'inputnode.gm_file')
+
+        seg_pipe.connect(
+            old_segment_pipe, 'outputnode.threshold_csf',
+            export_5tt_pipe, 'inputnode.wm_file')
+
+        seg_pipe.connect(
+            old_segment_pipe, 'outputnode.threshold_csf',
+            export_5tt_pipe, 'inputnode.csf_file')
+
+        if pad and space == "native":
+            if "short_preparation_pipe" in params.keys():
+                if "crop_T1" in params["short_preparation_pipe"].keys():
+
+                    print("Padding gen_5tt in native space")
+
+                    pad_gen_5tt = pe.Node(
+                        niu.Function(
+                            input_names=['cropped_img_file',
+                                         'orig_img_file',
+                                         'indiv_crop'],
+                            output_names=['padded_img_file'],
+                            function=padding_cropped_img),
+                        name="pad_gen_5tt")
+
+                    seg_pipe.connect(
+                        export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                        pad_gen_5tt, "cropped_img_file")
+
+                    seg_pipe.connect(
+                        data_preparation_pipe, "outputnode.native_T1",
+                        pad_gen_5tt, "orig_img_file")
+
+                    seg_pipe.connect(
+                        inputnode, "indiv_params",
+                        pad_gen_5tt, "indiv_crop")
+
+                    seg_pipe.connect(
+                        pad_gen_5tt, "padded_img_file",
+                        outputnode, "gen_5tt")
+
+                else:
+                    print("Using reg_aladin transfo to pad gen_5tt back")
+
+                    pad_gen_5tt = pe.Node(
+                        RegResample(),
+                        name="pad_gen_5tt")
+
+                    seg_pipe.connect(
+                        export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                        pad_gen_5tt, "flo_file")
+
+                    seg_pipe.connect(
+                        data_preparation_pipe, "outputnode.native_T1",
+                        pad_gen_5tt, "ref_file")
+
+                    seg_pipe.connect(
+                        data_preparation_pipe, "inv_tranfo.out_file",
+                        pad_gen_5tt, "trans_file")
+
+                    # outputnode
+                    seg_pipe.connect(
+                        pad_gen_5tt, "out_file",
+                        outputnode, "gen_5tt")
+
+                if "native_to_stereo_pipe" in params:
+
+                    # apply transfo to gen_5tt
+                    apply_stereo_gen_5tt = pe.Node(
+                        RegResample(inter_val="NN"),
+                        name='apply_stereo_gen_5tt')
+
+                    seg_pipe.connect(
+                        pad_gen_5tt, 'out_file',
+                        apply_stereo_gen_5tt, "flo_file")
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.native_to_stereo_trans',
+                        apply_stereo_gen_5tt, "trans_file")
+                    seg_pipe.connect(
+                        native_to_stereo_pipe,
+                        'outputnode.padded_stereo_T1',
+                        apply_stereo_gen_5tt, "ref_file")
+
+                    seg_pipe.connect(
+                        apply_stereo_gen_5tt, "out_file",
+                        outputnode, "stereo_gen_5tt")
+        else:
+
+            seg_pipe.connect(
+                export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                outputnode, 'gen_5tt')
 
     return seg_pipe
 
