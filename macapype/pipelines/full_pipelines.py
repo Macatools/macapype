@@ -2222,7 +2222,7 @@ def create_full_ants_subpipes(
                              "outputnode.debiased_T1",
                              extract_pipe, "inputnode.restore_T1")
 
-        if "N4debias" in params.keys():
+        elif "N4debias" in params.keys():
             # brain extraction
             seg_pipe.connect(N4debias_T1, "output_image",
                              extract_pipe, "inputnode.restore_T1")
