@@ -1369,10 +1369,10 @@ def create_full_spm_subpipes(
             seg_pipe.connect(inputnode, 'indiv_params',
                              nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
 
-    if "export_5tt_pipe" in params.keys():
+    if "export_5tt_pipe" in params["old_segment_pipe"].keys():
 
         export_5tt_pipe = create_5tt_pipe(
-            params=parse_key(params, "export_5tt_pipe"))
+            params=parse_key(params["old_segment_pipe"], "export_5tt_pipe"))
 
         seg_pipe.connect(
             old_segment_pipe, 'outputnode.threshold_csf',
