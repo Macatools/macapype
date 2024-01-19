@@ -1023,24 +1023,24 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_wm, "padded_img_file",
                                  outputnode, "prob_wm")
 
-            if "native_to_stereo_pipe" in params:
+        if "native_to_stereo_pipe" in params:
 
-                # apply transfo to prob_wm
-                apply_stereo_prob_wm = pe.Node(
-                    RegResample(inter_val="NN"),
-                    name='apply_stereo_prob_wm')
+            # apply transfo to prob_wm
+            apply_stereo_prob_wm = pe.Node(
+                RegResample(inter_val="NN"),
+                name='apply_stereo_prob_wm')
 
-                seg_pipe.connect(pad_prob_wm, 'out_file',
-                                 apply_stereo_prob_wm, "flo_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.native_to_stereo_trans',
-                                 apply_stereo_prob_wm, "trans_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.padded_stereo_T1',
-                                 apply_stereo_prob_wm, "ref_file")
+            seg_pipe.connect(pad_prob_wm, 'out_file',
+                                apply_stereo_prob_wm, "flo_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.native_to_stereo_trans',
+                                apply_stereo_prob_wm, "trans_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.padded_stereo_T1',
+                                apply_stereo_prob_wm, "ref_file")
 
-                seg_pipe.connect(apply_stereo_prob_wm, "out_file",
-                                 outputnode, "stereo_prob_wm")
+            seg_pipe.connect(apply_stereo_prob_wm, "out_file",
+                                outputnode, "stereo_prob_wm")
     else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
                          outputnode, 'prob_wm')
@@ -1116,24 +1116,24 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_csf, "padded_img_file",
                                  outputnode, "prob_csf")
 
-            if "native_to_stereo_pipe" in params:
+        if "native_to_stereo_pipe" in params:
 
-                # apply transfo to prob_csf
-                apply_stereo_prob_csf = pe.Node(
-                    RegResample(inter_val="NN"),
-                    name='apply_stereo_prob_csf')
+            # apply transfo to prob_csf
+            apply_stereo_prob_csf = pe.Node(
+                RegResample(inter_val="NN"),
+                name='apply_stereo_prob_csf')
 
-                seg_pipe.connect(pad_prob_csf, 'out_file',
-                                 apply_stereo_prob_csf, "flo_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.native_to_stereo_trans',
-                                 apply_stereo_prob_csf, "trans_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.padded_stereo_T1',
-                                 apply_stereo_prob_csf, "ref_file")
+            seg_pipe.connect(pad_prob_csf, 'out_file',
+                                apply_stereo_prob_csf, "flo_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.native_to_stereo_trans',
+                                apply_stereo_prob_csf, "trans_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.padded_stereo_T1',
+                                apply_stereo_prob_csf, "ref_file")
 
-                seg_pipe.connect(apply_stereo_prob_csf, "out_file",
-                                 outputnode, "stereo_prob_csf")
+            seg_pipe.connect(apply_stereo_prob_csf, "out_file",
+                                outputnode, "stereo_prob_csf")
     else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_csf',
                          outputnode, 'prob_csf')
@@ -1209,24 +1209,24 @@ def create_full_spm_subpipes(
                 seg_pipe.connect(pad_prob_gm, "padded_img_file",
                                  outputnode, "prob_gm")
 
-            if "native_to_stereo_pipe" in params:
+        if "native_to_stereo_pipe" in params:
 
-                # apply transfo to prob_gm
-                apply_stereo_prob_gm = pe.Node(
-                    RegResample(inter_val="NN"),
-                    name='apply_stereo_prob_gm')
+            # apply transfo to prob_gm
+            apply_stereo_prob_gm = pe.Node(
+                RegResample(inter_val="NN"),
+                name='apply_stereo_prob_gm')
 
-                seg_pipe.connect(pad_prob_gm, 'out_file',
-                                 apply_stereo_prob_gm, "flo_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.native_to_stereo_trans',
-                                 apply_stereo_prob_gm, "trans_file")
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.padded_stereo_T1',
-                                 apply_stereo_prob_gm, "ref_file")
+            seg_pipe.connect(pad_prob_gm, 'out_file',
+                                apply_stereo_prob_gm, "flo_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.native_to_stereo_trans',
+                                apply_stereo_prob_gm, "trans_file")
+            seg_pipe.connect(native_to_stereo_pipe,
+                                'outputnode.padded_stereo_T1',
+                                apply_stereo_prob_gm, "ref_file")
 
-                seg_pipe.connect(apply_stereo_prob_gm, "out_file",
-                                 outputnode, "stereo_prob_gm")
+            seg_pipe.connect(apply_stereo_prob_gm, "out_file",
+                                outputnode, "stereo_prob_gm")
 
     else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_gm',
