@@ -2328,13 +2328,13 @@ def create_full_ants_subpipes(
 
         if "correct_bias_pipe" in params.keys():
 
-            seg_pipe.connect(correct_bias_pipe, "debiased_T1",
+            seg_pipe.connect(correct_bias_pipe, "outputnode.debiased_T1",
                              masked_correct_bias_pipe, "inputnode.preproc_T1")
 
-            seg_pipe.connect(correct_bias_pipe, "debiased_T2",
+            seg_pipe.connect(correct_bias_pipe, "outputnode.debiased_T2",
                              masked_correct_bias_pipe, "inputnode.preproc_T2")
 
-        if "N4debias" in params.keys():
+        elif "N4debias" in params.keys():
 
             seg_pipe.connect(N4debias_T1, "output_image",
                              masked_correct_bias_pipe, "inputnode.preproc_T1")
