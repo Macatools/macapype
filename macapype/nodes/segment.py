@@ -365,8 +365,14 @@ def copy_header(ref_img, img_to_modify):
 
     modified_img = os.path.abspath(fname + "_hd" + ext)
 
-    os.system("CopyImageHeaderInformation {} {} {} 1 1 1".format(
-        ref_img, img_to_modify, modified_img))
+    cmd = "CopyImageHeaderInformation {} {} {} 1 1 1".format(
+        ref_img, img_to_modify, modified_img)
+
+    print(cmd)
+
+    ret = os.system(cmd)
+
+    print ret
 
     return modified_img
 

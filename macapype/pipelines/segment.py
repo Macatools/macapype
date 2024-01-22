@@ -115,7 +115,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(copy_header_to_seg, ('modified_img', show_files),
                              seg_at, "priors")
 
-        segment_pipe.connect(copy_header_to_seg, ('modified_img', get_list_length),
+        segment_pipe.connect(copy_header_to_seg,
+                             ('modified_img', get_list_length),
                              seg_at, "numberOfClasses")
 
     # split dseg_mask
