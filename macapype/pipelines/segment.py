@@ -69,15 +69,18 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     if "use_priors" in params.keys():
 
+        reorient_seg = pe.Node(fsl.utils.Reorient2Std(), name="reorient_csf")
+
+        segment_pipe.connect(inputnode, "brain_file",
+                             reorient_seg, "in_file")
+
         # copying header from img to csf_prior_file
         copy_header_to_seg = pe.Node(niu.Function(
             input_names=['ref_img', 'img_to_modify'],
             output_names=['modified_img'],
             function=copy_header), name='copy_header_to_seg')
 
-        segment_pipe.connect(inputnode, "brain_file",
-                             copy_header_to_seg, "ref_img")
-        segment_pipe.connect(inputnode, 'seg_file',
+        segment_pipe.connect(reorient_seg, 'out_file',
                              copy_header_to_seg, "img_to_modify")
 
         # merging priors as a list
