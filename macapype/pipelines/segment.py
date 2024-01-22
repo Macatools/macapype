@@ -83,7 +83,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(reorient_seg, 'out_file',
                              copy_header_to_seg, "img_to_modify")
 
-        segment_pipe.connect(inputnode, "brain_file",
+        # segment_pipe.connect(inputnode, "brain_file",
+        segment_pipe.connect(bin_norm_intensity, 'out_file',
                              copy_header_to_seg, "ref_img")
 
         # merging priors as a list
