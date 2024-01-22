@@ -372,7 +372,7 @@ def copy_header(ref_img, img_to_modify):
 
     ret = os.system(cmd)
 
-    print ret
+    print(ret)
 
     return modified_img
 
