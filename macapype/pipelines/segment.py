@@ -83,21 +83,21 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(reorient_seg, 'out_file',
                              split_seg, "nii_file")
 
-        # copying header from img to csf_prior_file
-        copy_header_to_seg = pe.MapNode(
-            niu.Function(
-                input_names=['ref_img', 'img_to_modify'],
-                output_names=['modified_img'],
-                function=copy_header),
-            iterfield=['img_to_modify'],
-            name='copy_header_to_seg')
+        ## copying header from img to csf_prior_file
+        #copy_header_to_seg = pe.MapNode(
+            #niu.Function(
+                #input_names=['ref_img', 'img_to_modify'],
+                #output_names=['modified_img'],
+                #function=copy_header),
+            #iterfield=['img_to_modify'],
+            #name='copy_header_to_seg')
 
-        # segment_pipe.connect(inputnode, "brain_file",
-        segment_pipe.connect(bin_norm_intensity, 'out_file',
-                             copy_header_to_seg, "ref_img")
+        ## segment_pipe.connect(inputnode, "brain_file",
+        #segment_pipe.connect(bin_norm_intensity, 'out_file',
+                             #copy_header_to_seg, "ref_img")
 
-        segment_pipe.connect(split_seg, 'list_split_files',
-                             copy_header_to_seg, "img_to_modify")
+        #segment_pipe.connect(split_seg, 'list_split_files',
+                             #copy_header_to_seg, "img_to_modify")
 
     # Atropos
     seg_at = NodeParams(AtroposN4(),
@@ -112,12 +112,17 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
         seg_at.inputs.prior_weight = params["use_priors"]
 
-        segment_pipe.connect(copy_header_to_seg, ('modified_img', show_files),
+        segment_pipe.connect(split_seg, 'list_split_files',
                              seg_at, "priors")
 
-        segment_pipe.connect(copy_header_to_seg,
-                             ('modified_img', get_list_length),
+        # segment_pipe.connect(copy_header_to_seg, ('modified_img', show_files),
+        # seg_at, "priors")
+
+        segment_pipe.connect(split_seg, 'list_split_files',
                              seg_at, "numberOfClasses")
+        # segment_pipe.connect(copy_header_to_seg,
+        #                     ('modified_img', get_list_length),
+        #                     seg_at, "numberOfClasses")
 
     # split dseg_mask
     split_dseg_mask = pe.Node(
