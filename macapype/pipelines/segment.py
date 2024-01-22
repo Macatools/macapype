@@ -89,7 +89,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 input_names=['ref_img', 'img_to_modify'],
                 output_names=['modified_img'],
                 function=copy_header),
-            iterfield='img_to_modify',
+            iterfield=['img_to_modify'],
             name='copy_header_to_seg')
 
         # segment_pipe.connect(inputnode, "brain_file",
@@ -115,7 +115,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(copy_header_to_seg, ('modified_img', show_files),
                              seg_at, "priors")
 
-        segment_pipe.connect(split_seg, ('modified_img', get_list_length),
+        segment_pipe.connect(copy_header_to_seg, ('modified_img', get_list_length),
                              seg_at, "numberOfClasses")
 
     # split dseg_mask
@@ -131,9 +131,9 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
     # on segmentation indexed mask (with labels)
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf"]),
+            fields=["segmented_file",
+                    "threshold_gm", "threshold_wm", "threshold_csf",
+                    "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
 
     segment_pipe.connect(seg_at, 'segmented_file',
