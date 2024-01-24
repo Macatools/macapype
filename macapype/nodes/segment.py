@@ -376,47 +376,6 @@ def copy_header(ref_img, img_to_modify):
 
     return modified_img
 
-
-if __name__ == '__main__':
-    # path_to = "/hpc/crise/meunier.d"
-    path_to = "/hpc/crise/meunier.d/Data/Data_Fred/test_Fred_dev"
-
-    seg_path = os.path.join(
-        path_to, "test_pipeline_single_indiv_params_ants_t1_template",
-        "full_T1_ants_subpipes", "brain_segment_from_mask_T1_pipe")
-
-    brain_file = os.path.join(
-        seg_path, "register_NMT_pipe",
-        "_session_01_subject_jazz", "norm_intensity",
-        "sub-jazz_ses-01_T1w_roi_noise_corrected_masked_corrected.nii.gz")
-
-    brainmask_file = os.path.join(
-        seg_path, "segment_atropos_pipe", "_session_01_subject_jazz",
-        "bin_norm_intensity",
-        "sub-jazz_ses-01_T1w_roi_noise_corrected_masked_corrected_bin.nii.gz")
-
-    priors = [os.path.join(
-        seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
-        "align_seg_csf", "tmp_01_allineate.nii.gz"),
-              os.path.join(
-                  seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
-                  "align_seg_gm", "tmp_02_allineate.nii.gz"),
-              os.path.join(
-                  seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
-                  "align_seg_wm", "tmp_03_allineate.nii.gz")]
-
-    seg_at = AtroposN4()
-
-    seg_at.inputs.brain_file = brain_file
-    seg_at.inputs.brainmask_file = brainmask_file
-
-    seg_at.inputs.priors = priors
-
-    val = seg_at.run().outputs
-
-    print(val)
-
-
 def compute_5tt(gm_file, wm_file, csf_file, background_val=0.0):
 
     import os
@@ -520,3 +479,67 @@ def fill_list_vol(list_vol, nb_classes):
             list_vol.append(new_img_file)
 
     return list_vol
+
+
+def set_origin(nii_file):
+
+    import os
+    import subprocess
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    origin_nii_file = os.path.abspath(fname + "_orig" + ext)
+
+    cmd_line = "SetOrigin 3 {} {} 0 0 0 ".format(
+        nii_file, origin_nii_file)
+
+    subprocess.check_output(cmd_line, shell=True)
+
+    assert os.path.exists(origin_nii_file), \
+        "Error, {} should exists".format(origin_nii_file)
+
+    return origin_nii_file
+
+
+
+if __name__ == '__main__':
+    # path_to = "/hpc/crise/meunier.d"
+    path_to = "/hpc/crise/meunier.d/Data/Data_Fred/test_Fred_dev"
+
+    seg_path = os.path.join(
+        path_to, "test_pipeline_single_indiv_params_ants_t1_template",
+        "full_T1_ants_subpipes", "brain_segment_from_mask_T1_pipe")
+
+    brain_file = os.path.join(
+        seg_path, "register_NMT_pipe",
+        "_session_01_subject_jazz", "norm_intensity",
+        "sub-jazz_ses-01_T1w_roi_noise_corrected_masked_corrected.nii.gz")
+
+    brainmask_file = os.path.join(
+        seg_path, "segment_atropos_pipe", "_session_01_subject_jazz",
+        "bin_norm_intensity",
+        "sub-jazz_ses-01_T1w_roi_noise_corrected_masked_corrected_bin.nii.gz")
+
+    priors = [os.path.join(
+        seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
+        "align_seg_csf", "tmp_01_allineate.nii.gz"),
+              os.path.join(
+                  seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
+                  "align_seg_gm", "tmp_02_allineate.nii.gz"),
+              os.path.join(
+                  seg_path, "register_NMT_pipe", "_session_01_subject_jazz",
+                  "align_seg_wm", "tmp_03_allineate.nii.gz")]
+
+    seg_at = AtroposN4()
+
+    seg_at.inputs.brain_file = brain_file
+    seg_at.inputs.brainmask_file = brainmask_file
+
+    seg_at.inputs.priors = priors
+
+    val = seg_at.run().outputs
+
+    print(val)
+
