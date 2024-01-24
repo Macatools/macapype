@@ -136,6 +136,21 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(split_seg, ('list_split_files', get_list_length),
                              seg_at, "numberOfClasses")
 
+    # copy back orignal brain_file header
+
+    # copying header from img to csf_prior_file
+    copy_original_header = pe.Node(niu.Function(
+        input_names=['ref_img', 'img_to_modify'],
+        output_names=['modified_img'],
+        function=copy_header), name='copy_original_header')
+
+    # segment_pipe.connect(inputnode, "brain_file",
+    segment_pipe.connect(inputnode, "brain_file",
+                            copy_original_header, "ref_img")
+    segment_pipe.connect(seg_at, 'segmented_file',
+                            copy_original_header, "img_to_modify")
+
+
     # split dseg_mask
     split_dseg_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -143,7 +158,8 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                                function=split_indexed_mask),
         name="split_dseg_mask")
 
-    segment_pipe.connect(seg_at, 'segmented_file',
+    # segment_pipe.connect(seg_at, 'segmented_file',
+    segment_pipe.connect(copy_original_header, 'modified_img',
                          split_dseg_mask, "nii_file")
 
     # on segmentation indexed mask (with labels)
