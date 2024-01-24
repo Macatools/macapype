@@ -5,7 +5,7 @@ import nipype.interfaces.fsl as fsl
 
 import nipype.interfaces.spm as spm
 
-from ..nodes.segment import (AtroposN4, merge_masks, set_origin
+from ..nodes.segment import (AtroposN4, merge_masks, set_origin,
                              merge_imgs, split_indexed_mask, copy_header,
                              compute_5tt, fill_list_vol)
 
