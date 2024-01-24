@@ -67,7 +67,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             function=set_origin), name="set_origin_brain")
 
     segment_pipe.connect(inputnode, 'brain_file',
-                         set_origin_brain, "in_file")
+                         set_origin_brain, "nii_file")
 
     # bin_norm_intensity (a cheat from Kepkee if I understood well!)
     bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
