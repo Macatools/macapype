@@ -60,37 +60,113 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             fields=["brain_file", "seg_file"]),
         name='inputnode')
 
-    # set_origin_brain
-    set_origin_brain = pe.Node(niu.Function(
-            input_names=['nii_file'],
-            output_names=['origin_nii_file'],
-            function=set_origin), name="set_origin_brain")
+    ## set_origin_brain
+    #set_origin_brain = pe.Node(niu.Function(
+            #input_names=['nii_file'],
+            #output_names=['origin_nii_file'],
+            #function=set_origin), name="set_origin_brain")
 
-    segment_pipe.connect(inputnode, 'brain_file',
-                         set_origin_brain, "nii_file")
-
-    # bin_norm_intensity (a cheat from Kepkee if I understood well!)
-    bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
-    bin_norm_intensity.inputs.operation = "bin"
-
-    segment_pipe.connect(set_origin_brain, "origin_nii_file",
-                         bin_norm_intensity, "in_file")
+    #segment_pipe.connect(inputnode, 'brain_file',
+                         #set_origin_brain, "nii_file")
 
     ## bin_norm_intensity (a cheat from Kepkee if I understood well!)
     #bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
     #bin_norm_intensity.inputs.operation = "bin"
 
-    #segment_pipe.connect(inputnode, "brain_file",
-                        #bin_norm_intensity, "in_file")
+    #segment_pipe.connect(set_origin_brain, "origin_nii_file",
+                         #bin_norm_intensity, "in_file")
 
-    ## set_origin_mask
-    #set_origin_mask = pe.Node(niu.Function(
+    ### bin_norm_intensity (a cheat from Kepkee if I understood well!)
+    ##bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
+    ##bin_norm_intensity.inputs.operation = "bin"
+
+    ##segment_pipe.connect(inputnode, "brain_file",
+                        ##bin_norm_intensity, "in_file")
+
+    ### set_origin_mask
+    ##set_origin_mask = pe.Node(niu.Function(
+            ##input_names=['nii_file'],
+            ##output_names=['origin_nii_file'],
+            ##function=set_origin), name="set_origin_mask")
+
+    ##segment_pipe.connect(bin_norm_intensity, 'out_file',
+                        ##set_origin_mask, "in_file")
+
+    #if "use_priors" in params.keys():
+
+        ## copying header from img to csf_prior_file
+        #copy_header_to_seg = pe.Node(niu.Function(
+            #input_names=['ref_img', 'img_to_modify'],
+            #output_names=['modified_img'],
+            #function=copy_header), name='copy_header_to_seg')
+
+        ## segment_pipe.connect(inputnode, "brain_file",
+        #segment_pipe.connect(set_origin_brain, "origin_nii_file",
+                             #copy_header_to_seg, "ref_img")
+        #segment_pipe.connect(inputnode, 'seg_file',
+                             #copy_header_to_seg, "img_to_modify")
+
+        ## merging priors as a list
+        #split_seg = pe.Node(niu.Function(
             #input_names=['nii_file'],
-            #output_names=['origin_nii_file'],
-            #function=set_origin), name="set_origin_mask")
+            #output_names=['list_split_files'],
+            #function=split_indexed_mask), name='split_seg')
 
+        #segment_pipe.connect(copy_header_to_seg, 'modified_img',
+                             #split_seg, "nii_file")
+
+    ## Atropos
+    #seg_at = NodeParams(AtroposN4(),
+                        #params=parse_key(params, "Atropos"),
+                        #name='seg_at')
+
+    #segment_pipe.connect(set_origin_brain, "origin_nii_file",
+                         #seg_at, "brain_file")
+    ## segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
     #segment_pipe.connect(bin_norm_intensity, 'out_file',
-                        #set_origin_mask, "in_file")
+                         #seg_at, "brainmask_file")
+
+    #if "use_priors" in params.keys():
+
+        #seg_at.inputs.prior_weight = params["use_priors"]
+
+        #segment_pipe.connect(split_seg, 'list_split_files',
+                             #seg_at, "priors")
+
+        #segment_pipe.connect(split_seg, ('list_split_files', get_list_length),
+                             #seg_at, "numberOfClasses")
+
+    ## copy back orignal brain_file header
+
+    ## copying header from img to csf_prior_file
+    #copy_original_header = pe.Node(niu.Function(
+        #input_names=['ref_img', 'img_to_modify'],
+        #output_names=['modified_img'],
+        #function=copy_header), name='copy_original_header')
+
+    ## segment_pipe.connect(inputnode, "brain_file",
+    #segment_pipe.connect(inputnode, "brain_file",
+                            #copy_original_header, "ref_img")
+    #segment_pipe.connect(seg_at, 'segmented_file',
+                            #copy_original_header, "img_to_modify")
+
+    ## split dseg_mask
+    #split_dseg_mask = pe.Node(
+        #interface=niu.Function(input_names=["nii_file"],
+                               #output_names=["list_split_files"],
+                               #function=split_indexed_mask),
+        #name="split_dseg_mask")
+
+    ## segment_pipe.connect(seg_at, 'segmented_file',
+    #segment_pipe.connect(copy_original_header, 'modified_img',
+                         #split_dseg_mask, "nii_file")
+
+    # bin_norm_intensity (a cheat from Kepkee if I understood well!)
+    bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
+    bin_norm_intensity.inputs.operation = "bin"
+
+    segment_pipe.connect(inputnode, "brain_file",
+                         bin_norm_intensity, "in_file")
 
     if "use_priors" in params.keys():
 
@@ -100,8 +176,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             output_names=['modified_img'],
             function=copy_header), name='copy_header_to_seg')
 
-        # segment_pipe.connect(inputnode, "brain_file",
-        segment_pipe.connect(set_origin_brain, "origin_nii_file",
+        segment_pipe.connect(inputnode, "brain_file",
                              copy_header_to_seg, "ref_img")
         segment_pipe.connect(inputnode, 'seg_file',
                              copy_header_to_seg, "img_to_modify")
@@ -120,9 +195,9 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                         params=parse_key(params, "Atropos"),
                         name='seg_at')
 
-    segment_pipe.connect(set_origin_brain, "origin_nii_file",
+    segment_pipe.connect(inputnode, "brain_file",
                          seg_at, "brain_file")
-    # segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
+
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
 
@@ -138,19 +213,6 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     # copy back orignal brain_file header
 
-    # copying header from img to csf_prior_file
-    copy_original_header = pe.Node(niu.Function(
-        input_names=['ref_img', 'img_to_modify'],
-        output_names=['modified_img'],
-        function=copy_header), name='copy_original_header')
-
-    # segment_pipe.connect(inputnode, "brain_file",
-    segment_pipe.connect(inputnode, "brain_file",
-                            copy_original_header, "ref_img")
-    segment_pipe.connect(seg_at, 'segmented_file',
-                            copy_original_header, "img_to_modify")
-
-
     # split dseg_mask
     split_dseg_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -158,8 +220,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                                function=split_indexed_mask),
         name="split_dseg_mask")
 
-    # segment_pipe.connect(seg_at, 'segmented_file',
-    segment_pipe.connect(copy_original_header, 'modified_img',
+    segment_pipe.connect(seg_at, 'segmented_file',
                          split_dseg_mask, "nii_file")
 
     # on segmentation indexed mask (with labels)
