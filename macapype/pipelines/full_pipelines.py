@@ -1556,40 +1556,92 @@ def create_brain_segment_from_mask_pipe(
             inputnode, 'indiv_params',
             register_NMT_pipe, "inputnode.indiv_params")
 
-    elif  "reg" in params:
+    elif "reg" in params:
         # Iterative registration to the INIA19 template
-        reg = NodeParams(IterREGBET(),
-                        params=parse_key(params, "reg"),
-                        name='reg')
+        reg = NodeParams(
+            IterREGBET(),
+            params=parse_key(params, "reg"),
+            name='reg')
 
         reg.inputs.refb_file = params_template["template_brain"]
 
         brain_segment_pipe.connect(
             inputnode, 'debiased_T1',
-                        reg, 'inw_file')
+            reg, 'inw_file')
 
         brain_segment_pipe.connect(
             inputnode, 'masked_debiased_T1',
-                        reg, 'inb_file')
+            reg, 'inb_file')
 
-        brain_segment_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
-                        reg, 'indiv_params')
+        brain_segment_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "reg"),
+            reg, 'indiv_params')
 
         if "template_seg" in params_template.keys():
 
-            register_seg_to_nat = pe.Node(fsl.ApplyXFM(), name="register_seg_to_nat")
+            # seg
+            register_seg_to_nat = pe.Node(
+                fsl.ApplyXFM(), name="register_seg_to_nat")
             register_seg_to_nat.inputs.interp = "nearestneighbour"
 
-            register_seg_to_nat.inputs.in_file = params_template["template_seg"]
-            brain_segment_pipe.connect(inputnode, 'masked_debiased_T1',
-                            register_seg_to_nat, 'reference')
+            register_seg_to_nat.inputs.in_file = params_template[
+                "template_seg"]
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                register_seg_to_nat, 'reference')
 
             brain_segment_pipe.connect(reg, 'inv_transfo_file',
                             register_seg_to_nat, "in_matrix_file")
 
         else:
-            #TODO
-            print("#### TODO")
+            # gm
+            register_gm_to_nat = pe.Node(
+                fsl.ApplyXFM(), name="register_gm_to_nat")
+            register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+            register_gm_to_nat.inputs.interp = "nearestneighbour"
+
+            register_gm_to_nat.inputs.in_file = params_template["template_gm"]
+
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                register_gm_to_nat, 'reference')
+
+            brain_segment_pipe.connect(
+                inputnode, 'inv_transfo_file',
+                register_gm_to_nat, "in_matrix_file")
+
+            # wm
+            register_wm_to_nat = pe.Node(
+                fsl.ApplyXFM(), name="register_wm_to_nat")
+            register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+            register_wm_to_nat.inputs.interp = "nearestneighbour"
+
+            register_wm_to_nat.inputs.in_file = params_template["template_wm"]
+
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                register_wm_to_nat, 'reference')
+
+            brain_segment_pipe.connect(
+                inputnode, 'inv_transfo_file',
+                register_wm_to_nat, "in_matrix_file")
+
+            # csf
+            register_csf_to_nat = pe.Node(
+                fsl.ApplyXFM(), name="register_csf_to_nat")
+            register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+            register_csf_to_nat.inputs.interp = "nearestneighbour"
+
+            register_csf_to_nat.inputs.in_file = params_template[
+                "template_csf"]
+
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                register_csf_to_nat, 'reference')
+
+            brain_segment_pipe.connect(
+                inputnode, 'inv_transfo_file',
+                register_csf_to_nat, "in_matrix_file")
 
     # ants Atropos
     if "template_seg" in params_template.keys():
@@ -1607,25 +1659,36 @@ def create_brain_segment_from_mask_pipe(
                 register_seg_to_nat, 'out_file',
                 segment_atropos_pipe, "inputnode.seg_file")
     else:
-        #TODO
-         print("#### TODO")
-        #print("#### create_segment_atropos_pipe (3 tissues) ")
+        print("#### create_segment_atropos_pipe (3 tissues) ")
 
-        #segment_atropos_pipe = create_segment_atropos_pipe(
-            #params=parse_key(params, "segment_atropos_pipe"))
+        segment_atropos_pipe = create_segment_atropos_pipe(
+            params=parse_key(params, "segment_atropos_pipe"))
 
-        #linking priors if "use_priors" in params
-        #if "use_priors" in params["segment_atropos_pipe"].keys():
+        # linking priors if "use_priors" in params
+        if "use_priors" in params["segment_atropos_pipe"].keys():
 
-            #brain_segment_pipe.connect(
-                #register_NMT_pipe, 'outputnode.native_template_csf',
-                #segment_atropos_pipe, "inputnode.csf_prior_file")
-            #brain_segment_pipe.connect(
-                #register_NMT_pipe,  'outputnode.native_template_gm',
-                #segment_atropos_pipe, "inputnode.gm_prior_file")
-            #brain_segment_pipe.connect(
-                #register_NMT_pipe,  'outputnode.native_template_wm',
-                #segment_atropos_pipe, "inputnode.wm_prior_file")
+            if "register_NMT_pipe" in params:
+                brain_segment_pipe.connect(
+                    register_NMT_pipe, 'outputnode.native_template_csf',
+                    segment_atropos_pipe, "inputnode.csf_prior_file")
+                brain_segment_pipe.connect(
+                    register_NMT_pipe,  'outputnode.native_template_gm',
+                    segment_atropos_pipe, "inputnode.gm_prior_file")
+                brain_segment_pipe.connect(
+                    register_NMT_pipe,  'outputnode.native_template_wm',
+                    segment_atropos_pipe, "inputnode.wm_prior_file")
+            elif "reg" in params:
+
+                print("To be validated...")
+                brain_segment_pipe.connect(
+                    register_csf_to_nat, "out_file",
+                    segment_atropos_pipe, "inputnode.csf_prior_file")
+                brain_segment_pipe.connect(
+                    register_gm_to_nat, "out_file",
+                    segment_atropos_pipe, "inputnode.gm_prior_file")
+                brain_segment_pipe.connect(
+                    register_gm_to_nat, "out_file",
+                    segment_atropos_pipe, "inputnode.wm_prior_file")
 
     # input to segment_atropos_pipe
     brain_segment_pipe.connect(
