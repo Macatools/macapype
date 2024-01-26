@@ -1575,17 +1575,21 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
                         reg, 'indiv_params')
 
+        if "template_seg" in params_template.keys():
 
-        register_seg_to_nat = pe.Node(fsl.ApplyXFM(), name="register_seg_to_nat")
-        register_seg_to_nat.inputs.interp = "nearestneighbour"
+            register_seg_to_nat = pe.Node(fsl.ApplyXFM(), name="register_seg_to_nat")
+            register_seg_to_nat.inputs.interp = "nearestneighbour"
 
-        register_seg_to_nat.inputs.in_file = params_template["template_brain"]
+            register_seg_to_nat.inputs.in_file = params_template["template_seg"]
+            brain_segment_pipe.connect(inputnode, 'masked_debiased_T1',
+                            register_seg_to_nat, 'reference')
 
-        brain_segment_pipe.connect(inputnode, 'masked_debiased_T1',
-                        register_seg_to_nat, 'reference')
+            brain_segment_pipe.connect(reg, 'inv_transfo_file',
+                            register_seg_to_nat, "in_matrix_file")
 
-        brain_segment_pipe.connect(reg, 'inv_transfo_file',
-                        register_seg_to_nat, "in_matrix_file")
+        else:
+            #TODO
+            print("#### TODO")
 
     # ants Atropos
     if "template_seg" in params_template.keys():
