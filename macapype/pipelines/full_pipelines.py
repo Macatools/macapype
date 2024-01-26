@@ -1530,7 +1530,7 @@ def create_brain_segment_from_mask_pipe(
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['masked_debiased_T1', 'indiv_params']),
+            fields=['masked_debiased_T1', "debiased_T1", 'indiv_params']),
         name='inputnode')
 
     # creating outputnode
@@ -1541,18 +1541,51 @@ def create_brain_segment_from_mask_pipe(
                     "prob_csf", "gen_5tt"]),
         name='outputnode')
 
-    # register NMT template, template mask and priors to subject T1
-    register_NMT_pipe = create_register_NMT_pipe(
-        params_template=params_template,
-        params=parse_key(params, "register_NMT_pipe"))
+    if "register_NMT_pipe" in params:
 
-    brain_segment_pipe.connect(
-        inputnode, 'masked_debiased_T1',
-        register_NMT_pipe, "inputnode.T1")
+        # register NMT template, template mask and priors to subject T1
+        register_NMT_pipe = create_register_NMT_pipe(
+            params_template=params_template,
+            params=parse_key(params, "register_NMT_pipe"))
 
-    brain_segment_pipe.connect(
-        inputnode, 'indiv_params',
-        register_NMT_pipe, "inputnode.indiv_params")
+        brain_segment_pipe.connect(
+            inputnode, 'masked_debiased_T1',
+            register_NMT_pipe, "inputnode.T1")
+
+        brain_segment_pipe.connect(
+            inputnode, 'indiv_params',
+            register_NMT_pipe, "inputnode.indiv_params")
+
+    elif  "reg" in params:
+        # Iterative registration to the INIA19 template
+        reg = NodeParams(IterREGBET(),
+                        params=parse_key(params, "reg"),
+                        name='reg')
+
+        reg.inputs.refb_file = params_template["template_brain"]
+
+        brain_segment_pipe.connect(
+            inputnode, 'debiased_T1',
+                        reg, 'inw_file')
+
+        brain_segment_pipe.connect(
+            inputnode, 'masked_debiased_T1',
+                        reg, 'inb_file')
+
+        brain_segment_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
+                        reg, 'indiv_params')
+
+
+        register_seg_to_nat = pe.Node(fsl.ApplyXFM(), name="register_seg_to_nat")
+        register_seg_to_nat.inputs.interp = "nearestneighbour"
+
+        register_seg_to_nat.inputs.in_file = params_template["template_brain"]
+
+        brain_segment_pipe.connect(inputnode, 'masked_debiased_T1',
+                        register_gm_to_nat, 'reference')
+
+        brain_segment_pipe.connect(reg, 'inv_transfo_file',
+                        register_gm_to_nat, "in_matrix_file")
 
     # ants Atropos
     if "template_seg" in params_template.keys():
@@ -1561,28 +1594,34 @@ def create_brain_segment_from_mask_pipe(
         segment_atropos_pipe = create_segment_atropos_seg_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
-        brain_segment_pipe.connect(
-            register_NMT_pipe, 'outputnode.native_template_seg',
-            segment_atropos_pipe, "inputnode.seg_file")
-
+        if "register_NMT_pipe" in params:
+            brain_segment_pipe.connect(
+                register_NMT_pipe, 'outputnode.native_template_seg',
+                segment_atropos_pipe, "inputnode.seg_file")
+        elif "reg" in params:
+            brain_segment_pipe.connect(
+                register_seg_to_nat, 'out_file',
+                segment_atropos_pipe, "inputnode.seg_file")
     else:
-        print("#### create_segment_atropos_pipe (3 tissues) ")
+        #TODO
+         print("#### TODO")
+        #print("#### create_segment_atropos_pipe (3 tissues) ")
 
-        segment_atropos_pipe = create_segment_atropos_pipe(
-            params=parse_key(params, "segment_atropos_pipe"))
+        #segment_atropos_pipe = create_segment_atropos_pipe(
+            #params=parse_key(params, "segment_atropos_pipe"))
 
-        # linking priors if "use_priors" in params
-        if "use_priors" in params["segment_atropos_pipe"].keys():
+        #linking priors if "use_priors" in params
+        #if "use_priors" in params["segment_atropos_pipe"].keys():
 
-            brain_segment_pipe.connect(
-                register_NMT_pipe, 'outputnode.native_template_csf',
-                segment_atropos_pipe, "inputnode.csf_prior_file")
-            brain_segment_pipe.connect(
-                register_NMT_pipe,  'outputnode.native_template_gm',
-                segment_atropos_pipe, "inputnode.gm_prior_file")
-            brain_segment_pipe.connect(
-                register_NMT_pipe,  'outputnode.native_template_wm',
-                segment_atropos_pipe, "inputnode.wm_prior_file")
+            #brain_segment_pipe.connect(
+                #register_NMT_pipe, 'outputnode.native_template_csf',
+                #segment_atropos_pipe, "inputnode.csf_prior_file")
+            #brain_segment_pipe.connect(
+                #register_NMT_pipe,  'outputnode.native_template_gm',
+                #segment_atropos_pipe, "inputnode.gm_prior_file")
+            #brain_segment_pipe.connect(
+                #register_NMT_pipe,  'outputnode.native_template_wm',
+                #segment_atropos_pipe, "inputnode.wm_prior_file")
 
     # input to segment_atropos_pipe
     brain_segment_pipe.connect(
@@ -3134,6 +3173,10 @@ def create_full_ants_subpipes(
             seg_pipe.connect(
                 debias, 't1_debiased_brain_file',
                 brain_segment_pipe, 'inputnode.masked_debiased_T1')
+
+            seg_pipe.connect(
+                debias, 't1_debiased_file',
+                brain_segment_pipe, 'inputnode.debiased_T1')
 
         else:
             seg_pipe.connect(
