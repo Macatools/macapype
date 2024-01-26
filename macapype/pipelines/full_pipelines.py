@@ -1582,10 +1582,10 @@ def create_brain_segment_from_mask_pipe(
         register_seg_to_nat.inputs.in_file = params_template["template_brain"]
 
         brain_segment_pipe.connect(inputnode, 'masked_debiased_T1',
-                        register_gm_to_nat, 'reference')
+                        register_seg_to_nat, 'reference')
 
         brain_segment_pipe.connect(reg, 'inv_transfo_file',
-                        register_gm_to_nat, "in_matrix_file")
+                        register_seg_to_nat, "in_matrix_file")
 
     # ants Atropos
     if "template_seg" in params_template.keys():
