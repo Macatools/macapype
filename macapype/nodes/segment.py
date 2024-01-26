@@ -337,7 +337,7 @@ def split_indexed_mask(nii_file, background_val=0):
 
     list_split_files = []
 
-    print (np.unique(nii_data)
+    print (np.unique(nii_data))
 
     nii_data = nii_data.astype(int)
 
