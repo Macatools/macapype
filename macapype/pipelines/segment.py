@@ -188,7 +188,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             function=split_indexed_mask), name='split_seg')
 
         #segment_pipe.connect(copy_header_to_seg, 'modified_img',
-        segment_pipe.connect(inputnode, "brain_file",
+        segment_pipe.connect(inputnode, "seg_file",
                              split_seg, "nii_file")
 
     # Atropos
