@@ -74,6 +74,8 @@ from macapype.utils.utils_params import update_params
 
 from macapype.utils.misc import show_files, get_first_elem, parse_key
 
+from macapype._version import __version__
+
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ###############################################################################
 
@@ -470,6 +472,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
     # saving real params.json
+    params["macapype_version"] = __version__
+
     real_params_file = op.join(process_dir, wf_name, "real_params.json")
     with open(real_params_file, 'w+') as fp:
         json.dump(params, fp)

@@ -522,14 +522,33 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
     reg_pipe.connect(pad_template_T1, 'img_padded_file',
                      outputnode, "padded_stereo_T1")
 
+    if "pre_crop_z_T1" in params.keys():
+
+        print('pre_crop_z_T1')
+        pre_crop_z_T1 = NodeParams(
+            fsl.RobustFOV(),
+            params=parse_key(params, "pre_crop_z_T1"),
+            name='pre_crop_z_T1')
+
+        reg_pipe.connect(
+            inputnode, 'native_T1',
+            pre_crop_z_T1, 'in_file')
+
     # align T1 on template
     reg_T1_on_template = NodeParams(
         reg.RegAladin(),
         params=parse_key(params, "reg_T1_on_template"),
         name='reg_T1_on_template')
 
-    reg_pipe.connect(inputnode, 'native_T1',
-                     reg_T1_on_template, "flo_file")
+    if "pre_crop_z_T1" in params.keys():
+        reg_pipe.connect(
+            pre_crop_z_T1, "out_roi",
+            reg_T1_on_template, "flo_file")
+    else:
+
+        reg_pipe.connect(
+            inputnode, 'native_T1',
+            reg_T1_on_template, "flo_file")
 
     reg_pipe.connect(pad_template_T1, 'img_padded_file',
                      reg_T1_on_template, "ref_file")
