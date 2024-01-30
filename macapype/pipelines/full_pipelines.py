@@ -448,24 +448,15 @@ def create_full_spm_subpipes(
     # prob_wm
     if pad and space == "native":
 
+        pad_prob_gm = pad_back(
+            seg_pipe, data_preparation_pipe, inputnode,
+            old_segment_pipe, "outputnode.prob_gm",
+            outputnode, "prob_gm", params)
+
         pad_prob_wm = pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_wm",
             outputnode, "prob_wm", params)
-
-        if "native_to_stereo_pipe" in params:
-
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_wm, 'out_file',
-                outputnode, "stereo_prob_wm")
-
-    else:
-        seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
-                         outputnode, 'prob_wm')
-
-    # prob_csf
-    if pad and space == "native":
 
         pad_prob_csf = pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
@@ -476,29 +467,26 @@ def create_full_spm_subpipes(
 
             apply_to_stereo(
                 seg_pipe, native_to_stereo_pipe,
+                pad_prob_gm, 'out_file',
+                outputnode, "stereo_prob_gm")
+
+            apply_to_stereo(
+                seg_pipe, native_to_stereo_pipe,
+                pad_prob_wm, 'out_file',
+                outputnode, "stereo_prob_wm")
+
+            apply_to_stereo(
+                seg_pipe, native_to_stereo_pipe,
                 pad_prob_csf, 'out_file',
                 outputnode, "stereo_prob_csf")
 
     else:
+        seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
+                         outputnode, 'prob_wm')
+
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_csf',
                          outputnode, 'prob_csf')
 
-    # prob_gm
-    if pad and space == "native":
-
-        pad_prob_gm = pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
-            old_segment_pipe, "outputnode.prob_gm",
-            outputnode, "prob_gm", params)
-
-        if "native_to_stereo_pipe" in params:
-
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_gm, 'out_file',
-                outputnode, "stereo_prob_gm")
-
-    else:
         seg_pipe.connect(old_segment_pipe, 'outputnode.prob_gm',
                          outputnode, 'prob_gm')
 
@@ -539,8 +527,10 @@ def create_full_spm_subpipes(
                     outputnode, "stereo_segmented_brain_mask")
 
         else:
-            seg_pipe.connect(old_segment_pipe, 'outputnode.prob_gm',
-                             outputnode, 'prob_gm')
+            seg_pipe.connect(
+                mask_from_seg_pipe,
+                'merge_indexed_mask.indexed_mask',
+                outputnode, 'stereo_segmented_brain_mask')
 
     # LEGACY
     if space == 'template':
