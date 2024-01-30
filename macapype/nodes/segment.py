@@ -339,7 +339,6 @@ def split_indexed_mask(nii_file, background_val=0):
 
     nii_data = nii_data.astype(int)
 
-
     for index in np.unique(nii_data):
         if index == background_val:
             continue
@@ -378,6 +377,7 @@ def copy_header(ref_img, img_to_modify):
     print(ret)
 
     return modified_img
+
 
 def compute_5tt(gm_file, wm_file, csf_file, background_val=0.0):
 
@@ -506,7 +506,6 @@ def set_origin(nii_file):
     return origin_nii_file
 
 
-
 if __name__ == '__main__':
     # path_to = "/hpc/crise/meunier.d"
     path_to = "/hpc/crise/meunier.d/Data/Data_Fred/test_Fred_dev"
@@ -545,4 +544,3 @@ if __name__ == '__main__':
     val = seg_at.run().outputs
 
     print(val)
-

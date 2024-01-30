@@ -14,7 +14,6 @@ from ..utils.utils_nodes import NodeParams
 
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
-from macapype.nodes.prepare import padding_cropped_img
 
 from macapype.nodes.pad import pad_back, apply_to_stereo
 
@@ -716,8 +715,9 @@ def create_brain_segment_from_mask_pipe(
                 inputnode, 'masked_debiased_T1',
                 register_seg_to_nat, 'reference')
 
-            brain_segment_pipe.connect(reg, 'inv_transfo_file',
-                            register_seg_to_nat, "in_matrix_file")
+            brain_segment_pipe.connect(
+                reg, 'inv_transfo_file',
+                register_seg_to_nat, "in_matrix_file")
 
         else:
             # gm
@@ -1740,7 +1740,7 @@ def create_full_ants_subpipes(
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
         if pad and space == "native":
-            pad_gen_5tt = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 brain_segment_pipe, "outputnode.gen_5tt",
                 outputnode, "gen_5tt", params)
@@ -2257,12 +2257,10 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
         if pad and space == "native":
-
-            pad_gen_5tt = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 brain_segment_pipe, "outputnode.gen_5tt",
                 outputnode, "gen_5tt", params)
-
 
     if "native_to_stereo_pipe" in params.keys() and pad:
 
