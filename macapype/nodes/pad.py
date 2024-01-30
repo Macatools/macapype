@@ -28,7 +28,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
                 name=pad_nodename)
 
             seg_pipe.connect(
-                node, 'nodefile',
+                node, nodefile,
                 pad_node, "cropped_img_file")
 
             seg_pipe.connect(
@@ -50,7 +50,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
                 name=pad_nodename)
 
             seg_pipe.connect(
-                node, 'nodefile',
+                node, nodefile,
                 pad_node, "flo_file")
 
             seg_pipe.connect(
@@ -81,7 +81,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
                 name=pad_nodename)
 
             seg_pipe.connect(
-                node, 'nodefile',
+                node, nodefile,
                 pad_node, "cropped_img_file")
 
             seg_pipe.connect(
