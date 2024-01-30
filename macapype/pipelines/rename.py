@@ -432,6 +432,22 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_wmgm_stl, 'out_file',
                 datasink, '@wmgm_stl')
 
+            # rename 5tt
+            if "export_5tt_pipe" in params["old_segment_pipe"].keys():
+                rename_gen_5tt = pe.Node(niu.Rename(), name="rename_gen_5tt")
+                rename_gen_5tt.inputs.format_string = \
+                    pref_deriv + "_space-{}_desc-5tt_dseg".format(space)
+                rename_gen_5tt.inputs.parse_string = parse_str
+                rename_gen_5tt.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.gen_5tt',
+                    rename_gen_5tt, 'in_file')
+
+                main_workflow.connect(
+                    rename_gen_5tt, 'out_file',
+                    datasink, '@gen_5tt')
+
     if "native_to_stereo_pipe" in params.keys():
 
         # rename stereo_native_T1

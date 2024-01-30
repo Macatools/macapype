@@ -69,24 +69,14 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     if "use_priors" in params.keys():
 
-        # copying header from img to csf_prior_file
-        copy_header_to_seg = pe.Node(niu.Function(
-            input_names=['ref_img', 'img_to_modify'],
-            output_names=['modified_img'],
-            function=copy_header), name='copy_header_to_seg')
-
-        segment_pipe.connect(inputnode, "brain_file",
-                             copy_header_to_seg, "ref_img")
-        segment_pipe.connect(inputnode, 'seg_file',
-                             copy_header_to_seg, "img_to_modify")
-
         # merging priors as a list
         split_seg = pe.Node(niu.Function(
             input_names=['nii_file'],
             output_names=['list_split_files'],
             function=split_indexed_mask), name='split_seg')
 
-        segment_pipe.connect(copy_header_to_seg, 'modified_img',
+        # segment_pipe.connect(copy_header_to_seg, 'modified_img',
+        segment_pipe.connect(inputnode, "seg_file",
                              split_seg, "nii_file")
 
     # Atropos
@@ -94,7 +84,9 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                         params=parse_key(params, "Atropos"),
                         name='seg_at')
 
-    segment_pipe.connect(inputnode, "brain_file", seg_at, "brain_file")
+    segment_pipe.connect(inputnode, "brain_file",
+                         seg_at, "brain_file")
+
     segment_pipe.connect(bin_norm_intensity, 'out_file',
                          seg_at, "brainmask_file")
 
