@@ -9,7 +9,9 @@ from nipype.interfaces.niftyreg.regutils import RegResample
 
 
 def pad_back(seg_pipe, data_preparation_pipe, inputnode,
-             node, nodefile, outputnode, outputnodefile, params):
+             node, nodefile,
+             outputnode, outputnodefile,
+             params):
 
     pad_nodename = "pad_" + outputnodefile
 
@@ -41,7 +43,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
 
             seg_pipe.connect(
                 pad_node, "padded_img_file",
-                outputnode, "brain_mask")
+                outputnode, outputnodefile)
 
         else:
             print("Using reg_aladin transfo to pad mask back")
@@ -64,7 +66,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
             # outputnode
             seg_pipe.connect(
                 pad_node, "out_file",
-                outputnode, "brain_mask")
+                outputnode, outputnodefile)
 
     elif "long_single_preparation_pipe" in params.keys():
         if "prep_T1" in params["long_single_preparation_pipe"].keys():
@@ -94,7 +96,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
 
             seg_pipe.connect(
                 pad_node, "padded_img_file",
-                outputnode, "brain_mask")
+                outputnode, outputnodefile)
 
     return pad_node
 
@@ -103,7 +105,7 @@ def apply_to_stereo(seg_pipe, native_to_stereo_pipe,
                     pad_node, pad_nodefile,
                     outputnode, outputnodefile):
 
-    apply_nodename = "pad_" + outputnodefile
+    apply_nodename = "apply_" + outputnodefile
 
     # apply stereo to masked_debiased_T1
     apply_node = pe.Node(
