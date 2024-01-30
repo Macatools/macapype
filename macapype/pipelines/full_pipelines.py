@@ -758,6 +758,9 @@ def create_brain_segment_from_mask_pipe(
             brain_segment_pipe.connect(
                 inputnode, 'inv_transfo_file',
                 register_csf_to_nat, "in_matrix_file")
+    else:
+        print("##### Error, no coregistration method is defined")
+        return brain_segment_pipe
 
     # ants Atropos
     if "template_seg" in params_template.keys():
@@ -888,9 +891,16 @@ def create_brain_segment_from_mask_pipe(
                                    'inputnode.native_prob_csf')
 
         # other inputs
-        brain_segment_pipe.connect(register_NMT_pipe,
-                                   'NMT_subject_align.transfo_file',
-                                   reg_seg_pipe, 'inputnode.transfo_file')
+        if "reg" in params:
+            brain_segment_pipe.connect(
+                reg, 'transfo_file',
+                reg_seg_pipe, 'inputnode.transfo_file')
+
+        elif "register_NMT_pipe" in params:
+            brain_segment_pipe.connect(
+                register_NMT_pipe,
+                'NMT_subject_align.transfo_file',
+                reg_seg_pipe, 'inputnode.transfo_file')
 
         reg_seg_pipe.inputs.inputnode.ref_image = \
             params_template['template_head']
