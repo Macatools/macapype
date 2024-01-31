@@ -284,7 +284,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 del params["mask_from_seg_pipe"]
                 print("Deleting mask_from_seg_pipe")
 
-
     print("After modif, running with params:")
     pprint.pprint(params)
 
