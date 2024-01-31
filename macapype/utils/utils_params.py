@@ -251,6 +251,10 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 del params["debias"]
                 print("Deleting debias")
 
+            if "brain_segment_pipe" in params.keys():
+                del params["brain_segment_pipe"]
+                print("Deleting brain_segment_pipe")
+
     # SPM
     if "spm" in ssoft:
         print("Found spm in soft")
@@ -271,6 +275,15 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             if "reg" in params.keys():
                 del params["reg"]
                 print("Deleting debias")
+
+            if "old_segment_pipe" in params.keys():
+                del params["old_segment_pipe"]
+                print("Deleting old_segment_pipe")
+
+            if "mask_from_seg_pipe" in params.keys():
+                del params["mask_from_seg_pipe"]
+                print("Deleting mask_from_seg_pipe")
+
 
     print("After modif, running with params:")
     pprint.pprint(params)
