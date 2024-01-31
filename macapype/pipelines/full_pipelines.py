@@ -193,12 +193,6 @@ def create_full_spm_subpipes(
             seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
                              outputnode, 'cropped_to_native_trans')
 
-    # Bias correction of cropped images
-    if "debias" not in params.keys():
-
-        print("No debias, skipping")
-        return seg_pipe
-
     debias = NodeParams(T1xT2BiasFieldCorrection(),
                         params=parse_key(params, "debias"),
                         name='debias')
@@ -351,6 +345,16 @@ def create_full_spm_subpipes(
                                  outputnode, "stereo_native_T1")
 
         else:
+
+            native_to_stereo_pipe = create_native_to_stereo_pipe(
+                "native_to_stereo_pipe",
+                params=parse_key(params, "native_to_stereo_pipe"))
+
+            seg_pipe.connect(
+                native_to_stereo_pipe,
+                'outputnode.native_to_stereo_trans',
+                outputnode, 'native_to_stereo_trans')
+
             # full head version
             seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                              native_to_stereo_pipe, 'inputnode.native_T1')
@@ -393,6 +397,12 @@ def create_full_spm_subpipes(
                     seg_pipe, native_to_stereo_pipe,
                     pad_mask, "out_file",
                     outputnode, "stereo_brain_mask")
+
+    # Bias correction of cropped images
+    if "reg" not in params.keys():
+
+        print("No reg, skipping")
+        return seg_pipe
 
     # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),

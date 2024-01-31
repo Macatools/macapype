@@ -227,52 +227,50 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             ssoft, subjects=subjects, sessions=sessions,
             indiv_params=indiv_params, params=params, extra_wf_name="")
 
-    # prep for testing only preparation part
-    if "prep" in ssoft:
-        print("Found prep in soft")
+    # ANTS
+    if "ants" in ssoft:
+        print("Found ants in soft")
 
-        # ANTS
-        if "extract_pipe" in params.keys():
-            del params["extract_pipe"]
-            print("Deleting extract_pipe")
+        if "noseg" in ssoft:
+            print("Found noseg in soft")
+            if "brain_segment_pipe" in params.keys():
+                del params["brain_segment_pipe"]
+                print("Deleting brain_segment_pipe")
 
-        if "masked_correct_bias_pipe" in params.keys():
-            del params["masked_correct_bias_pipe"]
-            print("Deleting masked_correct_bias_pipe")
+        if "prep" in ssoft:
+            print("Found prep in soft")
+            if "extract_pipe" in params.keys():
+                del params["extract_pipe"]
+                print("Deleting extract_pipe")
 
-        if "debias" in params.keys():
-            del params["debias"]
-            print("Deleting debias")
+            if "masked_correct_bias_pipe" in params.keys():
+                del params["masked_correct_bias_pipe"]
+                print("Deleting masked_correct_bias_pipe")
 
-        if "brain_segment_pipe" in params.keys():
-            del params["brain_segment_pipe"]
-            print("Deleting brain_segment_pipe")
+            if "debias" in params.keys():
+                del params["debias"]
+                print("Deleting debias")
 
-        # SPM
-        if "old_segment_pipe" in params.keys():
-            del params["old_segment_pipe"]
-            print("Deleting old_segment_pipe")
+    # SPM
+    if "spm" in ssoft:
+        print("Found spm in soft")
 
-        if "mask_from_seg_pipe" in params.keys():
-            del params["mask_from_seg_pipe"]
-            print("Deleting mask_from_seg_pipe")
+        if "noseg" in ssoft:
+            print("Found noseg in soft")
+            if "old_segment_pipe" in params.keys():
+                del params["old_segment_pipe"]
+                print("Deleting old_segment_pipe")
 
-    if "noseg" in ssoft:
-        print("Found noseg in soft")
+            if "mask_from_seg_pipe" in params.keys():
+                del params["mask_from_seg_pipe"]
+                print("Deleting mask_from_seg_pipe")
 
-        # ANTS
-        if "brain_segment_pipe" in params.keys():
-            del params["brain_segment_pipe"]
-            print("Deleting brain_segment_pipe")
+        if "prep" in ssoft:
+            print("Found prep in soft")
 
-        # SPM
-        if "old_segment_pipe" in params.keys():
-            del params["old_segment_pipe"]
-            print("Deleting old_segment_pipe")
-
-        if "mask_from_seg_pipe" in params.keys():
-            del params["mask_from_seg_pipe"]
-            print("Deleting mask_from_seg_pipe")
+            if "reg" in params.keys():
+                del params["reg"]
+                print("Deleting debias")
 
     print("After modif, running with params:")
     pprint.pprint(params)
