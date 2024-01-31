@@ -346,15 +346,6 @@ def create_full_spm_subpipes(
 
         else:
 
-            native_to_stereo_pipe = create_native_to_stereo_pipe(
-                "native_to_stereo_pipe",
-                params=parse_key(params, "native_to_stereo_pipe"))
-
-            seg_pipe.connect(
-                native_to_stereo_pipe,
-                'outputnode.native_to_stereo_trans',
-                outputnode, 'native_to_stereo_trans')
-
             # full head version
             seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                              native_to_stereo_pipe, 'inputnode.native_T1')
