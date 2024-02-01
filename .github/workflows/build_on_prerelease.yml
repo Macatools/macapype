@@ -138,6 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
+    steps:
       - name: Running test pipeline marmo-marmobrain SPM_native_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_prep -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
@@ -267,6 +268,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
+    steps:
       - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1 T2
@@ -293,6 +295,7 @@ jobs:
     timeout-minutes: 1440
 
 
+    steps:
       - name: Running test pipeline macaque_prime-de ANTS_prep T1
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
@@ -317,6 +320,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
+    steps:
       - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
