@@ -101,7 +101,7 @@ jobs:
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-01/anat/
 
             echo ""
 
@@ -109,14 +109,14 @@ jobs:
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native_noseg -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-01/anat/
             echo ""
 
       - name: Running test pipeline macaque_prime-de SPM_native T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-01/anat/
             echo ""
 
       - name: Running test pipeline marmo-marmobrain SPM_native_prep T1 T2
