@@ -167,15 +167,11 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
 
-      - name: Running test pipeline marmo-marmobrain SPM_native_noseg T1 T2
-        run: |
             docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
             echo ""
 
-      - name: Running test pipeline marmo-marmobrain SPM_native T1 T2
-        run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
@@ -229,8 +225,6 @@ jobs:
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
             echo ""
 
-      - name: Running test pipeline marmo-marmobrain ANTS T1
-        run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
@@ -275,18 +269,16 @@ jobs:
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
-            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline marmo-marmobrain ANTS T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
+            echo ""
+
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
             echo ""
@@ -471,7 +463,7 @@ jobs:
 
       - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2 -nprocs 1
 
             ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/
 
