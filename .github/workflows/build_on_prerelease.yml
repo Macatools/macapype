@@ -65,10 +65,11 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  docker-pull:
-    name: Running all existing pipelines in macapype_CI.zip (SPM_native)
-    needs: docker-build
+  run-pretest-spm-macaque:
+    name: Running all existing pipelines in macapype_CI.zip (SPM_native macaque)
+    needs:  docker-build
     runs-on: ubuntu-latest
+    timeout-minutes: 1440
 
     steps:
       - name: Pull latest docker image
@@ -93,13 +94,6 @@ jobs:
             ls macapype_CI/marmo-marmobrain
             echo ""
 
-  run-pretest-spm-macaque:
-    name: Running all existing pipelines in macapype_CI.zip (SPM_native macaque)
-    needs:  docker-pull
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
       - name: Running test pipeline macaque_prime-de SPM_native_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
@@ -134,11 +128,33 @@ jobs:
 
   run-pretest-spm-marmo:
     name: Running all existing pipelines in macapype_CI.zip (SPM_native marmo)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline marmo-marmobrain SPM_native_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_prep -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
@@ -173,11 +189,33 @@ jobs:
 
   run-pretest-ants-t1-marmo:
     name: Running all existing pipelines in macapype_CI.zip (ANTS marmo T1)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline marmo-marmobrain ANTS_noseg T1
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
@@ -206,11 +244,33 @@ jobs:
 
   run-pretest-ants-marmo:
     name: Running all existing pipelines in macapype_CI.zip (ANTS marmo)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline marmo-marmobrain ANTS_noseg T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
@@ -238,11 +298,33 @@ jobs:
 
   run-pretest-ants-t1-baboon:
     name: Running all existing pipelines in macapype_CI.zip (ANTS T1 baboon)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
@@ -264,11 +346,33 @@ jobs:
 
   run-pretest-ants-baboon:
     name: Running all existing pipelines in macapype_CI.zip (ANTS baboon)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1 T2
@@ -290,12 +394,34 @@ jobs:
 
   run-pretest-ants-macaque-t1:
     name: Running all existing pipelines in macapype_CI.zip (ANTS macaque T1)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline macaque_prime-de ANTS_prep T1
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
@@ -316,11 +442,33 @@ jobs:
 
   run-pretest-ants-macaque:
     name: Running all existing pipelines in macapype_CI.zip (ANTS macaque)
-    needs:  docker-pull
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
       - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
