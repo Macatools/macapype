@@ -167,7 +167,7 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
 
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
             echo ""
