@@ -177,7 +177,6 @@ jobs:
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
             echo ""
 
-
       - name: Cleaning dataset
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/
@@ -224,12 +223,6 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
             echo ""
-
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
-
-            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
-            echo ""
-
 
       - name: Cleaning dataset
         run:
@@ -278,10 +271,6 @@ jobs:
             ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
             echo ""
 
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
-            echo ""
 
       - name: Cleaning dataset
         run:
