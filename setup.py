@@ -24,10 +24,6 @@ else:
 
 print("Will not build conda module")
 
-print("*******************************************************")
-print(find_packages())
-print("*******************************************************")
-
 setup(
     name="macapype",
     version=verstr,
