@@ -60,13 +60,15 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
+
+          file: Dockerfile_nomcr
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  run-pretest-spm:
-    name: Running all existing pipelines in macapype_CI.zip (SPM_native)
-    needs: docker-build
+  run-pretest-ants-t1-marmo:
+    name: Running all existing pipelines in macapype_CI.zip (ANTS marmo T1)
+    needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
 
@@ -77,9 +79,6 @@ jobs:
 
       - name: Download dataset
         run: |
-
-            mkdir SPM_native
-            cd SPM_native
 
             wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
@@ -94,197 +93,261 @@ jobs:
             echo ""
 
             ls macapype_CI/marmo-marmobrain
-            echo ""
-
-      - name: Running test pipeline macaque_prime-de SPM_native_prep T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-001/anat/
-
-            echo ""
-
-      - name: Running test pipeline macaque_prime-de SPM_native_noseg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native_noseg -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-001/anat/
-            echo ""
-
-      - name: Running test pipeline macaque_prime-de SPM_native T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de -out /data/macaque_prime-de/results -soft SPM_native -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-032140/ses-001/anat/
-            echo ""
-
-      - name: Running test pipeline marmo-marmobrain SPM_native_prep T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_prep -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/marmo-marmobrain/results/
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/marmo-marmobrain/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
-
-      - name: Running test pipeline marmo-marmobrain SPM_native_noseg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline marmo-marmobrain SPM_native T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/SPM_native/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft SPM_native -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/SPM_native/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_spm_t1_t2_native/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/SPM_native
-
-
-  run-pretest:
-    name: Running all existing pipelines in macapype_CI.zip (ANTS)
-    needs: docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            mkdir ANTS
-            cd ANTS
-
-            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
-            unzip -o macapype_CI.zip -d macapype_CI
-
-            pwd
-            echo ""
-
-            ls macapype_CI
-            echo ""
-
-            ls macapype_CI/macaque_prime-de
-            echo ""
-
-            ls macapype_CI/marmo-marmobrain
-            echo ""
-
-            ls macapype_CI/baboon-cerimed-adrien
             echo ""
 
       - name: Running test pipeline marmo-marmobrain ANTS_noseg T1
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/
 
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline marmo-marmobrain ANTS T1
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline marmo-marmobrain ANTS_noseg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline marmo-marmobrain ANTS T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1/sub-Fidji/ses-01/anat/
-            echo ""
-
-      - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1_t2/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Fidji/ses-01/anat/
-            echo ""
-
-
-      - name: Running test pipeline macaque_prime-de ANTS_prep T1
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/sub-032140/ses-001/anat/
-            echo ""
-
-
-      - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/ANTS/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2/
-
-            ls /home/runner/work/macapype/macapype/ANTS/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-032140/ses-001/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/runner/work/macapype/macapype/ANTS
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/
+
+
+  run-pretest-ants-marmo:
+    name: Running all existing pipelines in macapype_CI.zip (ANTS marmo)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
+      - name: Running test pipeline marmo-marmobrain ANTS_noseg T1 T2
+        run: |
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/marmo-marmobrain -out /data/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
+            echo ""
+
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+
+
+  run-pretest-ants-t1-baboon:
+    name: Running all existing pipelines in macapype_CI.zip (ANTS T1 baboon)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
+      - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1
+        run: |
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1/sub-Fidji/ses-01/anat/
+            echo ""
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1/
+
+
+
+  run-pretest-ants-baboon:
+    name: Running all existing pipelines in macapype_CI.zip (ANTS baboon)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
+      - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1 T2
+        run: |
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1 T2
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Fidji/ses-01/anat/
+            echo ""
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+
+
+
+  run-pretest-ants-macaque-t1:
+    name: Running all existing pipelines in macapype_CI.zip (ANTS macaque T1)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
+      - name: Running test pipeline macaque_prime-de ANTS_prep T1
+        run: |
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/sub-032140/ses-001/anat/
+            echo ""
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/
+
+
+  run-pretest-ants-macaque:
+    name: Running all existing pipelines in macapype_CI.zip (ANTS macaque)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/macapype:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
+            unzip -o macapype_CI.zip -d macapype_CI
+
+            pwd
+            echo ""
+
+            ls macapype_CI
+            echo ""
+
+            ls macapype_CI/macaque_prime-de
+            echo ""
+
+            ls macapype_CI/marmo-marmobrain
+            echo ""
+
+      - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
+        run: |
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2 -nprocs 1
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+
+            ls /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-032140/ses-001/anat/
+            echo ""
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2
 
