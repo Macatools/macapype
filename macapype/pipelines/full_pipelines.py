@@ -1804,7 +1804,7 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                          outputnode, 'wmgm_mask')
-    elif "IsoSurface_brain_pipe" in params.keys():
+    elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"].keys():
 
         IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
             params=parse_key(params["brain_segment_pipe"],
@@ -2318,7 +2318,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                          outputnode, 'wmgm_mask')
 
-    elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"]:
+    elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"].keys():
 
         IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
             params=parse_key(params["brain_segment_pipe"],
