@@ -2071,6 +2071,9 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                 params_template_stereo["template_head"]
 
+            native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                params_template_stereo["padded_template_head"]
+
             seg_pipe.connect(native_to_stereo_pipe,
                              "outputnode.stereo_native_T1",
                              outputnode, "stereo_native_T1")

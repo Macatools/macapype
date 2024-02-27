@@ -501,7 +501,6 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
     # outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['stereo_native_T1',
-                                      'padded_stereo_T1',
                                       'native_to_stereo_trans']),
         name='outputnode')
 
