@@ -506,21 +506,21 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
                                       'native_to_stereo_trans']),
         name='outputnode')
 
-    # pad_stereo_T1
-    pad_template_T1 = NodeParams(
-        interface=niu.Function(
-            input_names=["img_file", "pad_val"],
-            output_names=["img_padded_file"],
-            function=pad_zero_mri),
-        params=parse_key(params, "pad_template_T1"),
-        name="pad_template_T1")
+    ## pad_stereo_T1
+    #pad_template_T1 = NodeParams(
+        #interface=niu.Function(
+            #input_names=["img_file", "pad_val"],
+            #output_names=["img_padded_file"],
+            #function=pad_zero_mri),
+        #params=parse_key(params, "pad_template_T1"),
+        #name="pad_template_T1")
 
-    reg_pipe.connect(inputnode, 'stereo_T1',
-                     pad_template_T1, "img_file")
+    #reg_pipe.connect(inputnode, 'stereo_T1',
+                     #pad_template_T1, "img_file")
 
-    # outputnode
-    reg_pipe.connect(pad_template_T1, 'img_padded_file',
-                     outputnode, "padded_stereo_T1")
+    ## outputnode
+    #reg_pipe.connect(pad_template_T1, 'img_padded_file',
+                     #outputnode, "padded_stereo_T1")
 
     if "pre_crop_z_T1" in params.keys():
 
@@ -549,9 +549,10 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(
             inputnode, 'native_T1',
             reg_T1_on_template, "flo_file")
-
-    reg_pipe.connect(pad_template_T1, 'img_padded_file',
-                     reg_T1_on_template, "ref_file")
+    reg_pipe.connect(
+        inputnode, 'stereo_T1',
+        # reg_pipe.connect(pad_template_T1, 'img_padded_file',
+        reg_T1_on_template, "ref_file")
 
     if "reg_T1_on_template2" in params.keys():
         # second align T1 on template (sometimes needed)
