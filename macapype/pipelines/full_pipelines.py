@@ -1215,7 +1215,10 @@ def create_full_ants_subpipes(
 
     # #### stereo to native
     if "native_to_stereo_pipe" in params.keys():
-        if "skull_stripped_template" not in params["native_to_stereo_pipe"]:
+        if "skull_stripped_template" \
+                not in params["native_to_stereo_pipe"].keys():
+
+            print("**** without skull_stripped for native_to_stereo")
 
             native_to_stereo_pipe = create_native_to_stereo_pipe(
                 "native_to_stereo_pipe",
@@ -1225,7 +1228,7 @@ def create_full_ants_subpipes(
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
 
-            if "use_T2" in params["native_to_stereo_pipe"]:
+            if "use_T2" in params["native_to_stereo_pipe"].keys():
 
                 print("* using T2 without skull_stripped for native_to_stereo")
 
