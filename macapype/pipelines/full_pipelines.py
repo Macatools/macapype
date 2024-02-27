@@ -1215,6 +1215,8 @@ def create_full_ants_subpipes(
 
     # #### stereo to native
     if "native_to_stereo_pipe" in params.keys():
+        print("**** native_to_stereo")
+
         if "skull_stripped_template" \
                 not in params["native_to_stereo_pipe"].keys():
 
