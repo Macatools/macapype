@@ -1048,8 +1048,10 @@ def create_full_ants_subpipes(
 
     seg_pipe.connect(inputnode, 'list_T1',
                      data_preparation_pipe, 'inputnode.list_T1')
+
     seg_pipe.connect(inputnode, 'list_T2',
                      data_preparation_pipe, 'inputnode.list_T2')
+
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
@@ -1225,10 +1227,12 @@ def create_full_ants_subpipes(
 
             if "use_T2" in params["native_to_stereo_pipe"]:
 
+                print("* using T2 without skull_stripped for native_to_stereo")
 
                 # full head version
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T2",
-                                native_to_stereo_pipe, 'inputnode.native_T1')
+                seg_pipe.connect(
+                    data_preparation_pipe, "outputnode.native_T2",
+                    native_to_stereo_pipe, 'inputnode.native_T1')
 
                 native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                     params_template_stereo["template_head"]
