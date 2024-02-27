@@ -1223,21 +1223,41 @@ def create_full_ants_subpipes(
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
 
-            # full head version
-            seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                             native_to_stereo_pipe, 'inputnode.native_T1')
+            if "use_T2" in params["native_to_stereo_pipe"]:
 
-            native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                params_template_stereo["template_head"]
 
-            seg_pipe.connect(native_to_stereo_pipe,
-                             "outputnode.stereo_native_T1",
-                             outputnode, "stereo_native_T1")
+                # full head version
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T2",
+                                native_to_stereo_pipe, 'inputnode.native_T1')
 
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                data_preparation_pipe, "outputnode.native_T2",
-                outputnode, "stereo_native_T2")
+                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+                    params_template_stereo["template_head"]
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                "outputnode.stereo_native_T1",
+                                outputnode, "stereo_native_T2")
+
+                apply_to_stereo(
+                    seg_pipe, native_to_stereo_pipe,
+                    data_preparation_pipe, "outputnode.native_T1",
+                    outputnode, "stereo_native_T1")
+
+            else:
+                # full head version
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                native_to_stereo_pipe, 'inputnode.native_T1')
+
+                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+                    params_template_stereo["template_head"]
+
+                seg_pipe.connect(native_to_stereo_pipe,
+                                "outputnode.stereo_native_T1",
+                                outputnode, "stereo_native_T1")
+
+                apply_to_stereo(
+                    seg_pipe, native_to_stereo_pipe,
+                    data_preparation_pipe, "outputnode.native_T2",
+                    outputnode, "stereo_native_T2")
 
             if pad:
                 apply_to_stereo(
@@ -1587,6 +1607,20 @@ def create_full_ants_subpipes(
                     seg_pipe, native_to_stereo_pipe,
                     pad_masked_debiased_T2, 'out_file',
                     outputnode, "stereo_masked_debiased_T2")
+
+                if "use_T2" in params["native_to_stereo_pipe"].keys():
+                    seg_pipe.connect(pad_masked_debiased_T2, "out_file",
+                                     native_to_stereo_pipe,
+                                     'inputnode.native_T1')
+
+                    seg_pipe.connect(native_to_stereo_pipe,
+                                     'outputnode.stereo_native_T1',
+                                     outputnode, "stereo_masked_debiased_T2")
+
+                    apply_to_stereo(
+                        seg_pipe, native_to_stereo_pipe,
+                        pad_masked_debiased_T1, "out_file",
+                        outputnode, "stereo_masked_debiased_T1")
 
         if "extract_pipe" in params.keys() and pad:
             apply_to_stereo(
