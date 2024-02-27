@@ -584,7 +584,7 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
             name="resample_T1")
 
         reg_pipe.connect(inputnode, 'native_T1',
-                         resample_T1, "ref_file")
+                         resample_T1, "flo_file")
 
         reg_pipe.connect(inputnode, 'padded_stereo_T1',
                          resample_T1, "ref_file")
