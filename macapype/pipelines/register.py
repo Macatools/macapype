@@ -13,8 +13,7 @@ from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NMTSubjectAlign2, NwarpApplyPriors,
-                              animal_warper, pad_zero_mri)
-
+                              animal_warper)
 
 def create_iterative_register_pipe(
         template_file, template_brain_file, template_mask_file, gm_prob_file,
@@ -496,7 +495,7 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['native_T1',
-                                      'stereo_T1']),
+                                      'stereo_T1', 'padded_stereo_T1']),
         name='inputnode')
 
     # outputnode
@@ -564,8 +563,10 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template, 'res_file',
                          reg_T1_on_template2, "flo_file")
 
-        reg_pipe.connect(pad_template_T1, 'img_padded_file',
-                         reg_T1_on_template2, "ref_file")
+        reg_pipe.connect(
+            # pad_template_T1, 'img_padded_file',
+            inputnode, 'stereo_T1',
+            reg_T1_on_template2, "ref_file")
 
         # compose_transfo
         compose_transfo = pe.Node(regutils.RegTransform(),
@@ -577,11 +578,26 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'aff_file',
                          compose_transfo, "comp_input")
 
+        # resample
+        resample_T1 = pe.Node(
+            regutils.RegResample(),
+            name="resample_T1")
+
+        reg_pipe.connect(inputnode, 'native_T1',
+                         resample_T1, "ref_file")
+
+        reg_pipe.connect(inputnode, 'padded_stereo_T1',
+                         resample_T1, "ref_file")
+
+        reg_pipe.connect(compose_transfo, 'out_file',
+                         resample_T1, "trans_file")
+        # remove nans
         remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
                               name="remove_nans")
 
-        reg_pipe.connect(reg_T1_on_template2, 'res_file',
+        reg_pipe.connect(resample_T1, 'out_file',
                          remove_nans, "in_file")
+
         # outputnode
         reg_pipe.connect(remove_nans, 'out_file',
                          outputnode, "stereo_native_T1")
