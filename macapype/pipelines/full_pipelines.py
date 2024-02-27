@@ -1230,6 +1230,12 @@ def create_full_ants_subpipes(
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
 
+            native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+                params_template_stereo["template_head"]
+
+            native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                params_template_stereo["padded_template_head"]
+
             if "use_T2" in params["native_to_stereo_pipe"].keys():
 
                 print("* using T2 without skull_stripped for native_to_stereo")
@@ -1239,12 +1245,9 @@ def create_full_ants_subpipes(
                     data_preparation_pipe, "outputnode.native_T2",
                     native_to_stereo_pipe, 'inputnode.native_T1')
 
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_head"]
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                "outputnode.stereo_native_T1",
-                                outputnode, "stereo_native_T2")
+                seg_pipe.connect(
+                    native_to_stereo_pipe,
+                    outputnode, "stereo_native_T2")
 
                 apply_to_stereo(
                     seg_pipe, native_to_stereo_pipe,
