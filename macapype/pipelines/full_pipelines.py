@@ -1269,10 +1269,9 @@ def create_full_ants_subpipes(
                     data_preparation_pipe, "outputnode.native_T2",
                     outputnode, "stereo_native_T2")
 
-            if pad and (
-                    "fast" in params.keys() or
-                    "N4debias" in params.keys() or
-                    "correct_bias_pipe" in params.keys()):
+            if pad and ("fast" in params
+                        or "N4debias" in params
+                        or "correct_bias_pipe" in params):
 
                 apply_to_stereo(
                     seg_pipe, native_to_stereo_pipe,
