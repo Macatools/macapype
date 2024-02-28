@@ -466,46 +466,6 @@ def create_short_preparation_pipe(params, params_template={},
                 inputnode, 'list_T2',
                 av_T2, 'list_img')
 
-
-    #if "avg_reorient_pipe" in params.keys():
-
-        #print("Found avg_reorient_pipe for av_T1 and av_T2")
-
-        #av_T1 = _create_avg_reorient_pipeline(
-            #name="av_T1", params=parse_key(params, "avg_reorient_pipe"))
-
-        #data_preparation_pipe.connect(inputnode, 'list_T1',
-                                      #av_T1, 'inputnode.list_img')
-
-        #data_preparation_pipe.connect(inputnode, 'indiv_params',
-                                      #av_T1, 'inputnode.indiv_params')
-
-        #av_T2 = _create_avg_reorient_pipeline(
-            #name="av_T2", params=parse_key(params, "avg_reorient_pipe"))
-
-        #data_preparation_pipe.connect(inputnode, 'list_T2',
-                                      #av_T2, 'inputnode.list_img')
-
-        #data_preparation_pipe.connect(inputnode, 'indiv_params',
-                                      #av_T2, 'inputnode.indiv_params')
-
-    #else:
-
-        ## average if multiple T2
-        #av_T2 = pe.Node(niu.Function(
-            #input_names=['list_img'],
-            #output_names=['avg_img'],
-            #function=average_align), name="av_T2")
-        #data_preparation_pipe.connect(inputnode, 'list_T2', av_T2, 'list_img')
-
-        ## avererge if multiple T1
-        #av_T1 = pe.Node(
-            #niu.Function(input_names=['list_img'],
-                         #output_names=['avg_img'],
-                         #function=average_align),
-            #name="av_T1")
-        #data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
-
     # align avg T2 on avg T1
     if 'aladin_T2_on_T1' in params.keys():
 
@@ -663,19 +623,44 @@ def create_short_preparation_pipe(params, params_template={},
                                       inv_tranfo, 'inv_aff_input')
 
     # outputnode
-    if "avg_reorient_pipe" in params.keys():
-        data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                      outputnode, 'native_T1')
-    else:
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      outputnode, 'native_T1')
 
-    if 'aladin_T2_on_T1' in params.keys():
-        data_preparation_pipe.connect(align_T2_on_T1, "res_file",
-                                      outputnode, 'native_T2')
+    if "use_T2" in params.keys():
+
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                outputnode, 'native_T1')
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                outputnode, 'native_T1')
+
+        if 'aladin_T2_on_T1' in params.keys():
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "res_file",
+                outputnode, 'native_T2')
+        else:
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                outputnode, 'native_T2')
     else:
-        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                      outputnode, 'native_T2')
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                outputnode, 'native_T2')
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                outputnode, 'native_T2')
+
+        if 'aladin_T2_on_T1' in params.keys():
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "res_file",
+                outputnode, 'native_T1')
+        else:
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                outputnode, 'native_T1')
 
     # denoise with Ants package
     if "denoise" in params.keys():
@@ -708,30 +693,73 @@ def create_short_preparation_pipe(params, params_template={},
                                           denoise_T2, 'input_image')
 
         # outputs
-        data_preparation_pipe.connect(denoise_T1, 'output_image',
-                                      outputnode, 'preproc_T1')
+        if "use_T2" in params.keys():
 
-        data_preparation_pipe.connect(denoise_T2, 'output_image',
-                                      outputnode, 'preproc_T2')
+            data_preparation_pipe.connect(
+                denoise_T1, 'output_image',
+                outputnode, 'preproc_T2')
+
+            data_preparation_pipe.connect(
+                denoise_T2, 'output_image',
+                outputnode, 'preproc_T1')
+        else:
+
+            data_preparation_pipe.connect(
+                denoise_T1, 'output_image',
+                outputnode, 'preproc_T1')
+
+            data_preparation_pipe.connect(
+                denoise_T2, 'output_image',
+                outputnode, 'preproc_T2')
     else:
 
         if "crop_T1" in params.keys():
-            data_preparation_pipe.connect(crop_T1, "roi_file",
-                                          outputnode, 'preproc_T1')
 
-            data_preparation_pipe.connect(crop_T2, "roi_file",
-                                          outputnode, 'preproc_T2')
+            if "use_T2" in params.keys():
 
-        else:
-            if "crop_z_T1" in params.keys():
-                data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                              outputnode, 'preproc_T1')
+                data_preparation_pipe.connect(
+                    crop_T1, "roi_file",
+                    outputnode, 'preproc_T1')
+
+                data_preparation_pipe.connect(
+                    crop_T2, "roi_file",
+                    outputnode, 'preproc_T2')
             else:
-                data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                              outputnode, 'preproc_T1')
 
-            data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                          outputnode, 'preproc_T2')
+                data_preparation_pipe.connect(
+                    crop_T1, "roi_file",
+                    outputnode, 'preproc_T2')
+
+                data_preparation_pipe.connect(
+                    crop_T2, "roi_file",
+                    outputnode, 'preproc_T1')
+        else:
+
+            if "use_T2" in params.keys():
+
+
+                if "crop_z_T1" in params.keys():
+                    data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                                outputnode, 'preproc_T2')
+                else:
+                    data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                                outputnode, 'preproc_T2')
+
+                data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
+                                            outputnode, 'preproc_T1')
+
+            else:
+
+
+                if "crop_z_T1" in params.keys():
+                    data_preparation_pipe.connect(crop_z_T1, "out_roi",
+                                                outputnode, 'preproc_T1')
+                else:
+                    data_preparation_pipe.connect(crop_aladin_T1, "res_file",
+                                                outputnode, 'preproc_T1')
+
+                data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
+                                            outputnode, 'preproc_T2')
 
     return data_preparation_pipe
 
