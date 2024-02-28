@@ -9,7 +9,7 @@
 #
 # Timestamp: 2020/12/02 18:33:44 UTC
 
-FROM macatools/macapype_env:v0.1.1-nomcr
+FROM macatools/macapype_env:v0.1.2
 
 USER root
 
