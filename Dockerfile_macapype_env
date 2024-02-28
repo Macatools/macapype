@@ -131,22 +131,20 @@ RUN apt-get install -y -q --no-install-recommends \
            netpbm \
            tcsh \
            xfonts-base \
-           xvfb \
-    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://mirrors.kernel.org/debian/pool/main/libx/libxp/libxp6_1.0.2-2_amd64.deb \
-    && dpkg -i /tmp/toinstall.deb \
-    && rm /tmp/toinstall.deb \
-    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://snapshot.debian.org/archive/debian-security/20160113T213056Z/pool/updates/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb \
-    && dpkg -i /tmp/toinstall.deb \
-    && rm /tmp/toinstall.deb \
-    && apt-get install -f \
-    && gsl2_path="$(find / -name 'libgsl.so.23' || printf '')" \
-    && if [ -n "$gsl2_path" ]; then \
-         ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0"; \
-    fi \
-    && ldconfig \
-    && echo "Downloading AFNI ..." \
-    && mkdir -p /opt/afni-latest \
-    && curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
+           xvfb
+
+RUN curl -sSL --retry 5 -o /tmp/toinstall.deb http://snapshot.debian.org/archive/debian-security/20160113T213056Z/pool/updates/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb
+RUN dpkg -i /tmp/toinstall.deb
+RUN rm /tmp/toinstall.deb
+RUN apt-get install -f
+RUN gsl2_path="$(find / -name 'libgsl.so.23' || printf '')"
+RUN if [ -n "$gsl2_path" ]; then \
+         ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0";\
+    fi
+RUN ldconfig
+RUN echo "Downloading AFNI ..."
+RUN mkdir -p /opt/afni-latest
+RUN curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
     | tar -xz -C /opt/afni-latest --strip-components 1
 
 ############################################# AFNI IsoSurface requires specifically libXp6
