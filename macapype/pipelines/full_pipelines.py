@@ -1233,8 +1233,15 @@ def create_full_ants_subpipes(
             native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                 params_template_stereo["template_head"]
 
-            native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                params_template_stereo["padded_template_head"]
+            if 'padded_template_head' in params_template_stereo.keys():
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["padded_template_head"]
+
+            else:
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["template_head"]
 
             if "use_T2" in params["native_to_stereo_pipe"].keys():
 
