@@ -736,29 +736,33 @@ def create_short_preparation_pipe(params, params_template={},
 
             if "use_T2" in params.keys():
 
-
                 if "crop_z_T1" in params.keys():
-                    data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                                outputnode, 'preproc_T2')
+                    data_preparation_pipe.connect(
+                        crop_z_T1, "out_roi",
+                        outputnode, 'preproc_T2')
                 else:
-                    data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                                outputnode, 'preproc_T2')
+                    data_preparation_pipe.connect(
+                        crop_aladin_T1, "res_file",
+                        outputnode, 'preproc_T2')
 
-                data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                            outputnode, 'preproc_T1')
+                data_preparation_pipe.connect(
+                    apply_crop_aladin_T2, 'out_file',
+                    outputnode, 'preproc_T1')
 
             else:
 
-
                 if "crop_z_T1" in params.keys():
-                    data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                                outputnode, 'preproc_T1')
+                    data_preparation_pipe.connect(
+                        crop_z_T1, "out_roi",
+                        outputnode, 'preproc_T1')
                 else:
-                    data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                                outputnode, 'preproc_T1')
+                    data_preparation_pipe.connect(
+                        crop_aladin_T1, "res_file",
+                        outputnode, 'preproc_T1')
 
-                data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                            outputnode, 'preproc_T2')
+                data_preparation_pipe.connect(
+                    apply_crop_aladin_T2, 'out_file',
+                    outputnode, 'preproc_T2')
 
     return data_preparation_pipe
 

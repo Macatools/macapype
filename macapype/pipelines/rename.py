@@ -7,7 +7,9 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                                  datasink, pref_deriv, parse_str,
                                  space, ssoft, datatypes):
 
-    if "fast" in params or "N4debias" in params or "correct_bias_pipe" in params:
+    if ("fast" in params
+            or "N4debias" in params
+            or "correct_bias_pipe" in params):
 
         # rename debiased_T1
         rename_debiased_T1 = pe.Node(

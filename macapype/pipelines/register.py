@@ -15,6 +15,7 @@ from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NMTSubjectAlign2, NwarpApplyPriors,
                               animal_warper)
 
+
 def create_iterative_register_pipe(
         template_file, template_brain_file, template_mask_file, gm_prob_file,
         wm_prob_file, csf_prob_file, n_iter, name="register_pipe"):
@@ -503,22 +504,6 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         niu.IdentityInterface(fields=['stereo_native_T1',
                                       'native_to_stereo_trans']),
         name='outputnode')
-
-    ## pad_stereo_T1
-    #pad_template_T1 = NodeParams(
-        #interface=niu.Function(
-            #input_names=["img_file", "pad_val"],
-            #output_names=["img_padded_file"],
-            #function=pad_zero_mri),
-        #params=parse_key(params, "pad_template_T1"),
-        #name="pad_template_T1")
-
-    #reg_pipe.connect(inputnode, 'stereo_T1',
-                     #pad_template_T1, "img_file")
-
-    ## outputnode
-    #reg_pipe.connect(pad_template_T1, 'img_padded_file',
-                     #outputnode, "padded_stereo_T1")
 
     if "pre_crop_z_T1" in params.keys():
 
