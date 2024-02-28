@@ -623,7 +623,6 @@ def create_short_preparation_pipe(params, params_template={},
                                       inv_tranfo, 'inv_aff_input')
 
     # outputnode
-
     if "use_T2" in params.keys():
 
         if "avg_reorient_pipe" in params.keys():
