@@ -2075,8 +2075,15 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                 params_template_stereo["template_head"]
 
-            native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                params_template_stereo["padded_template_head"]
+            if 'padded_template_head' in params_template_stereo.keys():
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["padded_template_head"]
+
+            else:
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["template_head"]
 
             seg_pipe.connect(native_to_stereo_pipe,
                              "outputnode.stereo_native_T1",
@@ -2184,6 +2191,16 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
             print("Found skull_stripped_template in native_to_stereo_pipe")
 
+            if 'padded_template_head' in params_template_stereo.keys():
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["padded_template_head"]
+
+            else:
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["template_brain"]
+
             if pad:
 
                 # skull stripped version
@@ -2197,9 +2214,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 seg_pipe.connect(native_to_stereo_pipe,
                                  'outputnode.stereo_native_T1',
                                  outputnode, "stereo_masked_debiased_T1")
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_brain"]
 
                 apply_to_stereo(
                     seg_pipe, native_to_stereo_pipe,
@@ -2215,9 +2229,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 # full head version
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                                  native_to_stereo_pipe, 'inputnode.native_T1')
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_head"]
 
                 seg_pipe.connect(native_to_stereo_pipe,
                                  "outputnode.stereo_native_T1",
