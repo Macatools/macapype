@@ -7,7 +7,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                                  datasink, pref_deriv, parse_str,
                                  space, ssoft, datatypes):
 
-    if "fast" in params or "N4debias" in params:
+    if "fast" in params or "N4debias" in params or "correct_bias_pipe" in params:
 
         # rename debiased_T1
         rename_debiased_T1 = pe.Node(
@@ -155,42 +155,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_brain_mask, 'out_file',
                 datasink, '@brain_mask')
-
-        if ('fast' not in params.keys() and 'N4debias' not in params.keys()):
-
-            # rename debiased_T1
-            rename_debiased_T1 = pe.Node(niu.Rename(),
-                                         name="rename_debiased_T1")
-            rename_debiased_T1.inputs.format_string = \
-                pref_deriv + "_space-native_desc-debiased_T1w"
-            rename_debiased_T1.inputs.parse_string = parse_str
-            rename_debiased_T1.inputs.keep_ext = True
-
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.debiased_T1',
-                rename_debiased_T1, 'in_file')
-
-            main_workflow.connect(
-                rename_debiased_T1, 'out_file',
-                datasink, '@debiased_T1')
-
-            if 't2' in datatypes:
-
-                # rename debiased_T2
-                rename_debiased_T2 = pe.Node(niu.Rename(),
-                                             name="rename_debiased_T2")
-                rename_debiased_T2.inputs.format_string = \
-                    pref_deriv + "_space-native_desc-debiased_T2w"
-                rename_debiased_T2.inputs.parse_string = parse_str
-                rename_debiased_T2.inputs.keep_ext = True
-
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.debiased_T2',
-                    rename_debiased_T2, 'in_file')
-
-                main_workflow.connect(
-                    rename_debiased_T2, 'out_file',
-                    datasink, '@debiased_T2')
 
     if "brain_segment_pipe" in params.keys():
         # rename segmented_brain_mask
