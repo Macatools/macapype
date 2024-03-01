@@ -22,9 +22,8 @@
             "MBM_v3.0.1": "RMxXifHeigNkB3g",
             "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP",
             "bma-1": "29qRZrnHnBxtCGB",
-            "bma-1_padded": "MqXmWWjykjeTbQo",
-            "bma-1_0p2mm_padded":"WHRfWN4XNF9RyNs"
-                    },
+            "bma-1_0p2mm": "YoLAFawKMTi7FqR",
+            },
         "cloud_format": "{}/public.php?service=files&t={}&download"
     }
 }
