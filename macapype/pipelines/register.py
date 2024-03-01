@@ -562,44 +562,63 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'aff_file',
                          compose_transfo, "comp_input")
 
-        # resample
-        resample_T1 = pe.Node(
+    # resample
+    if "resample_T1_pad" in params.keys():
+
+        resample_T1_pad = pe.Node(
             regutils.RegResample(),
             name="resample_T1")
 
-        reg_pipe.connect(inputnode, 'native_T1',
-                         resample_T1, "flo_file")
+        reg_pipe.connect(
+            inputnode, 'native_T1',
+            resample_T1_pad, "flo_file")
 
-        reg_pipe.connect(inputnode, 'padded_stereo_T1',
-                         resample_T1, "ref_file")
+        reg_pipe.connect(
+            inputnode, 'padded_stereo_T1',
+            resample_T1_pad, "ref_file")
 
-        reg_pipe.connect(compose_transfo, 'out_file',
-                         resample_T1, "trans_file")
-        # remove nans
-        remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
-                              name="remove_nans")
+        if "reg_T1_on_template2" in params.keys():
+            reg_pipe.connect(
+                compose_transfo, 'out_file',
+                resample_T1_pad, "trans_file")
 
-        reg_pipe.connect(resample_T1, 'out_file',
-                         remove_nans, "in_file")
+        else:
+            reg_pipe.connect(
+                reg_T1_on_template, 'aff_file',
+                resample_T1_pad, "trans_file")
 
-        # outputnode
-        reg_pipe.connect(remove_nans, 'out_file',
-                         outputnode, "stereo_native_T1")
+    # remove nans
+    remove_nans = pe.Node(
+        fsl.maths.MathsCommand(nan2zeros=True),
+        name="remove_nans")
 
-        reg_pipe.connect(compose_transfo, 'out_file',
-                         outputnode, "native_to_stereo_trans")
+    if "resample_T1_pad" in params.keys():
+        reg_pipe.connect(
+            resample_T1_pad, 'out_file',
+            remove_nans, "in_file")
+
+    elif "reg_T1_on_template2" in params.keys():
+        reg_pipe.connect(
+            reg_T1_on_template2, 'res_file',
+            remove_nans, "in_file")
+
     else:
+        reg_pipe.connect(
+            reg_T1_on_template, 'res_file',
+            remove_nans, "in_file")
 
-        remove_nans = pe.Node(fsl.maths.MathsCommand(nan2zeros=True),
-                              name="remove_nans")
+    # outputnode
+    reg_pipe.connect(remove_nans, 'out_file',
+                     outputnode, "stereo_native_T1")
 
-        reg_pipe.connect(reg_T1_on_template, 'res_file',
-                         remove_nans, "in_file")
-        # outputnode
-        reg_pipe.connect(remove_nans, 'out_file',
-                         outputnode, "stereo_native_T1")
+    if "reg_T1_on_template2" in params.keys():
+        reg_pipe.connect(
+            compose_transfo, 'out_file',
+            outputnode, "native_to_stereo_trans")
 
-        reg_pipe.connect(reg_T1_on_template, 'aff_file',
-                         outputnode, "native_to_stereo_trans")
+    else:
+        reg_pipe.connect(
+            reg_T1_on_template, 'aff_file',
+            outputnode, "native_to_stereo_trans")
 
     return reg_pipe
