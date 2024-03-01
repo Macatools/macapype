@@ -88,7 +88,8 @@
         "template_wm": "wm.nii.gz",
         "template_csf": "csf.nii.gz"
     },
-    "bma-1":{
+    "bma-1":
+    {
         "template_head": "bma-1-mri.nii.gz",
         "template_brain": "bma-1-mri.nii.gz",
         "template_seg": "bma-1-graywhite_seg.nii.gz",
@@ -96,7 +97,8 @@
         "padded_template_head": "bma-1-mri_padded.nii.gz",
         "padded_template_seg": "bma-1-graywhite_seg_padded.nii.gz"
     },
-    "bma-1_0p2mm":{
+    "bma-1_0p2mm":
+    {
         "template_head": "bma-1-mri_0p2mm.nii.gz",
         "template_brain": "bma-1-mri_0p2mm.nii.gz",
         "template_seg": "bma-1-graywhite_seg_0p2mm.nii.gz",
@@ -128,7 +130,6 @@
     "MBM_v3.0.1":{
         "template_head": "template_T1w.nii.gz",
         "template_brain": "template_T1w_brain.nii.gz",
-
         "template_gm": "segmentation_three_types_prob_1_gray.nii.gz",
         "template_wm": "segmentation_three_types_prob_2_white.nii.gz",
         "template_csf": "segmentation_three_types_prob_3_csf.nii.gz"
@@ -136,7 +137,6 @@
     "MBM_v3.0.1_6seg":{
         "template_head": "template_T1w.nii.gz",
         "template_brain": "template_T1w_brain.nii.gz",
-
         "template_seg": "segmentation_six_types_seg.nii.gz"
     },
     "pad40_NMT_v2.0_asym":
