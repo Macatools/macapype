@@ -581,6 +581,10 @@ def create_short_preparation_pipe(params, params_template={},
 
         crop_aladin_T1.inputs.ref_file = params_template["template_head"]
 
+        data_preparation_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "crop_aladin_T1"),
+            crop_aladin_T1, 'indiv_params')
+
         # crop_z_T1
         if "crop_z_T1" in params.keys():
             crop_z_T1 = NodeParams(fsl.RobustFOV(),
