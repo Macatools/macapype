@@ -438,17 +438,6 @@ def create_short_preparation_pipe(params, params_template={},
                          function=average_align),
             name="av_T1")
 
-        if "use_T2" in params.keys():
-
-            data_preparation_pipe.connect(
-                inputnode, 'list_T2',
-                av_T1, 'list_img')
-        else:
-
-            data_preparation_pipe.connect(
-                inputnode, 'list_T1',
-                av_T1, 'list_img')
-
         # average if multiple T2
         av_T2 = pe.Node(niu.Function(
             input_names=['list_img'],
@@ -460,7 +449,15 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(
                 inputnode, 'list_T1',
                 av_T2, 'list_img')
+
+            data_preparation_pipe.connect(
+                inputnode, 'list_T2',
+                av_T1, 'list_img')
         else:
+
+            data_preparation_pipe.connect(
+                inputnode, 'list_T1',
+                av_T1, 'list_img')
 
             data_preparation_pipe.connect(
                 inputnode, 'list_T2',
@@ -632,39 +629,40 @@ def create_short_preparation_pipe(params, params_template={},
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
-                outputnode, 'native_T1')
+                outputnode, 'native_T2')
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
-                outputnode, 'native_T1')
+                outputnode, 'native_T2')
 
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
                 align_T2_on_T1, "res_file",
-                outputnode, 'native_T2')
+                outputnode, 'native_T1')
         else:
             data_preparation_pipe.connect(
                 align_T2_on_T1, "out_file",
-                outputnode, 'native_T2')
+                outputnode, 'native_T1')
+
     else:
+
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
-                outputnode, 'native_T2')
+                outputnode, 'native_T1')
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
-                outputnode, 'native_T2')
+                outputnode, 'native_T1')
 
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
                 align_T2_on_T1, "res_file",
-                outputnode, 'native_T1')
+                outputnode, 'native_T2')
         else:
             data_preparation_pipe.connect(
                 align_T2_on_T1, "out_file",
-                outputnode, 'native_T1')
-
+                outputnode, 'native_T2')
     # denoise with Ants package
     if "denoise" in params.keys():
 
@@ -719,23 +717,23 @@ def create_short_preparation_pipe(params, params_template={},
         if "crop_T1" in params.keys():
 
             if "use_T2" in params.keys():
-
                 data_preparation_pipe.connect(
                     crop_T1, "roi_file",
-                    outputnode, 'preproc_T1')
+                    outputnode, 'preproc_T2')
 
                 data_preparation_pipe.connect(
                     crop_T2, "roi_file",
-                    outputnode, 'preproc_T2')
+                    outputnode, 'preproc_T1')
             else:
 
                 data_preparation_pipe.connect(
                     crop_T1, "roi_file",
-                    outputnode, 'preproc_T2')
+                    outputnode, 'preproc_T1')
 
                 data_preparation_pipe.connect(
                     crop_T2, "roi_file",
-                    outputnode, 'preproc_T1')
+                    outputnode, 'preproc_T2')
+
         else:
 
             if "use_T2" in params.keys():

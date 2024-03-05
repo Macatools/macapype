@@ -1252,6 +1252,7 @@ def create_full_ants_subpipes(
                     data_preparation_pipe, "outputnode.native_T2",
                     native_to_stereo_pipe, 'inputnode.native_T1')
 
+                # outputnode
                 seg_pipe.connect(
                     native_to_stereo_pipe,
                     "outputnode.stereo_native_T1",
@@ -1267,6 +1268,7 @@ def create_full_ants_subpipes(
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                                  native_to_stereo_pipe, 'inputnode.native_T1')
 
+                # outputnode
                 seg_pipe.connect(native_to_stereo_pipe,
                                  "outputnode.stereo_native_T1",
                                  outputnode, "stereo_native_T1")
