@@ -496,7 +496,8 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
     # creating inputnode
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['native_T1',
-                                      'stereo_T1', 'padded_stereo_T1']),
+                                      'stereo_T1', 'padded_stereo_T1',
+                                      'indiv_params']),
         name='inputnode')
 
     # outputnode
@@ -532,10 +533,15 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         reg_pipe.connect(
             inputnode, 'native_T1',
             reg_T1_on_template, "flo_file")
+
     reg_pipe.connect(
         inputnode, 'stereo_T1',
         # reg_pipe.connect(pad_template_T1, 'img_padded_file',
         reg_T1_on_template, "ref_file")
+
+    reg_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "reg_T1_on_template"),
+        reg_T1_on_template, "indiv_params")
 
     if "reg_T1_on_template2" in params.keys():
         # second align T1 on template (sometimes needed)
@@ -551,6 +557,10 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
             # pad_template_T1, 'img_padded_file',
             inputnode, 'stereo_T1',
             reg_T1_on_template2, "ref_file")
+
+        reg_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "reg_T1_on_template2"),
+            reg_T1_on_template2, "indiv_params")
 
         # compose_transfo
         compose_transfo = pe.Node(regutils.RegTransform(),
