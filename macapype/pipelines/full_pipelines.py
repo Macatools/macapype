@@ -258,6 +258,10 @@ def create_full_spm_subpipes(
                          'outputnode.native_to_stereo_trans',
                          outputnode, 'native_to_stereo_trans')
 
+        seg_pipe.connect(
+            inputnode, 'indiv_params',
+            native_to_stereo_pipe, 'inputnode.indiv_params')
+
         if "skull_stripped_template" in params["native_to_stereo_pipe"]:
             print("Found skull_stripped_template in native_to_stereo_pipe")
 
@@ -1225,6 +1229,10 @@ def create_full_ants_subpipes(
             native_to_stereo_pipe = create_native_to_stereo_pipe(
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
+
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
 
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',

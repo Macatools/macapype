@@ -543,6 +543,8 @@ def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
         inputnode, ('indiv_params', parse_key, "reg_T1_on_template"),
         reg_T1_on_template, "indiv_params")
 
+    # reg_T1_on_template2
+
     if "reg_T1_on_template2" in params.keys():
         # second align T1 on template (sometimes needed)
         reg_T1_on_template2 = NodeParams(
