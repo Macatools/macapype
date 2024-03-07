@@ -6,6 +6,7 @@
 
     "T1w_roi_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
     "T1w_roi_corrected_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
+    "T1w_flirt_res_restore_debiased_brain_Segmentation_1_merged_bin_5tt.nii.gz": "space-native_desc-5tt_dseg",
 
     "T1w_roi_restore_brain_bin_bin": "space-orig_desc-brain_mask",
     "T1w_roi_corrected_restore_brain_bin_bin": "space-orig_desc-brain_mask",
