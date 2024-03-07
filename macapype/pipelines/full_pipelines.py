@@ -1537,6 +1537,10 @@ def create_full_ants_subpipes(
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
 
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
+
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
@@ -2073,6 +2077,10 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
 
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
+
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
@@ -2193,6 +2201,10 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             native_to_stereo_pipe = create_native_to_stereo_pipe(
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
+
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
 
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
