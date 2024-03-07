@@ -35,6 +35,7 @@
     "_masked":"",
     "_mask_":"_",
     "_merged":"",
+    "_debiased_brain": "",
     "_debiased":"",
     "_thresh":"",
     "_fillh":"",
@@ -54,7 +55,6 @@
     "avg_": "",
     "padded_": "",
     "BET_": "",
-    "_brain_Segmentation_": "",
-    "_5tt": "",
+    "_5tt": "_",
     "Segmentation_": ""
 }
