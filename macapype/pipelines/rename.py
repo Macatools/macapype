@@ -237,7 +237,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_gen_5tt, 'out_file',
                 datasink, '@gen_5tt')
 
-        if "nii2mesh_brain_pipe" in params["brain_segment_pipe"].keys():
+        if "nii2mesh_brain_pipe" in params["brain_segment_pipe"] \
+                or "IsoSurface_brain_pipe" in params["brain_segment_pipe"]:
 
             print("Renaming wmgm_stl file")
 
