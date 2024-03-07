@@ -27,6 +27,7 @@
     "_roi":"",
     "_ROI":"",
     "_restore_debiased":"",
+    "_restore_brain": "",
     "_restore":"",
     "_noise_corrected":"",
     "_brain_corrected":"",
@@ -52,10 +53,10 @@
     "_pve": "",
     "_autothresh": "",
     "_5tt": "",
-    "_brain_Segmentation": "",
     "c3": "",
     "avg_": "",
     "padded_": "",
     "BET_": "",
+    "brain_Segmentation_": "",
     "Segmentation_": ""
 }
