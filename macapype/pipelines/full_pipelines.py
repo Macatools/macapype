@@ -258,6 +258,10 @@ def create_full_spm_subpipes(
                          'outputnode.native_to_stereo_trans',
                          outputnode, 'native_to_stereo_trans')
 
+        seg_pipe.connect(
+            inputnode, 'indiv_params',
+            native_to_stereo_pipe, 'inputnode.indiv_params')
+
         if "skull_stripped_template" in params["native_to_stereo_pipe"]:
             print("Found skull_stripped_template in native_to_stereo_pipe")
 
@@ -1048,8 +1052,10 @@ def create_full_ants_subpipes(
 
     seg_pipe.connect(inputnode, 'list_T1',
                      data_preparation_pipe, 'inputnode.list_T1')
+
     seg_pipe.connect(inputnode, 'list_T2',
                      data_preparation_pipe, 'inputnode.list_T2')
+
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
@@ -1213,33 +1219,77 @@ def create_full_ants_subpipes(
 
     # #### stereo to native
     if "native_to_stereo_pipe" in params.keys():
-        if "skull_stripped_template" not in params["native_to_stereo_pipe"]:
+        print("**** native_to_stereo")
+
+        if "skull_stripped_template" \
+                not in params["native_to_stereo_pipe"].keys():
+
+            print("**** without skull_stripped for native_to_stereo")
 
             native_to_stereo_pipe = create_native_to_stereo_pipe(
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
 
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
+
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
 
-            # full head version
-            seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                             native_to_stereo_pipe, 'inputnode.native_T1')
-
             native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                 params_template_stereo["template_head"]
 
-            seg_pipe.connect(native_to_stereo_pipe,
-                             "outputnode.stereo_native_T1",
-                             outputnode, "stereo_native_T1")
+            if 'padded_template_head' in params_template_stereo.keys():
 
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                data_preparation_pipe, "outputnode.native_T2",
-                outputnode, "stereo_native_T2")
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["padded_template_head"]
 
-            if pad:
+            else:
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["template_head"]
+
+            if "use_T2" in params["native_to_stereo_pipe"].keys():
+
+                print("* using T2 without skull_stripped for native_to_stereo")
+
+                # full head version
+                seg_pipe.connect(
+                    data_preparation_pipe, "outputnode.native_T2",
+                    native_to_stereo_pipe, 'inputnode.native_T1')
+
+                # outputnode
+                seg_pipe.connect(
+                    native_to_stereo_pipe,
+                    "outputnode.stereo_native_T1",
+                    outputnode, "stereo_native_T2")
+
+                apply_to_stereo(
+                    seg_pipe, native_to_stereo_pipe,
+                    data_preparation_pipe, "outputnode.native_T1",
+                    outputnode, "stereo_native_T1")
+
+            else:
+                # full head version
+                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                 native_to_stereo_pipe, 'inputnode.native_T1')
+
+                # outputnode
+                seg_pipe.connect(native_to_stereo_pipe,
+                                 "outputnode.stereo_native_T1",
+                                 outputnode, "stereo_native_T1")
+
+                apply_to_stereo(
+                    seg_pipe, native_to_stereo_pipe,
+                    data_preparation_pipe, "outputnode.native_T2",
+                    outputnode, "stereo_native_T2")
+
+            if pad and ("fast" in params
+                        or "N4debias" in params
+                        or "correct_bias_pipe" in params):
+
                 apply_to_stereo(
                     seg_pipe, native_to_stereo_pipe,
                     pad_debiased_T2, "out_file",
@@ -1494,6 +1544,10 @@ def create_full_ants_subpipes(
             native_to_stereo_pipe = create_native_to_stereo_pipe(
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
+
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
 
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
@@ -2031,6 +2085,10 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
 
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
+
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
@@ -2041,6 +2099,16 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
             native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
                 params_template_stereo["template_head"]
+
+            if 'padded_template_head' in params_template_stereo.keys():
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["padded_template_head"]
+
+            else:
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["template_head"]
 
             seg_pipe.connect(native_to_stereo_pipe,
                              "outputnode.stereo_native_T1",
@@ -2142,11 +2210,25 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 "native_to_stereo_pipe",
                 params=parse_key(params, "native_to_stereo_pipe"))
 
+            seg_pipe.connect(
+                inputnode, 'indiv_params',
+                native_to_stereo_pipe, 'inputnode.indiv_params')
+
             seg_pipe.connect(native_to_stereo_pipe,
                              'outputnode.native_to_stereo_trans',
                              outputnode, 'native_to_stereo_trans')
 
             print("Found skull_stripped_template in native_to_stereo_pipe")
+
+            if 'padded_template_head' in params_template_stereo.keys():
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["padded_template_head"]
+
+            else:
+
+                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
+                    params_template_stereo["template_brain"]
 
             if pad:
 
@@ -2162,9 +2244,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                                  'outputnode.stereo_native_T1',
                                  outputnode, "stereo_masked_debiased_T1")
 
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_brain"]
-
                 apply_to_stereo(
                     seg_pipe, native_to_stereo_pipe,
                     data_preparation_pipe, "outputnode.native_T1",
@@ -2179,9 +2258,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                 # full head version
                 seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
                                  native_to_stereo_pipe, 'inputnode.native_T1')
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_head"]
 
                 seg_pipe.connect(native_to_stereo_pipe,
                                  "outputnode.stereo_native_T1",

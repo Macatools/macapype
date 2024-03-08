@@ -6,6 +6,7 @@
 
     "T1w_roi_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
     "T1w_roi_corrected_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
+    "T1w_flirt_res_restore_debiased_brain_Segmentation_1_merged_bin_5tt.nii.gz": "space-native_desc-5tt_dseg",
 
     "T1w_roi_restore_brain_bin_bin": "space-orig_desc-brain_mask",
     "T1w_roi_corrected_restore_brain_bin_bin": "space-orig_desc-brain_mask",
@@ -19,11 +20,15 @@
     "Segmentation_allineate": "space-template_desc-brain_dseg",
     "indexed_mask": "space-orig_desc-brain_dseg",
     "FLAIR_flirt_flirt": "space-inia19_FLAIR",
+
     "T1w_":"",
+    "T2w_":"",
     "PDw_":"",
     "_roi":"",
     "_ROI":"",
+    "_restore_debiased_brain":"",
     "_restore_debiased":"",
+    "_restore_brain": "",
     "_restore":"",
     "_noise_corrected":"",
     "_brain_corrected":"",
@@ -32,6 +37,7 @@
     "_masked":"",
     "_mask_":"_",
     "_merged":"",
+    "_debiased_brain": "",
     "_debiased":"",
     "_thresh":"",
     "_fillh":"",
@@ -47,9 +53,11 @@
     "_recip": "",
     "_pve": "",
     "_autothresh": "",
+    "_5tt": "",
     "c3": "",
     "avg_": "",
     "padded_": "",
     "BET_": "",
+    "brain_Segmentation_": "",
     "Segmentation_": ""
 }
