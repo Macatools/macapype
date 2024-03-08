@@ -19,6 +19,8 @@ from ..nodes.prepare import average_align, FslOrient
 # should be in nipype code directly
 from ..nodes.prepare import Refit
 
+from .register import create_crop_aladin_pipe
+
 
 def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
     """
@@ -226,9 +228,7 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
 
 def _create_mapnode_prep_pipeline(params, name="mapnode_prep_pipeline",
                                   node_suffix=""):
-
     """Description: hidden function for sequence of preprocessing (mapnode)
-
     Params: (Warning: **all arguments are in lists**)
 
     - reorient (new dims as a string (e.g. "x z -y"))
@@ -502,6 +502,50 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'in_file')
 
+
+
+    # outputnode
+    if "use_T2" in params.keys():
+
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                outputnode, 'native_T2')
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                outputnode, 'native_T2')
+
+        if 'aladin_T2_on_T1' in params.keys():
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "res_file",
+                outputnode, 'native_T1')
+        else:
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                outputnode, 'native_T1')
+
+    else:
+
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                outputnode, 'native_T1')
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                outputnode, 'native_T1')
+
+        if 'aladin_T2_on_T1' in params.keys():
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "res_file",
+                outputnode, 'native_T2')
+        else:
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                outputnode, 'native_T2')
+
+    # auto cropping and register to stereo
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
 
@@ -544,52 +588,27 @@ def create_short_preparation_pipe(params, params_template={},
 
     else:
 
-        if "pre_crop_z_T1" in params.keys():
+        # register T1 to stereo image
+        native_to_stereo_pipe = create_native_to_stereo_pipe(
+            "native_to_stereo_pipe",
+            params=parse_key(params, "native_to_stereo_pipe"))
 
-            print('pre_crop_z_T1')
-            pre_crop_z_T1 = NodeParams(
-                fsl.RobustFOV(),
-                params=parse_key(params, "pre_crop_z_T1"),
-                name='pre_crop_z_T1')
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                native_to_stereo_pipe, 'inputnode.native_T1')
 
-            if "avg_reorient_pipe" in params.keys():
-                data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                              pre_crop_z_T1, 'in_file')
-
-            else:
-                data_preparation_pipe.connect(av_T1, 'avg_img',
-                                              pre_crop_z_T1, 'in_file')
-
-        print('default crop_aladin_T1 will be run')
-        crop_aladin_T1 = NodeParams(reg.RegAladin(),
-                                    params=parse_key(params, "crop_aladin_T1"),
-                                    name='crop_aladin_T1')
-
-        if "pre_crop_z_T1" in params.keys():
-            data_preparation_pipe.connect(pre_crop_z_T1, "out_roi",
-                                          crop_aladin_T1, 'flo_file')
         else:
-            if "avg_reorient_pipe" in params.keys():
-                data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                              crop_aladin_T1, 'flo_file')
-            else:
-                data_preparation_pipe.connect(av_T1, 'avg_img',
-                                              crop_aladin_T1, 'flo_file')
-
-        crop_aladin_T1.inputs.ref_file = params_template["template_head"]
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                native_to_stereo_pipe, 'inputnode.native_T1')
 
         data_preparation_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "crop_aladin_T1"),
-            crop_aladin_T1, 'indiv_params')
+            inputnode, 'indiv_params',
+            native_to_stereo_pipe, 'inputnode.indiv_params')
 
-        # crop_z_T1
-        if "crop_z_T1" in params.keys():
-            crop_z_T1 = NodeParams(fsl.RobustFOV(),
-                                   params=parse_key(params, "crop_z_T1"),
-                                   name='crop_z_T1')
-
-            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                          crop_z_T1, 'in_file')
+        native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+            params_template["template_head"]
 
         # apply reg_resample to T2
         apply_crop_aladin_T2 = NodeParams(
@@ -604,15 +623,13 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                           apply_crop_aladin_T2, 'flo_file')
 
-        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
-                                      apply_crop_aladin_T2, 'trans_file')
+        data_preparation_pipe.connect(
+            native_to_stereo_pipe, 'outputnode.native_to_stereo_trans',
+            apply_crop_aladin_T2, 'trans_file')
 
-        if "crop_z_T1" in params.keys():
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                          apply_crop_aladin_T2, 'ref_file')
-        else:
-            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                          apply_crop_aladin_T2, 'ref_file')
+        data_preparation_pipe.connect(
+            native_to_stereo_pipe, 'outputnode.stereo_native_T1',
+            apply_crop_aladin_T2, 'ref_file')
 
         # compute inv transfo
         inv_tranfo = NodeParams(
@@ -620,49 +637,10 @@ def create_short_preparation_pipe(params, params_template={},
             params=parse_key(params, "inv_transfo_aladin"),
             name='inv_tranfo')
 
-        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
-                                      inv_tranfo, 'inv_aff_input')
+        data_preparation_pipe.connect(
+            native_to_stereo_pipe, 'outputnode.native_to_stereo_trans',
+            inv_tranfo, 'inv_aff_input')
 
-    # outputnode
-    if "use_T2" in params.keys():
-
-        if "avg_reorient_pipe" in params.keys():
-            data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
-                outputnode, 'native_T2')
-        else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                outputnode, 'native_T2')
-
-        if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
-                outputnode, 'native_T1')
-        else:
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "out_file",
-                outputnode, 'native_T1')
-
-    else:
-
-        if "avg_reorient_pipe" in params.keys():
-            data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
-                outputnode, 'native_T1')
-        else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                outputnode, 'native_T1')
-
-        if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
-                outputnode, 'native_T2')
-        else:
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "out_file",
-                outputnode, 'native_T2')
     # denoise with Ants package
     if "denoise" in params.keys():
 
@@ -683,15 +661,13 @@ def create_short_preparation_pipe(params, params_template={},
 
         else:
 
-            if "crop_z_T1" in params.keys():
-                data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                              denoise_T1, 'input_image')
-            else:
-                data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                              denoise_T1, 'input_image')
+            data_preparation_pipe.connect(
+                native_to_stereo_pipe, "outputnode.stereo_native_T1",
+                denoise_T1, 'input_image')
 
-            data_preparation_pipe.connect(apply_crop_aladin_T2, 'out_file',
-                                          denoise_T2, 'input_image')
+            data_preparation_pipe.connect(
+                apply_crop_aladin_T2, 'out_file',
+                denoise_T2, 'input_image')
 
         # outputs
         if "use_T2" in params.keys():
@@ -738,14 +714,9 @@ def create_short_preparation_pipe(params, params_template={},
 
             if "use_T2" in params.keys():
 
-                if "crop_z_T1" in params.keys():
-                    data_preparation_pipe.connect(
-                        crop_z_T1, "out_roi",
-                        outputnode, 'preproc_T2')
-                else:
-                    data_preparation_pipe.connect(
-                        crop_aladin_T1, "res_file",
-                        outputnode, 'preproc_T2')
+                data_preparation_pipe.connect(
+                    native_to_stereo_pipe, "outputnode.stereo_native_T1",
+                    outputnode, 'preproc_T2')
 
                 data_preparation_pipe.connect(
                     apply_crop_aladin_T2, 'out_file',
@@ -753,14 +724,9 @@ def create_short_preparation_pipe(params, params_template={},
 
             else:
 
-                if "crop_z_T1" in params.keys():
-                    data_preparation_pipe.connect(
-                        crop_z_T1, "out_roi",
-                        outputnode, 'preproc_T1')
-                else:
-                    data_preparation_pipe.connect(
-                        crop_aladin_T1, "res_file",
-                        outputnode, 'preproc_T1')
+                data_preparation_pipe.connect(
+                    native_to_stereo_pipe, "outputnode.stereo_native_T1",
+                    outputnode, 'preproc_T1')
 
                 data_preparation_pipe.connect(
                     apply_crop_aladin_T2, 'out_file',
@@ -895,140 +861,6 @@ def create_long_single_preparation_pipe(params,
     return long_single_preparation_pipe
 
 
-def create_long_multi_preparation_pipe(params,
-                                       name="long_multi_preparation_pipe"):
-    """Description: Long data preparation, each T1 and T2 is processed \
-    independantly (mapnode).
-
-    Processing steps:
-
-    - reorient (opt: reorient) makes the whole pipeline more neat)
-    - start by denoising all input images (opt: denoise_first in json)
-    - crop T1 and T2 based on individual parameters
-    - running N4biascorrection on cropped T1 and T to help T2 and T1 alignment
-    - finish by denoising all input images (opt: denoise in json))
-    - processed T1s and T2s are averaged (by modality)
-    - Finally, align average T2 to average T1
-
-    Params:
-
-    - mapnode_prep_T1 and mapnodes_prep_T2 (see \
-    :class:`_create_mapnode_prep_pipeline \
-    <macapype.pipelines.prepare._create_mapnode_prep_pipeline>` for arguments)
-    - align_T2_on_T1 (see `FLIRT <https://nipype.readthedocs.io/en/0.12.1/\
-    interfaces/generated/nipype.interfaces.fsl.preprocess.html#flirt>`_ \
-    for more arguments)
-
-    Inputs:
-
-        inputnode:
-
-            list_T1:
-                T1 files (from BIDSDataGrabber)
-
-            list_T2:
-                T2 files
-
-            indiv_params (opt):
-                dict with individuals parameters for some nodes
-
-        arguments:
-
-            params:
-                dictionary of node sub-parameters (from a json file)
-
-            name:
-                pipeline name (default = "long_multi_preparation_pipe")
-
-    Outputs:
-
-        :outputnode:
-
-            preproc_T1:
-                preprocessed T1 file
-
-            preproc_T2:
-                preprocessed T2 file
-
-    """
-
-    # creating pipeline
-    long_multi_preparation_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['list_T1', 'list_T2', 'indiv_params']),
-        name='inputnode'
-    )
-
-    # Creating output node
-    outputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'preproc_T2']),
-        name='outputnode')
-
-    # mapnode_prep_pipeline for T1 list
-    mapnode_prep_T1_pipe = _create_mapnode_prep_pipeline(
-        params=parse_key(params, "prep_T1"),
-        name="prep_T1", node_suffix="_T1")
-
-    long_multi_preparation_pipe.connect(
-        inputnode, 'list_T1', mapnode_prep_T1_pipe, "inputnode.list_img")
-
-    long_multi_preparation_pipe.connect(
-        inputnode, 'indiv_params',
-        mapnode_prep_T1_pipe, "inputnode.indiv_params")
-
-    # average if multiple T1
-    av_T1 = pe.Node(
-        niu.Function(input_names=['list_img'],
-                     output_names=['avg_img'],
-                     function=average_align),
-        name="av_T1")
-
-    long_multi_preparation_pipe.connect(
-        mapnode_prep_T1_pipe, 'outputnode.prep_list_img', av_T1, 'list_img')
-
-    # mapnode_prep_pipeline for T2 list
-    mapnode_prep_T2_pipe = _create_mapnode_prep_pipeline(
-        params=parse_key(params, "prep_T2"),
-        name="prep_T2", node_suffix="_T2")
-
-    long_multi_preparation_pipe.connect(
-        inputnode, 'list_T2', mapnode_prep_T2_pipe, "inputnode.list_img")
-
-    long_multi_preparation_pipe.connect(
-        inputnode, 'indiv_params',
-        mapnode_prep_T2_pipe, "inputnode.indiv_params")
-
-    # average if multiple T2
-    av_T2 = pe.Node(
-        niu.Function(input_names=['list_img'],
-                     output_names=['avg_img'],
-                     function=average_align),
-        name="av_T2")
-
-    long_multi_preparation_pipe.connect(
-        mapnode_prep_T2_pipe, 'outputnode.prep_list_img', av_T2, 'list_img')
-
-    # align T2 on T1 - mutualinfo works better for crossmodal biased images
-    align_T2_on_T1 = NodeParams(fsl.FLIRT(),
-                                params=parse_key(params, "align_T2_on_T1"),
-                                name="align_T2_on_T1")
-
-    long_multi_preparation_pipe.connect(av_T1, 'avg_img',
-                                        align_T2_on_T1, 'reference')
-    long_multi_preparation_pipe.connect(av_T2, 'avg_img',
-                                        align_T2_on_T1, 'in_file')
-
-    # output node
-    long_multi_preparation_pipe.connect(av_T1, 'avg_img',
-                                        outputnode, 'preproc_T1')
-    long_multi_preparation_pipe.connect(align_T2_on_T1, 'out_file',
-                                        outputnode, 'preproc_T2')
-
-    return long_multi_preparation_pipe
-
-
 ###############################################################################
 # works with only one T1
 def create_short_preparation_T1_pipe(params, params_template,
@@ -1113,6 +945,17 @@ def create_short_preparation_T1_pipe(params, params_template,
             name="av_T1")
         data_preparation_pipe.connect(inputnode, 'list_T1', av_T1, 'list_img')
 
+    # outputnode
+    if "avg_reorient_pipe" in params.keys():
+        data_preparation_pipe.connect(
+            av_T1, 'outputnode.std_img',
+            outputnode, 'native_T1')
+
+    else:
+        data_preparation_pipe.connect(av_T1, 'avg_img',
+                                      outputnode, 'native_T1')
+
+    # cropping and possibly sending to stereo space
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
 
@@ -1140,49 +983,27 @@ def create_short_preparation_T1_pipe(params, params_template,
 
     else:
 
-        if "pre_crop_z_T1" in params.keys():
+        # register T1 to stereo image
+        native_to_stereo_pipe = create_crop_aladin_pipe(
+            "crop_aladin_pipe",
+            params=parse_key(params, "crop_aladin_pipe"))
 
-            print('pre_crop_z_T1')
-            pre_crop_z_T1 = NodeParams(
-                fsl.RobustFOV(),
-                params=parse_key(params, "pre_crop_z_T1"),
-                name='pre_crop_z_T1')
-
+        if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
-                inputnode, ("indiv_params", parse_key, "pre_crop_z_T1"),
-                pre_crop_z_T1, 'indiv_params')
-
-            if "avg_reorient_pipe" in params.keys():
-                data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                              pre_crop_z_T1, 'in_file')
-
-            else:
-                data_preparation_pipe.connect(av_T1, 'avg_img',
-                                              pre_crop_z_T1, 'in_file')
-
-        print('default crop_aladin_T1 will be run')
-        crop_aladin_T1 = NodeParams(reg.RegAladin(),
-                                    params=parse_key(params, "crop_aladin_T1"),
-                                    name='crop_aladin_T1')
-
-        crop_aladin_T1.inputs.ref_file = params_template["template_head"]
-
-        data_preparation_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "crop_aladin_T1"),
-            crop_aladin_T1, 'indiv_params')
-
-        if "pre_crop_z_T1" in params.keys():
-            data_preparation_pipe.connect(
-                pre_crop_z_T1, "out_roi",
-                crop_aladin_T1, 'flo_file')
+                av_T1, 'outputnode.std_img',
+                native_to_stereo_pipe, 'inputnode.native_T1')
 
         else:
-            if "avg_reorient_pipe" in params.keys():
-                data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
-                                              crop_aladin_T1, 'flo_file')
-            else:
-                data_preparation_pipe.connect(av_T1, 'avg_img',
-                                              crop_aladin_T1, 'flo_file')
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                native_to_stereo_pipe, 'inputnode.native_T1')
+
+        data_preparation_pipe.connect(
+            inputnode, 'indiv_params',
+            native_to_stereo_pipe, 'inputnode.indiv_params')
+
+        native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+            params_template["template_head"]
 
         # compute inv transfo
         inv_tranfo = NodeParams(
@@ -1190,32 +1011,9 @@ def create_short_preparation_T1_pipe(params, params_template,
             params=parse_key(params, "inv_transfo_aladin"),
             name='inv_tranfo')
 
-        data_preparation_pipe.connect(crop_aladin_T1, 'aff_file',
-                                      inv_tranfo, 'inv_aff_input')
-
-        # crop_z_T1
-        if "crop_z_T1" in params.keys():
-
-            crop_z_T1 = NodeParams(fsl.RobustFOV(),
-                                   params=parse_key(params, "crop_z_T1"),
-                                   name='crop_z_T1')
-
-            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                          crop_z_T1, 'in_file')
-
-            data_preparation_pipe.connect(
-                inputnode, ("indiv_params", parse_key, "crop_z_T1"),
-                crop_z_T1, 'indiv_params')
-
-    # outputnode
-    if "avg_reorient_pipe" in params.keys():
         data_preparation_pipe.connect(
-            av_T1, 'outputnode.std_img',
-            outputnode, 'native_T1')
-
-    else:
-        data_preparation_pipe.connect(av_T1, 'avg_img',
-                                      outputnode, 'native_T1')
+            native_to_stereo_pipe, 'outputnode.native_to_stereo_trans',
+            inv_tranfo, 'inv_aff_input')
 
     if "denoise" in params.keys():
 
@@ -1229,30 +1027,22 @@ def create_short_preparation_T1_pipe(params, params_template,
             data_preparation_pipe.connect(crop_T1, "roi_file",
                                           denoise_T1, 'input_image')
 
-        elif "crop_z_T1" in params.keys():
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                          denoise_T1, 'input_image')
-
         else:
-            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                          denoise_T1, 'input_image')
+            data_preparation_pipe.connect(
+                native_to_stereo_pipe, 'outputnode.stereo_native_T1',
+                denoise_T1, 'input_image')
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
                                       outputnode, 'preproc_T1')
-
     else:
-
         if "crop_T1" in params.keys():
             data_preparation_pipe.connect(crop_T1, "roi_file",
                                           outputnode, 'preproc_T1')
 
-        elif "crop_z_T1" in params.keys():
-            data_preparation_pipe.connect(crop_z_T1, "out_roi",
-                                          outputnode, 'preproc_T1')
-
         else:
-            data_preparation_pipe.connect(crop_aladin_T1, "res_file",
-                                          outputnode, 'preproc_T1')
+            data_preparation_pipe.connect(
+                native_to_stereo_pipe, 'outputnode.stereo_native_T1',
+                outputnode, 'preproc_T1')
 
     return data_preparation_pipe
