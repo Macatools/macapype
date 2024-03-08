@@ -628,7 +628,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
     return reg_pipe
 
 
-def create_c_pipe(name="native_to_stereo_pipe", params={}):
+def create_native_to_stereo_pipe(name="native_to_stereo_pipe", params={}):
 
     reg_pipe = pe.Workflow(name=name)
 
