@@ -496,25 +496,25 @@ def create_short_preparation_pipe(params, params_template={},
     else:
 
         # register T1 to stereo image
-        native_to_stereo_pipe = create_native_to_stereo_pipe(
-            "native_to_stereo_pipe",
-            params=parse_key(params, "native_to_stereo_pipe"))
+        crop_aladin_pipe = create_crop_aladin_pipe(
+            "crop_aladin_pipe",
+            params=parse_key(params, "crop_aladin_pipe"))
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
-                native_to_stereo_pipe, 'inputnode.native_T1')
+                crop_aladin_pipe, 'inputnode.native_T1')
 
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
-                native_to_stereo_pipe, 'inputnode.native_T1')
+                crop_aladin_pipe, 'inputnode.native_T1')
 
         data_preparation_pipe.connect(
             inputnode, 'indiv_params',
-            native_to_stereo_pipe, 'inputnode.indiv_params')
+            crop_aladin_pipe, 'inputnode.indiv_params')
 
-        native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+        crop_aladin_pipe.inputs.inputnode.stereo_T1 = \
             params_template["template_head"]
 
         # apply reg_resample to T2
@@ -531,11 +531,11 @@ def create_short_preparation_pipe(params, params_template={},
                                           apply_crop_aladin_T2, 'flo_file')
 
         data_preparation_pipe.connect(
-            native_to_stereo_pipe, 'outputnode.native_to_stereo_trans',
+            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
             apply_crop_aladin_T2, 'trans_file')
 
         data_preparation_pipe.connect(
-            native_to_stereo_pipe, 'outputnode.stereo_native_T1',
+            crop_aladin_pipe, 'outputnode.stereo_native_T1',
             apply_crop_aladin_T2, 'ref_file')
 
         # compute inv transfo
@@ -545,7 +545,7 @@ def create_short_preparation_pipe(params, params_template={},
             name='inv_tranfo')
 
         data_preparation_pipe.connect(
-            native_to_stereo_pipe, 'outputnode.native_to_stereo_trans',
+            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
             inv_tranfo, 'inv_aff_input')
 
     # denoise with Ants package
@@ -569,7 +569,7 @@ def create_short_preparation_pipe(params, params_template={},
         else:
 
             data_preparation_pipe.connect(
-                native_to_stereo_pipe, "outputnode.stereo_native_T1",
+                crop_aladin_pipe, "outputnode.stereo_native_T1",
                 denoise_T1, 'input_image')
 
             data_preparation_pipe.connect(
@@ -622,7 +622,7 @@ def create_short_preparation_pipe(params, params_template={},
             if "use_T2" in params.keys():
 
                 data_preparation_pipe.connect(
-                    native_to_stereo_pipe, "outputnode.stereo_native_T1",
+                    crop_aladin_pipe, "outputnode.stereo_native_T1",
                     outputnode, 'preproc_T2')
 
                 data_preparation_pipe.connect(
@@ -632,7 +632,7 @@ def create_short_preparation_pipe(params, params_template={},
             else:
 
                 data_preparation_pipe.connect(
-                    native_to_stereo_pipe, "outputnode.stereo_native_T1",
+                    crop_aladin_pipe, "outputnode.stereo_native_T1",
                     outputnode, 'preproc_T1')
 
                 data_preparation_pipe.connect(
@@ -891,25 +891,25 @@ def create_short_preparation_T1_pipe(params, params_template,
     else:
 
         # register T1 to stereo image
-        native_to_stereo_pipe = create_crop_aladin_pipe(
+        crop_aladin_pipe = create_crop_aladin_pipe(
             "crop_aladin_pipe",
             params=parse_key(params, "crop_aladin_pipe"))
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
-                native_to_stereo_pipe, 'inputnode.native_T1')
+                crop_aladin_pipe, 'inputnode.native_T1')
 
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
-                native_to_stereo_pipe, 'inputnode.native_T1')
+                crop_aladin_pipe, 'inputnode.native_T1')
 
         data_preparation_pipe.connect(
             inputnode, 'indiv_params',
-            native_to_stereo_pipe, 'inputnode.indiv_params')
+            crop_aladin_pipe, 'inputnode.indiv_params')
 
-        native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
+        crop_aladin_pipe.inputs.inputnode.stereo_T1 = \
             params_template["template_head"]
 
         # compute inv transfo
@@ -919,7 +919,7 @@ def create_short_preparation_T1_pipe(params, params_template,
             name='inv_tranfo')
 
         data_preparation_pipe.connect(
-            native_to_stereo_pipe, 'outputnode.native_to_stereo_trans',
+            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
             inv_tranfo, 'inv_aff_input')
 
     if "denoise" in params.keys():
@@ -936,7 +936,7 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         else:
             data_preparation_pipe.connect(
-                native_to_stereo_pipe, 'outputnode.stereo_native_T1',
+                crop_aladin_pipe, 'outputnode.stereo_native_T1',
                 denoise_T1, 'input_image')
 
         # outputs
@@ -949,7 +949,7 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         else:
             data_preparation_pipe.connect(
-                native_to_stereo_pipe, 'outputnode.stereo_native_T1',
+                crop_aladin_pipe, 'outputnode.stereo_native_T1',
                 outputnode, 'preproc_T1')
 
     return data_preparation_pipe
