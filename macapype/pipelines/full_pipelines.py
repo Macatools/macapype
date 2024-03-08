@@ -19,7 +19,6 @@ from macapype.nodes.pad import pad_back, apply_to_stereo
 
 from .prepare import (create_short_preparation_pipe,
                       create_short_preparation_T1_pipe,
-                      create_long_multi_preparation_pipe,
                       create_long_single_preparation_pipe,)
 
 from .segment import (create_old_segment_pipe,
@@ -149,10 +148,6 @@ def create_full_spm_subpipes(
     if 'long_single_preparation_pipe' in params.keys():
         data_preparation_pipe = create_long_single_preparation_pipe(
             params=parse_key(params, "long_single_preparation_pipe"))
-
-    elif 'long_multi_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_multi_preparation_pipe(
-            params=parse_key(params, "long_multi_preparation_pipe"))
 
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
@@ -948,8 +943,6 @@ def create_full_ants_subpipes(
     (see :class:`create_long_single_preparation_pipe \
     <macapype.pipelines.prepare.create_long_single_preparation_pipe>`) or \
     long_multi_preparation_pipe \
-    (see :class:`create_long_multi_preparation_pipe \
-    <macapype.pipelines.prepare.create_long_multi_preparation_pipe>`)
 
     - brain_extraction_pipe (see :class:`create_brain_extraction_pipe \
     <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`)
@@ -1024,10 +1017,6 @@ def create_full_ants_subpipes(
     if 'long_single_preparation_pipe' in params.keys():
         data_preparation_pipe = create_long_single_preparation_pipe(
             params=parse_key(params, "long_single_preparation_pipe"))
-
-    elif 'long_multi_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_multi_preparation_pipe(
-            params=parse_key(params, "long_multi_preparation_pipe"))
 
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
