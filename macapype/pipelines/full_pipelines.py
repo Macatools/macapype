@@ -728,7 +728,7 @@ def create_brain_segment_from_mask_pipe(
                 register_gm_to_nat, 'reference')
 
             brain_segment_pipe.connect(
-                inputnode, 'inv_transfo_file',
+                reg, 'inv_transfo_file',
                 register_gm_to_nat, "in_matrix_file")
 
             # wm
@@ -744,7 +744,7 @@ def create_brain_segment_from_mask_pipe(
                 register_wm_to_nat, 'reference')
 
             brain_segment_pipe.connect(
-                inputnode, 'inv_transfo_file',
+                reg, 'inv_transfo_file',
                 register_wm_to_nat, "in_matrix_file")
 
             # csf
@@ -761,7 +761,7 @@ def create_brain_segment_from_mask_pipe(
                 register_csf_to_nat, 'reference')
 
             brain_segment_pipe.connect(
-                inputnode, 'inv_transfo_file',
+                reg, 'inv_transfo_file',
                 register_csf_to_nat, "in_matrix_file")
     else:
         print("##### Error, no coregistration method is defined")
