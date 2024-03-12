@@ -13,17 +13,17 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         niu.Rename(),
         name="rename_stereo_T1")
     rename_stereo_T1.inputs.format_string = \
-        pref_deriv + "_space-native_desc-stereo_T1w"
+        pref_deriv + "_space-stereo_T1w"
     rename_stereo_T1.inputs.parse_string = parse_str
     rename_stereo_T1.inputs.keep_ext = True
 
     main_workflow.connect(
-        segment_pnh_pipe, 'outputnode.native_stereo_T1',
+        segment_pnh_pipe, 'outputnode.stereo_T1',
         rename_stereo_T1, 'in_file')
 
     main_workflow.connect(
         rename_stereo_T1, 'out_file',
-        datasink, '@native_stereo_T1')
+        datasink, '@stereo_T1')
 
     if 't2' in datatypes:
 
@@ -32,17 +32,17 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             niu.Rename(),
             name="rename_stereo_T2")
         rename_stereo_T2.inputs.format_string = \
-            pref_deriv + "_space-native_desc-stereo_T2w"
+            pref_deriv + "_space-stereo_T2w"
         rename_stereo_T2.inputs.parse_string = parse_str
         rename_stereo_T2.inputs.keep_ext = True
 
         main_workflow.connect(
-            segment_pnh_pipe, 'outputnode.native_stereo_T2',
+            segment_pnh_pipe, 'outputnode.stereo_T2',
             rename_stereo_T2, 'in_file')
 
         main_workflow.connect(
             rename_stereo_T2, 'out_file',
-            datasink, '@native_stereo_T2')
+            datasink, '@stereo_T2')
 
     # after debiased
     if ("fast" in params
