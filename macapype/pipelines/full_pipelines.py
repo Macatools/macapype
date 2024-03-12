@@ -947,7 +947,6 @@ def create_full_ants_subpipes(
                 correct_bias_pipe, "outputnode.debiased_T2",
                 outputnode, "native_debiased_T2", params)
 
-
     elif "N4debias" in params.keys():
         print("Found N4debias in params.json")
 
@@ -1215,7 +1214,7 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(
             debias, 't2_debiased_brain_file',
-            outputnode, "stereo_masked_debiased_T1")
+            outputnode, "stereo_masked_debiased_T2")
 
         if pad:
 
