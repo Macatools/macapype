@@ -295,7 +295,9 @@ def create_short_preparation_pipe(params, params_template={},
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['native_T1', 'native_T2',
-                                      'preproc_T1', 'preproc_T2']),
+                                      'preproc_T1', 'preproc_T2',
+                                      "native_to_stereo_trans",
+                                      "stereo_to_native_trans"]),
         name='outputnode')
 
     if "avg_reorient_pipe" in params.keys():
@@ -408,8 +410,6 @@ def create_short_preparation_pipe(params, params_template={},
 
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'in_file')
-
-
 
     # outputnode
     if "use_T2" in params.keys():
@@ -547,6 +547,15 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(
             crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
             inv_tranfo, 'inv_aff_input')
+
+        # outputnode (transfo)
+        data_preparation_pipe.connect(
+            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+            outputnode, 'native_to_stereo_trans')
+
+        data_preparation_pipe.connect(
+            inv_tranfo, 'out_file',
+            outputnode, 'stereo_to_native_trans')
 
     # denoise with Ants package
     if "denoise" in params.keys():
@@ -830,7 +839,9 @@ def create_short_preparation_T1_pipe(params, params_template,
 
     # Creating output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'native_T1']),
+        niu.IdentityInterface(fields=['preproc_T1', 'native_T1',
+                                      "stereo_to_native_trans",
+                                      "native_to_stereo_trans"]),
         name='outputnode')
 
     # average if multiple T1
@@ -921,6 +932,15 @@ def create_short_preparation_T1_pipe(params, params_template,
         data_preparation_pipe.connect(
             crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
             inv_tranfo, 'inv_aff_input')
+
+        # outputnode
+        data_preparation_pipe.connect(
+            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+            outputnode, 'native_to_stereo_trans')
+
+        data_preparation_pipe.connect(
+            inv_tranfo, 'out_file',
+            outputnode, 'stereo_to_native_trans')
 
     if "denoise" in params.keys():
 

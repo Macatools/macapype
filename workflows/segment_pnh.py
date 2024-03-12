@@ -463,9 +463,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             pref_deriv = "sub-%(sub)s_ses-%(ses)s"
             parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
 
-        rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
-                               datasink, pref_deriv, parse_str, space, ssoft,
-                               datatypes)
+        rename_all_brain_derivatives(
+            params, main_workflow, segment_pnh_pipe, datasink,
+            pref_deriv, parse_str, pad, ssoft, datatypes)
 
     # running main_workflow
     main_workflow.write_graph(graph2use="colored")
