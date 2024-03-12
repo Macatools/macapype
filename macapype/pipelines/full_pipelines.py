@@ -1647,11 +1647,11 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         if "crop_T1" not in params["short_preparation_pipe"].keys():
 
             seg_pipe.connect(data_preparation_pipe,
-                             "outputode.native_to_stereo_trans",
+                             "outputnode.native_to_stereo_trans",
                              outputnode, 'native_to_stereo_trans')
 
             seg_pipe.connect(data_preparation_pipe,
-                             "outputode.stereo_to_native_trans",
+                             "outputnode.stereo_to_native_trans",
                              outputnode, 'stereo_to_native_trans')
 
     # ######### correct_bias
