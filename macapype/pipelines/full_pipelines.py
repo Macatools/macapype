@@ -1640,7 +1640,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
                      outputnode, 'native_T1')
 
-    seg_pipe.connect(data_preparation_pipe,'outputnode.preproc_T1',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      outputnode, 'stereo_T1')
 
     if "short_preparation_pipe" in params.keys():
