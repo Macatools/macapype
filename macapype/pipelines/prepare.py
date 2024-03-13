@@ -15,6 +15,7 @@ from ..utils.misc import parse_key
 
 from ..nodes.prepare import average_align, FslOrient
 
+from ..nodes.register import pad_zero_mri
 
 # should be in nipype code directly
 from ..nodes.prepare import Refit
@@ -647,6 +648,55 @@ def create_short_preparation_pipe(params, params_template={},
                 data_preparation_pipe.connect(
                     apply_crop_aladin_T2, 'out_file',
                     outputnode, 'preproc_T2')
+    # resample T1 to higher dimension
+    if "resample_T1_pad" in params.keys():
+
+        resample_T1_pad = pe.Node(
+            regutils.RegResample(),
+            name="resample_T1")
+
+        data_preparation_pipe.connect(
+            inputnode, 'native_T1',
+            resample_T1_pad, "flo_file")
+
+        if "padded_template_head" in params_template.keys():
+            resample_T1_pad.inputs.ref_fie = params_template["padded_template_head"]
+
+        elif "template_head" in params_template.keys():
+            pad_template = pe.NodeParams(
+                niu.Function(
+                    input_names=["img_file", "pad_val", "const"],
+                    output_names=["padded_img_file"],
+                    function=pad_zero_mri),
+                params=parse_key(params, "resample_T1_pad"),
+                name = "pad_template")
+
+            pad_template.inputs.img_file = params_template["template_head"]
+
+            data_preparation_pipe.connect(
+                pad_template, 'padded_img_file',
+                resample_T1_pad, "ref_file")
+
+        else:
+            print("Error, template_head or padded_template_head should be \
+                defined in template")
+            exit(-1)
+
+
+        data_preparation_pipe.connect(
+            inputnode, 'stereo_T1',
+            resample_T1_pad, "ref_file")
+
+        if "reg_T1_on_template2" in params.keys():
+            data_preparation_pipe.connect(
+                compose_transfo, 'out_file',
+                resample_T1_pad, "trans_file")
+
+        else:
+            data_preparation_pipe.connect(
+                reg_T1_on_template, 'aff_file',
+                resample_T1_pad, "trans_file")
+
 
     return data_preparation_pipe
 
@@ -971,5 +1021,46 @@ def create_short_preparation_T1_pipe(params, params_template,
             data_preparation_pipe.connect(
                 crop_aladin_pipe, 'outputnode.stereo_native_T1',
                 outputnode, 'preproc_T1')
+
+
+    ## resample T1 to higher dimension
+    #if "resample_T1_pad" in params.keys():
+
+        #resample_T1_pad = pe.Node(
+            #regutils.RegResample(),
+            #name="resample_T1")
+
+        #data_preparation_pipe.connect(
+            #inputnode, 'native_T1',
+            #resample_T1_pad, "flo_file")
+
+        #if "padded_template_head" in params_template.keys():
+            #resample_T1_pad.inputs.ref_fie = params_template["padded_template_head"]
+
+        #else:
+            #pad_template = pe.NodeParams(
+                #niu.Function(
+                    #input_names = ["img_file", "pad_val", "const"],
+                    #output_names = ["padded_img_file"],
+                    #function = pad_zero_mri),
+                #params=parse_key(params, "resample_T1_pad"),
+                #name = "pad_template")
+
+            #pad_template.inputs.img_file =
+            #(img_file, pad_val=10, const=0)
+        #data_preparation_pipe.connect(
+            #inputnode, 'padded_stereo_T1',
+            #resample_T1_pad, "ref_file")
+
+        #if "reg_T1_on_template2" in params.keys():
+            #data_preparation_pipe.connect(
+                #compose_transfo, 'out_file',
+                #resample_T1_pad, "trans_file")
+
+        #else:
+            #data_preparation_pipe.connect(
+                #reg_T1_on_template, 'aff_file',
+                #resample_T1_pad, "trans_file")
+
 
     return data_preparation_pipe
