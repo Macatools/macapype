@@ -821,6 +821,7 @@ def create_full_ants_subpipes(
             fields=[
                     "native_T1", "native_T2",
                     'stereo_T1', 'stereo_T2',
+                    "stereo_padded_T1",
 
                     'stereo_debiased_T1', 'stereo_debiased_T2',
                     "native_debiased_T1", "native_debiased_T2",
@@ -896,6 +897,9 @@ def create_full_ants_subpipes(
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      outputnode, "stereo_T2")
+
+    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                     outputnode, "stereo_padded_T1")
 
     if "short_preparation_pipe" in params.keys():
         if "crop_T1" not in params["short_preparation_pipe"].keys():
