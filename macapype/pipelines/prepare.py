@@ -298,6 +298,7 @@ def create_short_preparation_pipe(params, params_template={},
         niu.IdentityInterface(fields=['native_T1', 'native_T2',
                                       'preproc_T1', 'preproc_T2',
                                       "stereo_padded_T1",
+                                      "stereo_padded_T2",
                                       "native_to_stereo_trans",
                                       "stereo_to_native_trans"]),
         name='outputnode')
@@ -655,7 +656,11 @@ def create_short_preparation_pipe(params, params_template={},
 
         resample_T1_pad = pe.Node(
             regutils.RegResample(),
-            name="resample_T1")
+            name="resample_T1_pad")
+
+        resample_T2_pad = pe.Node(
+            regutils.RegResample(),
+            name="resample_T2_pad")
 
         if "avg_reorient_pipe" in params.keys():
 
@@ -663,16 +668,28 @@ def create_short_preparation_pipe(params, params_template={},
                 av_T1, 'outputnode.std_img',
                 resample_T1_pad, "flo_file")
 
+            data_preparation_pipe.connect(
+                av_T2, 'outputnode.std_img',
+                resample_T2_pad, "flo_file")
+
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
                 resample_T1_pad, "flo_file")
 
+            data_preparation_pipe.connect(
+                av_T2, 'avg_img',
+                resample_T2_pad, "flo_file")
+
         if "padded_template_head" in params_template.keys():
             resample_T1_pad.inputs.ref_fie = \
                 params_template["padded_template_head"]
 
+            resample_T2_pad.inputs.ref_fie = \
+                params_template["padded_template_head"]
+
         elif "template_head" in params_template.keys():
+            # padding versio of the template
             pad_template = NodeParams(
                 niu.Function(
                     input_names=["img_file", "pad_val", "const"],
@@ -683,9 +700,15 @@ def create_short_preparation_pipe(params, params_template={},
 
             pad_template.inputs.img_file = params_template["template_head"]
 
+            #  resample_T1_pad
             data_preparation_pipe.connect(
                 pad_template, 'padded_img_file',
                 resample_T1_pad, "ref_file")
+
+            #  resample_T2_pad
+            data_preparation_pipe.connect(
+                pad_template, 'padded_img_file',
+                resample_T2_pad, "ref_file")
 
         else:
             print("Error, template_head or padded_template_head should be \
@@ -697,8 +720,16 @@ def create_short_preparation_pipe(params, params_template={},
             resample_T1_pad, "trans_file")
 
         data_preparation_pipe.connect(
+            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+            resample_T2_pad, "trans_file")
+
+        data_preparation_pipe.connect(
             resample_T1_pad, 'out_file',
             outputnode, 'stereo_padded_T1')
+
+        data_preparation_pipe.connect(
+            resample_T2_pad, 'out_file',
+            outputnode, 'stereo_padded_T2')
 
     return data_preparation_pipe
 
