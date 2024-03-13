@@ -297,7 +297,7 @@ def create_short_preparation_pipe(params, params_template={},
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['native_T1', 'native_T2',
                                       'preproc_T1', 'preproc_T2',
-                                      "stereo_padded_T1"
+                                      "stereo_padded_T1",
                                       "native_to_stereo_trans",
                                       "stereo_to_native_trans"]),
         name='outputnode')
