@@ -1600,6 +1600,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             fields=[
                     "native_T1",
                     'stereo_T1',
+                    "stereo_padded_T1",
 
                     'stereo_brain_mask', 'native_brain_mask',
                     'stereo_debiased_T1', "native_debiased_T1",
