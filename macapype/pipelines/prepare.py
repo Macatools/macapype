@@ -697,7 +697,7 @@ def create_short_preparation_pipe(params, params_template={},
             resample_T1_pad, "trans_file")
 
         data_preparation_pipe.connect(
-            resample_T1_pad, 'res_file',
+            resample_T1_pad, 'out_file',
             outputnode, 'stereo_padded_T1')
 
     return data_preparation_pipe
