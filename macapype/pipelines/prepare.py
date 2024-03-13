@@ -10,7 +10,7 @@ from nipype.interfaces.niftyreg import regutils
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
-from ..utils.utils_nodes import NodeParams, MapNodeParams
+from ..utils.utils_nodes import NodeParams
 from ..utils.misc import parse_key
 
 from ..nodes.prepare import average_align, FslOrient
@@ -663,7 +663,7 @@ def create_short_preparation_pipe(params, params_template={},
             resample_T1_pad.inputs.ref_fie = params_template["padded_template_head"]
 
         elif "template_head" in params_template.keys():
-            pad_template = pe.NodeParams(
+            pad_template = NodeParams(
                 niu.Function(
                     input_names=["img_file", "pad_val", "const"],
                     output_names=["padded_img_file"],
@@ -1038,7 +1038,7 @@ def create_short_preparation_T1_pipe(params, params_template,
             #resample_T1_pad.inputs.ref_fie = params_template["padded_template_head"]
 
         #else:
-            #pad_template = pe.NodeParams(
+            #pad_template = NodeParams(
                 #niu.Function(
                     #input_names = ["img_file", "pad_val", "const"],
                     #output_names = ["padded_img_file"],
