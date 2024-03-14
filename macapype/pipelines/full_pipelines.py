@@ -1614,7 +1614,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
                     "native_masked_debiased_T1", "stereo_masked_debiased_T1",
 
-                    'native_segmented_brain_mask', "native_gen_5tt"
+                    'native_segmented_brain_mask', "native_gen_5tt",
                     'native_prob_gm', 'native_prob_wm', 'native_prob_csf',
 
                     'stereo_segmented_brain_mask', "stereo_gen_5tt",

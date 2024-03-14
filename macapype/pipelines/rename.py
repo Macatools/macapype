@@ -44,7 +44,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_T2, 'out_file',
             datasink, '@stereo_T2')
 
-
     if ("fast" in params
             or "N4debias" in params
             or "correct_bias_pipe" in params):
@@ -234,7 +233,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
         # rename prob_csf
         rename_stereo_prob_csf = pe.Node(niu.Rename(),
-                                            name="rename_stereo_prob_csf")
+                                         name="rename_stereo_prob_csf")
         rename_stereo_prob_csf.inputs.format_string = \
             pref_deriv + "_space-stereo_label-CSF_probseg"
         rename_stereo_prob_csf.inputs.parse_string = parse_str
@@ -359,8 +358,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 main_workflow.connect(
                     rename_stereo_gen_5tt, 'out_file',
                     datasink, '@stereo_gen_5tt')
-
-
 
     if pad:
 
