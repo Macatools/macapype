@@ -1831,26 +1831,25 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                      outputnode, 'stereo_prob_wm')
 
-    if pad and space == "native":
-        pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
-            brain_segment_pipe, "outputnode.segmented_file",
-            outputnode, "native_segmented_brain_mask", params)
+    pad_back(
+        seg_pipe, data_preparation_pipe, inputnode,
+        brain_segment_pipe, "outputnode.segmented_file",
+        outputnode, "native_segmented_brain_mask", params)
 
-        pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
-            brain_segment_pipe, "outputnode.prob_gm",
-            outputnode, "native_prob_gm", params)
+    pad_back(
+        seg_pipe, data_preparation_pipe, inputnode,
+        brain_segment_pipe, "outputnode.prob_gm",
+        outputnode, "native_prob_gm", params)
 
-        pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
-            brain_segment_pipe, "outputnode.prob_wm",
-            outputnode, "native_prob_wm", params)
+    pad_back(
+        seg_pipe, data_preparation_pipe, inputnode,
+        brain_segment_pipe, "outputnode.prob_wm",
+        outputnode, "native_prob_wm", params)
 
-        pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
-            brain_segment_pipe, "outputnode.prob_csf",
-            outputnode, "native_prob_csf", params)
+    pad_back(
+        seg_pipe, data_preparation_pipe, inputnode,
+        brain_segment_pipe, "outputnode.prob_csf",
+        outputnode, "native_prob_csf", params)
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
 
