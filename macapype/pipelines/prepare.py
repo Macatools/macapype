@@ -723,6 +723,7 @@ def create_short_preparation_pipe(params, params_template={},
             crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
             resample_T2_pad, "trans_file")
 
+        # outputnode
         data_preparation_pipe.connect(
             resample_T1_pad, 'out_file',
             outputnode, 'stereo_padded_T1')

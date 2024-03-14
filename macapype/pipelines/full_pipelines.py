@@ -993,12 +993,12 @@ def create_full_ants_subpipes(
 
         if pad:
 
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T1, "output_image",
                 outputnode, "native_debiased_T1", params)
 
-            pad_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T2, "output_image",
                 outputnode, "native_debiased_T2", params)
