@@ -1064,9 +1064,15 @@ def create_short_preparation_T1_pipe(params, params_template,
             regutils.RegResample(),
             name="resample_T1")
 
-        data_preparation_pipe.connect(
-            inputnode, 'native_T1',
-            resample_T1_pad, "flo_file")
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                resample_T1_pad, "flo_file")
+
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                resample_T1_pad, "flo_file")
 
         if "padded_template_head" in params_template.keys():
             resample_T1_pad.inputs.ref_file = \
