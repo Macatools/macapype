@@ -1763,7 +1763,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         outputnode, "stereo_brain_mask")
 
     if pad and space == "native":
-        pad_mask = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             extract_T1_pipe, "smooth_mask.out_file",
             outputnode, "native_brain_mask", params)
@@ -1831,24 +1831,24 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
                      outputnode, 'stereo_prob_wm')
 
-    if pad and space == "native":
+    if pad:
 
-        pad_seg_mask = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.segmented_file",
             outputnode, "native_segmented_brain_mask", params)
 
-        pad_prob_gm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_gm",
             outputnode, "native_prob_gm", params)
 
-        pad_prob_wm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_wm",
             outputnode, "native_prob_wm", params)
 
-        pad_prob_csf = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params)
