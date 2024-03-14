@@ -1005,7 +1005,7 @@ def create_short_preparation_T1_pipe(params, params_template,
             inputnode, 'indiv_params',
             crop_aladin_pipe, 'inputnode.indiv_params')
 
-        crop_aladin_pipe.inputs.inputnode.stereo_T1 = \
+        crop_aladin_pipe.inputs.inputnode.stereo_template_T1 = \
             params_template["template_head"]
 
         # compute inv transfo
