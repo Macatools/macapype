@@ -1665,8 +1665,6 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                              "outputnode.stereo_to_native_trans",
                              outputnode, 'stereo_to_native_trans')
 
-
-
     # ######### correct_bias
     if "N4debias" in params.keys():
 
@@ -1754,7 +1752,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     else:
         # brain extraction (with atlasbrex)
         seg_pipe.connect(
-            inputnode, "preproc_T1",
+            data_preparation_pipe, 'outputnode.preproc_T1',
             extract_T1_pipe, "inputnode.restore_T1")
 
     # outputnode
@@ -1786,7 +1784,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
     else:
         seg_pipe.connect(
-            inputnode, "preproc_T1",
+            data_preparation_pipe, 'outputnode.preproc_T1',
             restore_mask_T1, 'in_file')
 
     seg_pipe.connect(extract_T1_pipe, "smooth_mask.out_file",
@@ -1811,6 +1809,22 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
         params_template=params_template,
         params=parse_key(params, "brain_segment_pipe"), space=space)
+
+    if "N4debias" in params.keys():
+        # brain extraction
+        seg_pipe.connect(N4debias_T1, "output_image",
+                         brain_segment_pipe, 'inputnode.debiased_T1')
+
+    elif "fast" in params.keys():
+        # brain extraction
+        seg_pipe.connect(
+            fast_T1, ("restored_image", show_files),
+            brain_segment_pipe, 'inputnode.debiased_T1')
+
+    else:
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.preproc_T1',
+            brain_segment_pipe, 'inputnode.debiased_T1')
 
     seg_pipe.connect(restore_mask_T1, 'out_file',
                      brain_segment_pipe, 'inputnode.masked_debiased_T1')
