@@ -1165,13 +1165,13 @@ def create_full_ants_subpipes(
 
         if pad:
 
-            pad_masked_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T1',
                 outputnode, "native_masked_debiased_T1", params)
 
-            pad_masked_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T2',
@@ -1687,7 +1687,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                          outputnode, "stereo_debiased_T1")
 
         if pad and space == "native":
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T1, "output_image",
                 outputnode, "native_debiased_T1", params)
