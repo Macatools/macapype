@@ -15,7 +15,7 @@ from ..utils.utils_nodes import NodeParams
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from macapype.nodes.pad import pad_back, apply_to_stereo
+from macapype.nodes.pad import pad_back
 
 from .prepare import (create_short_preparation_pipe,
                       create_short_preparation_T1_pipe,
@@ -35,7 +35,7 @@ from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import create_extract_pipe
 
-from .surface import (create_nii_to_mesh_pipe, create_nii_to_mesh_fs_pipe,
+from .surface import (create_nii_to_mesh_pipe,
                       create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files, show_files
@@ -319,32 +319,34 @@ def create_full_spm_subpipes(
         return seg_pipe
 
     # outputnode
-    seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
-                        outputnode, 'stereo_prob_wm')
+    seg_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_wm',
+        outputnode, 'stereo_prob_wm')
 
-    seg_pipe.connect(old_segment_pipe, 'outputnode.prob_csf',
-                        outputnode, 'stereo_prob_csf')
+    seg_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_csf',
+        outputnode, 'stereo_prob_csf')
 
-    seg_pipe.connect(old_segment_pipe, 'outputnode.prob_gm',
-                        outputnode, 'stereo_prob_gm')
+    seg_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_gm',
+        outputnode, 'stereo_prob_gm')
 
     if pad and space == "native":
 
-        pad_prob_gm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_gm",
             outputnode, "native_prob_gm", params)
 
-        pad_prob_wm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_wm",
             outputnode, "native_prob_wm", params)
 
-        pad_prob_csf = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params)
-
 
     if "mask_from_seg_pipe" in params.keys():
 
@@ -943,13 +945,12 @@ def create_full_ants_subpipes(
                          outputnode, "stereo_debiased_T2")
 
         if pad:
-
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 correct_bias_pipe, "outputnode.debiased_T1",
                 outputnode, "native_debiased_T1", params)
 
-            pad_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 correct_bias_pipe, "outputnode.debiased_T2",
                 outputnode, "native_debiased_T2", params)
@@ -1225,12 +1226,12 @@ def create_full_ants_subpipes(
 
         if pad:
 
-            pad_masked_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, 't1_debiased_brain_file',
                 outputnode, "native_masked_debiased_T1", params)
 
-            pad_masked_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, 't2_debiased_brain_file',
                 outputnode, "native_masked_debiased_T2", params)
@@ -1287,13 +1288,12 @@ def create_full_ants_subpipes(
             outputnode, "stereo_masked_debiased_T1")
 
         if pad:
-
-            pad_masked_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 restore_mask_T1, 'out_file',
                 outputnode, "native_masked_debiased_T1", params)
 
-            pad_masked_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 restore_mask_T2, 'out_file',
                 outputnode, "native_masked_debiased_T2", params)
@@ -1717,7 +1717,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
                          outputnode, "stereo_debiased_T1")
 
         if pad and space == "native":
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
                 outputnode, "native_debiased_T1", params)

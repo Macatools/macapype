@@ -405,8 +405,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         if "extract_pipe" in params.keys():
 
             # rename brain_mask
-            rename_native_brain_mask = pe.Node(niu.Rename(),
-                                        name="rename_native_brain_mask")
+            rename_native_brain_mask = pe.Node(
+                niu.Rename(), name="rename_native_brain_mask")
             rename_native_brain_mask.inputs.format_string = \
                 pref_deriv + "_space-native_desc-brain_mask"
             rename_native_brain_mask.inputs.parse_string = parse_str
@@ -447,7 +447,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     name="rename_native_masked_debiased_T2")
                 rename_native_masked_debiased_T2.inputs.format_string = \
                     pref_deriv + "_space-native_desc-debiased_desc-brain_T2w"
-                rename_native_masked_debiased_T2.inputs.parse_string = parse_str
+                rename_native_masked_debiased_T2.inputs.parse_string = \
+                    parse_str
                 rename_native_masked_debiased_T2.inputs.keep_ext = True
 
                 main_workflow.connect(
@@ -483,8 +484,11 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     niu.Rename(),
                     name="rename_native_masked_debiased_T2")
                 rename_native_masked_debiased_T2.inputs.format_string = \
-                    pref_deriv + "_space-native_desc-debiased_desc-brain_T2w"
-                rename_native_masked_debiased_T2.inputs.parse_string = parse_str
+                    pref_deriv + \
+                    "_space-native_desc-debiased_desc-brain_T2w"
+
+                rename_native_masked_debiased_T2.inputs.parse_string = \
+                    parse_str
                 rename_native_masked_debiased_T2.inputs.keep_ext = True
 
                 main_workflow.connect(
@@ -498,8 +502,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             if 'extract_pipe' not in params.keys():
 
                 # rename brain_mask
-                rename_native_brain_mask = pe.Node(niu.Rename(),
-                                            name="rename_native_brain_mask")
+                rename_native_brain_mask = pe.Node(
+                    niu.Rename(), name="rename_native_brain_mask")
                 rename_native_brain_mask.inputs.format_string = \
                     pref_deriv + "_space-native_desc-brain_mask"
                 rename_native_brain_mask.inputs.parse_string = parse_str

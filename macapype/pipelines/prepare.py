@@ -230,6 +230,7 @@ def _create_prep_pipeline(params, name="prep_pipeline", node_suffix=""):
 # choices between the 3 main pipelines: "short", "long_single" et "long_multi"
 ###############################################################################
 
+
 def create_short_preparation_pipe(params, params_template={},
                                   name="short_preparation_pipe"):
     """Description: short data preparation (average, reorient, crop/betcrop \
