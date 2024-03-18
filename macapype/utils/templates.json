@@ -119,14 +119,13 @@
         "cereb_template": "Haiko89_Asymmetric.Template_n89_brainmask_cerebellum.nii.gz"
 
     },
-
     "Haiko_v1.5":{
         "template_head": "Haiko20_T1w_sym_Template_sharpen.nii.gz",
         "template_brain": "Haiko20_T1w_sym_Template_sharpen_ss.nii.gz",
 
         "template_gm": "Haiko20_TPM_GM_sym.nii.gz",
         "template_wm": "Haiko20_TPM_WM_sym.nii.gz",
-        "template_csf": "Haiko20_TPM_CSF_sym.nii.gz",
+        "template_csf": "Haiko20_TPM_CSF_sym.nii.gz"
     },
     "Juna_Chimp":{
         "template_head": "Juna_Chimp_T1_05mm_skull.nii.gz",
