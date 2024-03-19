@@ -15,11 +15,10 @@ from ..utils.utils_nodes import NodeParams
 from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
 from macapype.nodes.register import IterREGBET
 
-from macapype.nodes.pad import pad_back, apply_to_stereo
+from macapype.nodes.pad import pad_back
 
 from .prepare import (create_short_preparation_pipe,
                       create_short_preparation_T1_pipe,
-                      create_long_multi_preparation_pipe,
                       create_long_single_preparation_pipe,)
 
 from .segment import (create_old_segment_pipe,
@@ -32,12 +31,11 @@ from .segment import (create_old_segment_pipe,
 from .correct_bias import (create_masked_correct_bias_pipe,
                            create_correct_bias_pipe)
 
-from .register import (create_register_NMT_pipe, create_reg_seg_pipe,
-                       create_native_to_stereo_pipe)
+from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import create_extract_pipe
 
-from .surface import (create_nii_to_mesh_pipe, create_nii_to_mesh_fs_pipe,
+from .surface import (create_nii_to_mesh_pipe,
                       create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files, show_files
@@ -49,8 +47,7 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 
 
 def create_full_spm_subpipes(
-        params_template, params_template_aladin,
-        params_template_stereo,
+        params_template, params_template_stereo,
         params={}, name='full_spm_subpipes',
         pad=False, space='template'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -126,38 +123,44 @@ def create_full_spm_subpipes(
 
     # output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['brain_mask', 'segmented_brain_mask',
-                                      'native_T1', 'native_T2',
-                                      'cropped_to_native_trans',
-                                      'debiased_T1', 'masked_debiased_T1',
-                                      'debiased_T2', 'masked_debiased_T2',
-                                      "wmgm_stl",
-                                      'prob_wm', 'prob_gm', 'prob_csf',
-                                      'gen_5tt',
-                                      'stereo_native_T1', 'stereo_debiased_T1',
-                                      'stereo_native_T2', 'stereo_debiased_T2',
-                                      'stereo_masked_debiased_T1',
-                                      'stereo_masked_debiased_T2',
-                                      'stereo_brain_mask',
-                                      'stereo_prob_wm', 'stereo_prob_gm',
-                                      'stereo_prob_csf',
-                                      'stereo_segmented_brain_mask',
-                                      'stereo_gen_5tt',
-                                      "native_to_stereo_trans"]),
+        niu.IdentityInterface(fields=[
+            'native_T1', 'native_T2', 'stereo_T1', 'stereo_T2',
+            "stereo_padded_T1",
+            "stereo_padded_T2",
+
+            'stereo_brain_mask', 'stereo_debiased_T1',
+            'stereo_debiased_T2',
+            'stereo_masked_debiased_T1',
+            'stereo_masked_debiased_T2',
+
+            'native_brain_mask', 'native_debiased_T1',
+            'native_masked_debiased_T1', 'native_debiased_T2',
+            'native_masked_debiased_T2',
+
+            'stereo_prob_wm', 'stereo_prob_gm',
+            'stereo_prob_csf',
+            'stereo_segmented_brain_mask',
+            'stereo_gen_5tt',
+
+            'native_segmented_brain_mask',
+            'native_prob_wm', 'native_prob_gm', 'native_prob_csf',
+            'native_gen_5tt',
+
+            "stereo_wmgm_mask", "native_wmgm_mask",
+            "wmgm_stl",
+
+            'stereo_to_native_trans',
+            "native_to_stereo_trans"]),
         name='outputnode')
     # preprocessing
     if 'long_single_preparation_pipe' in params.keys():
         data_preparation_pipe = create_long_single_preparation_pipe(
             params=parse_key(params, "long_single_preparation_pipe"))
 
-    elif 'long_multi_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_multi_preparation_pipe(
-            params=parse_key(params, "long_multi_preparation_pipe"))
-
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template_aladin)
+            params_template=params_template_stereo)
 
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
@@ -182,17 +185,37 @@ def create_full_spm_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
+    # outputnode
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
                      outputnode, 'native_T1')
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T2',
                      outputnode, 'native_T2')
 
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     outputnode, 'stereo_T1')
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
+                     outputnode, 'stereo_T2')
+
+    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                     outputnode, "stereo_padded_T1")
+
+    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
+                     outputnode, "stereo_padded_T2")
+
     if "short_preparation_pipe" in params.keys():
         if "crop_T1" not in params["short_preparation_pipe"].keys():
-            seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
-                             outputnode, 'cropped_to_native_trans')
 
+            seg_pipe.connect(data_preparation_pipe,
+                             "outputnode.stereo_to_native_trans",
+                             outputnode, 'stereo_to_native_trans')
+
+            seg_pipe.connect(data_preparation_pipe,
+                             "outputnode.native_to_stereo_trans",
+                             outputnode, 'native_to_stereo_trans')
+
+    # debias
     debias = NodeParams(T1xT2BiasFieldCorrection(),
                         params=parse_key(params, "debias"),
                         name='debias')
@@ -206,192 +229,44 @@ def create_full_spm_subpipes(
 
     debias.inputs.bet = 1
 
+    # outputnode
+
+    seg_pipe.connect(debias, "debiased_mask_file",
+                     outputnode, "stereo_brain_mask")
+
+    seg_pipe.connect(debias, 't1_debiased_brain_file',
+                     outputnode, "stereo_masked_debiased_T1")
+
+    seg_pipe.connect(debias, 't1_debiased_file',
+                     outputnode, "stereo_debiased_T1")
+
+    seg_pipe.connect(debias, 't2_debiased_brain_file',
+                     outputnode, "stereo_masked_debiased_T2")
+
+    seg_pipe.connect(debias, 't2_debiased_file',
+                     outputnode, "stereo_debiased_T2")
+
     if pad:
-        pad_mask = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "debiased_mask_file",
-            outputnode, "brain_mask",  params)
-
-        pad_masked_debiased_T1 = pad_back(
+            outputnode, "native_brain_mask",  params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t1_debiased_brain_file",
-            outputnode, "masked_debiased_T1", params)
-
-        pad_debiased_T1 = pad_back(
+            outputnode, "native_masked_debiased_T1", params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t1_debiased_file",
-            outputnode, "debiased_T1", params)
-
-        pad_masked_debiased_T2 = pad_back(
+            outputnode, "native_debiased_T1", params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t2_debiased_brain_file",
-            outputnode, "masked_debiased_T2", params)
-
-        pad_debiased_T2 = pad_back(
+            outputnode, "native_masked_debiased_T2", params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t2_debiased_file",
-            outputnode, "debiased_T2", params)
-
-    else:
-        seg_pipe.connect(debias, "debiased_mask_file",
-                         outputnode, "brain_mask")
-
-        seg_pipe.connect(debias, 't1_debiased_brain_file',
-                         outputnode, "masked_debiased_T1")
-
-        seg_pipe.connect(debias, 't1_debiased_file',
-                         outputnode, "debiased_T1")
-
-        seg_pipe.connect(debias, 't2_debiased_brain_file',
-                         outputnode, "masked_debiased_T2")
-
-        seg_pipe.connect(debias, 't2_debiased_file',
-                         outputnode, "debiased_T2")
-
-    if "native_to_stereo_pipe" in params.keys():
-
-        native_to_stereo_pipe = create_native_to_stereo_pipe(
-            "native_to_stereo_pipe",
-            params=parse_key(params, "native_to_stereo_pipe"))
-
-        seg_pipe.connect(native_to_stereo_pipe,
-                         'outputnode.native_to_stereo_trans',
-                         outputnode, 'native_to_stereo_trans')
-
-        seg_pipe.connect(
-            inputnode, 'indiv_params',
-            native_to_stereo_pipe, 'inputnode.indiv_params')
-
-        if "skull_stripped_template" in params["native_to_stereo_pipe"]:
-            print("Found skull_stripped_template in native_to_stereo_pipe")
-
-            if pad:
-
-                # skull stripped version
-                print("using skull_stripped_template for stereotaxic norm")
-
-                if "use_T2" in params["native_to_stereo_pipe"].keys():
-                    seg_pipe.connect(pad_masked_debiased_T2, "out_file",
-                                     native_to_stereo_pipe,
-                                     'inputnode.native_T1')
-
-                    seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_native_T1',
-                                     outputnode, "stereo_masked_debiased_T2")
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_masked_debiased_T1, "out_file",
-                        outputnode, "stereo_masked_debiased_T1", )
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_debiased_T1, "out_file",
-                        outputnode, "stereo_debiased_T1")
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_debiased_T2, "out_file",
-                        outputnode, "stereo_debiased_T2")
-
-                else:
-                    seg_pipe.connect(pad_masked_debiased_T1, "out_file",
-                                     native_to_stereo_pipe,
-                                     'inputnode.native_T1')
-
-                    seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_native_T1',
-                                     outputnode, "stereo_masked_debiased_T1")
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_masked_debiased_T2, "out_file",
-                        outputnode, "stereo_masked_debiased_T2", )
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_debiased_T1, "out_file",
-                        outputnode, "stereo_debiased_T1")
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_debiased_T2, "out_file",
-                        outputnode, "stereo_debiased_T2")
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_brain"]
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T1",
-                    outputnode, "stereo_native_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T2",
-                    outputnode, "stereo_native_T2")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_mask, 'out_file',
-                    outputnode, "stereo_brain_mask")
-
-            else:
-                # full head version
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 native_to_stereo_pipe, 'inputnode.native_T1')
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_head"]
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 "outputnode.stereo_native_T1",
-                                 outputnode, "stereo_native_T1")
-
-        else:
-
-            # full head version
-            seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                             native_to_stereo_pipe, 'inputnode.native_T1')
-
-            native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                params_template_stereo["template_head"]
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             "outputnode.stereo_native_T1",
-                             outputnode, "stereo_native_T1")
-
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                data_preparation_pipe, "outputnode.native_T2",
-                outputnode, "stereo_native_T2")
-
-            if pad:
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T1, "out_file",
-                    outputnode, "stereo_debiased_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T2, "out_file",
-                    outputnode, "stereo_debiased_T2")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_masked_debiased_T1, "out_file",
-                    outputnode, "stereo_masked_debiased_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_masked_debiased_T2, "out_file",
-                    outputnode, "stereo_masked_debiased_T2")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_mask, "out_file",
-                    outputnode, "stereo_brain_mask")
+            outputnode, "native_debiased_T2", params)
 
     # Bias correction of cropped images
     if "reg" not in params.keys():
@@ -450,50 +325,35 @@ def create_full_spm_subpipes(
         print("Error, space={}".format(space))
         return seg_pipe
 
-    # prob_wm
+    # outputnode
+    seg_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_wm',
+        outputnode, 'stereo_prob_wm')
+
+    seg_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_csf',
+        outputnode, 'stereo_prob_csf')
+
+    seg_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_gm',
+        outputnode, 'stereo_prob_gm')
+
     if pad and space == "native":
 
-        pad_prob_gm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_gm",
-            outputnode, "prob_gm", params)
+            outputnode, "native_prob_gm", params)
 
-        pad_prob_wm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_wm",
-            outputnode, "prob_wm", params)
+            outputnode, "native_prob_wm", params)
 
-        pad_prob_csf = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_csf",
-            outputnode, "prob_csf", params)
-
-        if "native_to_stereo_pipe" in params:
-
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_gm, 'out_file',
-                outputnode, "stereo_prob_gm")
-
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_wm, 'out_file',
-                outputnode, "stereo_prob_wm")
-
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_csf, 'out_file',
-                outputnode, "stereo_prob_csf")
-
-    else:
-        seg_pipe.connect(old_segment_pipe, 'outputnode.prob_wm',
-                         outputnode, 'prob_wm')
-
-        seg_pipe.connect(old_segment_pipe, 'outputnode.prob_csf',
-                         outputnode, 'prob_csf')
-
-        seg_pipe.connect(old_segment_pipe, 'outputnode.prob_gm',
-                         outputnode, 'prob_gm')
+            outputnode, "native_prob_csf", params)
 
     if "mask_from_seg_pipe" in params.keys():
 
@@ -512,47 +372,21 @@ def create_full_spm_subpipes(
         seg_pipe.connect(inputnode, 'indiv_params',
                          mask_from_seg_pipe, 'inputnode.indiv_params')
 
+        # outputnode
         seg_pipe.connect(mask_from_seg_pipe, "wmgm2mesh.stl_file",
                          outputnode, 'wmgm_stl')
 
-        # prob_gm
-        if pad and space == "native":
+        seg_pipe.connect(
+            mask_from_seg_pipe,
+            'merge_indexed_mask.indexed_mask',
+            outputnode, 'stereo_segmented_brain_mask')
 
-            pad_seg_mask = pad_back(
+        if pad and space == "native":
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 mask_from_seg_pipe,
                 'merge_indexed_mask.indexed_mask',
-                outputnode, "segmented_brain_mask", params)
-
-            if "native_to_stereo_pipe" in params:
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_seg_mask, 'out_file',
-                    outputnode, "stereo_segmented_brain_mask")
-
-        else:
-            seg_pipe.connect(
-                mask_from_seg_pipe,
-                'merge_indexed_mask.indexed_mask',
-                outputnode, 'stereo_segmented_brain_mask')
-
-    # LEGACY
-    if space == 'template':
-
-        # not mandatory
-        if "nii_to_mesh_fs_pipe" in params.keys():
-            nii_to_mesh_fs_pipe = create_nii_to_mesh_fs_pipe(
-                params=parse_key(params, "nii_to_mesh_fs_pipe"))
-
-            seg_pipe.connect(reg, 'warp_file',
-                             nii_to_mesh_fs_pipe, 'inputnode.reg_brain_file')
-
-            seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
-                             nii_to_mesh_fs_pipe, 'inputnode.wm_mask_file')
-
-            seg_pipe.connect(inputnode, 'indiv_params',
-                             nii_to_mesh_fs_pipe, 'inputnode.indiv_params')
+                outputnode, "native_segmented_brain_mask", params)
 
     if "export_5tt_pipe" in params["old_segment_pipe"].keys():
 
@@ -571,24 +405,15 @@ def create_full_spm_subpipes(
             old_segment_pipe, 'outputnode.threshold_csf',
             export_5tt_pipe, 'inputnode.csf_file')
 
-        if pad and space == "native":
+        seg_pipe.connect(
+            export_5tt_pipe, 'export_5tt.gen_5tt_file',
+            outputnode, 'stereo_gen_5tt')
 
-            pad_gen_5tt = pad_back(
+        if pad and space == "native":
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                outputnode, "gen_5tt", params)
-
-            if "native_to_stereo_pipe" in params:
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_gen_5tt, 'out_file',
-                    outputnode, "stereo_gen_5tt")
-        else:
-
-            seg_pipe.connect(
-                export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                outputnode, 'gen_5tt')
+                outputnode, "native_gen_5tt", params)
 
     return seg_pipe
 
@@ -935,7 +760,7 @@ def create_brain_segment_from_mask_pipe(
 
 
 def create_full_ants_subpipes(
-        params_template, params_template_aladin, params_template_stereo,
+        params_template, params_template_stereo,
         params={}, name="full_ants_subpipes", mask_file=None,
         space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
@@ -948,8 +773,6 @@ def create_full_ants_subpipes(
     (see :class:`create_long_single_preparation_pipe \
     <macapype.pipelines.prepare.create_long_single_preparation_pipe>`) or \
     long_multi_preparation_pipe \
-    (see :class:`create_long_multi_preparation_pipe \
-    <macapype.pipelines.prepare.create_long_multi_preparation_pipe>`)
 
     - brain_extraction_pipe (see :class:`create_brain_extraction_pipe \
     <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`)
@@ -1003,20 +826,34 @@ def create_full_ants_subpipes(
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm',
-                    'prob_csf', "gen_5tt",
-                    "masked_debiased_T1", "debiased_T1",
-                    "masked_debiased_T2", "debiased_T2",
-                    "cropped_brain_mask", "cropped_debiased_T1",
-                    "native_T1", "native_T2", "cropped_to_native_trans",
-                    "wmgm_stl", "wmgm_mask",
-                    'stereo_native_T1', 'stereo_debiased_T1',
-                    'stereo_masked_debiased_T1',
-                    'stereo_native_T2', 'stereo_debiased_T2',
+            fields=[
+                    "native_T1", "native_T2",
+                    'stereo_T1', 'stereo_T2',
+                    "stereo_padded_T1",
+                    "stereo_padded_T2",
+
+                    'stereo_debiased_T1', 'stereo_debiased_T2',
+                    "native_debiased_T1", "native_debiased_T2",
+
+                    'stereo_brain_mask', 'stereo_masked_debiased_T1',
                     'stereo_masked_debiased_T2',
-                    'stereo_brain_mask', 'stereo_segmented_brain_mask',
+
+                    'native_brain_mask', "native_masked_debiased_T1",
+                    "native_masked_debiased_T2",
+
+                    'stereo_segmented_brain_mask',
                     'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
-                    "stereo_wmgm_mask", "stereo_wmgm_stl",
+                    "stereo_gen_5tt",
+
+                    'native_segmented_brain_mask',
+                    'native_prob_gm', 'native_prob_wm', 'native_prob_csf',
+                    "native_gen_5tt",
+
+                    "stereo_wmgm_mask",
+                    "native_wmgm_mask",
+                    "wmgm_stl",
+
+                    "stereo_to_native_trans",
                     "native_to_stereo_trans"]),
         name='outputnode')
 
@@ -1025,14 +862,10 @@ def create_full_ants_subpipes(
         data_preparation_pipe = create_long_single_preparation_pipe(
             params=parse_key(params, "long_single_preparation_pipe"))
 
-    elif 'long_multi_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_multi_preparation_pipe(
-            params=parse_key(params, "long_multi_preparation_pipe"))
-
     elif 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template_aladin)
+            params_template=params_template_stereo)
 
     else:
         print("Error, short_preparation_pipe, long_single_preparation_pipe or\
@@ -1050,6 +883,7 @@ def create_full_ants_subpipes(
 
         return seg_pipe
 
+    # inputs
     seg_pipe.connect(inputnode, 'list_T1',
                      data_preparation_pipe, 'inputnode.list_T1')
 
@@ -1059,19 +893,35 @@ def create_full_ants_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      data_preparation_pipe, 'inputnode.indiv_params')
 
+    # outputnode
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
                      outputnode, 'native_T1')
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T2',
                      outputnode, 'native_T2')
 
+    # everything is now in stereo space
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     outputnode, "cropped_debiased_T1")
+                     outputnode, "stereo_T1")
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     outputnode, "stereo_T2")
+
+    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                     outputnode, "stereo_padded_T1")
+
+    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
+                     outputnode, "stereo_padded_T2")
 
     if "short_preparation_pipe" in params.keys():
         if "crop_T1" not in params["short_preparation_pipe"].keys():
-            seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
-                             outputnode, 'cropped_to_native_trans')
+            seg_pipe.connect(data_preparation_pipe,
+                             "outputnode.stereo_to_native_trans",
+                             outputnode, 'stereo_to_native_trans')
+
+            seg_pipe.connect(data_preparation_pipe,
+                             "outputnode.native_to_stereo_trans",
+                             outputnode, 'native_to_stereo_trans')
 
     # ######################################## correct bias
     assert not ("fast" in params.keys() and "N4debias" in
@@ -1092,26 +942,25 @@ def create_full_ants_subpipes(
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                          correct_bias_pipe, 'inputnode.preproc_T2')
 
-        if pad:
+        # outputnode
+        seg_pipe.connect(correct_bias_pipe,
+                         "outputnode.debiased_T1",
+                         outputnode, "stereo_debiased_T1")
 
-            pad_debiased_T1 = pad_back(
+        seg_pipe.connect(correct_bias_pipe,
+                         "outputnode.debiased_T2",
+                         outputnode, "stereo_debiased_T2")
+
+        if pad:
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 correct_bias_pipe, "outputnode.debiased_T1",
-                outputnode, "debiased_T1", params)
+                outputnode, "native_debiased_T1", params)
 
-            pad_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 correct_bias_pipe, "outputnode.debiased_T2",
-                outputnode, "debiased_T2", params)
-
-        else:
-            seg_pipe.connect(correct_bias_pipe,
-                             "outputnode.debiased_T1",
-                             outputnode, "debiased_T1")
-
-            seg_pipe.connect(correct_bias_pipe,
-                             "outputnode.debiased_T2",
-                             outputnode, "debiased_T2")
+                outputnode, "native_debiased_T2", params)
 
     elif "N4debias" in params.keys():
         print("Found N4debias in params.json")
@@ -1140,24 +989,26 @@ def create_full_ants_subpipes(
             inputnode, ('indiv_params', parse_key, "N4debias"),
             N4debias_T2, "indiv_params")
 
+        # outputnode
+        seg_pipe.connect(
+            N4debias_T1, "output_image",
+            outputnode, "stereo_debiased_T1")
+
+        seg_pipe.connect(
+            N4debias_T2, "output_image",
+            outputnode, "stereo_debiased_T2")
+
         if pad:
 
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T1, "output_image",
-                outputnode, "debiased_T1", params)
+                outputnode, "native_debiased_T1", params)
 
-            pad_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T2, "output_image",
-                outputnode, "debiased_T2", params)
-
-        else:
-            seg_pipe.connect(N4debias_T1, "output_image",
-                             outputnode, "debiased_T1")
-
-            seg_pipe.connect(N4debias_T2, "output_image",
-                             outputnode, "debiased_T2")
+                outputnode, "native_debiased_T2", params)
 
     elif "fast" in params.keys():
 
@@ -1195,110 +1046,28 @@ def create_full_ants_subpipes(
             inputnode, ('indiv_params', parse_key, "fast"),
             fast_T2, "indiv_params")
 
-        if pad:
+        # outputnode
+        seg_pipe.connect(
+            fast_T1, "restored_image",
+            outputnode, "stereo_debiased_T1")
 
-            pad_debiased_T1 = pad_back(
+        seg_pipe.connect(
+            fast_T2, "restored_image",
+            outputnode, "stereo_debiased_T2")
+
+        if pad:
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
-                outputnode, "debiased_T1", params)
+                outputnode, "native_debiased_T1", params)
 
-            pad_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T2, "restored_image",
-                outputnode, "debiased_T2", params)
-
-        else:
-            seg_pipe.connect(fast_T1, "restored_image",
-                             outputnode, "debiased_T1")
-
-            seg_pipe.connect(fast_T2, "restored_image",
-                             outputnode, "debiased_T2")
+                outputnode, "native_debiased_T2", params)
 
     else:
         print("No debias will be performed before extract_pipe")
-
-    # #### stereo to native
-    if "native_to_stereo_pipe" in params.keys():
-        print("**** native_to_stereo")
-
-        if "skull_stripped_template" \
-                not in params["native_to_stereo_pipe"].keys():
-
-            print("**** without skull_stripped for native_to_stereo")
-
-            native_to_stereo_pipe = create_native_to_stereo_pipe(
-                "native_to_stereo_pipe",
-                params=parse_key(params, "native_to_stereo_pipe"))
-
-            seg_pipe.connect(
-                inputnode, 'indiv_params',
-                native_to_stereo_pipe, 'inputnode.indiv_params')
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             outputnode, 'native_to_stereo_trans')
-
-            native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                params_template_stereo["template_head"]
-
-            if 'padded_template_head' in params_template_stereo.keys():
-
-                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                    params_template_stereo["padded_template_head"]
-
-            else:
-
-                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                    params_template_stereo["template_head"]
-
-            if "use_T2" in params["native_to_stereo_pipe"].keys():
-
-                print("* using T2 without skull_stripped for native_to_stereo")
-
-                # full head version
-                seg_pipe.connect(
-                    data_preparation_pipe, "outputnode.native_T2",
-                    native_to_stereo_pipe, 'inputnode.native_T1')
-
-                # outputnode
-                seg_pipe.connect(
-                    native_to_stereo_pipe,
-                    "outputnode.stereo_native_T1",
-                    outputnode, "stereo_native_T2")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T1",
-                    outputnode, "stereo_native_T1")
-
-            else:
-                # full head version
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 native_to_stereo_pipe, 'inputnode.native_T1')
-
-                # outputnode
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 "outputnode.stereo_native_T1",
-                                 outputnode, "stereo_native_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T2",
-                    outputnode, "stereo_native_T2")
-
-            if pad and ("fast" in params
-                        or "N4debias" in params
-                        or "correct_bias_pipe" in params):
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T2, "out_file",
-                    outputnode, "stereo_debiased_T2")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T1, "out_file",
-                    outputnode, "stereo_debiased_T1")
 
     # ################# extract mask
     if mask_file is None:
@@ -1314,9 +1083,6 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(inputnode, "indiv_params",
                                     extract_pipe, "inputnode.indiv_params")
-
-        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                         outputnode, "cropped_brain_mask")
 
         if "correct_bias_pipe" in params:
             seg_pipe.connect(correct_bias_pipe,
@@ -1338,22 +1104,23 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                              extract_pipe, "inputnode.restore_T1")
 
+        # outputnode
+        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
+                         outputnode, "stereo_brain_mask")
+
         if pad:
-            pad_mask = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 extract_pipe, "smooth_mask.out_file",
-                outputnode, "brain_mask", params)
-        else:
-            seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                             outputnode, "brain_mask")
+                outputnode, "native_brain_mask", params)
 
     else:
-
         outputnode.inputs.brain_mask = mask_file
 
     # ################################################ masked_debias ##
     # correcting for bias T1/T2, but this time with a mask
     if "masked_correct_bias_pipe" in params.keys():
+
         masked_correct_bias_pipe = create_masked_correct_bias_pipe(
             params=parse_key(params, "masked_correct_bias_pipe"))
 
@@ -1392,30 +1159,30 @@ def create_full_ants_subpipes(
         seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
                          masked_correct_bias_pipe, "inputnode.brain_mask")
 
+        # outputnode
+        seg_pipe.connect(
+            masked_correct_bias_pipe,
+            'outputnode.mask_debiased_T1',
+            outputnode, "stereo_masked_debiased_T1")
+
+        seg_pipe.connect(
+            masked_correct_bias_pipe,
+            'outputnode.mask_debiased_T2',
+            outputnode, "stereo_masked_debiased_T1")
+
         if pad:
 
-            pad_masked_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T1',
-                outputnode, "masked_debiased_T1", params)
+                outputnode, "native_masked_debiased_T1", params)
 
-            pad_masked_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T2',
-                outputnode, "masked_debiased_T2", params)
-
-        else:
-
-            # outputnode
-            seg_pipe.connect(masked_correct_bias_pipe,
-                             'outputnode.mask_debiased_T1',
-                             outputnode, "masked_debiased_T1")
-
-            seg_pipe.connect(masked_correct_bias_pipe,
-                             'outputnode.mask_debiased_T2',
-                             outputnode, "masked_debiased_T2")
+                outputnode, "native_masked_debiased_T2", params)
 
     elif "debias" in params.keys():
         # Bias correction of cropped images
@@ -1455,25 +1222,27 @@ def create_full_ants_subpipes(
             inputnode, ('indiv_params', parse_key, "debias"),
             debias, 'indiv_params')
 
-        # padding
+        # outputnode
+        seg_pipe.connect(
+            debias, 't1_debiased_brain_file',
+            outputnode, "stereo_masked_debiased_T1")
+
+        seg_pipe.connect(
+            debias, 't2_debiased_brain_file',
+            outputnode, "stereo_masked_debiased_T2")
+
         if pad:
-            pad_masked_debiased_T1 = pad_back(
+
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, 't1_debiased_brain_file',
-                outputnode, "masked_debiased_T1", params)
+                outputnode, "native_masked_debiased_T1", params)
 
-            pad_masked_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, 't2_debiased_brain_file',
-                outputnode, "masked_debiased_T2", params)
+                outputnode, "native_masked_debiased_T2", params)
 
-        else:
-
-            seg_pipe.connect(debias, 't1_debiased_brain_file',
-                             outputnode, "masked_debiased_T1")
-
-            seg_pipe.connect(debias, 't2_debiased_brain_file',
-                             outputnode, "masked_debiased_T2")
     else:
 
         print("**** Error, masked_correct_bias_pipe or debias \
@@ -1516,137 +1285,25 @@ def create_full_ants_subpipes(
         seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
                          restore_mask_T2, 'mask_file')
 
-        if pad:
+        # outputnode
+        seg_pipe.connect(
+            restore_mask_T1, 'out_file',
+            outputnode, "stereo_masked_debiased_T1")
 
-            pad_masked_debiased_T1 = pad_back(
+        seg_pipe.connect(
+            restore_mask_T2, 'out_file',
+            outputnode, "stereo_masked_debiased_T1")
+
+        if pad:
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 restore_mask_T1, 'out_file',
-                outputnode, "masked_debiased_T1", params)
+                outputnode, "native_masked_debiased_T1", params)
 
-            pad_masked_debiased_T2 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 restore_mask_T2, 'out_file',
-                outputnode, "masked_debiased_T2", params)
-
-        else:
-            # outputnode
-            seg_pipe.connect(restore_mask_T1, 'out_file',
-                             outputnode, "masked_debiased_T1")
-
-            seg_pipe.connect(restore_mask_T2, 'out_file',
-                             outputnode, "masked_debiased_T2")
-
-    # #### stereo to native
-    if "native_to_stereo_pipe" in params.keys():
-
-        if "skull_stripped_template" in params["native_to_stereo_pipe"]:
-
-            native_to_stereo_pipe = create_native_to_stereo_pipe(
-                "native_to_stereo_pipe",
-                params=parse_key(params, "native_to_stereo_pipe"))
-
-            seg_pipe.connect(
-                inputnode, 'indiv_params',
-                native_to_stereo_pipe, 'inputnode.indiv_params')
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             outputnode, 'native_to_stereo_trans')
-
-            print("Found skull_stripped_template in native_to_stereo_pipe")
-
-            if pad:
-
-                # skull stripped version
-                print("using skull_stripped_template for stereotaxic norm")
-
-                if "use_T2" in params["native_to_stereo_pipe"].keys():
-                    seg_pipe.connect(pad_masked_debiased_T2, "out_file",
-                                     native_to_stereo_pipe,
-                                     'inputnode.native_T1')
-
-                    seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_native_T1',
-                                     outputnode, "stereo_masked_debiased_T2")
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_masked_debiased_T1, "out_file",
-                        outputnode, "stereo_masked_debiased_T1")
-
-                else:
-                    seg_pipe.connect(pad_masked_debiased_T1, "out_file",
-                                     native_to_stereo_pipe,
-                                     'inputnode.native_T1')
-
-                    seg_pipe.connect(native_to_stereo_pipe,
-                                     'outputnode.stereo_native_T1',
-                                     outputnode, "stereo_masked_debiased_T1")
-
-                    apply_to_stereo(
-                        seg_pipe, native_to_stereo_pipe,
-                        pad_masked_debiased_T2, "out_file",
-                        outputnode, "stereo_masked_debiased_T2")
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_brain"]
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T1",
-                    outputnode, "stereo_native_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T2",
-                    outputnode, "stereo_native_T2")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T1, 'out_file',
-                    outputnode, "stereo_debiased_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T2, 'out_file',
-                    outputnode, "stereo_debiased_T2")
-
-            else:
-                # full head version
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 native_to_stereo_pipe, 'inputnode.native_T1')
-
-                native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                    params_template_stereo["template_head"]
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 "outputnode.stereo_native_T1",
-                                 outputnode, "stereo_native_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T2",
-                    outputnode, "stereo_native_T2")
-
-        else:
-            # remaining applies if not skull_stripped_template
-            if pad:
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_masked_debiased_T1, 'out_file',
-                    outputnode, "stereo_masked_debiased_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_masked_debiased_T2, 'out_file',
-                    outputnode, "stereo_masked_debiased_T2")
-
-        if "extract_pipe" in params.keys() and pad:
-            apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_mask, 'out_file',
-                outputnode, "stereo_brain_mask")
+                outputnode, "native_masked_debiased_T2", params)
 
     # ################################### brain_segment
     # (restarting from the avg_align files)
@@ -1697,6 +1354,27 @@ def create_full_ants_subpipes(
                 brain_segment_pipe, 'inputnode.debiased_T1')
 
         else:
+
+            if "correct_bias_pipe" in params.keys():
+                seg_pipe.connect(
+                    correct_bias_pipe, "outputnode.debiased_T1",
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            elif "N4debias" in params.keys():
+                seg_pipe.connect(
+                    N4debias_T1, "output_image",
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            elif "fast" in params.keys():
+                seg_pipe.connect(
+                    fast_T1, ("restored_image", show_files),
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            else:
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.preproc_T1',
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
             seg_pipe.connect(
                 restore_mask_T1, 'out_file',
                 brain_segment_pipe, 'inputnode.masked_debiased_T1')
@@ -1755,76 +1433,52 @@ def create_full_ants_subpipes(
                          brain_segment_pipe, 'inputnode.preproc_T2')
 
         # if in the same space a crop
-        # brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
+        # TODO if mask is external, apply stereo transfo
+        brain_segment_pipe.inputs.inputnode.brain_mask = mask_file
+
+    # outputnode
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
+                     outputnode, 'stereo_segmented_brain_mask')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_gm',
+                     outputnode, 'stereo_prob_gm')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
+                     outputnode, 'stereo_prob_wm')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
+                     outputnode, 'stereo_prob_csf')
 
     if pad and space == "native":
-        pad_seg_mask = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.segmented_file",
-            outputnode, "segmented_brain_mask", params)
-
-        pad_prob_gm = pad_back(
+            outputnode, "native_segmented_brain_mask", params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_gm",
-            outputnode, "prob_gm", params)
-
-        pad_prob_wm = pad_back(
+            outputnode, "native_prob_gm", params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_wm",
-            outputnode, "prob_wm", params)
-
-        pad_prob_csf = pad_back(
+            outputnode, "native_prob_wm", params)
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_csf",
-            outputnode, "prob_csf", params)
-
-    else:
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
-                         outputnode, 'segmented_brain_mask')
-
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_gm',
-                         outputnode, 'prob_gm')
-
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
-                         outputnode, 'prob_wm')
-
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
-                         outputnode, 'prob_csf')
+            outputnode, "native_prob_csf", params)
 
     # ############################################## export 5tt
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
+
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                         outputnode, 'stereo_gen_5tt')
+
         if pad and space == "native":
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 brain_segment_pipe, "outputnode.gen_5tt",
-                outputnode, "gen_5tt", params)
-
-        else:
-            seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                             outputnode, 'gen_5tt')
-
-    if "native_to_stereo_pipe" in params.keys() and pad:
-
-        apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_gm, 'out_file',
-                outputnode, "stereo_prob_gm")
-
-        apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_wm, 'out_file',
-                outputnode, "stereo_prob_wm")
-
-        apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_prob_csf, 'out_file',
-                outputnode, "stereo_prob_csf")
-
-        apply_stereo_seg_mask = apply_to_stereo(
-                seg_pipe, native_to_stereo_pipe,
-                pad_seg_mask, 'out_file',
-                outputnode, "stereo_segmented_brain_mask")
+                outputnode, "native_gen_5tt", params)
 
     if "nii2mesh_brain_pipe" in params["brain_segment_pipe"].keys():
 
@@ -1832,64 +1486,41 @@ def create_full_ants_subpipes(
             params=parse_key(params["brain_segment_pipe"],
                              "nii2mesh_brain_pipe"))
 
-        if pad:
-            if "native_to_stereo_pipe" in params.keys():
-
-                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
-                                 nii2mesh_brain_pipe,
-                                 'inputnode.segmented_file')
-
-                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
-                                 outputnode, 'stereo_wmgm_stl')
-
-                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
-                                 outputnode, 'stereo_wmgm_mask')
-
-            elif space == "native":
-                seg_pipe.connect(pad_seg_mask, "out_file",
-                                 nii2mesh_brain_pipe,
-                                 'inputnode.segmented_file')
-        else:
-            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
-                             nii2mesh_brain_pipe, 'inputnode.segmented_file')
+        seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                         nii2mesh_brain_pipe, 'inputnode.segmented_file')
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
-                         outputnode, 'wmgm_mask')
+                         outputnode, 'stereo_wmgm_mask')
+
+        if pad:
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                outputnode, "native_wmgm_mask", params)
+
     elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"].keys():
 
         IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
             params=parse_key(params["brain_segment_pipe"],
                              "IsoSurface_brain_pipe"))
 
-        if pad:
-            if "native_to_stereo_pipe" in params.keys():
-
-                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
-                                 IsoSurface_brain_pipe,
-                                 'inputnode.segmented_file')
-
-                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
-                                 outputnode, 'stereo_wmgm_stl')
-
-                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
-                                 outputnode, 'stereo_wmgm_mask')
-
-            elif space == "native":
-                seg_pipe.connect(pad_seg_mask, "out_file",
-                                 IsoSurface_brain_pipe,
-                                 'inputnode.segmented_file')
-        else:
-            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
-                             IsoSurface_brain_pipe, 'inputnode.segmented_file')
+        seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                         IsoSurface_brain_pipe, 'inputnode.segmented_file')
 
         seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
         seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
-                         outputnode, 'wmgm_mask')
+                         outputnode, 'stereo_wmgm_mask')
+
+        if pad:
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                IsoSurface_brain_pipe, "outputnode.wmgm_nii",
+                outputnode, "native_wmgm_mask", params)
 
     elif 'nii_to_mesh_pipe' in params.keys():
         # kept for compatibility but nii2mesh is prefered...
@@ -1927,8 +1558,7 @@ def create_full_ants_subpipes(
 # -soft ANTS_T1
 
 
-def create_full_T1_ants_subpipes(params_template, params_template_aladin,
-                                 params_template_stereo,
+def create_full_T1_ants_subpipes(params_template, params_template_stereo,
                                  params={}, name="full_T1_ants_subpipes",
                                  space="native", pad=False):
     """
@@ -1980,17 +1610,27 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     # output node
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=['brain_mask', 'segmented_brain_mask', 'prob_gm', 'prob_wm',
-                    'prob_csf', "gen_5tt", "debiased_T1",
-                    "masked_debiased_T1", "cropped_brain_mask",
-                    "cropped_debiased_T1", "native_T1",
-                    "cropped_to_native_trans",
-                    "wmgm_stl", "wmgm_mask",
-                    'stereo_native_T1', 'stereo_debiased_T1',
-                    'stereo_brain_mask', 'stereo_segmented_brain_mask',
-                    'stereo_prob_gm', 'stereo_prob_wm',
-                    'stereo_prob_csf',
-                    "stereo_wmgm_mask", "stereo_wmgm_stl",
+            fields=[
+                    "native_T1",
+                    'stereo_T1',
+                    "stereo_padded_T1",
+
+                    'stereo_brain_mask', 'native_brain_mask',
+                    'stereo_debiased_T1', "native_debiased_T1",
+
+                    "native_masked_debiased_T1", "stereo_masked_debiased_T1",
+
+                    'native_segmented_brain_mask', "native_gen_5tt",
+                    'native_prob_gm', 'native_prob_wm', 'native_prob_csf',
+
+                    'stereo_segmented_brain_mask', "stereo_gen_5tt",
+                    'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
+
+                    "native_wmgm_mask",
+                    "stereo_wmgm_mask",
+                    "wmgm_stl",
+
+                    "stereo_to_native_trans",
                     "native_to_stereo_trans"]),
         name='outputnode')
 
@@ -1998,7 +1638,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_T1_pipe(
             params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template_aladin)
+            params_template=params_template_stereo)
 
     else:
         print("Error, short_preparation_pipe was not found in params, \
@@ -2014,10 +1654,22 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
                      outputnode, 'native_T1')
 
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                     outputnode, 'stereo_T1')
+
+    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                     outputnode, "stereo_padded_T1")
+
     if "short_preparation_pipe" in params.keys():
         if "crop_T1" not in params["short_preparation_pipe"].keys():
-            seg_pipe.connect(data_preparation_pipe, "inv_tranfo.out_file",
-                             outputnode, 'cropped_to_native_trans')
+
+            seg_pipe.connect(data_preparation_pipe,
+                             "outputnode.native_to_stereo_trans",
+                             outputnode, 'native_to_stereo_trans')
+
+            seg_pipe.connect(data_preparation_pipe,
+                             "outputnode.stereo_to_native_trans",
+                             outputnode, 'stereo_to_native_trans')
 
     # ######### correct_bias
     if "N4debias" in params.keys():
@@ -2037,16 +1689,14 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             N4debias_T1, "indiv_params")
 
         # outputnode
+        seg_pipe.connect(N4debias_T1, "output_image",
+                         outputnode, "stereo_debiased_T1")
+
         if pad and space == "native":
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T1, "output_image",
-                outputnode, "debiased_T1", params)
-
-        else:
-
-            seg_pipe.connect(N4debias_T1, "output_image",
-                             outputnode, "debiased_T1")
+                outputnode, "native_debiased_T1", params)
 
     elif "fast" in params.keys():
 
@@ -2068,57 +1718,15 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             inputnode, ('indiv_params', parse_key, "fast"),
             fast_T1, "indiv_params")
 
-        # output node
-
         # outputnode
+        seg_pipe.connect(fast_T1, "restored_image",
+                         outputnode, "stereo_debiased_T1")
+
         if pad and space == "native":
-            pad_debiased_T1 = pad_back(
+            pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
-                outputnode, "debiased_T1", params)
-
-    # #### stereo to native
-    if "native_to_stereo_pipe" in params.keys():
-        if "skull_stripped_template" not in params["native_to_stereo_pipe"]:
-
-            native_to_stereo_pipe = create_native_to_stereo_pipe(
-                "native_to_stereo_pipe",
-                params=parse_key(params, "native_to_stereo_pipe"))
-
-            seg_pipe.connect(
-                inputnode, 'indiv_params',
-                native_to_stereo_pipe, 'inputnode.indiv_params')
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             outputnode, 'native_to_stereo_trans')
-
-            # full head version
-            seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                             native_to_stereo_pipe, 'inputnode.native_T1')
-
-            native_to_stereo_pipe.inputs.inputnode.stereo_T1 = \
-                params_template_stereo["template_head"]
-
-            if 'padded_template_head' in params_template_stereo.keys():
-
-                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                    params_template_stereo["padded_template_head"]
-
-            else:
-
-                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                    params_template_stereo["template_head"]
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             "outputnode.stereo_native_T1",
-                             outputnode, "stereo_native_T1")
-
-            if pad:
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T1, "out_file",
-                    outputnode, "stereo_debiased_T1")
+                outputnode, "native_debiased_T1", params)
 
     #  extract brain pipeline
     if "extract_pipe" not in params.keys():
@@ -2144,27 +1752,25 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
         # brain extraction
         seg_pipe.connect(
-            fast_T1, ("restored_image", show_files),
+            fast_T1, "restored_image",
             extract_T1_pipe, "inputnode.restore_T1")
 
     else:
-
         # brain extraction (with atlasbrex)
         seg_pipe.connect(
-            inputnode, "preproc_T1",
+            data_preparation_pipe, 'outputnode.preproc_T1',
             extract_T1_pipe, "inputnode.restore_T1")
 
+    # outputnode
+    seg_pipe.connect(
+        extract_T1_pipe, "smooth_mask.out_file",
+        outputnode, "stereo_brain_mask")
+
     if pad and space == "native":
-        pad_mask = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             extract_T1_pipe, "smooth_mask.out_file",
-            outputnode, "brain_mask", params)
-
-    else:
-        seg_pipe.connect(extract_T1_pipe, "smooth_mask.out_file",
-                         outputnode, "brain_mask")
-
-    # mask T1 using brain mask and perform N4 bias correction
+            outputnode, "native_brain_mask", params)
 
     # restore_mask_T1
     restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
@@ -2184,104 +1790,23 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
 
     else:
         seg_pipe.connect(
-            inputnode, "preproc_T1",
+            data_preparation_pipe, 'outputnode.preproc_T1',
             restore_mask_T1, 'in_file')
 
     seg_pipe.connect(extract_T1_pipe, "smooth_mask.out_file",
                      restore_mask_T1, 'mask_file')
 
-    # output masked brain T1
+    # outputnode
+    seg_pipe.connect(restore_mask_T1, 'out_file',
+                     outputnode, 'stereo_masked_debiased_T1')
+
     if pad and space == "native":
-        pad_masked_debiased_T1 = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             restore_mask_T1, 'out_file',
-            outputnode, "masked_debiased_T1", params)
+            outputnode, "native_masked_debiased_T1", params)
 
-    else:
-        seg_pipe.connect(restore_mask_T1, 'out_file',
-                         outputnode, 'masked_debiased_T1')
-
-    # #### stereo to native
-    if "native_to_stereo_pipe" in params.keys():
-
-        if "skull_stripped_template" in params["native_to_stereo_pipe"]:
-
-            native_to_stereo_pipe = create_native_to_stereo_pipe(
-                "native_to_stereo_pipe",
-                params=parse_key(params, "native_to_stereo_pipe"))
-
-            seg_pipe.connect(
-                inputnode, 'indiv_params',
-                native_to_stereo_pipe, 'inputnode.indiv_params')
-
-            seg_pipe.connect(native_to_stereo_pipe,
-                             'outputnode.native_to_stereo_trans',
-                             outputnode, 'native_to_stereo_trans')
-
-            print("Found skull_stripped_template in native_to_stereo_pipe")
-
-            if 'padded_template_head' in params_template_stereo.keys():
-
-                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                    params_template_stereo["padded_template_head"]
-
-            else:
-
-                native_to_stereo_pipe.inputs.inputnode.padded_stereo_T1 = \
-                    params_template_stereo["template_brain"]
-
-            if pad:
-
-                # skull stripped version
-                print("using skull_stripped_template for stereotaxic norm")
-
-                seg_pipe.connect(
-                    pad_masked_debiased_T1, "out_file",
-                    native_to_stereo_pipe,
-                    'inputnode.native_T1')
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 'outputnode.stereo_native_T1',
-                                 outputnode, "stereo_masked_debiased_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    data_preparation_pipe, "outputnode.native_T1",
-                    outputnode, "stereo_native_T1")
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_debiased_T1, "out_file",
-                    outputnode, "stereo_debiased_T1")
-
-            else:
-                # full head version
-                seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
-                                 native_to_stereo_pipe, 'inputnode.native_T1')
-
-                seg_pipe.connect(native_to_stereo_pipe,
-                                 "outputnode.stereo_native_T1",
-                                 outputnode, "stereo_native_T1")
-
-        else:
-
-            if pad:
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_masked_debiased_T1, "out_file",
-                    outputnode, "stereo_masked_debiased_T1")
-
-        # now for every pipeline (skull_stripped_template or not)
-        if pad:
-            if "extract_pipe" in params.keys():
-
-                apply_to_stereo(
-                    seg_pipe, native_to_stereo_pipe,
-                    pad_mask, "out_file",
-                    outputnode, "stereo_brain_mask")
-
-    # full_segment (restarting from the avg_align files)
+    # ### full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
         print("Error, brain_segment_pipe was not found in params, \
             skipping")
@@ -2291,75 +1816,72 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
         params_template=params_template,
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
+    if "N4debias" in params.keys():
+        # brain extraction
+        seg_pipe.connect(N4debias_T1, "output_image",
+                         brain_segment_pipe, 'inputnode.debiased_T1')
+
+    elif "fast" in params.keys():
+        # brain extraction
+        seg_pipe.connect(
+            fast_T1, ("restored_image", show_files),
+            brain_segment_pipe, 'inputnode.debiased_T1')
+
+    else:
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.preproc_T1',
+            brain_segment_pipe, 'inputnode.debiased_T1')
+
     seg_pipe.connect(restore_mask_T1, 'out_file',
                      brain_segment_pipe, 'inputnode.masked_debiased_T1')
 
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
+    # outputnode
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
+                     outputnode, 'stereo_segmented_brain_mask')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
+                     outputnode, 'stereo_prob_csf')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_gm',
+                     outputnode, 'stereo_prob_gm')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
+                     outputnode, 'stereo_prob_wm')
+
     if pad and space == "native":
 
-        pad_seg_mask = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.segmented_file",
-            outputnode, "segmented_brain_mask", params)
+            outputnode, "native_segmented_brain_mask", params)
 
-        pad_prob_gm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_gm",
-            outputnode, "prob_gm", params)
+            outputnode, "native_prob_gm", params)
 
-        pad_prob_wm = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_wm",
-            outputnode, "prob_wm", params)
+            outputnode, "native_prob_wm", params)
 
-        pad_prob_csf = pad_back(
+        pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_csf",
-            outputnode, "prob_csf", params)
-
-    else:
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.segmented_file',
-                         outputnode, 'segmented_brain_mask')
-
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
-                         outputnode, 'prob_csf')
-
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_gm',
-                         outputnode, 'prob_gm')
-
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_wm',
-                         outputnode, 'prob_wm')
+            outputnode, "native_prob_csf", params)
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
+
+        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
+                         outputnode, 'stereo_gen_5tt')
         if pad and space == "native":
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 brain_segment_pipe, "outputnode.gen_5tt",
-                outputnode, "gen_5tt", params)
-
-    if "native_to_stereo_pipe" in params.keys() and pad:
-
-        apply_to_stereo(
-            seg_pipe, native_to_stereo_pipe,
-            pad_prob_gm, "out_file",
-            outputnode, "stereo_prob_gm")
-
-        apply_to_stereo(
-            seg_pipe, native_to_stereo_pipe,
-            pad_prob_wm, "out_file",
-            outputnode, "stereo_prob_wm")
-
-        apply_to_stereo(
-            seg_pipe, native_to_stereo_pipe,
-            pad_prob_csf, "out_file",
-            outputnode, "stereo_prob_csf")
-
-        apply_stereo_seg_mask = apply_to_stereo(
-            seg_pipe, native_to_stereo_pipe,
-            pad_seg_mask, "out_file",
-            outputnode, "stereo_segmented_brain_mask")
+                outputnode, "native_gen_5tt", params)
 
     if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
 
@@ -2367,32 +1889,21 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             params=parse_key(params["brain_segment_pipe"],
                              "nii2mesh_brain_pipe"))
 
-        if pad:
-            if "native_to_stereo_pipe" in params.keys():
+        seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                         nii2mesh_brain_pipe, 'inputnode.segmented_file')
 
-                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
-                                 nii2mesh_brain_pipe,
-                                 'inputnode.segmented_file')
-
-                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
-                                 outputnode, 'stereo_wmgm_stl')
-
-                seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
-                                 outputnode, 'stereo_wmgm_mask')
-
-            elif space == "native":
-                seg_pipe.connect(pad_seg_mask, "out_file",
-                                 nii2mesh_brain_pipe,
-                                 'inputnode.segmented_file')
-        else:
-            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
-                             nii2mesh_brain_pipe, 'inputnode.segmented_file')
-
+        # outputnode
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_nii",
-                         outputnode, 'wmgm_mask')
+                         outputnode, 'stereo_wmgm_mask')
+
+        if pad and space == "native":
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                nii2mesh_brain_pipe, "outputnode.wmgm_nii",
+                outputnode, "native_wmgm_mask", params)
 
     elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"].keys():
 
@@ -2400,31 +1911,20 @@ def create_full_T1_ants_subpipes(params_template, params_template_aladin,
             params=parse_key(params["brain_segment_pipe"],
                              "IsoSurface_brain_pipe"))
 
-        if pad:
-            if "native_to_stereo_pipe" in params.keys():
+        seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
+                         IsoSurface_brain_pipe, 'inputnode.segmented_file')
 
-                seg_pipe.connect(apply_stereo_seg_mask, "out_file",
-                                 IsoSurface_brain_pipe,
-                                 'inputnode.segmented_file')
-
-                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
-                                 outputnode, 'stereo_wmgm_stl')
-
-                seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
-                                 outputnode, 'stereo_wmgm_mask')
-
-            elif space == "native":
-                seg_pipe.connect(pad_seg_mask, "out_file",
-                                 IsoSurface_brain_pipe,
-                                 'inputnode.segmented_file')
-        else:
-            seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
-                             IsoSurface_brain_pipe, 'inputnode.segmented_file')
-
+        # outputnode
         seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
         seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_nii",
-                         outputnode, 'wmgm_mask')
+                         outputnode, 'stereo_wmgm_mask')
+
+        if pad and space == "native":
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                IsoSurface_brain_pipe, "outputnode.wmgm_nii",
+                outputnode, "native_wmgm_mask", params)
 
     return seg_pipe
