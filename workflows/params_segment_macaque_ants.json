@@ -5,18 +5,18 @@
     },
     "short_preparation_pipe":
     {
-        "crop_aladin_T1":
+        "crop_aladin_pipe":
         {
-    	    "nac_flag": true,
-            "rig_only_flag": true,
-            "nosym_flag": true,
-            "ln_val" : 12,
-            "lp_val": 10,
-            "smoo_r_val" : 1.0
-        },
-        "crop_z_T1":
-        {
-            "brainsize": 70
+            "reg_T1_on_template":
+            {
+            },
+            "reg_T1_on_template2":
+            {
+            },
+            "crop_z_T1":
+            {
+                "brainsize": 70
+            }
         }
     },
     "N4debias":
@@ -41,20 +41,9 @@
         }
 
     },
-    "masked_correct_bias_pipe":
+    "debias":
     {
-        "smooth":
-        {
-            "args": "-bin -s 2"
-        },
-        "norm_smooth":
-        {
-            "op_string": "-s 2 -div %s"
-        },
-        "smooth_bias":
-        {
-                "sigma": 2
-        }
+        "s": 2
     },
     "brain_segment_pipe":
     {
@@ -87,22 +76,6 @@
             {
                 "keep_indexes": [2,3,4]
             }
-        }
-    },
-    "native_to_stereo_pipe":
-    {
-        "pad_template_T1":
-        {
-            "pad_val": 20
-        },
-        "reg_T1_on_template":
-        {
-            "nac_flag": true,
-            "rig_only_flag":true,
-            "nosym_flag": true,
-            "ln_val" : 12,
-            "lp_val": 10,
-            "smoo_r_val" : 1.0
         }
     }
 }

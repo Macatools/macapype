@@ -167,7 +167,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
     except OSError:
         print("process_dir {} already exists".format(process_dir))
 
-    #params
+    # params
     if params_file is None:
 
         # species
@@ -175,7 +175,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
             species = species.lower()
 
-            rep_species = {"marmoset":"marmo", "marmouset":"marmo", "chimpanzee":"chimp"}
+            rep_species = {"marmoset": "marmo",
+                           "marmouset": "marmo",
+                           "chimpanzee": "chimp"}
 
             if species in list(rep_species.keys()):
                 species = rep_species[species]
@@ -255,13 +257,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
     # adding forced space
-    if "spm" in ssoft or "spm12" in ssoft:
-        if 'native' in ssoft:
-            wf_name += "_native"
-
-    elif "ants" in ssoft:
-        if "template" in ssoft:
-            wf_name += "_template"
+    if "template" in ssoft:
+        wf_name += "_template"
 
     # params_template
     if template_path is not None:
@@ -309,7 +306,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             print("Unknown template_files format, should be 3 or 5 files")
             exit(-1)
 
-        params_template_aladin = params_template
         params_template_stereo = params_template
 
     else:
@@ -327,16 +323,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
         template_dir = load_test_data(template_name, path_to=my_path)
         params_template = format_template(template_dir, template_name)
-
-        if "template_aladin_name" in params["general"].keys():
-
-            template_aladin_name = params["general"]["template_aladin_name"]
-            template_aladin_dir = load_test_data(template_aladin_name,
-                                                 path_to=my_path)
-            params_template_aladin = format_template(template_aladin_dir,
-                                                     template_aladin_name)
-        else:
-            params_template_aladin = params_template
 
         if "template_stereo_name" in params["general"].keys():
 
@@ -357,38 +343,30 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
 
     main_workflow.base_dir = process_dir
 
+    # by default, space of segmentation is native, except if
+    if "template" in ssoft:
+        space = "template"
+
+    else:
+        space = "native"
+
     # which soft is used
     if "spm" in ssoft or "spm12" in ssoft:
-        if 'native' in ssoft:
-            space = 'native'
-
-        else:
-            space = 'template'
-
         segment_pnh_pipe = create_full_spm_subpipes(
             params_template=params_template,
-            params_template_aladin=params_template_aladin,
             params_template_stereo=params_template_stereo,
             params=params, pad=pad, space=space)
 
     elif "ants" in ssoft:
-        if "template" in ssoft:
-            space = "template"
-
-        else:
-            space = "native"
-
         if 't1' in datatypes and 't2' in datatypes:
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template,
-                params_template_aladin=params_template_aladin,
                 params_template_stereo=params_template_stereo,
                 params=params, mask_file=mask_file, space=space, pad=pad)
 
         elif 't1' in datatypes:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
                 params_template=params_template,
-                params_template_aladin=params_template_aladin,
                 params_template_stereo=params_template_stereo,
                 params=params, space=space, pad=pad)
 
@@ -463,9 +441,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             pref_deriv = "sub-%(sub)s_ses-%(ses)s"
             parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
 
-        rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
-                               datasink, pref_deriv, parse_str, space, ssoft,
-                               datatypes)
+        rename_all_brain_derivatives(
+            params, main_workflow, segment_pnh_pipe, datasink,
+            pref_deriv, parse_str, pad, ssoft, datatypes)
 
     # running main_workflow
     main_workflow.write_graph(graph2use="colored")

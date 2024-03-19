@@ -1,29 +1,36 @@
 {
     "general":
     {
-        "template_name": "haiko89_template"
+        "template_name": "Haiko_v1.5"
     },
     "short_preparation_pipe":
     {
         "aladin_T2_on_T1":{},
+    	"crop_aladin_pipe":
+    	{
 
-        "crop_aladin_T1":
-        {
-    	    "nac_flag": true,
-            "rig_only_flag": true,
-            "nosym_flag": true,
-            "ln_val" : 12,
-            "lp_val": 10,
-            "smoo_r_val" : 1.0
-        },
-        "crop_z_T1":
-        {
-            "brainsize": 70
-        },
-        "denoise":
-        {
-            "dimension": 3
-        }
+            "reg_T1_on_template":
+            {
+                "nac_flag": true,
+                "rig_only_flag":true,
+                "nosym_flag": true,
+                "ln_val" : 12,
+                "lp_val": 10,
+                "smoo_r_val" : 1.0
+            },
+            "reg_T1_on_template2":
+            {
+                "rig_only_flag":true,
+                "nosym_flag": true,
+                "ln_val" : 17,
+                "lp_val": 15,
+                "smoo_r_val" : 1.0
+            },
+            "crop_z_T1":
+            {
+                "brainsize": 70
+            }
+    	}
     },
     "N4debias":
     {
@@ -45,41 +52,20 @@
             "dil": 1
         }
     },
-    "masked_correct_bias_pipe":
+    "debias":
     {
-        "smooth":
-        {
-            "args": "-bin -s 2"
-        },
-        "norm_smooth":
-        {
-            "op_string": "-s 2 -div %s"
-        },
-        "smooth_bias":
-        {
-                "sigma": 2
-        }
+        "s": 2
     },
     "brain_segment_pipe":
     {
-        "register_NMT_pipe":
+        "reg":
         {
-            "deoblique":
-            {
-            },
-            "norm_intensity":
-            {
-                "dimension": 3,
-                "bspline_fitting_distance": 200,
-                "n_iterations": [50, 50, 40, 30],
-                "convergence_threshold": 0.00000001,
-                "shrink_factor": 2,
-                "args": "-r 0 --verbose 1"
-            }
+            "n": 2,
+            "m": "ref",
+            "dof": 12
         },
         "segment_atropos_pipe":
         {
-            "use_priors": 0.5,
             "Atropos":
             {
                 "dimension": 3
@@ -93,6 +79,13 @@
         },
         "export_5tt_pipe":
         {
+        },
+        "IsoSurface_brain_pipe":
+        {
+            "merge_brain_tissues":
+            {
+                "keep_indexes": [1,2,3]
+            }
         }
     }
 }
