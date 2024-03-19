@@ -1,9 +1,9 @@
 {
     "general":
     {
-        "template_name": "haiko_v1.5"
+        "template_name": "Haiko_v1.5"
     },
-     "short_preparation_pipe":
+    "short_preparation_pipe":
     {
         "aladin_T2_on_T1":{},
     	"crop_aladin_pipe":

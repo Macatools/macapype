@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "haiko_v1.5"
+        "template_name": "Haiko_v1.5"
     },
      "short_preparation_pipe":
     {
@@ -22,7 +22,7 @@
     },
     "debias":
     {
-        "s": 4
+        "s": 2
     },
     "reg":
     {
