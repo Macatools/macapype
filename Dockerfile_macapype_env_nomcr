@@ -173,6 +173,35 @@ RUN apt-get install --yes --no-install-recommends \
     && make install
 ENV PATH=/opt/niftyreg/bin:$PATH
 
+
+####################### new: python 3.10
+
+RUN wget https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz
+RUN tar xzf Python-3.10.8.tgz
+#RUN cd Python-3.10.8
+#RUN echo $(pwd)
+RUN Python-3.10.8/configure --enable-optimizations
+#RUN Python-3.10.8/make altinstall
+RUN apt-get install zlib1g-dev
+RUN make altinstall
+
+RUN echo $(which python3.10)
+
+RUN echo $(python3.10 -V )
+
+RUN echo $(which pip3.10)
+RUN echo $(pip3.10 -V )
+
+RUN echo $(which python) && \
+    echo $(which python3.10) && \
+    ln -s /usr/local/bin/python3.10 /usr/bin/python && \
+    ln -s /usr/local/bin/pip3.10 /usr/bin/pip
+
+RUN echo $(which python)
+RUN echo $(which pip)
+
+
+
 ################################################## Finishing
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
