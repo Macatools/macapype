@@ -176,6 +176,9 @@ ENV PATH=/opt/niftyreg/bin:$PATH
 
 ####################### new: python 3.10
 
+RUN apt-get install -y -q  wget build-essential libncursesw5-dev libssl-dev \
+     libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+
 RUN wget https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz
 RUN tar xzf Python-3.10.8.tgz
 #RUN cd Python-3.10.8
@@ -189,18 +192,32 @@ RUN echo $(which python3.10)
 
 RUN echo $(python3.10 -V )
 
+RUN echo ""
 RUN echo $(which pip3.10)
 RUN echo $(pip3.10 -V )
 
-RUN echo $(which python) && \
-    echo $(which python3.10) && \
+RUN echo $(which pip3.10)
+RUN echo $(pip3.10 -V )
+
+RUN echo $(which python3.10) && \
     ln -s /usr/local/bin/python3.10 /usr/bin/python && \
-    ln -s /usr/local/bin/pip3.10 /usr/bin/pip
+    ln -s /usr/local/bin/pip3.10 /usr/local/bin/pip3 && \
+    ln -s /usr/local/bin/pip3 /usr/local/bin/pip && \
+    ln -s /usr/local/bin/pip /usr/bin/pip
+
+RUN echo $(python -m ssl)
 
 RUN echo $(which python)
+RUN echo $(python -V )
+
 RUN echo $(which pip)
 
+# specific problems with pillow
+RUN apt-get install -y python3-pil python3-pil.imagetk
 
+RUN python -m pip install -U pillow
+#RUN pip install -U pillow
+RUN python -c "import PIL; print(PIL.__version__)"
 
 ################################################## Finishing
 RUN apt-get clean \
