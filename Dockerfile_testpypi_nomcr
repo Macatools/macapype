@@ -49,9 +49,6 @@ RUN python -m pip install xvfbwrapper \
 
 ############################################# install macapype
 
-#RUN pip3 install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
-#RUN python3 -c "import macapype; print(macapype.__version__)"
-
 RUN python -m pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
 RUN python -c "import macapype; print(macapype.__version__)"
 
