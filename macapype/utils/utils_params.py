@@ -226,6 +226,26 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 print("Deleting crop_T1")
                 del params["short_preparation_pipe"]["crop_T1"]
 
+            if "robustreg" in ssoft and "crop_aladin_pipe" \
+                    in params["short_preparation_pipe"]:
+                params["short_preparation_pipe"]["crop_aladin_pipe"] = {
+                    "reg_T1_on_template": {
+                        "nac_flag": True,
+                        "rig_only_flag": True,
+                        "nosym_flag": True,
+                        "ln_val": 12,
+                        "lp_val": 10,
+                        "smoo_r_val": 1.0
+                        },
+                    "reg_T1_on_template2": {
+                        "rig_only_flag": True,
+                        "nosym_flag": True,
+                        "ln_val": 17,
+                        "lp_val": 15,
+                        "smoo_r_val": 1.0
+                        }
+                    }
+
             print("New params after modification")
             pprint.pprint(params)
 
