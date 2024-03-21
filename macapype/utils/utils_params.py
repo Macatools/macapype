@@ -142,6 +142,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
 
                 if "robustreg" in ssoft and "crop_aladin_pipe" \
                         in params["short_preparation_pipe"]:
+                    print("Using robustreg option")
                     params["short_preparation_pipe"]["crop_aladin_pipe"] = {
                         "reg_T1_on_template": {
                             "nac_flag": True,
@@ -228,6 +229,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
             if "robustreg" in ssoft and "crop_aladin_pipe" \
                     in params["short_preparation_pipe"]:
+                print("Using robustreg option")
                 params["short_preparation_pipe"]["crop_aladin_pipe"] = {
                     "reg_T1_on_template": {
                         "nac_flag": True,
