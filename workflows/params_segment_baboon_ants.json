@@ -8,23 +8,8 @@
         "aladin_T2_on_T1":{},
     	"crop_aladin_pipe":
     	{
-
             "reg_T1_on_template":
             {
-                "nac_flag": true,
-                "rig_only_flag":true,
-                "nosym_flag": true,
-                "ln_val" : 12,
-                "lp_val": 10,
-                "smoo_r_val" : 1.0
-            },
-            "reg_T1_on_template2":
-            {
-                "rig_only_flag":true,
-                "nosym_flag": true,
-                "ln_val" : 17,
-                "lp_val": 15,
-                "smoo_r_val" : 1.0
             },
             "crop_z_T1":
             {
