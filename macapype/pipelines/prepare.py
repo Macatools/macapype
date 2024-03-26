@@ -663,24 +663,32 @@ def create_short_preparation_pipe(params, params_template={},
             regutils.RegResample(),
             name="resample_T2_pad")
 
+        # T1 to pad
         if "avg_reorient_pipe" in params.keys():
 
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
                 resample_T1_pad, "flo_file")
 
-            data_preparation_pipe.connect(
-                av_T2, 'outputnode.std_img',
-                resample_T2_pad, "flo_file")
-
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
                 resample_T1_pad, "flo_file")
 
+        # T2 to pad
+        if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
-                av_T2, 'avg_img',
+                align_T2_on_T1, "res_file",
                 resample_T2_pad, "flo_file")
+
+        else:
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                resample_T2_pad, "flo_file")
+
+        data_preparation_pipe.connect(
+            av_T2, 'outputnode.std_img',
+            resample_T2_pad, "flo_file")
 
         if "padded_template_head" in params_template.keys():
             resample_T1_pad.inputs.ref_file = \
@@ -725,13 +733,25 @@ def create_short_preparation_pipe(params, params_template={},
             resample_T2_pad, "trans_file")
 
         # outputnode
-        data_preparation_pipe.connect(
-            resample_T1_pad, 'out_file',
-            outputnode, 'stereo_padded_T1')
+        if "use_T2" in params.keys():
 
-        data_preparation_pipe.connect(
-            resample_T2_pad, 'out_file',
-            outputnode, 'stereo_padded_T2')
+            data_preparation_pipe.connect(
+                resample_T1_pad, 'out_file',
+                outputnode, 'stereo_padded_T2')
+
+            data_preparation_pipe.connect(
+                resample_T2_pad, 'out_file',
+                outputnode, 'stereo_padded_T1')
+
+        else:
+
+            data_preparation_pipe.connect(
+                resample_T1_pad, 'out_file',
+                outputnode, 'stereo_padded_T1')
+
+            data_preparation_pipe.connect(
+                resample_T2_pad, 'out_file',
+                outputnode, 'stereo_padded_T2')
 
     return data_preparation_pipe
 
