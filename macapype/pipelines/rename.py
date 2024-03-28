@@ -44,6 +44,80 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_T2, 'out_file',
             datasink, '@stereo_T2')
 
+    # transfo to native to template and inverse
+    if "crop_T1" not in params["short_preparation_pipe"].keys():
+
+        # rename trans
+        rename_trans = pe.Node(
+            niu.Rename(),
+            name="rename_trans")
+        rename_trans.inputs.format_string = \
+            pref_deriv + "_space-native_target-stereo_affine"
+        rename_trans.inputs.parse_string = parse_str
+        rename_trans.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.native_to_stereo_trans',
+            rename_trans, 'in_file')
+
+        main_workflow.connect(
+            rename_trans, 'out_file',
+            datasink, '@native_to_stereo_trans')
+
+        # rename inv_trans
+        rename_inv_trans = pe.Node(
+            niu.Rename(),
+            name="rename_inv_trans")
+        rename_inv_trans.inputs.format_string = \
+            pref_deriv + "_space-stereo_target-native_affine"
+        rename_inv_trans.inputs.parse_string = parse_str
+        rename_inv_trans.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.stereo_to_native_trans',
+            rename_inv_trans, 'in_file')
+
+        main_workflow.connect(
+            rename_inv_trans, 'out_file',
+            datasink, '@stereo_to_native_trans')
+
+    if "resample_T1_pad" in params["short_preparation_pipe"].keys():
+
+        rename_stereo_padded_T1 = pe.Node(
+            niu.Rename(),
+            name="rename_stereo_padded_T1")
+        rename_stereo_padded_T1.inputs.format_string = \
+            pref_deriv + "_space-stereo_desc-pad_T1w"
+        rename_stereo_padded_T1.inputs.parse_string = parse_str
+        rename_stereo_padded_T1.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.stereo_padded_T1',
+            rename_stereo_padded_T1, 'in_file')
+
+        main_workflow.connect(
+            rename_stereo_padded_T1, 'out_file',
+            datasink, '@stereo_padded_T1')
+
+        if 't2' in datatypes:
+
+            # rename stereo_padded_T2
+            rename_stereo_padded_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_padded_T2")
+            rename_stereo_padded_T2.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-pad_T2w"
+            rename_stereo_padded_T2.inputs.parse_string = parse_str
+            rename_stereo_padded_T2.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_padded_T2',
+                rename_stereo_padded_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_padded_T2, 'out_file',
+                datasink, '@stereo_padded_T2')
+
     if ("fast" in params
             or "N4debias" in params
             or "correct_bias_pipe" in params):
