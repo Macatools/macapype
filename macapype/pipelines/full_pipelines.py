@@ -232,7 +232,6 @@ def create_full_spm_subpipes(
 
     else:
         print("Using native external mask {}".format(mask_file))
-        outputnode.inputs.native_brain_mask = mask_file
 
         # apply transfo to list
         apply_crop_external_mask = pe.Node(RegResample(inter_val="NN"),
@@ -251,8 +250,13 @@ def create_full_spm_subpipes(
                          debias, "b")
 
     # outputnode
-    seg_pipe.connect(debias, "debiased_mask_file",
-                     outputnode, "stereo_brain_mask")
+
+    if mask_file is None:
+        seg_pipe.connect(debias, "debiased_mask_file",
+                         outputnode, "stereo_brain_mask")
+    else:
+        seg_pipe.connect(apply_crop_external_mask, "out_file",
+                         outputnode, "stereo_brain_mask")
 
     seg_pipe.connect(debias, 't1_debiased_brain_file',
                      outputnode, "stereo_masked_debiased_T1")
@@ -272,6 +276,8 @@ def create_full_spm_subpipes(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, "debiased_mask_file",
                 outputnode, "native_brain_mask",  params)
+        else:
+            outputnode.inputs.native_brain_mask = mask_file
 
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
