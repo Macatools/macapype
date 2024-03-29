@@ -1335,7 +1335,7 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(
             restore_mask_T2, 'out_file',
-            outputnode, "stereo_masked_debiased_T1")
+            outputnode, "stereo_masked_debiased_T2")
 
         if pad:
             pad_back(
