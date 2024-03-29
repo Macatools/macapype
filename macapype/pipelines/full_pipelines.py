@@ -49,7 +49,7 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 def create_full_spm_subpipes(
         params_template, params_template_stereo,
         params={}, name='full_spm_subpipes',
-        pad=False, space='template'):
+        mask_file=None, pad=False, space='template'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
     in template space
 
@@ -227,10 +227,30 @@ def create_full_spm_subpipes(
     seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
                      debias, 'indiv_params')
 
-    debias.inputs.bet = 1
+    if mask_file is None:
+        debias.inputs.bet = 1
+
+    else:
+        print("Using native external mask {}".format(mask_file))
+        outputnode.inputs.native_brain_mask = mask_file
+
+        # apply transfo to list
+        apply_crop_external_mask = pe.Node(RegResample(inter_val="NN"),
+                                           name='apply_crop_external_mask')
+
+        apply_crop_external_mask.inputs.flo_file = mask_file
+
+        seg_pipe.connect(data_preparation_pipe,
+                         'outputnode.native_to_stereo_trans',
+                         apply_crop_external_mask, "trans_file")
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.preproc_T1",
+                         apply_crop_external_mask, "ref_file")
+
+        seg_pipe.connect(apply_crop_external_mask, "out_file",
+                         debias, "mask_file")
 
     # outputnode
-
     seg_pipe.connect(debias, "debiased_mask_file",
                      outputnode, "stereo_brain_mask")
 
@@ -247,10 +267,12 @@ def create_full_spm_subpipes(
                      outputnode, "stereo_debiased_T2")
 
     if pad:
-        pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
-            debias, "debiased_mask_file",
-            outputnode, "native_brain_mask",  params)
+        if mask_file is None:
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                debias, "debiased_mask_file",
+                outputnode, "native_brain_mask",  params)
+
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t1_debiased_brain_file",
