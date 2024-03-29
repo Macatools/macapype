@@ -248,7 +248,7 @@ def create_full_spm_subpipes(
                          apply_crop_external_mask, "ref_file")
 
         seg_pipe.connect(apply_crop_external_mask, "out_file",
-                         debias, "mask_file")
+                         debias, "b")
 
     # outputnode
     seg_pipe.connect(debias, "debiased_mask_file",
