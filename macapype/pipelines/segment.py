@@ -259,6 +259,7 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
         name='inputnode')
 
     # bin_norm_intensity (a cheat from Kepkee if I understood well!)
+    # seg_at requires a mask so we binarized the masked_T1
     bin_norm_intensity = pe.Node(fsl.UnaryMaths(), name="bin_norm_intensity")
     bin_norm_intensity.inputs.operation = "bin"
 
