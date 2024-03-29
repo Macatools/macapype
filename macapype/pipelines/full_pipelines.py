@@ -1159,8 +1159,12 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                              masked_correct_bias_pipe, "inputnode.preproc_T2")
 
-        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                         masked_correct_bias_pipe, "inputnode.brain_mask")
+        if mask_file is None:
+            seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
+                             masked_correct_bias_pipe, "inputnode.brain_mask")
+        else:
+
+            masked_correct_bias_pipe.inputs.inputnode.brain_mask = mask_file
 
         # outputnode
         seg_pipe.connect(
@@ -1217,8 +1221,12 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                              debias, 't2_file')
 
-        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                         debias, 'b')
+        if mask_file is None:
+            seg_pipe.connect(
+                extract_pipe, "smooth_mask.out_file",
+                debias, 'b')
+        else:
+            debias.inputs.b = mask_file
 
         # TODO is not used now...
         seg_pipe.connect(
@@ -1282,11 +1290,15 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                              restore_mask_T2, 'in_file')
 
-        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                         restore_mask_T1, 'mask_file')
+        if mask_file is None:
+            seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
+                             restore_mask_T1, 'mask_file')
 
-        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                         restore_mask_T2, 'mask_file')
+            seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
+                             restore_mask_T2, 'mask_file')
+        else:
+            restore_mask_T1.inputs.mask_file = mask_file
+            restore_mask_T2.inputs.mask_file = mask_file
 
         # outputnode
         seg_pipe.connect(
