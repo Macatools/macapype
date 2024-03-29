@@ -636,7 +636,7 @@ def create_brain_segment_from_mask_pipe(
                     register_gm_to_nat, "out_file",
                     segment_atropos_pipe, "inputnode.gm_prior_file")
                 brain_segment_pipe.connect(
-                    register_gm_to_nat, "out_file",
+                    register_wm_to_nat, "out_file",
                     segment_atropos_pipe, "inputnode.wm_prior_file")
 
     # input to segment_atropos_pipe
