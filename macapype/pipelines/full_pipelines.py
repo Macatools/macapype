@@ -1070,6 +1070,8 @@ def create_full_ants_subpipes(
         print("No debias will be performed before extract_pipe")
 
     # ################# extract mask
+    print("mask file {}".format(mask_file))
+
     if mask_file is None:
 
         # full extract brain pipeline (correct_bias, denoising, extract brain)
@@ -1115,7 +1117,8 @@ def create_full_ants_subpipes(
                 outputnode, "native_brain_mask", params)
 
     else:
-        outputnode.inputs.brain_mask = mask_file
+        print("Using external mask {}".format(mask_file))
+        outputnode.inputs.stereo_brain_mask = mask_file
 
     # ################################################ masked_debias ##
     # correcting for bias T1/T2, but this time with a mask
