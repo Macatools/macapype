@@ -374,7 +374,8 @@ def copy_header(ref_img, img_to_modify):
 
     ret = os.system(cmd)
 
-    print(ret)
+    if ret:
+        print("Error copy_header cmd {}".format(ret))
 
     return modified_img
 
