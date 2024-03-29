@@ -1117,8 +1117,8 @@ def create_full_ants_subpipes(
                 outputnode, "native_brain_mask", params)
 
     else:
-        print("Using external mask {}".format(mask_file))
-        outputnode.inputs.stereo_brain_mask = mask_file
+        print("Using native external mask {}".format(mask_file))
+        outputnode.inputs.native_brain_mask = mask_file
 
         # apply transfo to list
         apply_crop_external_mask = pe.Node(RegResample(inter_val="NN"),
@@ -1132,6 +1132,10 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(data_preparation_pipe, "outputnode.preproc_T1",
                          apply_crop_external_mask, "ref_file")
+
+        # outputnode
+        seg_pipe.connect(apply_crop_external_mask, "out_file",
+                         outputnode, "stereo_brain_mask")
 
     # ################################################ masked_debias ##
     # correcting for bias T1/T2, but this time with a mask
@@ -1177,7 +1181,6 @@ def create_full_ants_subpipes(
                              masked_correct_bias_pipe, "inputnode.brain_mask")
 
         else:
-
             seg_pipe.connect(apply_crop_external_mask, "out_file",
                              masked_correct_bias_pipe, "inputnode.brain_mask")
 
@@ -1308,23 +1311,22 @@ def create_full_ants_subpipes(
             seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                              restore_mask_T2, 'in_file')
 
-
         if mask_file is None:
             seg_pipe.connect(
                 extract_pipe, "smooth_mask.out_file",
-                         restore_mask_T1, 'mask_file')
+                restore_mask_T1, 'mask_file')
 
             seg_pipe.connect(
                 extract_pipe, "smooth_mask.out_file",
-                         restore_mask_T2, 'mask_file')
+                restore_mask_T2, 'mask_file')
         else:
             seg_pipe.connect(
                 apply_crop_external_mask, "out_file",
-                         restore_mask_T1, 'mask_file')
+                restore_mask_T1, 'mask_file')
 
             seg_pipe.connect(
                 apply_crop_external_mask, "out_file",
-                         restore_mask_T2, 'mask_file')
+                restore_mask_T2, 'mask_file')
 
         # outputnode
         seg_pipe.connect(
