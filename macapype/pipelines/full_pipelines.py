@@ -1761,7 +1761,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
             # brain extraction
             seg_pipe.connect(N4debias_T1, "output_image",
-                            extract_T1_pipe, "inputnode.restore_T1")
+                             extract_T1_pipe, "inputnode.restore_T1")
 
         elif "fast" in params.keys():
 
