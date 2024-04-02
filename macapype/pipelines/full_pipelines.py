@@ -422,11 +422,11 @@ def create_full_spm_subpipes(
             params=parse_key(params["old_segment_pipe"], "export_5tt_pipe"))
 
         seg_pipe.connect(
-            old_segment_pipe, 'outputnode.threshold_csf',
+            old_segment_pipe, 'outputnode.threshold_gm',
             export_5tt_pipe, 'inputnode.gm_file')
 
         seg_pipe.connect(
-            old_segment_pipe, 'outputnode.threshold_csf',
+            old_segment_pipe, 'outputnode.threshold_wm',
             export_5tt_pipe, 'inputnode.wm_file')
 
         seg_pipe.connect(
