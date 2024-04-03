@@ -9,7 +9,7 @@
 #
 # Timestamp: 2020/12/02 18:33:44 UTC
 
-FROM macatools/macapype_env:v0.1.2-spm
+FROM macatools/macapype_env:v0.2.2
 
 USER root
 
@@ -18,17 +18,9 @@ ARG DEBIAN_FRONTEND="noninteractive"
 MAINTAINER David Meunier "david.meunier@univ-amu.fr"
 ######################## Python packages
 
-RUN apt-get update && apt-get install -y git python3-pip libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
+RUN apt-get update && apt-get install -y git libpng-dev libfreetype6-dev libxft-dev libblas-dev liblapack-dev libatlas-base-dev gfortran libxml2-dev libxslt1-dev wget graphviz
 
-RUN apt-get install -y python3-pil python3-pil.imagetk
-
-
-RUN python3 -m pip install -U pip
-RUN python3 -m pip install -U pillow
-#RUN pip3 install pillow
-
-#RUN apt-get install libx11-6 libxext6 libxt6 # matlab
-RUN pip3 install xvfbwrapper \
+RUN python -m pip install xvfbwrapper \
     psutil \
     numpy \
     scipy \
@@ -55,21 +47,10 @@ RUN pip3 install xvfbwrapper \
     scikit-image \
     brain-slam
 
-############################################# install macapype from github
-RUN mkdir -p /opt/packages/
+############################################# install macapype
 
-ADD https://api.github.com/repos/macatools/macapype/git/refs/heads/master version.json
-WORKDIR /opt/packages/
-
-RUN git clone https://github.com/macatools/macapype.git
-WORKDIR /opt/packages/macapype
-
-RUN python3 setup.py develop
-
-RUN echo $(which python) && \
-    echo $(which python3) && \
-    ln -s /usr/bin/python3 /usr/bin/python && \
-    ln -s /usr/bin/pip3 /usr/bin/pip
+RUN python -m pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
+RUN python -c "import macapype; print(macapype.__version__)"
 
 ################################################## Finishing
 RUN apt-get clean \
@@ -79,3 +60,4 @@ RUN rm -rf \
      /tmp/hsperfdata* \
      /var/*/apt/*/partial \
      /var/log/apt/term*
+

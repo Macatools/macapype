@@ -7,7 +7,6 @@ on:
     branches:
       - master
 
-
 jobs:
   build:
 
@@ -15,10 +14,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
+      - name: Set up Python  3.10.5
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version:  3.10.5
 
       - name: Install dependencies
         run: |
@@ -41,41 +40,67 @@ jobs:
             wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
 
-      - name: Running all test pipelines
+      - name: Running all test pipelines (macaque)
         run: |
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001  -dt T1
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_T1_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001  -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001  -dt T1
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_T1_test -species macaque -sub 032140 -ses 001 -deriv
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_T1_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_T1_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001  -dt T1 T2
 
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_template_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001  -dt T1
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_template_T1_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001  -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001  -dt T1
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_T1_test -species macaque -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001  -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_template_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+      - name: Running all test pipelines (macaque deriv)
+        run: |
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001 -deriv -dt T1
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_template_T1_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001 -deriv -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -dt T1
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_T1_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien -out /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results -soft ANTS_test -species baboon -indiv /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/indiv_params_segment_baboon.json -sub Fidji -ses 01 -deriv -pad
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain -out /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results -soft ANTS_test -species marmo -indiv /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/indiv_params_segment_marmo.json -sub Percy -ses 01 -deriv
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001 -deriv -dt T1
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001 -deriv -dt T1 T2
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -dt T1
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -dt T1 T2
+
+      - name: Running all test pipelines (macaque deriv pad)
+        run: |
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -pad -dt T1
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -pad -dt T1 T2
+
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -pad -dt T1
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de -out /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI/macaque_prime-de/indiv_params_segment_macaque.json -sub 032140 -ses 001 -deriv -pad -dt T1 T2
+
+      - name: Running some test pipelines (baboon / marmo)
+        run: |
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien -out /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results -soft ANTS_test -species baboon -indiv /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/indiv_params_segment_baboon.json -sub Fidji -ses 01 -deriv -pad -dt T1 T2
+
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain -out /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/results -soft ANTS_test -species marmo -indiv /home/runner/work/macapype/macapype/macapype_CI/marmo-marmobrain/indiv_params_segment_marmo.json -sub Percy -ses 01 -deriv -pad -dt T1 T2

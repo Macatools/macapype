@@ -51,7 +51,7 @@ def _download_data_zip(data_zip, name):
 
             return True
 
-    assert op.exists(data_zip),\
+    assert op.exists(data_zip), \
         "Error, data_zip = {} not found ".format(data_zip)
 
     return False

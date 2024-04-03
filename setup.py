@@ -5,9 +5,10 @@ import re
 from setuptools import find_packages, setup
 
 
-required_packages=[
-    "nipype", "nilearn", "networkx", "pybids", "scikit-image", "nibabel==3.2.2", "numpy",
-    "brain-slam"]
+required_packages = [
+    "nipype", "nilearn", "networkx",
+    "pybids", "scikit-image", "nibabel==3.2.2",
+    "numpy==1.22", "brain-slam"]
 
 verstr = "unknown"
 try:
@@ -33,7 +34,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     license='BSD 3',
-    entry_points = {
+    entry_points={
         'console_scripts': ['segment_pnh = workflows.segment_pnh:main']},
-    install_requires= required_packages,
+    install_requires=required_packages,
     include_package_data=True)

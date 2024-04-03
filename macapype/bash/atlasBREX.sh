@@ -19,12 +19,12 @@ HELP() {
     cat <<HELP
 
 atlasBREX [ver: 1.5]
---- 
+---
 Documentation: https://github.com/jlohmeier/atlasBREX
 Requirement: FSL ≥ 5 (optional usage of AFNI and ANTs)
 ---
 
-Usage: 
+Usage:
 
     bash $0 -b <input> -nb <input> -h <input> -f <input>
 
@@ -34,31 +34,31 @@ Compulsory arguments:
     -nb         whole-head (non-brain) atlas or template
     -h          target 3D volume
     -f          fractional intensity threshold [1 > n > 0] for provisional (BET) brain-extraction (e.g. -f 0.2).
-                interactive pilot: [-f n] proposes 3 default thresholds for user selection. 
-                for multi-step registration, different values for high-res, 
+                interactive pilot: [-f n] proposes 3 default thresholds for user selection.
+                for multi-step registration, different values for high-res,
                 low-res and native volumes can be entered (e.g. -f 0.2,0.5,0.8)
 
 Optional arguments:
 
     -l          low-resolution 3D volume (3-step registration)
     -n          (functional) 3D/4D volume  (2-/3-step registration)
-    -t/-tmp     disable removal [1] of temporary files (default: 0) 
+    -t/-tmp     disable removal [1] of temporary files (default: 0)
     -w/-wrp     define FNIRT (FSL) warp-resolution (e.g. -wrp 10,10,10),
                 for SyN (ANTs) enter warp [-wrp 1] flag (e.g. -wrp 1 -reg 2)
-    -r/-reg     FNIRT w/ bending- [-reg 0] or membrane-energy regularization [-reg 1] 
+    -r/-reg     FNIRT w/ bending- [-reg 0] or membrane-energy regularization [-reg 1]
                 ANTs/SyN w/ [-reg 2] or w/o [-reg 3] additional N4BiasFieldCorrection (def: 1)
     -nrm        provisional intensity normalization w/ T1 [-nrm 1] or T2 [-nrm 2] (req: AFNI)
                 (recommended for low-resolution volumes)
     -lr         optimized parameter settings for low-resolution volumes:
                 [1] non-linear registration between whole-head template and target volume with mask
                 [2] non-linear registration based on skullstripped template and target volume (def: 0)
-    -msk        mask binarization threshold (in %) for fslmaths 
+    -msk        mask binarization threshold (in %) for fslmaths
                 w/ optional erosion and dilation (e.g. -msk b,10,0,0) (def: b,0.5,0,0)
                 [-msk b,[100 < n > 0] for threshold, [0-9] for n-times erosion,
-                [0-9] for n-times dilation] or 3dAutomask (e.g. -msk a,0,0, req: AFNI) 
+                [0-9] for n-times dilation] or 3dAutomask (e.g. -msk a,0,0, req: AFNI)
                 [-msk a,[0-9] for n-times erosion,[0-9] for n-times dilation]
     -vox        provisional voxel-size adjustment [-vox 1] (def: 0)
-    -dil        n-times dilation of the brain-extraction from linear registration 
+    -dil        n-times dilation of the brain-extraction from linear registration
                 prior to non-linear registration (e.g. -dil 4)
 
 HELP
@@ -123,7 +123,7 @@ do
     -rot |-ROT )
     if [[ -n "$2" ]]; then REORIENT_="$2"; else echo $SYN; exit 1 ; fi
     shift 2
-    ;;    
+    ;;
     -msk |-MSK )
     if [[ -n "$2" ]]; then MASK_="$2"; else echo $SYN; exit 1 ; fi
     shift 2
@@ -321,7 +321,7 @@ trap removetemp 0
             then
                 echo -e $LINMSG
                 exit 1
-            fi          
+            fi
 
         else
             echo -e $LINMSG
@@ -535,7 +535,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
 
     report() {
     for (( c=1; c<=3; c++ ))
-    do  
+    do
         echo ">>" | tee -a log.txt
     done
     echo -e ">> Summary:" | tee -a log.txt
@@ -591,9 +591,9 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
                     nyval=$( printf "%.1f\n" $(echo "scale=1; ($yval * $maxFAC)" | bc -l) )
                     nzval=$( printf "%.1f\n" $(echo "scale=1; ($zval * $maxFAC)" | bc -l) )
                     echo "> Upscale factor estimation: $maxFAC" | tee -a log.txt
-                fi                   
+                fi
             fi
-            
+
             #fallback solution
             if [[ ! $(echo "$nxval >= 1" | bc -l) ]] || [[ ! $(echo "$nyval >= 1" | bc -l) ]] || [[ ! $(echo "$nzval >= 1" | bc -l) ]]
             then
@@ -617,7 +617,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
         echo "> (Temp.) voxel dimension scaling $filename to $nxval $nyval $nzval using factor $factor" | tee -a log.txt
         cp -f $filename ${filename%%.*}orig_.nii.gz
         $FSLDIR/bin/fslchpixdim $filename $nxval $nyval $nzval
-        $FSLDIR/bin/fslorient -setqformcode 1 $filename        
+        $FSLDIR/bin/fslorient -setqformcode 1 $filename
     }
 
     normalize()
@@ -667,7 +667,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
 
         #temporarily change voxel size for prelim segmentation
         if [[ $METHOD -eq "0" ]] && [[ $LIN -eq "0" ]] && [[ $VOX -eq "1" ]]
-        then            
+        then
             echo "> Skipping another upscaling step."
         else
             detvoxsize "$filename" "1.5" "2"
@@ -678,7 +678,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
         preBE_start=$(date +%s.%N)
         echo "> Provisional (BET) segmentation ($frct): $filename" | tee -a log.txt
 
-        #BET binary mask 
+        #BET binary mask
             if [[ $frct == "n" ]]
             then
                 $FSLDIR/bin/bet $filename ${filename%%.*}temp_option_1 -f 0.3 -R -g 0 -m | tee -a log.txt
@@ -691,7 +691,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
                 fsleyes ${filename%%.*}temp_option_2.nii.gz &
                 fsleyes ${filename%%.*}temp_option_3.nii.gz &
         	    for (( c=1; c<=3; c++ ))
-        	    do  
+        	    do
         	    echo ">>" | tee -a log.txt
         	    done
                 echo -e "> Shall we proceed with option 1 (-f 0.3), option 2 (-f 0.5) or option 3 (-f 0.8)?\n> In addition, an arbitrary fractional intensity threshold can be entered with option 4.\n> Enter a number from [1]-[4] and close fsleyes." | tee -a log.txt
@@ -718,9 +718,9 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
 	                	mask=${filename%%.*}temp_1_mask.nii.gz
 		                else
 	                     	echo ">> Invalid input." | tee -a log.txt
-	                     	exit 1		                
+	                     	exit 1
 		                fi
-            			;;            	
+            			;;
             			esac
                     	MSG="> Proceeding with option $option"
                         echo $MSG | tee -a log.txt
@@ -746,7 +746,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
             up_time $preBE_start $preBE_end "${MSG}"
 
         #biasfieldcorr
-            if [[ $METHOD -eq "1" ]] && [[ $BIAS -eq "1" ]] 
+            if [[ $METHOD -eq "1" ]] && [[ $BIAS -eq "1" ]]
             then
                 N4BiasFieldCorrection -i ${out}.nii.gz -o ${out}.nii.gz -x $mask | tee -a log.txt
                 MSG=$(echo -e "> N4BiasFieldCorrection (ANTs) : ${out}.nii.gz\n")
@@ -768,7 +768,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
     binary_mask() {
     filename=$1
     ftype=$2
-        #rethreshold binary mask to prevent weighted average 
+        #rethreshold binary mask to prevent weighted average
         ${FSLDIR}/bin/fslmaths ${standard_BE%%.*}${ftype}_msk.nii.gz -thr 0.001 -bin ${standard_BE%%.*}${ftype}_msk_.nii.gz | tee -a log.txt
         wait
         #3dcalc -overwrite -prefix ${filename%%.*}brain.nii.gz -a ${filename%%.*}orig.nii.gz -b ${standard_BE%%.*}${ftype}_msk.nii.gz -expr 'a*b'
@@ -780,7 +780,7 @@ thrmsg=">> Input needs to be a number (e.g. -f 0.8). Entering [n] will propose 3
     then
         ${FSLDIR}/bin/fslcpgeom ${filename%%.*}orig_.nii.gz ${filename%%.*}brain.nii.gz
     fi
-    
+
     }
 
     applytransform() {
@@ -894,7 +894,7 @@ echo -e "============\n" | tee -a log.txt
 
         if [[ -n "$func_nonBE" ]] ; then
         ${FSLDIR}/bin/fslreorient2std $func_nonBE $func_nonBE | tee -a log.txt
-        fi   
+        fi
 
         MSG=$(echo -e "> (Temp.) rotating target volumes to match MNI152 orientation \n")
         echo -e "$MSG" | tee -a log.txt
@@ -935,23 +935,23 @@ echo -e "============\n" | tee -a log.txt
             if [[ $ERO_ -gt "0" ]]
             then
                 for (( c=1; c<=$ERO_; c++ ))
-                do  
+                do
                     ERO+="-ero "
-                done    
+                done
             fi
             if [[ $DIL_ -gt "0" ]]
             then
                 for (( c=1; c<=$DIL_; c++ ))
-                do  
+                do
                     DIL+="-dilD "
-                done    
+                done
             fi
             ${FSLDIR}/bin/fslmaths $standard_BE $BTHR $DIL $ERO -bin ${standard_BE%%.*}std_mask.nii.gz | tee -a log.txt
             MSG="> Atlas mask created using fslmaths ($MASK): ${standard_BE%%.*}std_mask.nii.gz"
             echo $MSG | tee -a log.txt
             output+=([$ic+1]=$(echo $MSG '\n'))
             ;;
-        esac   
+        esac
         mask_end=$(date +%s.%N)
         up_time $mask_start $mask_end "> Atlas binary mask"
 
@@ -970,7 +970,7 @@ echo -e "============\n" | tee -a log.txt
 
         if [[ -n "$func_nonBE" ]] ; then
         chvoxsize "$func_nonBE" "$maxFAC"
-        fi        
+        fi
     fi
 
 #provisional brain-extraction
@@ -1009,7 +1009,7 @@ echo -e "============\n" | tee -a log.txt
     fi
 
     if [[ ! -f ${func_nonBE%%.*}tmpbrain.nii.gz && -e $func_nonBE && $STEP -gt "0" ]] ; then
- 		
+
         if [[ $STEP == "2" ]] ; then
             if [[ -n "$f3" ]]
             then
@@ -1075,7 +1075,7 @@ echo -e "============\n" | tee -a log.txt
     then
 
     for (( c=1; c<=$voxfac; c++ ))
-    do  
+    do
         diln+="-dilD "
     done
 
@@ -1097,7 +1097,7 @@ echo -e "============\n" | tee -a log.txt
     wait
     ${FSLDIR}/bin/fslcpgeom $standard_nonBE ${standard_BE%%.*}brain_tmp.nii.gz
     ostandardBE_nonBE=$standard_nonBE
-    standard_nonBE=${standard_BE%%.*}brain_tmp.nii.gz  
+    standard_nonBE=${standard_BE%%.*}brain_tmp.nii.gz
     fi
 
 
@@ -1144,7 +1144,7 @@ echo -e "============\n" | tee -a log.txt
                     --intorder=5 --biasres=50,50,50 --refmask=${highres_BE%%.*}_temp_mask.nii.gz --miter=5,5,5,5,5,10 \
                     --subsamp=4,4,2,2,1,1 --applyinmask=0 --applyrefmask=0,0,0,0,1,1 --lambda=300,150,100,50,40,30 \
                     --infwhm=8,6,5,4,2,0 --reffwhm=8,6,5,4,2,0 --estint=1,1,1,1,1,0 --numprec=float --verbose --splineorder=3 | tee -a log.txt
-                    fi               
+                    fi
                 ;;
                "1")
                #ANTs
@@ -1176,7 +1176,7 @@ echo -e "============\n" | tee -a log.txt
                     mv -f std2high_0GenericAffine.mat std2high_warp_${highres_BE%%.*}.mat
                     find . -maxdepth 1 -name "*InverseWarp*" -delete
                     find . -maxdepth 1 -name "*Warped*" -delete
-                    fi                     
+                    fi
                 ;;
             esac
         else
@@ -1205,7 +1205,7 @@ echo -e "============\n" | tee -a log.txt
             mv -f std2high_0GenericAffine.mat std2high_warp_${highres_BE%%.*}.mat
             find . -maxdepth 1 -name "*InverseWarp*" -delete
             find . -maxdepth 1 -name "*Warped*" -delete
-            fi            
+            fi
             if [[ $LOWRES -eq "2" ]]
             then
              echo '> SyN non-linear 1-step registration of skullstripped standard -> skullstripped highres' | tee -a log.txt
@@ -1214,7 +1214,7 @@ echo -e "============\n" | tee -a log.txt
             mv -f std2high_0GenericAffine.mat std2high_warp_${highres_BE%%.*}.mat
             find . -maxdepth 1 -name "*InverseWarp*" -delete
             find . -maxdepth 1 -name "*Warped*" -delete
-            fi  
+            fi
         fi
         fi
 
@@ -1281,7 +1281,7 @@ echo -e "============\n" | tee -a log.txt
            #FSL
                 echo '> FLIRT linear 2-step registration: highres -> lowres -> functional'
                 ${FSLDIR}/bin/flirt -dof 6 -in $lowres_BE -ref $func_BE -omat low2func.mat | tee -a log.txt
-                lowres_start=$(date +%s.%N)   
+                lowres_start=$(date +%s.%N)
                 ${FSLDIR}/bin/flirt -dof 12 -in $highres_BE -ref $lowres_BE -omat high2low.mat | tee -a log.txt
                 wait
                 ${FSLDIR}/bin/convert_xfm -omat high2func.mat -concat high2low.mat low2func.mat | tee -a log.txt
@@ -1290,7 +1290,7 @@ echo -e "============\n" | tee -a log.txt
                 then
                     ${FSLDIR}/bin/convert_xfm -omat std2low.mat -concat std2high.mat high2low.mat | tee -a log.txt
                     wait
-                    ${FSLDIR}/bin/convert_xfm -omat std2func.mat -concat std2high.mat high2func.mat | tee -a log.txt        
+                    ${FSLDIR}/bin/convert_xfm -omat std2func.mat -concat std2high.mat high2func.mat | tee -a log.txt
                 fi
             ;;
            "1")
@@ -1298,7 +1298,7 @@ echo -e "============\n" | tee -a log.txt
                 bash antsRegistrationSyN.sh -d 3 -n $ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS -t a -f $func_BE -m $lowres_BE -o low2func | tee -a log.txt
                 mv -f low2func0GenericAffine.mat low2func.mat
                 find . -maxdepth 1 -name "*Warped*" -delete
-                lowres_start=$(date +%s.%N)  
+                lowres_start=$(date +%s.%N)
                 bash antsRegistrationSyN.sh -d 3 -n $ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS -t a -f $lowres_BE -m $highres_BE -o high2low | tee -a log.txt
                 mv -f high2low0GenericAffine.mat high2low.mat
                 find . -maxdepth 1 -name "*Warped*" -delete
@@ -1318,7 +1318,7 @@ echo -e "============\n" | tee -a log.txt
         binary_mask $lowres_nonBE low
         lowres_fin=$(echo "> $(date) / $(showmet) / Output : ${lowres_nonBE%%.*}brain.nii.gz")
         echo $lowres_fin | tee -a log.txt
-        output+=([$ic+1]=$(echo $lowres_fin '\n')) 
+        output+=([$ic+1]=$(echo $lowres_fin '\n'))
 
         lowres_end=$(date +%s.%N)
         up_time $lowres_start $lowres_end '> atlasBREX runtime: lowres'
@@ -1373,7 +1373,7 @@ echo -e "============\n" | tee -a log.txt
 
     epi_fin=$(echo "> $(date) / $(showmet) / Output : ${func_nonBE%%.*}brain.nii.gz")
     echo $epi_fin | tee -a log.txt
-    output+=([$ic+1]=$(echo $epi_fin '\n')) 
+    output+=([$ic+1]=$(echo $epi_fin '\n'))
 
     native_end=$(date +%s.%N)
     up_time $native_start $native_end '> atlasBREX runtime: native volume'

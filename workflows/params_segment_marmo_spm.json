@@ -1,11 +1,12 @@
 {
     "general":
     {
-        "template_name": "Haiko_v1.5"
+        "template_name": "MBM_v3.0.1",
+        "template_stereo_name": "bma-1_0p2mm"
     },
      "short_preparation_pipe":
     {
-        "aladin_T2_on_T1":{},
+        "use_T2": {},
     	"crop_aladin_pipe":
     	{
             "reg_T1_on_template":
@@ -13,13 +14,13 @@
             },
             "crop_z_T1":
             {
-                "brainsize": 70
+                "brainsize": 30
             }
-    	}
+        }
     },
     "debias":
     {
-        "s": 2
+        "s": 4
     },
     "reg":
     {
@@ -46,6 +47,16 @@
         "threshold_csf":
         {
             "thresh": 0.5
+        },
+        "export_5tt_pipe":
+        {
+        },
+        "IsoSurface_brain_pipe":
+        {
+            "merge_brain_tissues":
+            {
+                "keep_indexes": [1,2,3]
+            }
         }
     },
     "mask_from_seg_pipe":
@@ -59,13 +70,6 @@
         {
             "kernel_shape": "sphere",
             "kernel_size": 2
-        },
-        "merge_indexed_mask":
-        {
-            "index_csf": 1,
-            "index_gm": 2,
-            "index_wm": 3
         }
-
     }
 }

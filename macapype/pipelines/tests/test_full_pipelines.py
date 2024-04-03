@@ -24,11 +24,19 @@ def test_create_full_ants_subpipes_no_args():
         "short_preparation_pipe":
         {
         },
-        "brain_extraction_pipe":
+        "fast":
+        {
+        },
+        "extract_pipe":
+        {
+        },
+        "debias":
         {
         },
         "brain_segment_pipe":
         {
+            "reg":
+                {},
             "segment_atropos_pipe":
                 {}
         }
@@ -43,7 +51,6 @@ def test_create_full_ants_subpipes_no_args():
     # running workflow
     segment_pnh = create_full_ants_subpipes(
         params=params, params_template=params_template,
-        params_template_aladin=params_template,
         params_template_stereo=params_template,
         name="test_create_full_ants_subpipes_no_args")
 
@@ -63,8 +70,9 @@ def test_create_full_ants_subpipes_all_default_params():
     softs = ["ants"]
     all_species = ["marmo", "macaque", 'baboon']
     spaces = ["native", "template"]
+    pads = [True, False]
 
-    for soft, species, space in product(softs, all_species, spaces):
+    for soft, species, space, pad in product(softs, all_species, spaces, pads):
 
         print("*** Testing soft {} with species {}".format(soft, species))
 
@@ -88,8 +96,8 @@ def test_create_full_ants_subpipes_all_default_params():
         # running workflow
         segment_pnh = create_full_ants_subpipes(
             params=params, params_template=params_template,
-            params_template_aladin=params_template,
             params_template_stereo=params_template,
+            pad=pad,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
@@ -109,8 +117,9 @@ def test_create_full_ants_t1_subpipes_all_default_params():
     softs = ["ants"]
     all_species = ["marmo", "macaque", 'baboon']
     spaces = ["native", "template"]
+    pads = [True, False]
 
-    for soft, species, space in product(softs, all_species, spaces):
+    for soft, species, space, pad in product(softs, all_species, spaces, pads):
 
         print("*** Testing soft {} with species {}".format(soft, species))
 
@@ -134,8 +143,8 @@ def test_create_full_ants_t1_subpipes_all_default_params():
         # running workflow
         segment_pnh = create_full_T1_ants_subpipes(
             params=params, params_template=params_template,
-            params_template_aladin=params_template,
             params_template_stereo=params_template,
+            pad=pad,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
@@ -156,8 +165,9 @@ def test_create_full_spm_subpipes_all_default_params():
     softs = ["spm"]
     all_species = ["macaque", 'baboon']
     spaces = ["native", "template"]
+    pads = [True, False]
 
-    for soft, species, space in product(softs, all_species, spaces):
+    for soft, species, space, pad in product(softs, all_species, spaces, pads):
 
         print("*** Testing soft {} with species {}".format(soft, species))
 
@@ -181,7 +191,8 @@ def test_create_full_spm_subpipes_all_default_params():
         # running workflow
         segment_pnh = create_full_spm_subpipes(
             params=params, params_template=params_template,
-            params_template_aladin=params_template, space=space,
+            params_template_stereo=params_template, space=space,
+            pad=pad,
             name="test_create_full_ants_subpipes_all_default_params")
 
         segment_pnh.base_dir = data_path
