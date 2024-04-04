@@ -656,6 +656,9 @@ def create_short_preparation_pipe(params, params_template={},
     if "resample_T1_pad" in params.keys() \
             and "crop_aladin_pipe" in params.keys():
 
+        print("entering resample_T1_pad \
+            (with crop_aladin_pipe)")
+
         resample_T1_pad = pe.Node(
             regutils.RegResample(),
             name="resample_T1_pad")
@@ -666,7 +669,6 @@ def create_short_preparation_pipe(params, params_template={},
 
         # T1 to pad
         if "avg_reorient_pipe" in params.keys():
-
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
                 resample_T1_pad, "flo_file")
@@ -731,7 +733,6 @@ def create_short_preparation_pipe(params, params_template={},
 
         # outputnode
         if "use_T2" in params.keys():
-
             data_preparation_pipe.connect(
                 resample_T1_pad, 'out_file',
                 outputnode, 'stereo_padded_T2')
