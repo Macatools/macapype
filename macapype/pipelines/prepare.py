@@ -653,7 +653,8 @@ def create_short_preparation_pipe(params, params_template={},
                     outputnode, 'preproc_T2')
 
     # resample T1 to higher dimension
-    if "resample_T1_pad" in params.keys():
+    if "resample_T1_pad" in params.keys() \
+            and "crop_aladin_pipe" in params.keys():
 
         resample_T1_pad = pe.Node(
             regutils.RegResample(),
