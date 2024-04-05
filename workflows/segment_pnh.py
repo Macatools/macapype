@@ -185,7 +185,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
             if species in list(rep_species.keys()):
                 species = rep_species[species]
 
-            list_species = ["macaque", "marmo", "baboon", "chimp"]
+            list_species = ["macaque", "marmo", "baboon",
+                            "chimp", "sheep", "dog"]
 
             assert species in list_species, \
                 "Error, species {} should in the following list {}".format(
