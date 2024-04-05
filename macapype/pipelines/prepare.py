@@ -654,100 +654,157 @@ def create_short_preparation_pipe(params, params_template={},
 
     # resample T1 to higher dimension
     if "resample_T1_pad" in params.keys():
-
-        resample_T1_pad = pe.Node(
-            regutils.RegResample(),
-            name="resample_T1_pad")
-
-        resample_T2_pad = pe.Node(
-            regutils.RegResample(),
-            name="resample_T2_pad")
-
-        # T1 to pad
-        if "avg_reorient_pipe" in params.keys():
-
-            data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
-                resample_T1_pad, "flo_file")
-
-        else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                resample_T1_pad, "flo_file")
-
-        # T2 to pad
-        if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
-                resample_T2_pad, "flo_file")
-
-        else:
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "out_file",
-                resample_T2_pad, "flo_file")
-
-        if "padded_template_head" in params_template.keys():
-            resample_T1_pad.inputs.ref_file = \
-                params_template["padded_template_head"]
-
-            resample_T2_pad.inputs.ref_file = \
-                params_template["padded_template_head"]
-
-        elif "template_head" in params_template.keys():
-            # padding versio of the template
-            pad_template = NodeParams(
+        if "crop_T1" in params.keys():
+            resample_T1_pad = NodeParams(
                 niu.Function(
                     input_names=["img_file", "pad_val", "const"],
                     output_names=["padded_img_file"],
                     function=pad_zero_mri),
                 params=parse_key(params, "resample_T1_pad"),
-                name="pad_template")
+                name="resample_T1_pad")
 
-            pad_template.inputs.img_file = params_template["template_head"]
+            resample_T2_pad = NodeParams(
+                niu.Function(
+                    input_names=["img_file", "pad_val", "const"],
+                    output_names=["padded_img_file"],
+                    function=pad_zero_mri),
+                params=parse_key(params, "resample_T2_pad"),
+                name="resample_T2_pad")
 
-            #  resample_T1_pad
+            # T1 to pad
+            if "avg_reorient_pipe" in params.keys():
+                data_preparation_pipe.connect(
+                    av_T1, 'outputnode.std_img',
+                    resample_T1_pad, "img_file")
+
+            else:
+                data_preparation_pipe.connect(
+                    av_T1, 'avg_img',
+                    resample_T1_pad, "img_file")
+
+            # T2 to pad
+            if "avg_reorient_pipe" in params.keys():
+                data_preparation_pipe.connect(
+                    av_T2, 'outputnode.std_img',
+                    resample_T2_pad, "img_file")
+
+            else:
+                data_preparation_pipe.connect(
+                    av_T2, 'avg_img',
+                    resample_T2_pad, "img_file")
+
+            # outputnode
+            if "use_T2" in params.keys():
+                data_preparation_pipe.connect(
+                    resample_T1_pad, 'padded_img_file',
+                    outputnode, 'stereo_padded_T2')
+
+                data_preparation_pipe.connect(
+                    resample_T2_pad, 'padded_img_file',
+                    outputnode, 'stereo_padded_T1')
+
+            else:
+                data_preparation_pipe.connect(
+                    resample_T1_pad, 'padded_img_file',
+                    outputnode, 'stereo_padded_T1')
+
+                data_preparation_pipe.connect(
+                    resample_T2_pad, 'padded_img_file',
+                    outputnode, 'stereo_padded_T2')
+
+        elif "crop_aladin_pipe" in params.keys():
+
+            resample_T1_pad = pe.Node(
+                regutils.RegResample(),
+                name="resample_T1_pad")
+
+            resample_T2_pad = pe.Node(
+                regutils.RegResample(),
+                name="resample_T2_pad")
+
+            # T1 to pad
+            if "avg_reorient_pipe" in params.keys():
+                data_preparation_pipe.connect(
+                    av_T1, 'outputnode.std_img',
+                    resample_T1_pad, "flo_file")
+
+            else:
+                data_preparation_pipe.connect(
+                    av_T1, 'avg_img',
+                    resample_T1_pad, "flo_file")
+
+            # T2 to pad
+            if 'aladin_T2_on_T1' in params.keys():
+                data_preparation_pipe.connect(
+                    align_T2_on_T1, "res_file",
+                    resample_T2_pad, "flo_file")
+
+            else:
+                data_preparation_pipe.connect(
+                    align_T2_on_T1, "out_file",
+                    resample_T2_pad, "flo_file")
+
+            if "padded_template_head" in params_template.keys():
+                resample_T1_pad.inputs.ref_file = \
+                    params_template["padded_template_head"]
+
+                resample_T2_pad.inputs.ref_file = \
+                    params_template["padded_template_head"]
+
+            elif "template_head" in params_template.keys():
+                # padding versio of the template
+                pad_template = NodeParams(
+                    niu.Function(
+                        input_names=["img_file", "pad_val", "const"],
+                        output_names=["padded_img_file"],
+                        function=pad_zero_mri),
+                    params=parse_key(params, "resample_T1_pad"),
+                    name="pad_template")
+
+                pad_template.inputs.img_file = params_template["template_head"]
+
+                #  resample_T1_pad
+                data_preparation_pipe.connect(
+                    pad_template, 'padded_img_file',
+                    resample_T1_pad, "ref_file")
+
+                #  resample_T2_pad
+                data_preparation_pipe.connect(
+                    pad_template, 'padded_img_file',
+                    resample_T2_pad, "ref_file")
+
+            else:
+                print("Error, template_head or padded_template_head should be \
+                    defined in template")
+                exit(-1)
+
             data_preparation_pipe.connect(
-                pad_template, 'padded_img_file',
-                resample_T1_pad, "ref_file")
-
-            #  resample_T2_pad
-            data_preparation_pipe.connect(
-                pad_template, 'padded_img_file',
-                resample_T2_pad, "ref_file")
-
-        else:
-            print("Error, template_head or padded_template_head should be \
-                defined in template")
-            exit(-1)
-
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            resample_T1_pad, "trans_file")
-
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            resample_T2_pad, "trans_file")
-
-        # outputnode
-        if "use_T2" in params.keys():
+                crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+                resample_T1_pad, "trans_file")
 
             data_preparation_pipe.connect(
-                resample_T1_pad, 'out_file',
-                outputnode, 'stereo_padded_T2')
+                crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+                resample_T2_pad, "trans_file")
 
-            data_preparation_pipe.connect(
-                resample_T2_pad, 'out_file',
-                outputnode, 'stereo_padded_T1')
+            # outputnode
+            if "use_T2" in params.keys():
+                data_preparation_pipe.connect(
+                    resample_T1_pad, 'out_file',
+                    outputnode, 'stereo_padded_T2')
 
-        else:
+                data_preparation_pipe.connect(
+                    resample_T2_pad, 'out_file',
+                    outputnode, 'stereo_padded_T1')
 
-            data_preparation_pipe.connect(
-                resample_T1_pad, 'out_file',
-                outputnode, 'stereo_padded_T1')
+            else:
 
-            data_preparation_pipe.connect(
-                resample_T2_pad, 'out_file',
-                outputnode, 'stereo_padded_T2')
+                data_preparation_pipe.connect(
+                    resample_T1_pad, 'out_file',
+                    outputnode, 'stereo_padded_T1')
+
+                data_preparation_pipe.connect(
+                    resample_T2_pad, 'out_file',
+                    outputnode, 'stereo_padded_T2')
 
     return data_preparation_pipe
 

@@ -1,24 +1,23 @@
 {
     "T1w_roi_noise_corrected_debiased_BET_FLIRT-to_inia19-t1-brain": "space-inia19_desc-brain_T1w",
-    "T1w_roi_corrected_debiased_BET_FLIRT-to_Haiko89_Asymmetric.Template_n89_flirt_thresh_fillh_indexed_mask":"space-orig_desc-brain_dseg",
+    "T1w_roi_corrected_debiased_BET_FLIRT-to_Haiko89_Asymmetric.Template_n89_flirt_thresh_fillh_indexed_mask":"space-stereo_desc-brain_dseg",
 
     "BET_mask_": "",
 
-    "T1w_roi_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
-    "T1w_roi_corrected_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-orig_desc-5tt_dseg",
+    "T1w_roi_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-stereo_desc-5tt_dseg",
+    "T1w_roi_corrected_restore_debiased_brain_SegmentationPosteriors02_thresh_5tt": "space-stereo_desc-5tt_dseg",
     "T1w_flirt_res_restore_debiased_brain_Segmentation_1_merged_bin_5tt.nii.gz": "space-native_desc-5tt_dseg",
 
-    "T1w_roi_restore_brain_bin_bin": "space-orig_desc-brain_mask",
-    "T1w_roi_corrected_restore_brain_bin_bin": "space-orig_desc-brain_mask",
+    "T1w_roi_restore_brain_bin_bin": "space-stereo_desc-brain_mask",
+    "T1w_roi_corrected_restore_brain_bin_bin": "space-stereo_desc-brain_mask",
 
-    "T1w_roi_restore_debiased_brain.nii.gz": "space-orig_desc-preproc_desc-brain_T1w.nii.gz",
-    "T1w_roi_corrected_restore_debiased_brain.nii.gz": "space-orig_desc-preproc_desc-brain_T1w.nii.gz",
+    "T1w_roi_restore_debiased_brain.nii.gz": "space-stereo_desc-preproc_desc-brain_T1w.nii.gz",
+    "T1w_roi_corrected_restore_debiased_brain.nii.gz": "space-stereo_desc-preproc_desc-brain_T1w.nii.gz",
 
-    "T1w_roi_restore.nii.gz": "space-orig_desc-preproc_T1w.nii.gz",
-    "T1w_roi_corrected_restore.nii.gz": "space-orig_desc-preproc_T1w.nii.gz",
+    "T1w_roi_restore.nii.gz": "space-stereo_desc-preproc_T1w.nii.gz",
+    "T1w_roi_corrected_restore.nii.gz": "space-stereo_desc-preproc_T1w.nii.gz",
 
     "Segmentation_allineate": "space-template_desc-brain_dseg",
-    "indexed_mask": "space-orig_desc-brain_dseg",
     "FLAIR_flirt_flirt": "space-inia19_FLAIR",
 
     "T1w_":"",
@@ -26,6 +25,7 @@
     "PDw_":"",
     "_roi":"",
     "_ROI":"",
+    "_indexed_mask": "",
     "_restore_debiased_brain":"",
     "_restore_debiased":"",
     "_restore_brain": "",

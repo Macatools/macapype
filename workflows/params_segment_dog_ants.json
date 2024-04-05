@@ -1,0 +1,56 @@
+{
+    "general":
+    {
+    },
+     "short_preparation_pipe":
+    {
+        "crop_aladin_pipe":
+        {
+            "reg_T1_on_template":
+            {
+            }
+        }
+    },
+    "fast":
+    {
+        "args": "-l 3"
+    },
+    "extract_pipe":
+    {
+        "atlas_brex":
+        {
+            "f": 0.62,
+            "reg": 1,
+            "msk": "b,0.5,0,0",
+            "wrp": "5,5,5",
+            "dil": 4,
+            "vox": 1
+        }
+    },
+    "brain_segment_pipe":
+    {
+        "reg":
+        {
+            "n": 2,
+            "m": "ref",
+            "dof": 12
+        },
+        "segment_atropos_pipe":
+        {
+            "use_priors":0.5,
+            "Atropos":
+            {
+                "dimension": 3
+            },
+            "tissue_dict":
+            {
+                "gm": 2,
+                "wm": 3,
+                "csf": 1
+            }
+        },
+        "export_5tt_pipe":
+        {
+        }
+    }
+}
