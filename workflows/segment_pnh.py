@@ -43,6 +43,7 @@
 #           Kepkee Loh (kepkee.loh@univ-amu.fr)
 #           Julien Sein (julien.sein@univ-amu.fr)
 
+import sys
 import os
 import os.path as op
 
@@ -80,7 +81,7 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ###############################################################################
 
 
-def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
+def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
                          subjects, sessions, acquisitions, reconstructions,
                          params_file, indiv_params_file, mask_file,
                          template_path, template_files, nprocs, reorient,
@@ -455,6 +456,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, datatypes,
     # saving real params.json
     params["macapype_version"] = __version__
 
+    params["full_command"] = cmd
+
     real_params_file = op.join(process_dir, wf_name, "real_params.json")
     with open(real_params_file, 'w+') as fp:
         json.dump(params, fp)
@@ -553,9 +556,12 @@ def main():
 
     args = parser.parse_args()
 
+    cmd = " ".join(sys.argv)
+
     # main_workflow
     print("Initialising the pipeline...")
     create_main_workflow(
+        cmd=cmd,
         data_dir=args.data,
         soft=args.soft,
         process_dir=args.out,
