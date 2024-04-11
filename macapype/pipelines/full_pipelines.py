@@ -932,7 +932,7 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      outputnode, "stereo_T1")
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      outputnode, "stereo_T2")
 
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
