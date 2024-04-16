@@ -1353,13 +1353,14 @@ def create_full_ants_subpipes(
                              restore_mask_T2, 'in_file')
 
         if mask_file is None:
-            seg_pipe.connect(
-                extract_pipe, "smooth_mask.out_file",
-                restore_mask_T1, 'mask_file')
+            if "extract_pipe" in params.keys():
+                seg_pipe.connect(
+                    extract_pipe, "smooth_mask.out_file",
+                    restore_mask_T1, 'mask_file')
 
-            seg_pipe.connect(
-                extract_pipe, "smooth_mask.out_file",
-                restore_mask_T2, 'mask_file')
+                seg_pipe.connect(
+                    extract_pipe, "smooth_mask.out_file",
+                    restore_mask_T2, 'mask_file')
         else:
             seg_pipe.connect(
                 apply_crop_external_mask, "out_file",
