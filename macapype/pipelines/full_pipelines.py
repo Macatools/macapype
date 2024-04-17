@@ -1143,6 +1143,10 @@ def create_full_ants_subpipes(
                     extract_pipe, "smooth_mask.out_file",
                     outputnode, "native_brain_mask", params)
 
+        # full extract brain pipeline (correct_bias, denoising, extract brain)
+        else:
+            print("no extract_brain method is defined, skipping")
+            return seg_pipe
 
     else:
         print("Using native external mask {}".format(mask_file))
