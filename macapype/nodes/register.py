@@ -67,10 +67,12 @@ def remove_fake_values(in_file):
         print("***** Found unit intensity values in more than 10 times")
 
         index_peak = np.argmax(hist[peaks])
-        print(bins[index_peak])
+        print("index:", index_peak)
 
-        filter_arr = np.logical_and(img_arr > bins[index_peak],
-                                    img_arr < bins[index_peak]+1)
+        print(bins[peaks[index_peak]], bins[peaks[index_peak]]+1)
+
+        filter_arr = np.logical_and(img_arr > bins[peaks[index_peak]],
+                                    img_arr < bins[peaks[index_peak]]+1)
 
         img_arr[filter_arr] = 0
 
