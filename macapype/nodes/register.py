@@ -39,7 +39,7 @@ def remove_fake_values(in_file):
 
     distance = np.round(np.max(X)/4)
 
-    nb_bins = (np.rint(np.max(X)*10)).astype(int)
+    nb_bins = (np.rint(np.max(X)/10)).astype(int)
     print("Nb bins: ", nb_bins)
 
     # Create a histogram
