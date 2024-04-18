@@ -31,7 +31,7 @@ def remove_fake_values(in_file):
 
     print("X: ", X)
     print("X shape : ", X.shape)
-    print("X min: ", np.min(X))
+    print("X min: ", np.max(X))
     print("X max : ", np.max(X))
 
 
@@ -39,7 +39,7 @@ def remove_fake_values(in_file):
 
     distance = np.round(np.max(X)/4)
 
-    nb_bins = (np.rint(np.max(X)/10)).astype(int)
+    nb_bins = (np.rint(np.max(X)*1)).astype(int)
     print("Nb bins: ", nb_bins)
 
     # Create a histogram
@@ -54,8 +54,8 @@ def remove_fake_values(in_file):
     plt.savefig(os.path.abspath('histogram.png'))
     plt.clf()
 
-    # Find local minima in the histogram
-    peaks, properties = find_peaks(-hist, distance=distance)
+    # Find local maxima in the histogram
+    peaks, properties = find_peaks(hist, distance=distance)
     # Use negative histogram for minima
 
     print("peaks indexes :", peaks)
