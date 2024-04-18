@@ -21,7 +21,6 @@ def remove_fake_values(in_file):
     import numpy as np
 
     #sample_bins = 10000
-    distance = 1
 
     img_nii = nib.load(in_file)
     img_arr = np.array(img_nii.dataobj)
@@ -37,6 +36,8 @@ def remove_fake_values(in_file):
     print("X max : ", np.max(X))
 
     print("Round X max : ", np.round(np.max(X)))
+
+    distance = np.round(np.max(X)/4)
 
     nb_bins = (np.rint(np.max(X)*1)).astype(int)
     print("Nb bins: ", nb_bins)
