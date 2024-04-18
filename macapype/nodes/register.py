@@ -69,8 +69,8 @@ def remove_fake_values(in_file):
         index_peak = np.argmax(hist[peaks])
         print(bins[index_peak])
 
-        filter_arr = (img_arr > bins[index_peak]
-                      and img_arr < bins[index_peak]+1)
+        filter_arr = np.logical_and(img_arr > bins[index_peak],
+                                    img_arr < bins[index_peak]+1)
 
         img_arr[filter_arr] = 0
 
