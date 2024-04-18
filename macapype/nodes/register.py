@@ -87,8 +87,6 @@ def remove_fake_values(in_file):
                                affine=img_nii.affine)
     nib.save(clean_img, out_file)
 
-    0/0
-
     return out_file
 
 def interative_flirt(anat_file, anat_file_BET, template_brain_file,
