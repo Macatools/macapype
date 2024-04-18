@@ -932,7 +932,7 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                      outputnode, "stereo_T1")
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      outputnode, "stereo_T2")
 
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
@@ -1103,46 +1103,54 @@ def create_full_ants_subpipes(
     if mask_file is None:
 
         # full extract brain pipeline (correct_bias, denoising, extract brain)
-        if "extract_pipe" not in params.keys():
-            return seg_pipe
-
-        # brain extraction
-        extract_pipe = create_extract_pipe(
-            params_template=params_template,
-            params=parse_key(params, "extract_pipe"))
-
-        seg_pipe.connect(inputnode, "indiv_params",
-                                    extract_pipe, "inputnode.indiv_params")
-
-        if "correct_bias_pipe" in params:
-            seg_pipe.connect(correct_bias_pipe,
-                             "outputnode.debiased_T1",
-                             extract_pipe, "inputnode.restore_T1")
-
-        elif "N4debias" in params.keys():
-            # brain extraction
-            seg_pipe.connect(N4debias_T1, "output_image",
-                             extract_pipe, "inputnode.restore_T1")
-
-        elif "fast" in params.keys():
+        if "extract_pipe" in params.keys():
 
             # brain extraction
-            seg_pipe.connect(fast_T1, ("restored_image", show_files),
-                             extract_pipe, "inputnode.restore_T1")
-        else:
+            extract_pipe = create_extract_pipe(
+                params_template=params_template,
+                params=parse_key(params, "extract_pipe"))
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                             extract_pipe, "inputnode.restore_T1")
+            seg_pipe.connect(inputnode, "indiv_params",
+                                        extract_pipe, "inputnode.indiv_params")
 
-        # outputnode
-        seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                         outputnode, "stereo_brain_mask")
+            if "correct_bias_pipe" in params:
+                seg_pipe.connect(
+                    correct_bias_pipe, "outputnode.debiased_T1",
+                    extract_pipe, "inputnode.restore_T1")
 
-        if pad:
-            pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+            elif "N4debias" in params.keys():
+                # brain extraction
+                seg_pipe.connect(
+                    N4debias_T1, "output_image",
+                    extract_pipe, "inputnode.restore_T1")
+
+            elif "fast" in params.keys():
+
+                # brain extraction
+                seg_pipe.connect(
+                    fast_T1, ("restored_image", show_files),
+                    extract_pipe, "inputnode.restore_T1")
+            else:
+
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.preproc_T1',
+                    extract_pipe, "inputnode.restore_T1")
+
+            # outputnode
+            seg_pipe.connect(
                 extract_pipe, "smooth_mask.out_file",
-                outputnode, "native_brain_mask", params)
+                outputnode, "stereo_brain_mask")
+
+            if pad:
+                pad_back(
+                    seg_pipe, data_preparation_pipe, inputnode,
+                    extract_pipe, "smooth_mask.out_file",
+                    outputnode, "native_brain_mask", params)
+
+        # full extract brain pipeline (correct_bias, denoising, extract brain)
+        else:
+            print("no extract_brain method is defined, skipping")
+            return seg_pipe
 
     else:
         print("Using native external mask {}".format(mask_file))
@@ -1268,9 +1276,23 @@ def create_full_ants_subpipes(
                              debias, 't2_file')
 
         if mask_file is None:
-            seg_pipe.connect(
-                extract_pipe, "smooth_mask.out_file",
-                debias, 'b')
+            if "extract_pipe" in params.keys():
+                seg_pipe.connect(
+                    extract_pipe, "smooth_mask.out_file",
+                    debias, 'b')
+            else:
+                debias.inputs.bet = 1
+
+                # outputnode
+                seg_pipe.connect(
+                    debias, "debiased_mask_file",
+                    outputnode, "stereo_brain_mask")
+
+                if pad:
+                    pad_back(
+                        seg_pipe, data_preparation_pipe, inputnode,
+                        debias, "debiased_mask_file",
+                        outputnode, "native_brain_mask", params)
 
         else:
             seg_pipe.connect(
@@ -1340,13 +1362,14 @@ def create_full_ants_subpipes(
                              restore_mask_T2, 'in_file')
 
         if mask_file is None:
-            seg_pipe.connect(
-                extract_pipe, "smooth_mask.out_file",
-                restore_mask_T1, 'mask_file')
+            if "extract_pipe" in params.keys():
+                seg_pipe.connect(
+                    extract_pipe, "smooth_mask.out_file",
+                    restore_mask_T1, 'mask_file')
 
-            seg_pipe.connect(
-                extract_pipe, "smooth_mask.out_file",
-                restore_mask_T2, 'mask_file')
+                seg_pipe.connect(
+                    extract_pipe, "smooth_mask.out_file",
+                    restore_mask_T2, 'mask_file')
         else:
             seg_pipe.connect(
                 apply_crop_external_mask, "out_file",
