@@ -13,7 +13,7 @@ from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NMTSubjectAlign2, NwarpApplyPriors,
-                              animal_warper)
+                              animal_warper, remove_fake_values)
 
 
 def create_iterative_register_pipe(
@@ -592,7 +592,10 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
 
     # remove nans
     remove_nans = pe.Node(
-        fsl.maths.MathsCommand(nan2zeros=True),
+        niu.Function(
+            input_names=["in_file"],
+            output_names=["out_file"],
+            function=remove_fake_values),
         name="remove_nans")
 
     if "crop_z_T1" in params.keys():

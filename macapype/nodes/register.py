@@ -9,6 +9,65 @@ from nipype.utils.filemanip import split_filename as split_f
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec, traits, File)
 
+def remove_fake_values(in_file):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    import matplotlib.pyplot as plt
+    from scipy.signal import find_peaks
+
+    import nibabel as nib
+    import numpy as np
+
+    sample_bins = 10000
+
+    img_nii = nib.load(in_file)
+    img_arr = np.array(img_nii.dataobj)
+
+    print("nb nan: ", np.sum(np.isnan(img_arr)))
+    img_arr[np.isnan(img_arr)] = 0
+
+    # Reshape data to a 1D array (required by k-means)
+    X = np.copy(img_arr).flatten().reshape(-1, 1)
+
+    print("X: ", X)
+    print("X shape : ", X.shape)
+    print("X max : ", np.max(X))
+
+    print("Round X max : ", np.round(np.max(X)))
+    0/0
+
+    nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
+    print("Nb bins: ", nb_bins)
+
+    # Create a histogram
+    hist, bins, _ = plt.hist(X, bins=nb_bins,
+                             alpha=0.5, color='b', label='Histogram')
+
+    # Add labels and a legend
+    plt.xlabel('Value')
+    plt.ylabel('Probability')
+
+    # Save the figure as a PNG file
+    plt.savefig(os.path.abspath('histogram.png'))
+    plt.clf()
+
+    # Find local minima in the histogram
+    peaks, _ = find_peaks(-hist, distance=distance)
+    # Use negative histogram for minima
+
+    print("peaks indexes :", peaks)
+
+    print("peak_hist :", hist[peaks])
+    print("peak_bins :", bins[peaks])
+
+    f.write("peaks indexes : {}\n".format(peaks))
+    f.write("peak_hist : {}\n".format(hist[peaks]))
+    f.write("peak_bins : {}\n".format(bins[peaks]))
+
+
+    return out_file
 
 def interative_flirt(anat_file, anat_file_BET, template_brain_file,
                      template_mask_file, n_iter):
