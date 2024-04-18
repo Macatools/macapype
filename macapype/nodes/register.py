@@ -20,8 +20,6 @@ def remove_fake_values(in_file):
     import nibabel as nib
     import numpy as np
 
-    #sample_bins = 10000
-
     img_nii = nib.load(in_file)
     img_arr = np.array(img_nii.dataobj)
 
@@ -33,7 +31,9 @@ def remove_fake_values(in_file):
 
     print("X: ", X)
     print("X shape : ", X.shape)
+    print("X min: ", np.min(X))
     print("X max : ", np.max(X))
+
 
     print("Round X max : ", np.round(np.max(X)))
 
