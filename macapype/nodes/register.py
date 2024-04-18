@@ -63,6 +63,28 @@ def remove_fake_values(in_file):
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
 
+    if np.max(hist[peaks]) > X.shape[0] / 10:
+        print("***** Found unit intensity values in more than 10 times")
+
+        index_peak = np.argmax(hist[peaks])
+        print(bins[index_peak])
+
+        filter_arr = (img_arr > bins[index_peak]
+                      and img_arr < bins[index_peak]+1)
+
+        img_arr[filter_arr] = 0
+
+    # saving mask as nii
+
+    path, fname, ext = split_f(in_file)
+
+    out_file = os.path.abspath(fname + "_clean" + ext)
+
+    clean_img = nib.Nifti1Image(dataobj=img_arr,
+                               header=img_nii.header,
+                               affine=img_nii.affine)
+    nib.save(clean_img, out_file)
+
     0/0
 
     return out_file
