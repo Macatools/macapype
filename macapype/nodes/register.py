@@ -20,7 +20,8 @@ def remove_fake_values(in_file):
     import nibabel as nib
     import numpy as np
 
-    sample_bins = 10000
+    #sample_bins = 10000
+    distance = 1
 
     img_nii = nib.load(in_file)
     img_arr = np.array(img_nii.dataobj)
@@ -37,7 +38,7 @@ def remove_fake_values(in_file):
 
     print("Round X max : ", np.round(np.max(X)))
 
-    nb_bins = (np.rint(np.max(X)*100)).astype(int)
+    nb_bins = (np.rint(np.max(X)*1)).astype(int)
     print("Nb bins: ", nb_bins)
 
     # Create a histogram
@@ -52,10 +53,8 @@ def remove_fake_values(in_file):
     plt.savefig(os.path.abspath('histogram.png'))
     plt.clf()
 
-    0/0
-
     # Find local minima in the histogram
-    peaks, _ = find_peaks(-hist, distance=distance)
+    peaks, properties = find_peaks(-hist, distance=distance)
     # Use negative histogram for minima
 
     print("peaks indexes :", peaks)
@@ -63,10 +62,7 @@ def remove_fake_values(in_file):
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
 
-    f.write("peaks indexes : {}\n".format(peaks))
-    f.write("peak_hist : {}\n".format(hist[peaks]))
-    f.write("peak_bins : {}\n".format(bins[peaks]))
-
+    0/0
 
     return out_file
 
