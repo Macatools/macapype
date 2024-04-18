@@ -1114,28 +1114,32 @@ def create_full_ants_subpipes(
                                         extract_pipe, "inputnode.indiv_params")
 
             if "correct_bias_pipe" in params:
-                seg_pipe.connect(correct_bias_pipe,
-                                "outputnode.debiased_T1",
-                                extract_pipe, "inputnode.restore_T1")
+                seg_pipe.connect(
+                    correct_bias_pipe, "outputnode.debiased_T1",
+                    extract_pipe, "inputnode.restore_T1")
 
             elif "N4debias" in params.keys():
                 # brain extraction
-                seg_pipe.connect(N4debias_T1, "output_image",
-                                extract_pipe, "inputnode.restore_T1")
+                seg_pipe.connect(
+                    N4debias_T1, "output_image",
+                    extract_pipe, "inputnode.restore_T1")
 
             elif "fast" in params.keys():
 
                 # brain extraction
-                seg_pipe.connect(fast_T1, ("restored_image", show_files),
-                                extract_pipe, "inputnode.restore_T1")
+                seg_pipe.connect(
+                    fast_T1, ("restored_image", show_files),
+                    extract_pipe, "inputnode.restore_T1")
             else:
 
-                seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                                extract_pipe, "inputnode.restore_T1")
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.preproc_T1',
+                    extract_pipe, "inputnode.restore_T1")
 
             # outputnode
-            seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
-                            outputnode, "stereo_brain_mask")
+            seg_pipe.connect(
+                extract_pipe, "smooth_mask.out_file",
+                outputnode, "stereo_brain_mask")
 
             if pad:
                 pad_back(
@@ -1280,8 +1284,9 @@ def create_full_ants_subpipes(
                 debias.inputs.bet = 1
 
                 # outputnode
-                seg_pipe.connect(debias, "debiased_mask_file",
-                                outputnode, "stereo_brain_mask")
+                seg_pipe.connect(
+                    debias, "debiased_mask_file",
+                    outputnode, "stereo_brain_mask")
 
                 if pad:
                     pad_back(
