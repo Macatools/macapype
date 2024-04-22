@@ -619,9 +619,9 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
             input_names=["img_file", "pad_val", "const"],
             output_names=["out_file"],
             function=pad_zero_mri),
-        name="remove_nans")
+        name="pad_image")
 
-    pad_image.inputs.pad_val = 200
+    pad_image.inputs.pad_val = "double"
     pad_image.inputs.const = 0
 
     if "crop_z_T1" in params.keys():
@@ -630,15 +630,9 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
             pad_image, "img_file")
 
     else:
-        if "reg_T1_on_template2" in params.keys():
-            reg_pipe.connect(
-                reg_T1_on_template2, 'res_file',
-                pad_image, "img_file")
-
-        else:
-            reg_pipe.connect(
-                reg_T1_on_template, 'res_file',
-                pad_image, "img_file")
+        reg_pipe.connect(
+            inputnode, 'native_T1',
+            pad_image, "img_file")
 
     # resampling using transfo on much bigger image
     reg_resample_T1 = pe.Node(
