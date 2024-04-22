@@ -614,7 +614,6 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                 #reg_T1_on_template, 'res_file',
                 #remove_nans, "in_file")
 
-
     pad_image = pe.Node(
         niu.Function(
             input_names=["img_file", "pad_val", "const"],
@@ -646,6 +645,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
         regutils.RegResample(pad_val=0.0),
         name="reg_resample_T1")
 
+    # transfo
     if "reg_T1_on_template2" in params.keys():
         reg_pipe.connect(
             compose_transfo, 'out_file',
@@ -654,7 +654,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
     else:
         reg_pipe.connect(
             reg_T1_on_template, 'aff_file',
-            outputnode, "native_to_stereo_trans")
+            reg_resample_T1, 'trans_file')
 
     reg_pipe.connect(
         pad_image, 'out_file',
