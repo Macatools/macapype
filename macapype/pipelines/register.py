@@ -589,48 +589,23 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                 reg_T1_on_template, 'res_file',
                 crop_z_T1, 'in_file')
 
-    ## remove nans
-    #remove_nans = pe.Node(
-        #niu.Function(
-            #input_names=["in_file"],
-            #output_names=["out_file"],
-            #function=remove_fake_values),
-        #name="remove_nans")
-
-
-    #if "crop_z_T1" in params.keys():
-        #reg_pipe.connect(
-            #crop_z_T1, 'out_roi',
-            #remove_nans, "in_file")
-
-    #else:
-        #if "reg_T1_on_template2" in params.keys():
-            #reg_pipe.connect(
-                #reg_T1_on_template2, 'res_file',
-                #remove_nans, "in_file")
-
-        #else:
-            #reg_pipe.connect(
-                #reg_T1_on_template, 'res_file',
-                #remove_nans, "in_file")
-
-    pad_image = pe.Node(
+    pad_image_T1 = pe.Node(
         ants.utils.ImageMath(),
-        name="pad_image")
+        name="pad_image_T1")
 
-    pad_image.inputs.copy_header = True
-    pad_image.inputs.operation = "PadImage"
-    pad_image.inputs.op2 = '200'
+    pad_image_T1.inputs.copy_header = True
+    pad_image_T1.inputs.operation = "PadImage"
+    pad_image_T1.inputs.op2 = '200'
 
     if "crop_z_T1" in params.keys():
         reg_pipe.connect(
             crop_z_T1, 'out_roi',
-            pad_image, "op1")
+            pad_image_T1, "op1")
 
     else:
         reg_pipe.connect(
             inputnode, 'native_T1',
-            pad_image, "op1")
+            pad_image_T1, "op1")
 
     # resampling using transfo on much bigger image
     reg_resample_T1 = pe.Node(
@@ -649,7 +624,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
             reg_resample_T1, 'trans_file')
 
     reg_pipe.connect(
-        pad_image, 'output_image',
+        pad_image_T1, 'output_image',
         reg_resample_T1, "flo_file")
 
     reg_pipe.connect(
