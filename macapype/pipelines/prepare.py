@@ -528,8 +528,9 @@ def create_short_preparation_pipe(params, params_template={},
                                           crop_T1, 'in_file')
 
         if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(align_T2_on_T1, "res_file",
-                                          crop_T2, 'in_file')
+            data_preparation_pipe.connect(
+                reg_resample_T2, 'out_file',
+                crop_T2, 'in_file')
 
         else:
             data_preparation_pipe.connect(align_T2_on_T1, "out_file",
@@ -565,8 +566,9 @@ def create_short_preparation_pipe(params, params_template={},
             name='apply_crop_aladin_T2')
 
         if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(align_T2_on_T1, "res_file",
-                                          apply_crop_aladin_T2, 'flo_file')
+            data_preparation_pipe.connect(
+                reg_resample_T2, 'out_file',
+                apply_crop_aladin_T2, 'flo_file')
 
         else:
             data_preparation_pipe.connect(align_T2_on_T1, "out_file",
@@ -716,7 +718,7 @@ def create_short_preparation_pipe(params, params_template={},
         # T2 to pad
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
+                reg_resample_T2, 'out_file',
                 resample_T2_pad, "flo_file")
 
         else:
