@@ -620,6 +620,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
 
     pad_image.inputs.copy_header = True
     pad_image.inputs.operation = "PadImage"
+    pad_image.inputs.op2 = 200
 
     if "crop_z_T1" in params.keys():
         reg_pipe.connect(
