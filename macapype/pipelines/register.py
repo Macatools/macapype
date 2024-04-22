@@ -648,7 +648,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
             reg_resample_T1, 'trans_file')
 
     reg_pipe.connect(
-        pad_image, 'out_file',
+        pad_image, 'output_image',
         reg_resample_T1, "flo_file")
 
     reg_pipe.connect(
