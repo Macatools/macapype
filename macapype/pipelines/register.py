@@ -615,24 +615,21 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                 #remove_nans, "in_file")
 
     pad_image = pe.Node(
-        niu.Function(
-            input_names=["img_file", "pad_val", "const"],
-            output_names=["out_file"],
-            function=pad_zero_mri),
+        ants.utils.ImageMath(),
         name="pad_image")
 
-    pad_image.inputs.pad_val = "double"
-    pad_image.inputs.const = 0
+    pad_image.inputs.copy_header = True
+    pad_image.inputs.operation = "PadImage"
 
     if "crop_z_T1" in params.keys():
         reg_pipe.connect(
             crop_z_T1, 'out_roi',
-            pad_image, "img_file")
+            pad_image, "op1")
 
     else:
         reg_pipe.connect(
             inputnode, 'native_T1',
-            pad_image, "img_file")
+            pad_image, "op1")
 
     # resampling using transfo on much bigger image
     reg_resample_T1 = pe.Node(
