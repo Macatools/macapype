@@ -395,7 +395,7 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'flo_file')
 
-
+        # pad image T2
         pad_image_T2 = pe.Node(
             ImageMath(),
             name="pad_image_T2")
@@ -404,8 +404,14 @@ def create_short_preparation_pipe(params, params_template={},
         pad_image_T2.inputs.operation = "PadImage"
         pad_image_T2.inputs.op2 = '200'
 
-        data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T2, 'outputnode.std_img',
+                pad_image_T2, "op1")
+
+        else:
+            data_preparation_pipe.connect(
+                av_T2, 'avg_img',
                 pad_image_T2, "op1")
 
         # resampling using transfo on much bigger image
@@ -413,7 +419,6 @@ def create_short_preparation_pipe(params, params_template={},
             regutils.RegResample(pad_val=0.0),
             name="reg_resample_T2")
 
-        # transfo
         data_preparation_pipe.connect(
             align_T2_on_T1, 'aff_file',
             reg_resample_T2, 'trans_file')
@@ -421,7 +426,6 @@ def create_short_preparation_pipe(params, params_template={},
         data_preparation_pipe.connect(
             pad_image_T2, 'output_image',
             reg_resample_T2, "flo_file")
-
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
