@@ -590,32 +590,83 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                 reg_T1_on_template, 'res_file',
                 crop_z_T1, 'in_file')
 
-    # remove nans
-    remove_nans = pe.Node(
+    ## remove nans
+    #remove_nans = pe.Node(
+        #niu.Function(
+            #input_names=["in_file"],
+            #output_names=["out_file"],
+            #function=remove_fake_values),
+        #name="remove_nans")
+
+
+    #if "crop_z_T1" in params.keys():
+        #reg_pipe.connect(
+            #crop_z_T1, 'out_roi',
+            #remove_nans, "in_file")
+
+    #else:
+        #if "reg_T1_on_template2" in params.keys():
+            #reg_pipe.connect(
+                #reg_T1_on_template2, 'res_file',
+                #remove_nans, "in_file")
+
+        #else:
+            #reg_pipe.connect(
+                #reg_T1_on_template, 'res_file',
+                #remove_nans, "in_file")
+
+
+    pad_image = pe.Node(
         niu.Function(
-            input_names=["in_file"],
+            input_names=["img_file", "pad_val", "const"],
             output_names=["out_file"],
-            function=remove_fake_values),
+            function=pad_zero_mri),
         name="remove_nans")
+
+    pad_image.inputs.pad_val = 200
+    pad_image.inputs.const = 0
 
     if "crop_z_T1" in params.keys():
         reg_pipe.connect(
             crop_z_T1, 'out_roi',
-            remove_nans, "in_file")
+            pad_image, "img_file")
 
     else:
         if "reg_T1_on_template2" in params.keys():
             reg_pipe.connect(
                 reg_T1_on_template2, 'res_file',
-                remove_nans, "in_file")
+                pad_image, "img_file")
 
         else:
             reg_pipe.connect(
                 reg_T1_on_template, 'res_file',
-                remove_nans, "in_file")
+                pad_image, "img_file")
+
+    # resampling using transfo on much bigger image
+    reg_resample_T1 = pe.Node(
+        regutils.RegResample(pad_val=0.0),
+        name="reg_resample_T1")
+
+    if "reg_T1_on_template2" in params.keys():
+        reg_pipe.connect(
+            compose_transfo, 'out_file',
+            reg_resample_T1, 'trans_file')
+
+    else:
+        reg_pipe.connect(
+            reg_T1_on_template, 'aff_file',
+            outputnode, "native_to_stereo_trans")
+
+    reg_pipe.connect(
+        pad_image, 'out_file',
+        reg_resample_T1, "flo_file")
+
+    reg_pipe.connect(
+            inputnode, 'stereo_template_T1',
+            reg_resample_T1, "ref_file")
 
     # outputnode
-    reg_pipe.connect(remove_nans, 'out_file',
+    reg_pipe.connect(reg_resample_T1, 'out_file',
                      outputnode, "stereo_T1")
 
     if "reg_T1_on_template2" in params.keys():
