@@ -828,7 +828,7 @@ def pad_zero_mri(img_file, pad_val=10, const=0):
         img_arr = np.array(img.dataobj)
         img_arr_copy = np.copy(img_arr)
 
-        if isinstance(pad_val, integer):
+        if isinstance(pad_val, int):
             img_arr_copy_padded = np.pad(
                 img_arr_copy,
                 pad_width=pad_val,
