@@ -838,15 +838,11 @@ def pad_zero_mri(img_file, pad_val=10, const=0):
         elif pad_val == 'double':
             print("running with double")
 
-            pad_val = np.max(img_arr.shape)
-
-            print(pad_val)
-
-            0/0
+            print(img_arr.shape)
 
             img_arr_copy_padded = np.pad(
                 img_arr_copy,
-                pad_width=pad_val,
+                pad_width=img_arr.shape,
                 mode='constant',
                 constant_values=const)
 
