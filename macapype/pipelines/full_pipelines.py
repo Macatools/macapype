@@ -514,111 +514,114 @@ def create_brain_segment_from_mask_pipe(
                     "prob_csf", "gen_5tt"]),
         name='outputnode')
 
-    if "register_NMT_pipe" in params:
 
-        # register NMT template, template mask and priors to subject T1
-        register_NMT_pipe = create_register_NMT_pipe(
-            params_template=params_template,
-            params=parse_key(params, "register_NMT_pipe"))
+    if "use_priors" in params["segment_atropos_pipe"].keys():
 
-        brain_segment_pipe.connect(
-            inputnode, 'masked_debiased_T1',
-            register_NMT_pipe, "inputnode.T1")
+        if "register_NMT_pipe" in params:
 
-        brain_segment_pipe.connect(
-            inputnode, 'indiv_params',
-            register_NMT_pipe, "inputnode.indiv_params")
+            # register NMT template, template mask and priors to subject T1
+            register_NMT_pipe = create_register_NMT_pipe(
+                params_template=params_template,
+                params=parse_key(params, "register_NMT_pipe"))
 
-    elif "reg" in params:
-        # Iterative registration to the INIA19 template
-        reg = NodeParams(
-            IterREGBET(),
-            params=parse_key(params, "reg"),
-            name='reg')
-
-        reg.inputs.refb_file = params_template["template_brain"]
-
-        brain_segment_pipe.connect(
-            inputnode, 'debiased_T1',
-            reg, 'inw_file')
-
-        brain_segment_pipe.connect(
-            inputnode, 'masked_debiased_T1',
-            reg, 'inb_file')
-
-        brain_segment_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "reg"),
-            reg, 'indiv_params')
-
-        if "template_seg" in params_template.keys():
-
-            # seg
-            register_seg_to_nat = pe.Node(
-                fsl.ApplyXFM(), name="register_seg_to_nat")
-            register_seg_to_nat.inputs.interp = "nearestneighbour"
-
-            register_seg_to_nat.inputs.in_file = params_template[
-                "template_seg"]
             brain_segment_pipe.connect(
                 inputnode, 'masked_debiased_T1',
-                register_seg_to_nat, 'reference')
+                register_NMT_pipe, "inputnode.T1")
 
             brain_segment_pipe.connect(
-                reg, 'inv_transfo_file',
-                register_seg_to_nat, "in_matrix_file")
+                inputnode, 'indiv_params',
+                register_NMT_pipe, "inputnode.indiv_params")
 
+        elif "reg" in params:
+            # Iterative registration to the INIA19 template
+            reg = NodeParams(
+                IterREGBET(),
+                params=parse_key(params, "reg"),
+                name='reg')
+
+            reg.inputs.refb_file = params_template["template_brain"]
+
+            brain_segment_pipe.connect(
+                inputnode, 'debiased_T1',
+                reg, 'inw_file')
+
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                reg, 'inb_file')
+
+            brain_segment_pipe.connect(
+                inputnode, ('indiv_params', parse_key, "reg"),
+                reg, 'indiv_params')
+
+            if "template_seg" in params_template.keys():
+
+                # seg
+                register_seg_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_seg_to_nat")
+                register_seg_to_nat.inputs.interp = "nearestneighbour"
+
+                register_seg_to_nat.inputs.in_file = params_template[
+                    "template_seg"]
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_seg_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_seg_to_nat, "in_matrix_file")
+
+            else:
+                # gm
+                register_gm_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_gm_to_nat")
+                register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+                register_gm_to_nat.inputs.interp = "nearestneighbour"
+
+                register_gm_to_nat.inputs.in_file = params_template["template_gm"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_gm_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_gm_to_nat, "in_matrix_file")
+
+                # wm
+                register_wm_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_wm_to_nat")
+                register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+                register_wm_to_nat.inputs.interp = "nearestneighbour"
+
+                register_wm_to_nat.inputs.in_file = params_template["template_wm"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_wm_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_wm_to_nat, "in_matrix_file")
+
+                # csf
+                register_csf_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_csf_to_nat")
+                register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+                register_csf_to_nat.inputs.interp = "nearestneighbour"
+
+                register_csf_to_nat.inputs.in_file = params_template[
+                    "template_csf"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_csf_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_csf_to_nat, "in_matrix_file")
         else:
-            # gm
-            register_gm_to_nat = pe.Node(
-                fsl.ApplyXFM(), name="register_gm_to_nat")
-            register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-            register_gm_to_nat.inputs.interp = "nearestneighbour"
-
-            register_gm_to_nat.inputs.in_file = params_template["template_gm"]
-
-            brain_segment_pipe.connect(
-                inputnode, 'masked_debiased_T1',
-                register_gm_to_nat, 'reference')
-
-            brain_segment_pipe.connect(
-                reg, 'inv_transfo_file',
-                register_gm_to_nat, "in_matrix_file")
-
-            # wm
-            register_wm_to_nat = pe.Node(
-                fsl.ApplyXFM(), name="register_wm_to_nat")
-            register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-            register_wm_to_nat.inputs.interp = "nearestneighbour"
-
-            register_wm_to_nat.inputs.in_file = params_template["template_wm"]
-
-            brain_segment_pipe.connect(
-                inputnode, 'masked_debiased_T1',
-                register_wm_to_nat, 'reference')
-
-            brain_segment_pipe.connect(
-                reg, 'inv_transfo_file',
-                register_wm_to_nat, "in_matrix_file")
-
-            # csf
-            register_csf_to_nat = pe.Node(
-                fsl.ApplyXFM(), name="register_csf_to_nat")
-            register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
-            register_csf_to_nat.inputs.interp = "nearestneighbour"
-
-            register_csf_to_nat.inputs.in_file = params_template[
-                "template_csf"]
-
-            brain_segment_pipe.connect(
-                inputnode, 'masked_debiased_T1',
-                register_csf_to_nat, 'reference')
-
-            brain_segment_pipe.connect(
-                reg, 'inv_transfo_file',
-                register_csf_to_nat, "in_matrix_file")
-    else:
-        print("##### Error, no coregistration method is defined")
-        return brain_segment_pipe
+            print("##### Error, no coregistration method is defined")
+            return brain_segment_pipe
 
     # ants Atropos
     if "template_seg" in params_template.keys():
