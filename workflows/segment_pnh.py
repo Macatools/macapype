@@ -282,11 +282,21 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
         assert os.path.exists(template_head), "Could not find template_head {}".format(template_head)
         params_template["template_head"] = template_head
 
+
         template_brain = os.path.join(template_path,template_files[1])
         assert os.path.exists(template_brain), "Could not find template_brain {}".format(template_brain)
         params_template["template_brain"] = template_brain
 
-        if len(template_files) == 3:
+        if len(template_files) == 2:
+
+            print("Only two files (template_head and template_brain) have been specified, segmentation will be without priors")
+
+            if "brain_segment_pipe" in params.keys():
+                if "segment_atropos_pipe" in params["brain_segment_pipe"].keys():
+                    if "use_priors" in params["brain_segment_pipe"]["segment_atropos_pipe"].keys():
+                        del params["brain_segment_pipe"]["segment_atropos_pipe"]["use_priors"]
+
+        elif len(template_files) == 3:
 
             template_seg = os.path.join(template_path,template_files[2])
             assert os.path.exists(template_seg), "Could not find template_seg {}".format(template_seg)
