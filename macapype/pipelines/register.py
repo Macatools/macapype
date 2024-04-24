@@ -13,7 +13,8 @@ from ..utils.utils_nodes import NodeParams, parse_key
 
 from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NMTSubjectAlign2, NwarpApplyPriors,
-                              animal_warper, pad_zero_mri)
+                              animal_warper)
+
 
 def create_iterative_register_pipe(
         template_file, template_brain_file, template_mask_file, gm_prob_file,

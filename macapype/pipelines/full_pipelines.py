@@ -514,7 +514,6 @@ def create_brain_segment_from_mask_pipe(
                     "prob_csf", "gen_5tt"]),
         name='outputnode')
 
-
     if "use_priors" in params["segment_atropos_pipe"].keys():
 
         if "register_NMT_pipe" in params:
@@ -574,10 +573,11 @@ def create_brain_segment_from_mask_pipe(
                 # gm
                 register_gm_to_nat = pe.Node(
                     fsl.ApplyXFM(), name="register_gm_to_nat")
-                register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+                register_gm_to_nat.inputs.output_type = "NIFTI"  # for SPM
                 register_gm_to_nat.inputs.interp = "nearestneighbour"
 
-                register_gm_to_nat.inputs.in_file = params_template["template_gm"]
+                register_gm_to_nat.inputs.in_file = \
+                    params_template["template_gm"]
 
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
@@ -590,10 +590,11 @@ def create_brain_segment_from_mask_pipe(
                 # wm
                 register_wm_to_nat = pe.Node(
                     fsl.ApplyXFM(), name="register_wm_to_nat")
-                register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+                register_wm_to_nat.inputs.output_type = "NIFTI"  # for SPM
                 register_wm_to_nat.inputs.interp = "nearestneighbour"
 
-                register_wm_to_nat.inputs.in_file = params_template["template_wm"]
+                register_wm_to_nat.inputs.in_file = \
+                    params_template["template_wm"]
 
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
@@ -606,11 +607,11 @@ def create_brain_segment_from_mask_pipe(
                 # csf
                 register_csf_to_nat = pe.Node(
                     fsl.ApplyXFM(), name="register_csf_to_nat")
-                register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM segment
+                register_csf_to_nat.inputs.output_type = "NIFTI"  # for SPM
                 register_csf_to_nat.inputs.interp = "nearestneighbour"
 
-                register_csf_to_nat.inputs.in_file = params_template[
-                    "template_csf"]
+                register_csf_to_nat.inputs.in_file = \
+                    params_template["template_csf"]
 
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
