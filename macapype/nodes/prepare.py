@@ -295,32 +295,35 @@ def average_align(list_img, reorient=False):
             path, fname, ext = split_f(list_img[0])
 
             data_0 = img_0.get_data()
-            print(data_0.dtype)
 
+            avg_shape = data_0.shape
             list_data = [data_0]
+
             for i, img in enumerate(list_img[1:]):
+                if img.get_data.shape != avg_shape:
+                    print(f"**** Warning , original image {img} \
+                          have a different shape than ref {avg_shape}")
 
                 print("running flirt on {}".format(img))
                 flirt = fsl.FLIRT(dof=6)
                 flirt.inputs.in_file = img
-                flirt.inputs.reference = list_img[0]
+                flirt.inputs.reference = data_0
                 flirt.inputs.interp = "sinc"
                 flirt.inputs.no_search = True
                 out_file = flirt.run().outputs.out_file
                 print(out_file)
 
                 data = nib.load(out_file).get_data()
+                assert img.get_data.shape == avg_shape, \
+                    f"**** Error, flirt results {out_file} \
+                    have a different shape than ref {avg_shape}"
+
                 list_data.append(data)
 
             avg_data = np.mean(np.array(list_data), axis=0)
-            print(avg_data.shape)
-            print(avg_data.dtype)
-            print(np.max(avg_data))
 
             # after casting type
             avg_data = avg_data.astype(data_0.dtype)
-            print(avg_data.dtype)
-            print(np.max(avg_data))
 
             av_img_file = os.path.abspath("avg_" + fname + ext)
             nib.save(nib.Nifti1Image(avg_data, header=img_0.header,
