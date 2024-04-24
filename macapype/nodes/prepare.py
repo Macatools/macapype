@@ -311,6 +311,14 @@ def average_align(list_img, reorient=False):
 
             avg_data = np.mean(np.array(list_data), axis=0)
             print(avg_data.shape)
+            print(avg_data.dtype)
+            print(np.max(avg_data))
+
+            avg_data = avg_data.astype(np.int16, casting='safe')
+            print(avg_data.dtype)
+            print(np.max(avg_data))
+
+            0/0
 
             av_img_file = os.path.abspath("avg_" + fname + ext)
             nib.save(nib.Nifti1Image(avg_data, header=img_0.header,
