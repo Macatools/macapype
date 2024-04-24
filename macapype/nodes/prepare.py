@@ -307,7 +307,7 @@ def average_align(list_img, reorient=False):
                 print("running flirt on {}".format(img))
                 flirt = fsl.FLIRT(dof=6)
                 flirt.inputs.in_file = img
-                flirt.inputs.reference = data_0
+                flirt.inputs.reference = list_img[0]
                 flirt.inputs.interp = "sinc"
                 flirt.inputs.no_search = True
                 out_file = flirt.run().outputs.out_file
