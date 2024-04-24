@@ -294,15 +294,15 @@ def average_align(list_img, reorient=False):
             img_0 = nib.load(list_img[0])
             path, fname, ext = split_f(list_img[0])
 
-            data_0 = img_0.get_data()
+            data_0 = img_0.get_fdata()
 
-            avg_shape = data_0.shape
+            data_0_shape = data_0.shape
             list_data = [data_0]
 
             for i, img in enumerate(list_img[1:]):
-                if img.get_data.shape != avg_shape:
+                if img.get_fdata().shape != data_0_shape:
                     print(f"**** Warning , original image {img} \
-                          have a different shape than ref {avg_shape}")
+                          have a different shape than ref {data_0_shape}")
 
                 print("running flirt on {}".format(img))
                 flirt = fsl.FLIRT(dof=6)
@@ -313,14 +313,17 @@ def average_align(list_img, reorient=False):
                 out_file = flirt.run().outputs.out_file
                 print(out_file)
 
-                data = nib.load(out_file).get_data()
-                assert data.shape == avg_shape, \
+                data = nib.load(out_file).get_fdata()
+                assert data.shape == data_0_shape, \
                     f"**** Error, flirt results {out_file} \
-                    have a different shape than ref {avg_shape}"
+                    have a different shape than ref {data_0_shape}"
 
                 list_data.append(data)
 
             avg_data = np.mean(np.array(list_data), axis=0)
+
+            assert data_0_shape == avg_data.shape, \
+                f"Error with average shape {avg_data.shape} != {data_0_shape}"
 
             # after casting type
             avg_data = avg_data.astype(data_0.dtype)
