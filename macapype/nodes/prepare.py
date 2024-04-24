@@ -316,7 +316,7 @@ def average_align(list_img, reorient=False):
                 data = nib.load(out_file).get_fdata()
                 assert data.shape == data_0_shape, \
                     f"**** Error, flirt results {out_file} \
-                    have a different shape than ref {data_0_shape}"
+                    have a different shape {data.shape} than ref {data_0_shape}"
 
                 list_data.append(data)
 
