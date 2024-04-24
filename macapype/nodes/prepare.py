@@ -294,6 +294,8 @@ def average_align(list_img, reorient=False):
             img_0 = nib.load(list_img[0])
             path, fname, ext = split_f(list_img[0])
 
+            print(img_0.get_data().dtype)
+
             list_data = [img_0.get_data()]
             for i, img in enumerate(list_img[1:]):
 
@@ -314,12 +316,11 @@ def average_align(list_img, reorient=False):
             print(avg_data.dtype)
             print(np.max(avg_data))
 
-            avg_data = avg_data.astype(np.int16, casting='safe')
+            avg_data = avg_data.astype(np.int16)
             print(avg_data.dtype)
             print(np.max(avg_data))
 
             0/0
-
             av_img_file = os.path.abspath("avg_" + fname + ext)
             nib.save(nib.Nifti1Image(avg_data, header=img_0.header,
                                      affine=img_0.affine),
