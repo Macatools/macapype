@@ -300,8 +300,10 @@ def average_align(list_img, reorient=False):
             list_data = [data_0]
 
             for i, img in enumerate(list_img[1:]):
-                if nib.load(img).get_fdata().shape != data_0_shape:
-                    print(f"**** Warning , original image {img} \
+                data_orig_shape = nib.load(img).get_fdata().shape
+                if data_orig_shape != data_0_shape:
+                    print(f"**** Warning , original image shape \
+                          {data_orig_shape} \
                           have a different shape than ref {data_0_shape}")
 
                 print("running flirt on {}".format(img))
