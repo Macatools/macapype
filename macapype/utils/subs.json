@@ -24,6 +24,7 @@
     "T1w_":"",
     "T2w_":"",
     "PDw_":"",
+    "_aff":"",
     "_roi":"",
     "_ROI":"",
     "_restore_debiased_brain":"",
