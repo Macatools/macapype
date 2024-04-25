@@ -327,7 +327,7 @@ def average_align(list_img, reorient=False):
                 f"Error with average shape {avg_data.shape} != {data_0_shape}"
 
             # after casting type
-            avg_data = avg_data.astype(data_0.dtype)
+            avg_data = avg_data.astype(np.int16)
 
             av_img_file = os.path.abspath("avg_" + fname + ext)
             nib.save(nib.Nifti1Image(avg_data, header=img_0.header,
