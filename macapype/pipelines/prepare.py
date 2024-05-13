@@ -731,6 +731,8 @@ def create_short_preparation_pipe(params, params_template={},
                 resample_T2_pad, "flo_file")
 
         if "padded_template_head" in params_template.keys():
+            print("Found padded_template_head in template_stereo")
+
             resample_T1_pad.inputs.ref_file = \
                 params_template["padded_template_head"]
 
@@ -738,6 +740,8 @@ def create_short_preparation_pipe(params, params_template={},
                 params_template["padded_template_head"]
 
         elif "template_head" in params_template.keys():
+            print("Found pad_val {}".format(pad_val))
+
             # padding versio of the template
             pad_template = NodeParams(
                 niu.Function(
