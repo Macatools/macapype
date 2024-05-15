@@ -532,7 +532,7 @@ def create_brain_segment_from_mask_pipe(
                 register_NMT_pipe, "inputnode.indiv_params")
 
         elif "reg" in params:
-            # Iterative registration to the INIA19 template
+            # Iterative registration to the template
             reg = NodeParams(
                 IterREGBET(),
                 params=parse_key(params, "reg"),
