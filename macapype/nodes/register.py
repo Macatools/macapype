@@ -197,7 +197,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
     p = traits.String(
         desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
-        position=3, argstr="-p %s")
+        argstr="-p %s")
 
 
 class IterREGBETOutputSpec(TraitedSpec):
