@@ -190,8 +190,7 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         mandatory=False, argstr="-refw %s")
 
     k = traits.Bool(
-        False, usedefault=True,
-        position=3, argstr="-k",
+        False, usedefault=True, argstr="-k",
         desc="Will keep temporary files",
         mandatory=False)
 
