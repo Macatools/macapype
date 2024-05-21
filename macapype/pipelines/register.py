@@ -598,9 +598,9 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
     pad_image_T1.inputs.operation = "PadImage"
     pad_image_T1.inputs.op2 = '200'
 
-    if "crop_z_T1" in params.keys():
+    if "pre_crop_z_T1" in params.keys():
         reg_pipe.connect(
-            crop_z_T1, 'out_roi',
+            pre_crop_z_T1, 'out_roi',
             pad_image_T1, "op1")
 
     else:
