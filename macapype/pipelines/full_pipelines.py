@@ -1120,28 +1120,55 @@ def create_full_ants_subpipes(
             seg_pipe.connect(inputnode, "indiv_params",
                                         extract_pipe, "inputnode.indiv_params")
 
-            if "correct_bias_pipe" in params:
-                seg_pipe.connect(
-                    correct_bias_pipe, "outputnode.debiased_T1",
-                    extract_pipe, "inputnode.restore_T1")
+            if "use_T2" in params["extract_pipe"]:
 
-            elif "N4debias" in params.keys():
-                # brain extraction
-                seg_pipe.connect(
-                    N4debias_T1, "output_image",
-                    extract_pipe, "inputnode.restore_T1")
+                if "correct_bias_pipe" in params:
+                    seg_pipe.connect(
+                        correct_bias_pipe, "outputnode.debiased_T2",
+                        extract_pipe, "inputnode.restore_T1")
 
-            elif "fast" in params.keys():
+                elif "N4debias" in params.keys():
+                    # brain extraction
+                    seg_pipe.connect(
+                        N4debias_T2, "output_image",
+                        extract_pipe, "inputnode.restore_T1")
 
-                # brain extraction
-                seg_pipe.connect(
-                    fast_T1, ("restored_image", show_files),
-                    extract_pipe, "inputnode.restore_T1")
+                elif "fast" in params.keys():
+
+                    # brain extraction
+                    seg_pipe.connect(
+                        fast_T2, ("restored_image", show_files),
+                        extract_pipe, "inputnode.restore_T1")
+                else:
+
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.preproc_T2',
+                        extract_pipe, "inputnode.restore_T1")
+
             else:
 
-                seg_pipe.connect(
-                    data_preparation_pipe, 'outputnode.preproc_T1',
-                    extract_pipe, "inputnode.restore_T1")
+                if "correct_bias_pipe" in params:
+                    seg_pipe.connect(
+                        correct_bias_pipe, "outputnode.debiased_T1",
+                        extract_pipe, "inputnode.restore_T1")
+
+                elif "N4debias" in params.keys():
+                    # brain extraction
+                    seg_pipe.connect(
+                        N4debias_T1, "output_image",
+                        extract_pipe, "inputnode.restore_T1")
+
+                elif "fast" in params.keys():
+
+                    # brain extraction
+                    seg_pipe.connect(
+                        fast_T1, ("restored_image", show_files),
+                        extract_pipe, "inputnode.restore_T1")
+                else:
+
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.preproc_T1',
+                        extract_pipe, "inputnode.restore_T1")
 
             # outputnode
             seg_pipe.connect(
