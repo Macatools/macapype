@@ -75,7 +75,7 @@ def create_extract_pipe(params_template, params={},
                             name='atlas_brex')
 
     if "smooth" in params.keys():
-        extract_pipe.connect(smooth, 'out_file',
+        extract_pipe.connect(smooth, 'smoothed_file',
                              atlas_brex, 't1_restored_file')
     else:
 
