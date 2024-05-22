@@ -4,9 +4,9 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 
-from nipype.interfaces.niftyreg import reg
+from nipype.interfaces.niftyreg import reg, regutils
 
-from nipype.interfaces.niftyreg import regutils
+from nipype.interfaces.ants.utils import ImageMath
 
 from nipype.interfaces.ants.segmentation import DenoiseImage
 
@@ -395,6 +395,48 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'flo_file')
 
+        # pad image T2
+        pad_image_T2 = pe.Node(
+            ImageMath(),
+            name="pad_image_T2")
+
+        pad_image_T2.inputs.copy_header = True
+        pad_image_T2.inputs.operation = "PadImage"
+        pad_image_T2.inputs.op2 = '200'
+
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T2, 'outputnode.std_img',
+                pad_image_T2, "op1")
+
+        else:
+            data_preparation_pipe.connect(
+                av_T2, 'avg_img',
+                pad_image_T2, "op1")
+
+        # resampling using transfo on much bigger image
+        reg_resample_T2 = pe.Node(
+            regutils.RegResample(pad_val=0.0),
+            name="reg_resample_T2")
+
+        data_preparation_pipe.connect(
+            align_T2_on_T1, 'aff_file',
+            reg_resample_T2, 'trans_file')
+
+        data_preparation_pipe.connect(
+            pad_image_T2, 'output_image',
+            reg_resample_T2, "flo_file")
+
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                reg_resample_T2, "ref_file")
+
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                reg_resample_T2, "ref_file")
+
     # align avg T2 on avg T1
     else:
 
@@ -429,7 +471,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
+                reg_resample_T2, 'out_file',
                 outputnode, 'native_T1')
         else:
             data_preparation_pipe.connect(
@@ -449,7 +491,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
+                reg_resample_T2, 'out_file',
                 outputnode, 'native_T2')
         else:
             data_preparation_pipe.connect(
@@ -490,8 +532,9 @@ def create_short_preparation_pipe(params, params_template={},
                                           crop_T1, 'in_file')
 
         if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(align_T2_on_T1, "res_file",
-                                          crop_T2, 'in_file')
+            data_preparation_pipe.connect(
+                reg_resample_T2, 'out_file',
+                crop_T2, 'in_file')
 
         else:
             data_preparation_pipe.connect(align_T2_on_T1, "out_file",
@@ -527,8 +570,9 @@ def create_short_preparation_pipe(params, params_template={},
             name='apply_crop_aladin_T2')
 
         if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(align_T2_on_T1, "res_file",
-                                          apply_crop_aladin_T2, 'flo_file')
+            data_preparation_pipe.connect(
+                reg_resample_T2, 'out_file',
+                apply_crop_aladin_T2, 'flo_file')
 
         else:
             data_preparation_pipe.connect(align_T2_on_T1, "out_file",
@@ -678,7 +722,7 @@ def create_short_preparation_pipe(params, params_template={},
         # T2 to pad
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
-                align_T2_on_T1, "res_file",
+                reg_resample_T2, 'out_file',
                 resample_T2_pad, "flo_file")
 
         else:
@@ -687,6 +731,8 @@ def create_short_preparation_pipe(params, params_template={},
                 resample_T2_pad, "flo_file")
 
         if "padded_template_head" in params_template.keys():
+            print("Found padded_template_head in template_stereo")
+
             resample_T1_pad.inputs.ref_file = \
                 params_template["padded_template_head"]
 
@@ -694,6 +740,10 @@ def create_short_preparation_pipe(params, params_template={},
                 params_template["padded_template_head"]
 
         elif "template_head" in params_template.keys():
+            if "pad_val" in params["resample_T1_pad"].keys():
+                pad_val = params["resample_T1_pad"]["pad_val"]
+                print("Found pad_val {}".format(pad_val))
+
             # padding versio of the template
             pad_template = NodeParams(
                 niu.Function(

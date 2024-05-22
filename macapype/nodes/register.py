@@ -190,15 +190,14 @@ class IterREGBETInputSpec(CommandLineInputSpec):
         mandatory=False, argstr="-refw %s")
 
     k = traits.Bool(
-        False, usedefault=True,
-        position=3, argstr="-k",
+        False, usedefault=True, argstr="-k",
         desc="Will keep temporary files",
         mandatory=False)
 
     p = traits.String(
         desc="Prefix for running FSL functions\
             (can be a path or just a prefix)",
-        position=3, argstr="-p %s")
+        argstr="-p %s")
 
 
 class IterREGBETOutputSpec(TraitedSpec):
@@ -749,11 +748,26 @@ def pad_zero_mri(img_file, pad_val=10, const=0):
         img_arr = np.array(img.dataobj)
         img_arr_copy = np.copy(img_arr)
 
-        img_arr_copy_padded = np.pad(
-            img_arr_copy,
-            pad_width=pad_val,
-            mode='constant',
-            constant_values=const)
+        if isinstance(pad_val, int):
+            print("running with pad_val")
+
+            img_arr_copy_padded = np.pad(
+                img_arr_copy,
+                pad_width=pad_val,
+                mode='constant',
+                constant_values=const)
+
+        elif pad_val == 'double':
+
+            pad_val = np.max(img_arr.shape)
+
+            print(f"running with double pad_val = {pad_val}")
+
+            img_arr_copy_padded = np.pad(
+                img_arr_copy,
+                pad_width=pad_val,
+                mode='constant',
+                constant_values=const)
 
         img_padded = nib.Nifti1Image(img_arr_copy_padded,
                                      header=img.header,

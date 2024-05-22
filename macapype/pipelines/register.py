@@ -590,29 +590,50 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                 reg_T1_on_template, 'res_file',
                 crop_z_T1, 'in_file')
 
-    # remove nans
-    remove_nans = pe.Node(
-        fsl.maths.MathsCommand(nan2zeros=True),
-        name="remove_nans")
+    pad_image_T1 = pe.Node(
+        ants.utils.ImageMath(),
+        name="pad_image_T1")
 
-    if "crop_z_T1" in params.keys():
+    pad_image_T1.inputs.copy_header = True
+    pad_image_T1.inputs.operation = "PadImage"
+    pad_image_T1.inputs.op2 = '200'
+
+    if "pre_crop_z_T1" in params.keys():
         reg_pipe.connect(
-            crop_z_T1, 'out_roi',
-            remove_nans, "in_file")
+            pre_crop_z_T1, 'out_roi',
+            pad_image_T1, "op1")
 
     else:
-        if "reg_T1_on_template2" in params.keys():
-            reg_pipe.connect(
-                reg_T1_on_template2, 'res_file',
-                remove_nans, "in_file")
+        reg_pipe.connect(
+            inputnode, 'native_T1',
+            pad_image_T1, "op1")
 
-        else:
-            reg_pipe.connect(
-                reg_T1_on_template, 'res_file',
-                remove_nans, "in_file")
+    # resampling using transfo on much bigger image
+    reg_resample_T1 = pe.Node(
+        regutils.RegResample(pad_val=0.0),
+        name="reg_resample_T1")
+
+    # transfo
+    if "reg_T1_on_template2" in params.keys():
+        reg_pipe.connect(
+            compose_transfo, 'out_file',
+            reg_resample_T1, 'trans_file')
+
+    else:
+        reg_pipe.connect(
+            reg_T1_on_template, 'aff_file',
+            reg_resample_T1, 'trans_file')
+
+    reg_pipe.connect(
+        pad_image_T1, 'output_image',
+        reg_resample_T1, "flo_file")
+
+    reg_pipe.connect(
+            inputnode, 'stereo_template_T1',
+            reg_resample_T1, "ref_file")
 
     # outputnode
-    reg_pipe.connect(remove_nans, 'out_file',
+    reg_pipe.connect(reg_resample_T1, 'out_file',
                      outputnode, "stereo_T1")
 
     if "reg_T1_on_template2" in params.keys():
