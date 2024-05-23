@@ -1446,7 +1446,7 @@ def create_full_ants_subpipes(
                      brain_segment_pipe, 'inputnode.indiv_params')
 
     if 'use_T2' in params['brain_segment_pipe'].keys():
-
+        # using T2
         if "masked_correct_bias_pipe" in params.keys():
             seg_pipe.connect(
                 masked_correct_bias_pipe, 'outputnode.mask_debiased_T2',
@@ -1481,34 +1481,34 @@ def create_full_ants_subpipes(
                 debias, 't2_debiased_file',
                 brain_segment_pipe, 'inputnode.debiased_T1')
 
-    else:
-
-        if "correct_bias_pipe" in params.keys():
-            seg_pipe.connect(
-                correct_bias_pipe, "outputnode.debiased_T1",
-                brain_segment_pipe, 'inputnode.debiased_T1')
-
-        elif "N4debias" in params.keys():
-            seg_pipe.connect(
-                N4debias_T1, "output_image",
-                brain_segment_pipe, 'inputnode.debiased_T1')
-
-        elif "fast" in params.keys():
-            seg_pipe.connect(
-                fast_T1, ("restored_image", show_files),
-                brain_segment_pipe, 'inputnode.debiased_T1')
-
         else:
-            seg_pipe.connect(
-                data_preparation_pipe, 'outputnode.preproc_T1',
-                brain_segment_pipe, 'inputnode.debiased_T1')
 
-        seg_pipe.connect(
-            restore_mask_T1, 'out_file',
-            brain_segment_pipe, 'inputnode.masked_debiased_T1')
+            if "correct_bias_pipe" in params.keys():
+                seg_pipe.connect(
+                    correct_bias_pipe, "outputnode.debiased_T2",
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            elif "N4debias" in params.keys():
+                seg_pipe.connect(
+                    N4debias_T2, "output_image",
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            elif "fast" in params.keys():
+                seg_pipe.connect(
+                    fast_T2, ("restored_image", show_files),
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            else:
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.preproc_T2',
+                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+            seg_pipe.connect(
+                restore_mask_T1, 'out_file',
+                brain_segment_pipe, 'inputnode.masked_debiased_T1')
 
     else:
-
+        # using T1
         if "masked_correct_bias_pipe" in params.keys():
             seg_pipe.connect(
                 masked_correct_bias_pipe, 'outputnode.mask_debiased_T1',
