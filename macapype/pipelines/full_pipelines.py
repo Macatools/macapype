@@ -1446,6 +1446,7 @@ def create_full_ants_subpipes(
                      brain_segment_pipe, 'inputnode.indiv_params')
 
     if 'use_T2' in params['brain_segment_pipe'].keys():
+
         # using T2
         if "masked_correct_bias_pipe" in params.keys():
             seg_pipe.connect(
@@ -1504,10 +1505,11 @@ def create_full_ants_subpipes(
                     brain_segment_pipe, 'inputnode.debiased_T1')
 
             seg_pipe.connect(
-                restore_mask_T1, 'out_file',
+                restore_mask_T2, 'out_file',
                 brain_segment_pipe, 'inputnode.masked_debiased_T1')
 
     else:
+
         # using T1
         if "masked_correct_bias_pipe" in params.keys():
             seg_pipe.connect(
