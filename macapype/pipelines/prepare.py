@@ -750,12 +750,12 @@ def create_short_preparation_pipe(params, params_template={},
 
             #  resample_T1_pad
             data_preparation_pipe.connect(
-                pad_template, 'padded_img_file',
+                pad_template, 'output_image',
                 resample_T1_pad, "ref_file")
 
             #  resample_T2_pad
             data_preparation_pipe.connect(
-                pad_template, 'padded_img_file',
+                pad_template, 'output_image',
                 resample_T2_pad, "ref_file")
 
         else:
