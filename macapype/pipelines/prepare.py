@@ -741,7 +741,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         elif "template_head" in params_template.keys():
 
-            pad_template = pe.NodeParams(
+            pad_template = NodeParams(
                 ImageMath(),
                 params=parse_key(params, "pad_template"),
                 name="pad_template")
