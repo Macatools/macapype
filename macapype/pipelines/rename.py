@@ -81,7 +81,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_inv_trans, 'out_file',
             datasink, '@stereo_to_native_trans')
 
-    if "resample_T1_pad" in params["short_preparation_pipe"].keys():
+    if "pad_template" in params["short_preparation_pipe"].keys():
 
         rename_stereo_padded_T1 = pe.Node(
             niu.Rename(),

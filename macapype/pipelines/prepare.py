@@ -697,7 +697,7 @@ def create_short_preparation_pipe(params, params_template={},
                     outputnode, 'preproc_T2')
 
     # resample T1 to higher dimension
-    if "resample_T1_pad" in params.keys():
+    if "pad_template" in params.keys():
 
         resample_T1_pad = pe.Node(
             regutils.RegResample(),
@@ -740,29 +740,22 @@ def create_short_preparation_pipe(params, params_template={},
                 params_template["padded_template_head"]
 
         elif "template_head" in params_template.keys():
-            if "pad_val" in params["resample_T1_pad"].keys():
-                pad_val = params["resample_T1_pad"]["pad_val"]
-                print("Found pad_val {}".format(pad_val))
 
-            # padding versio of the template
             pad_template = NodeParams(
-                niu.Function(
-                    input_names=["img_file", "pad_val", "const"],
-                    output_names=["padded_img_file"],
-                    function=pad_zero_mri),
-                params=parse_key(params, "resample_T1_pad"),
+                ImageMath(),
+                params=parse_key(params, "pad_template"),
                 name="pad_template")
 
-            pad_template.inputs.img_file = params_template["template_head"]
+            pad_template.inputs.op1 = params_template["template_head"]
 
             #  resample_T1_pad
             data_preparation_pipe.connect(
-                pad_template, 'padded_img_file',
+                pad_template, 'output_image',
                 resample_T1_pad, "ref_file")
 
             #  resample_T2_pad
             data_preparation_pipe.connect(
-                pad_template, 'padded_img_file',
+                pad_template, 'output_image',
                 resample_T2_pad, "ref_file")
 
         else:
