@@ -1,7 +1,6 @@
 
-from ..base import TraitedSpec, File, traits, isdefined
-from .base import ANTSCommand, ANTSCommandInputSpec
-
+from nipype.interfaces.base import (ANTSCommand, ANTSCommandInputSpec)
+from nipype.interfaces.base import TraitedSpec, File, traits, isdefined
 
 class DenoiseImageInputSpec(ANTSCommandInputSpec):
     dimension = traits.Enum(
