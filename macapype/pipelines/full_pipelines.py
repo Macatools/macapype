@@ -1630,7 +1630,7 @@ def create_full_ants_subpipes(
             ImageMath(),
             params=parse_key(params["short_preparation_pipe"],
                              "pad_template"),
-            name="pad_stereo_brain_mask")
+            name="pad_stereo_stereo_brain_mask")
 
         seg_pipe.connect(
             brain_segment_pipe, "outputnode.segmented_file",
