@@ -1185,7 +1185,8 @@ def create_full_ants_subpipes(
 
                 pad_stereo_brain_mask = NodeParams(
                     ImageMath(),
-                    params=parse_key(params, "pad_template"),
+                    params=parse_key(params["short_preparation_pipe"],
+                                     "pad_template"),
                     name="pad_stereo_brain_mask")
 
                 seg_pipe.connect(
@@ -1195,6 +1196,7 @@ def create_full_ants_subpipes(
                 seg_pipe.connect(
                     pad_stereo_brain_mask, "output_image",
                     outputnode, "stereo_padded_brain_mask")
+
             if pad:
                 pad_back(
                     seg_pipe, data_preparation_pipe, inputnode,
