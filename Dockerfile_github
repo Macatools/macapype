@@ -44,7 +44,7 @@ RUN pip3 install xvfbwrapper \
     pydot \
     rdflib \
     pbr \
-    nibabel==3.2.2 \
+    nibabel \
     packaging \
     pytest \
     install \

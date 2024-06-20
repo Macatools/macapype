@@ -36,7 +36,7 @@ RUN python -m pip install xvfbwrapper \
     pydot \
     rdflib \
     pbr \
-    nibabel\
+    nibabel \
     packaging \
     pytest \
     install \
