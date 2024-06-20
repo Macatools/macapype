@@ -8,6 +8,8 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces import fsl
 from nipype.interfaces import ants
 
+from nipype.interfaces.ants.utils import ImageMath
+
 from nipype.interfaces.niftyreg.regutils import RegResample
 
 from ..utils.utils_nodes import NodeParams
@@ -128,7 +130,8 @@ def create_full_spm_subpipes(
             "stereo_padded_T1",
             "stereo_padded_T2",
 
-            'stereo_brain_mask', 'stereo_debiased_T1',
+            'stereo_brain_mask',
+            'stereo_debiased_T1',
             'stereo_debiased_T2',
             'stereo_masked_debiased_T1',
             'stereo_masked_debiased_T2',
@@ -871,13 +874,16 @@ def create_full_ants_subpipes(
                     'stereo_debiased_T1', 'stereo_debiased_T2',
                     "native_debiased_T1", "native_debiased_T2",
 
-                    'stereo_brain_mask', 'stereo_masked_debiased_T1',
+                    'stereo_brain_mask',
+                    'stereo_padded_brain_mask',
+                    'stereo_masked_debiased_T1',
                     'stereo_masked_debiased_T2',
 
                     'native_brain_mask', "native_masked_debiased_T1",
                     "native_masked_debiased_T2",
 
                     'stereo_segmented_brain_mask',
+                    'stereo_padded_segmented_brain_mask',
                     'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
                     "stereo_gen_5tt",
 
@@ -1175,6 +1181,22 @@ def create_full_ants_subpipes(
             seg_pipe.connect(
                 extract_pipe, "smooth_mask.out_file",
                 outputnode, "stereo_brain_mask")
+
+            if "pad_template" in params["short_preparation_pipe"].keys():
+
+                pad_stereo_brain_mask = NodeParams(
+                    ImageMath(),
+                    params=parse_key(params["short_preparation_pipe"],
+                                     "pad_template"),
+                    name="pad_stereo_brain_mask")
+
+                seg_pipe.connect(
+                    extract_pipe, "smooth_mask.out_file",
+                    pad_stereo_brain_mask, "op1")
+
+                seg_pipe.connect(
+                    pad_stereo_brain_mask, "output_image",
+                    outputnode, "stereo_padded_brain_mask")
 
             if pad:
                 pad_back(
@@ -1602,6 +1624,21 @@ def create_full_ants_subpipes(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params)
+
+    if "pad_template" in params["short_preparation_pipe"].keys():
+        pad_stereo_stereo_brain_mask = NodeParams(
+            ImageMath(),
+            params=parse_key(params["short_preparation_pipe"],
+                             "pad_template"),
+            name="pad_stereo_stereo_brain_mask")
+
+        seg_pipe.connect(
+            brain_segment_pipe, "outputnode.segmented_file",
+            pad_stereo_stereo_brain_mask, "op1")
+
+        seg_pipe.connect(
+            pad_stereo_stereo_brain_mask, "output_image",
+            outputnode, "stereo_padded_segmented_brain_mask")
 
     # ############################################## export 5tt
 

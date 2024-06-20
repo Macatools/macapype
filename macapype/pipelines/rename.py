@@ -176,6 +176,24 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_brain_mask, 'out_file',
             datasink, '@stereo_brain_mask')
 
+        if "pad_template" in params["short_preparation_pipe"].keys():
+
+            rename_stereo_padded_brain_mask = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_padded_brain_mask")
+            rename_stereo_padded_brain_mask.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-pad_desc-brain_mask"
+            rename_stereo_padded_brain_mask.inputs.parse_string = parse_str
+            rename_stereo_padded_brain_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_padded_brain_mask',
+                rename_stereo_padded_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_padded_brain_mask, 'out_file',
+                datasink, '@stereo_padded_brain_mask')
+
     if "masked_correct_bias_pipe" in params.keys():
 
         # rename masked_debiased_T1
@@ -339,6 +357,26 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         main_workflow.connect(
             rename_stereo_segmented_brain_mask, 'out_file',
             datasink, '@stereo_segmented_brain_mask')
+
+        if "pad_template" in params["short_preparation_pipe"].keys():
+
+            rename_stereo_padded_segmented_brain_mask = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_padded_segmented_brain_mask")
+            rename_stereo_padded_segmented_brain_mask.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-pad_desc-brain_dseg"
+            rename_stereo_padded_segmented_brain_mask.inputs.parse_string = \
+                parse_str
+            rename_stereo_padded_segmented_brain_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe,
+                'outputnode.stereo_padded_segmented_brain_mask',
+                rename_stereo_padded_segmented_brain_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_padded_segmented_brain_mask, 'out_file',
+                datasink, '@stereo_padded_segmented_brain_mask')
 
         # rename 5tt
         if "export_5tt_pipe" in params["brain_segment_pipe"].keys():
