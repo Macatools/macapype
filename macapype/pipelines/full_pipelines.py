@@ -638,14 +638,17 @@ def create_brain_segment_from_mask_pipe(
         segment_atropos_pipe = create_segment_atropos_seg_pipe(
             params=parse_key(params, "segment_atropos_pipe"))
 
-        if "register_NMT_pipe" in params:
-            brain_segment_pipe.connect(
-                register_NMT_pipe, 'outputnode.native_template_seg',
-                segment_atropos_pipe, "inputnode.seg_file")
-        elif "reg" in params:
-            brain_segment_pipe.connect(
-                register_seg_to_nat, 'out_file',
-                segment_atropos_pipe, "inputnode.seg_file")
+        # linking priors if "use_priors" in params
+        if "use_priors" in params["segment_atropos_pipe"].keys():
+
+            if "register_NMT_pipe" in params:
+                brain_segment_pipe.connect(
+                    register_NMT_pipe, 'outputnode.native_template_seg',
+                    segment_atropos_pipe, "inputnode.seg_file")
+            elif "reg" in params:
+                brain_segment_pipe.connect(
+                    register_seg_to_nat, 'out_file',
+                    segment_atropos_pipe, "inputnode.seg_file")
     else:
         print("#### create_segment_atropos_pipe (3 tissues) ")
 
@@ -665,8 +668,8 @@ def create_brain_segment_from_mask_pipe(
                 brain_segment_pipe.connect(
                     register_NMT_pipe,  'outputnode.native_template_wm',
                     segment_atropos_pipe, "inputnode.wm_prior_file")
-            elif "reg" in params:
 
+            elif "reg" in params:
                 print("To be validated...")
                 brain_segment_pipe.connect(
                     register_csf_to_nat, "out_file",
