@@ -172,6 +172,12 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
 
     # merging probseg
     for tissue, index_tissue in tissue_dict.items():
+
+        if "use_priors" in params.keys():
+            post_pat = "SegmentationPosteriors{:02d}"
+        else:
+            post_pat = "SegmentationPosteriors{}"
+
         if isinstance(index_tissue, list):
 
             # Merging as file list
@@ -182,7 +188,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                 segment_pipe.connect(
                     seg_at,
                     ('segmented_files', get_pattern,
-                     "SegmentationPosteriors{:02d}".format(
+                     post_pat.format(
                          int(sub_index_tissue))),
                     merge_list, 'in' + str(index+1))
 
@@ -207,7 +213,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
             segment_pipe.connect(
                 seg_at,
                 ('segmented_files', get_pattern,
-                 "SegmentationPosteriors{:02d}".format(int(index_tissue))),
+                 post_pat.format(int(index_tissue))),
                 outputnode, 'prob_'+tissue)
 
     return segment_pipe
