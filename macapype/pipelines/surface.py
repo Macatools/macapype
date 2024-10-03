@@ -10,7 +10,8 @@ import macapype.nodes.register as reg
 
 from macapype.nodes.surface import (Meshify, split_LR_mask,
                                     wrap_nii2mesh,
-                                    wrap_afni_IsoSurface, merge_tissues)
+                                    wrap_afni_IsoSurface, merge_tissues,
+                                    keep_gcc)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
@@ -658,12 +659,22 @@ def create_nii2mesh_brain_pipe(params={},
     nii2mesh_brain_pipe.connect(inputnode, 'segmented_file',
                                 merge_brain_tissues, 'dseg_file')
 
-    # bin mask
+    # bin_mask
     bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
     bin_mask.inputs.operation = "bin"
 
     nii2mesh_brain_pipe.connect(merge_brain_tissues,
                                 'mask_file', bin_mask, 'in_file')
+
+    # keep_gcc_bin_mask
+    keep_gcc_bin_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_bin_mask")
+
+    nii2mesh_brain_pipe.connect(bin_mask, "out_file",
+                                keep_gcc_bin_mask, "nii_file")
 
     # wmgm2mesh
     wmgm2mesh = pe.Node(
@@ -672,7 +683,7 @@ def create_nii2mesh_brain_pipe(params={},
                                function=wrap_nii2mesh),
         name="wmgm2mesh")
 
-    nii2mesh_brain_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
+    nii2mesh_brain_pipe.connect(keep_gcc_bin_mask, 'gcc_nii_file', wmgm2mesh, "nii_file")
 
     # outputnode
     outputnode = pe.Node(
@@ -680,7 +691,7 @@ def create_nii2mesh_brain_pipe(params={},
             fields=["wmgm_stl", "wmgm_nii"]),
         name='outputnode')
 
-    nii2mesh_brain_pipe.connect(bin_mask, 'out_file', outputnode, "wmgm_nii")
+    nii2mesh_brain_pipe.connect(keep_gcc_bin_mask, 'gcc_nii_file', outputnode, "wmgm_nii")
     nii2mesh_brain_pipe.connect(wmgm2mesh, 'stl_file', outputnode, "wmgm_stl")
 
     return nii2mesh_brain_pipe
