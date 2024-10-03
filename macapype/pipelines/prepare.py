@@ -457,8 +457,6 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'in_file')
 
-
-
     # auto cropping and register to stereo
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
