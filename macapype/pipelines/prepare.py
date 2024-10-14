@@ -765,25 +765,13 @@ def create_short_preparation_pipe(params, params_template={},
             resample_T2_pad, "trans_file")
 
         # outputnode
-        if "use_T2" in params.keys():
+        data_preparation_pipe.connect(
+            resample_T1_pad, 'out_file',
+            outputnode, 'stereo_padded_T1')
 
-            data_preparation_pipe.connect(
-                resample_T1_pad, 'out_file',
-                outputnode, 'stereo_padded_T2')
-
-            data_preparation_pipe.connect(
-                resample_T2_pad, 'out_file',
-                outputnode, 'stereo_padded_T1')
-
-        else:
-
-            data_preparation_pipe.connect(
-                resample_T1_pad, 'out_file',
-                outputnode, 'stereo_padded_T1')
-
-            data_preparation_pipe.connect(
-                resample_T2_pad, 'out_file',
-                outputnode, 'stereo_padded_T2')
+        data_preparation_pipe.connect(
+            resample_T2_pad, 'out_file',
+            outputnode, 'stereo_padded_T2')
 
     return data_preparation_pipe
 
