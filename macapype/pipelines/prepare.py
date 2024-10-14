@@ -689,39 +689,21 @@ def create_short_preparation_pipe(params, params_template={},
             name="resample_T2_pad")
 
         if "denoise" in params.keys():
-            if "use_T2" in params.keys():
-                data_preparation_pipe.connect(
-                    denoise_T1, 'output_image',
-                    resample_T2_pad, "flo_file")
+            data_preparation_pipe.connect(
+                denoise_T1, 'output_image',
+                resample_T1_pad, "flo_file")
 
-                data_preparation_pipe.connect(
-                    denoise_T2, 'output_image',
-                    resample_T1_pad, "flo_file")
-            else:
-                data_preparation_pipe.connect(
-                    denoise_T1, 'output_image',
-                    resample_T1_pad, "flo_file")
-
-                data_preparation_pipe.connect(
-                    denoise_T2, 'output_image',
-                    resample_T2_pad, "flo_file")
+            data_preparation_pipe.connect(
+                denoise_T2, 'output_image',
+                resample_T2_pad, "flo_file")
         else:
-            if "use_T2" in params.keys():
-                data_preparation_pipe.connect(
-                    crop_aladin_pipe, "outputnode.stereo_T1",
-                    resample_T2_pad, "flo_file")
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                resample_T1_pad, "flo_file")
 
-                data_preparation_pipe.connect(
-                    apply_crop_aladin_T2, 'out_file',
-                    resample_T1_pad, "flo_file")
-            else:
-                data_preparation_pipe.connect(
-                    crop_aladin_pipe, "outputnode.stereo_T1",
-                    resample_T1_pad, "flo_file")
-
-                data_preparation_pipe.connect(
-                    apply_crop_aladin_T2, 'out_file',
-                    resample_T2_pad, "flo_file")
+            data_preparation_pipe.connect(
+                apply_crop_aladin_T2, 'out_file',
+                resample_T2_pad, "flo_file")
 
         if "padded_template_head" in params_template.keys():
             print("Found padded_template_head in template_stereo")
@@ -765,13 +747,25 @@ def create_short_preparation_pipe(params, params_template={},
             resample_T2_pad, "trans_file")
 
         # outputnode
-        data_preparation_pipe.connect(
-            resample_T1_pad, 'out_file',
-            outputnode, 'stereo_padded_T1')
+        if "use_T2" in params.keys():
 
-        data_preparation_pipe.connect(
-            resample_T2_pad, 'out_file',
-            outputnode, 'stereo_padded_T2')
+            data_preparation_pipe.connect(
+                resample_T1_pad, 'out_file',
+                outputnode, 'stereo_padded_T2')
+
+            data_preparation_pipe.connect(
+                resample_T2_pad, 'out_file',
+                outputnode, 'stereo_padded_T1')
+
+        else:
+
+            data_preparation_pipe.connect(
+                resample_T1_pad, 'out_file',
+                outputnode, 'stereo_padded_T1')
+
+            data_preparation_pipe.connect(
+                resample_T2_pad, 'out_file',
+                outputnode, 'stereo_padded_T2')
 
     return data_preparation_pipe
 
