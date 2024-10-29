@@ -716,6 +716,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         elif "template_head" in params_template.keys():
 
+            print("***** Found pad_template and using template_head ")
             pad_template = NodeParams(
                 ImageMath(),
                 params=parse_key(params, "pad_template"),
