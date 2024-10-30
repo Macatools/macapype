@@ -135,8 +135,8 @@ def wrap_afni_IsoSurface(nii_file):
     remesh = 0.5
 
     # Tsmooth
-    KPB = 0.01
-    NITER = 100
+    KPB = 0.001
+    NITER = 1000
 
     # remesh
     remesh = 0.5
