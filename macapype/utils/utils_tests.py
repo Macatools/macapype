@@ -27,7 +27,8 @@ def _download_data_zip(data_zip, name):
         server = cloud_elem["server"]
 
         if "cloud_format" in list(cloud_elem.keys()):
-            oc_path = cloud_elem["cloud_format"].format(server, data_dir[name])
+            oc_path = cloud_elem["cloud_format"].format(server,
+                                                        data_dir[name])
         elif "cloud_format_3" in list(cloud_elem.keys()):
             oc_path = cloud_elem["cloud_format_3"].format(server,
                                                           data_dir[name], name)
