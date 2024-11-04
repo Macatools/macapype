@@ -22,7 +22,6 @@ def _download_data_zip(data_zip, name):
         data_dir = cloud_elem["data_dir"]
 
         if name not in data_dir.keys():
-
             print("{} not found in {}".format(name, key))
             continue
         server = cloud_elem["server"]
