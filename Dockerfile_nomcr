@@ -38,14 +38,15 @@ RUN python -m pip install xvfbwrapper \
     pbr \
     nibabel \
     packaging \
-    pytest \
-    install \
-    graphviz \
+    pytest
+
+RUN python -m pip install graphviz \
     pybids \
     nipype \
     nilearn \
     scikit-image \
     brain-slam
+
 
 ############################################# install macapype
 
