@@ -30,12 +30,19 @@ def _download_data_zip(data_zip, name):
 
         if "cloud_format" in list(cloud_elem.keys()):
             oc_path = cloud_elem["cloud_format"].format(server, data_dir[name])
-        elif "cloud_format_3" in list(cloud_elem.keys()):
-            oc_path = cloud_elem["cloud_format_3"].format(server,
-                                                          data_dir[name], name)
 
-        cmd = 'wget --no-check-certificate  \
-            --content-disposition  {} -O {} '.format(oc_path, data_zip)
+            cmd = 'curl  {} -output {} '.format(oc_path, data_zip)
+
+        else:
+            if "cloud_format" in list(cloud_elem.keys()):
+                oc_path = cloud_elem["cloud_format"].format(server,
+                                                            data_dir[name])
+            elif "cloud_format_3" in list(cloud_elem.keys()):
+                oc_path = cloud_elem["cloud_format_3"].format(
+                    server, data_dir[name], name)
+
+            cmd = 'wget --no-check-certificate  \
+                --content-disposition  {} -O {} '.format(oc_path, data_zip)
 
         val = subprocess.call(cmd.split())
 
