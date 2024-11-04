@@ -25,6 +25,7 @@
             "bma-1": "29qRZrnHnBxtCGB",
             "bma-1_0p2mm": "YoLAFawKMTi7FqR"
             },
-        "cloud_format": "{}/public.php?service=files&t={}&download"
+        "cloud_format": "{}/public.php?service=files&t={}&download",
+        "curl_cloud_format": "{}/public.php/dav/files/{}"
     }
 }
