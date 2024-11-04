@@ -2,7 +2,6 @@ from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
 
 
 def keep_gcc(nii_file):
-
     import os
     import nibabel as nib
     import numpy as np
