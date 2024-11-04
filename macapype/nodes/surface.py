@@ -1,13 +1,10 @@
-from nipype.interfaces.base import TraitedSpec, SimpleInterface
-from nipype.interfaces.base import traits, File
+from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
 
 
 def keep_gcc(nii_file):
-
     import os
     import nibabel as nib
     import numpy as np
-
     from nipype.utils.filemanip import split_filename as split_f
 
     def getLargestCC(segmentation):
@@ -27,8 +24,6 @@ def keep_gcc(nii_file):
     # numpy
     data[data > 0] = 1
     binary = np.array(data, dtype="bool")
-
-    # skimage
 
     # skimage GCC
     new_data = getLargestCC(binary)
@@ -135,8 +130,8 @@ def wrap_afni_IsoSurface(nii_file):
     remesh = 0.5
 
     # Tsmooth
-    KPB = 0.1
-    NITER = 100
+    KPB = 0.0001
+    NITER = 10000
 
     # remesh
     remesh = 0.5

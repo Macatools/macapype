@@ -457,47 +457,6 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(av_T2, 'avg_img',
                                           align_T2_on_T1, 'in_file')
 
-    # outputnode
-    if "use_T2" in params.keys():
-
-        if "avg_reorient_pipe" in params.keys():
-            data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
-                outputnode, 'native_T2')
-        else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                outputnode, 'native_T2')
-
-        if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(
-                reg_resample_T2, 'out_file',
-                outputnode, 'native_T1')
-        else:
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "out_file",
-                outputnode, 'native_T1')
-
-    else:
-
-        if "avg_reorient_pipe" in params.keys():
-            data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
-                outputnode, 'native_T1')
-        else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                outputnode, 'native_T1')
-
-        if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(
-                reg_resample_T2, 'out_file',
-                outputnode, 'native_T2')
-        else:
-            data_preparation_pipe.connect(
-                align_T2_on_T1, "out_file",
-                outputnode, 'native_T2')
-
     # auto cropping and register to stereo
     if "crop_T1" in params.keys():
         print('crop_T1 is in params')
@@ -539,14 +498,67 @@ def create_short_preparation_pipe(params, params_template={},
         else:
             data_preparation_pipe.connect(align_T2_on_T1, "out_file",
                                           crop_T2, 'in_file')
+        data_preparation_pipe.connect(
+            crop_T1, "roi_file",
+            outputnode, 'native_T1')
 
+        data_preparation_pipe.connect(
+            crop_T2, "roi_file",
+            outputnode, 'native_T2')
     else:
 
-        # register T1 to stereo image
-        crop_aladin_pipe = create_crop_aladin_pipe(
-            "crop_aladin_pipe",
-            params=parse_key(params, "crop_aladin_pipe"))
+        # outputnode
+        if "use_T2" in params.keys():
 
+            if "avg_reorient_pipe" in params.keys():
+                data_preparation_pipe.connect(
+                    av_T1, 'outputnode.std_img',
+                    outputnode, 'native_T2')
+            else:
+                data_preparation_pipe.connect(
+                    av_T1, 'avg_img',
+                    outputnode, 'native_T2')
+
+            if 'aladin_T2_on_T1' in params.keys():
+                data_preparation_pipe.connect(
+                    reg_resample_T2, 'out_file',
+                    outputnode, 'native_T1')
+            else:
+                data_preparation_pipe.connect(
+                    align_T2_on_T1, "out_file",
+                    outputnode, 'native_T1')
+
+        else:
+
+            if "avg_reorient_pipe" in params.keys():
+                data_preparation_pipe.connect(
+                    av_T1, 'outputnode.std_img',
+                    outputnode, 'native_T1')
+            else:
+                data_preparation_pipe.connect(
+                    av_T1, 'avg_img',
+                    outputnode, 'native_T1')
+
+            if 'aladin_T2_on_T1' in params.keys():
+                data_preparation_pipe.connect(
+                    reg_resample_T2, 'out_file',
+                    outputnode, 'native_T2')
+            else:
+                data_preparation_pipe.connect(
+                    align_T2_on_T1, "out_file",
+                    outputnode, 'native_T2')
+
+    # register T1 to stereo image
+    crop_aladin_pipe = create_crop_aladin_pipe(
+        "crop_aladin_pipe",
+        params=parse_key(params, "crop_aladin_pipe"))
+
+    if "crop_T1" in params.keys():
+        data_preparation_pipe.connect(
+            crop_T1, "roi_file",
+            crop_aladin_pipe, 'inputnode.native_T1')
+
+    else:
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
@@ -557,53 +569,53 @@ def create_short_preparation_pipe(params, params_template={},
                 av_T1, 'avg_img',
                 crop_aladin_pipe, 'inputnode.native_T1')
 
+    data_preparation_pipe.connect(
+        inputnode, 'indiv_params',
+        crop_aladin_pipe, 'inputnode.indiv_params')
+
+    crop_aladin_pipe.inputs.inputnode.stereo_template_T1 = \
+        params_template["template_head"]
+
+    # apply reg_resample to T2
+    apply_crop_aladin_T2 = NodeParams(
+        regutils.RegResample(),
+        name='apply_crop_aladin_T2')
+
+    if 'aladin_T2_on_T1' in params.keys():
         data_preparation_pipe.connect(
-            inputnode, 'indiv_params',
-            crop_aladin_pipe, 'inputnode.indiv_params')
+            reg_resample_T2, 'out_file',
+            apply_crop_aladin_T2, 'flo_file')
 
-        crop_aladin_pipe.inputs.inputnode.stereo_template_T1 = \
-            params_template["template_head"]
+    else:
+        data_preparation_pipe.connect(align_T2_on_T1, "out_file",
+                                      apply_crop_aladin_T2, 'flo_file')
 
-        # apply reg_resample to T2
-        apply_crop_aladin_T2 = NodeParams(
-            regutils.RegResample(),
-            name='apply_crop_aladin_T2')
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+        apply_crop_aladin_T2, 'trans_file')
 
-        if 'aladin_T2_on_T1' in params.keys():
-            data_preparation_pipe.connect(
-                reg_resample_T2, 'out_file',
-                apply_crop_aladin_T2, 'flo_file')
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.stereo_T1',
+        apply_crop_aladin_T2, 'ref_file')
 
-        else:
-            data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                          apply_crop_aladin_T2, 'flo_file')
+    # compute inv transfo
+    inv_tranfo = NodeParams(
+        regutils.RegTransform(),
+        params=parse_key(params, "inv_transfo_aladin"),
+        name='inv_tranfo')
 
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            apply_crop_aladin_T2, 'trans_file')
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+        inv_tranfo, 'inv_aff_input')
 
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.stereo_T1',
-            apply_crop_aladin_T2, 'ref_file')
+    # outputnode (transfo)
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+        outputnode, 'native_to_stereo_trans')
 
-        # compute inv transfo
-        inv_tranfo = NodeParams(
-            regutils.RegTransform(),
-            params=parse_key(params, "inv_transfo_aladin"),
-            name='inv_tranfo')
-
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            inv_tranfo, 'inv_aff_input')
-
-        # outputnode (transfo)
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            outputnode, 'native_to_stereo_trans')
-
-        data_preparation_pipe.connect(
-            inv_tranfo, 'out_file',
-            outputnode, 'stereo_to_native_trans')
+    data_preparation_pipe.connect(
+        inv_tranfo, 'out_file',
+        outputnode, 'stereo_to_native_trans')
 
     # denoise with Ants package
     if "denoise" in params.keys():
@@ -616,22 +628,13 @@ def create_short_preparation_pipe(params, params_template={},
                                 params=parse_key(params, "denoise"),
                                 name="denoise_T2")
         # inputs
-        if "crop_T1" in params.keys():
-            data_preparation_pipe.connect(crop_T1, "roi_file",
-                                          denoise_T1, 'input_image')
+        data_preparation_pipe.connect(
+            crop_aladin_pipe, "outputnode.stereo_T1",
+            denoise_T1, 'input_image')
 
-            data_preparation_pipe.connect(crop_T2, "roi_file",
-                                          denoise_T2, 'input_image')
-
-        else:
-
-            data_preparation_pipe.connect(
-                crop_aladin_pipe, "outputnode.stereo_T1",
-                denoise_T1, 'input_image')
-
-            data_preparation_pipe.connect(
-                apply_crop_aladin_T2, 'out_file',
-                denoise_T2, 'input_image')
+        data_preparation_pipe.connect(
+            apply_crop_aladin_T2, 'out_file',
+            denoise_T2, 'input_image')
 
         # outputs
         if "use_T2" in params.keys():
@@ -654,47 +657,25 @@ def create_short_preparation_pipe(params, params_template={},
                 outputnode, 'preproc_T2')
     else:
 
-        if "crop_T1" in params.keys():
+        if "use_T2" in params.keys():
 
-            if "use_T2" in params.keys():
-                data_preparation_pipe.connect(
-                    crop_T1, "roi_file",
-                    outputnode, 'preproc_T2')
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                outputnode, 'preproc_T2')
 
-                data_preparation_pipe.connect(
-                    crop_T2, "roi_file",
-                    outputnode, 'preproc_T1')
-            else:
-
-                data_preparation_pipe.connect(
-                    crop_T1, "roi_file",
-                    outputnode, 'preproc_T1')
-
-                data_preparation_pipe.connect(
-                    crop_T2, "roi_file",
-                    outputnode, 'preproc_T2')
+            data_preparation_pipe.connect(
+                apply_crop_aladin_T2, 'out_file',
+                outputnode, 'preproc_T1')
 
         else:
 
-            if "use_T2" in params.keys():
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                outputnode, 'preproc_T1')
 
-                data_preparation_pipe.connect(
-                    crop_aladin_pipe, "outputnode.stereo_T1",
-                    outputnode, 'preproc_T2')
-
-                data_preparation_pipe.connect(
-                    apply_crop_aladin_T2, 'out_file',
-                    outputnode, 'preproc_T1')
-
-            else:
-
-                data_preparation_pipe.connect(
-                    crop_aladin_pipe, "outputnode.stereo_T1",
-                    outputnode, 'preproc_T1')
-
-                data_preparation_pipe.connect(
-                    apply_crop_aladin_T2, 'out_file',
-                    outputnode, 'preproc_T2')
+            data_preparation_pipe.connect(
+                apply_crop_aladin_T2, 'out_file',
+                outputnode, 'preproc_T2')
 
     # resample T1 to higher dimension
     if "pad_template" in params.keys():
@@ -707,28 +688,23 @@ def create_short_preparation_pipe(params, params_template={},
             regutils.RegResample(),
             name="resample_T2_pad")
 
-        # T1 to pad
         if "avg_reorient_pipe" in params.keys():
-
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
                 resample_T1_pad, "flo_file")
-
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
                 resample_T1_pad, "flo_file")
 
-        # T2 to pad
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
                 reg_resample_T2, 'out_file',
                 resample_T2_pad, "flo_file")
-
         else:
             data_preparation_pipe.connect(
                 align_T2_on_T1, "out_file",
-                resample_T2_pad, "flo_file")
+                outputnode, 'native_T2')
 
         if "padded_template_head" in params_template.keys():
             print("Found padded_template_head in template_stereo")
@@ -741,6 +717,7 @@ def create_short_preparation_pipe(params, params_template={},
 
         elif "template_head" in params_template.keys():
 
+            print("***** Found pad_template and using template_head ")
             pad_template = NodeParams(
                 ImageMath(),
                 params=parse_key(params, "pad_template"),
@@ -1044,13 +1021,22 @@ def create_short_preparation_T1_pipe(params, params_template,
             inputnode, ("indiv_params", parse_key, "crop_T1"),
             crop_T1, 'indiv_params')
 
+    # register T1 to stereo image
+    crop_aladin_pipe = create_crop_aladin_pipe(
+        "crop_aladin_pipe",
+        params=parse_key(params, "crop_aladin_pipe"))
+
+    # register T1 to stereo image
+    crop_aladin_pipe = create_crop_aladin_pipe(
+        "crop_aladin_pipe",
+        params=parse_key(params, "crop_aladin_pipe"))
+
+    if "crop_T1" in params.keys():
+        data_preparation_pipe.connect(
+            crop_T1, "roi_file",
+            crop_aladin_pipe, 'inputnode.native_T1')
+
     else:
-
-        # register T1 to stereo image
-        crop_aladin_pipe = create_crop_aladin_pipe(
-            "crop_aladin_pipe",
-            params=parse_key(params, "crop_aladin_pipe"))
-
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
@@ -1061,31 +1047,31 @@ def create_short_preparation_T1_pipe(params, params_template,
                 av_T1, 'avg_img',
                 crop_aladin_pipe, 'inputnode.native_T1')
 
-        data_preparation_pipe.connect(
-            inputnode, 'indiv_params',
-            crop_aladin_pipe, 'inputnode.indiv_params')
+    data_preparation_pipe.connect(
+        inputnode, 'indiv_params',
+        crop_aladin_pipe, 'inputnode.indiv_params')
 
-        crop_aladin_pipe.inputs.inputnode.stereo_template_T1 = \
-            params_template["template_head"]
+    crop_aladin_pipe.inputs.inputnode.stereo_template_T1 = \
+        params_template["template_head"]
 
-        # compute inv transfo
-        inv_tranfo = NodeParams(
-            regutils.RegTransform(),
-            params=parse_key(params, "inv_transfo_aladin"),
-            name='inv_tranfo')
+    # compute inv transfo
+    inv_tranfo = NodeParams(
+        regutils.RegTransform(),
+        params=parse_key(params, "inv_transfo_aladin"),
+        name='inv_tranfo')
 
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            inv_tranfo, 'inv_aff_input')
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+        inv_tranfo, 'inv_aff_input')
 
-        # outputnode
-        data_preparation_pipe.connect(
-            crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
-            outputnode, 'native_to_stereo_trans')
+    # outputnode
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.native_to_stereo_trans',
+        outputnode, 'native_to_stereo_trans')
 
-        data_preparation_pipe.connect(
-            inv_tranfo, 'out_file',
-            outputnode, 'stereo_to_native_trans')
+    data_preparation_pipe.connect(
+        inv_tranfo, 'out_file',
+        outputnode, 'stereo_to_native_trans')
 
     if "denoise" in params.keys():
 

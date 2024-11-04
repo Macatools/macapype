@@ -22,14 +22,13 @@ def _download_data_zip(data_zip, name):
         data_dir = cloud_elem["data_dir"]
 
         if name not in data_dir.keys():
-
             print("{} not found in {}".format(name, key))
             continue
-
         server = cloud_elem["server"]
 
         if "curl_cloud_format" in list(cloud_elem.keys()):
-            oc_path = cloud_elem["curl_cloud_format"].format(server, data_dir[name])
+            oc_path = cloud_elem["curl_cloud_format"].format(server,
+                                                             data_dir[name])
 
             cmd = 'curl  {} --output {} '.format(oc_path, data_zip)
 
