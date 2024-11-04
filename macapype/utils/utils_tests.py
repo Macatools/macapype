@@ -31,7 +31,7 @@ def _download_data_zip(data_zip, name):
         if "cloud_format" in list(cloud_elem.keys()):
             oc_path = cloud_elem["cloud_format"].format(server, data_dir[name])
 
-            cmd = 'curl  {} -output {} '.format(oc_path, data_zip)
+            cmd = 'curl  {} --output {} '.format(oc_path, data_zip)
 
         else:
             if "cloud_format" in list(cloud_elem.keys()):
