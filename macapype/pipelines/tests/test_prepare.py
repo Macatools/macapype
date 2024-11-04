@@ -48,8 +48,11 @@ def test_create_crop_T1_short_preparation_pipe():
         }
     }
 
+    params_template = {"template_head": ""}
+
     # running workflow
     segment_pnh = create_short_preparation_pipe(
+        params_template=params_template,
         params=parse_key(params, "short_preparation_pipe"),
         name="short_manual_preparation_pipe")
 
