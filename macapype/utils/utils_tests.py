@@ -25,7 +25,6 @@ def _download_data_zip(data_zip, name):
 
             print("{} not found in {}".format(name, key))
             continue
-
         server = cloud_elem["server"]
 
         if "cloud_format" in list(cloud_elem.keys()):
