@@ -37,7 +37,7 @@ jobs:
 
       - name: Download dataset
         run: |
-            curl https://amubox.univ-amu.fr/public.php?/dav/files/KJ2L5j6L6orPXxM --output macapype_CI.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI.zip
             unzip -o macapype_CI.zip -d macapype_CI
 
       - name: Running all test pipelines (macaque)
