@@ -1,5 +1,4 @@
-from nipype.interfaces.base import TraitedSpec, SimpleInterface
-from nipype.interfaces.base import traits, File
+from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
 
 
 def keep_gcc(nii_file):
