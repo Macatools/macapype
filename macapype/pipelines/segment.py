@@ -10,7 +10,7 @@ from ..nodes.segment import (AtroposN4, merge_masks,
                              compute_5tt, fill_list_vol)
 
 
-from macapype.nodes.surface import wrap_afni_IsoSurface
+from macapype.nodes.surface import IsoSurface
 
 from ..utils.misc import (gunzip, merge_3_elem_to_list,
                           get_pattern, get_list_length, get_index)
@@ -1047,9 +1047,7 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
 
     # wmgm2mesh
     wmgm2mesh = pe.Node(
-        interface=niu.Function(input_names=["nii_file"],
-                               output_names=["stl_file"],
-                               function=wrap_afni_IsoSurface),
+        interface=IsoSurface(),
         name="wmgm2mesh")
 
     seg_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
