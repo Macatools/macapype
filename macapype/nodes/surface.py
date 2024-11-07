@@ -1,4 +1,5 @@
-from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
+from nipype.interfaces.base import (
+    TraitedSpec, SimpleInterface, traits, File, AFNICommandLine)
 
 
 def keep_gcc(nii_file):
@@ -147,7 +148,7 @@ class IsoSurfaceInputSpec(CommandLineInputSpec):
         100,
         usedefault=True,
         desc='NITER',
-        requires = ["KPB"]
+        requires=["KPB"],
         mandatory=True, position=-1, argstr="%d")
 
     remesh = traits.Float(
