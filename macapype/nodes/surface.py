@@ -135,7 +135,8 @@ class IsoSurfaceInputSpec(CommandLineInputSpec):
         position=2, argstr="-o %s")
 
     isoval = traits.Float(
-        1,
+        1.0,
+        usedefault=True,
         desc='isoval',
         mandatory=True, argstr="-isoval %f")
 
