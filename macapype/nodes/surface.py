@@ -1,5 +1,5 @@
 from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
-from nipype.interfaces.afni.base import AFNICommandLine
+from nipype.interfaces.afni.base import AFNICommandBase
 
 def keep_gcc(nii_file):
     import os
@@ -171,7 +171,7 @@ class IsoSurfaceOutputSpec(TraitedSpec):
         exists=True, desc="stl file")
 
 
-class IsoSurface(AFNICommandLine):
+class IsoSurface(AFNICommandBase):
     """Description: Wrap of antsIsoSurface.sh
 
     Inputs:
