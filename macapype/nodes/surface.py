@@ -3,6 +3,7 @@ from nipype.interfaces.base import (
 
 from nipype.interfaces.afni.base import AFNICommandBase
 
+
 def keep_gcc(nii_file):
     import os
     import nibabel as nib
@@ -117,7 +118,6 @@ def wrap_nii2mesh(nii_file):
     return stl_file
 
 
-## TODO
 # IsoSurface
 class IsoSurfaceInputSpec(CommandLineInputSpec):
 
@@ -141,8 +141,9 @@ class IsoSurfaceInputSpec(CommandLineInputSpec):
 
     KPB = traits.Float(
         0.01,
-        usedefault = True,
+        usedefault=True,
         desc='Smoothing ',
+        requires=["NITER"],
         mandatory=True, position=-2, argstr="-Tsmooth %f")
 
     NITER = traits.Int(
@@ -216,8 +217,6 @@ class IsoSurface(AFNICommandBase):
     output_spec = IsoSurfaceOutputSpec
 
     _cmd = 'IsoSurface'
-
-
 
 
 def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
