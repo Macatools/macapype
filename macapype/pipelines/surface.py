@@ -10,7 +10,7 @@ import macapype.nodes.register as reg
 
 from macapype.nodes.surface import (Meshify, split_LR_mask,
                                     wrap_nii2mesh,
-                                    wrap_afni_IsoSurface, merge_tissues,
+                                    IsoSurface, merge_tissues,
                                     keep_gcc)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
@@ -740,11 +740,8 @@ def create_IsoSurface_brain_pipe(params={},
                                   keep_gcc_bin_mask, "nii_file")
 
     # wmgm2mesh
-    wmgm2mesh = pe.Node(
-        interface=niu.Function(input_names=["nii_file"],
-                               output_names=["stl_file"],
-                               function=wrap_afni_IsoSurface),
-        name="wmgm2mesh")
+    wmgm2mesh = pe.Node(interface=IsoSurface(),
+                        name="wmgm2mesh")
 
     IsoSurface_brain_pipe.connect(keep_gcc_bin_mask, 'gcc_nii_file',
                                   wmgm2mesh, "nii_file")

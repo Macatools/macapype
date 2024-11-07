@@ -1,4 +1,7 @@
-from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
+from nipype.interfaces.base import (
+    TraitedSpec, SimpleInterface, traits, File, CommandLineInputSpec)
+
+from nipype.interfaces.afni.base import AFNICommandBase
 
 
 def keep_gcc(nii_file):
@@ -115,51 +118,106 @@ def wrap_nii2mesh(nii_file):
     return stl_file
 
 
-# ### wrapping afni IsoSurface
-def wrap_afni_IsoSurface(nii_file):
+# IsoSurface
+class IsoSurfaceInputSpec(CommandLineInputSpec):
 
-    import os
-    from nipype.utils.filemanip import split_filename as split_f
+    nii_file = File(
+        exists=True,
+        desc='brain_file',
+        mandatory=True, position=1, argstr="-input %s")
 
-    path, fname, ext = split_f(nii_file)
+    stl_file = File(
+        name_source=["nii_file"],
+        name_template="%s.stl",
+        desc="stl file",
+        exists=True,
+        keep_extension=False,
+        position=2, argstr="-o %s")
 
-    stl_file = os.path.abspath(fname + ".stl")
+    isoval = traits.Float(
+        1.0,
+        usedefault=True,
+        desc='isoval',
+        mandatory=True, argstr="-isoval %f")
 
-    # parameters
-    isoval = 1
-    remesh = 0.5
+    KPB = traits.Float(
+        0.01,
+        usedefault=True,
+        desc='Smoothing ',
+        requires=["NITER"],
+        mandatory=True, position=-2, argstr="-Tsmooth %f")
 
-    # Tsmooth
-    KPB = 0.0001
-    NITER = 10000
+    NITER = traits.Int(
+        100,
+        usedefault=True,
+        desc='NITER',
+        requires=["KPB"],
+        mandatory=True, position=-1, argstr="%d")
 
-    # remesh
-    remesh = 0.5
+    remesh = traits.Float(
+        0.5, usedefault=True,
+        desc='EDGE_FRACTION',
+        mandatory=True, argstr="-remesh %f")
 
-    # options
-    overwrite = True
-    autocrop = True
+    autocrop = traits.Bool(
+        True,
+        desc='autocrop',
+        mandatory=False, argstr="-autocrop")
 
-    # command
-    cmd = "IsoSurface"
-    cmd += " -isoval {}".format(isoval)
-    cmd += " -input {}".format(nii_file)
-    cmd += " -Tsmooth {} {}".format(KPB, NITER)
-    cmd += " -remesh {}".format(remesh)
-    if overwrite:
-        cmd += " -overwrite"
-    if autocrop:
-        cmd += " -autocrop"
-    cmd += " -o {}".format(stl_file)
+    overwrite = traits.Bool(
+        True,
+        desc='overwrite',
+        mandatory=False, argstr="-overwrite")
 
-    print(cmd)
 
-    ret = os.system(cmd)
+class IsoSurfaceOutputSpec(TraitedSpec):
+    stl_file = File(
+        exists=True, desc="stl file")
 
-    print(ret)
 
-    assert ret == 0, "Error, cmd {} did not work".format(cmd)
-    return stl_file
+class IsoSurface(AFNICommandBase):
+    """Description: Wrap of antsIsoSurface.sh
+
+    Inputs:
+
+        Mandatory:
+
+            nii_file
+                File, 'brain_file',
+
+            stl_file:
+                File, "stl file",
+
+            isoval
+                Float, 1, desc='isoval',
+
+    ,       KPB
+                Float, 0.01, 'Smoothing'
+
+            NITER
+                Int, 100 , 'NITER'
+
+            remesh
+                Float, 0.5 'EDGE_FRACTION',
+
+        Optional:
+
+            autocrop :
+                Bool, 'autocrop',
+
+            overwrite :
+                Bool, 'overwrite'
+
+    Outputs:
+
+        stl_file :
+            File, desc="stl file"
+
+    """
+    input_spec = IsoSurfaceInputSpec
+    output_spec = IsoSurfaceOutputSpec
+
+    _cmd = 'IsoSurface'
 
 
 def split_LR_mask(LR_mask_file, left_index=1, right_index=2):
