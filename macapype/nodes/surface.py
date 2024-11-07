@@ -157,7 +157,7 @@ class IsoSurfaceInputSpec(CommandLineInputSpec):
     remesh = traits.Float(
         0.5, usedefault=True,
         desc='EDGE_FRACTION',
-        mandatory=True, argstr="-w %f")
+        mandatory=True, argstr="-remesh %f")
 
     autocrop = traits.Bool(
         True,
