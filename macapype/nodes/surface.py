@@ -1,4 +1,6 @@
-from nipype.interfaces.base import (TraitedSpec, SimpleInterface, traits, File)
+from nipype.interfaces.base import (
+    TraitedSpec, SimpleInterface, traits, File, CommandLineInputSpec)
+
 from nipype.interfaces.afni.base import AFNICommandBase
 
 def keep_gcc(nii_file):
