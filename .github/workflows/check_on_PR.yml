@@ -21,9 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-            pip install codecov pytest pytest-cov
-            pip install -e .
-            pip install flake8
+            pip install -e .[test]
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
