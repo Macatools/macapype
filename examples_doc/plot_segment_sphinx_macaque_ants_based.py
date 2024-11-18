@@ -42,7 +42,7 @@ os.system(cmd)
 import matplotlib.pyplot as plt  # noqa
 
 fig, axs = plt.subplots(1, 1, figsize=(36, 24))
-axs[0].imshow(plt.imread(orig_T1))
-axs[0].axis('off')
+axs.imshow(plt.imread(orig_T1))
+axs.axis('off')
 
 plt.show()
