@@ -209,7 +209,7 @@ texinfo_documents = [
 intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 
 sphinx_gallery_conf = {
-    'examples_dirs': '../examples',
+    'examples_dirs': '../examples_doc',
     'gallery_dirs': 'auto_examples',
     'filename_pattern': '^((?!sgskip).)*$',
     'backreferences_dir': 'generated',
@@ -225,7 +225,7 @@ sphinx_gallery_conf = {
 import sys
 import os.path as op
 
-path = op.join(op.dirname(__file__), '../examples/')
+path = op.join(op.dirname(__file__), '../examples_doc/')
 sys.path.insert(0, path)
 
 #from visbrain.config import CONFIG

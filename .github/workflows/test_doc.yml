@@ -4,7 +4,6 @@ on:
   push:
     branches: [ test_doc ]
 
-
 jobs:
   build:
 
@@ -26,7 +25,6 @@ jobs:
       - name: Test with pytest
         run:
             py.test --cov macapype --ignore=examples/ --ignore=run_examples/
-
 
       - name: Build the Doc 🔧
         run: |
