@@ -28,7 +28,7 @@ doc_deps = ['sphinx',
             'sphinx_bootstrap_theme',
             'numpydoc',
             'sphinxcontrib-fulltoc',
-            'matpotlib']
+            'matplotlib']
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
