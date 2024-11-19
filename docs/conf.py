@@ -218,7 +218,7 @@ sphinx_gallery_conf = {
         "numpy": "http://docs.scipy.org/doc/numpy-1.9.1",
         "scipy": "http://docs.scipy.org/doc/scipy-0.17.0/reference",
         "nipype": "https://nipype.readthedocs.io/en/latest",
-        "macapype": "http://macatools.github.io/macapype/"
+        "macapype": "http://macatools.github.io/macapype"
     }
 }
 
