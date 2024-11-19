@@ -15,3 +15,7 @@ Macapype
 ..    | |logo1| |
 ..    +---------+
 ..
+
+.. image:: ./img/logo/logo_macapype_0.3.jpg
+    :width: 600
+    :align: center
