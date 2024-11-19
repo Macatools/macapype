@@ -206,7 +206,7 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
+intersphinx_mapping = {"python": ("https://docs.python.org", None)}
 
 sphinx_gallery_conf = {
     'examples_dirs': '../examples_doc',
@@ -215,17 +215,13 @@ sphinx_gallery_conf = {
     'backreferences_dir': 'generated',
     'within_subsection_order': FileNameSortKey,
     "reference_url": {
-        "numpy": "http://docs.scipy.org/doc/numpy-1.9.1",
-        "scipy": "http://docs.scipy.org/doc/scipy-0.17.0/reference",
-        "nipype": "https://nipype.readthedocs.io/en/latest",
-        "macapype": "http://macatools.github.io/macapype"
     }
 }
 
 import sys
 import os.path as op
 
-path = op.join(op.dirname(__file__), '../examples_doc/')
+path = op.join(op.dirname(__file__), "../examples_doc")
 sys.path.insert(0, path)
 
 #from visbrain.config import CONFIG
