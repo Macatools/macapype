@@ -20,29 +20,29 @@ from macapype.utils.utils_tests import load_test_data
 # Testing plot in local
 ##############################################################################
 
-orig_data_path = load_test_data("data_test_sphinx_macaque")
-
-##############################################################################
-# Data preparation
-##############################################################################
-
+#orig_data_path = load_test_data("data_test_sphinx_macaque")
 
 ###############################################################################
-## Reorient
-##==========================
+## Data preparation
+###############################################################################
 
 
-orig_T1_file = op.join(orig_data_path, "sub-ziggy_T1w.nii")
+################################################################################
+### Reorient
+###==========================
 
-# displaying results
-orig_T1 = os.path.join(orig_data_path, "orig_T1.png")
-cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(orig_T1, orig_T1_file)
-os.system(cmd)
 
-import matplotlib.pyplot as plt  # noqa
+#orig_T1_file = op.join(orig_data_path, "sub-ziggy_T1w.nii")
 
-fig, axs = plt.subplots(1, 1, figsize=(36, 24))
-axs.imshow(plt.imread(orig_T1))
-axs.axis('off')
+## displaying results
+#orig_T1 = os.path.join(orig_data_path, "orig_T1.png")
+#cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(orig_T1, orig_T1_file)
+#os.system(cmd)
 
-plt.show()
+#import matplotlib.pyplot as plt  # noqa
+
+#fig, axs = plt.subplots(1, 1, figsize=(36, 24))
+#axs.imshow(plt.imread(orig_T1))
+#axs.axis('off')
+
+#plt.show()
