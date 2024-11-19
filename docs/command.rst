@@ -9,17 +9,17 @@ Launching a processing
 Commands
 ********
 
-The main file is located in workflows and is called segment_petra.py and should be called like a python script:
+The main file is located in workflows and is called segment_pnh.py and should be called like a python script:
 
 .. code:: bash
 
-    $ python workflows/segment_petra.py
+    $ python workflows/segment_pnh.py
 
-**N.B. if you have installed the pypi version (e.g. using pip install macapype) or a docker/singularity version, you can replace the previous command by the following command:**
+**N.B. if you have installed the pypi version (e.g. using pip install skullTo3d) or a docker/singularity version, you can replace the previous command by the following command:**
 
 .. code:: bash
 
-    $ segment_petra
+    $ segment_pnh
 
 
 
@@ -27,11 +27,11 @@ For container (docker and singularity), here are some examples - add your proper
 
 .. code:: bash
 
-    $ docker run -B binding_to_host:binding_guest macatools/skullto3d:latest segment_petra
+    $ docker run -B binding_to_host:binding_guest macatools/macapype:latest segment_pnh
 
 .. code:: bash
 
-    $ singularity run -v binding_to_host:binding_guest /path/to/containers/skullto3d_v0.0.4.1.sif segment_petra
+    $ singularity run -v binding_to_host:binding_guest /path/to/containers/macapype_v0.0.4.1.sif segment_pnh
 
 Expected input data
 *******************
@@ -43,10 +43,6 @@ In particular:
 
 * _T1w (BIDS) extension is expected for T1 weighted images (BIDS)
 * _T2w (BIDS) extension is expected for T2 weighted images (BIDS)
-* _PDw (BIDS) or petra (non-BIDS) extensions are expected for petra images
-
-* _acq-CT_T2star (BIDS, but non canonical) extension is expected for CT images
-* _angio extension is expected for angiography images
 
 
 Command line parameters
@@ -56,21 +52,19 @@ Command line parameters
 The following parameters are mandatory
 --------------------------------------
 
-* -data  *like in macapype*
+* -data
 the path to your data dataset (existing BIDS format directory)
 
-* -out  *like in macapype*
+* -out
 the path to the output results (an existing path)
 
-* -soft  *like in macapype*
+* -soft
 can be one of these : SPM or ANTS
-    * with _skull after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed)
-    * with _robustreg (at the end) to have a more robust registration (in two steps) *like in macapype*
-    * with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png) *like in macapype*
-    * with _prep (at the end) will perform data preparation (no brain extraction and segmentation) *like in macapype*
-    * with _noseg (at the end) will perform data preparation and brain extraction (no segmentation) *like in macapype*
-    * with _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1) *like in macapype*
-
+    * with _robustreg (at the end) to have a more robust registration (in two steps)
+    * with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
+    * with _prep (at the end) will perform data preparation (no brain extraction and segmentation)
+    * with _noseg (at the end) will perform data preparation and brain extraction (no segmentation)
+    * with _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1)
 
 --------------------------------------
 The following parameters are exclusive
@@ -88,13 +82,9 @@ The following parameters are optional
 --------------------------------------
 *(but highly recommanded)*
 
-* -brain_dt  *equivalent to -dt in macapype*
+* dt
 specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").
 **Note** : default is T1 if the attribute is omitted
-
-* -skull_dt  *specific to skullTo3d*
-specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT", "angio" or a combination of the latter (with space(s) in between).
-**Note** : default is T1 if the attribute is omitted.
 
 * -deriv  creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
 
@@ -124,13 +114,13 @@ Command line examples
 
 .. code:: bash
 
-    $ python workflows/segment_petra.py -data ~/Data_maca -out ./local_test -soft ANTS_skull -params params.json
+    $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft ANTS -params params.json
 
 
 .. code:: bash
 
-    $ python workflows/segment_petra.py -data ~/Data_maca -out ./local_test -soft ANTS_skull_robustreg -species macaque
+    $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft ANTS_robustreg -species macaque
 
 .. code:: bash
 
-    $ python workflows/segment_petra.py -data ~/Data_maca -out ./local_test -soft ANTS_skull -params params.json -sub Apache Baron -ses 01 -rec mean -deriv -pad
+    $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft ANTS -params params.json -sub Apache Baron -ses 01 -rec mean -deriv -pad

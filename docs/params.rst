@@ -12,7 +12,7 @@ All the params spefications are in each function of the API, as well the spefica
 
 Here is an example of the params.json corresponding to :class:`segment_pnh_spm_based pipeline <macapype.pipelines.full_pipelines.create_full_spm_subpipes>` for macaque:
 
-.. include:: ../workflows/params_segment_macaque_ants_skull.json
+.. include:: ../workflows/params_segment_macaque_ants.json
    :literal:
 
 Advanced parameters settings

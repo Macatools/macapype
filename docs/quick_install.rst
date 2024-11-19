@@ -27,15 +27,15 @@ SkullTo3d relies on python packages. Here we provide installations using Anacond
 Creating environment with all packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "skullTo3d", but can be called the name you prefer):
+In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
 
 .. code-block:: bash
 
     $ conda init bash
-    $ conda create -n skullTo3d_env python=3.7
-    $ conda activate skullTo3d_env
+    $ conda create -n macapype_env python=3.10
+    $ conda activate macapype_env
 
-Install skullTo3d package
+Install macapype package
 ########################
 
 from github
@@ -48,8 +48,8 @@ Using git
 
 .. code:: bash
 
-    $ git clone https://github.com/Macatools/skullTo3d.git
-    $ cd skullTo3d
+    $ git clone https://github.com/Macatools/macapype.git
+    $ cd macapype
     $ python setup.py develop --user
 
 Using pip
@@ -57,35 +57,35 @@ Using pip
 
 .. code:: bash
 
-    $ pip install git+https://github.com/Macatools/skullTo3d
+    $ pip install git+https://github.com/Macatools/macapype
 
 .. _pip_install:
 
 from pypi
 ---------
 
-SkullTo3d is available on * `pypi.org <https://pypi.org/project/skullTo3d/>`_:
+SkullTo3d is available on * `pypi.org <https://pypi.org/project/macapype/>`_:
 
 If 'pip' package is installed on your system, you can install the lastest stable version with:
 
 .. code:: bash
 
-    $ pip install skullTo3d
+    $ pip install macapype
 
 
 From conda
 -----------
 
-SkullTo3d is also available on `Anaconda cloud <https://anaconda.org/macatools/skullTo3d>`_:
+SkullTo3d is also available on `Anaconda cloud <https://anaconda.org/macatools/macapype>`_:
 
 If 'conda' (Anaconda, or miniconda) is installed on your system, you can type:
 
 .. code:: bash
 
-    $ conda install -c macatools skullTo3d
+    $ conda install -c macatools macapype
 
-!!!! The lastest version of skullTo3d (0.2.1) is not available, due to the inclusion of packages that are not yet packaged in conda
-use "pip install skullTo3d" or "git clone https://github.com/Macatools/skullTo3d.git" till further notice
+!!!! The latest versions of macapype (from > 0.2.1) are not available, due to the inclusion of packages that are not yet packaged in conda
+use "pip install macapype" or "git clone https://github.com/Macatools/macapype.git" till further notice
 
 Testing the install
 ###################
@@ -97,4 +97,4 @@ Testing the install
 
 .. code:: ipython
 
-    In [1]: import skullTo3d; print (skullTo3d.__version__)
+    In [1]: import macapype; print (macapype.__version__)
