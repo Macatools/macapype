@@ -111,7 +111,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_logo = "img/logo/logo_macapype_0.3.jpg"
+html_logo = "_images/logo_macapype_0.3.jpg"
 
 html_sidebars = {'**': ['localtoc.html'],
    'using/windows': ['windowssidebar.html']}
