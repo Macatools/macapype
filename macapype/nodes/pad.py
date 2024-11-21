@@ -1,9 +1,6 @@
 
 
-import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
-
-from macapype.nodes.prepare import padding_cropped_img
 
 from nipype.interfaces.niftyreg.regutils import RegResample
 

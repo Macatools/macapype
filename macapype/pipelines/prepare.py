@@ -13,7 +13,7 @@ from nipype.interfaces.ants.segmentation import DenoiseImage
 from ..utils.utils_nodes import NodeParams
 from ..utils.misc import parse_key
 
-from ..nodes.prepare import average_align, FslOrient
+from ..nodes.prepare import average_align
 
 from ..nodes.register import pad_zero_mri
 
@@ -73,6 +73,7 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
 ###############################################################################
 # main pipeline: "short_preparation_pipe"
 ###############################################################################
+
 
 def create_short_preparation_pipe(params, params_template={},
                                   name="short_preparation_pipe"):
