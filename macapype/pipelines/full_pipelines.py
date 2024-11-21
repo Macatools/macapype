@@ -20,8 +20,7 @@ from macapype.nodes.register import IterREGBET
 from macapype.nodes.pad import pad_back
 
 from .prepare import (create_short_preparation_pipe,
-                      create_short_preparation_T1_pipe,
-                      create_long_single_preparation_pipe,)
+                      create_short_preparation_T1_pipe)
 
 from .segment import (create_old_segment_pipe,
                       create_native_old_segment_pipe,
@@ -155,19 +154,16 @@ def create_full_spm_subpipes(
             'stereo_to_native_trans',
             "native_to_stereo_trans"]),
         name='outputnode')
-    # preprocessing
-    if 'long_single_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_single_preparation_pipe(
-            params=parse_key(params, "long_single_preparation_pipe"))
 
-    elif 'short_preparation_pipe' in params.keys():
+    # preprocessing
+    if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
             params_template=params_template_stereo)
 
     else:
-        print("Error, short_preparation_pipe, long_single_preparation_pipe or\
-            long_multi_preparation_pipe was not found in params, skipping")
+        print("Error, short_preparation_pipe, \
+            was not found in params, skipping")
 
         test_node = pe.Node(niu.Function(input_names=['list_T1', 'list_T2'],
                                          output_names=[''],
@@ -207,16 +203,15 @@ def create_full_spm_subpipes(
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
                      outputnode, "stereo_padded_T2")
 
-    if "short_preparation_pipe" in params.keys():
-        if "crop_T1" not in params["short_preparation_pipe"].keys():
+    if "crop_T1" not in params["short_preparation_pipe"].keys():
 
-            seg_pipe.connect(data_preparation_pipe,
-                             "outputnode.stereo_to_native_trans",
-                             outputnode, 'stereo_to_native_trans')
+        seg_pipe.connect(data_preparation_pipe,
+                         "outputnode.stereo_to_native_trans",
+                         outputnode, 'stereo_to_native_trans')
 
-            seg_pipe.connect(data_preparation_pipe,
-                             "outputnode.native_to_stereo_trans",
-                             outputnode, 'native_to_stereo_trans')
+        seg_pipe.connect(data_preparation_pipe,
+                         "outputnode.native_to_stereo_trans",
+                         outputnode, 'native_to_stereo_trans')
 
     # debias
     debias = NodeParams(T1xT2BiasFieldCorrection(),
@@ -810,11 +805,7 @@ def create_full_ants_subpipes(
     Params:
 
     - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
-    <macapype.pipelines.prepare.create_short_preparation_pipe>`) or \
-    long_single_preparation_pipe \
-    (see :class:`create_long_single_preparation_pipe \
-    <macapype.pipelines.prepare.create_long_single_preparation_pipe>`) or \
-    long_multi_preparation_pipe \
+    <macapype.pipelines.prepare.create_short_preparation_pipe>`)
 
     - brain_extraction_pipe (see :class:`create_brain_extraction_pipe \
     <macapype.pipelines.full_pipelines.create_brain_extraction_pipe>`)
@@ -903,18 +894,14 @@ def create_full_ants_subpipes(
         name='outputnode')
 
     # preprocessing
-    if 'long_single_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_long_single_preparation_pipe(
-            params=parse_key(params, "long_single_preparation_pipe"))
-
-    elif 'short_preparation_pipe' in params.keys():
+    if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
             params_template=params_template_stereo)
 
     else:
-        print("Error, short_preparation_pipe, long_single_preparation_pipe or\
-            long_multi_preparation_pipe was not found in params, skipping")
+        print("Error, short_preparation_pipe \
+            was not found in params, skipping")
 
         test_node = pe.Node(niu.Function(input_names=['list_T1', 'list_T2'],
                                          output_names=[''],

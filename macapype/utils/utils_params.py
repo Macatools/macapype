@@ -82,44 +82,11 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                     if "crop_T1" in indiv.keys():
                         count_T1_crops += 1
 
-                        if "crop_T2" in indiv.keys() and 't1' not in ssoft:
-
-                            count_long_crops += 1
-
-                            crop_T1_args = indiv["crop_T1"]["args"]
-                            crop_T2_args = indiv["crop_T2"]["args"]
-                            if isinstance(crop_T1_args, list) and \
-                                    isinstance(crop_T2_args, list):
-
-                                count_multi_long_crops += 1
-
             print("count_all_sessions {}".format(count_all_sessions))
             print("count_T1_crops {}".format(count_T1_crops))
-            print("count_long_crops {}".format(count_long_crops))
-            print("count_multi_long_crops {}".format(
-                count_multi_long_crops))
 
             if count_all_sessions:
-                if count_multi_long_crops == count_all_sessions:
-                    print("**** Found list of crops for T1 and T2\
-                        for all sub/ses in indiv -> \
-                        long_multi_preparation_pipe")
-
-                    prep_pipe = "long_multi_preparation_pipe"
-
-                    extra_wf_name += "_indiv_crop_long_multi"
-
-                elif count_long_crops == count_all_sessions:
-
-                    print("**** Found crop for T1 and crop for T2\
-                        for all sub/ses in indiv -> \
-                        long_single_preparation_pipe")
-
-                    prep_pipe = "long_single_preparation_pipe"
-
-                    extra_wf_name += "_indiv_crop_long_single"
-
-                elif count_T1_crops == count_all_sessions:
+                if count_T1_crops == count_all_sessions:
 
                     print("**** Found crop for T1 for all \
                         sub/ses in indiv \
@@ -128,7 +95,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                     extra_wf_name += "_indiv_crop"
 
                 else:
-                    print("**** not all sub/ses have T1 and T2 crops,\
+                    print("**** not all sub/ses have T1 crops,\
                         using autocrop ")
 
                     extra_wf_name += "_crop_aladin"
@@ -179,27 +146,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                 print("Adding crop_T1")
                 params["short_preparation_pipe"]["crop_T1"] = \
                     {"args": "should be defined in indiv"}
-            else:
-                print("modifying prep = {}".format(prep_pipe))
-
-                params[prep_pipe] = {
-                    "prep_T1": {
-                        "crop_T1": {
-                            "args": "should be defined in indiv"}
-                        },
-                    "prep_T2": {
-                        "crop_T2": {
-                            "args": "should be defined in indiv"}
-                        }
-                    }
-
-                if "denoise" in params["short_preparation_pipe"].keys():
-                    denoise = params["short_preparation_pipe"]["denoise"]
-
-                    params[prep_pipe]["prep_T1"]["denoise"] = denoise
-                    params[prep_pipe]["prep_T2"]["denoise"] = denoise
-
-                del params["short_preparation_pipe"]
 
         return params, indiv_params, extra_wf_name
 

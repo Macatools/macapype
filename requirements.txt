@@ -1,0 +1,8 @@
+nipype
+nilearn
+networkx
+pybids
+scikit-image
+nibabel
+numpy
+brain-slam

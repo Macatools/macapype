@@ -4,17 +4,11 @@
 import re
 from setuptools import find_packages, setup
 
-
-required_packages = [
-    "nipype", "nilearn", "networkx",
-    "pybids", "scikit-image", "nibabel",
-    "numpy", "brain-slam"]
-
 verstr = "unknown"
 try:
     verstrline = open('macapype/_version.py', "rt").read()
 except EnvironmentError:
-    pass # Okay, there is no version file.
+    pass  # Okay, there is no version file.
 else:
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
     mo = re.search(VSRE, verstrline, re.M)
@@ -24,6 +18,13 @@ else:
         raise RuntimeError("unable to find version in yourpackage/_version.py")
 
 print("Will not build conda module")
+
+test_deps = ['codecov', 'pytest', 'pytest-cov']
+flake_deps = ['flake8']
+doc_deps = ['sphinx', 'sphinx-gallery', 'sphinx_bootstrap_theme']
+
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 setup(
     name="macapype",
@@ -36,5 +37,9 @@ setup(
     license='BSD 3',
     entry_points={
         'console_scripts': ['segment_pnh = workflows.segment_pnh:main']},
-    install_requires=required_packages,
+    install_requires=requirements,
+    extras_require={
+        'test': test_deps + flake_deps,
+        'doc': flake_deps + test_deps + doc_deps
+    },
     include_package_data=True)
