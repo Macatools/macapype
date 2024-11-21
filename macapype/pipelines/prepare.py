@@ -71,7 +71,7 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
     return reorient_pipe
 
 ###############################################################################
-# choices between the 3 main pipelines: "short", "long_single" et "long_multi"
+# main pipeline: "short_preparation_pipe"
 ###############################################################################
 
 def create_short_preparation_pipe(params, params_template={},
@@ -655,7 +655,7 @@ def create_short_preparation_T1_pipe(params, params_template,
                 dictionary of node sub-parameters (from a json file)
 
             name:
-                pipeline name (default = "long_multi_preparation_pipe")
+                pipeline name (default = "short_preparation_T1_pipe")
 
     Outputs:
 

@@ -39,36 +39,6 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
             pad_node, "out_file",
             outputnode, outputnodefile)
 
-    elif "long_single_preparation_pipe" in params.keys():
-        if "prep_T1" in params["long_single_preparation_pipe"].keys():
-
-            print("Padding mask in native space")
-            pad_node = pe.Node(
-                niu.Function(
-                    input_names=[
-                        'cropped_img_file',
-                        'orig_img_file',
-                        'indiv_crop'],
-                    output_names=['padded_img_file'],
-                    function=padding_cropped_img),
-                name=pad_nodename)
-
-            seg_pipe.connect(
-                node, nodefile,
-                pad_node, "cropped_img_file")
-
-            seg_pipe.connect(
-                data_preparation_pipe, "outputnode.native_T1",
-                pad_node, "orig_img_file")
-
-            seg_pipe.connect(
-                inputnode, "indiv_params",
-                pad_node, "indiv_crop")
-
-            seg_pipe.connect(
-                pad_node, "padded_img_file",
-                outputnode, outputnodefile)
-
     return pad_node
 
 
