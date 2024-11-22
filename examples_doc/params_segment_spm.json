@@ -26,7 +26,12 @@
     {
         "segment":
         {
+            "comment": "mandatory if old_segment_pipe is defined",
             "params": "Segment (SPM12)",
+
+            "gm_output_type": [false, false, true],
+            "wm_output_type": [false, false, true],
+            "csf_output_type": [false, false, true]
         },
 
         "threshold_gm":
