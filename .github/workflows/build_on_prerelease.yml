@@ -6,6 +6,8 @@ on:
 
 jobs:
 
+  build:
+
     name: Build documentation
     runs-on: ubuntu-latest
 
