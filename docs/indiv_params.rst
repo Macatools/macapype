@@ -22,17 +22,17 @@ Here is json file with all possible nodes to be tuned in indiv_params; In partic
 
 The nodes belonging to "short_data_preparation" pipeline (see `Params<params>`_) are common to both -soft ANTS and SPM :
 
-.. include:: ../examples_doc/indiv_params_general_preparation.json
+.. include:: ../examples_doc/indiv_params_preparation.json
    :literal:
 
 
 For -soft SPM, here is the set of nodes that can be individually tuned:
 
-.. include:: ../examples_doc/params_spm.json
+.. include:: ../examples_doc/indiv_params_segment_spm.json
    :literal:
 
 For -soft ANTS, here is the set of nodes that can be individually tuned:
 
-.. include:: ../examples_doc/params_ants.json
+.. include:: ../examples_doc/indiv_params_segment_ants.json
    :literal:
 

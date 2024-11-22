@@ -28,7 +28,7 @@ Here is json file with all possible nodes to be tuned; Some node are optional, s
 
 The beginning of a params include a keyword "general", and the definition of "short_data_preparation" is also required for both -soft ANTS and SPM:
 
-.. include:: ../examples_doc/params_gereral_preparation.json
+.. include:: ../examples_doc/params_general_preparation.json
    :literal:
 
 For -soft SPM, here is the overall structure of the pipeline:
