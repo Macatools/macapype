@@ -1,0 +1,43 @@
+{
+    "sub-test":
+    {
+        "ses-01":
+        {
+            "debias":
+            {
+                "params": "T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)",
+
+                "s": 2
+            },
+
+            "reg":
+            {
+                "params": "IterREGBET (local wrap of Regis Trapeau tools)",
+
+                "n": 2,
+                "m": "ref",
+                "dof": 12
+            },
+
+
+            "threshold_gm":
+            {
+                "params": "Threshold (FSL)",
+
+                "thr": 0.5
+            },
+            "threshold_wm":
+            {
+                "params": "Threshold (FSL)",
+
+                "thr": 0.5
+            },
+            "threshold_csf":
+            {
+                "params": "Threshold (FSL)",
+
+                "thr": 0.5
+            }
+        }
+    }
+}

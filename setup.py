@@ -20,8 +20,8 @@ else:
 print("Will not build conda module")
 
 test_deps = ['codecov', 'pytest', 'pytest-cov']
-flake_deps = ['flake8']
 
+flake_deps = ['flake8']
 
 doc_deps = ['sphinx',
             'sphinx-gallery',

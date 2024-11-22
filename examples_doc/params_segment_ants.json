@@ -1,0 +1,225 @@
+{
+    "comment": "the following nodes are mutually exclusive, and are optional",
+    "correct_bias_pipe":
+    {
+        "comment": "is problematic if hypointensities (zeros) in T2w images outside of the brain, as as division by 0 will be performed",
+        "comment": "N4debias or fast are preferred",
+
+        "smooth":
+        {
+
+            "comment": "mandatory if correct_bias_pipe is defined",
+            "params": "MathsCommand (FSL)",
+
+            "args": "-bin -s 2"
+        },
+        "norm_smooth":
+        {
+            "comment": "mandatory if correct_bias_pipe is defined",
+            "params": "MultiImageMaths (FSL)",
+
+            "op_string": "-s 2 -div %s"
+        },
+        "smooth_bias":
+        {
+            "comment": "mandatory if correct_bias_pipe is defined",
+            "params": "Smooth (FSL)",
+
+            "sigma": 2
+        }
+    },
+    "comment": "OR",
+    "N4debias":
+    {
+        "comment": "PREFERED",
+        "comment": "OPTIONAL",
+        "params": "N4BiasFieldCorrection (ANTS)",
+        "comment": "same parameters for T1 and T2",
+
+        "dimension": 3,
+        "bspline_fitting_distance": 200,
+        "n_iterations": [50, 50, 40, 30],
+        "convergence_threshold": 0.00000001,
+        "shrink_factor": 2,
+        "args": "-r 0 --verbose 1"
+    },
+    "comment": "OR",
+    "fast":
+    {
+        "comment": "OPTIONAL",
+        "comment": "same parameters for T1 and T2",
+        "params": "FAST (FSL) used for debias not segmentation",
+    },
+
+    "comment": "MANDATORY if mask is not provided as input of command line",
+    "extract_pipe":
+    {
+        "use_T2":
+        {
+            "comment": "boolean marker, if present T2 and T1 are exchanged in the process, (T2 is used to register to template)",
+
+            "comment": "Be careful that in this case, the template head and brain have to match T2w images ",
+            "comment": "better to specify your own template with template_path template_files in the command line"
+        },
+        "smooth":
+        {
+            "comment": "OPTIONAL",
+            "params": "Smooth (FSL)",
+        },
+
+        "atlas_brex":
+        {
+            "comment": "mandatory if extract_pipe is defined",
+            "params": "AtlasBREX (local wrap in macapype of Johannes Lohmeier tool)",
+
+            "f": 0.7,
+            "reg": 1,
+            "msk": "b,0.5,0,0",
+            "wrp": "10,10,10",
+            "dil": 1,
+            "nrm": 1
+        }
+    },
+
+    "comment": "the two following nodes are mutually exclusive, and are optional",
+    "masked_correct_bias_pipe":
+    {
+        "smooth":
+        {
+
+            "comment": "mandatory if masked_correct_bias_pipe is defined",
+            "params": "MathsCommand (FSL)",
+
+            "args": "-bin -s 2"
+        },
+        "norm_smooth":
+        {
+            "comment": "mandatory if masked_correct_bias_pipe is defined",
+            "params": "MultiImageMaths (FSL)",
+
+            "op_string": "-s 2 -div %s"
+        },
+        "smooth_bias":
+        {
+            "comment": "mandatory if masked_correct_bias_pipe is defined",
+            "params": "Smooth (FSL)",
+
+            "sigma": 2
+        }
+
+    },
+    "comment": "OR",
+    "debias":
+    {
+
+        "comment": "PREFERED",
+        "comment": "performs same operations as masked_correct_bias_pipe in bash function",
+        "params": "T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)",
+
+        "s": 2
+    },
+
+    "brain_segment_pipe":
+    {
+        "use_T2":
+        {
+            "comment": "boolean marker, if present T2 and T1 are exchanged in the process, (T2 is used to register to template)",
+
+            "comment": "Be careful that in this case, the template priors have to match T2w images ",
+            "comment": "better to specify your own template with template_path template_files in the command line"
+        },
+
+        "comment": "If use_priors is defined in segment_atropos_pipe, one of register_NMT_pipe or reg must be defined",
+        "register_NMT_pipe":
+        {
+            "norm_intensity":
+            {
+                "comment": "OPTIONAL",
+                "params": "N4BiasFieldCorrection (ANTS)"
+            },
+
+            "deoblique":
+            {
+                "comment": "OPTIONAL",
+                "params": "boolean marker (no params) for adding a node with Refit (AFNI) deoblique=True"
+            },
+
+            "NMTSubjectAlign":
+            {
+                "comment": "OPTIONAL"
+            },
+            "comment": "OR",
+            "NMT_subject_align":
+            {
+                "comment": "default"
+            }
+        },
+        "comment": "OR",
+        "reg":
+        {
+            "params": "IterREGBET (local wrap of Regis Trapeau tools)",
+
+            "n": 2,
+            "m": "ref",
+            "dof": 12
+        },
+
+        "segment_atropos_pipe":
+        {
+
+            "comment": "if present ( a value have to be specied),  priors will be projected to stereo space (possibly not the same as another template can be specified for priors)",
+            "comment": "(this is typically the case for marmoset: use_T2 with bma for short_preparation_pipe, and MBM for priors)",
+            "comment": "If no usepriors, the register_NMT_pipe or reg are not used",
+            "use_priors": 0.0,
+
+            "Atropos":
+            {
+                "comment": "mandatory if segment_atropos_pipe is defined",
+                "params" : "AtroposN4 (ANTS)",
+                "dimension": 3,
+
+
+                "comment": "numberOfClasses is OPTIONAL (default is 3)",
+                "numberOfClasses": 3
+            },
+            "tissue_dict":
+            {
+                "comment": "OPTIONAL",
+                "comment": "default are : gm:   1,  wm:   2, csf: 3",
+                "comment": "possible to merge indexes for one label, for example csf: [1, 5], gm: [2, 3],  wm: 4",
+
+                "gm": 2,
+                "wm": 3,
+                "csf": 1
+            }
+        },
+
+        "comment": "optional (if segmentation in 5tt mrtrix format is required",
+        "export_5tt_pipe":
+        {
+            "commment": "no node are parametrized"
+        }
+    },
+
+
+    "comment": "following pipelines are used for surface mesh",
+    "comment": "all are mutually exclusive and optional",
+
+    "comment": "prefered method",
+    "IsoSurface_brain_pipe":
+    {
+
+        "merge_brain_tissues":
+        {
+            "keep_indexes": [2,3]
+        }
+    },
+    "comment": "OR",
+    "nii2mesh_brain_pipe":
+    {
+    },
+    "comment": "OR",
+    "nii_to_mesh_pipe":
+    {
+    }
+}
