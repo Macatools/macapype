@@ -1,0 +1,77 @@
+{
+    "general":
+    {
+        "template_name": "Haiko_v1.5"
+    },
+
+    "comment": "mandatory, performing both debias and brain_extraction",
+    "debias":
+    {
+        "params": "T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)",
+
+        "s": 2
+    },
+
+    "comment": "mandatory",
+    "reg":
+    {
+        "params": "IterREGBET (local wrap of Regis Trapeau tools)",
+        "n": 2,
+        "m": "ref",
+        "dof": 12
+    },
+
+
+    "old_segment_pipe":
+    {
+        "segment":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Segment (SPM12)",
+
+            "gm_output_type": [false, false, true],
+            "wm_output_type": [false, false, true],
+            "csf_output_type": [false, false, true]
+        },
+
+        "threshold_gm":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Threshold (FSL)",
+
+            "thr": 0.5
+        },
+        "threshold_wm":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Threshold (FSL)",
+
+            "thr": 0.5
+        },
+        "threshold_csf":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Threshold (FSL)",
+
+            "thr": 0.5
+        },
+
+        "comment": "optional (if segmentation in 5tt mrtrix format is required"),
+        "export_5tt_pipe":
+        {
+            "commment": "no node are parametrized"
+        }
+    },
+
+    "comment": "OPTIONAL",
+    "mask_from_seg_pipe":
+    {
+        "merge_indexed_mask":
+        {
+            "comment": "never used, not sure if modifying default parameters works",
+            "comment": "default : index_csf=1, index_gm=2, index_wm=3",
+            "params": "merge_masks (python)",
+
+        }
+    }
+}
