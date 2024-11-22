@@ -1,6 +1,0 @@
-﻿macapype.pipelines.prepare.\_create\_prep\_pipeline
-===================================================
-
-.. currentmodule:: macapype.pipelines.prepare
-
-.. autofunction:: _create_prep_pipeline

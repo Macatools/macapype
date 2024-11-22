@@ -1,6 +1,0 @@
-﻿macapype.pipelines.full\_pipelines.create\_full\_spm\_subpipes
-==============================================================
-
-.. currentmodule:: macapype.pipelines.full_pipelines
-
-.. autofunction:: create_full_spm_subpipes

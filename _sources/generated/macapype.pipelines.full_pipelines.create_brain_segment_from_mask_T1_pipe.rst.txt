@@ -1,6 +1,0 @@
-﻿macapype.pipelines.full\_pipelines.create\_brain\_segment\_from\_mask\_T1\_pipe
-===============================================================================
-
-.. currentmodule:: macapype.pipelines.full_pipelines
-
-.. autofunction:: create_brain_segment_from_mask_T1_pipe

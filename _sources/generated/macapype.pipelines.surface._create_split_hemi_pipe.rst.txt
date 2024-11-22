@@ -1,6 +1,0 @@
-﻿macapype.pipelines.surface.\_create\_split\_hemi\_pipe
-======================================================
-
-.. currentmodule:: macapype.pipelines.surface
-
-.. autofunction:: _create_split_hemi_pipe

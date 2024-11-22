@@ -10,8 +10,8 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -26,7 +26,7 @@ Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 
 .. GENERATED FROM PYTHON SOURCE LINES 8-19
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Authors: David Meunier, Bastien Cagna
@@ -51,144 +51,52 @@ Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 Testing plot in local
 #############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-38
+.. GENERATED FROM PYTHON SOURCE LINES 22-25
 
-.. code-block:: default
-
-
-    orig_data_path = load_test_data("data_test_sphinx_macaque")
-
-    data_path = load_test_data("data_test_sphinx_macaque_processed")
-
-    wf_path = os.path.join(data_path, "example_segment_sphinx_macaque_ants_based")
-
-    graph = os.path.join(wf_path, "graph.png")
-
-    import matplotlib.pyplot as plt  # noqa
-    img = plt.imread(graph)
-    plt.figure(figsize=(36, 72))
-    plt.imshow(img)
-    plt.axis('off')
-    plt.show()
+.. code-block:: Python
 
 
-
-
-.. image-sg:: /auto_examples/images/sphx_glr_plot_segment_sphinx_macaque_ants_based_001.png
-   :alt: plot segment sphinx macaque ants based
-   :srcset: /auto_examples/images/sphx_glr_plot_segment_sphinx_macaque_ants_based_001.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    data_dirpath /home/meunier.d/data_macapype already exists
-    /home/meunier.d/data_macapype/data_test_sphinx_macaque Already exists, skipping download
-    data_dirpath /home/meunier.d/data_macapype already exists
-    /home/meunier.d/data_macapype/data_test_sphinx_macaque_processed Already exists, skipping download
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 39-41
-
-Data preparation
-#############################################################################
-
-.. GENERATED FROM PYTHON SOURCE LINES 44-46
-
-# Reorient
-#==========================
-
-.. GENERATED FROM PYTHON SOURCE LINES 46-72
-
-.. code-block:: default
-
-
-
-    orig_T1_file = op.join(orig_data_path, "sub-ziggy_T1w.nii")
-
-    reoriented_T1_file = op.join(wf_path, "old_data_preparation_pipe", "reorient_T1_pipe", "swap_dim", "sub-ziggy_T1w_newdims.nii.gz")
-
-    # displaying results
-    orig_T1 = os.path.join(wf_path, "orig_T1.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(orig_T1, orig_T1_file)
-    os.system(cmd)
-
-    reoriented_T1 = os.path.join(wf_path, "reoriented_T1.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(reoriented_T1, reoriented_T1_file)
-    os.system(cmd)
-
-    import matplotlib.pyplot as plt  # noqa
-
-    fig, axs = plt.subplots(2, 1, figsize=(36, 24))
-    axs[0].imshow(plt.imread(orig_T1))
-    axs[0].axis('off')
-
-    axs[1].imshow(plt.imread(reoriented_T1))
-    axs[1].axis('off')
-
-    plt.show()
-
-
-
-
-.. image-sg:: /auto_examples/images/sphx_glr_plot_segment_sphinx_macaque_ants_based_002.png
-   :alt: plot segment sphinx macaque ants based
-   :srcset: /auto_examples/images/sphx_glr_plot_segment_sphinx_macaque_ants_based_002.png
-   :class: sphx-glr-single-img
+    #orig_data_path = load_test_data("data_test_sphinx_macaque")
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-75
-
-# Cropping and denoise
-#==========================
-
-.. GENERATED FROM PYTHON SOURCE LINES 75-102
-
-.. code-block:: default
-
-
-    cropped_T1_file = op.join(wf_path, "old_data_preparation_pipe", "bet_crop", "sub-ziggy_T1w_newdims_cropped.nii.gz")
-    assert os.path.exists(cropped_T1_file), "Error with {}".format(cropped_T1_file)
-
-    cropped_T1 = os.path.join(wf_path, "cropped_T1.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(cropped_T1, cropped_T1_file)
-    os.system(cmd)
-
-
-    denoised_T1_file = op.join(wf_path, "old_data_preparation_pipe", "denoise_T1", "sub-ziggy_T1w_newdims_cropped_noise_corrected.nii.gz")
-
-    denoised_T1 = os.path.join(wf_path, "denoised_T1.png")
-    cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(denoised_T1, denoised_T1_file)
-    os.system(cmd)
-
-    import matplotlib.pyplot as plt  # noqa
-
-    fig, axs = plt.subplots(2, 1, figsize=(36, 24))
-    axs[0].imshow(plt.imread(cropped_T1))
-    axs[0].axis('off')
-
-    axs[1].imshow(plt.imread(denoised_T1))
-    axs[1].axis('off')
-
-    plt.show()
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 26-28
+
+# Data preparation
+##############################################################################
+
+.. GENERATED FROM PYTHON SOURCE LINES 31-33
+
+## Reorient
+##==========================
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-49
+
+.. code-block:: Python
 
 
-.. image-sg:: /auto_examples/images/sphx_glr_plot_segment_sphinx_macaque_ants_based_003.png
-   :alt: plot segment sphinx macaque ants based
-   :srcset: /auto_examples/images/sphx_glr_plot_segment_sphinx_macaque_ants_based_003.png
-   :class: sphx-glr-single-img
+
+    #orig_T1_file = op.join(orig_data_path, "sub-ziggy_T1w.nii")
+
+    ## displaying results
+    #orig_T1 = os.path.join(orig_data_path, "orig_T1.png")
+    #cmd = "fsleyes render --outfile {} --size 1800 600 {}".format(orig_T1, orig_T1_file)
+    #os.system(cmd)
+
+    #import matplotlib.pyplot as plt  # noqa
+
+    #fig, axs = plt.subplots(1, 1, figsize=(36, 24))
+    #axs.imshow(plt.imread(orig_T1))
+    #axs.axis('off')
+
+    #plt.show()
+
+
 
 
 
@@ -197,28 +105,26 @@ Data preparation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  37.341 seconds)
+   **Total running time of the script:** (0 minutes 0.002 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_segment_sphinx_macaque_ants_based.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: plot_segment_sphinx_macaque_ants_based.ipynb <plot_segment_sphinx_macaque_ants_based.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: plot_segment_sphinx_macaque_ants_based.py <plot_segment_sphinx_macaque_ants_based.py>`
 
-     :download:`Download Python source code: plot_segment_sphinx_macaque_ants_based.py <plot_segment_sphinx_macaque_ants_based.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_segment_sphinx_macaque_ants_based.ipynb <plot_segment_sphinx_macaque_ants_based.ipynb>`
+      :download:`Download zipped: plot_segment_sphinx_macaque_ants_based.zip <plot_segment_sphinx_macaque_ants_based.zip>`
 
 
 .. only:: html

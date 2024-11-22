@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Parameters &#8212; macapype 0.3.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <title>Parameters &#8212; Macapype 0.4.3-rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="_static/documentation_options.js?v=56cbf197"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Individual Parameters" href="indiv_params.html" />
-    <link rel="prev" title="How to run workflows" href="workflows.html" />
+    <link rel="prev" title="Launching a processing" href="command.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -40,19 +39,15 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html"><span><img src="_static/logo_macapype_0.3.jpg"></span>
+        <a class="navbar-brand" href="index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.3-rc2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
             
-                <li><a href="auto_examples/index.html">Gallery</a></li>
-                <li><a href="api.html">API</a></li>
-                <li><a href="tutorial.html">Tutorial</a></li>
-                <li><a href="install.html">Installation</a></li>
-                <li><a href="https://github.com/macatools/macapype">Github</a></li>
+                <li><a href="https://github.com/davidmeunier79/macapype">Github</a></li>
             
             
               <li class="dropdown globaltoc-container">
@@ -64,135 +59,57 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#dependancies">Dependancies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#external-software-dependancies">External software dependancies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#python-packages-dependancies">Python packages dependancies</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#install-macapype-package">Install macapype package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#from-github">from github</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="install.html#using-git">Using git</a></li>
-<li class="toctree-l4"><a class="reference internal" href="install.html#using-pip">Using pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#using-pip">Using pip</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#from-pypi">from pypi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#from-conda">From conda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-conda">From conda</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-install">Testing the install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#testing-the-install">Testing the install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-spm-docker">Note on SPM Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-singularity">Note on Singularity</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command.html#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#command-line-parameters">Command line parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-optional">The following parameters are optional</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#id1">The following parameters are optional</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="command.html#command-line-examples">Command line examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-params">Adding -params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#changing-parameters">Changing parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#adding-a-parameter-to-a-node-absent-from-params-json">Adding a parameter to a node absent from params.json</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-old-fashioned-way">the “old fashioned” way:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-semi-dirty-way">the “semi-dirty” way</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorial.html#the-new-way-using-nodeparams">the new way: using NodeParams</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorial.html#new-multi-params">New: multi_params</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#modifying-an-existing-pipeline">Modifying an existing pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#wrapping-new-nodes">Wrapping new nodes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#macaque">Macaque:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#marmoset">Marmoset:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#baboon">Baboon:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipelines.html#spm-based-pipelines">SPM-based pipelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-t1w-and-t2w-images">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-a-t1w-image">Using only a T1w image</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="pipelines.html#ants-based-pipelines">ANTS-based pipelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#id2">Using T1w and T2w images</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#using-only-t1w-images">Using only T1w images</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="pipelines.html#data-preparation">Data preparation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#short-data-preparation">Short data preparation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#long-data-preparation">Long data preparation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pipelines.html#options">Options</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pipelines.html#reorient-sub-pipeline">Reorient sub-pipeline</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pipelines.html#denoise-and-denoise-first">Denoise and denoise_first</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="external_pipeline.html#macaque-diffusion-weighted-imaging">Macaque diffusion weighted imaging</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="external_pipeline.html#how-to-create-a-whole-brain-tractogram">How to create a whole brain tractogram?</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#perform-conversion-between-different-file-types">Perform conversion between different file types</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#generation-of-a-whole-brain-mask-from-a-dwi-image">Generation of a whole brain mask from a DWI image</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#diffusion-tensor-estimation">Diffusion tensor estimation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#maps-generation-of-tensor-derived-parameters">Maps Generation of tensor-derived parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#constrained-spherical-deconvolution-csd">Constrained spherical deconvolution (CSD)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#fod-estimation">FOD estimation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#convertion-of-the-macaque-t1-in-mif-file">Convertion of the macaque T1 in .mif file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#generation-of-a-volume-which-contain-the-probability-to-be-on-the-gm-wm-interface">Generation of a volume which contain the probability to be on the gm-wm interface</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#perform-streamlines-tractography">Perform streamlines tractography</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#reduction-of-the-fibers-number">Reduction of the fibers number</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#estimation-of-the-registration-of-two-images-together-using-a-symmetric-rigid-transformation-model">Estimation of the registration of two images together using a symmetric rigid transformation model</a></li>
-<li class="toctree-l4"><a class="reference internal" href="external_pipeline.html#application-of-the-spatial-transformations-to-an-image">Application of the spatial transformations to an image</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contribute.html#install-a-dev-version">Install a dev version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contribute.html#to-build-the-documentation">To build the documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contribute.html#pull-request">Pull Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contribute.html#versionning">Versionning</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Useful tips (before processing)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#how-to-orient-the-labels-your-images">How to orient the labels your images ?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#how-to-tilt-the-orientation-of-your-images">How to tilt the orientation of your images ?</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utils.html#nudging-the-image-with-fsleyes">Nudging the image with FSLEyes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="utils.html#in-fsleyes">In FSLEyes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="utils.html#apply-the-nudge-transfo-to-the-orig-image">Apply the nudge transfo to the Orig image</a></li>
-<li class="toctree-l4"><a class="reference internal" href="utils.html#rename-everything-back-as-intended-in-bids">rename everything back as intended in BIDS</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#how-to-compute-cropping-parameters">How to compute cropping parameters ?</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="brainhack.html#brainhack-marseille-2021">BrainHack Marseille 2021</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="brainhack.html#channels-of-communication">Channels of communication</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="brainhack.html#during-the-event">during the event</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brainhack.html#before-after-the-event">before/after the event</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="brainhack.html#project-pages">Project pages:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="brainhack.html#program">Program:</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#advanced-parameters-settings">Advanced parameters settings</a></li>
 </ul>
 </li>
 </ul>
@@ -208,18 +125,15 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-params">Adding -params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Useful tips (before processing)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a></li>
 </ul>
 </ul>
 </li>
@@ -255,18 +169,15 @@
   <div class="row">
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">How to run workflows</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-params">Adding -params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Pipeline examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="external_pipeline.html">External Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">How to contribute to the sources of the project</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Useful tips (before processing)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="brainhack.html">Events</a></li>
 </ul>
 
         </div>
@@ -274,73 +185,530 @@
     <div class="body col-md-9 content" role="main">
       
   <section id="parameters">
-<span id="params"></span><h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
-<p>All the params spefications are in each function of the API, as well the spefications available for <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a>.</p>
-<p><strong>N.B. in the newest version of macapype, the -params can be replaced the option -species followed by the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}, and a default parameter, tested for this species, will be used. It is however still possible to use the -params option and provide a params.json for advanced users</strong></p>
-<p>Here is an example of the params.json corresponding to <a class="reference internal" href="generated/macapype.pipelines.full_pipelines.create_full_spm_subpipes.html#macapype.pipelines.full_pipelines.create_full_spm_subpipes" title="macapype.pipelines.full_pipelines.create_full_spm_subpipes"><code class="xref py py-class docutils literal notranslate"><span class="pre">segment_pnh_spm_based</span> <span class="pre">pipeline</span></code></a> for macaque:</p>
+<span id="params"></span><h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h1>
+<section id="adding-params">
+<h2>Adding -params<a class="headerlink" href="#adding-params" title="Link to this heading">¶</a></h2>
+<p>Definition of the sequence of nodes in processing pipelines, as well as general parameters, are specified by json file. When specifying a -species and -soft (see <a class="reference external" href="command">Commands</a>), the corresponding default parameter file will be used; They are located in the <em>workflows</em> directory of the package.</p>
+<p>The original parameter file can be altered by some options in -soft (e.g. _robustreg, _prep, etc.; see <a class="reference external" href="command">Commands</a>).</p>
+<p>Here is an example of the params.json with parameters -soft ANTS for -species macaque:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;general&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;template_name&quot;</span><span class="p">:</span> <span class="s2">&quot;inia19&quot;</span>
+        <span class="s2">&quot;template_name&quot;</span><span class="p">:</span> <span class="s2">&quot;NMT_v2.0_asym&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;crop_T1&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;crop_aladin_pipe&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;should be defined in indiv&quot;</span>
+            <span class="s2">&quot;reg_T1_on_template&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;crop_z_T1&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;brainsize&quot;</span><span class="p">:</span> <span class="mi">70</span>
+            <span class="p">}</span>
         <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;N4debias&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">&quot;n_iterations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+        <span class="s2">&quot;convergence_threshold&quot;</span><span class="p">:</span> <span class="mf">0.00000001</span><span class="p">,</span>
+        <span class="s2">&quot;shrink_factor&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-r 0 --verbose 1&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;extract_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;atlas_brex&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;wrp&quot;</span><span class="p">:</span> <span class="s2">&quot;10,10,10&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;msk&quot;</span><span class="p">:</span> <span class="s2">&quot;a,0,0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dil&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;nrm&quot;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+
     <span class="p">},</span>
     <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">4</span>
+        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span>
     <span class="p">},</span>
-    <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;segment&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;gm_output_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">false</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">true</span><span class="p">],</span>
-            <span class="s2">&quot;wm_output_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">false</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">true</span><span class="p">],</span>
-            <span class="s2">&quot;csf_output_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">false</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">true</span><span class="p">]</span>
+            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
         <span class="p">},</span>
-        <span class="s2">&quot;threshold_gm&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+            <span class="s2">&quot;use_priors&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;Atropos&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;tissue_dict&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;gm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                <span class="s2">&quot;wm&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">&quot;csf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+            <span class="p">}</span>
         <span class="p">},</span>
-        <span class="s2">&quot;threshold_wm&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
         <span class="p">},</span>
-        <span class="s2">&quot;threshold_csf&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;IsoSurface_brain_pipe&quot;</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;thresh&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+            <span class="s2">&quot;merge_brain_tissues&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;keep_indexes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;mask_from_seg_pipe&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;dilate_mask&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;kernel_shape&quot;</span><span class="p">:</span> <span class="s2">&quot;sphere&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;kernel_size&quot;</span><span class="p">:</span> <span class="mi">2</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;erode_mask&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;kernel_shape&quot;</span><span class="p">:</span> <span class="s2">&quot;sphere&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;kernel_size&quot;</span><span class="p">:</span> <span class="mi">2</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;regex_subs&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;FLAIR_flirt&quot;</span><span class="p">:</span> <span class="s2">&quot;preproc-coreg_FLAIR&quot;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>It is also possible to alter values of some nodes for individual sessions/subjects. See <a class="reference external" href="indiv_params">individual parameter section</a>).</p>
+<p><strong>Note</strong>: Individual parameter will not modify the pipeline sequence itself, a value specified in indiv_params for a node that do not exists in params will ignored</p>
+</section>
+<section id="advanced-parameters-settings">
+<h2>Advanced parameters settings<a class="headerlink" href="#advanced-parameters-settings" title="Link to this heading">¶</a></h2>
+<p>For advanced user, it is however possible to pass the pipeline sequence as a params.json file. In this case all further alteration will be canceled.</p>
+<p>Here is json file with all possible nodes to be tuned; Some node are optional, some nodes are exclusive with each other (XOR). All parameters given here are give as examples and may vary:</p>
+<p>The beginning of a params include a keyword “general”, and the definition of “short_data_preparation” is also required for both -soft ANTS and SPM:</p>
+<pre class="literal-block">{
+    &quot;general&quot;:
+    {
+        &quot;comment&quot;: &quot;OPTIONAL&quot;,
+        &quot;comment&quot;: &quot;specify a path on where to put the template after download&quot;,
+        &quot;comment&quot;: &quot;By default set to the home directory of the user&quot;,
+
+        &quot;my_path&quot; : &quot;/path/to/template&quot;,
+
+
+        &quot;comment&quot;: &quot;MANDOTORY, if not set as -template_path / template_files in command line&quot;,
+        &quot;comment&quot;: &quot;Template used for priors segmentation&quot;,
+        &quot;comment&quot;: &quot;see macapype/utils/templates.json for available names&quot;,
+
+        &quot;template_name&quot;: &quot;bma_padded&quot;,
+
+
+        &quot;comment&quot;: &quot;OPTIONAL&quot;,
+        &quot;comment&quot;: &quot;if not set, template_name will be used by default&quot;,
+        &quot;comment&quot;: &quot;Template used for crop_aladin / projection in stereo space&quot;,
+
+        &quot;template_stereo_name&quot;: &quot;MBM_3.0&quot;,
+    },
+    &quot;short_preparation_pipe&quot;:
+    {
+
+        &quot;use_T2&quot;:
+        {
+
+            &quot;comment&quot;: &quot;boolean marker, if present T2 and T1 are exchanged in the process, (T2 is used to register to template, and T1 is registered to T2)&quot;,
+
+            &quot;comment&quot;: &quot;BE CAREFUL, the name of the internal nodes are still using the original names although the files are swapped&quot;,
+            &quot;comment&quot;: &quot;Everything is swapped back as outputs of short_preparation_pipe&quot;,
+        },
+
+        &quot;avg_reorient_pipe&quot;:
+        {
+            &quot;comment&quot;: &quot;OPTIONAL&quot;,
+            &quot;reorient&quot;:
+            {
+                &quot;params&quot;: &quot;SwapDimensions (FSL)&quot;,
+                &quot;new_dims&quot;: &quot;x z -y&quot;
+            }
+        },
+
+        &quot;aladin_T2_on_T1&quot;:
+        {
+            &quot;comment&quot;: &quot;boolean marker, if present RegAladin to coregister T2 on T1 and pad/resample, otherwise use FSL FLIRT (default)&quot;,
+        },
+
+        &quot;crop_T1&quot;:
+        {
+            &quot;comment&quot;: &quot;OPTIONAL&quot;,
+            &quot;comment&quot;: &quot;if present, applied to both T1w and T2w&quot;,
+            &quot;params&quot;: &quot;fslroi (FSL)&quot;,
+
+            &quot;args&quot;: &quot;should be specified in indiv_params&quot;
+        },
+
+        &quot;crop_aladin_pipe&quot;:
+        {
+            &quot;pre_crop_z_T1&quot;:
+            {
+
+                &quot;comment&quot;: &quot;OPTIONAL&quot;,
+                &quot;comment&quot;: &quot;use with caution&quot;,
+                &quot;params&quot;: &quot;RobustFOV (FSL)&quot;,
+
+                &quot;brainsize&quot;: &quot;70&quot;
+            },
+            &quot;reg_T1_on_template&quot;:
+            {
+                &quot;params&quot;: &quot;RegAladin (NiftyReg)&quot;
+
+            },
+            &quot;reg_T1_on_template2&quot;:
+            {
+                &quot;comment&quot;: &quot;OPTIONAL&quot;,
+                &quot;comment&quot;: &quot;typically used with -soft _robustreg &quot;,
+
+                &quot;params&quot;: &quot;RegAladin (NiftyReg)&quot;
+
+            },
+            &quot;crop_z_T1&quot;:
+            {
+                &quot;comment&quot;: &quot;OPTIONAL&quot;,
+                &quot;params&quot;: &quot;RobustFOV (FSL)&quot;,
+
+                &quot;brainsize&quot;: &quot;70&quot;
+            }
+        },
+
+        &quot;inv_transfo_aladin&quot;:
+        {
+            &quot;comment&quot;: &quot;OPTIONAL&quot;,
+            &quot;comment&quot; : &quot;not sure why it is parameterized&quot;,
+            &quot;params&quot;: &quot;RegTransform (NiftyReg)&quot;
+        },
+
+        &quot;denoise&quot;:
+        {
+            &quot;comment&quot;: &quot;OPTIONAL&quot;,
+            &quot;params&quot;: &quot;DenoiseImage (ANTS)&quot;,
+
+            &quot;shrink_factor&quot;: 2
+        },
+
+        &quot;pad_template&quot;:
+        {
+
+            &quot;comment&quot;: &quot;OPTIONAL&quot;,
+            &quot;comment&quot;: &quot;used for skullTo3d to keep an image bigger than brain, but is not used further in brain segmentation&quot;,
+            &quot;params&quot;: &quot;ImageMath (ANTS)&quot;,
+
+            &quot;copy_header&quot; : true,
+            &quot;operation&quot; : &quot;PadImage&quot;,
+            &quot;op2&quot; : &quot;70&quot;
+        }
+    }
+}
+</pre>
+<p>For -soft SPM, here is the overall structure of the pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;general&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;template_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Haiko_v1.5&quot;</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory, performing both debias and brain_extraction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+
+        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;IterREGBET (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
+    <span class="p">},</span>
+
+
+    <span class="s2">&quot;old_segment_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;segment&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if old_segment_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Segment (SPM12)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;gm_output_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">false</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">true</span><span class="p">],</span>
+            <span class="s2">&quot;wm_output_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">false</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">true</span><span class="p">],</span>
+            <span class="s2">&quot;csf_output_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">false</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">true</span><span class="p">]</span>
+        <span class="p">},</span>
+
+        <span class="s2">&quot;threshold_gm&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if old_segment_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;thr&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;threshold_wm&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if old_segment_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;thr&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;threshold_csf&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if old_segment_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;thr&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="p">},</span>
+
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;optional (if segmentation in 5tt mrtrix format is required&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;commment&quot;</span><span class="p">:</span> <span class="s2">&quot;no node are parametrized&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mask_from_seg_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;merge_indexed_mask&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;never used, not sure if modifying default parameters works&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;default : index_csf=1, index_gm=2, index_wm=3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;merge_masks (python)&quot;</span><span class="p">,</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For -soft ANTS, here is the overall structure of the pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;the following nodes are mutually exclusive, and are optional&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;correct_bias_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;is problematic if hypointensities (zeros) in T2w images outside of the brain, as as division by 0 will be performed&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;N4debias or fast are preferred&quot;</span><span class="p">,</span>
+
+        <span class="s2">&quot;smooth&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if correct_bias_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;MathsCommand (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-bin -s 2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;norm_smooth&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if correct_bias_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiImageMaths (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;op_string&quot;</span><span class="p">:</span> <span class="s2">&quot;-s 2 -div </span><span class="si">%s</span><span class="s2">&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;smooth_bias&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if correct_bias_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Smooth (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="mi">2</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;N4debias&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;PREFERED&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;N4BiasFieldCorrection (ANTS)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;same parameters for T1 and T2&quot;</span><span class="p">,</span>
+
+        <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">&quot;n_iterations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+        <span class="s2">&quot;convergence_threshold&quot;</span><span class="p">:</span> <span class="mf">0.00000001</span><span class="p">,</span>
+        <span class="s2">&quot;shrink_factor&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-r 0 --verbose 1&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fast&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;same parameters for T1 and T2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;FAST (FSL) used for debias not segmentation&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;MANDATORY if mask is not provided as input of command line&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;extract_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;use_T2&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean marker, if present T2 and T1 are exchanged in the process, (T2 is used to register to template)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;Be careful that in this case, the template head and brain have to match T2w images &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;better to specify your own template with template_path template_files in the command line&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;smooth&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Smooth (FSL)&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+
+        <span class="s2">&quot;atlas_brex&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if extract_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;AtlasBREX (local wrap in macapype of Johannes Lohmeier tool)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+            <span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;msk&quot;</span><span class="p">:</span> <span class="s2">&quot;b,0.5,0,0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wrp&quot;</span><span class="p">:</span> <span class="s2">&quot;10,10,10&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dil&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;nrm&quot;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;the two following nodes are mutually exclusive, and are optional&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;masked_correct_bias_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;smooth&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if masked_correct_bias_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;MathsCommand (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-bin -s 2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;norm_smooth&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if masked_correct_bias_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiImageMaths (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;op_string&quot;</span><span class="p">:</span> <span class="s2">&quot;-s 2 -div </span><span class="si">%s</span><span class="s2">&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;smooth_bias&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if masked_correct_bias_pipe is defined&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Smooth (FSL)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="mi">2</span>
+        <span class="p">}</span>
+
+    <span class="p">},</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;PREFERED&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;performs same operations as masked_correct_bias_pipe in bash function&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+
+        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;use_T2&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean marker, if present T2 and T1 are exchanged in the process, (T2 is used to register to template)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;Be careful that in this case, the template priors have to match T2w images &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;better to specify your own template with template_path template_files in the command line&quot;</span>
+        <span class="p">},</span>
+
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;If use_priors is defined in segment_atropos_pipe, one of register_NMT_pipe or reg must be defined&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;register_NMT_pipe&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;norm_intensity&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;N4BiasFieldCorrection (ANTS)&quot;</span>
+            <span class="p">},</span>
+
+            <span class="s2">&quot;deoblique&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean marker (no params) for adding a node with Refit (AFNI) deoblique=True&quot;</span>
+            <span class="p">},</span>
+
+            <span class="s2">&quot;NMTSubjectAlign&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NMT_subject_align&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;IterREGBET (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
+        <span class="p">},</span>
+
+        <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;if present ( a value have to be specied),  priors will be projected to stereo space (possibly not the same as another template can be specified for priors)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;(this is typically the case for marmoset: use_T2 with bma for short_preparation_pipe, and MBM for priors)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;If no usepriors, the register_NMT_pipe or reg are not used&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;use_priors&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+
+            <span class="s2">&quot;Atropos&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;mandatory if segment_atropos_pipe is defined&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="s2">&quot;AtroposN4 (ANTS)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+
+
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;numberOfClasses is OPTIONAL (default is 3)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;numberOfClasses&quot;</span><span class="p">:</span> <span class="mi">3</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;tissue_dict&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;default are : gm:   1,  wm:   2, csf: 3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;possible to merge indexes for one label, for example csf: [1, 5], gm: [2, 3],  wm: 4&quot;</span><span class="p">,</span>
+
+                <span class="s2">&quot;gm&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;wm&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;csf&quot;</span><span class="p">:</span> <span class="mi">1</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;optional (if segmentation in 5tt mrtrix format is required&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;commment&quot;</span><span class="p">:</span> <span class="s2">&quot;no node are parametrized&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;following pipelines are used for surface mesh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;all are mutually exclusive and optional&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;prefered method&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IsoSurface_brain_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+
+        <span class="s2">&quot;merge_brain_tissues&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;keep_indexes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nii2mesh_brain_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nii_to_mesh_pipe&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -355,8 +723,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, Macapype Developers (macatools). Last updated on 2022-05-13.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.<br/>
+        &copy; Copyright 2024, Macapype Developers (macatools). Last updated on 2024-11-22.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
 </footer>

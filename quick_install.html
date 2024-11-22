@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation &#8212; Macapype 0.4.3-rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="_static/documentation_options.js?v=56cbf197"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Container install" href="docker_install.html" />
+    <link rel="prev" title="Macapype" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.3-rc2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/davidmeunier79/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-singularity">Note on Singularity</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command.html#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#command-line-parameters">Command line parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-optional">The following parameters are optional</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#id1">The following parameters are optional</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="command.html#command-line-examples">Command line examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="params.html#adding-params">Adding -params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="params.html#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/quick_install.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="installation">
+<span id="quick-install"></span><h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<section id="dependancies">
+<h2>Dependancies<a class="headerlink" href="#dependancies" title="Link to this heading">¶</a></h2>
+<section id="external-software-dependancies">
+<h3>External software dependancies<a class="headerlink" href="#external-software-dependancies" title="Link to this heading">¶</a></h3>
+<p>SkullTo3d relies heavily on other neuroimaging Softwares, predominentyly:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.fmrib.ox.ac.uk/fsl/index.html">FSL</a></p></li>
+<li><p><a class="reference external" href="http://stnava.github.io/ANTs/">ANTS</a></p></li>
+<li><p><a class="reference external" href="https://afni.nimh.nih.gov/">AFNI</a></p></li>
+<li><p><a class="reference external" href="https://www.fil.ion.ucl.ac.uk/spm/">SPM</a></p></li>
+</ul>
+</section>
+<section id="python-packages-dependancies">
+<h3>Python packages dependancies<a class="headerlink" href="#python-packages-dependancies" title="Link to this heading">¶</a></h3>
+<p>SkullTo3d relies on python packages. Here we provide installations using Anaconda</p>
+<section id="creating-environment-with-all-packages">
+<h4>Creating environment with all packages<a class="headerlink" href="#creating-environment-with-all-packages" title="Link to this heading">¶</a></h4>
+<p>In case you have access to a conda environment, here is the procedure to initialize your own environnment (called “macapype”, but can be called the name you prefer):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>init<span class="w"> </span>bash
+$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>macapype_env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>macapype_env
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="install-macapype-package">
+<h2>Install macapype package<a class="headerlink" href="#install-macapype-package" title="Link to this heading">¶</a></h2>
+<section id="from-github">
+<h3>from github<a class="headerlink" href="#from-github" title="Link to this heading">¶</a></h3>
+<section id="using-git">
+<span id="git-install"></span><h4>Using git<a class="headerlink" href="#using-git" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Macatools/macapype.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>macapype
+$<span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> </span>develop<span class="w"> </span>--user
+</pre></div>
+</div>
+</section>
+<section id="using-pip">
+<h4>Using pip<a class="headerlink" href="#using-pip" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Macatools/macapype
+</pre></div>
+</div>
+</section>
+</section>
+<section id="from-pypi">
+<span id="pip-install"></span><h3>from pypi<a class="headerlink" href="#from-pypi" title="Link to this heading">¶</a></h3>
+<p>SkullTo3d is available on * <a class="reference external" href="https://pypi.org/project/macapype/">pypi.org</a>:</p>
+<p>If ‘pip’ package is installed on your system, you can install the lastest stable version with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>macapype
+</pre></div>
+</div>
+</section>
+<section id="from-conda">
+<h3>From conda<a class="headerlink" href="#from-conda" title="Link to this heading">¶</a></h3>
+<p>SkullTo3d is also available on <a class="reference external" href="https://anaconda.org/macatools/macapype">Anaconda cloud</a>:</p>
+<p>If ‘conda’ (Anaconda, or miniconda) is installed on your system, you can type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>macatools<span class="w"> </span>macapype
+</pre></div>
+</div>
+<p>!!!! The latest versions of macapype (from &gt; 0.2.1) are not available, due to the inclusion of packages that are not yet packaged in conda
+use “pip install macapype” or “git clone <a class="reference external" href="https://github.com/Macatools/macapype.git">https://github.com/Macatools/macapype.git</a>” till further notice</p>
+</section>
+</section>
+<section id="testing-the-install">
+<h2>Testing the install<a class="headerlink" href="#testing-the-install" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ipython
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span>In [1]: import macapype; print (macapype.__version__)
+</pre></div>
+</div>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, Macapype Developers (macatools). Last updated on 2024-11-22.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

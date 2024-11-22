@@ -1,6 +1,0 @@
-﻿macapype.pipelines.prepare.create\_long\_multi\_preparation\_pipe
-=================================================================
-
-.. currentmodule:: macapype.pipelines.prepare
-
-.. autofunction:: create_long_multi_preparation_pipe

@@ -1,6 +1,0 @@
-﻿macapype.pipelines.segment.create\_old\_segment\_pipe
-=====================================================
-
-.. currentmodule:: macapype.pipelines.segment
-
-.. autofunction:: create_old_segment_pipe

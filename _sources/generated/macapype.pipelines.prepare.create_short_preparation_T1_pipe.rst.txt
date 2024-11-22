@@ -1,6 +1,0 @@
-﻿macapype.pipelines.prepare.create\_short\_preparation\_T1\_pipe
-===============================================================
-
-.. currentmodule:: macapype.pipelines.prepare
-
-.. autofunction:: create_short_preparation_T1_pipe

@@ -1,6 +1,0 @@
-﻿macapype.pipelines.surface.create\_nii\_to\_mesh\_fs\_pipe
-==========================================================
-
-.. currentmodule:: macapype.pipelines.surface
-
-.. autofunction:: create_nii_to_mesh_fs_pipe

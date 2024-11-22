@@ -1,6 +1,0 @@
-﻿macapype.pipelines.prepare.\_create\_mapnode\_prep\_pipeline
-============================================================
-
-.. currentmodule:: macapype.pipelines.prepare
-
-.. autofunction:: _create_mapnode_prep_pipeline

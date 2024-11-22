@@ -1,9 +1,5 @@
 :orphan:
 
-
-
-.. _sphx_glr_auto_examples:
-
 .. _general_examples:
 
 Examples Gallery
@@ -18,87 +14,9 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline">
+    <div class="sphx-glr-thumbnails">
 
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_baboon_ants_based_thumb.png
-     :alt: Plot the results of a segmentation of a baboon dataset with ANTS-based pipeline
-
-     :ref:`sphx_glr_auto_examples_plot_segment_baboon_ants_based.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_segment_baboon_ants_based
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with ANTS-based pipeline">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_ants_based_thumb.png
-     :alt: Plot the results of a segmentation with ANTS-based pipeline
-
-     :ref:`sphx_glr_auto_examples_plot_segment_macaque_ants_based.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_segment_macaque_ants_based
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation with SPM-based pipeline T1xT2">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_macaque_spm_based_thumb.png
-     :alt: Plot the results of a segmentation with SPM-based pipeline T1xT2
-
-     :ref:`sphx_glr_auto_examples_plot_segment_macaque_spm_based.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_segment_macaque_spm_based
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the results of a segmentation of marmoset data with ANTS-based pipeline">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_marmo_ants_based_thumb.png
-     :alt: Plot the results of a segmentation of marmoset data with ANTS-based pipeline
-
-     :ref:`sphx_glr_auto_examples_plot_segment_marmo_ants_based.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_segment_marmo_ants_based
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -106,10 +24,18 @@ Examples Gallery
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_macaque_ants_based_thumb.png
-     :alt: Plot the results of a segmentation with ANTS-based pipeline in sphinx position
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_macaque_ants_based_thumb.png
+    :alt:
 
-     :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py`
+  :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Plot the results of a segmentation with ANTS-based pipeline in sphinx position</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
@@ -120,27 +46,19 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_segment_sphinx_macaque_ants_based
-.. raw:: html
-
-    <div class="sphx-glr-clear"></div>
 
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-gallery
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-gallery
+    .. container:: sphx-glr-download sphx-glr-download-python
 
+      :download:`Download all examples in Python source code: auto_examples_python.zip </auto_examples/auto_examples_python.zip>`
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-    :download:`Download all examples in Python source code: auto_examples_python.zip </auto_examples/auto_examples_python.zip>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip </auto_examples/auto_examples_jupyter.zip>`
+      :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip </auto_examples/auto_examples_jupyter.zip>`
 
 
 .. only:: html

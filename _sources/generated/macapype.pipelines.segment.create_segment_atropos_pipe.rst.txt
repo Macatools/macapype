@@ -1,6 +1,0 @@
-﻿macapype.pipelines.segment.create\_segment\_atropos\_pipe
-=========================================================
-
-.. currentmodule:: macapype.pipelines.segment
-
-.. autofunction:: create_segment_atropos_pipe

@@ -1,6 +1,0 @@
-﻿macapype.pipelines.correct\_bias.create\_correct\_bias\_pipe
-============================================================
-
-.. currentmodule:: macapype.pipelines.correct_bias
-
-.. autofunction:: create_correct_bias_pipe
