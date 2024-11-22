@@ -17,4 +17,22 @@ You can include "-indiv indiv_params.json" in the python command, for specifiyin
 Advanced parameters settings
 ****************************
 
-    TODO  : all available nodes / pipelines
+
+Here is json file with all possible nodes to be tuned in indiv_params; In particular, the specifications of sub- and ses- are mandatory before the specification of nodes; Also note that the nodes are specified directly, without specifiying the sub-pipelines they belong to.
+
+The nodes belonging to "short_data_preparation" pipeline (see `Params<params>`_) are common to both -soft ANTS and SPM :
+
+.. include:: ../examples_doc/indiv_params_general_preparation.json
+   :literal:
+
+
+For -soft SPM, here is the set of nodes that can be individually tuned:
+
+.. include:: ../examples_doc/params_spm.json
+   :literal:
+
+For -soft ANTS, here is the set of nodes that can be individually tuned:
+
+.. include:: ../examples_doc/params_ants.json
+   :literal:
+

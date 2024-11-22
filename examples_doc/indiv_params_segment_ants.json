@@ -1,0 +1,57 @@
+{
+    "sub-test":
+    {
+        "ses-01":
+        {
+            "N4debias":
+            {
+                "params": "N4BiasFieldCorrection (ANTS)",
+                "comment": "OPTIONAL",
+
+                "dimension": 3,
+                "bspline_fitting_distance": 200,
+                "n_iterations": [50, 50, 40, 30],
+                "convergence_threshold": 0.00000001,
+                "shrink_factor": 2,
+                "args": "-r 0 --verbose 1"
+            },
+            "comment": "OR",
+            "fast":
+            {
+                "comment": "OPTIONAL",
+                "params": "FAST (FSL)",
+            },
+
+            "atlas_brex":
+            {
+                "f": 0.8
+            },
+
+            "debias":
+            {
+                "comment": "OPTIONAL",
+                "params": "T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)",
+                "commnet": "# TODO is not used now... in code" ,
+                "s": 2
+            },
+
+
+
+            "norm_intensity":
+            {
+                "comment": "OPTIONAL node in params, if register_NMT_pipe is defined",
+                "params": "N4BiasFieldCorrection (ANTS)"
+            },
+            "comment": "OR",
+            "reg":
+            {
+                "comment": "OPTIONAL node in params, if reg is defined",
+                "params": "IterREGBET (local wrap of Regis Trapeau tools)",
+
+                "n": 2,
+                "m": "ref",
+                "dof": 12
+            },
+        }
+    }
+}

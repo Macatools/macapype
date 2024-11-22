@@ -1,0 +1,35 @@
+{
+    "sub-test":
+    {
+        "ses-01":
+        {
+            "reorient":
+            {
+                "comment": "OPTIONAL node in params",
+                "params": "SwapDimensions (FSL)",
+                "new_dims": "x z -y"
+            },
+
+            "crop_T1":
+            {
+                "comment": "OPTIONAL node in params",
+                "params": "fslroi (FSL)",
+                "args": 0.8
+            },
+
+            "reg_T1_on_template":
+            {
+                "params": "RegAladin (NiftyReg)"
+
+            },
+            "reg_T1_on_template2":
+            {
+                "comment": "OPTIONAL node in params",
+                "comment": "typically used with -soft _robustreg ",
+
+                "params": "RegAladin (NiftyReg)"
+
+            }
+        }
+    }
+}
