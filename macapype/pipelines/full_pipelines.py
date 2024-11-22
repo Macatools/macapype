@@ -1643,6 +1643,8 @@ def create_full_ants_subpipes(
                 brain_segment_pipe, "outputnode.gen_5tt",
                 outputnode, "native_gen_5tt", params)
 
+    # ############################################## surface
+
     if "nii2mesh_brain_pipe" in params["brain_segment_pipe"].keys():
 
         nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
@@ -1891,6 +1893,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
                 outputnode, "native_debiased_T1", params)
+    else:
+        print("No debias is applied before masking")
 
     #  extract brain pipeline
     if "extract_pipe" not in params.keys():
