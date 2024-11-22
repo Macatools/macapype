@@ -3,7 +3,7 @@ name: "Test and deploy"
 on:
   push:
     branches:
-        [ test_doc ]
+        [ master ]
 
 jobs:
   build:
