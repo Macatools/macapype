@@ -88,7 +88,7 @@
 
                 "brainsize": "70"
             }
-    	},
+        },
 
         "inv_transfo_aladin":
         {
@@ -97,16 +97,16 @@
             "params": "RegTransform (NiftyReg)"
         },
 
-    	"denoise":
-    	{
+        "denoise":
+        {
             "comment": "OPTIONAL",
             "params": "DenoiseImage (ANTS)",
 
             "shrink_factor": 2
-    	},
+        },
 
-    	"pad_template":
-    	{
+        "pad_template":
+        {
 
             "comment": "OPTIONAL",
             "comment": "used for skullTo3d to keep an image bigger than brain, but is not used further in brain segmentation",
@@ -115,6 +115,6 @@
             "copy_header" : true,
             "operation" : "PadImage",
             "op2" : "70"
-    	}
-    },
+        }
+    }
 }

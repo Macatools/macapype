@@ -3,102 +3,6 @@
     {
         "template_name": "Haiko_v1.5"
     },
-    "short_preparation_pipe":
-    {
-
-        "use_T2":
-        {
-
-            "comment": "boolean marker, if present T2 and T1 are exchanged in the process, (T2 is used to register to template, and T1 is registered to T2)",
-
-            "comment": "BE CAREFUL, the name of the internal nodes are still using the original names although the files are swapped",
-            "comment": "Everything is swapped back as outputs of short_preparation_pipe",
-        },
-
-        "avg_reorient_pipe":
-        {
-            "comment": "OPTIONAL",
-            "reorient":
-            {
-                "params": "SwapDimensions (FSL)",
-                "new_dims": "x z -y"
-            }
-        },
-
-        "aladin_T2_on_T1":
-        {
-            "comment": "boolean marker, if present RegAladin to coregister T2 on T1 and pad/resample, otherwise use FSL FLIRT (default)",
-        },
-
-        "crop_T1":
-        {
-            "comment": "OPTIONAL",
-            "comment": "if present, applied to both T1w and T2w",
-            "params": "fslroi (FSL)",
-
-            "args": "should be specified in indiv_params"
-        },
-
-    	"crop_aladin_pipe":
-    	{
-            "pre_crop_z_T1":
-            {
-
-                "comment": "OPTIONAL",
-                "comment": "use with caution",
-                "params": "RobustFOV (FSL)",
-
-                "brainsize": "70"
-            },
-            "reg_T1_on_template":
-            {
-                "params": "RegAladin (NiftyReg)"
-
-            },
-            "reg_T1_on_template2":
-            {
-                "comment": "OPTIONAL",
-                "comment": "typically used with -soft _robustreg ",
-
-                "params": "RegAladin (NiftyReg)"
-
-            },
-            "crop_z_T1":
-            {
-                "comment": "OPTIONAL",
-                "params": "RobustFOV (FSL)",
-
-                "brainsize": "70"
-            }
-    	},
-
-        "inv_transfo_aladin":
-        {
-            "comment": "OPTIONAL",
-            "comment" : "not sure why it is parameterized",
-            "params": "RegTransform (NiftyReg)"
-        },
-
-    	"denoise":
-    	{
-            "comment": "OPTIONAL",
-            "params": "DenoiseImage (ANTS)",
-
-            "shrink_factor": 2
-    	},
-
-    	"pad_template":
-    	{
-
-            "comment": "OPTIONAL",
-            "comment": "used for skullTo3d to keep an image bigger than brain, but is not used further in brain segmentation",
-            "params": "ImageMath (ANTS)",
-
-            "copy_header" : true,
-            "operation" : "PadImage",
-            "op2" : "70"
-    	}
-    },
 
     "comment": "mandatory, performing both debias and brain_extraction",
     "debias":
@@ -120,15 +24,49 @@
 
     "old_segment_pipe":
     {
+        "segment":
+        {
+            "params": "Segment (SPM12)",
+        },
 
-        "comment": "optional (if segmentation in 5tt mrtrix format is required",
+        "threshold_gm":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Threshold (FSL)",
+
+            "thr": 0.5
+        },
+        "threshold_wm":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Threshold (FSL)",
+
+            "thr": 0.5
+        },
+        "threshold_csf":
+        {
+            "comment": "mandatory if old_segment_pipe is defined",
+            "params": "Threshold (FSL)",
+
+            "thr": 0.5
+        },
+
+        "comment": "optional (if segmentation in 5tt mrtrix format is required"),
         "export_5tt_pipe":
         {
+            "commment": "no node are parametrized"
         }
     },
 
     "comment": "OPTIONAL",
     "mask_from_seg_pipe":
     {
+        "merge_indexed_mask":
+        {
+            "comment": "never used, not sure if modifying default parameters works",
+            "comment": "default : index_csf=1, index_gm=2, index_wm=3",
+            "params": "merge_masks (python)",
+
+        }
     }
 }

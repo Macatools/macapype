@@ -197,6 +197,7 @@
         "comment": "optional (if segmentation in 5tt mrtrix format is required",
         "export_5tt_pipe":
         {
+            "commment": "no node are parametrized"
         }
     },
 

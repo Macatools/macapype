@@ -18,6 +18,26 @@
                 "m": "ref",
                 "dof": 12
             },
+
+
+            "threshold_gm":
+            {
+                "params": "Threshold (FSL)",
+
+                "thr": 0.5
+            },
+            "threshold_wm":
+            {
+                "params": "Threshold (FSL)",
+
+                "thr": 0.5
+            },
+            "threshold_csf":
+            {
+                "params": "Threshold (FSL)",
+
+                "thr": 0.5
+            }
         }
     }
 }
