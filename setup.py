@@ -21,7 +21,14 @@ print("Will not build conda module")
 
 test_deps = ['codecov', 'pytest', 'pytest-cov']
 flake_deps = ['flake8']
-doc_deps = ['sphinx', 'sphinx-gallery', 'sphinx_bootstrap_theme']
+
+
+doc_deps = ['sphinx',
+            'sphinx-gallery',
+            'sphinx_bootstrap_theme',
+            'numpydoc',
+            'sphinxcontrib-fulltoc',
+            'matplotlib']
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
