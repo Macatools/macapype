@@ -127,7 +127,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                             "smoo_r_val": 1.0
                             }
                         }
-                elif "haflrobustreg" in ssoft and "crop_aladin_pipe" \
+                elif "halfrobustreg" in ssoft and "crop_aladin_pipe" \
                         in params["short_preparation_pipe"]:
                     print("Using robustreg option")
                     params["short_preparation_pipe"]["crop_aladin_pipe"] = {
