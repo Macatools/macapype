@@ -129,7 +129,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                         }
                 elif "halfrobustreg" in ssoft and "crop_aladin_pipe" \
                         in params["short_preparation_pipe"]:
-                    print("Using robustreg option")
+                    print("Using halfrobustreg option")
                     params["short_preparation_pipe"]["crop_aladin_pipe"] = {
                         "reg_T1_on_template": {
                             "nac_flag": True,
