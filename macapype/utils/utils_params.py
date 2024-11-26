@@ -127,6 +127,19 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                             "smoo_r_val": 1.0
                             }
                         }
+                elif "halfrobustreg" in ssoft and "crop_aladin_pipe" \
+                        in params["short_preparation_pipe"]:
+                    print("Using halfrobustreg option")
+                    params["short_preparation_pipe"]["crop_aladin_pipe"] = {
+                        "reg_T1_on_template": {
+                            "nac_flag": True,
+                            "rig_only_flag": True,
+                            "nosym_flag": True,
+                            "ln_val": 12,
+                            "lp_val": 10,
+                            "smoo_r_val": 1.0
+                            }
+                        }
                 return params, indiv_params, extra_wf_name
 
             if prep_pipe == "short_preparation_pipe":
