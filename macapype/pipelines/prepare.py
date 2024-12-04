@@ -16,6 +16,7 @@ from ..utils.misc import parse_key
 from ..nodes.prepare import average_align, apply_li_thresh
 
 from ..nodes.register import pad_zero_mri
+from ..nodes.surface import keep_gcc
 
 # should be in nipype code directly
 from ..nodes.prepare import Refit
@@ -87,13 +88,34 @@ def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
         name='inputnode'
     )
 
+    # lithresholding
     li_thresh = pe.Node(
         niu.Function(input_names=['orig_img_file'],
                      output_names=['lithr_img_file'],
                      function=apply_li_thresh),
         name="li_thresholding")
 
-    remove_caps_pipe.connect(inputnode, 'av_img', li_thresh, 'orig_img')
+    remove_caps_pipe.connect(inputnode, 'av_img', li_thresh, 'orig_img_file')
+
+    # gcc
+
+    gcc_mask = pe.Node(
+        niu.Function(input_names=['nii_file'],
+                     output_names=['gcc_nii_file'],
+                     function=keep_gcc),
+        name="gcc_mask")
+
+
+    remove_caps_pipe.connect(li_thresh, 'lithr_img_file',
+                             gcc_mask, 'nii_file')
+
+    # masking original_image
+    mask_capsule = pe.Node(fsl.ApplyMask(), name='mask_capsule')
+
+    remove_caps_pipe.connect(inputnode, 'av_img',
+                             mask_capsule, 'in_file')
+    remove_caps_pipe.connect(gcc_mask, 'gcc_nii_file',
+                             mask_capsule, 'mask_file')
 
     return remove_caps_pipe
 
