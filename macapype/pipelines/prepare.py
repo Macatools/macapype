@@ -73,7 +73,6 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
 
 
 def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
-
     """
     By david:
     li_thresholding
@@ -104,7 +103,6 @@ def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
                      output_names=['gcc_nii_file'],
                      function=keep_gcc),
         name="gcc_mask")
-
 
     remove_caps_pipe.connect(li_thresh, 'lithr_img_file',
                              gcc_mask, 'nii_file')
@@ -445,7 +443,7 @@ def create_short_preparation_pipe(params, params_template={},
     if "remove_capsule_pipe" in params:
 
         remove_capsule_pipe = _create_remove_capsule_pipeline(
-            params["remove_capsule_pipe"])
+            params = params["remove_capsule_pipe"])
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
