@@ -83,7 +83,7 @@ def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['av_img', 'indiv_params']),
+        niu.IdentityInterface(fields=['orig_img', 'indiv_params']),
         name='inputnode'
     )
 
@@ -94,7 +94,7 @@ def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
                      function=apply_li_thresh),
         name="li_thresholding")
 
-    remove_caps_pipe.connect(inputnode, 'av_img', li_thresh, 'orig_img_file')
+    remove_caps_pipe.connect(inputnode, 'orig_img', li_thresh, 'orig_img_file')
 
     # gcc
 
@@ -110,7 +110,7 @@ def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
     # masking original_image
     mask_capsule = pe.Node(fsl.ApplyMask(), name='mask_capsule')
 
-    remove_caps_pipe.connect(inputnode, 'av_img',
+    remove_caps_pipe.connect(inputnode, 'orig_img',
                              mask_capsule, 'in_file')
     remove_caps_pipe.connect(gcc_mask, 'gcc_nii_file',
                              mask_capsule, 'mask_file')
@@ -441,19 +441,18 @@ def create_short_preparation_pipe(params, params_template={},
                     outputnode, 'native_T2')
 
     if "remove_capsule_pipe" in params:
-
         remove_capsule_pipe = _create_remove_capsule_pipeline(
-            params = params["remove_capsule_pipe"])
+            params=params["remove_capsule_pipe"])
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
-                remove_capsule_pipe, 'inputnode.avg_img')
+                remove_capsule_pipe, 'inputnode.orig_img')
 
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
-                remove_capsule_pipe, 'inputnode.avg_img')
+                remove_capsule_pipe, 'inputnode.orig_img')
 
     # register T1 to stereo image
     crop_aladin_pipe = create_crop_aladin_pipe(
