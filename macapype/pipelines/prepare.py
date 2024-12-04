@@ -447,8 +447,15 @@ def create_short_preparation_pipe(params, params_template={},
         remove_capsule_pipe = _create_remove_capsule_pipeline(
             params["remove_capsule_pipe"])
 
-    0/0
+        if "avg_reorient_pipe" in params.keys():
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                remove_capsule_pipe, 'inputnode.avg_img')
 
+        else:
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                remove_capsule_pipe, 'inputnode.avg_img')
 
     # register T1 to stereo image
     crop_aladin_pipe = create_crop_aladin_pipe(
@@ -461,15 +468,21 @@ def create_short_preparation_pipe(params, params_template={},
             crop_aladin_pipe, 'inputnode.native_T1')
 
     else:
-        if "avg_reorient_pipe" in params.keys():
+        if "remove_capsule_pipe" in params.keys():
             data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
+                remove_capsule_pipe, 'mask_capsule.out_file',
                 crop_aladin_pipe, 'inputnode.native_T1')
 
         else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                crop_aladin_pipe, 'inputnode.native_T1')
+            if "avg_reorient_pipe" in params.keys():
+                data_preparation_pipe.connect(
+                    av_T1, 'outputnode.std_img',
+                    crop_aladin_pipe, 'inputnode.native_T1')
+
+            else:
+                data_preparation_pipe.connect(
+                    av_T1, 'avg_img',
+                    crop_aladin_pipe, 'inputnode.native_T1')
 
     data_preparation_pipe.connect(
         inputnode, 'indiv_params',
