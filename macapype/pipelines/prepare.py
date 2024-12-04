@@ -13,7 +13,7 @@ from nipype.interfaces.ants.segmentation import DenoiseImage
 from ..utils.utils_nodes import NodeParams
 from ..utils.misc import parse_key
 
-from ..nodes.prepare import average_align
+from ..nodes.prepare import average_align, apply_li_thresh
 
 from ..nodes.register import pad_zero_mri
 
@@ -69,6 +69,34 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
     reorient_pipe.connect(std_img, 'out_file', outputnode, 'std_img')
 
     return reorient_pipe
+
+
+def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
+
+    """
+    By david:
+    li_thresholding
+    gcc
+    """
+    # creating pipeline
+    remove_caps_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['av_img', 'indiv_params']),
+        name='inputnode'
+    )
+
+    li_thresh = pe.Node(
+        niu.Function(input_names=['orig_img_file'],
+                     output_names=['lithr_img_file'],
+                     function=apply_li_thresh),
+        name="li_thresholding")
+
+    remove_caps_pipe.connect(inputnode, 'av_img', li_thresh, 'orig_img')
+
+    return remove_caps_pipe
+
 
 ###############################################################################
 # main pipeline: "short_preparation_pipe"
@@ -391,6 +419,14 @@ def create_short_preparation_pipe(params, params_template={},
                 data_preparation_pipe.connect(
                     align_T2_on_T1, "out_file",
                     outputnode, 'native_T2')
+
+    if "remove_capsule_pipe" in params:
+
+        remove_capsule_pipe = _create_remove_capsule_pipeline(
+            params["remove_capsule_pipe"])
+
+    0/0
+
 
     # register T1 to stereo image
     crop_aladin_pipe = create_crop_aladin_pipe(

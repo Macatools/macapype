@@ -445,6 +445,40 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
     return padded_img_file
 
 
+def apply_li_thresh(orig_img_file):
+
+    import os
+    from skimage.filters import threshold_li
+    import nibabel as nib
+    # import numpy as np
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    # orig image
+    orig_img = nib.load(orig_img_file)
+
+    data_orig = orig_img.get_data()
+    header_orig = orig_img.header
+    affine_orig = orig_img.affine
+
+    print("Orig img shape:", data_orig.shape)
+
+    img_lithresh = threshold_li(data_orig)
+
+    # saving lithresh image
+    fpath, fname, ext = split_f(orig_img_file)
+    lithr_img_file = os.path.abspath(fname + "_lithresh" + ext)
+    img_thresh = nib.Nifti1Image(padded_img_data, affine=affine_orig,
+                                     header=header_orig)
+    nib.save(img_lithresh, lithr_img_file)
+
+    return lithr_img_file
+
+
+
+    return thresh_img_file
+
+
 if __name__ == '__main__':
 
     data_path = "/hpc/meca/data/Macaques/Macaque_hiphop/results/ucdavis"
