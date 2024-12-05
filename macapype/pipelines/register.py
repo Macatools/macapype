@@ -495,7 +495,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['native_T1',
+        niu.IdentityInterface(fields=['native_T1', 'orig_native_T1',
                                       'stereo_template_T1',
                                       'indiv_params']),
         name='inputnode')
@@ -506,33 +506,15 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                                       'native_to_stereo_trans']),
         name='outputnode')
 
-    if "pre_crop_z_T1" in params.keys():
-
-        print('pre_crop_z_T1')
-        pre_crop_z_T1 = NodeParams(
-            fsl.RobustFOV(),
-            params=parse_key(params, "pre_crop_z_T1"),
-            name='pre_crop_z_T1')
-
-        reg_pipe.connect(
-            inputnode, 'native_T1',
-            pre_crop_z_T1, 'in_file')
-
     # align T1 on template
     reg_T1_on_template = NodeParams(
         reg.RegAladin(),
         params=parse_key(params, "reg_T1_on_template"),
         name='reg_T1_on_template')
 
-    if "pre_crop_z_T1" in params.keys():
-        reg_pipe.connect(
-            pre_crop_z_T1, "out_roi",
-            reg_T1_on_template, "flo_file")
-    else:
-
-        reg_pipe.connect(
-            inputnode, 'native_T1',
-            reg_T1_on_template, "flo_file")
+    reg_pipe.connect(
+        inputnode, 'native_T1',
+        reg_T1_on_template, "flo_file")
 
     reg_pipe.connect(
         inputnode, 'stereo_template_T1',
@@ -573,23 +555,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'aff_file',
                          compose_transfo, "comp_input")
 
-    # crop_z_T1
-    if "crop_z_T1" in params.keys():
-        crop_z_T1 = NodeParams(
-            fsl.RobustFOV(),
-            params=parse_key(params, "crop_z_T1"),
-            name='crop_z_T1')
-
-        if "reg_T1_on_template2" in params.keys():
-            reg_pipe.connect(
-                reg_T1_on_template2, 'res_file',
-                crop_z_T1, 'in_file')
-
-        else:
-            reg_pipe.connect(
-                reg_T1_on_template, 'res_file',
-                crop_z_T1, 'in_file')
-
+    ### padding image to have zeros and non nans
     pad_image_T1 = pe.Node(
         ants.utils.ImageMath(),
         name="pad_image_T1")
@@ -598,15 +564,9 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
     pad_image_T1.inputs.operation = "PadImage"
     pad_image_T1.inputs.op2 = '200'
 
-    if "pre_crop_z_T1" in params.keys():
-        reg_pipe.connect(
-            pre_crop_z_T1, 'out_roi',
-            pad_image_T1, "op1")
-
-    else:
-        reg_pipe.connect(
-            inputnode, 'native_T1',
-            pad_image_T1, "op1")
+    reg_pipe.connect(
+        inputnode, 'orig_native_T1',
+        pad_image_T1, "op1")
 
     # resampling using transfo on much bigger image
     reg_resample_T1 = pe.Node(
