@@ -26,7 +26,8 @@ def keep_gcc(nii_file):
 
     # numpy
     data[data > 0] = 1
-    binary = np.array(data, dtype="bool")
+
+    binary = np.array(data, dtype=np.int16)
 
     # skimage GCC
     new_data = getLargestCC(binary)
