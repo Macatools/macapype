@@ -1054,6 +1054,7 @@ def create_full_ants_subpipes(
 
         fast_T1.inputs.output_biascorrected = True
         fast_T1.inputs.output_biasfield = True
+        fast_T1.inputs.img_type = 1
 
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
                          fast_T1, "in_files")
@@ -1070,6 +1071,7 @@ def create_full_ants_subpipes(
 
         fast_T2.inputs.output_biascorrected = True
         fast_T2.inputs.output_biasfield = True
+        fast_T2.inputs.img_type = 1
 
         seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                          fast_T2, "in_files")
