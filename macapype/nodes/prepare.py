@@ -444,6 +444,7 @@ def padding_cropped_img(cropped_img_file, orig_img_file, indiv_crop):
 
     return padded_img_file
 
+
 def apply_li_thresh(orig_img_file):
 
     import os
@@ -466,7 +467,7 @@ def apply_li_thresh(orig_img_file):
 
     lithresh = threshold_li(data_orig)
 
-    img_lithresh_data = data_orig.astype(bool)
+    img_lithresh_data = data_orig.astype(np.int16)
 
     img_lithresh_data[data_orig <= lithresh] = 0
     img_lithresh_data[lithresh < data_orig] = 1
