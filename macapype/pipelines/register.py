@@ -15,6 +15,10 @@ from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NMTSubjectAlign2, NwarpApplyPriors,
                               animal_warper)
 
+from ..nodes.surface import keep_gcc
+
+from ..nodes.prepare import apply_li_thresh
+
 
 def create_iterative_register_pipe(
         template_file, template_brain_file, template_mask_file, gm_prob_file,
@@ -489,13 +493,59 @@ def create_reg_seg_pipe(name="reg_seg_pipe"):
     return reg_pipe
 
 
+# used for registration
+def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
+    """
+    By david:
+    li_thresholding
+    gcc
+    """
+    # creating pipeline
+    remove_caps_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['orig_img', 'indiv_params']),
+        name='inputnode'
+    )
+
+    # lithresholding
+    li_thresh = pe.Node(
+        niu.Function(input_names=['orig_img_file'],
+                     output_names=['lithr_img_file'],
+                     function=apply_li_thresh),
+        name="li_thresholding")
+
+    remove_caps_pipe.connect(inputnode, 'orig_img', li_thresh, 'orig_img_file')
+
+    # gcc
+
+    gcc_mask = pe.Node(
+        niu.Function(input_names=['nii_file'],
+                     output_names=['gcc_nii_file'],
+                     function=keep_gcc),
+        name="gcc_mask")
+
+    remove_caps_pipe.connect(li_thresh, 'lithr_img_file',
+                             gcc_mask, 'nii_file')
+
+    # masking original_image
+    mask_capsule = pe.Node(fsl.ApplyMask(), name='mask_capsule')
+
+    remove_caps_pipe.connect(inputnode, 'orig_img',
+                             mask_capsule, 'in_file')
+    remove_caps_pipe.connect(gcc_mask, 'gcc_nii_file',
+                             mask_capsule, 'mask_file')
+
+    return remove_caps_pipe
+
 def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
 
     reg_pipe = pe.Workflow(name=name)
 
     # creating inputnode
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['native_T1', 'orig_native_T1',
+        niu.IdentityInterface(fields=['native_T1',
                                       'stereo_template_T1',
                                       'indiv_params']),
         name='inputnode')
@@ -506,15 +556,29 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                                       'native_to_stereo_trans']),
         name='outputnode')
 
+    if "remove_capsule_pipe" in params:
+        remove_capsule_pipe = _create_remove_capsule_pipeline(
+            params=params["remove_capsule_pipe"])
+
+        reg_pipe.connect(
+                inputnode, 'native_T1',
+                remove_capsule_pipe, 'inputnode.orig_img')
+
     # align T1 on template
     reg_T1_on_template = NodeParams(
         reg.RegAladin(),
         params=parse_key(params, "reg_T1_on_template"),
         name='reg_T1_on_template')
 
-    reg_pipe.connect(
-        inputnode, 'native_T1',
-        reg_T1_on_template, "flo_file")
+    if "remove_capsule_pipe" in params:
+        reg_pipe.connect(
+            remove_capsule_pipe, 'mask_capsule.out_file',
+            reg_T1_on_template, "flo_file")
+    else:
+
+        reg_pipe.connect(
+            inputnode, 'native_T1',
+            reg_T1_on_template, "flo_file")
 
     reg_pipe.connect(
         inputnode, 'stereo_template_T1',

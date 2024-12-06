@@ -13,10 +13,9 @@ from nipype.interfaces.ants.segmentation import DenoiseImage
 from ..utils.utils_nodes import NodeParams
 from ..utils.misc import parse_key
 
-from ..nodes.prepare import average_align, apply_li_thresh
+from ..nodes.prepare import average_align
 
 from ..nodes.register import pad_zero_mri
-from ..nodes.surface import keep_gcc
 
 # should be in nipype code directly
 from ..nodes.prepare import Refit
@@ -71,51 +70,6 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
 
     return reorient_pipe
 
-
-def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
-    """
-    By david:
-    li_thresholding
-    gcc
-    """
-    # creating pipeline
-    remove_caps_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['orig_img', 'indiv_params']),
-        name='inputnode'
-    )
-
-    # lithresholding
-    li_thresh = pe.Node(
-        niu.Function(input_names=['orig_img_file'],
-                     output_names=['lithr_img_file'],
-                     function=apply_li_thresh),
-        name="li_thresholding")
-
-    remove_caps_pipe.connect(inputnode, 'orig_img', li_thresh, 'orig_img_file')
-
-    # gcc
-
-    gcc_mask = pe.Node(
-        niu.Function(input_names=['nii_file'],
-                     output_names=['gcc_nii_file'],
-                     function=keep_gcc),
-        name="gcc_mask")
-
-    remove_caps_pipe.connect(li_thresh, 'lithr_img_file',
-                             gcc_mask, 'nii_file')
-
-    # masking original_image
-    mask_capsule = pe.Node(fsl.ApplyMask(), name='mask_capsule')
-
-    remove_caps_pipe.connect(inputnode, 'orig_img',
-                             mask_capsule, 'in_file')
-    remove_caps_pipe.connect(gcc_mask, 'gcc_nii_file',
-                             mask_capsule, 'mask_file')
-
-    return remove_caps_pipe
 
 
 ###############################################################################
@@ -440,20 +394,6 @@ def create_short_preparation_pipe(params, params_template={},
                     align_T2_on_T1, "out_file",
                     outputnode, 'native_T2')
 
-    if "remove_capsule_pipe" in params:
-        remove_capsule_pipe = _create_remove_capsule_pipeline(
-            params=params["remove_capsule_pipe"])
-
-        if "avg_reorient_pipe" in params.keys():
-            data_preparation_pipe.connect(
-                av_T1, 'outputnode.std_img',
-                remove_capsule_pipe, 'inputnode.orig_img')
-
-        else:
-            data_preparation_pipe.connect(
-                av_T1, 'avg_img',
-                remove_capsule_pipe, 'inputnode.orig_img')
-
     # register T1 to stereo image
     crop_aladin_pipe = create_crop_aladin_pipe(
         "crop_aladin_pipe",
@@ -469,23 +409,6 @@ def create_short_preparation_pipe(params, params_template={},
             crop_aladin_pipe, 'inputnode.orig_native_T1')
 
     else:
-        # connect native_T1
-        if "remove_capsule_pipe" in params.keys():
-            data_preparation_pipe.connect(
-                remove_capsule_pipe, 'mask_capsule.out_file',
-                crop_aladin_pipe, 'inputnode.native_T1')
-
-        else:
-            if "avg_reorient_pipe" in params.keys():
-                data_preparation_pipe.connect(
-                    av_T1, 'outputnode.std_img',
-                    crop_aladin_pipe, 'inputnode.native_T1')
-
-            else:
-                data_preparation_pipe.connect(
-                    av_T1, 'avg_img',
-                    crop_aladin_pipe, 'inputnode.native_T1')
-
         # connect orig_native_T1
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
