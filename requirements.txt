@@ -1,8 +1,10 @@
 nipype
+rdflib==6.3.1
+pandas==2.2.3
 nilearn
 networkx
 pybids
 scikit-image
 nibabel
 numpy
-brain-slam
+SimpleITK

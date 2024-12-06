@@ -15,6 +15,10 @@ from ..nodes.register import (interative_flirt, NMTSubjectAlign,
                               NMTSubjectAlign2, NwarpApplyPriors,
                               animal_warper)
 
+from ..nodes.surface import keep_gcc
+
+from ..nodes.prepare import apply_li_thresh
+
 
 def create_iterative_register_pipe(
         template_file, template_brain_file, template_mask_file, gm_prob_file,
@@ -489,6 +493,53 @@ def create_reg_seg_pipe(name="reg_seg_pipe"):
     return reg_pipe
 
 
+# used for registration
+def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
+    """
+    By david:
+    li_thresholding
+    gcc
+    """
+    # creating pipeline
+    remove_caps_pipe = pe.Workflow(name=name)
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['orig_img', 'indiv_params']),
+        name='inputnode'
+    )
+
+    # lithresholding
+    li_thresh = pe.Node(
+        niu.Function(input_names=['orig_img_file'],
+                     output_names=['lithr_img_file'],
+                     function=apply_li_thresh),
+        name="li_thresholding")
+
+    remove_caps_pipe.connect(inputnode, 'orig_img', li_thresh, 'orig_img_file')
+
+    # gcc
+
+    gcc_mask = pe.Node(
+        niu.Function(input_names=['nii_file'],
+                     output_names=['gcc_nii_file'],
+                     function=keep_gcc),
+        name="gcc_mask")
+
+    remove_caps_pipe.connect(li_thresh, 'lithr_img_file',
+                             gcc_mask, 'nii_file')
+
+    # masking original_image
+    mask_capsule = pe.Node(fsl.ApplyMask(), name='mask_capsule')
+
+    remove_caps_pipe.connect(inputnode, 'orig_img',
+                             mask_capsule, 'in_file')
+    remove_caps_pipe.connect(gcc_mask, 'gcc_nii_file',
+                             mask_capsule, 'mask_file')
+
+    return remove_caps_pipe
+
+
 def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
 
     reg_pipe = pe.Workflow(name=name)
@@ -506,17 +557,13 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
                                       'native_to_stereo_trans']),
         name='outputnode')
 
-    if "pre_crop_z_T1" in params.keys():
-
-        print('pre_crop_z_T1')
-        pre_crop_z_T1 = NodeParams(
-            fsl.RobustFOV(),
-            params=parse_key(params, "pre_crop_z_T1"),
-            name='pre_crop_z_T1')
+    if "remove_capsule_pipe" in params:
+        remove_capsule_pipe = _create_remove_capsule_pipeline(
+            params=params["remove_capsule_pipe"])
 
         reg_pipe.connect(
-            inputnode, 'native_T1',
-            pre_crop_z_T1, 'in_file')
+                inputnode, 'native_T1',
+                remove_capsule_pipe, 'inputnode.orig_img')
 
     # align T1 on template
     reg_T1_on_template = NodeParams(
@@ -524,9 +571,9 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
         params=parse_key(params, "reg_T1_on_template"),
         name='reg_T1_on_template')
 
-    if "pre_crop_z_T1" in params.keys():
+    if "remove_capsule_pipe" in params:
         reg_pipe.connect(
-            pre_crop_z_T1, "out_roi",
+            remove_capsule_pipe, 'mask_capsule.out_file',
             reg_T1_on_template, "flo_file")
     else:
 
@@ -573,23 +620,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'aff_file',
                          compose_transfo, "comp_input")
 
-    # crop_z_T1
-    if "crop_z_T1" in params.keys():
-        crop_z_T1 = NodeParams(
-            fsl.RobustFOV(),
-            params=parse_key(params, "crop_z_T1"),
-            name='crop_z_T1')
-
-        if "reg_T1_on_template2" in params.keys():
-            reg_pipe.connect(
-                reg_T1_on_template2, 'res_file',
-                crop_z_T1, 'in_file')
-
-        else:
-            reg_pipe.connect(
-                reg_T1_on_template, 'res_file',
-                crop_z_T1, 'in_file')
-
+    # padding image to have zeros and non nans
     pad_image_T1 = pe.Node(
         ants.utils.ImageMath(),
         name="pad_image_T1")
@@ -598,15 +629,9 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
     pad_image_T1.inputs.operation = "PadImage"
     pad_image_T1.inputs.op2 = '200'
 
-    if "pre_crop_z_T1" in params.keys():
-        reg_pipe.connect(
-            pre_crop_z_T1, 'out_roi',
-            pad_image_T1, "op1")
-
-    else:
-        reg_pipe.connect(
-            inputnode, 'native_T1',
-            pad_image_T1, "op1")
+    reg_pipe.connect(
+        inputnode, 'native_T1',
+        pad_image_T1, "op1")
 
     # resampling using transfo on much bigger image
     reg_resample_T1 = pe.Node(

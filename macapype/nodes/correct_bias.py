@@ -217,3 +217,44 @@ class T1xT2BiasFieldCorrection(CommandLine):
             outputs["t2_debiased_brain_file"] = os.path.abspath(
                 t2_fname + self.inputs.os + "_brain.nii.gz")
         return outputs
+
+# ############## simpleITK debias
+
+
+def itk_debias(img_file):
+
+    import os
+    import SimpleITK as sitk
+
+    from nipype.utils.filemanip import split_filename as split_f
+
+    # Read the input image
+    input_image = sitk.ReadImage(img_file, sitk.sitkFloat32)
+
+    # Initialize the N4 bias field correction filter
+    n4_filter = sitk.N4BiasFieldCorrectionImageFilter()
+
+    # best paramters for marmoset Randy petra
+    n4_filter.SetMaximumNumberOfIterations([200, 100, 50, 25])
+    n4_filter.SetConvergenceThreshold(0.0001)
+    n4_filter.SetWienerFilterNoise(0.01)
+
+    input_image_mask = sitk.LiThreshold(input_image, 0, 1)
+
+    # the output image
+    corrected_image = n4_filter.Execute(input_image, input_image_mask)
+
+    # get the bias field
+    bias_field_image = n4_filter.GetLogBiasFieldAsImage(input_image)
+
+    # Save the corrected image and bias
+    fpath, fname, ext = split_f(img_file)
+    cor_img_file = os.path.abspath(fname + "_debias" + ext)
+
+    bias_img_file = os.path.abspath(fname + "_bias" + ext)
+
+    sitk.WriteImage(corrected_image, cor_img_file)
+
+    sitk.WriteImage(bias_field_image, bias_img_file)
+
+    return cor_img_file, bias_img_file
