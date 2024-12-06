@@ -5,4 +5,3 @@ pybids
 scikit-image
 nibabel
 numpy
-brain-slam
