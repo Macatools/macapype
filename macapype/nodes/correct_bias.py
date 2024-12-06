@@ -234,6 +234,11 @@ def itk_debias(img_file):
     # Initialize the N4 bias field correction filter
     n4_filter = sitk.N4BiasFieldCorrectionImageFilter()
 
+    # best paramters for marmoset Randy petra
+    n4_filter.SetMaximumNumberOfIterations([200, 100, 50, 25])
+    n4_filter.SetConvergenceThreshold(0.0001)
+    n4_filter.SetWienerFilterNoise(0.01)
+
     input_image_mask = sitk.LiThreshold(input_image, 0, 1)
 
     # the output image
