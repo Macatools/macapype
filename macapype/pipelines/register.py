@@ -629,7 +629,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
     pad_image_T1.inputs.op2 = '200'
 
     reg_pipe.connect(
-        inputnode, 'orig_native_T1',
+        inputnode, 'native_T1',
         pad_image_T1, "op1")
 
     # resampling using transfo on much bigger image
