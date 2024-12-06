@@ -44,6 +44,12 @@ In particular:
 * _T1w (BIDS) extension is expected for T1 weighted images (BIDS)
 * _T2w (BIDS) extension is expected for T2 weighted images (BIDS)
 
+.. image:: ./img/images/BIDS_orga.jpg
+    :width: 600
+    :align: center
+
+**Note** : All files with the same extension (T1w or T2w) will be aligned to the first one and averaged
+
 
 Command line parameters
 ***********************
