@@ -472,17 +472,18 @@ def apply_li_thresh(orig_img_file):
     img_lithresh_data[data_orig <= lithresh] = 0
     img_lithresh_data[lithresh < data_orig] = 1
 
-    print("Min/max values after lithresh:", np.min(img_lithresh_data), np.max(img_lithresh_data))
+    print("Min/max values after lithresh:", np.min(img_lithresh_data),
+          np.max(img_lithresh_data))
 
     # saving lithresh image
     fpath, fname, ext = split_f(orig_img_file)
     lithr_img_file = os.path.abspath(fname + "_lithresh" + ext)
-    img_lithresh = nib.Nifti1Image(img_lithresh_data, affine=affine_orig,
-                                     header=header_orig)
+    img_lithresh = nib.Nifti1Image(img_lithresh_data,
+                                   affine=affine_orig,
+                                   header=header_orig)
     nib.save(img_lithresh, lithr_img_file)
 
     return lithr_img_file
-
 
 
 if __name__ == '__main__':

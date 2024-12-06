@@ -620,7 +620,7 @@ def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
         reg_pipe.connect(reg_T1_on_template2, 'aff_file',
                          compose_transfo, "comp_input")
 
-    ### padding image to have zeros and non nans
+    # padding image to have zeros and non nans
     pad_image_T1 = pe.Node(
         ants.utils.ImageMath(),
         name="pad_image_T1")

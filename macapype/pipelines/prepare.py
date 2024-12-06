@@ -71,7 +71,6 @@ def _create_avg_reorient_pipeline(name="avg_reorient_pipe", params={}):
     return reorient_pipe
 
 
-
 ###############################################################################
 # main pipeline: "short_preparation_pipe"
 ###############################################################################
