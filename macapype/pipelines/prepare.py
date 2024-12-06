@@ -404,21 +404,17 @@ def create_short_preparation_pipe(params, params_template={},
             crop_T1, "roi_file",
             crop_aladin_pipe, 'inputnode.native_T1')
 
-        data_preparation_pipe.connect(
-            crop_T1, "roi_file",
-            crop_aladin_pipe, 'inputnode.orig_native_T1')
-
     else:
         # connect orig_native_T1
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(
                 av_T1, 'outputnode.std_img',
-                crop_aladin_pipe, 'inputnode.orig_native_T1')
+                crop_aladin_pipe, 'inputnode.native_T1')
 
         else:
             data_preparation_pipe.connect(
                 av_T1, 'avg_img',
-                crop_aladin_pipe, 'inputnode.orig_native_T1')
+                crop_aladin_pipe, 'inputnode.native_T1')
 
     data_preparation_pipe.connect(
         inputnode, 'indiv_params',

@@ -539,6 +539,7 @@ def _create_remove_capsule_pipeline(name="remove_capsule_pipe", params={}):
 
     return remove_caps_pipe
 
+
 def create_crop_aladin_pipe(name="crop_aladin_pipe", params={}):
 
     reg_pipe = pe.Workflow(name=name)
