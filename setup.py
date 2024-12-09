@@ -1,52 +1,24 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
+# vi: set ft=python sts=4 ts=4 sw=4 et:
+"""Pydra: Dataflow Engine
 
-import re
-from setuptools import find_packages, setup
+"""
+import sys
+from setuptools import setup
+import versioneer
 
-verstr = "unknown"
-try:
-    verstrline = open('macapype/_version.py', "rt").read()
-except EnvironmentError:
-    pass  # Okay, there is no version file.
-else:
-    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-    mo = re.search(VSRE, verstrline, re.M)
-    if mo:
-        verstr = mo.group(1)
-    else:
-        raise RuntimeError("unable to find version in yourpackage/_version.py")
+# Give setuptools a hint to complain if it's too old a version
+# 30.3.0 allows us to put most metadata in setup.cfg
+# Should match pyproject.toml
+SETUP_REQUIRES = ["setuptools >= 30.3.0"]
+# This enables setuptools to install wheel on-the-fly
+SETUP_REQUIRES += ["wheel"] if "bdist_wheel" in sys.argv else []
 
-print("Will not build conda module")
-
-test_deps = ['codecov', 'pytest', 'pytest-cov']
-
-flake_deps = ['flake8']
-
-doc_deps = ['sphinx',
-            'sphinx-gallery',
-            'sphinx_bootstrap_theme',
-            'numpydoc',
-            'sphinxcontrib-fulltoc',
-            'matplotlib']
-
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
-setup(
-    name="macapype",
-    version=verstr,
-    packages=find_packages(),
-    author="macatools team",
-    description="Pipeline for anatomic processing for macaque",
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
-    license='BSD 3',
-    entry_points={
-        'console_scripts': ['segment_pnh = workflows.segment_pnh:main']},
-    install_requires=requirements,
-    extras_require={
-        'test': test_deps + flake_deps,
-        'doc': flake_deps + test_deps + doc_deps
-    },
-    include_package_data=True)
+if __name__ == "__main__":
+    setup(
+        name="macapype",
+        version=versioneer.get_version(),
+        cmdclass=versioneer.get_cmdclass(),
+        setup_requires=SETUP_REQUIRES,
+    )

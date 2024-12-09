@@ -1,0 +1,13 @@
+[build-system]
+requires = [
+    "setuptools", "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ["dependencies"]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+version = {attr = "macapype.__version__"}

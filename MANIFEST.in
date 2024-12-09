@@ -2,3 +2,6 @@
 include macapype/utils/*.json
 include macapype/bash/*
 include workflows/params*.json
+
+include versionneer.py
+include macapype/_version.py
