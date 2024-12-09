@@ -1,0 +1,57 @@
+[build-system]
+requires = [
+    "setuptools", "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ['version']
+name = "macapype"
+maintainers = [{name = "Macapype developers" }]
+authors= [{name = "Macatools team"}]
+description= "Pipeline for anatomic processing for macaque "
+readme = {content-type = "text/markdown", file = "README.md"}
+requires-python = ">= 3.10"
+license = {text = "BSD-3-Clause"}
+
+dependencies = [
+    "nipype",
+    "rdflib==6.3.1",
+    "pandas==2.2.3",
+    "matplotlib",
+    "nilearn",
+    "networkx",
+    "pybids",
+    "scikit-image",
+    "nibabel",
+    "numpy",
+    "SimpleITK"
+]
+
+[project.optional-dependencies]
+# Dependencies for building the documentation
+doc_deps = [
+     "sphinx",
+     "sphinx-gallery",
+     "sphinx_bootstrap_theme",
+     "numpydoc",
+     "sphinxcontrib-fulltoc"
+]
+
+# Dependencies for test
+test_deps = [
+    "pytest",
+    "pytest-cov",
+    "codecov",
+    ]
+flake_deps = [
+    "flake8"
+    ]
+
+# real calls
+test=["macapype[test_deps, flake_deps]"]
+doc=["macapype[flake_deps, test_deps, doc_deps]"]
+
+
+[tool.setuptools.packages]
+find = {}  # Scanning implicit namespaces is active by default
