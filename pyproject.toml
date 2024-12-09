@@ -28,7 +28,6 @@ dependencies = [
     "SimpleITK"
 ]
 
-
 [project.optional-dependencies]
 # Dependencies for building the documentation
 doc_deps = [
@@ -38,6 +37,8 @@ doc_deps = [
      "numpydoc",
      "sphinxcontrib-fulltoc"
 ]
+
+# Dependencies for test
 test_deps = [
     "pytest",
     "pytest-cov",
@@ -46,5 +47,11 @@ test_deps = [
 flake_deps = [
     "flake8"
     ]
+
+# real calls
 test=["macapype[test_deps, flake_deps]"]
 doc=["macapype[flake_deps, test_deps, doc_deps]"]
+
+
+[tool.setuptools.packages]
+find = {}  # Scanning implicit namespaces is active by default
