@@ -9,7 +9,6 @@ from setuptools import setup
 
 import re
 
-
 def _get_version():
 
     verstr = "unknown"
@@ -26,17 +25,7 @@ def _get_version():
             raise RuntimeError("unable to find version in yourpackage/_version.py")
     return verstr
 
-
-# Give setuptools a hint to complain if it's too old a version
-# 30.3.0 allows us to put most metadata in setup.cfg
-# Should match pyproject.toml
-SETUP_REQUIRES = ["setuptools >= 30.3.0"]
-# This enables setuptools to install wheel on-the-fly
-SETUP_REQUIRES += ["wheel"] if "bdist_wheel" in sys.argv else []
-
 if __name__ == "__main__":
     setup(
-        name="macapype",
-        version=_get_version(),
-        setup_requires=SETUP_REQUIRES,
+        version=_get_version()
     )
