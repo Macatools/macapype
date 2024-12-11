@@ -14,7 +14,7 @@ from nipype.interfaces.niftyreg.regutils import RegResample
 
 from ..utils.utils_nodes import NodeParams
 
-from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection
+from macapype.nodes.correct_bias import T1xT2BiasFieldCorrection, itk_debias
 from macapype.nodes.register import IterREGBET
 
 from macapype.nodes.pad import pad_back
@@ -1100,6 +1100,54 @@ def create_full_ants_subpipes(
                 fast_T2, "restored_image",
                 outputnode, "native_debiased_T2", params)
 
+    elif "itk_debias" in params:
+
+        print("Found itk_debias in params.json")
+
+        # itk_debias over T1
+        itk_debias_T1 = NodeParams(
+            interface=niu.Function(
+                input_names=["img_file"],
+                output_names=["cor_img_file", "bias_img_file"],
+                function=itk_debias),
+            params=parse_key(params, "itk_debias"),
+            name='itk_debias_T1')
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         itk_debias_T1, "img_file")
+
+        # itk_debias over T2
+        itk_debias_T2 = NodeParams(
+            interface=niu.Function(
+                input_names=["img_file"],
+                output_names=["cor_img_file", "bias_img_file"],
+                function=itk_debias),
+            params=parse_key(params, "itk_debias"),
+            name='itk_debias_T2')
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
+                         itk_debias_T2, "img_file")
+
+        # outputnode
+        seg_pipe.connect(
+            itk_debias_T1, "cor_img_file",
+            outputnode, "stereo_debiased_T1")
+
+        seg_pipe.connect(
+            itk_debias_T2, "cor_img_file",
+            outputnode, "stereo_debiased_T2")
+
+        if pad:
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                itk_debias_T1, "cor_img_file",
+                outputnode, "native_debiased_T1", params)
+
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                itk_debias_T2, "cor_img_file",
+                outputnode, "native_debiased_T2", params)
+
     else:
         print("No debias will be performed before extract_pipe")
 
@@ -1896,6 +1944,38 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
                 outputnode, "native_debiased_T1", params)
+
+    #elif "itk_debias" in params:
+
+        #print("Found fast in params.json")
+
+        ## fast over T1
+        #fast_T1 = NodeParams(
+            #fsl.FAST(),
+            #params=parse_key(params, "fast"),
+            #name='fast_T1')
+
+        #fast_T1.inputs.output_biascorrected = True
+        #fast_T1.inputs.output_biasfield = True
+        #fast_T1.inputs.img_type = 1
+
+        #seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+                         #fast_T1, "in_files")
+
+        #seg_pipe.connect(
+            #inputnode, ('indiv_params', parse_key, "fast"),
+            #fast_T1, "indiv_params")
+
+        ## outputnode
+        #seg_pipe.connect(fast_T1, "restored_image",
+                         #outputnode, "stereo_debiased_T1")
+
+        #if pad and space == "native":
+            #pad_back(
+                #seg_pipe, data_preparation_pipe, inputnode,
+                #fast_T1, "restored_image",
+                #outputnode, "native_debiased_T1", params)
+
     else:
         print("No debias is applied before masking")
 
