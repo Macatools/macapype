@@ -939,12 +939,6 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
                      outputnode, "stereo_T2")
 
-    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
-                     outputnode, "stereo_padded_T1")
-
-    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
-                     outputnode, "stereo_padded_T2")
-
     if "short_preparation_pipe" in params.keys():
         if "crop_T1" not in params["short_preparation_pipe"].keys():
             seg_pipe.connect(data_preparation_pipe,
@@ -1148,7 +1142,47 @@ def create_full_ants_subpipes(
                 itk_debias_T2, "cor_img_file",
                 outputnode, "native_debiased_T2", params)
 
+        # debias over padded image
+        # itk_debias over padded_T1
+        itk_debias_padded_T1 = NodeParams(
+            interface=niu.Function(
+                input_names=["img_file"],
+                output_names=["cor_img_file", "bias_img_file"],
+                function=itk_debias),
+            params=parse_key(params, "itk_debias"),
+            name='itk_debias_padded_T1')
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_padded_T1',
+                         itk_debias_padded_T1, "img_file")
+
+        # itk_debias over padded_T2
+        itk_debias_padded_T2 = NodeParams(
+            interface=niu.Function(
+                input_names=["img_file"],
+                output_names=["cor_img_file", "bias_img_file"],
+                function=itk_debias),
+            params=parse_key(params, "itk_debias"),
+            name='itk_debias_padded_T2')
+
+        seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_padded_T2',
+                         itk_debias_padded_T2, "img_file")
+
+        # outputnode
+        seg_pipe.connect(
+            itk_debias_padded_T1, "cor_img_file",
+            outputnode, "stereo_padded_T1")
+
+        seg_pipe.connect(
+            itk_debias_padded_T2, "cor_img_file",
+            outputnode, "stereo_padded_T2")
     else:
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                        outputnode, "stereo_padded_T1")
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
+                        outputnode, "stereo_padded_T2")
+
         print("No debias will be performed before extract_pipe")
 
     # ################# extract mask
