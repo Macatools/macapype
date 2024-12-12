@@ -225,6 +225,7 @@ def create_short_preparation_pipe(params, params_template={},
     if 'aladin_T2_on_T1' in params.keys():
 
         align_T2_on_T1 = pe.Node(reg.RegAladin(), name="align_T2_on_T1")
+        align_T2_on_T1.inputs.rig_only_flag = True
 
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
