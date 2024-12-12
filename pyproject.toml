@@ -52,6 +52,11 @@ flake_deps = [
 test=["macapype[test_deps, flake_deps]"]
 doc=["macapype[flake_deps, test_deps, doc_deps]"]
 
+[project.scripts]
+segment_pnh = "workflows.segment_pnh:main"
+
+
+
 
 [tool.setuptools.packages]
 find = {}  # Scanning implicit namespaces is active by default
