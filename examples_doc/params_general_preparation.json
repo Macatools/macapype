@@ -59,15 +59,7 @@
 
     	"crop_aladin_pipe":
     	{
-            "pre_crop_z_T1":
-            {
-
-                "comment": "OPTIONAL",
-                "comment": "use with caution",
-                "params": "RobustFOV (FSL)",
-
-                "brainsize": "70"
-            },
+            "remove_capsule_pipe":{},
             "reg_T1_on_template":
             {
                 "params": "RegAladin (NiftyReg)"
@@ -80,13 +72,6 @@
 
                 "params": "RegAladin (NiftyReg)"
 
-            },
-            "crop_z_T1":
-            {
-                "comment": "OPTIONAL",
-                "params": "RobustFOV (FSL)",
-
-                "brainsize": "70"
             }
         },
 
