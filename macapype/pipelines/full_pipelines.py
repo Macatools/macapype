@@ -988,6 +988,13 @@ def create_full_ants_subpipes(
                 correct_bias_pipe, "outputnode.debiased_T2",
                 outputnode, "native_debiased_T2", params)
 
+    # TODO apply T1T2debias on stereo_padded
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                         outputnode, "stereo_padded_T1")
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
+                         outputnode, "stereo_padded_T2")
+
     elif "N4debias" in params.keys():
         print("Found N4debias in params.json")
 
@@ -1035,6 +1042,13 @@ def create_full_ants_subpipes(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T2, "output_image",
                 outputnode, "native_debiased_T2", params)
+
+    # TODO apply N4debias on stereo_padded
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                         outputnode, "stereo_padded_T1")
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
+                         outputnode, "stereo_padded_T2")
 
     elif "fast" in params.keys():
 
@@ -1093,6 +1107,13 @@ def create_full_ants_subpipes(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T2, "restored_image",
                 outputnode, "native_debiased_T2", params)
+
+    # TODO apply fast on stereo_padded
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
+                         outputnode, "stereo_padded_T1")
+
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
+                         outputnode, "stereo_padded_T2")
 
     elif "itk_debias" in params:
 
