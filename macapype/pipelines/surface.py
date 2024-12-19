@@ -663,8 +663,8 @@ def create_nii2mesh_brain_pipe(params={},
     #bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
     #bin_mask.inputs.operation = "bin"
 
-    #nii2mesh_brain_pipe.connect(merge_brain_tissues,
-                                #'mask_file', bin_mask, 'in_file')
+    #nii2mesh_brain_pipe.connect(merge_brain_tissues, 'mask_file',
+                                # bin_mask, 'in_file')
 
     # keep_gcc_bin_mask
     keep_gcc_bin_mask = pe.Node(
@@ -727,8 +727,8 @@ def create_IsoSurface_brain_pipe(params={},
     #bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
     #bin_mask.inputs.operation = "bin"
 
-    #IsoSurface_brain_pipe.connect(merge_brain_tissues,
-                                  #'mask_file', bin_mask, 'in_file')
+    # IsoSurface_brain_pipe.connect(merge_brain_tissues,'mask_file',
+    #                               bin_mask, 'in_file')
 
     # keep_gcc_bin_mask
     keep_gcc_bin_mask = pe.Node(
