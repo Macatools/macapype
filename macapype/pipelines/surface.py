@@ -673,7 +673,7 @@ def create_nii2mesh_brain_pipe(params={},
                                function=keep_gcc),
         name="keep_gcc_bin_mask")
 
-    nii2mesh_brain_pipe.connect(merge_brain_tissues,
+    nii2mesh_brain_pipe.connect(merge_brain_tissues, 'mask_file',
     #nii2mesh_brain_pipe.connect(bin_mask, "out_file",
                                 keep_gcc_bin_mask, "nii_file")
 
@@ -737,7 +737,7 @@ def create_IsoSurface_brain_pipe(params={},
                                function=keep_gcc_tmp),
         name="keep_gcc_bin_mask")
 
-    IsoSurface_brain_pipe.connect(merge_brain_tissues,
+    IsoSurface_brain_pipe.connect(merge_brain_tissues, 'mask_file',
     #IsoSurface_brain_pipe.connect(bin_mask, "out_file",
                                   keep_gcc_bin_mask, "nii_file")
 
