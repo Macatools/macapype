@@ -659,12 +659,12 @@ def create_nii2mesh_brain_pipe(params={},
     nii2mesh_brain_pipe.connect(inputnode, 'segmented_file',
                                 merge_brain_tissues, 'dseg_file')
 
-    # bin_mask
-    bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
-    bin_mask.inputs.operation = "bin"
+    ## bin_mask
+    #bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
+    #bin_mask.inputs.operation = "bin"
 
-    nii2mesh_brain_pipe.connect(merge_brain_tissues,
-                                'mask_file', bin_mask, 'in_file')
+    #nii2mesh_brain_pipe.connect(merge_brain_tissues,
+                                #'mask_file', bin_mask, 'in_file')
 
     # keep_gcc_bin_mask
     keep_gcc_bin_mask = pe.Node(
