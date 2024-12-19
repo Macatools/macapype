@@ -65,18 +65,17 @@ def keep_gcc_tmp(nii_file):
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
-    data = img.get_fdata(dtype=np.uint16)
+    data = img.get_fdata().astype(np.int16)
     print(data.shape)
     print(data.dtype)
     print(np.unique(data))
 
     # numpy
-    data[data > 0] = 1
+    #data[data > 0] = 1
 
-    binary = np.array(data, dtype=np.int16)
 
     # skimage GCC
-    new_data = getLargestCC(binary)
+    new_data = getLargestCC(data)
 
     # nibabel (np.array -> nifti)
     new_img = nib.Nifti1Image(dataobj=new_data,
