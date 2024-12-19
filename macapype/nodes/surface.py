@@ -58,7 +58,6 @@ def keep_gcc_tmp(nii_file):
 
         labels = label(segmentation)
         print(np.unique(labels))
-        0/0
         assert labels.max() != 0  # assume at least 1 CC
         largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
         return largestCC
