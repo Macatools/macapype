@@ -60,7 +60,7 @@ def keep_gcc_tmp(nii_file):
         print(np.unique(labels))
         assert labels.max() != 0  # assume at least 1 CC
         largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
-        return largestCC
+        return largestCC, labels
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
@@ -72,20 +72,30 @@ def keep_gcc_tmp(nii_file):
     # numpy
     #data[data > 0] = 1
 
-
     # skimage GCC
-    new_data = getLargestCC(data)
+    new_data, labels = getLargestCC(data)
+
+    # nibabel (np.array -> nifti)
+
+    path, fname, ext = split_f(nii_file)
+
+    labels_img = nib.Nifti1Image(dataobj=labels,
+                                 header=img.header,
+                                 affine=img.affine)
+
+    labels_file = os.path.abspath(fname + "_labels" + ext)
+
+    nib.save(labels_img, labels_file)
 
     # nibabel (np.array -> nifti)
     new_img = nib.Nifti1Image(dataobj=new_data,
                               header=img.header,
                               affine=img.affine)
 
-    path, fname, ext = split_f(nii_file)
-
     gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
 
     nib.save(new_img, gcc_nii_file)
+
     return gcc_nii_file
 
 
