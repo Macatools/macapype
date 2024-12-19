@@ -46,6 +46,50 @@ def keep_gcc(nii_file):
     nib.save(new_img, gcc_nii_file)
     return gcc_nii_file
 
+def keep_gcc_tmp(nii_file):
+    import os
+    import nibabel as nib
+    import numpy as np
+    from nipype.utils.filemanip import split_filename as split_f
+
+    def getLargestCC(segmentation):
+
+        from skimage.measure import label
+
+        labels = label(segmentation)
+        print(labels)
+        0/0
+        assert labels.max() != 0  # assume at least 1 CC
+        largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
+        return largestCC
+
+    # nibabel (nifti -> np.array)
+    img = nib.load(nii_file)
+    data = img.get_fdata()
+    print(data.shape)
+    print(data.dtype)
+    print(np.unique(data))
+
+    # numpy
+    data[data > 0] = 1
+
+    binary = np.array(data, dtype=np.int16)
+
+    # skimage GCC
+    new_data = getLargestCC(binary)
+
+    # nibabel (np.array -> nifti)
+    new_img = nib.Nifti1Image(dataobj=new_data,
+                              header=img.header,
+                              affine=img.affine)
+
+    path, fname, ext = split_f(nii_file)
+
+    gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
+
+    nib.save(new_img, gcc_nii_file)
+    return gcc_nii_file
+
 
 def merge_tissues(dseg_file, keep_indexes):
 

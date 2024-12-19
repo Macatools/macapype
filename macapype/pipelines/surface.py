@@ -11,7 +11,7 @@ import macapype.nodes.register as reg
 from macapype.nodes.surface import (Meshify, split_LR_mask,
                                     wrap_nii2mesh,
                                     IsoSurface, merge_tissues,
-                                    keep_gcc)
+                                    keep_gcc, keep_gcc_tmp)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
@@ -733,7 +733,7 @@ def create_IsoSurface_brain_pipe(params={},
     keep_gcc_bin_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["gcc_nii_file"],
-                               function=keep_gcc),
+                               function=keep_gcc_tmp),
         name="keep_gcc_bin_mask")
 
     IsoSurface_brain_pipe.connect(bin_mask, "out_file",
