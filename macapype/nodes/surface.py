@@ -21,8 +21,10 @@ def keep_gcc(nii_file):
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
-    data = img.get_fdata().astype("int32")
+    data = img.get_fdata()
     print(data.shape)
+    print(data.dtype)
+    print(np.unique(data))
 
     # numpy
     data[data > 0] = 1
@@ -58,7 +60,11 @@ def merge_tissues(dseg_file, keep_indexes):
     dseg_img = nib.load(dseg_file)
     dseg_data = dseg_img.get_fdata()
 
-    mask_data = np.zeros(shape=dseg_data.shape)
+    print(dseg_data.shape)
+    print(dseg_data.dtype)
+    print(np.unique(dseg_data))
+
+    mask_data = np.zeros(shape=dseg_data.shape, dtype=np.int16)
 
     for index in keep_indexes:
         if index in np.unique(dseg_data):
@@ -66,6 +72,8 @@ def merge_tissues(dseg_file, keep_indexes):
             mask_data[dseg_data == index] = 1
         else:
             print("Error, could not find index {} in dseg file".format(index))
+
+    print(np.unique(mask_data))
 
     mask_img = nib.Nifti1Image(dataobj=mask_data,
                                header=dseg_img.header,
