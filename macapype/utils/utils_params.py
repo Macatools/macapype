@@ -106,40 +106,50 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                     using autocrop ")
 
                 extra_wf_name += "_crop_aladin"
+                params_spp = params["short_preparation_pipe"]
 
-                if "robustreg" in ssoft and "crop_aladin_pipe" \
-                        in params["short_preparation_pipe"]:
-                    print("Using robustreg option")
-                    params["short_preparation_pipe"]["crop_aladin_pipe"] = {
-                        "reg_T1_on_template": {
-                            "nac_flag": True,
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 12,
-                            "lp_val": 10,
-                            "smoo_r_val": 1.0
-                            },
-                        "reg_T1_on_template2": {
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 17,
-                            "lp_val": 15,
-                            "smoo_r_val": 1.0
-                            }
+                if "crop_aladin_pipe" in params_spp:
+                    params_spp_cap = params_spp["crop_aladin_pipe"]
+
+                    if "robustreg" in ssoft:
+                        print("Using robustreg option")
+                        new_pipe = {
+                            "reg_T1_on_template": {
+                                "nac_flag": True,
+                                "rig_only_flag": True,
+                                "nosym_flag": True,
+                                "ln_val": 12,
+                                "lp_val": 10,
+                                "smoo_r_val": 1.0
+                                },
+                            "reg_T1_on_template2": {
+                                "rig_only_flag": True,
+                                "nosym_flag": True,
+                                "ln_val": 17,
+                                "lp_val": 15,
+                                "smoo_r_val": 1.0
+                                }
                         }
-                elif "halfrobustreg" in ssoft and "crop_aladin_pipe" \
-                        in params["short_preparation_pipe"]:
-                    print("Using halfrobustreg option")
-                    params["short_preparation_pipe"]["crop_aladin_pipe"] = {
-                        "reg_T1_on_template": {
-                            "nac_flag": True,
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 12,
-                            "lp_val": 10,
-                            "smoo_r_val": 1.0
+                    elif "halfrobustreg" in ssoft:
+                        print("Using halfrobustreg option")
+                        new_pipe = {
+                            "reg_T1_on_template": {
+                                "nac_flag": True,
+                                "rig_only_flag": True,
+                                "nosym_flag": True,
+                                "ln_val": 12,
+                                "lp_val": 10,
+                                "smoo_r_val": 1.0
+                                }
                             }
-                        }
+                    else:
+                        new_pipe = params_spp["crop_aladin_pipe"]
+
+                    if "remove_capsule_pipe" in params_spp_cap:
+                        params_rcp = params_spp_cap["remove_capsule_pipe"]
+                        new_pipe["remove_capsule_pipe"] = params_rcp
+                    params_spp_cap = new_pipe
+
                 return params, indiv_params, extra_wf_name
 
             if prep_pipe == "short_preparation_pipe":
