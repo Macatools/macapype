@@ -11,7 +11,7 @@ import macapype.nodes.register as reg
 from macapype.nodes.surface import (Meshify, split_LR_mask,
                                     wrap_nii2mesh,
                                     IsoSurface, merge_tissues,
-                                    keep_gcc, keep_gcc_tmp)
+                                    keep_gcc)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
@@ -659,13 +659,6 @@ def create_nii2mesh_brain_pipe(params={},
     nii2mesh_brain_pipe.connect(inputnode, 'segmented_file',
                                 merge_brain_tissues, 'dseg_file')
 
-    ## bin_mask
-    #bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
-    #bin_mask.inputs.operation = "bin"
-
-    #nii2mesh_brain_pipe.connect(merge_brain_tissues, 'mask_file',
-                                # bin_mask, 'in_file')
-
     # keep_gcc_bin_mask
     keep_gcc_bin_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -674,7 +667,6 @@ def create_nii2mesh_brain_pipe(params={},
         name="keep_gcc_bin_mask")
 
     nii2mesh_brain_pipe.connect(merge_brain_tissues, 'mask_file',
-    #nii2mesh_brain_pipe.connect(bin_mask, "out_file",
                                 keep_gcc_bin_mask, "nii_file")
 
     # wmgm2mesh
@@ -723,22 +715,14 @@ def create_IsoSurface_brain_pipe(params={},
     IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
                                   merge_brain_tissues, 'dseg_file')
 
-    ## bin mask
-    #bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
-    #bin_mask.inputs.operation = "bin"
-
-    # IsoSurface_brain_pipe.connect(merge_brain_tissues,'mask_file',
-    #                               bin_mask, 'in_file')
-
     # keep_gcc_bin_mask
     keep_gcc_bin_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["gcc_nii_file"],
-                               function=keep_gcc_tmp),
+                               function=keep_gcc),
         name="keep_gcc_bin_mask")
 
     IsoSurface_brain_pipe.connect(merge_brain_tissues, 'mask_file',
-    #IsoSurface_brain_pipe.connect(bin_mask, "out_file",
                                   keep_gcc_bin_mask, "nii_file")
 
     # wmgm2mesh
