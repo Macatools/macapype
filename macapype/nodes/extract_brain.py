@@ -83,7 +83,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
             bottom, smaller at top',
         argstr="-g %f", mandatory=False)
 
-    cog = traits.ListInt(
+    cog = traits.List(
         desc='For difficult cases, you can directly provide a center of \
             gravity. Only one iteration will be performed.',
         argstr="-cog %d %d %d", mandatory=False)
