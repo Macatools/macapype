@@ -113,4 +113,4 @@ Macaque
 Testing different pipelines and options
 #######################################
 
-    It is possible to run the pipeline with only T1w available with *-dt T1* (instead of *-dt T1 T2* previously). Please see
+    It is possible to run the pipeline with only T1w available with *-dt T1* (instead of *-dt T1 T2* previously). Please see `Commands <command>`_ for further information on the parameters available for command line
