@@ -48,8 +48,8 @@ Table of contents
 
     quick_install
     docker_install
-    command
     quick_test
+    command
     params
     indiv_params
 
