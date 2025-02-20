@@ -25,13 +25,13 @@ Testing from Singularity image
 
 .. code:: bash
 
-    $ singularity run -v /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS_test -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS_test -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
-    $ singularity run -v /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS_prep -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS_prep -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
-    $ singularity run -v /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
-    $ singularity run -v /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/marmo-marmobrain -out /data/macapype_CI/marmo-marmobrain/results -soft ANTS -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
 
 
 The 4 commands earlier corresponds to brain segmentation performed on an example of marmoset (Percy) . The 4 steps corresponds to incremental processings, and can performed in the given order. It is possible to test directly the last command (with *-soft ANTS*), but the caching system of nipype should work and the previous steps will not be performed again.
@@ -100,7 +100,7 @@ Baboon
 
 .. code:: bash
 
-    $ singularity run -v /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/baboon-cerimed-adrien -out /data/macapype_CI/baboon-cerimed-adrien/results -soft ANTS -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/baboon-cerimed-adrien -out /data/macapype_CI/baboon-cerimed-adrien/results -soft ANTS -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
 
 
 Macaque
@@ -108,7 +108,7 @@ Macaque
 
 .. code:: bash
 
-    $ singularity run -v /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/baboon-cerimed-adrien -out /data/macapype_CI/baboon-cerimed-adrien/results -soft ANTS -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI/baboon-cerimed-adrien -out /data/macapype_CI/baboon-cerimed-adrien/results -soft ANTS -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
 
 Testing different pipelines and options
 #######################################
