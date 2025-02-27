@@ -17,7 +17,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Launching a processing" href="command.html" />
+    <link rel="next" title="Quick test" href="quick_test.html" />
     <link rel="prev" title="Installation" href="quick_install.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -87,6 +87,22 @@
 <li class="toctree-l2"><a class="reference internal" href="#note-on-singularity">Note on Singularity</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="quick_test.html">Quick test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick_test.html#download-datasets">Download datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_test.html#testing-depending-on-the-installation">Testing depending on the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_test.html#testing-from-singularity-image">Testing from Singularity image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_test.html#testing-from-docker-image">Testing from docker image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_test.html#testing-from-python-package-install">Testing from python package install</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_test.html#from-pip-install">From pip install</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quick_test.html#from-github-install">From github install</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quick_test.html#testing-the-macaque-and-baboon-datasets">Testing the macaque and baboon datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_test.html#testing-different-pipelines-and-options">Testing different pipelines and options</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="command.html#commands">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
@@ -132,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#note-on-singularity">Note on Singularity</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="quick_test.html">Quick test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
@@ -177,6 +194,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#note-on-singularity">Note on Singularity</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="quick_test.html">Quick test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
@@ -211,6 +229,7 @@ $<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </s
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>pull<span class="w"> </span>macatools/macapype:version-0.2.1
 </pre></div>
 </div>
+<p>See <a class="reference internal" href="quick_test.html#quick-test"><span class="std std-ref">Quick test</span></a> for testing if your docker installation works properly on test datasets.</p>
 </section>
 <section id="note-on-singularity">
 <h2>Note on Singularity<a class="headerlink" href="#note-on-singularity" title="Link to this heading">¶</a></h2>
@@ -220,6 +239,7 @@ $<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </s
 </pre></div>
 </div>
 <p>It <em>seems</em> the sudo priviliges are required to install and build images, so in case you have trouble, ask the admin of your cluster to perform this operation</p>
+<p>See <a class="reference internal" href="quick_test.html#quick-test"><span class="std std-ref">Quick test</span></a> for testing if your singularity installation works properly on test datasets.</p>
 </section>
 </section>
 
@@ -235,7 +255,7 @@ $<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </s
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-02-19.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-02-27.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>

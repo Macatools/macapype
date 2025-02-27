@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quick test &#8212; Macapype 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="_static/documentation_options.js?v=db78e746"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Launching a processing" href="command.html" />
+    <link rel="prev" title="Container install" href="docker_install.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Macapype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/davidmeunier79/macapype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#install-macapype-package">Install macapype package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-singularity">Note on Singularity</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download-datasets">Download datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-depending-on-the-installation">Testing depending on the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-singularity-image">Testing from Singularity image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-docker-image">Testing from docker image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-python-package-install">Testing from python package install</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#from-pip-install">From pip install</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#from-github-install">From github install</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-and-baboon-datasets">Testing the macaque and baboon datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-different-pipelines-and-options">Testing different pipelines and options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command.html#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#command-line-parameters">Command line parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#the-following-parameters-are-optional">The following parameters are optional</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command.html#id1">The following parameters are optional</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="command.html#command-line-examples">Command line examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="params.html#adding-params">Adding -params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="params.html#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#adding-indiv">Adding -indiv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indiv_params.html#advanced-parameters-settings">Advanced parameters settings</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download-datasets">Download datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-depending-on-the-installation">Testing depending on the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-singularity-image">Testing from Singularity image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-docker-image">Testing from docker image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-python-package-install">Testing from python package install</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#from-pip-install">From pip install</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#from-github-install">From github install</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-and-baboon-datasets">Testing the macaque and baboon datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-different-pipelines-and-options">Testing different pipelines and options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/quick_test.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download-datasets">Download datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-depending-on-the-installation">Testing depending on the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-singularity-image">Testing from Singularity image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-docker-image">Testing from docker image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-from-python-package-install">Testing from python package install</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#from-pip-install">From pip install</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#from-github-install">From github install</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-and-baboon-datasets">Testing the macaque and baboon datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-different-pipelines-and-options">Testing different pipelines and options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="quick-test">
+<span id="id1"></span><h1>Quick test<a class="headerlink" href="#quick-test" title="Link to this heading">¶</a></h1>
+<section id="download-datasets">
+<h2>Download datasets<a class="headerlink" href="#download-datasets" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/path/to/data
+
+$<span class="w"> </span>curl<span class="w"> </span>https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM<span class="w"> </span>--output<span class="w"> </span>macapype_CI.zip
+
+$<span class="w"> </span>unzip<span class="w"> </span>-o<span class="w"> </span>macapype_CI.zip<span class="w"> </span>-d<span class="w"> </span>macapype_CI
+</pre></div>
+</div>
+</section>
+<section id="testing-depending-on-the-installation">
+<h2>Testing depending on the installation<a class="headerlink" href="#testing-depending-on-the-installation" title="Link to this heading">¶</a></h2>
+<section id="testing-from-singularity-image">
+<h3>Testing from Singularity image<a class="headerlink" href="#testing-from-singularity-image" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_test<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+
+$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_prep<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+
+$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_noseg<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+
+$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+</pre></div>
+</div>
+<p>The 4 commands earlier corresponds to brain segmentation performed on an example of marmoset (Percy) . The 4 steps corresponds to incremental processings, and can performed in the given order. It is possible to test directly the last command (with <em>-soft ANTS</em>), but the caching system of nipype should work and the previous steps will not be performed again.</p>
+<ul class="simple">
+<li><p>The first one (<em>-soft ANTS_test</em>) is to test the workflow graph. If it works, the representation graph of the pipeline is available as:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI/marmo-marmobrain/results/macapype_crop_aladin_ants_t1/graph.png
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The second one (<em>-soft ANTS_prep</em>) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated croping and alignement in the template space:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/sub-Percy_ses-01_space-stereo_T1w.nii.gz
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The third one (<em>-soft ANTS_noseg</em>) will perform brain extraction and stop afterward. This is normally the longest step (ranging from 45min to a few hours depending on the image resolution. If it works, you should be able to see the brain mask as :</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/sub-Percy_ses-01_space-stereo_desc-brain_mask.nii.gz
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The fourth and last one (<em>-soft ANTS</em>) will perform brain segmentation and mesh. If it works, you should be able to see the brain segmented mask and brain mesh as :</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI/marmo-marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/sub-Percy_ses-01_space-stereo_desc-brain_desc-desg_mask.nii.gz
+</pre></div>
+</div>
+</section>
+<section id="testing-from-docker-image">
+<h3>Testing from docker image<a class="headerlink" href="#testing-from-docker-image" title="Link to this heading">¶</a></h3>
+<p>For testing the docker installation, the beginning of the commands should be replaced by docker run -v /path/to/<a class="reference external" href="data:/data">data:/data</a> macatools/macapype:v0.3.1, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span>/path/to/data:/data<span class="w"> </span>macatools/macapype:v0.5<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+</pre></div>
+</div>
+</section>
+<section id="testing-from-python-package-install">
+<h3>Testing from python package install<a class="headerlink" href="#testing-from-python-package-install" title="Link to this heading">¶</a></h3>
+<section id="from-pip-install">
+<h4>From pip install<a class="headerlink" href="#from-pip-install" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/path/to/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/path/to/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+</pre></div>
+</div>
+</section>
+<section id="from-github-install">
+<h4>From github install<a class="headerlink" href="#from-github-install" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>workflows/segment_pnh.py<span class="w"> </span>-data<span class="w"> </span>/path/to/data/macapype_CI/marmo-marmobrain<span class="w"> </span>-out<span class="w"> </span>/path/to/data/macapype_CI/marmo-marmobrain/results<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>marmo<span class="w"> </span>-sub<span class="w"> </span>Percy<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2
+</pre></div>
+</div>
+<p><strong>Note the /path/to/data instead of /data (as in the container install) in the arguments</strong></p>
+</section>
+</section>
+</section>
+<section id="testing-the-macaque-and-baboon-datasets">
+<h2>Testing the macaque and baboon datasets<a class="headerlink" href="#testing-the-macaque-and-baboon-datasets" title="Link to this heading">¶</a></h2>
+<p>Two other dataset, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/baboon-cerimed-adrien<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/baboon-cerimed-adrien/results<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon<span class="w"> </span>-sub<span class="w"> </span>Fidji<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI/baboon-cerimed-adrien<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI/baboon-cerimed-adrien/results<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon<span class="w"> </span>-sub<span class="w"> </span>Fidji<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-pad<span class="w"> </span>-dt<span class="w"> </span>T1
+</pre></div>
+</div>
+</section>
+<section id="testing-different-pipelines-and-options">
+<h2>Testing different pipelines and options<a class="headerlink" href="#testing-different-pipelines-and-options" title="Link to this heading">¶</a></h2>
+<blockquote>
+<div><p>It is possible to run the pipeline with only T1w available with <em>-dt T1</em> (instead of <em>-dt T1 T2</em> previously). Please see <a class="reference external" href="command">Commands</a> for further information on the parameters available for command line</p>
+</div></blockquote>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-02-27.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
