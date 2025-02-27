@@ -98,3 +98,6 @@ Testing the install
 .. code:: ipython
 
     In [1]: import macapype; print (macapype.__version__)
+
+
+See :ref:`Quick test <quick_test>` for testing if your installation works properly on test datasets.
