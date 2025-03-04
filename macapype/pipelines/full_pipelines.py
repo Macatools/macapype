@@ -943,15 +943,13 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
                      outputnode, "stereo_padded_T2")
 
-    if "short_preparation_pipe" in params.keys():
-        if "crop_T1" not in params["short_preparation_pipe"].keys():
-            seg_pipe.connect(data_preparation_pipe,
-                             "outputnode.stereo_to_native_trans",
-                             outputnode, 'stereo_to_native_trans')
+    seg_pipe.connect(data_preparation_pipe,
+                        "outputnode.stereo_to_native_trans",
+                        outputnode, 'stereo_to_native_trans')
 
-            seg_pipe.connect(data_preparation_pipe,
-                             "outputnode.native_to_stereo_trans",
-                             outputnode, 'native_to_stereo_trans')
+    seg_pipe.connect(data_preparation_pipe,
+                        "outputnode.native_to_stereo_trans",
+                        outputnode, 'native_to_stereo_trans')
 
     # ######################################## correct bias
     assert not ("fast" in params.keys() and "N4debias" in
