@@ -867,7 +867,7 @@ def create_short_preparation_T1_pipe(params, params_template,
                 outputnode, 'preproc_T1')
 
     # resample T1 to higher dimension
-    if "resample_T1_pad" in params.keys():
+    if "pad_template" in params.keys():
 
         resample_T1_pad = pe.Node(
             regutils.RegResample(),
