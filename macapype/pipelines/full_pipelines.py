@@ -203,15 +203,13 @@ def create_full_spm_subpipes(
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
                      outputnode, "stereo_padded_T2")
 
-    if "crop_T1" not in params["short_preparation_pipe"].keys():
+    seg_pipe.connect(data_preparation_pipe,
+                        "outputnode.stereo_to_native_trans",
+                        outputnode, 'stereo_to_native_trans')
 
-        seg_pipe.connect(data_preparation_pipe,
-                         "outputnode.stereo_to_native_trans",
-                         outputnode, 'stereo_to_native_trans')
-
-        seg_pipe.connect(data_preparation_pipe,
-                         "outputnode.native_to_stereo_trans",
-                         outputnode, 'native_to_stereo_trans')
+    seg_pipe.connect(data_preparation_pipe,
+                        "outputnode.native_to_stereo_trans",
+                        outputnode, 'native_to_stereo_trans')
 
     # debias
     debias = NodeParams(T1xT2BiasFieldCorrection(),
