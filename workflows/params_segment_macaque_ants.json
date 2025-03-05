@@ -5,15 +5,16 @@
     },
     "short_preparation_pipe":
     {
-        "crop_aladin_pipe":
-        {
+        "aladin_T2_on_T1":{},
+    	"crop_aladin_pipe":
+    	{
             "reg_T1_on_template":
             {
-            },
-            "crop_z_T1":
-            {
-                "brainsize": 70
             }
+    	},
+        "denoise":
+        {
+            "shrink_factor": 2
         }
     },
     "N4debias":
