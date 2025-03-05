@@ -332,25 +332,36 @@ def create_short_preparation_pipe(params, params_template={},
         if "avg_reorient_pipe" in params.keys():
             data_preparation_pipe.connect(av_T1, 'outputnode.std_img',
                                           crop_T1, 'in_file')
+            data_preparation_pipe.connect(
+                av_T1, 'outputnode.std_img',
+                outputnode, 'native_T1')
+
         else:
             data_preparation_pipe.connect(av_T1, 'avg_img',
                                           crop_T1, 'in_file')
+
+            data_preparation_pipe.connect(
+                av_T1, 'avg_img',
+                outputnode, 'native_T1')
 
         if 'aladin_T2_on_T1' in params.keys():
             data_preparation_pipe.connect(
                 reg_resample_T2, 'out_file',
                 crop_T2, 'in_file')
 
-        else:
-            data_preparation_pipe.connect(align_T2_on_T1, "out_file",
-                                          crop_T2, 'in_file')
-        data_preparation_pipe.connect(
-            crop_T1, "roi_file",
-            outputnode, 'native_T1')
+            data_preparation_pipe.connect(
+                reg_resample_T2, 'out_file',
+                outputnode, 'native_T2')
 
-        data_preparation_pipe.connect(
-            crop_T2, "roi_file",
-            outputnode, 'native_T2')
+        else:
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                crop_T2, 'in_file')
+
+            data_preparation_pipe.connect(
+                align_T2_on_T1, "out_file",
+                outputnode, 'native_T2')
+
     else:
 
         # outputnode
@@ -825,7 +836,7 @@ def create_short_preparation_T1_pipe(params, params_template,
                 outputnode, 'preproc_T1')
 
     # resample T1 to higher dimension
-    if "resample_T1_pad" in params.keys():
+    if "pad_template" in params.keys():
 
         resample_T1_pad = pe.Node(
             regutils.RegResample(),
