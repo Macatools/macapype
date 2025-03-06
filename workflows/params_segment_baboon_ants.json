@@ -10,12 +10,12 @@
     	{
             "reg_T1_on_template":
             {
-            },
-            "crop_z_T1":
-            {
-                "brainsize": 70
             }
-    	}
+    	},
+        "denoise":
+        {
+            "shrink_factor": 2
+        }
     },
     "N4debias":
     {
