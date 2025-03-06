@@ -209,86 +209,86 @@
 <p>Definition of the sequence of nodes in processing pipelines, as well as general parameters, are specified by json file. When specifying a -species and -soft (see <a class="reference external" href="command">Commands</a>), the corresponding default parameter file will be used; They are located in the <em>workflows</em> directory of the package.</p>
 <p>The original parameter file can be altered by some options in -soft (e.g. _robustreg, _prep, etc.; see <a class="reference external" href="command">Commands</a>).</p>
 <p>Here is an example of the params.json with parameters -soft ANTS for -species macaque:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;general&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;template_name&quot;</span><span class="p">:</span> <span class="s2">&quot;NMT_v2.0_asym&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;short_preparation_pipe&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;crop_aladin_pipe&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;reg_T1_on_template&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;crop_z_T1&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;brainsize&quot;</span><span class="p">:</span> <span class="mi">70</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;N4debias&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-        <span class="s2">&quot;n_iterations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
-        <span class="s2">&quot;convergence_threshold&quot;</span><span class="p">:</span> <span class="mf">0.00000001</span><span class="p">,</span>
-        <span class="s2">&quot;shrink_factor&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-r 0 --verbose 1&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;extract_pipe&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;atlas_brex&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;wrp&quot;</span><span class="p">:</span> <span class="s2">&quot;10,10,10&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;msk&quot;</span><span class="p">:</span> <span class="s2">&quot;a,0,0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dil&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;nrm&quot;</span><span class="p">:</span> <span class="mi">1</span>
-        <span class="p">}</span>
+<pre class="literal-block">{
+    &quot;general&quot;:
+    {
+        &quot;template_name&quot;: &quot;NMT_v2.0_asym&quot;
+    },
+    &quot;short_preparation_pipe&quot;:
+    {
+        &quot;aladin_T2_on_T1&quot;:{},
+        &quot;crop_aladin_pipe&quot;:
+        {
+            &quot;reg_T1_on_template&quot;:
+            {
+            }
+        },
+        &quot;denoise&quot;:
+        {
+            &quot;shrink_factor&quot;: 2
+        }
+    },
+    &quot;N4debias&quot;:
+    {
+        &quot;dimension&quot;: 3,
+        &quot;bspline_fitting_distance&quot;: 200,
+        &quot;n_iterations&quot;: [50, 50, 40, 30],
+        &quot;convergence_threshold&quot;: 0.00000001,
+        &quot;shrink_factor&quot;: 2,
+        &quot;args&quot;: &quot;-r 0 --verbose 1&quot;
+    },
+    &quot;extract_pipe&quot;:
+    {
+        &quot;atlas_brex&quot;:
+        {
+            &quot;f&quot;: 0.5,
+            &quot;reg&quot;: 1,
+            &quot;wrp&quot;: &quot;10,10,10&quot;,
+            &quot;msk&quot;: &quot;a,0,0&quot;,
+            &quot;dil&quot;: 2,
+            &quot;nrm&quot;: 1
+        }
 
-    <span class="p">},</span>
-    <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;brain_segment_pipe&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;segment_atropos_pipe&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;use_priors&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s2">&quot;Atropos&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;tissue_dict&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;gm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
-                <span class="s2">&quot;wm&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                <span class="s2">&quot;csf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;export_5tt_pipe&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;IsoSurface_brain_pipe&quot;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;merge_brain_tissues&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;keep_indexes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+    },
+    &quot;debias&quot;:
+    {
+        &quot;s&quot;: 2
+    },
+    &quot;brain_segment_pipe&quot;:
+    {
+        &quot;reg&quot;:
+        {
+            &quot;n&quot;: 2,
+            &quot;m&quot;: &quot;ref&quot;,
+            &quot;dof&quot;: 12
+        },
+        &quot;segment_atropos_pipe&quot;:
+        {
+            &quot;use_priors&quot;: 0.0,
+            &quot;Atropos&quot;:
+            {
+                &quot;dimension&quot;: 3
+            },
+            &quot;tissue_dict&quot;:
+            {
+                &quot;gm&quot;: [2, 3],
+                &quot;wm&quot;: 4,
+                &quot;csf&quot;: [1, 5]
+            }
+        },
+        &quot;export_5tt_pipe&quot;:
+        {
+        },
+        &quot;IsoSurface_brain_pipe&quot;:
+        {
+            &quot;merge_brain_tissues&quot;:
+            {
+                &quot;keep_indexes&quot;: [2,3,4]
+            }
+        }
+    }
+}
+</pre>
 <p>It is also possible to alter values of some nodes for individual sessions/subjects. See <a class="reference external" href="indiv_params">individual parameter section</a>).</p>
 <p><strong>Note</strong>: Individual parameter will not modify the pipeline sequence itself, a value specified in indiv_params for a node that do not exists in params will ignored</p>
 </section>
@@ -726,7 +726,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-03-05.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-03-06.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
