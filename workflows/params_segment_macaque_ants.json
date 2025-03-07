@@ -11,11 +11,7 @@
             "reg_T1_on_template":
             {
             }
-    	},
-        "denoise":
-        {
-            "shrink_factor": 2
-        }
+    	}
     },
     "N4debias":
     {

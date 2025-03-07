@@ -116,7 +116,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/YGrYLjRb8AyQoQp --output macapype_CI.zip
 
             unzip -o macapype_CI.zip -d macapype_CI
 
@@ -231,7 +231,7 @@ jobs:
 
       - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Prune -ses T3 -deriv -pad -dt T1
 
             ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/
 
@@ -280,7 +280,7 @@ jobs:
 
       - name: Running test pipeline baboon-cerimed-adrien ANTS_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Fidji -ses 01 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI:/data macatools/macapype:latest segment_pnh -data /data/baboon-cerimed-adrien -out /data/baboon-cerimed-adrien/results -soft ANTS_prep -species baboon -sub Prune -ses T3 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI/baboon-cerimed-adrien/results/
 
