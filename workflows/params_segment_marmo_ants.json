@@ -12,6 +12,10 @@
             "reg_T1_on_template":
             {
             }
+        },
+        "denoise":
+        {
+            "s": 2
         }
     },
     "fast":
