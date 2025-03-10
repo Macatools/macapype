@@ -15,7 +15,7 @@
         },
         "denoise":
         {
-            "s": 2
+            "shrink_factor": 2
         }
     },
     "fast":
