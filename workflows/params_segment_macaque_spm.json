@@ -10,10 +10,6 @@
         {
             "reg_T1_on_template":
             {
-            },
-            "crop_z_T1":
-            {
-                "brainsize": 70
             }
         }
     },
