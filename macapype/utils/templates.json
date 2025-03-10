@@ -127,6 +127,13 @@
         "template_wm": "Haiko20_TPM_WM_sym.nii.gz",
         "template_csf": "Haiko20_TPM_CSF_sym.nii.gz"
     },
+    "BaBa21":{
+        "template_head": "sub-BaBa21_ses-3_T1w.nii.gz",
+        "template_brain": "sub-BaBa21_ses-3_space-CACP_desc-brain_T1w.nii.gz",
+        "template_gm": "sub-BaBa21_ses-3_space-CACP_label-GM_probseg.nii.gz",
+        "template_wm": "sub-BaBa21_ses-3_space-CACP_label-WM_probseg.nii.gz",
+        "template_csf": "sub-BaBa21_ses-3_space-CACP_label-CSF_probseg.nii.gz"
+    },
     "Juna_Chimp":{
         "template_head": "Juna_Chimp_T1_05mm_skull.nii.gz",
         "template_brain": "Juna_Chimp_T1_05mm_skull_stripped.nii.gz",
