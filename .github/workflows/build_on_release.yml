@@ -127,9 +127,6 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/macaque_prime-de
-            echo ""
-
             ls macapype_CI_v2/marmo_marmobrain
             echo ""
 
@@ -165,7 +162,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI_v2.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/YGrYLjRb8AyQoQp --output macapype_CI_v2.zip
 
             unzip -o macapype_CI_v2.zip -d macapype_CI_v2
 
@@ -173,9 +170,6 @@ jobs:
             echo ""
 
             ls macapype_CI_v2
-            echo ""
-
-            ls macapype_CI_v2/macaque_prime-de
             echo ""
 
             ls macapype_CI_v2/marmo_marmobrain
@@ -214,7 +208,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI_v2.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/YGrYLjRb8AyQoQp --output macapype_CI_v2.zip
 
             unzip -o macapype_CI_v2.zip -d macapype_CI_v2
 
@@ -224,10 +218,7 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/macaque_prime-de
-            echo ""
-
-            ls macapype_CI_v2/marmo_marmobrain
+            ls macapype_CI_v2/baboon_cerimed
             echo ""
 
       - name: Running test pipeline baboon_cerimed ANTS_prep T1
@@ -263,7 +254,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI_v2.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/YGrYLjRb8AyQoQp --output macapype_CI_v2.zip
 
             unzip -o macapype_CI_v2.zip -d macapype_CI_v2
 
@@ -273,10 +264,7 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/macaque_prime-de
-            echo ""
-
-            ls macapype_CI_v2/marmo_marmobrain
+            ls macapype_CI_v2/baboon_cerimed
             echo ""
 
       - name: Running test pipeline baboon_cerimed ANTS_prep T1 T2
@@ -313,7 +301,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI_v2.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/YGrYLjRb8AyQoQp --output macapype_CI_v2.zip
 
             unzip -o macapype_CI_v2.zip -d macapype_CI_v2
 
@@ -326,8 +314,6 @@ jobs:
             ls macapype_CI_v2/macaque_prime-de
             echo ""
 
-            ls macapype_CI_v2/marmo_marmobrain
-            echo ""
 
       - name: Running test pipeline macaque_prime-de ANTS_prep T1
         run: |
@@ -361,7 +347,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/KJ2L5j6L6orPXxM --output macapype_CI_v2.zip
+            curl https://amubox.univ-amu.fr/public.php/dav/files/YGrYLjRb8AyQoQp --output macapype_CI_v2.zip
 
             unzip -o macapype_CI_v2.zip -d macapype_CI_v2
 
@@ -372,9 +358,6 @@ jobs:
             echo ""
 
             ls macapype_CI_v2/macaque_prime-de
-            echo ""
-
-            ls macapype_CI_v2/marmo_marmobrain
             echo ""
 
       - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
