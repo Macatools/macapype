@@ -230,7 +230,7 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1/sub-Fidji/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1/sub-Prune/ses-T3/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -277,7 +277,7 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1_t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Fidji/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Prune/ses-T3/anat/
             echo ""
 
       - name: Cleaning dataset
