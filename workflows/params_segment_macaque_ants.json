@@ -5,11 +5,13 @@
     },
     "short_preparation_pipe":
     {
-      "aladin_T2_on_T1":{},
+        "aladin_T2_on_T1":{},
     	"crop_aladin_pipe":
     	{
             "reg_T1_on_template":
             {
+                "rig_only_flag":true,
+                "nosym_flag": true
             }
     	}
     },

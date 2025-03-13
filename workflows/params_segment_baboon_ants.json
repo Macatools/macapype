@@ -10,6 +10,8 @@
     	{
             "reg_T1_on_template":
             {
+                "rig_only_flag":true,
+                "nosym_flag": true
             }
     	}
     },
