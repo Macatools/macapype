@@ -28,7 +28,7 @@ Macapype relies on python packages. Here we provide installations using Anaconda
 Creating environment with all packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
+In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype_env", but can be called the name you prefer):
 
 .. code-block:: bash
 
