@@ -18,7 +18,7 @@ Macapype relies heavily on other neuroimaging Softwares, predominentyly:
 * `ANTS <http://stnava.github.io/ANTs/>`_
 * `AFNI <https://afni.nimh.nih.gov/>`_
 * `SPM <https://www.fil.ion.ucl.ac.uk/spm/>`_
-* `NiftiReg <http://cmictig.cs.ucl.ac.uk/wiki/index.php/NiftyReg>
+* `NiftiReg <http://cmictig.cs.ucl.ac.uk/wiki/index.php/NiftyReg>`_
 
 Python packages dependancies
 ----------------------------
