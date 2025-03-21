@@ -15,7 +15,6 @@ def keep_gcc(nii_file):
         from skimage.measure import label
 
         labels = label(segmentation)
-        print(np.unique(labels))
         assert labels.max() != 0  # assume at least 1 CC
         largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
         return largestCC, labels
@@ -23,9 +22,6 @@ def keep_gcc(nii_file):
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
     data = img.get_fdata().astype(np.int16)
-    print(data.shape)
-    print(data.dtype)
-    print(np.unique(data))
 
     # skimage GCC
     new_data, labels = getLargestCC(data)
