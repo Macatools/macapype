@@ -188,9 +188,14 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
 
             list_species = ["macaque", "marmo", "baboon", "chimp"]
 
-            assert species in list_species, \
-                "Error, species {} should in the following list {}".format(
-                    species, list_species)
+            ok_species = False
+            for cur_species in list_species:
+                if species.startswith(cur_species):
+                    ok_species = True
+
+            if ok_species is False:
+                print(f"Error, species {species} not in list")
+                exit(-1)
 
             package_directory = op.dirname(op.abspath(__file__))
 
