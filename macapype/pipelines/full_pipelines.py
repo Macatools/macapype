@@ -278,19 +278,19 @@ def create_full_spm_subpipes(
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t1_debiased_brain_file",
-            outputnode, "native_masked_debiased_T1", params)
+            outputnode, "native_masked_debiased_T1", params, inter_val="LIN")
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t1_debiased_file",
-            outputnode, "native_debiased_T1", params)
+            outputnode, "native_debiased_T1", params, inter_val="LIN")
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t2_debiased_brain_file",
-            outputnode, "native_masked_debiased_T2", params)
+            outputnode, "native_masked_debiased_T2", params, inter_val="LIN")
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             debias, "t2_debiased_file",
-            outputnode, "native_debiased_T2", params)
+            outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     # Bias correction of cropped images
     if "reg" not in params.keys():
@@ -367,17 +367,17 @@ def create_full_spm_subpipes(
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_gm",
-            outputnode, "native_prob_gm", params)
+            outputnode, "native_prob_gm", params, inter_val="LIN")
 
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_wm",
-            outputnode, "native_prob_wm", params)
+            outputnode, "native_prob_wm", params, inter_val="LIN")
 
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             old_segment_pipe, "outputnode.prob_csf",
-            outputnode, "native_prob_csf", params)
+            outputnode, "native_prob_csf", params, inter_val="LIN")
 
     if "mask_from_seg_pipe" in params.keys():
 
@@ -983,12 +983,12 @@ def create_full_ants_subpipes(
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 correct_bias_pipe, "outputnode.debiased_T1",
-                outputnode, "native_debiased_T1", params)
+                outputnode, "native_debiased_T1", params, inter_val="LIN")
 
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 correct_bias_pipe, "outputnode.debiased_T2",
-                outputnode, "native_debiased_T2", params)
+                outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     elif "N4debias" in params.keys():
         print("Found N4debias in params.json")
@@ -1031,12 +1031,12 @@ def create_full_ants_subpipes(
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T1, "output_image",
-                outputnode, "native_debiased_T1", params)
+                outputnode, "native_debiased_T1", params, inter_val="LIN")
 
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T2, "output_image",
-                outputnode, "native_debiased_T2", params)
+                outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     elif "fast" in params.keys():
 
@@ -1089,12 +1089,12 @@ def create_full_ants_subpipes(
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
-                outputnode, "native_debiased_T1", params)
+                outputnode, "native_debiased_T1", params, inter_val="LIN")
 
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T2, "restored_image",
-                outputnode, "native_debiased_T2", params)
+                outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     else:
         print("No debias will be performed before extract_pipe")
@@ -1282,13 +1282,15 @@ def create_full_ants_subpipes(
                 seg_pipe, data_preparation_pipe, inputnode,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T1',
-                outputnode, "native_masked_debiased_T1", params)
+                outputnode, "native_masked_debiased_T1", params,
+                inter_val="LIN")
 
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T2',
-                outputnode, "native_masked_debiased_T2", params)
+                outputnode, "native_masked_debiased_T2", params,
+                inter_val="LIN")
 
     elif "debias" in params.keys():
         # Bias correction of cropped images
@@ -1363,12 +1365,14 @@ def create_full_ants_subpipes(
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, 't1_debiased_brain_file',
-                outputnode, "native_masked_debiased_T1", params)
+                outputnode, "native_masked_debiased_T1", params,
+                inter_val="LIN")
 
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 debias, 't2_debiased_brain_file',
-                outputnode, "native_masked_debiased_T2", params)
+                outputnode, "native_masked_debiased_T2", params,
+                inter_val="LIN")
 
     else:
 
@@ -1437,12 +1441,14 @@ def create_full_ants_subpipes(
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 restore_mask_T1, 'out_file',
-                outputnode, "native_masked_debiased_T1", params)
+                outputnode, "native_masked_debiased_T1", params,
+                inter_val="LIN")
 
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 restore_mask_T2, 'out_file',
-                outputnode, "native_masked_debiased_T2", params)
+                outputnode, "native_masked_debiased_T2", params,
+                inter_val="LIN")
 
     # ################################### brain_segment
     # (restarting from the avg_align files)
@@ -1603,15 +1609,18 @@ def create_full_ants_subpipes(
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_gm",
-            outputnode, "native_prob_gm", params)
+            outputnode, "native_prob_gm", params,
+            inter_val="LIN")
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_wm",
-            outputnode, "native_prob_wm", params)
+            outputnode, "native_prob_wm", params,
+            inter_val="LIN")
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_csf",
-            outputnode, "native_prob_csf", params)
+            outputnode, "native_prob_csf", params,
+            inter_val="LIN")
 
     if "pad_template" in params["short_preparation_pipe"].keys():
         pad_stereo_stereo_brain_mask = NodeParams(
@@ -1859,7 +1868,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 N4debias_T1, "output_image",
-                outputnode, "native_debiased_T1", params)
+                outputnode, "native_debiased_T1", params,
+                inter_val="LIN")
 
     elif "fast" in params.keys():
 
@@ -1890,7 +1900,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
             pad_back(
                 seg_pipe, data_preparation_pipe, inputnode,
                 fast_T1, "restored_image",
-                outputnode, "native_debiased_T1", params)
+                outputnode, "native_debiased_T1", params,
+                inter_val="LIN")
     else:
         print("No debias is applied before masking")
 
@@ -1999,7 +2010,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             restore_mask_T1, 'out_file',
-            outputnode, "native_masked_debiased_T1", params)
+            outputnode, "native_masked_debiased_T1", params,
+            inter_val="LIN")
 
     # ### full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" not in params.keys():
@@ -2056,17 +2068,20 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_gm",
-            outputnode, "native_prob_gm", params)
+            outputnode, "native_prob_gm", params,
+            inter_val="LIN")
 
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_wm",
-            outputnode, "native_prob_wm", params)
+            outputnode, "native_prob_wm", params,
+            inter_val="LIN")
 
         pad_back(
             seg_pipe, data_preparation_pipe, inputnode,
             brain_segment_pipe, "outputnode.prob_csf",
-            outputnode, "native_prob_csf", params)
+            outputnode, "native_prob_csf", params,
+            inter_val="LIN")
 
     if "export_5tt_pipe" in params["brain_segment_pipe"]:
 

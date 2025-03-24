@@ -8,7 +8,7 @@ from nipype.interfaces.niftyreg.regutils import RegResample
 def pad_back(seg_pipe, data_preparation_pipe, inputnode,
              node, nodefile,
              outputnode, outputnodefile,
-             params):
+             params, inter_val="NN"):
 
     pad_nodename = "pad_" + outputnodefile
 
@@ -16,7 +16,7 @@ def pad_back(seg_pipe, data_preparation_pipe, inputnode,
 
         print("Using reg_aladin transfo to pad mask back")
         pad_node = pe.Node(
-            RegResample(inter_val="NN"),
+            RegResample(inter_val=inter_val),
             name=pad_nodename)
 
         seg_pipe.connect(
