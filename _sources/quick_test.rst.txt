@@ -108,7 +108,7 @@ Macaque
 
 .. code:: bash
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data segment_pnh -data /data/macapype_CI_v2/macaque_prime-de -out /data/macapype_CI_v2/macaque_prime-de/results -soft ANTS -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -species macaque
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data segment_pnh -data /data/macapype_CI_v2/cerimed_macaque -out /data/macapype_CI_v2/cerimed_macaque/results -soft ANTS -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -species macaque
 
 Testing different pipelines and options
 #######################################
