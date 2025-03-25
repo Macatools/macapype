@@ -17,11 +17,6 @@
                 "rig_only_flag":true
             }
         },
-        "pad_template":
-        {
-            "operation" : "PadImage",
-            "op2" : "90"
-        },
         "denoise":
         {
         }
