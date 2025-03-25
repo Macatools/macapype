@@ -126,25 +126,25 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/marmo_marmobrain
+            ls macapype_CI_v2/cerimed_marmo
             echo ""
 
-      - name: Running test pipeline marmo_marmobrain ANTS_noseg T1
+      - name: Running test pipeline cerimed_marmo ANTS_noseg T1
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/marmo_marmobrain -out /data/marmo_marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/sub-Percy/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1/sub-Tresor/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/macapype_crop_aladin_ants_t1/
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1/
 
 
   run-pretest-ants-marmo:
@@ -171,26 +171,26 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/marmo_marmobrain
+            ls macapype_CI_v2/cerimed_marmo
             echo ""
 
-      - name: Running test pipeline marmo_marmobrain ANTS_noseg T1 T2
+      - name: Running test pipeline cerimed_marmo ANTS_noseg T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/marmo_marmobrain -out /data/marmo_marmobrain/results -soft ANTS_noseg -species marmo -sub Percy -ses 01 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Percy/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/
             echo ""
 
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/marmo_marmobrain/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/
 
 
   run-pretest-ants-t1-baboon:
@@ -217,25 +217,25 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/baboon_cerimed
+            ls macapype_CI_v2/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline baboon_cerimed ANTS_prep T1
+      - name: Running test pipeline cerimed_baboon ANTS_prep T1
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/baboon_cerimed -out /data/baboon_cerimed/results -soft ANTS_prep -species baboon -sub Prune -ses T3 -deriv -pad -dt T1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results -soft ANTS_prep -species baboon -sub Prune -ses 3 -deriv -pad -dt T1
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/macapype_crop_aladin_ants_t1/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1/sub-Prune/ses-T3/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/macapype_crop_aladin_ants_t1/sub-Prune/ses-3/anat/
             echo ""
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1/
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/macapype_crop_aladin_ants_t1/
 
 
 
@@ -263,26 +263,25 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/baboon_cerimed
+            ls macapype_CI_v2/cerimed_baboon
             echo ""
 
-
-      - name: Running test pipeline baboon_cerimed ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/baboon_cerimed -out /data/baboon_cerimed/results -soft ANTS_prep -species baboon -sub Prune -ses T3 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results -soft ANTS_prep -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/macapype_crop_aladin_ants_t1_t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Prune/ses-T3/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Prune/ses-3/anat/
             echo ""
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/baboon_cerimed/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results/derivatives/macapype_crop_aladin_ants_t1_t2/
 
 
 
@@ -311,26 +310,26 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/macaque_prime-de
+            ls macapype_CI_v2/cerimed_macaque
             echo ""
 
 
-      - name: Running test pipeline macaque_prime-de ANTS_prep T1
+      - name: Running test pipeline cerimed_macaque ANTS_prep T1
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/cerimed_macaque/ -out /data/cerimed_macaque/results -soft ANTS_prep -species macaque -sub Stevie -ses 01 -deriv -pad -dt T1
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/macapype_crop_aladin_ants_t1/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/sub-032140/ses-001/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/macapype_crop_aladin_ants_t1/sub-Stevie/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1/
+            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/macapype_crop_aladin_ants_t1/
 
 
   run-pretest-ants-macaque:
@@ -357,24 +356,23 @@ jobs:
             ls macapype_CI_v2
             echo ""
 
-            ls macapype_CI_v2/macaque_prime-de
+            ls macapype_CI_v2/cerimed_macaque
             echo ""
 
-
-      - name: Running test pipeline macaque_prime-de ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_macaque ANTS_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/macaque_prime-de/ -out /data/macaque_prime-de/results -soft ANTS_prep -species macaque -sub 032140 -ses 001 -deriv -pad -dt T1 T2 -nprocs 1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2:/data macatools/macapype:latest segment_pnh -data /data/cerimed_macaque/ -out /data/cerimed_macaque/results -soft ANTS_prep -species macaque -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -nprocs 1
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/macapype_crop_aladin_ants_t1_t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2/macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-032140/ses-001/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Stevie/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
         run:
-            sudo rm -rf macaque_prime-de/results/derivatives/macapype_crop_aladin_ants_t1_t2
+            sudo rm -rf cerimed_macaque/results
 
