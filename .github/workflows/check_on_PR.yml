@@ -44,18 +44,9 @@ jobs:
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -sub Stevie -ses 001  -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001  -dt T1
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001  -dt T1 T2
-
-
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -sub Stevie -ses 001  -dt T1
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -sub Stevie -ses 001  -dt T1 T2
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001  -dt T1
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001  -dt T1 T2
 
       - name: Running all test pipelines (macaque deriv)
         run: |
@@ -63,18 +54,9 @@ jobs:
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -sub Stevie -ses 001 -deriv -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001 -deriv -dt T1
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001 -deriv -dt T1 T2
-
-
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -sub Stevie -ses 001 -deriv -dt T1
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -sub Stevie -ses 001 -deriv -dt T1 T2
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001 -deriv -dt T1
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001 -deriv -dt T1 T2
 
       - name: Running all test pipelines (macaque deriv pad)
         run: |
@@ -83,11 +65,6 @@ jobs:
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -sub Stevie -ses 001 -deriv -pad -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001 -deriv -pad -dt T1
-
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft ANTS_test -species macaque -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/indiv_params_segment_macaque.json -sub Stevie -ses 001 -deriv -pad -dt T1 T2
-
-
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -sub Stevie -ses 001 -deriv -pad -dt T1
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_macaque/results -soft SPM_native_test -species macaque -sub Stevie -ses 001 -deriv -pad -dt T1 T2
@@ -95,6 +72,6 @@ jobs:
       - name: Running some test pipelines (baboon / marmo)
         run: |
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results -soft ANTS_test -species baboon -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/indiv_params_segment_baboon.json -sub Prune -ses 3 -deriv -pad -dt T1 T2
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_baboon/results -soft ANTS_test -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results -soft ANTS_test -species marmo -indiv /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/indiv_params_segment_marmo.json -sub Tresor -ses 01 -deriv -pad -dt T1 T2
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo -out /home/runner/work/macapype/macapype/macapype_CI_v2/cerimed_marmo/results -soft ANTS_test -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1 T2
