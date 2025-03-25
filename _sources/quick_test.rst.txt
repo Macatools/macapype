@@ -100,7 +100,7 @@ Baboon
 
 .. code:: bash
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2/cerimed_baboon -out /data/macapype_CI_v2/cerimed_baboon/results -soft ANTS -species baboon -sub Prune -ses T3 -deriv -pad -dt T1 T2
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2/cerimed_baboon -out /data/macapype_CI_v2/cerimed_baboon/results -soft ANTS -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2
 
 
 Macaque
