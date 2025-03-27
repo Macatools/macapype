@@ -150,7 +150,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
     # modifying crop_aladin
     params_spp = params["short_preparation_pipe"]
 
-    if ["crop_aladin_pipe"] in params_spp.keys():
+    if "crop_aladin_pipe" in params_spp.keys():
 
         params_spp_cap = params_spp["crop_aladin_pipe"]
 
