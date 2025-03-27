@@ -104,44 +104,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
 
                     extra_wf_name += "_crop_aladin"
 
-            # modifying crop_aladin_pipe
-
-            extra_wf_name += "_crop_aladin"
-            params_spp = params["short_preparation_pipe"]
-
-            if "crop_aladin_pipe" in params_spp:
-                params_spp_cap = params_spp["crop_aladin_pipe"]
-
-                if "robustreg" in ssoft:
-                    print("Using robustreg option")
-                    params_spp_cap["reg_T1_on_template"] = {
-                            "nac_flag": True,
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 12,
-                            "lp_val": 10,
-                            "smoo_r_val": 1.0
-                            }
-
-                    params_spp_cap["reg_T1_on_template2"] = {
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 17,
-                            "lp_val": 15,
-                            "smoo_r_val": 1.0
-                            }
-
-                elif "halfrobustreg" in ssoft:
-                    print("Using halfrobustreg option")
-                    params_spp_cap["reg_T1_on_template"] = {
-                            "nac_flag": True,
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 12,
-                            "lp_val": 10,
-                            "smoo_r_val": 1.0
-                            }
-
         return params, indiv_params, extra_wf_name
 
 
@@ -168,31 +130,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 print("Deleting crop_T1")
                 del params["short_preparation_pipe"]["crop_T1"]
 
-            if "robustreg" in ssoft and "crop_aladin_pipe" \
-                    in params["short_preparation_pipe"]:
-                print("Using robustreg option")
-                params["short_preparation_pipe"]["crop_aladin_pipe"] = {
-                    "reg_T1_on_template": {
-                        "nac_flag": True,
-                        "rig_only_flag": True,
-                        "nosym_flag": True,
-                        "ln_val": 12,
-                        "lp_val": 10,
-                        "smoo_r_val": 1.0
-                        },
-                    "reg_T1_on_template2": {
-                        "rig_only_flag": True,
-                        "nosym_flag": True,
-                        "ln_val": 17,
-                        "lp_val": 15,
-                        "smoo_r_val": 1.0
-                        }
-                    }
-
-            print("New params after modification")
-            pprint.pprint(params)
-
-            extra_wf_name += "_crop_aladin"
         else:
             print('**** params modification not implemented \
                 if no indiv_params ****')
@@ -210,6 +147,48 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             ssoft, subjects=subjects, sessions=sessions,
             indiv_params=indiv_params, params=params, extra_wf_name="")
 
+    # modifying crop_aladin
+    params_spp = params["short_preparation_pipe"]
+
+    if ["crop_aladin_pipe"] in params_spp.keys():
+
+        params_spp_cap = params_spp["crop_aladin_pipe"]
+
+        if "robustreg" in ssoft:
+            print("Using robustreg option")
+            params_spp_cap["reg_T1_on_template"] = {
+                    "nac_flag": True,
+                    "rig_only_flag": True,
+                    "nosym_flag": True,
+                    "ln_val": 12,
+                    "lp_val": 10,
+                    "smoo_r_val": 1.0
+                    }
+
+            params_spp_cap["reg_T1_on_template2"] = {
+                    "rig_only_flag": True,
+                    "nosym_flag": True,
+                    "ln_val": 17,
+                    "lp_val": 15,
+                    "smoo_r_val": 1.0
+                    }
+
+        elif "halfrobustreg" in ssoft:
+            print("Using halfrobustreg option")
+            params_spp_cap["reg_T1_on_template"] = {
+                    "nac_flag": True,
+                    "rig_only_flag": True,
+                    "nosym_flag": True,
+                    "ln_val": 12,
+                    "lp_val": 10,
+                    "smoo_r_val": 1.0
+                    }
+
+    print("New params after modification")
+    pprint.pprint(params)
+
+    extra_wf_name += "_crop_aladin"
+
     # ANTS
     if "ants" in ssoft:
         print("Found ants in soft")
@@ -222,10 +201,22 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         if "prep" in ssoft:
             print("Found prep in soft")
+
+            # debias
+            if "fast" in params.keys():
+                del params["fast"]
+                print("Deleting fast")
+
+            if "N4debias" in params.keys():
+                del params["N4debias"]
+                print("Deleting N4debias")
+
+            # brain mask
             if "extract_pipe" in params.keys():
                 del params["extract_pipe"]
                 print("Deleting extract_pipe")
 
+            # masked debias
             if "masked_correct_bias_pipe" in params.keys():
                 del params["masked_correct_bias_pipe"]
                 print("Deleting masked_correct_bias_pipe")
@@ -234,6 +225,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 del params["debias"]
                 print("Deleting debias")
 
+            # segment
             if "brain_segment_pipe" in params.keys():
                 del params["brain_segment_pipe"]
                 print("Deleting brain_segment_pipe")
@@ -254,6 +246,10 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         if "prep" in ssoft:
             print("Found prep in soft")
+
+            if "debias" in params.keys():
+                del params["debias"]
+                print("Deleting debias")
 
             if "reg" in params.keys():
                 del params["reg"]
