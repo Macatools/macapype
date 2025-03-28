@@ -1978,8 +1978,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
     if "denoise" in params["short_preparation_pipe"].keys():
         seg_pipe.connect(
-            data_preparation_pipe, 'outputnode.stereo_T1',
-            outputnode, 'stereo_T1')
+            data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+            outputnode, 'stereo_denoised_T1')
 
     seg_pipe.connect(
         data_preparation_pipe, "outputnode.stereo_padded_T1",
