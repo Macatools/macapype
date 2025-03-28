@@ -86,7 +86,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             niu.Rename(),
             name="rename_stereo_denoised_T1")
         rename_stereo_denoised_T1.inputs.format_string = \
-            pref_deriv + "_space-stereo_desc-pad_T1w"
+            pref_deriv + "_space-stereo_desc-denoised_T1w"
         rename_stereo_denoised_T1.inputs.parse_string = parse_str
         rename_stereo_denoised_T1.inputs.keep_ext = True
 
@@ -105,7 +105,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 niu.Rename(),
                 name="rename_stereo_denoised_T2")
             rename_stereo_denoised_T2.inputs.format_string = \
-                pref_deriv + "_space-stereo_desc-pad_T2w"
+                pref_deriv + "_space-stereo_desc-denoised_T2w"
             rename_stereo_denoised_T2.inputs.parse_string = parse_str
             rename_stereo_denoised_T2.inputs.keep_ext = True
 
