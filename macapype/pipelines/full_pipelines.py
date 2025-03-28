@@ -883,6 +883,9 @@ def create_full_ants_subpipes(
                     "stereo_padded_T1",
                     "stereo_padded_T2",
 
+                    "stereo_denoised_T1",
+                    "stereo_denoised_T2",
+
                     'stereo_debiased_T1', 'stereo_debiased_T2',
                     "native_debiased_T1", "native_debiased_T2",
 
