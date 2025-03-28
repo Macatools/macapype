@@ -13,10 +13,8 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
         print("short_preparation_pipe not found in params, \
             not modifying preparation pipe")
 
-
     else:
 
-        prep_pipe = "short_preparation_pipe"
         count_all_sessions = 0
         count_T1_crops = 0
         count_long_crops = 0
@@ -99,7 +97,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                 else:
                     print("**** not all sub/ses have T1 crops,\
                         using autocrop ")
-
 
         return params, indiv_params, extra_wf_name
 

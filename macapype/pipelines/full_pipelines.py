@@ -1643,7 +1643,6 @@ def create_full_ants_subpipes(
                         data_preparation_pipe, 'outputnode.stereo_T2',
                         brain_segment_pipe, 'inputnode.debiased_T1')
 
-
             seg_pipe.connect(
                 restore_mask_T2, 'out_file',
                 brain_segment_pipe, 'inputnode.masked_debiased_T1')
@@ -1839,12 +1838,12 @@ def create_full_ants_subpipes(
         if "denoise" in params["short_preparation_pipe"].keys():
             seg_pipe.connect(
                 data_preparation_pipe, 'outputnode.stereo_denoised_T1',
-                    nii_to_mesh_pipe, 'inputnode.t1_ref_file')
+                nii_to_mesh_pipe, 'inputnode.t1_ref_file')
 
         else:
             seg_pipe.connect(
                 data_preparation_pipe, 'outputnode.stereo_T1',
-                    nii_to_mesh_pipe, 'inputnode.t1_ref_file')
+                nii_to_mesh_pipe, 'inputnode.t1_ref_file')
 
         # from brain_segment_pipe
         seg_pipe.connect(brain_segment_pipe,
