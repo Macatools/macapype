@@ -63,7 +63,7 @@ def create_full_spm_subpipes(
 
     Params:
 
-    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
+    - short_preparation_pipe (see :class:`create_short_preparation_pipe \
     <macapype.pipelines.prepare.create_short_preparation_pipe>`)
     - debias (see :class:`T1xT2BiasFieldCorrection \
     <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`) - also available \
@@ -822,7 +822,7 @@ def create_full_ants_subpipes(
 
     Params:
 
-    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe \
+    - short_preparation_pipe (see :class:`create_short_preparation_pipe \
     <macapype.pipelines.prepare.create_short_preparation_pipe>`)
 
     - brain_extraction_pipe (see :class:`create_brain_extraction_pipe \
@@ -1883,7 +1883,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
     Params:
 
-    - short_data_preparation_pipe (see :class:`create_short_preparation_pipe <\
+    - short_preparation_pipe (see :class:`create_short_preparation_pipe <\
     macapype.pipelines.prepare.create_short_preparation_pipe>`
     - brain_extraction_T1_pipe (see :class:`create_brain_extraction_T1_pipe \
     <macapype.pipelines.full_pipelines.create_brain_extraction_T1_pipe>`)
@@ -1930,6 +1930,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
             fields=[
                     "native_T1",
                     'stereo_T1',
+                    'stereo_denoised_T1',
                     "stereo_padded_T1",
 
                     'stereo_brain_mask', 'native_brain_mask',
@@ -1974,6 +1975,11 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T1',
                      outputnode, 'stereo_T1')
+
+    if "denoise" in params["short_preparation_pipe"].keys:
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_T1',
+            outputnode, 'stereo_T1')
 
     seg_pipe.connect(
         data_preparation_pipe, "outputnode.stereo_padded_T1",
