@@ -1976,7 +1976,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
     seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T1',
                      outputnode, 'stereo_T1')
 
-    if "denoise" in params["short_preparation_pipe"].keys:
+    if "denoise" in params["short_preparation_pipe"].keys():
         seg_pipe.connect(
             data_preparation_pipe, 'outputnode.stereo_T1',
             outputnode, 'stereo_T1')
