@@ -142,7 +142,9 @@ def create_short_preparation_pipe(params, params_template={},
     # Creating output node
     outputnode = pe.Node(
         niu.IdentityInterface(fields=['native_T1', 'native_T2',
-                                      'preproc_T1', 'preproc_T2',
+                                      'stereo_T1', 'stereo_T2',
+                                      'stereo_denoised_T1',
+                                      'stereo_denoised_T2',
                                       "stereo_padded_T1",
                                       "stereo_padded_T2",
                                       "native_to_stereo_trans",
@@ -475,6 +477,26 @@ def create_short_preparation_pipe(params, params_template={},
         inv_tranfo, 'out_file',
         outputnode, 'stereo_to_native_trans')
 
+    # outputnode (stereo)
+    if "use_T2" in params.keys():
+        data_preparation_pipe.connect(
+            crop_aladin_pipe, "outputnode.stereo_T1",
+            outputnode, 'stereo_T2')
+
+        data_preparation_pipe.connect(
+            apply_crop_aladin_T2, 'out_file',
+            outputnode, 'stereo_T1')
+
+    else:
+
+        data_preparation_pipe.connect(
+            crop_aladin_pipe, "outputnode.stereo_T1",
+            outputnode, 'stereo_T1')
+
+        data_preparation_pipe.connect(
+            apply_crop_aladin_T2, 'out_file',
+            outputnode, 'stereo_T2')
+
     # denoise with Ants package
     if "denoise" in params.keys():
 
@@ -499,41 +521,20 @@ def create_short_preparation_pipe(params, params_template={},
 
             data_preparation_pipe.connect(
                 denoise_T1, 'output_image',
-                outputnode, 'preproc_T2')
+                outputnode, 'stereo_denoised_T2')
 
             data_preparation_pipe.connect(
                 denoise_T2, 'output_image',
-                outputnode, 'preproc_T1')
+                outputnode, 'stereo_denoised_T1')
         else:
 
             data_preparation_pipe.connect(
                 denoise_T1, 'output_image',
-                outputnode, 'preproc_T1')
+                outputnode, 'stereo_denoised_T1')
 
             data_preparation_pipe.connect(
                 denoise_T2, 'output_image',
-                outputnode, 'preproc_T2')
-    else:
-
-        if "use_T2" in params.keys():
-
-            data_preparation_pipe.connect(
-                crop_aladin_pipe, "outputnode.stereo_T1",
-                outputnode, 'preproc_T2')
-
-            data_preparation_pipe.connect(
-                apply_crop_aladin_T2, 'out_file',
-                outputnode, 'preproc_T1')
-
-        else:
-
-            data_preparation_pipe.connect(
-                crop_aladin_pipe, "outputnode.stereo_T1",
-                outputnode, 'preproc_T1')
-
-            data_preparation_pipe.connect(
-                apply_crop_aladin_T2, 'out_file',
-                outputnode, 'preproc_T2')
+                outputnode, 'stereo_denoised_T2')
 
     # resample T1 to higher dimension
     if "pad_template" in params.keys():

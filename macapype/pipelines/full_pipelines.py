@@ -191,11 +191,14 @@ def create_full_spm_subpipes(
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T2',
                      outputnode, 'native_T2')
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     outputnode, 'stereo_T1')
+    if "denoise" in params["short_preparation_pipe"].keys():
+        seg_pipe.connect(data_preparation_pipe,
+                         'outputnode.stereo_denoised_T1',
+                         outputnode, 'stereo_denoised_T1')
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                     outputnode, 'stereo_T2')
+        seg_pipe.connect(data_preparation_pipe,
+                         'outputnode.stereo_denoised_T2',
+                         outputnode, 'stereo_denoised_T2')
 
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
                      outputnode, "stereo_padded_T1")
@@ -216,10 +219,21 @@ def create_full_spm_subpipes(
                         params=parse_key(params, "debias"),
                         name='debias')
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                     debias, 't1_file')
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                     debias, 't2_file')
+    if "denoise" in params["short_preparation_pipe"].keys():
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+            debias, 't1_file')
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_denoised_T2',
+            debias, 't2_file')
+    else:
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_T1',
+            debias, 't1_file')
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_T2',
+            debias, 't2_file')
+
     seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
                      debias, 'indiv_params')
 
@@ -239,8 +253,14 @@ def create_full_spm_subpipes(
                          'outputnode.native_to_stereo_trans',
                          apply_crop_external_mask, "trans_file")
 
-        seg_pipe.connect(data_preparation_pipe, "outputnode.preproc_T1",
-                         apply_crop_external_mask, "ref_file")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
+                apply_crop_external_mask, "ref_file")
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_T1",
+                apply_crop_external_mask, "ref_file")
 
         seg_pipe.connect(apply_crop_external_mask, "out_file",
                          debias, "b")
@@ -931,10 +951,19 @@ def create_full_ants_subpipes(
                      outputnode, 'native_T2')
 
     # everything is now in stereo space
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+
+    if "denoise" in params["short_preparation_pipe"].keys():
+        seg_pipe.connect(
+            data_preparation_pipe, "outputnode.stereo_denoised_T1",
+            outputnode, "stereo_denoised_T1")
+        seg_pipe.connect(
+            data_preparation_pipe, "outputnode.stereo_denoised_T2",
+            outputnode, "stereo_denoised_T2")
+
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T1',
                      outputnode, "stereo_T1")
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T2',
                      outputnode, "stereo_T2")
 
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
@@ -964,11 +993,19 @@ def create_full_ants_subpipes(
         correct_bias_pipe = create_correct_bias_pipe(
             params=parse_key(params, "correct_bias_pipe"))
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         correct_bias_pipe, 'inputnode.preproc_T1')
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
+                correct_bias_pipe, 'inputnode.preproc_T1')
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T2",
+                correct_bias_pipe, 'inputnode.preproc_T1')
+        else:
+            seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T1',
+                             correct_bias_pipe, 'inputnode.preproc_T1')
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                         correct_bias_pipe, 'inputnode.preproc_T2')
+            seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T2',
+                             correct_bias_pipe, 'inputnode.preproc_T2')
 
         # outputnode
         seg_pipe.connect(correct_bias_pipe,
@@ -998,8 +1035,14 @@ def create_full_ants_subpipes(
                                  params=parse_key(params, "N4debias"),
                                  name='N4debias_T1')
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         N4debias_T1, "input_image")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
+                N4debias_T1, "input_image")
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                N4debias_T1, "input_image")
 
         seg_pipe.connect(
             inputnode, ('indiv_params', parse_key, "N4debias"),
@@ -1010,8 +1053,14 @@ def create_full_ants_subpipes(
                                  params=parse_key(params, "N4debias"),
                                  name='N4debias_T2')
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                         N4debias_T2, "input_image")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T2",
+                N4debias_T2, "input_image")
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T2',
+                N4debias_T2, "input_image")
 
         seg_pipe.connect(
             inputnode, ('indiv_params', parse_key, "N4debias"),
@@ -1052,8 +1101,14 @@ def create_full_ants_subpipes(
         fast_T1.inputs.output_biasfield = True
         fast_T1.inputs.img_type = 1
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         fast_T1, "in_files")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
+                fast_T1, "in_files")
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                fast_T1, "in_files")
 
         seg_pipe.connect(
             inputnode, ('indiv_params', parse_key, "fast"),
@@ -1069,8 +1124,14 @@ def create_full_ants_subpipes(
         fast_T2.inputs.output_biasfield = True
         fast_T2.inputs.img_type = 2
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                         fast_T2, "in_files")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_denoised_T2",
+                fast_T2, "in_files")
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T2',
+                fast_T2, "in_files")
 
         seg_pipe.connect(
             inputnode, ('indiv_params', parse_key, "fast"),
@@ -1136,9 +1197,16 @@ def create_full_ants_subpipes(
                         extract_pipe, "inputnode.restore_T1")
                 else:
 
-                    seg_pipe.connect(
-                        data_preparation_pipe, 'outputnode.preproc_T2',
-                        extract_pipe, "inputnode.restore_T1")
+                    if "denoise" in params["short_preparation_pipe"].keys():
+                        seg_pipe.connect(
+                            data_preparation_pipe,
+                            "outputnode.stereo_denoised_T2",
+                            extract_pipe, "inputnode.restore_T1")
+                    else:
+                        seg_pipe.connect(
+                            data_preparation_pipe,
+                            'outputnode.stereo_T2',
+                            extract_pipe, "inputnode.restore_T1")
 
             else:
 
@@ -1161,9 +1229,16 @@ def create_full_ants_subpipes(
                         extract_pipe, "inputnode.restore_T1")
                 else:
 
-                    seg_pipe.connect(
-                        data_preparation_pipe, 'outputnode.preproc_T1',
-                        extract_pipe, "inputnode.restore_T1")
+                    if "denoise" in params["short_preparation_pipe"].keys():
+                        seg_pipe.connect(
+                            data_preparation_pipe,
+                            "outputnode.stereo_denoised_T1",
+                            extract_pipe, "inputnode.restore_T1")
+                    else:
+                        seg_pipe.connect(
+                            data_preparation_pipe,
+                            'outputnode.stereo_T1',
+                            extract_pipe, "inputnode.restore_T1")
 
             # outputnode
             seg_pipe.connect(
@@ -1211,7 +1286,7 @@ def create_full_ants_subpipes(
                          'outputnode.native_to_stereo_trans',
                          apply_crop_external_mask, "trans_file")
 
-        seg_pipe.connect(data_preparation_pipe, "outputnode.preproc_T1",
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_T1",
                          apply_crop_external_mask, "ref_file")
 
         # outputnode
@@ -1250,12 +1325,23 @@ def create_full_ants_subpipes(
                              masked_correct_bias_pipe, "inputnode.preproc_T2")
 
         else:
+            if "denoise" in params["short_preparation_pipe"].keys():
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                    masked_correct_bias_pipe, "inputnode.preproc_T1")
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                             masked_correct_bias_pipe, "inputnode.preproc_T1")
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T2',
+                    masked_correct_bias_pipe, "inputnode.preproc_T2")
+            else:
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                             masked_correct_bias_pipe, "inputnode.preproc_T2")
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T1',
+                    masked_correct_bias_pipe, "inputnode.preproc_T1")
+
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T2',
+                    masked_correct_bias_pipe, "inputnode.preproc_T2")
 
         if mask_file is None:
             seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
@@ -1315,12 +1401,23 @@ def create_full_ants_subpipes(
                              debias, 't2_file')
 
         else:
+            if "denoise" in params["short_preparation_pipe"].keys():
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                    debias, 't1_file')
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                             debias, 't1_file')
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T2',
+                    debias, 't2_file')
+            else:
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                             debias, 't2_file')
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T1',
+                    debias, 't1_file')
+
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T2',
+                    debias, 't2_file')
 
         if mask_file is None:
             if "extract_pipe" in params.keys():
@@ -1403,12 +1500,23 @@ def create_full_ants_subpipes(
                              restore_mask_T2, 'in_file')
 
         else:
+            if "denoise" in params["short_preparation_pipe"].keys():
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                    restore_mask_T1, 'in_file')
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                             restore_mask_T1, 'in_file')
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T2',
+                    restore_mask_T2, 'in_file')
+            else:
 
-            seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T2',
-                             restore_mask_T2, 'in_file')
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T1',
+                    restore_mask_T1, 'in_file')
+
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T2',
+                    restore_mask_T2, 'in_file')
 
         if mask_file is None:
             if "extract_pipe" in params.keys():
@@ -1486,9 +1594,16 @@ def create_full_ants_subpipes(
                     brain_segment_pipe, 'inputnode.debiased_T1')
 
             else:
-                seg_pipe.connect(
-                    data_preparation_pipe, 'outputnode.preproc_T2',
-                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+                if "denoise" in params["short_preparation_pipe"].keys():
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_denoised_T2',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
+
+                else:
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_T2',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
 
         elif "debias" in params.keys():
             seg_pipe.connect(
@@ -1517,9 +1632,17 @@ def create_full_ants_subpipes(
                     brain_segment_pipe, 'inputnode.debiased_T1')
 
             else:
-                seg_pipe.connect(
-                    data_preparation_pipe, 'outputnode.preproc_T2',
-                    brain_segment_pipe, 'inputnode.debiased_T1')
+
+                if "denoise" in params["short_preparation_pipe"].keys():
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_denoised_T2',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
+
+                else:
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_T2',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
+
 
             seg_pipe.connect(
                 restore_mask_T2, 'out_file',
@@ -1549,9 +1672,15 @@ def create_full_ants_subpipes(
                     brain_segment_pipe, 'inputnode.debiased_T1')
 
             else:
-                seg_pipe.connect(
-                    data_preparation_pipe, 'outputnode.preproc_T1',
-                    brain_segment_pipe, 'inputnode.debiased_T1')
+                if "denoise" in params["short_preparation_pipe"].keys():
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
+
+                else:
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_T1',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
 
         elif "debias" in params.keys():
             seg_pipe.connect(
@@ -1580,9 +1709,15 @@ def create_full_ants_subpipes(
                     brain_segment_pipe, 'inputnode.debiased_T1')
 
             else:
-                seg_pipe.connect(
-                    data_preparation_pipe, 'outputnode.preproc_T1',
-                    brain_segment_pipe, 'inputnode.debiased_T1')
+                if "denoise" in params["short_preparation_pipe"].keys():
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
+
+                else:
+                    seg_pipe.connect(
+                        data_preparation_pipe, 'outputnode.stereo_T1',
+                        brain_segment_pipe, 'inputnode.debiased_T1')
 
             seg_pipe.connect(
                 restore_mask_T1, 'out_file',
@@ -1701,8 +1836,15 @@ def create_full_ants_subpipes(
             params=parse_key(params, "nii_to_mesh_pipe"))
 
         # from data_preparation_pipe
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         nii_to_mesh_pipe, 'inputnode.t1_ref_file')
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                    nii_to_mesh_pipe, 'inputnode.t1_ref_file')
+
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                    nii_to_mesh_pipe, 'inputnode.t1_ref_file')
 
         # from brain_segment_pipe
         seg_pipe.connect(brain_segment_pipe,
@@ -1828,7 +1970,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
     seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
                      outputnode, 'native_T1')
 
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
+    seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T1',
                      outputnode, 'stereo_T1')
 
     seg_pipe.connect(
@@ -1853,8 +1995,15 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
                                  params=parse_key(params, "N4debias"),
                                  name='N4debias_T1')
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         N4debias_T1, "input_image")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                N4debias_T1, "input_image")
+
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                N4debias_T1, "input_image")
 
         seg_pipe.connect(
             inputnode, ('indiv_params', parse_key, "N4debias"),
@@ -1885,8 +2034,14 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
         fast_T1.inputs.output_biasfield = True
         fast_T1.inputs.img_type = 1
 
-        seg_pipe.connect(data_preparation_pipe, 'outputnode.preproc_T1',
-                         fast_T1, "in_files")
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                fast_T1, "in_files")
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                fast_T1, "in_files")
 
         seg_pipe.connect(
             inputnode, ('indiv_params', parse_key, "fast"),
@@ -1936,9 +2091,14 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         else:
             # brain extraction (with atlasbrex)
-            seg_pipe.connect(
-                data_preparation_pipe, 'outputnode.preproc_T1',
-                extract_T1_pipe, "inputnode.restore_T1")
+            if "denoise" in params["short_preparation_pipe"].keys():
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                    extract_T1_pipe, "inputnode.restore_T1")
+            else:
+                seg_pipe.connect(
+                    data_preparation_pipe, 'outputnode.stereo_T1',
+                    extract_T1_pipe, "inputnode.restore_T1")
 
         # outputnode
         seg_pipe.connect(
@@ -1965,7 +2125,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
                          'outputnode.native_to_stereo_trans',
                          apply_crop_external_mask, "trans_file")
 
-        seg_pipe.connect(data_preparation_pipe, "outputnode.preproc_T1",
+        seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_T1",
                          apply_crop_external_mask, "ref_file")
 
         # outputnode
@@ -1989,9 +2149,14 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
             restore_mask_T1, 'in_file')
 
     else:
-        seg_pipe.connect(
-            data_preparation_pipe, 'outputnode.preproc_T1',
-            restore_mask_T1, 'in_file')
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                restore_mask_T1, 'in_file')
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                restore_mask_T1, 'in_file')
 
     if mask_file is None:
         seg_pipe.connect(
@@ -2035,9 +2200,14 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
             brain_segment_pipe, 'inputnode.debiased_T1')
 
     else:
-        seg_pipe.connect(
-            data_preparation_pipe, 'outputnode.preproc_T1',
-            brain_segment_pipe, 'inputnode.debiased_T1')
+        if "denoise" in params["short_preparation_pipe"].keys():
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_denoised_T1',
+                brain_segment_pipe, 'inputnode.debiased_T1')
+        else:
+            seg_pipe.connect(
+                data_preparation_pipe, 'outputnode.stereo_T1',
+                brain_segment_pipe, 'inputnode.debiased_T1')
 
     seg_pipe.connect(restore_mask_T1, 'out_file',
                      brain_segment_pipe, 'inputnode.masked_debiased_T1')

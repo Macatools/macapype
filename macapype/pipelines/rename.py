@@ -80,6 +80,43 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         rename_inv_trans, 'out_file',
         datasink, '@stereo_to_native_trans')
 
+    if "denoise" in params["short_preparation_pipe"].keys():
+
+        rename_stereo_denoised_T1 = pe.Node(
+            niu.Rename(),
+            name="rename_stereo_denoised_T1")
+        rename_stereo_denoised_T1.inputs.format_string = \
+            pref_deriv + "_space-stereo_desc-pad_T1w"
+        rename_stereo_denoised_T1.inputs.parse_string = parse_str
+        rename_stereo_denoised_T1.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.stereo_denoised_T1',
+            rename_stereo_denoised_T1, 'in_file')
+
+        main_workflow.connect(
+            rename_stereo_denoised_T1, 'out_file',
+            datasink, '@stereo_denoised_T1')
+
+        if 't2' in datatypes:
+
+            # rename stereo_denoised_T2
+            rename_stereo_denoised_T2 = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_denoised_T2")
+            rename_stereo_denoised_T2.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-pad_T2w"
+            rename_stereo_denoised_T2.inputs.parse_string = parse_str
+            rename_stereo_denoised_T2.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_denoised_T2',
+                rename_stereo_denoised_T2, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_denoised_T2, 'out_file',
+                datasink, '@stereo_denoised_T2')
+
     if "pad_template" in params["short_preparation_pipe"].keys():
 
         rename_stereo_padded_T1 = pe.Node(
