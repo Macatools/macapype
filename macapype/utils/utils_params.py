@@ -13,7 +13,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
         print("short_preparation_pipe not found in params, \
             not modifying preparation pipe")
 
-        extra_wf_name += "_crop_aladin"
 
     else:
 
@@ -28,7 +27,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                 unable to assess if the indiv_params is correct")
             print("Running by default short_preparation_pipe and crop_T1")
 
-            extra_wf_name += "_crop_aladin"
         else:
 
             print("Will modify params if necessary, \
@@ -102,7 +100,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                     print("**** not all sub/ses have T1 crops,\
                         using autocrop ")
 
-                    extra_wf_name += "_crop_aladin"
 
         return params, indiv_params, extra_wf_name
 
