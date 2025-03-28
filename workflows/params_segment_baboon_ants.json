@@ -14,9 +14,9 @@
             }
     	},
         "denoise":
-            {
-                "shrink_factor": 2
-            }
+        {
+            "shrink_factor": 2
+        }
 
     },
     "N4debias":
