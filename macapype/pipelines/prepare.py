@@ -693,8 +693,9 @@ def create_short_preparation_T1_pipe(params, params_template,
 
     # Creating output node
     outputnode = pe.Node(
-        niu.IdentityInterface(fields=['preproc_T1', 'native_T1',
+        niu.IdentityInterface(fields=['stereo_T1', 'native_T1',
                                       'stereo_padded_T1',
+                                      'stereo_denoised_T1',
                                       "stereo_to_native_trans",
                                       "native_to_stereo_trans"]),
         name='outputnode')
@@ -806,6 +807,10 @@ def create_short_preparation_T1_pipe(params, params_template,
         inv_tranfo, 'out_file',
         outputnode, 'stereo_to_native_trans')
 
+    data_preparation_pipe.connect(
+        crop_aladin_pipe, 'outputnode.stereo_T1',
+        outputnode, 'stereo_T1')
+
     if "denoise" in params.keys():
 
         # denoise with Ants package
@@ -825,16 +830,7 @@ def create_short_preparation_T1_pipe(params, params_template,
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
-                                      outputnode, 'preproc_T1')
-    else:
-        if "crop_T1" in params.keys():
-            data_preparation_pipe.connect(crop_T1, "roi_file",
-                                          outputnode, 'preproc_T1')
-
-        else:
-            data_preparation_pipe.connect(
-                crop_aladin_pipe, 'outputnode.stereo_T1',
-                outputnode, 'preproc_T1')
+                                      outputnode, 'stereo_denoised_T1')
 
     # resample T1 to higher dimension
     if "pad_template" in params.keys():
