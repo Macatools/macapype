@@ -9,6 +9,7 @@
         "use_T2": {},
         "crop_aladin_pipe":
         {
+            "remove_capsule_pipe":{},
             "reg_T1_on_template":
             {
                 "rig_only_flag":true

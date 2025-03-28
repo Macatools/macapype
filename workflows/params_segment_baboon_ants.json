@@ -12,7 +12,12 @@
             {
                 "rig_only_flag":true
             }
-    	}
+    	},
+        "denoise":
+        {
+            "shrink_factor": 2
+        }
+
     },
     "N4debias":
     {
@@ -27,7 +32,7 @@
     {
         "atlas_brex":
         {
-            "f": 0.5,
+            "f": 0.7,
             "reg": 1,
             "msk": "b,0.5,0,0",
             "wrp": "10,10,10",
