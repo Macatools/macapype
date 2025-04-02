@@ -5,7 +5,7 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.niftyreg.regutils import RegResample
 
 
-def pad_back(seg_pipe, data_preparation_pipe, inputnode,
+def pad_back(seg_pipe, data_preparation_pipe,
              node, nodefile,
              outputnode, outputnodefile,
              params, inter_val="NN"):
