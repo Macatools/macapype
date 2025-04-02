@@ -207,14 +207,14 @@ def create_full_spm_subpipes(
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
-                outputnode, "stereo_denoised_T1",
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
                 outputnode, "native_denoised_T1", params,
                 inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
-                outputnode, "stereo_denoised_T2",
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_denoised_T2",
                 outputnode, "native_denoised_T2", params,
                 inter_val="LIN")
 
@@ -307,26 +307,26 @@ def create_full_spm_subpipes(
     if pad:
         if mask_file is None:
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 debias, "debiased_mask_file",
                 outputnode, "native_brain_mask",  params)
         else:
             outputnode.inputs.native_brain_mask = mask_file
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             debias, "t1_debiased_brain_file",
             outputnode, "native_masked_debiased_T1", params, inter_val="LIN")
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             debias, "t1_debiased_file",
             outputnode, "native_debiased_T1", params, inter_val="LIN")
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             debias, "t2_debiased_brain_file",
             outputnode, "native_masked_debiased_T2", params, inter_val="LIN")
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             debias, "t2_debiased_file",
             outputnode, "native_debiased_T2", params, inter_val="LIN")
 
@@ -403,17 +403,17 @@ def create_full_spm_subpipes(
     if pad and space == "native":
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             old_segment_pipe, "outputnode.prob_gm",
             outputnode, "native_prob_gm", params, inter_val="LIN")
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             old_segment_pipe, "outputnode.prob_wm",
             outputnode, "native_prob_wm", params, inter_val="LIN")
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             old_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params, inter_val="LIN")
 
@@ -445,7 +445,7 @@ def create_full_spm_subpipes(
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 mask_from_seg_pipe,
                 'merge_indexed_mask.indexed_mask',
                 outputnode, "native_segmented_brain_mask", params)
@@ -473,7 +473,7 @@ def create_full_spm_subpipes(
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 export_5tt_pipe, 'export_5tt.gen_5tt_file',
                 outputnode, "native_gen_5tt", params)
 
@@ -987,14 +987,14 @@ def create_full_ants_subpipes(
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
-                outputnode, "stereo_denoised_T1",
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
                 outputnode, "native_denoised_T1", params,
                 inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
-                outputnode, "stereo_denoised_T2",
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_denoised_T2",
                 outputnode, "native_denoised_T2", params,
                 inter_val="LIN")
 
@@ -1056,12 +1056,12 @@ def create_full_ants_subpipes(
 
         if pad:
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 correct_bias_pipe, "outputnode.debiased_T1",
                 outputnode, "native_debiased_T1", params, inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 correct_bias_pipe, "outputnode.debiased_T2",
                 outputnode, "native_debiased_T2", params, inter_val="LIN")
 
@@ -1116,12 +1116,12 @@ def create_full_ants_subpipes(
         if pad:
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 N4debias_T1, "output_image",
                 outputnode, "native_debiased_T1", params, inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 N4debias_T2, "output_image",
                 outputnode, "native_debiased_T2", params, inter_val="LIN")
 
@@ -1186,12 +1186,12 @@ def create_full_ants_subpipes(
 
         if pad:
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 fast_T1, "restored_image",
                 outputnode, "native_debiased_T1", params, inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 fast_T2, "restored_image",
                 outputnode, "native_debiased_T2", params, inter_val="LIN")
 
@@ -1301,7 +1301,7 @@ def create_full_ants_subpipes(
 
             if pad:
                 pad_back(
-                    seg_pipe, data_preparation_pipe, inputnode,
+                    seg_pipe, data_preparation_pipe,
                     extract_pipe, "smooth_mask.out_file",
                     outputnode, "native_brain_mask", params)
 
@@ -1403,14 +1403,14 @@ def create_full_ants_subpipes(
         if pad:
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T1',
                 outputnode, "native_masked_debiased_T1", params,
                 inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 masked_correct_bias_pipe,
                 'outputnode.mask_debiased_T2',
                 outputnode, "native_masked_debiased_T2", params,
@@ -1472,7 +1472,7 @@ def create_full_ants_subpipes(
 
                 if pad:
                     pad_back(
-                        seg_pipe, data_preparation_pipe, inputnode,
+                        seg_pipe, data_preparation_pipe,
                         debias, "debiased_mask_file",
                         outputnode, "native_brain_mask", params)
 
@@ -1498,13 +1498,13 @@ def create_full_ants_subpipes(
         if pad:
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 debias, 't1_debiased_brain_file',
                 outputnode, "native_masked_debiased_T1", params,
                 inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 debias, 't2_debiased_brain_file',
                 outputnode, "native_masked_debiased_T2", params,
                 inter_val="LIN")
@@ -1585,13 +1585,13 @@ def create_full_ants_subpipes(
 
         if pad:
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 restore_mask_T1, 'out_file',
                 outputnode, "native_masked_debiased_T1", params,
                 inter_val="LIN")
 
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 restore_mask_T2, 'out_file',
                 outputnode, "native_masked_debiased_T2", params,
                 inter_val="LIN")
@@ -1775,21 +1775,21 @@ def create_full_ants_subpipes(
 
     if pad and space == "native":
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.segmented_file",
             outputnode, "native_segmented_brain_mask", params)
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.prob_gm",
             outputnode, "native_prob_gm", params,
             inter_val="LIN")
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.prob_wm",
             outputnode, "native_prob_wm", params,
             inter_val="LIN")
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params,
             inter_val="LIN")
@@ -1818,7 +1818,7 @@ def create_full_ants_subpipes(
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 brain_segment_pipe, "outputnode.gen_5tt",
                 outputnode, "native_gen_5tt", params)
 
@@ -1841,7 +1841,7 @@ def create_full_ants_subpipes(
 
         if pad:
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
@@ -1862,7 +1862,7 @@ def create_full_ants_subpipes(
 
         if pad:
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
@@ -2019,8 +2019,8 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
-                outputnode, "stereo_denoised_T1",
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_denoised_T1",
                 outputnode, "native_denoised_T1", params,
                 inter_val="LIN")
 
@@ -2066,7 +2066,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 N4debias_T1, "output_image",
                 outputnode, "native_debiased_T1", params,
                 inter_val="LIN")
@@ -2104,7 +2104,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 fast_T1, "restored_image",
                 outputnode, "native_debiased_T1", params,
                 inter_val="LIN")
@@ -2158,7 +2158,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 extract_T1_pipe, "smooth_mask.out_file",
                 outputnode, "native_brain_mask", params)
 
@@ -2224,7 +2224,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
     if pad and space == "native":
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             restore_mask_T1, 'out_file',
             outputnode, "native_masked_debiased_T1", params,
             inter_val="LIN")
@@ -2282,24 +2282,24 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
     if pad and space == "native":
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.segmented_file",
             outputnode, "native_segmented_brain_mask", params)
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.prob_gm",
             outputnode, "native_prob_gm", params,
             inter_val="LIN")
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.prob_wm",
             outputnode, "native_prob_wm", params,
             inter_val="LIN")
 
         pad_back(
-            seg_pipe, data_preparation_pipe, inputnode,
+            seg_pipe, data_preparation_pipe,
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params,
             inter_val="LIN")
@@ -2310,7 +2310,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
                          outputnode, 'stereo_gen_5tt')
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 brain_segment_pipe, "outputnode.gen_5tt",
                 outputnode, "native_gen_5tt", params)
 
@@ -2332,7 +2332,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
@@ -2354,7 +2354,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe, inputnode,
+                seg_pipe, data_preparation_pipe,
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
