@@ -102,7 +102,6 @@
         "template_head": "bma-1-mri_0p2mm.nii.gz",
         "template_brain": "bma-1-mri_0p2mm.nii.gz",
         "template_seg": "bma-1-graywhite_seg_0p2mm.nii.gz",
-
         "padded_template_head": "bma-1-mri_padded_0p2mm.nii.gz",
         "padded_template_seg": "bma-1-graywhite_seg_padded_0p2mm.nii.gz"
     },
