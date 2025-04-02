@@ -130,10 +130,15 @@ def create_full_spm_subpipes(
             "stereo_padded_T2",
 
             'stereo_brain_mask',
+
             'stereo_debiased_T1',
             'stereo_debiased_T2',
             'stereo_masked_debiased_T1',
             'stereo_masked_debiased_T2',
+            "stereo_denoised_T1",
+            "native_denoised_T1",
+            "stereo_denoised_T2",
+            "native_denoised_T2",
 
             'native_brain_mask', 'native_debiased_T1',
             'native_masked_debiased_T1', 'native_debiased_T2',
@@ -199,6 +204,19 @@ def create_full_spm_subpipes(
         seg_pipe.connect(data_preparation_pipe,
                          'outputnode.stereo_denoised_T2',
                          outputnode, 'stereo_denoised_T2')
+
+        if pad and space == "native":
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                outputnode, "stereo_denoised_T1",
+                outputnode, "native_denoised_T1", params,
+                inter_val="LIN")
+
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                outputnode, "stereo_denoised_T2",
+                outputnode, "native_denoised_T2", params,
+                inter_val="LIN")
 
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
                      outputnode, "stereo_padded_T1")
@@ -884,7 +902,10 @@ def create_full_ants_subpipes(
                     "stereo_padded_T2",
 
                     "stereo_denoised_T1",
+                    "native_denoised_T1",
+
                     "stereo_denoised_T2",
+                    "native_denoised_T2",
 
                     'stereo_debiased_T1', 'stereo_debiased_T2',
                     "native_debiased_T1", "native_debiased_T2",
@@ -956,12 +977,26 @@ def create_full_ants_subpipes(
     # everything is now in stereo space
 
     if "denoise" in params["short_preparation_pipe"].keys():
-        seg_pipe.connect(
-            data_preparation_pipe, "outputnode.stereo_denoised_T1",
-            outputnode, "stereo_denoised_T1")
-        seg_pipe.connect(
-            data_preparation_pipe, "outputnode.stereo_denoised_T2",
-            outputnode, "stereo_denoised_T2")
+        seg_pipe.connect(data_preparation_pipe,
+                         'outputnode.stereo_denoised_T1',
+                         outputnode, 'stereo_denoised_T1')
+
+        seg_pipe.connect(data_preparation_pipe,
+                         'outputnode.stereo_denoised_T2',
+                         outputnode, 'stereo_denoised_T2')
+
+        if pad and space == "native":
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                outputnode, "stereo_denoised_T1",
+                outputnode, "native_denoised_T1", params,
+                inter_val="LIN")
+
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                outputnode, "stereo_denoised_T2",
+                outputnode, "native_denoised_T2", params,
+                inter_val="LIN")
 
     seg_pipe.connect(data_preparation_pipe, 'outputnode.stereo_T1',
                      outputnode, "stereo_T1")
@@ -1930,6 +1965,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
             fields=[
                     "native_T1",
                     'stereo_T1',
+                    'native_denoised_T1',
                     'stereo_denoised_T1',
                     "stereo_padded_T1",
 
@@ -1980,6 +2016,13 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
         seg_pipe.connect(
             data_preparation_pipe, 'outputnode.stereo_denoised_T1',
             outputnode, 'stereo_denoised_T1')
+
+        if pad and space == "native":
+            pad_back(
+                seg_pipe, data_preparation_pipe, inputnode,
+                outputnode, "stereo_denoised_T1",
+                outputnode, "native_denoised_T1", params,
+                inter_val="LIN")
 
     seg_pipe.connect(
         data_preparation_pipe, "outputnode.stereo_padded_T1",
