@@ -4,9 +4,9 @@ import json
 import pprint
 
 
-def update_preparation_params(ssoft=[], subjects=None, sessions=None,
-                              params=None, indiv_params=None,
-                              extra_wf_name=""):
+def update_indiv_params(ssoft=[], subjects=None, sessions=None,
+                        params=None, indiv_params=None,
+                        extra_wf_name=""):
 
     if "short_preparation_pipe" not in params.keys():
 
@@ -124,7 +124,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         pprint.pprint(indiv_params)
 
-        params, indiv_params, extra_wf_name = update_preparation_params(
+        params, indiv_params, extra_wf_name = update_indiv_params(
             ssoft, subjects=subjects, sessions=sessions,
             indiv_params=indiv_params, params=params, extra_wf_name="")
 
