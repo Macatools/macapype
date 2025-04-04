@@ -1,10 +1,11 @@
 {
     "general":
     {
-        "template_name": "NMT_v2.0_asym"
+        "template_name": "BaBa21-0"
     },
     "short_preparation_pipe":
     {
+        "use_T2":{},
         "aladin_T2_on_T1":{},
     	"crop_aladin_pipe":
     	{
@@ -13,11 +14,10 @@
                 "rig_only_flag":true
             }
     	},
-
         "denoise":
         {
-            "shrink_factor": 2
         }
+
     },
     "N4debias":
     {
@@ -30,16 +30,16 @@
     },
     "extract_pipe":
     {
+        "use_T2":{},
         "atlas_brex":
         {
-            "f": 0.5,
+            "f": 0.7,
             "reg": 1,
+            "msk": "b,0.5,0,0",
             "wrp": "10,10,10",
-            "msk": "a,0,0",
-            "dil": 2,
+            "dil": 1,
             "nrm": 1
         }
-
     },
     "debias":
     {
@@ -47,6 +47,7 @@
     },
     "brain_segment_pipe":
     {
+        "use_T2": {},
         "reg":
         {
             "n": 2,
@@ -62,9 +63,9 @@
             },
             "tissue_dict":
             {
-                "gm": [2, 3],
-                "wm": 4,
-                "csf": [1, 5]
+                "gm": 2,
+                "wm": 3,
+                "csf": 1
             }
         },
         "export_5tt_pipe":
@@ -74,7 +75,7 @@
         {
             "merge_brain_tissues":
             {
-                "keep_indexes": [2,3,4]
+                "keep_indexes": [1,2,3]
             }
         }
     }

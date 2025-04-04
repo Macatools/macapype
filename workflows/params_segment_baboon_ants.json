@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "BaBa21"
+        "template_name": "Haiko_v1.5"
     },
     "short_preparation_pipe":
     {
@@ -15,7 +15,6 @@
     	},
         "denoise":
         {
-            "shrink_factor": 2
         }
 
     },

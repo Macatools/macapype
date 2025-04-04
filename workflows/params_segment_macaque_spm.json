@@ -12,6 +12,10 @@
             {
                  "rig_only_flag":true
             }
+        },
+        "denoise":
+        {
+            "shrink_factor": 2
         }
     },
     "debias":

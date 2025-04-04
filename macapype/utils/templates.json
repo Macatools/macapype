@@ -102,7 +102,6 @@
         "template_head": "bma-1-mri_0p2mm.nii.gz",
         "template_brain": "bma-1-mri_0p2mm.nii.gz",
         "template_seg": "bma-1-graywhite_seg_0p2mm.nii.gz",
-
         "padded_template_head": "bma-1-mri_padded_0p2mm.nii.gz",
         "padded_template_seg": "bma-1-graywhite_seg_padded_0p2mm.nii.gz"
     },
@@ -127,7 +126,28 @@
         "template_wm": "Haiko20_TPM_WM_sym.nii.gz",
         "template_csf": "Haiko20_TPM_CSF_sym.nii.gz"
     },
-    "BaBa21":{
+    "BaBa21-0":{
+        "template_head": "sub-BaBa21_ses-0_T1w.nii.gz",
+        "template_brain": "sub-BaBa21_ses-0_space-CACP_desc-brain_T1w.nii.gz",
+        "template_gm": "sub-BaBa21_ses-0_space-CACP_label-GM_probseg.nii.gz",
+        "template_wm": "sub-BaBa21_ses-0_space-CACP_label-WM_probseg.nii.gz",
+        "template_csf": "sub-BaBa21_ses-0_space-CACP_label-CSF_probseg.nii.gz"
+    },
+    "BaBa21-1":{
+        "template_head": "sub-BaBa21_ses-1_T1w.nii.gz",
+        "template_brain": "sub-BaBa21_ses-1_space-CACP_desc-brain_T1w.nii.gz",
+        "template_gm": "sub-BaBa21_ses-1_space-CACP_label-GM_probseg.nii.gz",
+        "template_wm": "sub-BaBa21_ses-1_space-CACP_label-WM_probseg.nii.gz",
+        "template_csf": "sub-BaBa21_ses-1_space-CACP_label-CSF_probseg.nii.gz"
+    },
+    "BaBa21-2":{
+        "template_head": "sub-BaBa21_ses-2_T1w.nii.gz",
+        "template_brain": "sub-BaBa21_ses-2_space-CACP_desc-brain_T1w.nii.gz",
+        "template_gm": "sub-BaBa21_ses-2_space-CACP_label-GM_probseg.nii.gz",
+        "template_wm": "sub-BaBa21_ses-2_space-CACP_label-WM_probseg.nii.gz",
+        "template_csf": "sub-BaBa21_ses-2_space-CACP_label-CSF_probseg.nii.gz"
+    },
+    "BaBa21-3":{
         "template_head": "sub-BaBa21_ses-3_T1w.nii.gz",
         "template_brain": "sub-BaBa21_ses-3_space-CACP_desc-brain_T1w.nii.gz",
         "template_gm": "sub-BaBa21_ses-3_space-CACP_label-GM_probseg.nii.gz",
