@@ -40,25 +40,25 @@ The 4 commands earlier corresponds to brain segmentation performed on an example
 
 .. code:: bash
 
-    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/macapype_crop_aladin_ants_t1_t2/graph.png
+    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/macapype_ants/graph.png
 
 * The second one (*-soft ANTS_prep*) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated croping and alignement in the template space:
 
 .. code:: bash
 
-    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_T1w.nii.gz
+    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_T1w.nii.gz
 
 * The third one (*-soft ANTS_noseg*) will perform brain extraction and stop afterward. This is normally the longest step (ranging from 45min to a few hours depending on the image resolution. If it works, you should be able to see the brain mask as :
 
 .. code:: bash
 
-    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_mask.nii.gz
+    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_mask.nii.gz
 
 * The fourth and last one (*-soft ANTS*) will perform brain segmentation and mesh. If it works, you should be able to see the brain segmented mask and brain mesh as :
 
 .. code:: bash
 
-    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_desc-desg_mask.nii.gz
+    /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_desc-desg_mask.nii.gz
 
 
 Testing from docker image
