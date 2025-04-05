@@ -82,7 +82,7 @@ a json file specifiying the global parameters of the analysis. See :ref:`Paramet
 
 * -species  *(mandatory if -params is omitted)*
 followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
-In extra, marmoT1 can be used for segmenting from the T1w image (by default, T2w is used)
+In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w is used)
 
 --------------------------------------
 The following parameters are optional

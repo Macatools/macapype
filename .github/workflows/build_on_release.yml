@@ -152,7 +152,7 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results
 
-  run-pretest-ants-marmoT1:
+  run-pretest-ants-marmoT2:
     name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS marmo T1)
     needs:  docker-build
     runs-on: ubuntu-latest
@@ -181,7 +181,7 @@ jobs:
 
       - name: Running test pipeline cerimed_marmo ANTS_noseg T1
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg -species marmoT1 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg -species marmoT2 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/
 
