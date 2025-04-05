@@ -253,15 +253,6 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
     # soft
     wf_name += "_{}".format(soft)
 
-    if 't1' in datatypes:
-        wf_name += "_t1"
-
-    if 't2' in datatypes:
-        wf_name += "_t2"
-
-    if mask_file is not None:
-        wf_name += "_mask"
-
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
