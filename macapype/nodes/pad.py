@@ -36,9 +36,6 @@ def pad_back(seg_pipe, data_preparation_pipe,
             pad_node, "out_file",
             outputnode, outputnodefile)
 
-        if "crop_T1" in params["short_preparation_pipe"].keys():
-            #TODO
-            pass
     return pad_node
 
 
