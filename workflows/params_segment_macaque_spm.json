@@ -14,7 +14,7 @@
             },
             "reg_T1_on_template2":
             {
-                "reg_T1_on_template":true
+                "rig_only_flag":true
             }
         },
         "denoise":
