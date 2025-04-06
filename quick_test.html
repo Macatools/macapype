@@ -253,25 +253,25 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
 <ul class="simple">
 <li><p>The first one (<em>-soft ANTS_test</em>) is to test the workflow graph. If it works, the representation graph of the pipeline is available as:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/macapype_crop_aladin_ants_t1_t2/graph.png
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/macapype_ants/graph.png
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>The second one (<em>-soft ANTS_prep</em>) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated croping and alignement in the template space:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_T1w.nii.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_T1w.nii.gz
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>The third one (<em>-soft ANTS_noseg</em>) will perform brain extraction and stop afterward. This is normally the longest step (ranging from 45min to a few hours depending on the image resolution. If it works, you should be able to see the brain mask as :</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_mask.nii.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_mask.nii.gz
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>The fourth and last one (<em>-soft ANTS</em>) will perform brain segmentation and mesh. If it works, you should be able to see the brain segmented mask and brain mesh as :</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_crop_aladin_ants_t1_t2/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_desc-desg_mask.nii.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_desc-brain_desc-desg_mask.nii.gz
 </pre></div>
 </div>
 </section>
@@ -337,7 +337,7 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-04-04.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-04-06.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
