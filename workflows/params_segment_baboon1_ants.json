@@ -11,6 +11,10 @@
             "reg_T1_on_template":
             {
                 "rig_only_flag":true
+            },
+            "reg_T1_on_template2":
+            {
+                "rig_only_flag":true
             }
     	},
         "denoise":

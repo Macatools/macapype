@@ -1,13 +1,15 @@
 {
     "general":
     {
-        "template_name": "MBM_v3.0.1_6seg"
+        "template_name": "MBM_v3.0.1_6seg",
+        "template_stereo_name": "bma-1_0p2mm"
     },
-    "short_preparation_pipe":
+     "short_preparation_pipe":
     {
-        "aladin_T2_on_T1": {},
+        "use_T2": {},
         "crop_aladin_pipe":
         {
+            "remove_capsule_pipe":{},
             "reg_T1_on_template":
             {
                 "rig_only_flag":true
@@ -29,7 +31,7 @@
     {
         "atlas_brex":
         {
-            "f": 0.7,
+            "f": 0.6,
             "reg": 1,
             "msk": "b,0.5,0,0",
             "wrp": "5,5,5",

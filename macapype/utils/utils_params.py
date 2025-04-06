@@ -4,9 +4,9 @@ import json
 import pprint
 
 
-def update_preparation_params(ssoft=[], subjects=None, sessions=None,
-                              params=None, indiv_params=None,
-                              extra_wf_name=""):
+def update_indiv_params(ssoft=[], subjects=None, sessions=None,
+                        params=None, indiv_params=None,
+                        extra_wf_name=""):
 
     if "short_preparation_pipe" not in params.keys():
 
@@ -17,8 +17,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
 
         count_all_sessions = 0
         count_T1_crops = 0
-        count_long_crops = 0
-        count_multi_long_crops = 0
 
         if subjects is None:
             print("For whole BIDS dir, \
@@ -57,17 +55,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                         if "crop_T1" in indiv.keys():
                             count_T1_crops += 1
 
-                            if "crop_T2" in indiv.keys() and 't1' not in ssoft:
-
-                                count_long_crops += 1
-
-                                crop_T1_args = indiv["crop_T1"]["args"]
-                                crop_T2_args = indiv["crop_T2"]["args"]
-                                if isinstance(crop_T1_args, list) and \
-                                        isinstance(crop_T2_args, list):
-
-                                    count_multi_long_crops += 1
-
                 else:
                     count_all_sessions += 1
 
@@ -88,7 +75,7 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                         sub/ses in indiv \
                         -> keeping short_preparation_pipe")
 
-                    extra_wf_name += "_indiv_crop"
+                    extra_wf_name += "_crop_T1"
 
                     print("Adding crop_T1")
                     params["short_preparation_pipe"]["crop_T1"] = \
@@ -137,7 +124,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         pprint.pprint(indiv_params)
 
-        params, indiv_params, extra_wf_name = update_preparation_params(
+        params, indiv_params, extra_wf_name = update_indiv_params(
             ssoft, subjects=subjects, sessions=sessions,
             indiv_params=indiv_params, params=params, extra_wf_name="")
 
@@ -180,8 +167,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
     print("New params after modification")
     pprint.pprint(params)
-
-    extra_wf_name += "_crop_aladin"
 
     # ANTS
     if "ants" in ssoft:
