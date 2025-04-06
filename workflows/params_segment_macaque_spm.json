@@ -12,9 +12,9 @@
             {
                  "rig_only_flag":true
             },
-            "reg_T1_on_template":
+            "reg_T1_on_template2":
             {
-                "reg_T1_on_template2":true
+                "reg_T1_on_template":true
             }
         },
         "denoise":
