@@ -100,4 +100,4 @@ jobs:
 
             python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo -out /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_test -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
-            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo -out /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_test -species marmoT1 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
+            python workflows/segment_pnh.py -data /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo -out /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_test -species marmoT2 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
