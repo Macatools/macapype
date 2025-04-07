@@ -38,14 +38,17 @@ RUN python -m pip install xvfbwrapper \
     pbr \
     nibabel==3.2.2 \
     packaging \
-    pytest \
-    install \
-    graphviz \
+    pytest
+
+RUN python -m pip install graphviz \
     pybids \
     nipype \
     nilearn \
     scikit-image \
     brain-slam
+
+RUN python -m pip install SimpleITK
+
 
 ############################################# install macapype
 

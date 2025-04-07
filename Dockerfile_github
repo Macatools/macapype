@@ -55,6 +55,8 @@ RUN pip3 install xvfbwrapper \
     scikit-image \
     brain-slam
 
+RUN python -m pip install SimpleITK
+
 ############################################# install macapype from github
 RUN mkdir -p /opt/packages/
 

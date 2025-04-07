@@ -47,6 +47,8 @@ RUN python -m pip install xvfbwrapper \
     scikit-image \
     brain-slam
 
+RUN python -m pip install SimpleITK
+
 ############################################# install macapype
 
 RUN python -m pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
