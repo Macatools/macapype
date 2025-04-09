@@ -183,4 +183,5 @@
         "template_head": "template_space-stereoINT_largeFOV_T1w.nii.gz",
         "template_brain": "template_space-stereoINT_largeFOV_T1w_brain.nii.gz",
         "template_seg": "segmentation_six_types_seg_space_largeFOV-stereoINT.nii.gz"
+    }
 }
