@@ -320,74 +320,19 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
 
     else:
         # use template from params
-        if "general" in params.keys():
-            pg = params["general"]
-            if "my_path" in pg.keys():
-                my_path = pg["my_path"]
-            else:
-                my_path = ""
+        assert ("general" in params.keys() and
+                "template_name" in params["general"].keys()),\
+            "Error, the params.json should contains a general/template_name"
 
-            if "template_name" in pg.keys():
-                template_name = pg["template_name"]
-                print("template_name = {}".format(template_name))
-                template_dir = load_test_data(template_name, path_to=my_path)
-                params_template = format_template(template_dir, template_name)
-            else:
-                params_template = {}
+        template_name = params["general"]["template_name"]
 
-            # template_stereo_name
-            if "template_stereo_name" in pg.keys():
-                template_stereo_name = pg["template_stereo_name"]
-                print("template_stereo_name = {}".format(template_stereo_name))
-                template_stereo_dir = load_test_data(
-                    template_stereo_name, path_to=my_path)
-                params_template_stereo = format_template(
-                    template_stereo_dir, template_stereo_name)
-
-            elif params_template:
-                params_template_stereo = params_template
-
-            else:
-                print("Error, either template_name or \
-                    template_stereo_name should be filled")
-                params_template_stereo = {}
-
-            # template_brainmask_name
-            if "template_brainmask_name" in pg.keys():
-                template_brainmask_name = pg["template_brainmask_name"]
-                print("template_brainmask_name = {}".format(template_brainmask_name))
-                template_brainmask_dir = load_test_data(
-                    template_brainmask_name, path_to=my_path)
-                params_template_brainmask = format_template(
-                    template_brainmask_dir, template_brainmask_name)
-
-            elif params_template:
-                params_template_brainmask = params_template
-
-            else:
-                print("Error, either template_name or \
-                    template_brainmask_name should be filled")
-                params_template_brainmask = {}
-
-            # template_seg_name
-            if "template_seg_name" in pg.keys():
-                template_seg_name = pg["template_seg_name"]
-                print("template_seg_name = {}".format(template_seg_name))
-                template_seg_dir = load_test_data(
-                    template_seg_name, path_to=my_path)
-                params_template_seg = format_template(
-                    template_seg_dir, template_seg_name)
-
-            elif params_template:
-                params_template_seg = params_template
-
-            else:
-                print("Error, either template_name or \
-                    template_seg_name should be filled")
-                params_template_seg = {}
+        if "general" in params.keys() and "my_path" in params["general"].keys():
+            my_path = params["general"]["my_path"]
         else:
-            print("Error, the params.json should contains \
-                a general/template_name")
+            my_path = ""
+
+        template_dir = load_test_data(template_name, path_to=my_path)
+        params_template = format_template(template_dir, template_name)
 
         if "template_stereo_name" in params["general"].keys():
 
@@ -425,16 +370,14 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
     elif "ants" in ssoft:
         if 't1' in datatypes and 't2' in datatypes:
             segment_pnh_pipe = create_full_ants_subpipes(
+                params_template=params_template,
                 params_template_stereo=params_template_stereo,
-                params_template_brainmask=params_template_brainmask,
-                params_template_seg=params_template_seg,
                 params=params, mask_file=mask_file, space=space, pad=pad)
 
         elif 't1' in datatypes:
             segment_pnh_pipe = create_full_T1_ants_subpipes(
+                params_template=params_template,
                 params_template_stereo=params_template_stereo,
-                params_template_brainmask=params_template_brainmask,
-                params_template_seg=params_template_seg,
                 params=params, mask_file=mask_file, space=space, pad=pad)
 
     # list of all required outputs
