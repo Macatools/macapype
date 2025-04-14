@@ -319,8 +319,9 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
         params_template_stereo = params_template
 
     else:
-        ### use template from params
-        assert ("general" in params.keys()) "Error, the params.json should contains a general section"
+        # use template from params
+        assert "general" in params.keys(), \
+            "Error, the params.json should contains a general section"
 
         pg = params["general"]
 
