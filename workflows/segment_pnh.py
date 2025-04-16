@@ -333,7 +333,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
         # template_name
         if "template_name" in pg.keys():
 
-            template_name = ["template_name"]
+            template_name = pg["template_name"]
 
             template_dir = load_test_data(template_name, path_to=my_path)
             params_template = format_template(template_dir, template_name)
