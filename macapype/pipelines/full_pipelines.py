@@ -36,8 +36,7 @@ from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import create_extract_pipe
 
-from .surface import (create_nii_to_mesh_pipe,
-                      create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
+from .surface import (create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files, show_files
 
