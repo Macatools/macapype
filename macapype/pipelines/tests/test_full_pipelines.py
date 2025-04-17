@@ -50,8 +50,10 @@ def test_create_full_ants_subpipes_no_args():
 
     # running workflow
     segment_pnh = create_full_ants_subpipes(
-        params=params, params_template=params_template,
+        params=params,
         params_template_stereo=params_template,
+        params_template_brainmask=params_template,
+        params_template_seg=params_template,
         name="test_create_full_ants_subpipes_no_args")
 
     segment_pnh.base_dir = data_path
@@ -95,8 +97,10 @@ def test_create_full_ants_subpipes_all_default_params():
 
         # running workflow
         segment_pnh = create_full_ants_subpipes(
-            params=params, params_template=params_template,
+            params=params,
             params_template_stereo=params_template,
+            params_template_brainmask=params_template,
+            params_template_seg=params_template,
             pad=pad,
             name="test_create_full_ants_subpipes_all_default_params")
 
@@ -142,8 +146,10 @@ def test_create_full_ants_t1_subpipes_all_default_params():
 
         # running workflow
         segment_pnh = create_full_T1_ants_subpipes(
-            params=params, params_template=params_template,
+            params=params,
             params_template_stereo=params_template,
+            params_template_brainmask=params_template,
+            params_template_seg=params_template,
             pad=pad,
             name="test_create_full_ants_subpipes_all_default_params")
 
@@ -190,8 +196,11 @@ def test_create_full_spm_subpipes_all_default_params():
 
         # running workflow
         segment_pnh = create_full_spm_subpipes(
-            params=params, params_template=params_template,
-            params_template_stereo=params_template, space=space,
+            params=params,
+            params_template_stereo=params_template,
+            params_template_brainmask=params_template,
+            params_template_seg=params_template,
+            space=space,
             pad=pad,
             name="test_create_full_ants_subpipes_all_default_params")
 
