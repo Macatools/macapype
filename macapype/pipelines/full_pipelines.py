@@ -36,8 +36,7 @@ from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import create_extract_pipe
 
-from .surface import (create_nii_to_mesh_pipe,
-                      create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
+from .surface import (create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files, show_files
 
@@ -48,7 +47,7 @@ from macapype.utils.misc import parse_key, list_input_files, show_files
 
 
 def create_full_spm_subpipes(
-        params_template, params_template_stereo,
+        params_template_stereo, params_template_brainmask, params_template_seg,
         params={}, name='full_spm_subpipes',
         mask_file=None, pad=False, space='template'):
     """ Description: SPM based segmentation pipeline from T1w and T2w images
@@ -341,7 +340,7 @@ def create_full_spm_subpipes(
                      params=parse_key(params, "reg"),
                      name='reg')
 
-    reg.inputs.refb_file = params_template["template_brain"]
+    reg.inputs.refb_file = params_template_brainmask["template_brain"]
 
     seg_pipe.connect(debias, 't1_debiased_file',
                      reg, 'inw_file')
@@ -361,7 +360,7 @@ def create_full_spm_subpipes(
     if space == "template":
 
         old_segment_pipe = create_old_segment_pipe(
-            params_template, params=parse_key(params, "old_segment_pipe"))
+            params_template_seg, params=parse_key(params, "old_segment_pipe"))
 
         seg_pipe.connect(reg, 'warp_file',
                          old_segment_pipe, 'inputnode.T1')
@@ -372,7 +371,7 @@ def create_full_spm_subpipes(
     elif space == "native":
 
         old_segment_pipe = create_native_old_segment_pipe(
-            params_template, params=parse_key(params, "old_segment_pipe"))
+            params_template_seg, params=parse_key(params, "old_segment_pipe"))
 
         seg_pipe.connect(reg, 'inv_transfo_file',
                          old_segment_pipe, 'inputnode.inv_transfo_file')
@@ -833,7 +832,7 @@ def create_brain_segment_from_mask_pipe(
 
 
 def create_full_ants_subpipes(
-        params_template, params_template_stereo,
+        params_template_stereo, params_template_brainmask, params_template_seg,
         params={}, name="full_ants_subpipes", mask_file=None,
         space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
@@ -1208,7 +1207,7 @@ def create_full_ants_subpipes(
 
             # brain extraction
             extract_pipe = create_extract_pipe(
-                params_template=params_template,
+                params_template=params_template_brainmask,
                 params=parse_key(params, "extract_pipe"))
 
             seg_pipe.connect(inputnode, "indiv_params",
@@ -1332,6 +1331,7 @@ def create_full_ants_subpipes(
                          outputnode, "stereo_brain_mask")
 
     # ################################################ masked_debias ##
+
     # correcting for bias T1/T2, but this time with a mask
     if "masked_correct_bias_pipe" in params.keys():
 
@@ -1602,7 +1602,7 @@ def create_full_ants_subpipes(
         return seg_pipe
 
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
-        params_template=params_template,
+        params_template=params_template_seg,
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
     seg_pipe.connect(inputnode, 'indiv_params',
@@ -1866,41 +1866,6 @@ def create_full_ants_subpipes(
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
-    elif 'nii_to_mesh_pipe' in params.keys():
-        # kept for compatibility but nii2mesh is prefered...
-        nii_to_mesh_pipe = create_nii_to_mesh_pipe(
-            params_template=params_template,
-            params=parse_key(params, "nii_to_mesh_pipe"))
-
-        # from data_preparation_pipe
-        if "denoise" in params["short_preparation_pipe"].keys():
-            seg_pipe.connect(
-                data_preparation_pipe, 'outputnode.stereo_denoised_T1',
-                nii_to_mesh_pipe, 'inputnode.t1_ref_file')
-
-        else:
-            seg_pipe.connect(
-                data_preparation_pipe, 'outputnode.stereo_T1',
-                nii_to_mesh_pipe, 'inputnode.t1_ref_file')
-
-        # from brain_segment_pipe
-        seg_pipe.connect(brain_segment_pipe,
-                         'register_NMT_pipe.NMT_subject_align.warpinv_file',
-                         nii_to_mesh_pipe, 'inputnode.warpinv_file')
-
-        seg_pipe.connect(
-            brain_segment_pipe,
-            'register_NMT_pipe.NMT_subject_align.inv_transfo_file',
-            nii_to_mesh_pipe, 'inputnode.inv_transfo_file')
-
-        seg_pipe.connect(brain_segment_pipe,
-                         'register_NMT_pipe.NMT_subject_align.aff_file',
-                         nii_to_mesh_pipe, 'inputnode.aff_file')
-
-        seg_pipe.connect(brain_segment_pipe,
-                         'segment_atropos_pipe.outputnode.segmented_file',
-                         nii_to_mesh_pipe, "inputnode.segmented_file")
-
     return seg_pipe
 
 
@@ -1909,10 +1874,10 @@ def create_full_ants_subpipes(
 # -soft ANTS_T1
 
 
-def create_full_T1_ants_subpipes(params_template, params_template_stereo,
-                                 params={}, name="full_T1_ants_subpipes",
-                                 mask_file=None,
-                                 space="native", pad=False):
+def create_full_T1_ants_subpipes(
+        params_template_stereo, params_template_brainmask, params_template_seg,
+        params={}, name="full_T1_ants_subpipes", mask_file=None,
+        space="native", pad=False):
     """
     Description: Full pipeline to segment T1 (with no T2).
 
@@ -2120,7 +2085,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
     if mask_file is None:
 
         extract_T1_pipe = create_extract_pipe(
-            params_template=params_template,
+            params_template=params_template_brainmask,
             params=parse_key(params, "extract_pipe"))
 
         seg_pipe.connect(
@@ -2236,7 +2201,7 @@ def create_full_T1_ants_subpipes(params_template, params_template_stereo,
         return seg_pipe
 
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
-        params_template=params_template,
+        params_template=params_template_seg,
         params=parse_key(params, "brain_segment_pipe"), space=space)
 
     if "N4debias" in params.keys():
