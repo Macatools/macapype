@@ -68,7 +68,7 @@
         "template_head": "NMT_v20_asym_0p5.nii.gz",
         "template_brain": "NMT_v20_asym_SS_0p5.nii.gz",
 
-        "template_seg": "NMT_v20_asym_segmentation_0p5.nii.gz",
+        "template_seg": "NMT_v20_asym_segmentation_0p5.nii.gz"
     },
     "inia19":
     {
