@@ -1,6 +1,7 @@
 {
     "general":
     {
+        "template_stereo_name": "BaBa21-3",
         "template_name": "BaBa21-3_0p6"
     },
     "short_preparation_pipe":
