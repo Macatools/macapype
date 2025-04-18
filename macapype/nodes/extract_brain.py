@@ -481,7 +481,7 @@ class HDBET(CommandLine):
         import os
         outputs = self._outputs().get()
         #outputs = self.output_spec().get()
-        outputs["out_file"] = os.inputs.out_file
+        outputs["out_file"] = self.inputs.out_file
 
         outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
 
