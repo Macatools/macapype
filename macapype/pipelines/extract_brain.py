@@ -78,7 +78,6 @@ def create_extract_pipe(params_template, params={},
                             params=parse_key(params, "hdbet"),
                             name='hdbet')
 
-
         if "smooth" in params.keys():
             extract_pipe.connect(
                 smooth, 'smoothed_file',
