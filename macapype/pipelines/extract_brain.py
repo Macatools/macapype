@@ -73,7 +73,7 @@ def create_extract_pipe(params_template, params={},
         extract_pipe.connect(inputnode, 'restore_T1',
                              smooth, 'in_file')
 
-    if "hd-bet" in params.keys():
+    if "hdbet" in params.keys():
         hdbet =  NodeParams(HDBET(),
                             params=parse_key(params, "hdbet"),
                             name='hdbet')
