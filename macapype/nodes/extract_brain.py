@@ -415,11 +415,11 @@ class HDBETInputSpec(CommandLineInputSpec):
         mandatory=True, position=0, argstr="-i %s")
 
     out_file = File(
-        exists=True,
         desc='name of output skull stripped image',
-        genfile=True,
+        name_source=["in_file"],
+        name_template="%s_brain",
         hash_files=False,
-        mandatory=True, position=1, argstr="-o %s")
+        position=1, argstr="-o %s")
 
     disable_tta = traits.Bool(
         True, usedefault=True, desc='disable_tta',
@@ -466,16 +466,6 @@ class HDBET(CommandLine):
     output_spec = HDBETOutputSpec
 
     _cmd = 'hd-bet --save_bet_mask '
-
-    def _gen_outfilename(self):
-        out_file = self.inputs.out_file
-        # Generate default output filename if non specified.
-        if not isdefined(out_file) and isdefined(self.inputs.in_file):
-            out_file = self._gen_fname(self.inputs.in_file, suffix="_brain")
-            # Convert to relative path to prevent BET failure
-            # with long paths.
-            return os.path.relpath(out_file, start=os.path.getcwd())
-        return out_file
 
     def _gen_maskfilename(self):
         # Generate default output filename if non specified.
