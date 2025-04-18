@@ -470,11 +470,11 @@ class HDBET(CommandLine):
     def _gen_maskfilename(self):
         # Generate default output filename if non specified.
         if isdefined(self.inputs.out_file):
-            out_file = self._gen_fname(self.inputs.out_file, suffix="_bet")
+            mask_file = self._gen_fname(self.inputs.out_file, suffix="_bet")
             # Convert to relative path to prevent BET failure
             # with long paths.
-            return os.path.relpath(out_file, start=os.path.getcwd())
-        return out_file
+            return os.path.relpath(mask_file, start=os.path.getcwd())
+        return mask_file
 
     def _list_outputs(self):
 
