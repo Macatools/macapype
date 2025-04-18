@@ -116,7 +116,7 @@ def create_extract_pipe(params_template, params={},
     mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
     mask_brex.inputs.operation = 'bin'
 
-    if "hd-bet" in params.keys():
+    if "hdbet" in params.keys():
         extract_pipe.connect(hdbet, 'mask_file', mask_brex, 'in_file')
     else:
         extract_pipe.connect(atlas_brex, 'brain_file', mask_brex, 'in_file')
