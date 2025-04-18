@@ -468,11 +468,12 @@ class HDBET(CommandLine):
     _cmd = 'hd-bet --save_bet_mask '
 
     def _gen_maskfilename(self):
+        from nipype.utils.filemanip import split_filename as split_f
         # Generate default mask filename
         if isdefined(self.inputs.in_file):
-            mask_file = self._gen_fname(
-                self.inputs.in_file, suffix="_brain_bet")
-            return os.path.relpath(mask_file, start=os.path.getcwd())
+            path, fname, ext = split_f(self.inputs.in_file)
+            mask_file = fname + "_brain_bet" + ext
+            return os.path.abspath(mask_file)
 
     def _list_outputs(self):
 
