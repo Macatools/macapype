@@ -417,7 +417,6 @@ class HDBETInputSpec(CommandLineInputSpec):
     out_file = File(
         exists=True,
         desc='name of output skull stripped image',
-        position=1,
         genfile=True,
         hash_files=False,
         mandatory=True, position=1, argstr="-o %s")
