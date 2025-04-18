@@ -489,14 +489,10 @@ class HDBET(CommandLine):
     def _list_outputs(self):
 
         import os
-        from nipype.utils.filemanip import split_filename as split_f
-
         outputs = self._outputs().get()
         #outputs = self.output_spec().get()
         outputs["out_file"] = os.path.abspath(self._gen_outfilename())
-
-        if save_bet_mask == True,
-
+        if self.inputs.save_bet_mask == True:
             outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
 
         return outputs
