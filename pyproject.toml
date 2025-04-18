@@ -25,7 +25,8 @@ dependencies = [
     "scikit-image",
     "nibabel",
     "numpy",
-    "SimpleITK"
+    "SimpleITK",
+    "brainles-hd-bet==0.0.11"
 ]
 
 [project.optional-dependencies]

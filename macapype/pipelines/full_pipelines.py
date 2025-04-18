@@ -1279,7 +1279,7 @@ def create_full_ants_subpipes(
 
             # outputnode
             seg_pipe.connect(
-                extract_pipe, "smooth_mask.out_file",
+                extract_pipe, "outputnode.mask_file",
                 outputnode, "stereo_brain_mask")
 
             if "pad_template" in params["short_preparation_pipe"].keys():
@@ -1291,7 +1291,7 @@ def create_full_ants_subpipes(
                     name="pad_stereo_brain_mask")
 
                 seg_pipe.connect(
-                    extract_pipe, "smooth_mask.out_file",
+                    extract_pipe, "outputnode.mask_file",
                     pad_stereo_brain_mask, "op1")
 
                 seg_pipe.connect(
@@ -1301,7 +1301,7 @@ def create_full_ants_subpipes(
             if pad:
                 pad_back(
                     seg_pipe, data_preparation_pipe,
-                    extract_pipe, "smooth_mask.out_file",
+                    extract_pipe, "outputnode.mask_file",
                     outputnode, "native_brain_mask", params)
 
         # full extract brain pipeline (correct_bias, denoising, extract brain)
@@ -1382,7 +1382,7 @@ def create_full_ants_subpipes(
                     masked_correct_bias_pipe, "inputnode.preproc_T2")
 
         if mask_file is None:
-            seg_pipe.connect(extract_pipe, "smooth_mask.out_file",
+            seg_pipe.connect(extract_pipe, "outputnode.mask_file",
                              masked_correct_bias_pipe, "inputnode.brain_mask")
 
         else:
@@ -1460,7 +1460,7 @@ def create_full_ants_subpipes(
         if mask_file is None:
             if "extract_pipe" in params.keys():
                 seg_pipe.connect(
-                    extract_pipe, "smooth_mask.out_file",
+                    extract_pipe, "outputnode.mask_file",
                     debias, 'b')
             else:
                 debias.inputs.bet = 1
@@ -1559,11 +1559,11 @@ def create_full_ants_subpipes(
         if mask_file is None:
             if "extract_pipe" in params.keys():
                 seg_pipe.connect(
-                    extract_pipe, "smooth_mask.out_file",
+                    extract_pipe, "outputnode.mask_file",
                     restore_mask_T1, 'mask_file')
 
                 seg_pipe.connect(
-                    extract_pipe, "smooth_mask.out_file",
+                    extract_pipe, "outputnode.mask_file",
                     restore_mask_T2, 'mask_file')
         else:
             seg_pipe.connect(
@@ -2118,13 +2118,13 @@ def create_full_T1_ants_subpipes(
 
         # outputnode
         seg_pipe.connect(
-            extract_T1_pipe, "smooth_mask.out_file",
+            extract_T1_pipe, "outputnode.mask_file",
             outputnode, "stereo_brain_mask")
 
         if pad and space == "native":
             pad_back(
                 seg_pipe, data_preparation_pipe,
-                extract_T1_pipe, "smooth_mask.out_file",
+                extract_T1_pipe, "outputnode.mask_file",
                 outputnode, "native_brain_mask", params)
 
     else:
@@ -2176,7 +2176,7 @@ def create_full_T1_ants_subpipes(
 
     if mask_file is None:
         seg_pipe.connect(
-            extract_T1_pipe, "smooth_mask.out_file",
+            extract_T1_pipe, "outputnode.mask_file",
             restore_mask_T1, 'mask_file')
 
     else:

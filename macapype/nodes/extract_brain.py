@@ -2,7 +2,7 @@
 
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
-from nipype.interfaces.base import traits, File
+from nipype.interfaces.base import traits, File, isdefined
 
 
 import os
@@ -402,6 +402,105 @@ class AtlasBREX(CommandLine):
         outputs["brain_file"] = os.path.abspath(fname + '_brain' + ext)
 
         return outputs
+
+
+# HDBET
+class HDBETInputSpec(CommandLineInputSpec):
+
+    import os
+
+    in_file = File(
+        exists=True,
+        desc='T1 image to map',
+        mandatory=True, position=0, argstr="-i %s")
+
+    out_file = File(
+        exists=True,
+        desc='name of output skull stripped image',
+        position=1,
+        genfile=True,
+        hash_files=False,
+        mandatory=True, position=1, argstr="-o %s")
+
+    disable_tta = traits.Bool(
+        True, usedefault=True, desc='disable_tta',
+        argstr="--disable_tta", mandatory=False)
+
+    save_bet_mask = traits.Bool(
+        True, usedefault=True, desc='save_bet_mask', argstr="--save_bet_mask",
+        mandatory=False)
+
+    device = traits.Enum(
+        "cpu", 'cuda', 'mps', usedefault=True, desc="",
+        argstr="-device %s", mandatory=True)
+
+    verbose = traits.Bool(
+        True, usedefault=True, desc='verbose', argstr="--verbose",
+        mandatory=True)
+
+
+class HDBETOutputSpec(TraitedSpec):
+    out_file = File(
+        exists=True,
+        desc="extracted brain from hd-bet")
+
+    mask_file = File(
+        desc="brain mask from hd-bet")
+
+
+class HDBET(CommandLine):
+    """
+    Description: Atlas based BrainExtraction
+
+    Inputs:
+
+        Mandatory:
+
+    Outputs:
+
+        brain_file:
+            File, "extracted brain from atlas_brex"
+
+    """
+    input_spec = HDBETInputSpec
+    output_spec = HDBETOutputSpec
+
+    _cmd = 'hd-bet '
+
+    def _gen_outfilename(self):
+        out_file = self.inputs.out_file
+        # Generate default output filename if non specified.
+        if not isdefined(out_file) and isdefined(self.inputs.in_file):
+            out_file = self._gen_fname(self.inputs.in_file, suffix="_brain")
+            # Convert to relative path to prevent BET failure
+            # with long paths.
+            return os.path.relpath(out_file, start=os.path.getcwd())
+        return out_file
+
+    def _gen_maskfilename(self):
+        # Generate default output filename if non specified.
+        if isdefined(self.inputs.in_file):
+            out_file = self._gen_fname(self.inputs.in_file, suffix="_brain_bet")
+            # Convert to relative path to prevent BET failure
+            # with long paths.
+            return os.path.relpath(out_file, start=os.path.getcwd())
+        return out_file
+
+    def _list_outputs(self):
+
+        import os
+        from nipype.utils.filemanip import split_filename as split_f
+
+        outputs = self._outputs().get()
+        #outputs = self.output_spec().get()
+        outputs["out_file"] = os.path.abspath(self._gen_outfilename())
+
+        if save_bet_mask == True,
+
+            outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
+
+        return outputs
+
 
 
 if __name__ == '__main__':
