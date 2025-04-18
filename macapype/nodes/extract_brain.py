@@ -425,9 +425,9 @@ class HDBETInputSpec(CommandLineInputSpec):
         True, usedefault=True, desc='disable_tta',
         argstr="--disable_tta", mandatory=False)
 
-    save_bet_mask = traits.Bool(
-        True, usedefault=True, desc='save_bet_mask', argstr="--save_bet_mask",
-        mandatory=False)
+    #save_bet_mask = traits.Bool(
+        #True, usedefault=True, desc='save_bet_mask', argstr="--save_bet_mask",
+        #mandatory=False)
 
     device = traits.Enum(
         "cpu", 'cuda', 'mps', usedefault=True, desc="",
@@ -464,7 +464,7 @@ class HDBET(CommandLine):
     input_spec = HDBETInputSpec
     output_spec = HDBETOutputSpec
 
-    _cmd = 'hd-bet '
+    _cmd = 'hd-bet --save_bet_mask '
 
     def _gen_outfilename(self):
         out_file = self.inputs.out_file
@@ -491,8 +491,8 @@ class HDBET(CommandLine):
         outputs = self._outputs().get()
         #outputs = self.output_spec().get()
         outputs["out_file"] = os.path.abspath(self._gen_outfilename())
-        if self.inputs.save_bet_mask == True:
-            outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
+
+        outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
 
         return outputs
 

@@ -81,12 +81,12 @@ def create_extract_pipe(params_template, params={},
         if "smooth" in params.keys():
             extract_pipe.connect(
                 smooth, 'smoothed_file',
-                hdbet, 'input_file')
+                hdbet, 'in_file')
         else:
 
             extract_pipe.connect(
                 inputnode, 'restore_T1',
-                hdbet, 'input_file')
+                hdbet, 'in_file')
 
         extract_pipe.connect(
                 inputnode, ("indiv_params", parse_key, "atlas_brex"),
