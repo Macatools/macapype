@@ -62,6 +62,14 @@
         "LR_hemi_template": "supplemental_masks/NMT_v20_asym_LR_brainmask.nii.gz",
         "cereb_template": "supplemental_masks/NMT_v20_asym_cerebellum_mask.nii.gz"
     },
+
+    "NMT_v2.0_asym_0p5":
+    {
+        "template_head": "NMT_v20_asym_0p5.nii.gz",
+        "template_brain": "NMT_v20_asym_SS_0p5.nii.gz",
+
+        "template_seg": "NMT_v20_asym_segmentation_0p5.nii.gz"
+    },
     "inia19":
     {
         "template_head": "inia19-t1.nii",
