@@ -469,8 +469,8 @@ class HDBET(CommandLine):
 
     def _gen_maskfilename(self):
         # Generate default output filename if non specified.
-        if isdefined(self.inputs.in_file):
-            out_file = self._gen_fname(self.inputs.in_file, suffix="_brain_bet")
+        if isdefined(self.inputs.out_file):
+            out_file = self._gen_fname(self.inputs.out_file, suffix="_bet")
             # Convert to relative path to prevent BET failure
             # with long paths.
             return os.path.relpath(out_file, start=os.path.getcwd())
@@ -481,7 +481,7 @@ class HDBET(CommandLine):
         import os
         outputs = self._outputs().get()
         #outputs = self.output_spec().get()
-        outputs["out_file"] = os.path.abspath(self._gen_outfilename())
+        outputs["out_file"] = os.inputs.out_file
 
         outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
 
