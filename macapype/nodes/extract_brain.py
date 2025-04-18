@@ -468,13 +468,11 @@ class HDBET(CommandLine):
     _cmd = 'hd-bet --save_bet_mask '
 
     def _gen_maskfilename(self):
-        # Generate default output filename if non specified.
-        if isdefined(self.inputs.out_file):
-            mask_file = self._gen_fname(self.inputs.out_file, suffix="_bet")
-            # Convert to relative path to prevent BET failure
-            # with long paths.
+        # Generate default mask filename
+        if isdefined(self.inputs.in_file):
+            mask_file = self._gen_fname(
+                self.inputs.in_file, suffix="_brain_bet")
             return os.path.relpath(mask_file, start=os.path.getcwd())
-        return mask_file
 
     def _list_outputs(self):
 
