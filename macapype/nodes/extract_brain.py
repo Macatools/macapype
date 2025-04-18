@@ -444,6 +444,7 @@ class HDBETOutputSpec(TraitedSpec):
         desc="extracted brain from hd-bet")
 
     mask_file = File(
+        exists=True,
         desc="brain mask from hd-bet")
 
 
