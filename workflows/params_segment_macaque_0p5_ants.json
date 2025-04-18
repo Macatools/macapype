@@ -1,7 +1,6 @@
 {
     "general":
     {
-        "template_stereo_name": "NMT_v2.0_asym",
         "template_name": "NMT_v2.0_asym_0p5"
     },
     "short_preparation_pipe":
