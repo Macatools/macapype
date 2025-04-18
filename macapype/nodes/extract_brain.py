@@ -418,6 +418,7 @@ class HDBETInputSpec(CommandLineInputSpec):
         desc='name of output skull stripped image',
         name_source=["in_file"],
         name_template="%s_brain",
+        keep_extension=True,
         hash_files=False,
         position=1, argstr="-o %s")
 
