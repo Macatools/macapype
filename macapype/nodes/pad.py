@@ -14,7 +14,6 @@ def pad_back(seg_pipe, data_preparation_pipe,
 
     if "short_preparation_pipe" in params.keys():
 
-        print("Using reg_aladin transfo to pad mask back")
         pad_node = pe.Node(
             RegResample(inter_val=inter_val),
             name=pad_nodename)
