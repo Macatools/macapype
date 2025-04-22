@@ -637,7 +637,7 @@ def create_short_preparation_pipe(params, params_template={},
                 fast_T2, "in_files")
         else:
             data_preparation_pipe.connect(
-                crop_aladin_pipe, "outputnode.stereo_T2",
+                apply_crop_aladin_T2, 'out_file',
                 fast_T2, "in_files")
 
         data_preparation_pipe.connect(
