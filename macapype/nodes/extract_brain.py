@@ -415,20 +415,16 @@ class HDBETInputSpec(CommandLineInputSpec):
         mandatory=True, position=0, argstr="-i %s")
 
     out_file = File(
-        exists=True,
         desc='name of output skull stripped image',
-        position=1,
-        genfile=True,
+        name_source=["in_file"],
+        name_template="%s_brain",
+        keep_extension=True,
         hash_files=False,
-        mandatory=True, position=1, argstr="-o %s")
+        position=1, argstr="-o %s")
 
     disable_tta = traits.Bool(
         True, usedefault=True, desc='disable_tta',
         argstr="--disable_tta", mandatory=False)
-
-    save_bet_mask = traits.Bool(
-        True, usedefault=True, desc='save_bet_mask', argstr="--save_bet_mask",
-        mandatory=False)
 
     device = traits.Enum(
         "cpu", 'cuda', 'mps', usedefault=True, desc="",
@@ -445,6 +441,7 @@ class HDBETOutputSpec(TraitedSpec):
         desc="extracted brain from hd-bet")
 
     mask_file = File(
+        exists=True,
         desc="brain mask from hd-bet")
 
 
@@ -465,42 +462,23 @@ class HDBET(CommandLine):
     input_spec = HDBETInputSpec
     output_spec = HDBETOutputSpec
 
-    _cmd = 'hd-bet '
-
-    def _gen_outfilename(self):
-        out_file = self.inputs.out_file
-        # Generate default output filename if non specified.
-        if not isdefined(out_file) and isdefined(self.inputs.in_file):
-            out_file = self._gen_fname(self.inputs.in_file, suffix="_brain")
-            # Convert to relative path to prevent BET failure
-            # with long paths.
-            return os.path.relpath(out_file, start=os.path.getcwd())
-        return out_file
+    _cmd = 'hd-bet --save_bet_mask '
 
     def _gen_maskfilename(self):
-        # Generate default output filename if non specified.
+        from nipype.utils.filemanip import split_filename as split_f
+        # Generate default mask filename
         if isdefined(self.inputs.in_file):
-            out_file = self._gen_fname(self.inputs.in_file, suffix="_brain_bet")
-            # Convert to relative path to prevent BET failure
-            # with long paths.
-            return os.path.relpath(out_file, start=os.path.getcwd())
-        return out_file
+            path, fname, ext = split_f(self.inputs.in_file)
+            mask_file = fname + "_brain_bet" + ext
+            return os.path.abspath(mask_file)
 
     def _list_outputs(self):
 
         import os
-        from nipype.utils.filemanip import split_filename as split_f
-
         outputs = self._outputs().get()
-        #outputs = self.output_spec().get()
-        outputs["out_file"] = os.path.abspath(self._gen_outfilename())
-
-        if save_bet_mask == True,
-
-            outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
-
+        outputs["out_file"] = self.inputs.out_file
+        outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
         return outputs
-
 
 
 if __name__ == '__main__':
