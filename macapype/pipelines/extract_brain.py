@@ -7,7 +7,7 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 
-from ..nodes.extract_brain import AtlasBREX
+from ..nodes.extract_brain import AtlasBREX, HDBET
 
 from ..utils.utils_nodes import NodeParams, parse_key
 
@@ -60,6 +60,9 @@ def create_extract_pipe(params_template, params={},
                                       "indiv_params"]),
         name='inputnode')
 
+    outputnode = pe.Node(niu.IdentityInterface(fields=['mask_file']),
+                         name="outputnode")
+
     # smooth before brex
     if "smooth" in params.keys():
 
@@ -69,37 +72,63 @@ def create_extract_pipe(params_template, params={},
 
         extract_pipe.connect(inputnode, 'restore_T1',
                              smooth, 'in_file')
-    # atlas_brex
-    atlas_brex = NodeParams(AtlasBREX(),
-                            params=parse_key(params, "atlas_brex"),
-                            name='atlas_brex')
 
-    if "smooth" in params.keys():
-        extract_pipe.connect(smooth, 'smoothed_file',
-                             atlas_brex, 't1_restored_file')
+    if "hdbet" in params.keys():
+        hdbet = NodeParams(HDBET(),
+                           params=parse_key(params, "hdbet"),
+                           name='hdbet')
+
+        if "smooth" in params.keys():
+            extract_pipe.connect(
+                smooth, 'smoothed_file',
+                hdbet, 'in_file')
+        else:
+
+            extract_pipe.connect(
+                inputnode, 'restore_T1',
+                hdbet, 'in_file')
+
+        extract_pipe.connect(
+                inputnode, ("indiv_params", parse_key, "atlas_brex"),
+                hdbet, 'indiv_params')
+
+        # outputnode
+        extract_pipe.connect(hdbet, 'mask_file', outputnode, 'mask_file')
     else:
+        # atlas_brex
+        atlas_brex = NodeParams(AtlasBREX(),
+                                params=parse_key(params, "atlas_brex"),
+                                name='atlas_brex')
 
-        extract_pipe.connect(inputnode, 'restore_T1',
-                             atlas_brex, 't1_restored_file')
+        if "smooth" in params.keys():
+            extract_pipe.connect(smooth, 'smoothed_file',
+                                 atlas_brex, 't1_restored_file')
+        else:
 
-    atlas_brex.inputs.NMT_file = params_template["template_head"]
-    atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]
+            extract_pipe.connect(inputnode, 'restore_T1',
+                                 atlas_brex, 't1_restored_file')
 
-    extract_pipe.connect(
-            inputnode, ("indiv_params", parse_key, "atlas_brex"),
-            atlas_brex, 'indiv_params')
+        atlas_brex.inputs.NMT_file = params_template["template_head"]
+        atlas_brex.inputs.NMT_SS_file = params_template["template_brain"]
 
-    # mask_brex
-    mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
-    mask_brex.inputs.operation = 'bin'
+        extract_pipe.connect(
+                inputnode, ("indiv_params", parse_key, "atlas_brex"),
+                atlas_brex, 'indiv_params')
 
-    extract_pipe.connect(atlas_brex, 'brain_file', mask_brex, 'in_file')
+        # mask_brex
+        mask_brex = pe.Node(fsl.UnaryMaths(), name='mask_brex')
+        mask_brex.inputs.operation = 'bin'
 
-    # smooth_mask
-    smooth_mask = pe.Node(fsl.UnaryMaths(), name='smooth_mask')
-    smooth_mask.inputs.operation = "bin"
-    smooth_mask.inputs.args = "-s 1 -thr 0.5 -bin"
+        extract_pipe.connect(atlas_brex, 'brain_file', mask_brex, 'in_file')
 
-    extract_pipe.connect(mask_brex, 'out_file', smooth_mask, 'in_file')
+        # smooth_mask
+        smooth_mask = pe.Node(fsl.UnaryMaths(), name='smooth_mask')
+        smooth_mask.inputs.operation = "bin"
+        smooth_mask.inputs.args = "-s 1 -thr 0.5 -bin"
+
+        extract_pipe.connect(mask_brex, 'out_file', smooth_mask, 'in_file')
+
+        # outputnode
+        extract_pipe.connect(smooth_mask, 'out_file', outputnode, 'mask_file')
 
     return extract_pipe
