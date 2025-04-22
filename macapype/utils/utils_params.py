@@ -177,19 +177,16 @@ def update_params(ssoft=[], subjects=None, sessions=None,
         del params["correct_bias_pipe"]
 
     if "fast" in params.keys():
-        print("!!!!!! Old version json, fast now in short_preparation_pipe")
 
+        print("!!!!!! Old version json, moving fast in short_preparation_pipe")
         params["short_preparation_pipe"]["fast"] = params["fast"]
         del params["fast"]
-        print("Deleting fast")
 
     if "N4debias" in params.keys():
 
-        print("!!!!! Old version json, N4debias now in short_preparation_pipe")
-
+        print("!!!!! Old version json, moving N4debias in short_preparation_pipe")
         params["short_preparation_pipe"]["N4debias"] = params["N4debias"]
         del params["N4debias"]
-        print("Deleting N4debias")
 
     # ANTS
     if "ants" in ssoft:
