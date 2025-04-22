@@ -92,6 +92,7 @@ def create_extract_pipe(params_template, params={},
                 inputnode, ("indiv_params", parse_key, "atlas_brex"),
                 hdbet, 'indiv_params')
 
+        # outputnode
         extract_pipe.connect(hdbet, 'mask_file', outputnode, 'mask_file')
     else:
         # atlas_brex
@@ -127,7 +128,7 @@ def create_extract_pipe(params_template, params={},
 
         extract_pipe.connect(mask_brex, 'out_file', smooth_mask, 'in_file')
 
-        #outputnode
+        # outputnode
         extract_pipe.connect(smooth_mask, 'out_file', outputnode, 'mask_file')
 
     return extract_pipe
