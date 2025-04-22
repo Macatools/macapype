@@ -18,20 +18,19 @@
                 "rig_only_flag":true
             }
     	},
-
         "denoise":
         {
             "shrink_factor": 2
+        },
+        "N4debias":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
         }
-    },
-    "N4debias":
-    {
-        "dimension": 3,
-        "bspline_fitting_distance": 200,
-        "n_iterations": [50, 50, 40, 30],
-        "convergence_threshold": 0.00000001,
-        "shrink_factor": 2,
-        "args": "-r 0 --verbose 1"
     },
     "extract_pipe":
     {

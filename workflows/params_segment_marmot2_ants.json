@@ -21,11 +21,11 @@
         },
         "denoise":
         {
+        },
+        "fast":
+        {
+            "args": "-l 3"
         }
-    },
-    "fast":
-    {
-        "args": "-l 3"
     },
     "extract_pipe":
     {
