@@ -3,6 +3,7 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
+from nipype.interfaces import ants
 
 from nipype.interfaces.niftyreg import reg, regutils
 
@@ -145,6 +146,10 @@ def create_short_preparation_pipe(params, params_template={},
                                       'stereo_T1', 'stereo_T2',
                                       'stereo_denoised_T1',
                                       'stereo_denoised_T2',
+
+                                      'stereo_debiased_T1',
+                                      'stereo_debiased_T2',
+
                                       "stereo_padded_T1",
                                       "stereo_padded_T2",
                                       "native_to_stereo_trans",
@@ -536,6 +541,130 @@ def create_short_preparation_pipe(params, params_template={},
                 denoise_T2, 'output_image',
                 outputnode, 'stereo_denoised_T2')
 
+    # correct bias
+    assert not ("fast" in params.keys() and "N4debias" in
+                params.keys()), "error, only one of correct_bias_pipe\
+                or N4debias should be present"
+
+    if "N4debias" in params.keys():
+        print("Found N4debias in params.json")
+
+        # N4 intensity normalization over T1
+        N4debias_T1 = NodeParams(ants.N4BiasFieldCorrection(),
+                                 params=parse_key(params, "N4debias"),
+                                 name='N4debias_T1')
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T1, "output_image",
+                N4debias_T1, "input_image")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                N4debias_T1, "input_image")
+
+        data_preparation_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "N4debias"),
+            N4debias_T1, "indiv_params")
+
+        # N4 intensity normalization over T2
+        N4debias_T2 = NodeParams(ants.N4BiasFieldCorrection(),
+                                 params=parse_key(params, "N4debias"),
+                                 name='N4debias_T2')
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T2, "output_image",
+                N4debias_T2, "input_image")
+        else:
+            data_preparation_pipe.connect(
+                apply_crop_aladin_T2, 'out_file',
+                N4debias_T2, "input_image")
+
+        data_preparation_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "N4debias"),
+            N4debias_T2, "indiv_params")
+
+        # outputnode
+        data_preparation_pipe.connect(
+            N4debias_T1, "output_image",
+            outputnode, "stereo_debiased_T1")
+
+        data_preparation_pipe.connect(
+            N4debias_T2, "output_image",
+            outputnode, "stereo_debiased_T2")
+
+    elif "fast" in params.keys():
+
+        print("Found fast in params.json")
+
+        # fast over T1
+        fast_T1 = NodeParams(
+            fsl.FAST(),
+            params=parse_key(params, "fast"),
+            name='fast_T1')
+
+        fast_T1.inputs.output_biascorrected = True
+        fast_T1.inputs.output_biasfield = True
+        fast_T1.inputs.img_type = 1
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T1, "output_image",
+                fast_T1, "in_files")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                fast_T1, "in_files")
+
+        data_preparation_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "fast"),
+            fast_T1, "indiv_params")
+
+        # fast over T2
+        fast_T2 = NodeParams(
+            fsl.FAST(),
+            params=parse_key(params, "fast"),
+            name='fast_T2')
+
+        fast_T2.inputs.output_biascorrected = True
+        fast_T2.inputs.output_biasfield = True
+        fast_T2.inputs.img_type = 1
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T2, "output_image",
+                fast_T2, "in_files")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T2",
+                fast_T2, "in_files")
+
+        data_preparation_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "fast"),
+            fast_T2, "indiv_params")
+
+        # outputnode
+        data_preparation_pipe.connect(
+            fast_T1, "restored_image",
+            outputnode, "stereo_debiased_T1")
+
+        data_preparation_pipe.connect(
+            fast_T2, "restored_image",
+            outputnode, "stereo_debiased_T2")
+
+    else:
+        print("No debias will be performed before extract_pipe")
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T2, "output_image",
+                outputnode, "stereo_debiased_T1")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T2",
+                outputnode, "stereo_debiased_T2")
+
     # resample T1 to higher dimension
     if "pad_template" in params.keys():
 
@@ -819,18 +948,88 @@ def create_short_preparation_T1_pipe(params, params_template,
                                 name="denoise_T1")
 
         # inputs
-        if "crop_T1" in params.keys():
-            data_preparation_pipe.connect(crop_T1, "roi_file",
-                                          denoise_T1, 'input_image')
-
-        else:
-            data_preparation_pipe.connect(
+        data_preparation_pipe.connect(
                 crop_aladin_pipe, 'outputnode.stereo_T1',
                 denoise_T1, 'input_image')
 
         # outputs
         data_preparation_pipe.connect(denoise_T1, 'output_image',
                                       outputnode, 'stereo_denoised_T1')
+
+    # correct bias
+    assert not ("fast" in params.keys() and "N4debias" in
+                params.keys()), "error, only one of correct_bias_pipe\
+                or N4debias should be present"
+
+    if "N4debias" in params.keys():
+        print("Found N4debias in params.json")
+
+        # N4 intensity normalization over T1
+        N4debias_T1 = NodeParams(ants.N4BiasFieldCorrection(),
+                                 params=parse_key(params, "N4debias"),
+                                 name='N4debias_T1')
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T1, "output_image",
+                N4debias_T1, "input_image")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, 'outputnode.stereo_T1',
+                N4debias_T1, "input_image")
+
+        data_preparation_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "N4debias"),
+            N4debias_T1, "indiv_params")
+
+        # outputnode
+        data_preparation_pipe.connect(
+            N4debias_T1, "output_image",
+            outputnode, "stereo_debiased_T1")
+
+    elif "fast" in params.keys():
+
+        print("Found fast in params.json")
+
+        # fast over T1
+        fast_T1 = NodeParams(
+            fsl.FAST(),
+            params=parse_key(params, "fast"),
+            name='fast_T1')
+
+        fast_T1.inputs.output_biascorrected = True
+        fast_T1.inputs.output_biasfield = True
+        fast_T1.inputs.img_type = 1
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T1, "output_image",
+                fast_T1, "in_files")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, 'outputnode.stereo_T1',
+                fast_T1, "in_files")
+
+        data_preparation_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "fast"),
+            fast_T1, "indiv_params")
+
+        # outputnode
+        data_preparation_pipe.connect(
+            fast_T1, "restored_image",
+            outputnode, "stereo_debiased_T1")
+
+    else:
+        print("!!!! No N4debias will be performed")
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T1, "output_image",
+                outputnode, "stereo_debiased_T1")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, 'outputnode.stereo_T1',
+                outputnode, "stereo_debiased_T1")
 
     # resample T1 to higher dimension
     if "pad_template" in params.keys():

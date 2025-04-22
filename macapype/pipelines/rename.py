@@ -6,6 +6,22 @@ import nipype.interfaces.utility as niu
 def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                                  datasink, pref_deriv, parse_str,
                                  pad, ssoft, datatypes):
+    # rename native_T1
+    rename_native_T1 = pe.Node(
+        niu.Rename(),
+        name="rename_native_T1")
+    rename_native_T1.inputs.format_string = \
+        pref_deriv + "_space-native_T1w"
+    rename_native_T1.inputs.parse_string = parse_str
+    rename_native_T1.inputs.keep_ext = True
+
+    main_workflow.connect(
+        segment_pnh_pipe, 'outputnode.native_T1',
+        rename_native_T1, 'in_file')
+
+    main_workflow.connect(
+        rename_native_T1, 'out_file',
+        datasink, '@native_T1')
 
     # default: projection in stereo
     # rename stereo_T1
@@ -26,6 +42,23 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         datasink, '@stereo_T1')
 
     if 't2' in datatypes:
+
+        # rename native_T2
+        rename_native_T2 = pe.Node(
+            niu.Rename(),
+            name="rename_native_T2")
+        rename_native_T2.inputs.format_string = \
+            pref_deriv + "_space-native_T2w"
+        rename_native_T2.inputs.parse_string = parse_str
+        rename_native_T2.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.native_T2',
+            rename_native_T2, 'in_file')
+
+        main_workflow.connect(
+            rename_native_T2, 'out_file',
+            datasink, '@native_T2')
 
         # rename stereo_T2
         rename_stereo_T2 = pe.Node(
@@ -154,9 +187,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_padded_T2, 'out_file',
                 datasink, '@stereo_padded_T2')
 
-    if ("fast" in params
-            or "N4debias" in params
-            or "correct_bias_pipe" in params):
+    if ("fast" in params["short_preparation_pipe"]
+            or "N4debias" in params["short_preparation_pipe"]):
 
         # rename debiased_T1
         rename_stereo_debiased_T1 = pe.Node(
@@ -548,9 +580,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     datasink, '@native_denoised_T2')
 
         # after some processing
-        if ("fast" in params
-                or "N4debias" in params
-                or "correct_bias_pipe" in params):
+        if ("fast" in params["short_preparation_pipe"]
+                or "N4debias" in params["short_preparation_pipe"]):
 
             # rename debiased_T1
             rename_native_debiased_T1 = pe.Node(
