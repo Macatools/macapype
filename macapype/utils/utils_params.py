@@ -185,9 +185,9 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
     if "N4debias" in params.keys():
 
-        print("!!!!!! Old version json, N4debias now in short_preparation_pipe")
+        print("!!!!! Old version json, N4debias now in short_preparation_pipe")
 
-        params["short_preparation_pipe"]["fast"] = params["N4debias"]
+        params["short_preparation_pipe"]["N4debias"] = params["N4debias"]
         del params["N4debias"]
         print("Deleting N4debias")
 
