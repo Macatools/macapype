@@ -95,10 +95,12 @@ def create_extract_pipe(params_template, params={},
         # outputnode
         extract_pipe.connect(hdbet, 'mask_file', outputnode, 'mask_file')
     else:
+
         # atlas_brex
-        atlas_brex = NodeParams(AtlasBREX(),
-                                params=parse_key(params, "atlas_brex"),
-                                name='atlas_brex')
+        atlas_brex = NodeParams(
+            AtlasBREX(),
+            params=parse_key(params, "atlas_brex"),
+            name='atlas_brex')
 
         if "smooth" in params.keys():
             extract_pipe.connect(smooth, 'smoothed_file',

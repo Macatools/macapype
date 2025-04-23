@@ -24,9 +24,6 @@ def test_create_full_ants_subpipes_no_args():
         "short_preparation_pipe":
         {
         },
-        "fast":
-        {
-        },
         "extract_pipe":
         {
         },
@@ -36,9 +33,11 @@ def test_create_full_ants_subpipes_no_args():
         "brain_segment_pipe":
         {
             "reg":
-                {},
+            {
+            },
             "segment_atropos_pipe":
-                {}
+            {
+            }
         }
     }
 

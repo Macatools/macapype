@@ -168,6 +168,25 @@ def update_params(ssoft=[], subjects=None, sessions=None,
     print("New params after modification")
     pprint.pprint(params)
 
+    # debias
+
+    if "correct_bias_pipe" in params.keys():
+        print("!!!!!! Old version json, correct_bias_pipe is obsolete")
+        print("!!!!!! Use fast or N4debias node instead")
+        del params["correct_bias_pipe"]
+
+    if "fast" in params.keys():
+
+        print("!! Old version json, moving fast in short_preparation_pipe")
+        params["short_preparation_pipe"]["fast"] = params["fast"]
+        del params["fast"]
+
+    if "N4debias" in params.keys():
+
+        print("!! Old version json, moving N4debias in short_preparation_pipe")
+        params["short_preparation_pipe"]["N4debias"] = params["N4debias"]
+        del params["N4debias"]
+
     # ANTS
     if "ants" in ssoft:
         print("Found ants in soft")
@@ -180,15 +199,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         if "prep" in ssoft:
             print("Found prep in soft")
-
-            # debias
-            if "fast" in params.keys():
-                del params["fast"]
-                print("Deleting fast")
-
-            if "N4debias" in params.keys():
-                del params["N4debias"]
-                print("Deleting N4debias")
 
             # brain mask
             if "extract_pipe" in params.keys():
