@@ -1,0 +1,76 @@
+{
+    "general":
+    {
+        "template_name": "Haiko_v1.5"
+    },
+    "short_preparation_pipe":
+    {
+        "aladin_T2_on_T1":{},
+    	"crop_aladin_pipe":
+    	{
+            "reg_T1_on_template":
+            {
+                "rig_only_flag":true
+            },
+            "reg_T1_on_template2":
+            {
+                "rig_only_flag":true
+            }
+    	},
+        "denoise":
+        {
+        },
+        "N4debias":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
+        }
+    },
+    "extract_pipe":
+    {
+        "hdbet":
+        {
+        }
+    },
+    "debias":
+    {
+        "s": 2
+    },
+    "brain_segment_pipe":
+    {
+        "reg":
+        {
+            "n": 2,
+            "m": "ref",
+            "dof": 12
+        },
+        "segment_atropos_pipe":
+        {
+            "use_priors": 0.0,
+            "Atropos":
+            {
+                "dimension": 3
+            },
+            "tissue_dict":
+            {
+                "gm": 2,
+                "wm": 3,
+                "csf": 1
+            }
+        },
+        "export_5tt_pipe":
+        {
+        },
+        "IsoSurface_brain_pipe":
+        {
+            "merge_brain_tissues":
+            {
+                "keep_indexes": [1,2,3]
+            }
+        }
+    }
+}
