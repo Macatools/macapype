@@ -133,6 +133,4 @@ def create_extract_pipe(params_template, params={},
         # outputnode
         extract_pipe.connect(smooth_mask, 'out_file', outputnode, 'mask_file')
 
-    extract_pipe.connect(smooth_mask, 'out_file', outputnode, 'mask_file')
-
     return extract_pipe
