@@ -304,14 +304,8 @@ def create_full_spm_subpipes(
     seg_pipe.connect(debias, 't1_debiased_brain_file',
                      outputnode, "stereo_masked_debiased_T1")
 
-    seg_pipe.connect(debias, 't1_debiased_file',
-                     outputnode, "stereo_debiased_T1")
-
     seg_pipe.connect(debias, 't2_debiased_brain_file',
                      outputnode, "stereo_masked_debiased_T2")
-
-    seg_pipe.connect(debias, 't2_debiased_file',
-                     outputnode, "stereo_debiased_T2")
 
     if pad:
         if mask_file is None:
