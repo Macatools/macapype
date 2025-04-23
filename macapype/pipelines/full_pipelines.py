@@ -6,7 +6,6 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 from nipype.interfaces import fsl
-from nipype.interfaces import ants
 
 from nipype.interfaces.ants.utils import ImageMath
 
@@ -37,7 +36,7 @@ from .extract_brain import create_extract_pipe
 
 from .surface import (create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
 
-from macapype.utils.misc import parse_key, list_input_files, show_files
+from macapype.utils.misc import parse_key, list_input_files
 
 ###############################################################################
 # SPM based segmentation (from: Régis Trapeau)
@@ -1006,12 +1005,13 @@ def create_full_ants_subpipes(
                      outputnode, "stereo_padded_T2")
 
     # debiased
-    seg_pipe.connect(data_preparation_pipe,
-                         'outputnode.stereo_debiased_T1',
-                         outputnode, 'stereo_debiased_T1')
-    seg_pipe.connect(data_preparation_pipe,
-                         'outputnode.stereo_debiased_T2',
-                         outputnode, 'stereo_debiased_T2')
+    seg_pipe.connect(
+        data_preparation_pipe, 'outputnode.stereo_debiased_T1',
+        outputnode, 'stereo_debiased_T1')
+
+    seg_pipe.connect(
+        data_preparation_pipe, 'outputnode.stereo_debiased_T2',
+        outputnode, 'stereo_debiased_T2')
 
     seg_pipe.connect(
         data_preparation_pipe, "outputnode.stereo_to_native_trans",
@@ -1243,11 +1243,11 @@ def create_full_ants_subpipes(
 
         seg_pipe.connect(
             data_preparation_pipe, "outputnode.stereo_debiased_T1",
-                             restore_mask_T1, 'in_file')
+            restore_mask_T1, 'in_file')
 
         seg_pipe.connect(
             data_preparation_pipe, "outputnode.stereo_debiased_T2",
-                             restore_mask_T2, 'in_file')
+            restore_mask_T2, 'in_file')
 
         if mask_file is None:
             if "extract_pipe" in params.keys():
