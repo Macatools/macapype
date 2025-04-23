@@ -320,18 +320,11 @@ def create_full_spm_subpipes(
             seg_pipe, data_preparation_pipe,
             debias, "t1_debiased_brain_file",
             outputnode, "native_masked_debiased_T1", params, inter_val="LIN")
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            debias, "t1_debiased_file",
-            outputnode, "native_debiased_T1", params, inter_val="LIN")
+
         pad_back(
             seg_pipe, data_preparation_pipe,
             debias, "t2_debiased_brain_file",
             outputnode, "native_masked_debiased_T2", params, inter_val="LIN")
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            debias, "t2_debiased_file",
-            outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     # Bias correction of cropped images
     if "reg" not in params.keys():

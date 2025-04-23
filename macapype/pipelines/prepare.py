@@ -662,7 +662,7 @@ def create_short_preparation_pipe(params, params_template={},
                 outputnode, "stereo_debiased_T1")
         else:
             data_preparation_pipe.connect(
-                crop_aladin_pipe, "outputnode.stereo_T2",
+                apply_crop_aladin_T2, 'out_file',
                 outputnode, "stereo_debiased_T2")
 
     # resample T1 to higher dimension
@@ -825,6 +825,7 @@ def create_short_preparation_T1_pipe(params, params_template,
         niu.IdentityInterface(fields=['stereo_T1', 'native_T1',
                                       'stereo_padded_T1',
                                       'stereo_denoised_T1',
+                                      'stereo_debiased_T1',
                                       "stereo_to_native_trans",
                                       "native_to_stereo_trans"]),
         name='outputnode')
