@@ -209,10 +209,6 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
 
         print("Using default params file:", params_file)
 
-        params, indiv_params, extra_wf_name = update_params(
-            ssoft=ssoft, subjects=subjects, sessions=sessions,
-            params_file=params_file, indiv_params_file=indiv_params_file)
-
     else:
 
         # format for relative path
@@ -224,20 +220,20 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
 
         print("Using orig params file:", params_file)
 
-        params = json.load(open(params_file))
-
         extra_wf_name = "_orig"
-        indiv_params = {}
 
-        # indiv_params
-        if indiv_params_file is not None:
+    # indiv_params
+    if indiv_params_file is not None:
 
-            # format for relative path
-            indiv_params_file = op.abspath(indiv_params_file)
+        # format for relative path
+        indiv_params_file = op.abspath(indiv_params_file)
 
-            assert op.exists(indiv_params_file), "Error with file {}".format(
-                indiv_params_file)
-            indiv_params = json.load(open(indiv_params_file))
+        assert op.exists(indiv_params_file), "Error with file {}".format(
+            indiv_params_file)
+
+    params, indiv_params, extra_wf_name = update_params(
+        ssoft=ssoft, subjects=subjects, sessions=sessions,
+        params_file=params_file, indiv_params_file=indiv_params_file)
 
     # modifying if reorient
     if reorient is not None:

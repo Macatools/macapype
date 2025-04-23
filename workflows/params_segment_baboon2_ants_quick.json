@@ -1,11 +1,10 @@
 {
     "general":
     {
-        "template_name": "BaBa21-0"
+        "template_name": "BaBa21-2"
     },
     "short_preparation_pipe":
     {
-        "use_T2":{},
         "aladin_T2_on_T1":{},
     	"crop_aladin_pipe":
     	{
@@ -33,15 +32,9 @@
     },
     "extract_pipe":
     {
-        "use_T2":{},
-        "atlas_brex":
+        "hdbet":
         {
-            "f": 0.7,
-            "reg": 1,
-            "msk": "b,0.5,0,0",
-            "wrp": "10,10,10",
-            "dil": 1,
-            "nrm": 1
+
         }
     },
     "debias":
@@ -50,7 +43,6 @@
     },
     "brain_segment_pipe":
     {
-        "use_T2": {},
         "reg":
         {
             "n": 2,
