@@ -228,20 +228,19 @@
                 &quot;rig_only_flag&quot;:true
             }
         },
-
         &quot;denoise&quot;:
         {
             &quot;shrink_factor&quot;: 2
+        },
+        &quot;N4debias&quot;:
+        {
+            &quot;dimension&quot;: 3,
+            &quot;bspline_fitting_distance&quot;: 200,
+            &quot;n_iterations&quot;: [50, 50, 40, 30],
+            &quot;convergence_threshold&quot;: 0.00000001,
+            &quot;shrink_factor&quot;: 2,
+            &quot;args&quot;: &quot;-r 0 --verbose 1&quot;
         }
-    },
-    &quot;N4debias&quot;:
-    {
-        &quot;dimension&quot;: 3,
-        &quot;bspline_fitting_distance&quot;: 200,
-        &quot;n_iterations&quot;: [50, 50, 40, 30],
-        &quot;convergence_threshold&quot;: 0.00000001,
-        &quot;shrink_factor&quot;: 2,
-        &quot;args&quot;: &quot;-r 0 --verbose 1&quot;
     },
     &quot;extract_pipe&quot;:
     {
@@ -732,7 +731,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-04-22.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-04-23.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
