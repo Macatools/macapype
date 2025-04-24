@@ -72,16 +72,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-       - name: Clean images
-         run: |
-            docker images purge
-
-            docker rm -vf $(docker ps -aq)
-
-            docker rmi -f $(docker images -aq)
-
-            docker system prune -a
-
   run-pretest-ants-macaque:
     name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS macaque)
     needs:  docker-build
