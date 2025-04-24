@@ -13,6 +13,10 @@ jobs:
     permissions:
       id-token: write
 
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/macapype
+
     steps:
     - uses: actions/checkout@master
     - name: Set up Python 3.10.5
@@ -36,7 +40,7 @@ jobs:
     - name: Publish distribution to Test PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        repository_url: https://test.pypi.org/legacy/
+        repository-url: https://test.pypi.org/legacy/
 
   docker-build:
     name: Build Docker image and Push to Docker Hub
