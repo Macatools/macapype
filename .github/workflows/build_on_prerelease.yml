@@ -6,43 +6,6 @@ on:
 
 jobs:
 
-  build:
-
-    name: Build documentation
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@master
-      - name: Set up Python  3.10.5
-        uses: actions/setup-python@v2
-        with:
-          python-version:  3.10.5
-
-      - name: Install dependencies
-        run: |
-            pip install -e .[doc]
-            sudo apt-get install build-essential  graphviz libgraphviz-dev
-            pip install --upgrade pygraphviz graphviz
-
-      - name: Test with pytest
-        run:
-            py.test --cov macapype --ignore=examples/ --ignore=run_examples/
-
-      - name: Build the Doc 🔧
-        run: |
-          cd docs
-          make clean
-          make html
-          touch _build/html/.nojekyll
-
-      - name: Deploy Github Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.4.3
-        with:
-          branch: gh-pages
-          folder: docs/_build/html/
-          clean: true
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-
   build-n-publish-testpypi:
     name: Build and publish Python to Test PyPI
     runs-on: ubuntu-latest
@@ -68,14 +31,14 @@ jobs:
         --outdir dist/
 
     - name: Publish distribution to Test PyPI
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1.12.4
       with:
         password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         repository_url: https://test.pypi.org/legacy/
 
   docker-build:
     name: Build Docker image and Push to Docker Hub
-    needs: build-n-publish-testpypi
+    needs: build-n-publish-docker
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
