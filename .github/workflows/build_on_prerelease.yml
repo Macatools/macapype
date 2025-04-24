@@ -38,7 +38,7 @@ jobs:
 
   docker-build:
     name: Build Docker image and Push to Docker Hub
-    needs: build-n-publish-docker
+    needs: build-n-publish-testpypi
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
