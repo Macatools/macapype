@@ -46,6 +46,7 @@ jobs:
     name: Build Docker image and Push to Docker Hub
     needs: build-n-publish-testpypi
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -74,8 +75,11 @@ jobs:
        - name: Clean images
          run: |
             docker images purge
+
             docker rm -vf $(docker ps -aq)
+
             docker rmi -f $(docker images -aq)
+
             docker system prune -a
 
   run-pretest-ants-macaque:
@@ -123,9 +127,12 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results
 
       - name: Clean images
-         run: |
+        run: |
             docker images purge
+
             docker rm -vf $(docker ps -aq)
+
             docker rmi -f $(docker images -aq)
+
             docker system prune -a
 
