@@ -10,6 +10,9 @@ jobs:
     name: Build and publish Python to Test PyPI
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+
     steps:
     - uses: actions/checkout@master
     - name: Set up Python 3.10.5
