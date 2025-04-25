@@ -39,7 +39,6 @@ RUN python -m pip install xvfbwrapper \
     nibabel \
     packaging \
     pytest \
-    install \
     graphviz \
     pybids \
     nipype \
