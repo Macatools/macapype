@@ -49,6 +49,7 @@ RUN python -m pip install graphviz \
 
 RUN python -m pip install SimpleITK
 
+RUN python -m pip install brainles-hd-bet==0.0.11
 
 ############################################# install macapype
 
