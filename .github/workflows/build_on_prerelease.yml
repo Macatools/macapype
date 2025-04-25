@@ -282,7 +282,7 @@ jobs:
 
       - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results -soft ANTS_ -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results -soft ANTS_prep -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/
 
