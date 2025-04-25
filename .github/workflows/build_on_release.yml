@@ -6,43 +6,6 @@ on:
 
 jobs:
 
-  build:
-
-    name: Build documentation
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@master
-      - name: Set up Python  3.10.5
-        uses: actions/setup-python@v2
-        with:
-          python-version:  3.10.5
-
-      - name: Install dependencies
-        run: |
-            pip install -e .[doc]
-            sudo apt-get install build-essential  graphviz libgraphviz-dev
-            pip install --upgrade pygraphviz graphviz
-
-      - name: Test with pytest
-        run:
-            py.test --cov macapype --ignore=examples/ --ignore=run_examples/
-
-      - name: Build the Doc 🔧
-        run: |
-          cd docs
-          make clean
-          make html
-          touch _build/html/.nojekyll
-
-      - name: Deploy Github Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.4.3
-        with:
-          branch: gh-pages
-          folder: docs/_build/html/
-          clean: true
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-
   build-n-publish-pypi:
     name: Build and publish Python to PyPI
     runs-on: ubuntu-latest
@@ -109,9 +72,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
 
-
   run-pretest-ants-macaque:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS macaque)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg macaque)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -137,9 +99,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_macaque
             echo ""
 
-      - name: Running test pipeline cerimed_macaque ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_macaque ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_macaque/ -out /data/cerimed_macaque/results -soft ANTS_quick_robustreg -species macaque -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -nprocs 1
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_macaque/ -out /data/cerimed_macaque/results -soft ANTS_robustreg_prep -species macaque -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -nprocs 1
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/
 
@@ -154,9 +116,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results
 
-
   run-pretest-ants-macaque_0p5:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS macaque)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg macaque)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -182,7 +143,7 @@ jobs:
             ls macapype_CI_v2.1/cerimed_macaque
             echo ""
 
-      - name: Running test pipeline cerimed_macaque ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_macaque ANTS_robustreg T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_macaque/ -out /data/cerimed_macaque/results -soft ANTS_robustreg -species macaque_0p5 -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -nprocs 1
 
@@ -199,9 +160,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results
 
-
   run-pretest-ants-marmo:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS marmo)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg marmo)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -227,7 +187,7 @@ jobs:
             ls macapype_CI_v2.1/cerimed_marmo
             echo ""
 
-      - name: Running test pipeline cerimed_marmo ANTS_noseg T1 T2
+      - name: Running test pipeline cerimed_marmo ANTS_robustreg_noseg T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_robustreg_noseg -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
@@ -246,7 +206,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results
 
   run-pretest-ants-marmoT2:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS marmo T1)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS marmo T2)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -272,7 +232,7 @@ jobs:
             ls macapype_CI_v2.1/cerimed_marmo
             echo ""
 
-      - name: Running test pipeline cerimed_marmo ANTS_noseg T1
+      - name: Running test pipeline cerimed_marmo ANTS_robustreg_noseg T1
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg -species marmoT2 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
@@ -289,9 +249,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results
 
-
   run-pretest-ants-baboon:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -317,9 +276,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results -soft ANTS_quick -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results -soft ANTS_robustreg_prep -species baboon -sub Prune -ses 3 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/
 
@@ -335,7 +294,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results
 
   run-pretest-ants-baboon3:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -361,9 +320,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results3 -soft ANTS_quick -species baboon3 -sub Prune -ses 3 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results3 -soft ANTS_robustreg_prep -species baboon3 -sub Prune -ses 3 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/
 
@@ -378,9 +337,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3
 
-
   run-pretest-ants-baboon2:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -406,9 +364,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results2 -soft ANTS_quick -species baboon2 -sub Prune -ses 2 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results2 -soft ANTS_robustreg_prep -species baboon2 -sub Prune -ses 2 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/
 
@@ -424,7 +382,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2
 
   run-pretest-ants-baboon1:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -450,9 +408,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results1 -soft ANTS_prep -species baboon1 -sub Prune -ses 1 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results1 -soft ANTS_robustreg_prep -species baboon1 -sub Prune -ses 1 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/
 
@@ -467,9 +425,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1
 
-
   run-pretest-ants-baboon3-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -495,9 +452,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results3 -soft ANTS -species baboon3_0p6 -sub Prune -ses 3 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results3 -soft ANTS_robustreg -species baboon3_0p6 -sub Prune -ses 3 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/
 
@@ -512,9 +469,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3
 
-
   run-pretest-ants-baboon2-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -540,9 +496,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results2 -soft ANTS -species baboon2_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results2 -soft ANTS_robustreg -species baboon2_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/
 
@@ -557,9 +513,8 @@ jobs:
         run:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2
 
-
   run-pretest-ants-baboon1-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -585,9 +540,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_baboon
             echo ""
 
-      - name: Running test pipeline cerimed_baboon ANTS_prep T1 T2
+      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results1 -soft ANTS -species baboon1_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2 -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results1 -soft ANTS_robustreg -species baboon1_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/
 
