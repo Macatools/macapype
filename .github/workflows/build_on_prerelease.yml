@@ -1,4 +1,4 @@
-﻿name: (Prerelease) Build Pipy, Dockerhub image and test
+﻿name: (Prerelease) Build TestPipy, Dockerhub image and test
 
 on:
   release:
@@ -72,12 +72,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Clean images
-        run:
-            docker images purge
-
   run-pretest-ants-macaque:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg macaque)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep macaque)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -147,7 +143,7 @@ jobs:
             ls macapype_CI_v2.1/cerimed_macaque
             echo ""
 
-      - name: Running test pipeline cerimed_macaque ANTS_robustreg_prep T1 T2
+      - name: Running test pipeline cerimed_macaque ANTS_robustreg T1 T2
         run: |
             docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_macaque/ -out /data/cerimed_macaque/results -soft ANTS_robustreg -species macaque_0p5 -sub Stevie -ses 01 -deriv -pad -dt T1 T2 -nprocs 1
 
@@ -210,7 +206,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results
 
   run-pretest-ants-marmoT2:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg marmo T1)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS marmo T2)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -236,9 +232,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_marmo
             echo ""
 
-      - name: Running test pipeline cerimed_marmo ANTS_robustreg_noseg T1
+      - name: Running test pipeline cerimed_marmo ANTS_noseg T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_robustreg_noseg -species marmoT2 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg -species marmoT2 -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/
 
