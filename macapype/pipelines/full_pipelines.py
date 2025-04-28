@@ -217,11 +217,21 @@ def create_full_spm_subpipes(
                 outputnode, "native_denoised_T2", params,
                 inter_val="LIN")
 
-    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T1",
-                     outputnode, "stereo_padded_T1")
+    seg_pipe.connect(
+        data_preparation_pipe, 'outputnode.stereo_T1',
+        outputnode, "stereo_T1")
 
-    seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
-                     outputnode, "stereo_padded_T2")
+    seg_pipe.connect(
+        data_preparation_pipe, 'outputnode.stereo_T2',
+        outputnode, "stereo_T2")
+
+    seg_pipe.connect(
+        data_preparation_pipe, "outputnode.stereo_padded_T1",
+        outputnode, "stereo_padded_T1")
+
+    seg_pipe.connect(
+        data_preparation_pipe, "outputnode.stereo_padded_T2",
+        outputnode, "stereo_padded_T2")
 
     seg_pipe.connect(
         data_preparation_pipe,  "outputnode.stereo_to_native_trans",
