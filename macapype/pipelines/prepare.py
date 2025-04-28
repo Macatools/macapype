@@ -658,9 +658,17 @@ def create_short_preparation_pipe(params, params_template={},
 
         if "denoise" in params.keys():
             data_preparation_pipe.connect(
-                denoise_T2, "output_image",
+                denoise_T1, "output_image",
                 outputnode, "stereo_debiased_T1")
+
+            data_preparation_pipe.connect(
+                denoise_T2, "output_image",
+                outputnode, "stereo_debiased_T2")
         else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                outputnode, "stereo_debiased_T1")
+
             data_preparation_pipe.connect(
                 apply_crop_aladin_T2, 'out_file',
                 outputnode, "stereo_debiased_T2")

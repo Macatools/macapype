@@ -241,27 +241,29 @@ def create_full_spm_subpipes(
         data_preparation_pipe,  "outputnode.native_to_stereo_trans",
         outputnode, 'native_to_stereo_trans')
 
-    # N4debias
-    seg_pipe.connect(data_preparation_pipe,
-                     'outputnode.stereo_debiased_T1',
-                     outputnode, 'stereo_debiased_T1')
+    if ("fast" in params["short_preparation_pipe"]
+            or "N4debias" in params["short_preparation_pipe"]):
 
-    seg_pipe.connect(data_preparation_pipe,
-                     'outputnode.stereo_debiased_T2',
-                     outputnode, 'stereo_debiased_T2')
+        # debiased
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_debiased_T1',
+            outputnode, 'stereo_debiased_T1')
 
-    if pad and space == "native":
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            data_preparation_pipe, "outputnode.stereo_debiased_T1",
-            outputnode, "native_debiased_T1", params,
-            inter_val="LIN")
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_debiased_T2',
+            outputnode, 'stereo_debiased_T2')
 
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            data_preparation_pipe, "outputnode.stereo_debiased_T2",
-            outputnode, "native_debiased_T2", params,
-            inter_val="LIN")
+        if pad:
+
+            pad_back(
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_debiased_T1",
+                outputnode, "native_debiased_T1", params, inter_val="LIN")
+
+            pad_back(
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_debiased_T2",
+                outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     # debias
     debias = NodeParams(T1xT2BiasFieldCorrection(),
@@ -302,13 +304,13 @@ def create_full_spm_subpipes(
                          debias, "b")
 
     # outputnode
-
     if mask_file is None:
         seg_pipe.connect(debias, "debiased_mask_file",
                          outputnode, "stereo_brain_mask")
     else:
         seg_pipe.connect(apply_crop_external_mask, "out_file",
                          outputnode, "stereo_brain_mask")
+
 
     seg_pipe.connect(debias, 't1_debiased_brain_file',
                      outputnode, "stereo_masked_debiased_T1")
@@ -334,6 +336,31 @@ def create_full_spm_subpipes(
             seg_pipe, data_preparation_pipe,
             debias, "t2_debiased_brain_file",
             outputnode, "native_masked_debiased_T2", params, inter_val="LIN")
+
+    if not ("fast" in params["short_preparation_pipe"]
+            or "N4debias" in params["short_preparation_pipe"]):
+
+        # N4debias
+        seg_pipe.connect(
+            debias, 't1_debiased_file',
+            outputnode, 'stereo_debiased_T1')
+
+        seg_pipe.connect(
+            debias, 't2_debiased_file',
+            outputnode, 'stereo_debiased_T2')
+
+        if pad:
+            pad_back(
+                seg_pipe, data_preparation_pipe,
+                debias, 't1_debiased_file',
+                outputnode, "native_debiased_T1", params,
+                inter_val="LIN")
+
+            pad_back(
+                seg_pipe, data_preparation_pipe,
+                debias, 't2_debiased_file',
+                outputnode, "native_debiased_T2", params,
+                inter_val="LIN")
 
     # Bias correction of cropped images
     if "reg" not in params.keys():
@@ -1014,14 +1041,29 @@ def create_full_ants_subpipes(
     seg_pipe.connect(data_preparation_pipe, "outputnode.stereo_padded_T2",
                      outputnode, "stereo_padded_T2")
 
-    # debiased
-    seg_pipe.connect(
-        data_preparation_pipe, 'outputnode.stereo_debiased_T1',
-        outputnode, 'stereo_debiased_T1')
+    if ("fast" in params["short_preparation_pipe"]
+            or "N4debias" in params["short_preparation_pipe"]):
 
-    seg_pipe.connect(
-        data_preparation_pipe, 'outputnode.stereo_debiased_T2',
-        outputnode, 'stereo_debiased_T2')
+        # debiased
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_debiased_T1',
+            outputnode, 'stereo_debiased_T1')
+
+        seg_pipe.connect(
+            data_preparation_pipe, 'outputnode.stereo_debiased_T2',
+            outputnode, 'stereo_debiased_T2')
+
+        if pad:
+
+            pad_back(
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_debiased_T1",
+                outputnode, "native_debiased_T1", params, inter_val="LIN")
+
+            pad_back(
+                seg_pipe, data_preparation_pipe,
+                data_preparation_pipe, "outputnode.stereo_debiased_T2",
+                outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     seg_pipe.connect(
         data_preparation_pipe, "outputnode.stereo_to_native_trans",
@@ -1030,18 +1072,6 @@ def create_full_ants_subpipes(
     seg_pipe.connect(
         data_preparation_pipe, "outputnode.native_to_stereo_trans",
         outputnode, 'native_to_stereo_trans')
-
-    if pad:
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            data_preparation_pipe, "outputnode.stereo_debiased_T1",
-            outputnode, "native_debiased_T1", params, inter_val="LIN")
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            data_preparation_pipe, "outputnode.stereo_debiased_T2",
-            outputnode, "native_debiased_T2", params, inter_val="LIN")
 
     # ################# extract mask
     print("mask file {}".format(mask_file))
