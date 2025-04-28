@@ -18,7 +18,6 @@
     "T1w_roi_corrected_restore.nii.gz": "space-orig_desc-preproc_T1w.nii.gz",
 
     "Segmentation_allineate": "space-template_desc-brain_dseg",
-    "indexed_mask": "space-orig_desc-brain_dseg",
     "FLAIR_flirt_flirt": "space-inia19_FLAIR",
 
     "T1w_":"",
@@ -28,6 +27,7 @@
     "_trans":"",
     "_roi":"",
     "_ROI":"",
+    "_indexed": "",
     "_restore_debiased_brain":"",
     "_restore_debiased":"",
     "_restore_brain": "",
