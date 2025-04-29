@@ -311,7 +311,7 @@ def create_full_spm_subpipes(
         seg_pipe.connect(apply_crop_external_mask, "out_file",
                          outputnode, "stereo_brain_mask")
 
-
+    # debiased brain
     seg_pipe.connect(debias, 't1_debiased_brain_file',
                      outputnode, "stereo_masked_debiased_T1")
 
@@ -337,10 +337,10 @@ def create_full_spm_subpipes(
             debias, "t2_debiased_brain_file",
             outputnode, "native_masked_debiased_T2", params, inter_val="LIN")
 
+    # debiased if not processed in short_preparation_pipe
     if not ("fast" in params["short_preparation_pipe"]
             or "N4debias" in params["short_preparation_pipe"]):
 
-        # N4debias
         seg_pipe.connect(
             debias, 't1_debiased_file',
             outputnode, 'stereo_debiased_T1')
@@ -362,13 +362,12 @@ def create_full_spm_subpipes(
                 outputnode, "native_debiased_T2", params,
                 inter_val="LIN")
 
-    # Bias correction of cropped images
+    # Iterative registration to the INIA19 template
     if "reg" not in params.keys():
 
         print("No reg, skipping")
         return seg_pipe
 
-    # Iterative registration to the INIA19 template
     reg = NodeParams(IterREGBET(),
                      params=parse_key(params, "reg"),
                      name='reg')
