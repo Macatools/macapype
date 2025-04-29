@@ -1,0 +1,69 @@
+{
+    "general":
+    {
+        "template_name": "inia19",
+        "template_stereo_name": "NMT_v2.0_asym_0p5"
+    },
+    "short_preparation_pipe":
+    {
+        "crop_aladin_pipe":
+        {
+            "reg_T1_on_template":
+            {
+                 "rig_only_flag":true
+            },
+            "reg_T1_on_template2":
+            {
+                "rig_only_flag":true
+            }
+        },
+        "denoise":
+        {
+            "shrink_factor": 2
+        }
+    },
+    "debias":
+    {
+        "s": 2
+    },
+    "reg":
+    {
+        "n": 2,
+        "m": "ref",
+        "dof": 12
+    },
+    "old_segment_pipe":
+    {
+        "segment":
+        {
+            "gm_output_type": [false, false, true],
+            "wm_output_type": [false, false, true],
+            "csf_output_type": [false, false, true]
+        },
+        "threshold_gm":
+        {
+            "thresh": 0.5
+        },
+        "threshold_wm":
+        {
+            "thresh": 0.5
+        },
+        "threshold_csf":
+        {
+            "thresh": 0.5
+        }
+    },
+    "mask_from_seg_pipe":
+    {
+        "dilate_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        },
+        "erode_mask":
+        {
+            "kernel_shape": "sphere",
+            "kernel_size": 2
+        }
+    }
+}

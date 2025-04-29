@@ -63,7 +63,7 @@ class BinaryFillHoles(BaseInterface):
 
         struc = np.ones((size, size, size))
 
-        nii_data = nii_image.get_data()
+        nii_data = nii_image.get_fdata()
 
         nii_data = binary_fill_holes(nii_data, struc)
         out_image = nb.Nifti1Image(nii_data.astype(int),
@@ -285,7 +285,7 @@ def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
 
     mask_csf = nib.load(mask_csf_file)
 
-    mask_csf_data = mask_csf.get_data()
+    mask_csf_data = mask_csf.get_fdata()
 
     indexed_mask_data = np.zeros(shape=mask_csf_data.shape)
 
@@ -294,7 +294,7 @@ def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
     # gm
     mask_gm = nib.load(mask_gm_file)
 
-    mask_gm_data = mask_gm.get_data()
+    mask_gm_data = mask_gm.get_fdata()
 
     assert np.all(indexed_mask_data.shape == mask_gm_data.shape)
 
@@ -303,7 +303,7 @@ def merge_masks(mask_csf_file, mask_wm_file, mask_gm_file, index_csf=1,
     # wm
     mask_wm = nib.load(mask_wm_file)
 
-    mask_wm_data = mask_wm.get_data()
+    mask_wm_data = mask_wm.get_fdata()
 
     assert np.all(indexed_mask_data.shape == mask_wm_data.shape)
 
