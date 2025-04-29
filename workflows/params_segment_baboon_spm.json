@@ -3,17 +3,18 @@
     {
         "template_name": "Haiko_v1.5"
     },
-     "short_preparation_pipe":
+    "short_preparation_pipe":
     {
         "aladin_T2_on_T1":{},
     	"crop_aladin_pipe":
     	{
             "reg_T1_on_template":
             {
+                "rig_only_flag":true
             },
-            "crop_z_T1":
+            "reg_T1_on_template2":
             {
-                "brainsize": 70
+                "rig_only_flag":true
             }
     	}
     },

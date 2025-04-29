@@ -11,10 +11,11 @@
     	{
             "reg_T1_on_template":
             {
+                "rig_only_flag":true
             },
-            "crop_z_T1":
+            "reg_T1_on_template2":
             {
-                "brainsize": 30
+                "rig_only_flag":true
             }
         }
     },

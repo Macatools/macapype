@@ -47,6 +47,7 @@ RUN python -m pip install graphviz \
     scikit-image \
     brain-slam
 
+RUN python -m pip install SimpleITK
 
 ############################################# install macapype
 

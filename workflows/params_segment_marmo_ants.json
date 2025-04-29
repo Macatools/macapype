@@ -1,32 +1,35 @@
 {
     "general":
     {
-        "template_name": "MBM_v3.0.1_6seg",
-        "template_stereo_name": "bma-1_0p2mm"
+        "template_name": "MBM_v3.0.1_6seg"
     },
-     "short_preparation_pipe":
+    "short_preparation_pipe":
     {
-        "use_T2":{},
+        "aladin_T2_on_T1": {},
         "crop_aladin_pipe":
         {
             "reg_T1_on_template":
             {
+                "rig_only_flag":true
             },
-            "crop_z_T1":
+            "reg_T1_on_template2":
             {
-                "brainsize": 30
+                "rig_only_flag":true
             }
+        },
+        "denoise":
+        {
+        },
+        "fast":
+        {
+            "args": "-l 3"
         }
-    },
-    "fast":
-    {
-        "args": "-l 3"
     },
     "extract_pipe":
     {
         "atlas_brex":
         {
-            "f": 0.62,
+            "f": 0.7,
             "reg": 1,
             "msk": "b,0.5,0,0",
             "wrp": "5,5,5",
@@ -48,7 +51,7 @@
         },
         "segment_atropos_pipe":
         {
-            "use_priors":0.0,
+            "use_priors": 0.0,
             "Atropos":
             {
                 "dimension": 3

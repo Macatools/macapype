@@ -4,31 +4,25 @@ import json
 import pprint
 
 
-def update_preparation_params(ssoft=[], subjects=None, sessions=None,
-                              params=None, indiv_params=None,
-                              extra_wf_name=""):
+def update_indiv_params(ssoft=[], subjects=None, sessions=None,
+                        params=None, indiv_params=None,
+                        extra_wf_name=""):
 
     if "short_preparation_pipe" not in params.keys():
 
         print("short_preparation_pipe not found in params, \
             not modifying preparation pipe")
 
-        extra_wf_name += "_crop_aladin"
-
     else:
 
-        prep_pipe = "short_preparation_pipe"
         count_all_sessions = 0
         count_T1_crops = 0
-        count_long_crops = 0
-        count_multi_long_crops = 0
 
         if subjects is None:
             print("For whole BIDS dir, \
                 unable to assess if the indiv_params is correct")
             print("Running by default short_preparation_pipe and crop_T1")
 
-            extra_wf_name += "_crop_aladin"
         else:
 
             print("Will modify params if necessary, \
@@ -61,17 +55,6 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                         if "crop_T1" in indiv.keys():
                             count_T1_crops += 1
 
-                            if "crop_T2" in indiv.keys() and 't1' not in ssoft:
-
-                                count_long_crops += 1
-
-                                crop_T1_args = indiv["crop_T1"]["args"]
-                                crop_T2_args = indiv["crop_T2"]["args"]
-                                if isinstance(crop_T1_args, list) and \
-                                        isinstance(crop_T2_args, list):
-
-                                    count_multi_long_crops += 1
-
                 else:
                     count_all_sessions += 1
 
@@ -92,73 +75,15 @@ def update_preparation_params(ssoft=[], subjects=None, sessions=None,
                         sub/ses in indiv \
                         -> keeping short_preparation_pipe")
 
-                    extra_wf_name += "_indiv_crop"
+                    extra_wf_name += "_crop_T1"
+
+                    print("Adding crop_T1")
+                    params["short_preparation_pipe"]["crop_T1"] = \
+                        {"args": "should be defined in indiv"}
 
                 else:
                     print("**** not all sub/ses have T1 crops,\
                         using autocrop ")
-
-                    extra_wf_name += "_crop_aladin"
-                    return params, indiv_params, extra_wf_name
-
-            else:
-                print("**** not all sub/ses have T1 and T2 crops,\
-                    using autocrop ")
-
-                extra_wf_name += "_crop_aladin"
-
-                if "robustreg" in ssoft and "crop_aladin_pipe" \
-                        in params["short_preparation_pipe"]:
-                    print("Using robustreg option")
-                    params["short_preparation_pipe"]["crop_aladin_pipe"] = {
-                        "reg_T1_on_template": {
-                            "nac_flag": True,
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 12,
-                            "lp_val": 10,
-                            "smoo_r_val": 1.0
-                            },
-                        "reg_T1_on_template2": {
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 17,
-                            "lp_val": 15,
-                            "smoo_r_val": 1.0
-                            }
-                        }
-                elif "halfrobustreg" in ssoft and "crop_aladin_pipe" \
-                        in params["short_preparation_pipe"]:
-                    print("Using halfrobustreg option")
-                    params["short_preparation_pipe"]["crop_aladin_pipe"] = {
-                        "reg_T1_on_template": {
-                            "nac_flag": True,
-                            "rig_only_flag": True,
-                            "nosym_flag": True,
-                            "ln_val": 12,
-                            "lp_val": 10,
-                            "smoo_r_val": 1.0
-                            }
-                        }
-                return params, indiv_params, extra_wf_name
-
-            if prep_pipe == "short_preparation_pipe":
-
-                if "crop_aladin_T1" in \
-                        params["short_preparation_pipe"].keys():
-
-                    print("Deleting crop_aladin_T1")
-                    del params["short_preparation_pipe"]["crop_aladin_T1"]
-
-                if "crop_z_T1" in \
-                        params["short_preparation_pipe"].keys():
-
-                    print("Deleting crop_z_T1")
-                    del params["short_preparation_pipe"]["crop_z_T1"]
-
-                print("Adding crop_T1")
-                params["short_preparation_pipe"]["crop_T1"] = \
-                    {"args": "should be defined in indiv"}
 
         return params, indiv_params, extra_wf_name
 
@@ -186,31 +111,6 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 print("Deleting crop_T1")
                 del params["short_preparation_pipe"]["crop_T1"]
 
-            if "robustreg" in ssoft and "crop_aladin_pipe" \
-                    in params["short_preparation_pipe"]:
-                print("Using robustreg option")
-                params["short_preparation_pipe"]["crop_aladin_pipe"] = {
-                    "reg_T1_on_template": {
-                        "nac_flag": True,
-                        "rig_only_flag": True,
-                        "nosym_flag": True,
-                        "ln_val": 12,
-                        "lp_val": 10,
-                        "smoo_r_val": 1.0
-                        },
-                    "reg_T1_on_template2": {
-                        "rig_only_flag": True,
-                        "nosym_flag": True,
-                        "ln_val": 17,
-                        "lp_val": 15,
-                        "smoo_r_val": 1.0
-                        }
-                    }
-
-            print("New params after modification")
-            pprint.pprint(params)
-
-            extra_wf_name += "_crop_aladin"
         else:
             print('**** params modification not implemented \
                 if no indiv_params ****')
@@ -224,9 +124,68 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         pprint.pprint(indiv_params)
 
-        params, indiv_params, extra_wf_name = update_preparation_params(
+        params, indiv_params, extra_wf_name = update_indiv_params(
             ssoft, subjects=subjects, sessions=sessions,
             indiv_params=indiv_params, params=params, extra_wf_name="")
+
+    # modifying crop_aladin
+    params_spp = params["short_preparation_pipe"]
+
+    if "crop_aladin_pipe" in params_spp.keys():
+
+        params_spp_cap = params_spp["crop_aladin_pipe"]
+
+        if "robustreg" in ssoft:
+            print("Using robustreg option")
+            params_spp_cap["reg_T1_on_template"] = {
+                    "nac_flag": True,
+                    "rig_only_flag": True,
+                    "nosym_flag": True,
+                    "ln_val": 12,
+                    "lp_val": 10,
+                    "smoo_r_val": 1.0
+                    }
+
+            params_spp_cap["reg_T1_on_template2"] = {
+                    "rig_only_flag": True,
+                    "nosym_flag": True,
+                    "ln_val": 17,
+                    "lp_val": 15,
+                    "smoo_r_val": 1.0
+                    }
+
+        elif "halfrobustreg" in ssoft:
+            print("Using halfrobustreg option")
+            params_spp_cap["reg_T1_on_template"] = {
+                    "nac_flag": True,
+                    "rig_only_flag": True,
+                    "nosym_flag": True,
+                    "ln_val": 12,
+                    "lp_val": 10,
+                    "smoo_r_val": 1.0
+                    }
+
+    print("New params after modification")
+    pprint.pprint(params)
+
+    # debias
+
+    if "correct_bias_pipe" in params.keys():
+        print("!!!!!! Old version json, correct_bias_pipe is obsolete")
+        print("!!!!!! Use fast or N4debias node instead")
+        del params["correct_bias_pipe"]
+
+    if "fast" in params.keys():
+
+        print("!! Old version json, moving fast in short_preparation_pipe")
+        params["short_preparation_pipe"]["fast"] = params["fast"]
+        del params["fast"]
+
+    if "N4debias" in params.keys():
+
+        print("!! Old version json, moving N4debias in short_preparation_pipe")
+        params["short_preparation_pipe"]["N4debias"] = params["N4debias"]
+        del params["N4debias"]
 
     # ANTS
     if "ants" in ssoft:
@@ -240,10 +199,13 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         if "prep" in ssoft:
             print("Found prep in soft")
+
+            # brain mask
             if "extract_pipe" in params.keys():
                 del params["extract_pipe"]
                 print("Deleting extract_pipe")
 
+            # masked debias
             if "masked_correct_bias_pipe" in params.keys():
                 del params["masked_correct_bias_pipe"]
                 print("Deleting masked_correct_bias_pipe")
@@ -252,6 +214,7 @@ def update_params(ssoft=[], subjects=None, sessions=None,
                 del params["debias"]
                 print("Deleting debias")
 
+            # segment
             if "brain_segment_pipe" in params.keys():
                 del params["brain_segment_pipe"]
                 print("Deleting brain_segment_pipe")
@@ -272,6 +235,10 @@ def update_params(ssoft=[], subjects=None, sessions=None,
 
         if "prep" in ssoft:
             print("Found prep in soft")
+
+            if "debias" in params.keys():
+                del params["debias"]
+                print("Deleting debias")
 
             if "reg" in params.keys():
                 del params["reg"]

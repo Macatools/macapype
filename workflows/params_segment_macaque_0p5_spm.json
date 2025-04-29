@@ -2,7 +2,7 @@
     "general":
     {
         "template_name": "inia19",
-        "template_stereo_name": "NMT_v2.0_asym"
+        "template_stereo_name": "NMT_v2.0_asym_0p5"
     },
     "short_preparation_pipe":
     {
@@ -65,9 +65,5 @@
             "kernel_shape": "sphere",
             "kernel_size": 2
         }
-    },
-    "regex_subs":
-    {
-        "FLAIR_flirt": "preproc-coreg_FLAIR"
     }
 }

@@ -10,27 +10,31 @@
     	{
             "reg_T1_on_template":
             {
+                "rig_only_flag":true
             },
-            "crop_z_T1":
+            "reg_T1_on_template2":
             {
-                "brainsize": 70
+                "rig_only_flag":true
             }
-    	}
-    },
-    "N4debias":
-    {
-        "dimension": 3,
-        "bspline_fitting_distance": 200,
-        "n_iterations": [50, 50, 40, 30],
-        "convergence_threshold": 0.00000001,
-        "shrink_factor": 2,
-        "args": "-r 0 --verbose 1"
+    	},
+        "denoise":
+        {
+        },
+        "N4debias":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
+        }
     },
     "extract_pipe":
     {
         "atlas_brex":
         {
-            "f": 0.5,
+            "f": 0.7,
             "reg": 1,
             "msk": "b,0.5,0,0",
             "wrp": "10,10,10",

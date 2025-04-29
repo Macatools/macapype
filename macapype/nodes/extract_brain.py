@@ -2,7 +2,7 @@
 
 from nipype.interfaces.base import (CommandLine, CommandLineInputSpec,
                                     TraitedSpec)
-from nipype.interfaces.base import traits, File
+from nipype.interfaces.base import traits, File, isdefined
 
 
 import os
@@ -83,7 +83,7 @@ class T1xT2BETInputSpec(FSLCommandInputSpec):
             bottom, smaller at top',
         argstr="-g %f", mandatory=False)
 
-    cog = traits.ListInt(
+    cog = traits.List(
         desc='For difficult cases, you can directly provide a center of \
             gravity. Only one iteration will be performed.',
         argstr="-cog %d %d %d", mandatory=False)
@@ -400,6 +400,84 @@ class AtlasBREX(CommandLine):
 
         path, fname, ext = split_f(self.inputs.t1_restored_file)
         outputs["brain_file"] = os.path.abspath(fname + '_brain' + ext)
+
+        return outputs
+
+
+# HDBET
+class HDBETInputSpec(CommandLineInputSpec):
+
+    import os
+
+    in_file = File(
+        exists=True,
+        desc='T1 image to map',
+        mandatory=True, position=0, argstr="-i %s")
+
+    out_file = File(
+        desc='name of output skull stripped image',
+        name_source=["in_file"],
+        name_template="%s_brain",
+        keep_extension=True,
+        hash_files=False,
+        position=1, argstr="-o %s")
+
+    disable_tta = traits.Bool(
+        True, usedefault=True, desc='disable_tta',
+        argstr="--disable_tta", mandatory=False)
+
+    device = traits.Enum(
+        "cpu", 'cuda', 'mps', usedefault=True, desc="",
+        argstr="-device %s", mandatory=True)
+
+    verbose = traits.Bool(
+        True, usedefault=True, desc='verbose', argstr="--verbose",
+        mandatory=True)
+
+
+class HDBETOutputSpec(TraitedSpec):
+    out_file = File(
+        exists=True,
+        desc="extracted brain from hd-bet")
+
+    mask_file = File(
+        exists=True,
+        desc="brain mask from hd-bet")
+
+
+class HDBET(CommandLine):
+    """
+    Description: Atlas based BrainExtraction
+
+    Inputs:
+
+        Mandatory:
+
+    Outputs:
+
+        brain_file:
+            File, "extracted brain from atlas_brex"
+
+    """
+    input_spec = HDBETInputSpec
+    output_spec = HDBETOutputSpec
+
+    _cmd = 'hd-bet --save_bet_mask '
+
+    def _gen_maskfilename(self):
+        from nipype.utils.filemanip import split_filename as split_f
+        # Generate default mask filename
+        if isdefined(self.inputs.in_file):
+            path, fname, ext = split_f(self.inputs.in_file)
+            mask_file = fname + "_brain_bet" + ext
+            return os.path.abspath(mask_file)
+
+    def _list_outputs(self):
+
+        import os
+        outputs = self._outputs().get()
+        outputs["out_file"] = self.inputs.out_file
+        outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
 
         return outputs
 

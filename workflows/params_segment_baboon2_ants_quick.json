@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "template_name": "NMT_v2.0_asym"
+        "template_name": "BaBa21-2"
     },
     "short_preparation_pipe":
     {
@@ -19,7 +19,6 @@
     	},
         "denoise":
         {
-            "shrink_factor": 2
         },
         "N4debias":
         {
@@ -33,16 +32,10 @@
     },
     "extract_pipe":
     {
-        "atlas_brex":
+        "hdbet":
         {
-            "f": 0.5,
-            "reg": 1,
-            "wrp": "10,10,10",
-            "msk": "a,0,0",
-            "dil": 2,
-            "nrm": 1
-        }
 
+        }
     },
     "debias":
     {
@@ -65,9 +58,9 @@
             },
             "tissue_dict":
             {
-                "gm": [2, 3],
-                "wm": 4,
-                "csf": [1, 5]
+                "gm": 2,
+                "wm": 3,
+                "csf": 1
             }
         },
         "export_5tt_pipe":
@@ -77,7 +70,7 @@
         {
             "merge_brain_tissues":
             {
-                "keep_indexes": [2,3,4]
+                "keep_indexes": [1,2,3]
             }
         }
     }

@@ -12,22 +12,23 @@ Dependancies
 External software dependancies
 ------------------------------
 
-SkullTo3d relies heavily on other neuroimaging Softwares, predominentyly:
+Macapype relies heavily on other neuroimaging Softwares, predominentyly:
 
 * `FSL <http://www.fmrib.ox.ac.uk/fsl/index.html>`_
 * `ANTS <http://stnava.github.io/ANTs/>`_
 * `AFNI <https://afni.nimh.nih.gov/>`_
 * `SPM <https://www.fil.ion.ucl.ac.uk/spm/>`_
+* `NiftiReg <http://cmictig.cs.ucl.ac.uk/wiki/index.php/NiftyReg>`_
 
 Python packages dependancies
 ----------------------------
 
-SkullTo3d relies on python packages. Here we provide installations using Anaconda
+Macapype relies on python packages. Here we provide installations using Anaconda
 
 Creating environment with all packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype", but can be called the name you prefer):
+In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "macapype_env", but can be called the name you prefer):
 
 .. code-block:: bash
 
@@ -64,7 +65,7 @@ Using pip
 from pypi
 ---------
 
-SkullTo3d is available on * `pypi.org <https://pypi.org/project/macapype/>`_:
+Macapype is available on * `pypi.org <https://pypi.org/project/macapype/>`_:
 
 If 'pip' package is installed on your system, you can install the lastest stable version with:
 
@@ -76,7 +77,7 @@ If 'pip' package is installed on your system, you can install the lastest stable
 From conda
 -----------
 
-SkullTo3d is also available on `Anaconda cloud <https://anaconda.org/macatools/macapype>`_:
+Macapype is also available on `Anaconda cloud <https://anaconda.org/macatools/macapype>`_:
 
 If 'conda' (Anaconda, or miniconda) is installed on your system, you can type:
 
@@ -98,3 +99,6 @@ Testing the install
 .. code:: ipython
 
     In [1]: import macapype; print (macapype.__version__)
+
+
+See :ref:`Quick test <quick_test>` for testing if your installation works properly on test datasets.

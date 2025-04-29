@@ -39,13 +39,16 @@ RUN python -m pip install xvfbwrapper \
     nibabel \
     packaging \
     pytest \
-    install \
     graphviz \
     pybids \
     nipype \
     nilearn \
     scikit-image \
     brain-slam
+
+RUN python -m pip install SimpleITK
+
+RUN python -m pip install HD-BET
 
 ############################################# install macapype
 

@@ -17,31 +17,36 @@ def keep_gcc(nii_file):
         labels = label(segmentation)
         assert labels.max() != 0  # assume at least 1 CC
         largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
-        return largestCC
+        return largestCC, labels
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
-    data = img.get_fdata().astype("int32")
-    print(data.shape)
-
-    # numpy
-    data[data > 0] = 1
-
-    binary = np.array(data, dtype=np.int16)
+    data = img.get_fdata().astype(np.int16)
 
     # skimage GCC
-    new_data = getLargestCC(binary)
+    new_data, labels = getLargestCC(data)
+
+    # nibabel (np.array -> nifti)
+
+    path, fname, ext = split_f(nii_file)
+
+    labels_img = nib.Nifti1Image(dataobj=labels,
+                                 header=img.header,
+                                 affine=img.affine)
+
+    labels_file = os.path.abspath(fname + "_labels" + ext)
+
+    nib.save(labels_img, labels_file)
 
     # nibabel (np.array -> nifti)
     new_img = nib.Nifti1Image(dataobj=new_data,
                               header=img.header,
                               affine=img.affine)
 
-    path, fname, ext = split_f(nii_file)
-
     gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
 
     nib.save(new_img, gcc_nii_file)
+
     return gcc_nii_file
 
 
@@ -58,7 +63,11 @@ def merge_tissues(dseg_file, keep_indexes):
     dseg_img = nib.load(dseg_file)
     dseg_data = dseg_img.get_fdata()
 
-    mask_data = np.zeros(shape=dseg_data.shape)
+    print(dseg_data.shape)
+    print(dseg_data.dtype)
+    print(np.unique(dseg_data))
+
+    mask_data = np.zeros(shape=dseg_data.shape, dtype=np.int16)
 
     for index in keep_indexes:
         if index in np.unique(dseg_data):
@@ -66,6 +75,8 @@ def merge_tissues(dseg_file, keep_indexes):
             mask_data[dseg_data == index] = 1
         else:
             print("Error, could not find index {} in dseg file".format(index))
+
+    print(np.unique(mask_data))
 
     mask_img = nib.Nifti1Image(dataobj=mask_data,
                                header=dseg_img.header,

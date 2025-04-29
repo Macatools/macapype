@@ -10,18 +10,37 @@
     "AMUBOX": {
         "server": "https://amubox.univ-amu.fr",
         "data_dir": {
-            "data_test_macaque": "RDxdxzmX89xcABG",
-            "data_test_sphinx_macaque": "RkWbC2gmbn4ytK3",
+            "data_test_macaque": "qzsfymDYjx692Q4",
             "inia19":"Jq5abnZDZ3smmBJ",
             "macapype_CI": "KJ2L5j6L6orPXxM",
+
+
             "NMT_v1.2": "5YnwNf3Jr7Qsc8H",
             "NMT_v1.3better": "6DBctypBT7LsexL",
             "NMT_v2.0_asym": "BYj6NmwB76Z4Bt2",
+            "NMT_v2.0_asym_0p5": "Estr3kFHSXLSGsf",
+
             "pad40_NMT_v2.0_asym": "Rd7ymLxfHpa4dgK",
+
             "haiko89_template": "3Agb3zecnkQGCr5",
             "Haiko_v1.5": "QdQ2Sefb53KQCG2",
+
+            "BaBa21-3": "H5PwgcfWPQLAYWM",
+            "BaBa21-2": "qmibGGGcHLszPJR",
+            "BaBa21-1": "zY9cPqAAoMznFpf",
+            "BaBa21-0": "xfERHnjBWyYz37X",
+
+            "BaBa21-3_0p6": "QAEScG44SEoBHbb",
+            "BaBa21-2_0p6": "5zaGnnc7YMX8y9f",
+            "BaBa21-1_0p6": "M9cF7FqFNBxf283",
+            "BaBa21-0_0p6": "QCZzrG2dgN74fBQ",
+
+
             "MBM_v3.0.1": "RMxXifHeigNkB3g",
             "MBM_v3.0.1_6seg": "yop65ARqHKMdfrP",
+            "MBM_v3.0.1_6seg_stereoINT": "PREL3NDPrrcytPT",
+            "MBM_v3.0.1_6seg_stereoINT_largeFOV": "PREL3NDPrrcytPT",
+
             "bma-1": "29qRZrnHnBxtCGB",
             "bma-1_0p2mm": "YoLAFawKMTi7FqR"
             },
