@@ -14,8 +14,8 @@ jobs:
       id-token: write
 
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/macapype
+      name: pypi
+      url: https://pypi.org/p/macapype
 
     steps:
     - uses: actions/checkout@master
