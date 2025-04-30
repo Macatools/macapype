@@ -242,7 +242,8 @@ def create_full_spm_subpipes(
         outputnode, 'native_to_stereo_trans')
 
     if ("fast" in params["short_preparation_pipe"]
-            or "N4debias" in params["short_preparation_pipe"]):
+            or "N4debias" in params["short_preparation_pipe"]
+            or "itk_debias" in params["short_preparation_pipe"]):
 
         # debiased
         seg_pipe.connect(
@@ -339,7 +340,8 @@ def create_full_spm_subpipes(
 
     # debiased if not processed in short_preparation_pipe
     if not ("fast" in params["short_preparation_pipe"]
-            or "N4debias" in params["short_preparation_pipe"]):
+            or "N4debias" in params["short_preparation_pipe"]
+            or "itk_debias" in params["short_preparation_pipe"]):
 
         seg_pipe.connect(
             debias, 't1_debiased_file',
@@ -966,7 +968,7 @@ def create_full_ants_subpipes(
                     "native_to_stereo_trans"]),
         name='outputnode')
 
-    # preprocessing
+    # ##################################### preprocessing
     if 'short_preparation_pipe' in params.keys():
         data_preparation_pipe = create_short_preparation_pipe(
             params=parse_key(params, "short_preparation_pipe"),
@@ -1041,7 +1043,8 @@ def create_full_ants_subpipes(
                      outputnode, "stereo_padded_T2")
 
     if ("fast" in params["short_preparation_pipe"]
-            or "N4debias" in params["short_preparation_pipe"]):
+            or "N4debias" in params["short_preparation_pipe"]
+            or "itk_debias" in params["short_preparation_pipe"]):
 
         # debiased
         seg_pipe.connect(
@@ -1072,7 +1075,7 @@ def create_full_ants_subpipes(
         data_preparation_pipe, "outputnode.native_to_stereo_trans",
         outputnode, 'native_to_stereo_trans')
 
-    # ################# extract mask
+    # ############################################ extract mask
     print("mask file {}".format(mask_file))
 
     if mask_file is None:

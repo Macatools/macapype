@@ -654,7 +654,7 @@ def create_nii2mesh_brain_pipe(params={},
                                output_names=["mask_file"],
                                function=merge_tissues),
         params=parse_key(params, "merge_brain_tissues"),
-        name="keep_GCC_brain")
+        name="merge_brain_tissues")
 
     nii2mesh_brain_pipe.connect(inputnode, 'segmented_file',
                                 merge_brain_tissues, 'dseg_file')
