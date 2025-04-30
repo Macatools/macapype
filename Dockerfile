@@ -9,7 +9,7 @@
 #
 # Timestamp: 2020/12/02 18:33:44 UTC
 
-FROM macatools/macapype_env:v0.2.2-spm
+FROM macatools/macapype_env:v0.2.2
 
 USER root
 
@@ -36,7 +36,7 @@ RUN python -m pip install xvfbwrapper \
     pydot \
     rdflib \
     pbr \
-    nibabel==3.2.2 \
+    nibabel \
     packaging \
     pytest
 
@@ -48,8 +48,6 @@ RUN python -m pip install graphviz \
     brain-slam
 
 RUN python -m pip install SimpleITK
-
-RUN python -m pip install HD-BET
 
 ############################################# install macapype
 

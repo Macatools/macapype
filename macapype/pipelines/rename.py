@@ -188,7 +188,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 datasink, '@stereo_padded_T2')
 
     if ("fast" in params["short_preparation_pipe"]
-            or "N4debias" in params["short_preparation_pipe"]):
+            or "N4debias" in params["short_preparation_pipe"]
+            or "itk_debias" in params["short_preparation_pipe"]):
 
         # rename debiased_T1
         rename_stereo_debiased_T1 = pe.Node(
@@ -581,7 +582,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
         # after some processing
         if ("fast" in params["short_preparation_pipe"]
-                or "N4debias" in params["short_preparation_pipe"]):
+                or "N4debias" in params["short_preparation_pipe"]
+                or "itk_debias" in params["short_preparation_pipe"]):
 
             # rename debiased_T1
             rename_native_debiased_T1 = pe.Node(

@@ -18,6 +18,8 @@ from ..nodes.prepare import average_align
 
 from ..nodes.register import pad_zero_mri
 
+from ..nodes.correct_bias import itk_debias
+
 # should be in nipype code directly
 from ..nodes.prepare import Refit
 
@@ -651,6 +653,55 @@ def create_short_preparation_pipe(params, params_template={},
 
         data_preparation_pipe.connect(
             fast_T2, "restored_image",
+            outputnode, "stereo_debiased_T2")
+
+    elif "itk_debias" in params:
+
+        print("Found itk_debias in params.json")
+
+        # itk_debias over T1
+        itk_debias_T1 = NodeParams(
+            interface=niu.Function(
+                input_names=["img_file"],
+                output_names=["cor_img_file", "bias_img_file"],
+                function=itk_debias),
+            params=parse_key(params, "itk_debias"),
+            name='itk_debias_T1')
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T1, "output_image",
+                itk_debias_T1, "img_file")
+        else:
+            data_preparation_pipe.connect(
+                crop_aladin_pipe, "outputnode.stereo_T1",
+                itk_debias_T1, "img_file")
+
+        # itk_debias over T2
+        itk_debias_T2 = NodeParams(
+            interface=niu.Function(
+                input_names=["img_file"],
+                output_names=["cor_img_file", "bias_img_file"],
+                function=itk_debias),
+            params=parse_key(params, "itk_debias"),
+            name='itk_debias_T2')
+
+        if "denoise" in params.keys():
+            data_preparation_pipe.connect(
+                denoise_T2, "output_image",
+                itk_debias_T2, "img_file")
+        else:
+            data_preparation_pipe.connect(
+                apply_crop_aladin_T2, 'out_file',
+                itk_debias_T2, "img_file")
+
+        # outputnode
+        data_preparation_pipe.connect(
+            itk_debias_T1, "cor_img_file",
+            outputnode, "stereo_debiased_T1")
+
+        data_preparation_pipe.connect(
+            itk_debias_T2, "cor_img_file",
             outputnode, "stereo_debiased_T2")
 
     else:
