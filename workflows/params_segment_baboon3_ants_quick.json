@@ -32,14 +32,8 @@
     },
     "extract_pipe":
     {
-        "atlas_brex":
+        "hdbet":
         {
-            "f": 0.7,
-            "reg": 1,
-            "msk": "b,0.5,0,0",
-            "wrp": "10,10,10",
-            "dil": 1,
-            "nrm": 1
 
         }
     },

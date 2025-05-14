@@ -129,6 +129,9 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             indiv_params=indiv_params, params=params, extra_wf_name="")
 
     # modifying crop_aladin
+    if "short_preparation_pipe" not in params:
+        return params, indiv_params, extra_wf_name
+
     params_spp = params["short_preparation_pipe"]
 
     if "crop_aladin_pipe" in params_spp.keys():
