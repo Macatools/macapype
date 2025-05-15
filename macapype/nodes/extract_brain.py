@@ -516,6 +516,11 @@ class Bet4AnimalInputSpec(CommandLineInputSpec):
         desc='robust brain centre estimation (iterates BET several times)',
         argstr="-R",)
 
+    f = traits.Float(
+        desc='fractional intensity threshold (0->1); default=0.5; \
+        smaller values give larger brain outline estimates', argstr="-f %f",
+        mandatory=False)
+
 
 class Bet4AnimalOutputSpec(TraitedSpec):
 
