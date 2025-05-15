@@ -518,6 +518,11 @@ class Bet4AnimalInputSpec(CommandLineInputSpec):
 
 
 class Bet4AnimalOutputSpec(TraitedSpec):
+
+    out_file = File(
+        exists=True,
+        desc="masked T1 from hd-bet")
+
     mask_file = File(
         exists=True,
         desc="brain mask from hd-bet")
@@ -542,10 +547,21 @@ class Bet4Animal(CommandLine):
 
     _cmd = 'bet4animal '
 
+    def _gen_maskfilename(self):
+        from nipype.utils.filemanip import split_filename as split_f
+        # Generate default mask filename
+        if isdefined(self.inputs.in_file) and self.inputs.mask is True:
+            path, fname, ext = split_f(self.inputs.in_file)
+            mask_file = fname + "_brain_mask" + ext
+            return os.path.abspath(mask_file)
+
     def _list_outputs(self):
 
         outputs = self._outputs().get()
-        outputs["mask_file"] = self.inputs.mask_file
+
+        outputs["out_file"] = self.inputs.out_file
+        if self.inputs.mask is True:
+            outputs["mask_file"] = os.path.abspath(self._gen_maskfilename())
 
         return outputs
 
