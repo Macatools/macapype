@@ -491,7 +491,7 @@ class Bet4AnimalInputSpec(CommandLineInputSpec):
         desc='T1 image to map',
         mandatory=True, position=0, argstr="%s")
 
-    mask_file = File(
+    out_file = File(
         desc='name of output skull stripped image',
         name_source=["in_file"],
         name_template="%s_brain",
