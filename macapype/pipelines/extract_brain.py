@@ -93,7 +93,8 @@ def create_extract_pipe(params_template, params={},
                 bet4animal, 'indiv_params')
 
         # outputnode
-        extract_pipe.connect(hdbet, 'mask_file', outputnode, 'mask_file')
+        extract_pipe.connect(bet4animal, 'mask_file', outputnode, 'mask_file')
+
     elif "hdbet" in params.keys():
         hdbet = NodeParams(HDBET(),
                            params=parse_key(params, "hdbet"),
