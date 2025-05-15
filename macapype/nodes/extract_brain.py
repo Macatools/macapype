@@ -481,6 +481,74 @@ class HDBET(CommandLine):
 
         return outputs
 
+# Bet4Animal
+class Bet4AnimalInputSpec(CommandLineInputSpec):
+
+    import os
+
+    in_file = File(
+        exists=True,
+        desc='T1 image to map',
+        mandatory=True, position=0, argstr="%s")
+
+    mask_file = File(
+        desc='name of output skull stripped image',
+        name_source=["in_file"],
+        name_template="%s_brain",
+        keep_extension=True,
+        hash_files=False,
+        position=1, argstr="%s")
+
+    outline = traits.Bool(
+        False, usedefault=True, desc='outline',
+        argstr="--outline", mandatory=False)
+
+    mask = traits.Bool(
+        True, usedefault=True, desc='mask',
+        argstr="--mask", mandatory=False)
+
+    label = traits.Enum(
+        "2", "0", "1", "3", usedefault=True, desc="label (default = macaque)",
+        argstr="-z %s", mandatory=True)
+
+    robust = traits.Bool(
+        True, usedefault=True,
+        desc='robust brain centre estimation (iterates BET several times)',
+        argstr="-R",)
+
+
+class Bet4AnimalOutputSpec(TraitedSpec):
+    mask_file = File(
+        exists=True,
+        desc="brain mask from hd-bet")
+
+
+class Bet4Animal(CommandLine):
+    """
+    Description: Atlas based BrainExtraction
+
+    Inputs:
+
+        Mandatory:
+
+    Outputs:
+
+        brain_file:
+            File, "extracted brain from atlas_brex"
+
+    """
+    input_spec = Bet4AnimalInputSpec
+    output_spec = Bet4AnimalOutputSpec
+
+    _cmd = 'bet4animal '
+
+    def _list_outputs(self):
+
+        outputs = self._outputs().get()
+        outputs["mask_file"] = self.inputs.mask_file
+
+        return outputs
+
 
 if __name__ == '__main__':
     ab = AtlasBREX()
