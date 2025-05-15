@@ -508,8 +508,8 @@ class Bet4AnimalInputSpec(CommandLineInputSpec):
         argstr="--mask", mandatory=False)
 
     label = traits.Enum(
-        "2", "0", "1", "3", usedefault=True, desc="label (default = macaque)",
-        argstr="-z %s", mandatory=True)
+        2, 0, 1, 3, usedefault=True, desc="label (default 2 = macaque)",
+        argstr="-z %d", mandatory=True)
 
     robust = traits.Bool(
         True, usedefault=True,
