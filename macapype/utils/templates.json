@@ -100,13 +100,13 @@
     {
         "template_head": "MNI152_T1_1mm.nii.gz",
         "template_brain": "MNI152_T1_1mm_Brain.nii.gz",
-        "template_seg": "MNI152_T1_1mm_Brain_FAST_pveseg.nii.gz",
+        "template_seg": "MNI152_T1_1mm_Brain_FAST_pveseg.nii.gz"
     },
     "MNI_Fortin_2mm":
     {
         "template_head": "MNI152_T1_2mm.nii.gz",
         "template_brain": "MNI152_T1_2mm_Brain.nii.gz",
-        "template_seg": "MNI152_T1_2mm_Brain_FAST_pveseg.nii.gz",
+        "template_seg": "MNI152_T1_2mm_Brain_FAST_pveseg.nii.gz"
     },
     "bma-1":
     {
