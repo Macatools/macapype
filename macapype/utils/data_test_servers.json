@@ -42,7 +42,10 @@
             "MBM_v3.0.1_6seg_stereoINT_largeFOV": "PREL3NDPrrcytPT",
 
             "bma-1": "29qRZrnHnBxtCGB",
-            "bma-1_0p2mm": "YoLAFawKMTi7FqR"
+            "bma-1_0p2mm": "YoLAFawKMTi7FqR",
+
+            "MNI_Fortin_1mm": "b2CkZdLN5TkLQzF",
+            "MNI_Fortin_2mm": "b2CkZdLN5TkLQzF"
             },
         "cloud_format": "{}/public.php?service=files&t={}&download",
         "curl_cloud_format": "{}/public.php/dav/files/{}"
