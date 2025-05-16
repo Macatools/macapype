@@ -481,6 +481,7 @@ class HDBET(CommandLine):
 
         return outputs
 
+
 # Bet4Animal
 class Bet4AnimalInputSpec(CommandLineInputSpec):
 

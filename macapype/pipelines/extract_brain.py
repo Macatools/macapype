@@ -74,9 +74,10 @@ def create_extract_pipe(params_template, params={},
                              smooth, 'in_file')
 
     if "bet4animal" in params:
-        bet4animal = NodeParams(Bet4Animal(),
-                           params=parse_key(params, "bet4animal"),
-                           name='bet4animal')
+        bet4animal = NodeParams(
+            Bet4Animal(),
+            params=parse_key(params, "bet4animal"),
+            name='bet4animal')
 
         if "smooth" in params.keys():
             extract_pipe.connect(
