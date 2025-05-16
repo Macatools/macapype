@@ -56,13 +56,13 @@ RUN echo '{ \
     \n    [ \
     \n      "ants", \
     \n      { \
-    \n        "version": "2.3.1" \
+    \n        "version": "2.4.3" \
     \n      } \
     \n    ], \
     \n    [ \
     \n      "fsl", \
     \n      { \
-    \n        "version": "5.0.10" \
+    \n        "version": "6.0.7.17" \
     \n      } \
     \n    ], \
     \n    [ \
@@ -198,6 +198,7 @@ RUN apt update  -y && \
     apt install -y    \
       wget            \
       file            \
+      bc              \
       dc              \
       mesa-utils      \
       pulseaudio      \
@@ -209,8 +210,15 @@ RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.
 RUN python -m pip install readline
 RUN python ./fslinstaller.py -d /usr/local/fsl/
 
-ENV PATH="${PATH}:${FSLDIR}/bin"
-#ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
+ENV PATH="${PATH}:${FSLDIR}/bin"\
+    FSLOUTPUTTYPE="NIFTI_GZ" \
+    FSLMULTIFILEQUIT="TRUE" \
+    FSLTCLSH="${FSLDIR}/bin/fsltclsh" \
+    FSLWISH="${FSLDIR}/bin/fslwish" \
+    FSLLOCKDIR="" \
+    FSLMACHINELIST="" \
+    FSLREMOTECALL="" \
+    FSLGECUDAQ="cuda.q"
 
 ################################################## Finishing
 RUN apt-get clean \
