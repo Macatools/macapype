@@ -186,7 +186,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
             if species in list(rep_species.keys()):
                 species = rep_species[species]
 
-            list_species = ["macaque", "marmo", "baboon", "chimp"]
+            list_species = ["macaque", "marmo", "baboon", "chimp", "human"]
 
             ok_species = False
             for cur_species in list_species:

@@ -7,7 +7,7 @@ import nipype.pipeline.engine as pe
 
 import nipype.interfaces.fsl as fsl
 
-from ..nodes.extract_brain import AtlasBREX, HDBET
+from ..nodes.extract_brain import AtlasBREX, HDBET, Bet4Animal
 
 from ..utils.utils_nodes import NodeParams, parse_key
 
@@ -73,7 +73,30 @@ def create_extract_pipe(params_template, params={},
         extract_pipe.connect(inputnode, 'restore_T1',
                              smooth, 'in_file')
 
-    if "hdbet" in params.keys():
+    if "bet4animal" in params:
+        bet4animal = NodeParams(
+            Bet4Animal(),
+            params=parse_key(params, "bet4animal"),
+            name='bet4animal')
+
+        if "smooth" in params.keys():
+            extract_pipe.connect(
+                smooth, 'smoothed_file',
+                bet4animal, 'in_file')
+        else:
+
+            extract_pipe.connect(
+                inputnode, 'restore_T1',
+                bet4animal, 'in_file')
+
+        extract_pipe.connect(
+                inputnode, ("indiv_params", parse_key, "bet4animal"),
+                bet4animal, 'indiv_params')
+
+        # outputnode
+        extract_pipe.connect(bet4animal, 'mask_file', outputnode, 'mask_file')
+
+    elif "hdbet" in params.keys():
         hdbet = NodeParams(HDBET(),
                            params=parse_key(params, "hdbet"),
                            name='hdbet')
