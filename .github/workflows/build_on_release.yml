@@ -250,7 +250,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results
 
   run-pretest-ants-4animal-marmo:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_4animal marmo)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_4animal_noseg marmo)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -276,9 +276,9 @@ jobs:
             ls macapype_CI_v2.1/cerimed_marmo
             echo ""
 
-      - name: Running test pipeline cerimed_marmo ANTS_4animal T1 T2
+      - name: Running test pipeline cerimed_marmo ANTS_4animal_noseg T1 T2
         run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_4animal -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1 T2
+            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_4animal_noseg -species marmo -sub Tresor -ses 01 -deriv -pad -dt T1 T2
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/
 
