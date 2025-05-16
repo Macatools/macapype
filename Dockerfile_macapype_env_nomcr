@@ -209,7 +209,8 @@ RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.
 RUN python -m pip install readline
 RUN python ./fslinstaller.py -d /usr/local/fsl/
 
-ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
+ENV PATH="${PATH}:${FSLDIR}/bin"
+#ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
 
 ################################################## Finishing
 RUN apt-get clean \
