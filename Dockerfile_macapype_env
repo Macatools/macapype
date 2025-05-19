@@ -9,7 +9,7 @@
 #
 # Timestamp: 2020/12/02 18:33:44 UTC
 
-FROM macatools/macapype_env:v0.3.2
+FROM debian:buster
 
 USER root
 
@@ -19,38 +19,206 @@ MAINTAINER David Meunier "david.meunier@univ-amu.fr"
 
 RUN apt-get update -qq
 
-################################################## Install SPM12 as MCR
-RUN  apt-get -y install unzip xorg wget
+################################################## Neurodocker
+ENV LANG="en_US.UTF-8" \
+    LC_ALL="en_US.UTF-8" \
+    ND_ENTRYPOINT="/neurodocker/startup.sh"
+RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
+    && apt-get install -y -q --no-install-recommends \
+           apt-utils \
+           bzip2 \
+           ca-certificates \
+           curl \
+           locales \
+           unzip \
+    && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && update-locale LANG="en_US.UTF-8" \
+    && chmod 777 /opt && chmod a+s /opt \
+    && mkdir -p /neurodocker \
+    && if [ ! -f "$ND_ENTRYPOINT" ]; then \
+         echo '#!/usr/bin/env bash' >> "$ND_ENTRYPOINT" \
+    &&   echo 'set -e' >> "$ND_ENTRYPOINT" \
+    &&   echo 'export USER="${USER:=`whoami`}"' >> "$ND_ENTRYPOINT" \
+    &&   echo 'if [ -n "$1" ]; then "$@"; else /usr/bin/env bash; fi' >> "$ND_ENTRYPOINT"; \
+    fi \
+    && chmod -R 777 /neurodocker && chmod a+s /neurodocker
 
-# Install MATLAB MCR in /opt/mcr/
-ENV MATLAB_VERSION R2019b
-ENV MCR_VERSION v97
-RUN mkdir /opt/mcr_install \
- && mkdir /opt/mcr \
- && wget --progress=bar:force -P /opt/mcr_install https://ssd.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/Release/3/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_${MATLAB_VERSION}_Update_3_glnxa64.zip \
- && unzip -q /opt/mcr_install/MATLAB_Runtime_${MATLAB_VERSION}_Update_3_glnxa64.zip -d /opt/mcr_install \
- && /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent \
- && rm -rf /opt/mcr_install /tmp/*
+ENTRYPOINT ["/neurodocker/startup.sh"]
 
-# Install SPM Standalone in /opt/spm12/
-ENV SPM_VERSION 12
-ENV SPM_REVISION r7771
+RUN echo '{ \
+    \n  "pkg_manager": "apt", \
+    \n  "instructions": [ \
+    \n    [ \
+    \n      "base", \
+    \n      "debian:buster" \
+    \n    ], \
+    \n    [ \
+    \n      "ants", \
+    \n      { \
+    \n        "version": "2.4.3" \
+    \n      } \
+    \n    ], \
+    \n    [ \
+    \n      "fsl", \
+    \n      { \
+    \n        "version": "6.0.7.17" \
+    \n      } \
+    \n    ], \
+    \n    [ \
+    \n      "afni", \
+    \n      { \
+    \n        "version": "latest" \
+    \n      } \
+    \n    ]\
+    \n  ] \
+    \n}' > /neurodocker/neurodocker_specs.json
 
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:/opt/mcr/${MCR_VERSION}/extern/bin/glnxa64
+################################################## Install AFNI
+ENV PATH="/opt/afni-latest:$PATH" \
+    AFNI_PLUGINPATH="/opt/afni-latest"
+RUN apt-get install -y -q --no-install-recommends \
+           ed \
+           gsl-bin \
+           libglib2.0-0 \
+           libglu1-mesa-dev \
+           libglw1-mesa \
+           libgomp1 \
+           libjpeg62 \
+           libxm4 \
+           multiarch-support \
+           netpbm \
+           tcsh \
+           xfonts-base \
+           xvfb
+RUN curl -sSL --retry 5 -o /tmp/toinstall.deb http://snapshot.debian.org/archive/debian-security/20160113T213056Z/pool/updates/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb
+RUN dpkg -i /tmp/toinstall.deb
+RUN rm /tmp/toinstall.deb
+RUN apt-get install -f
+RUN gsl2_path="$(find / -name 'libgsl.so.23' || printf '')"
+RUN if [ -n "$gsl2_path" ]; then \
+         ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0";\
+    fi
+RUN ldconfig
+RUN echo "Downloading AFNI ..."
+RUN mkdir -p /opt/afni-latest
+RUN curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
+    | tar -xz -C /opt/afni-latest --strip-components 1
 
-ENV MCR_INHIBIT_CTF_LOCK 1
-ENV SPM_HTML_BROWSER 0
-# Running SPM once with "function exit" tests the succesfull installation *and*
-# extracts the ctf archive which is necessary if singularity is going to be
-# used later on, because singularity containers are read-only.
-# Also, set +x on the entrypoint for non-root container invocations
-RUN wget --no-check-certificate --progress=bar:force -P /opt https://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
- && unzip -q /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt \
- && rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
- && /opt/spm${SPM_VERSION}/spm${SPM_VERSION} function exit \
- && chmod +x /opt/spm${SPM_VERSION}/spm${SPM_VERSION}
-ENV SPM_DIR /opt/spm${SPM_VERSION}
+############################################# AFNI IsoSurface requires specifically libXp6
+#RUN echo 'deb http://security.ubuntu.com/ubuntu precise-security main' >> /etc/apt/sources.list
+#RUN apt update
+#RUN apt install libxp6
 
+RUN ls -l /usr/lib/x86_64-linux-gnu
+RUN ln -s /usr/lib/x86_64-linux-gnu/libXpm.so.4.11.0 /usr/lib/x86_64-linux-gnu/libXp.so.6
+
+################################################## Install ANTS
+ENV ANTSPATH="/opt/ants-2.4.3/" \
+    PATH="/opt/ants-2.4.3:$PATH"
+RUN apt-get update -qq \
+    && apt-get install -y -q --no-install-recommends \
+           ca-certificates \
+           curl \
+           unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "Downloading ANTs ..." \
+    && curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.4.3/ants-2.4.3-centos7-X64-gcc.zip \
+    && unzip ants.zip -d /opt \
+    && mv /opt/ants-2.4.3/bin/* /opt/ants-2.4.3 \
+    && rm ants.zip
+
+######################## NiftiReg
+RUN apt-get update -qq
+RUN apt-get install --yes --no-install-recommends \
+        ca-certificates cmake gcc g++ git make
+
+RUN git clone https://github.com/KCL-BMEIS/niftyreg.git /tmp/niftyreg-src \
+    && mkdir /tmp/niftyreg-build \
+    && cd /tmp/niftyreg-build \
+    && cmake -DCMAKE_INSTALL_PREFIX=/opt/niftyreg /tmp/niftyreg-src \
+    && make \
+    && make install
+ENV PATH=/opt/niftyreg/bin:$PATH
+
+
+####################### new: python 3.10
+
+RUN apt-get install -y -q  wget build-essential libncursesw5-dev libssl-dev \
+     libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+
+RUN wget https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz
+RUN tar xzf Python-3.10.8.tgz
+#RUN cd Python-3.10.8
+#RUN echo $(pwd)
+RUN Python-3.10.8/configure --enable-optimizations
+#RUN Python-3.10.8/make altinstall
+RUN apt-get install zlib1g-dev
+RUN make altinstall
+
+RUN echo $(which python3.10)
+
+RUN echo $(python3.10 -V )
+
+RUN echo ""
+RUN echo $(which pip3.10)
+RUN echo $(pip3.10 -V )
+
+RUN echo $(which pip3.10)
+RUN echo $(pip3.10 -V )
+
+RUN echo $(which python3.10) && \
+    ln -s /usr/local/bin/python3.10 /usr/bin/python && \
+    ln -s /usr/local/bin/pip3.10 /usr/local/bin/pip3 && \
+    ln -s /usr/local/bin/pip3 /usr/local/bin/pip && \
+    ln -s /usr/local/bin/pip /usr/bin/pip
+
+RUN echo $(python -m ssl)
+
+RUN echo $(which python)
+RUN echo $(python -V )
+
+RUN echo $(which pip)
+
+# specific problems with pillow
+RUN apt-get install -y python3-pil python3-pil.imagetk
+
+RUN python -m pip install -U pillow
+#RUN pip install -U pillow
+RUN python -c "import PIL; print(PIL.__version__)"
+
+################################################## Install FSL
+
+ENV FSLDIR          "/usr/local/fsl"
+ENV DEBIAN_FRONTEND "noninteractive"
+ENV LANG            "en_GB.UTF-8"
+
+RUN apt update  -y && \
+    apt upgrade -y && \
+    apt install -y    \
+      wget            \
+      file            \
+      bc              \
+      dc              \
+      mesa-utils      \
+      pulseaudio      \
+      libquadmath0    \
+      libgtk2.0-0     \
+      libgomp1
+
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
+RUN python -m pip install readline
+RUN python ./fslinstaller.py -d /usr/local/fsl/
+
+ENV PATH="${PATH}:${FSLDIR}/bin"\
+    FSLOUTPUTTYPE="NIFTI_GZ" \
+    FSLMULTIFILEQUIT="TRUE" \
+    FSLTCLSH="${FSLDIR}/bin/fsltclsh" \
+    FSLWISH="${FSLDIR}/bin/fslwish" \
+    FSLLOCKDIR="" \
+    FSLMACHINELIST="" \
+    FSLREMOTECALL="" \
+    FSLGECUDAQ="cuda.q"
 
 ################################################## Finishing
 RUN apt-get clean \
