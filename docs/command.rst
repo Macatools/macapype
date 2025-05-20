@@ -64,17 +64,17 @@ mandatory parameters
 
 * ``-soft`` : can be one of these : SPM or ANTS (**NB: ** SPM requires a specific version of macapype/skullTo3d, not available by default)
 
-    In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
+In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
 
     * ``_4animal`` :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
 
     * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
 
-    This option should be used if the coregistration to template in preparation is not performed correctly:
+This option should be used if the coregistration to template in preparation is not performed correctly:
 
     * ``_robustreg`` (at the end) to have a more robust registration (in two steps)
 
-    Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
+Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
 
     * ``_test`` : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
 
