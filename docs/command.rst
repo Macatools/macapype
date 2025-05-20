@@ -59,12 +59,15 @@ The following parameters are mandatory
 --------------------------------------
 
 * -data
+
 the path to your data dataset (existing BIDS format directory)
 
 * -out
+
 the path to the output results (an existing path)
 
-* -soft  *like in macapype*
+* -soft
+
 can be one of these : SPM or ANTS (**NB** SPM requires a specific version of macapype/skullTo3d, not available by default)
 
     In extra, all this option are available (to place after SPM or ANTS):
@@ -88,25 +91,39 @@ The following parameters are exclusive
 --------------------------------------
 *(but one is mandatory)*
 
-* -params  *(mandatory if -species is omitted)*
+* -params
+
+*(mandatory if -species is omitted)*
 a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
-* -species  *(mandatory if -params is omitted)*
+* -species
+
+*(mandatory if -params is omitted)*
 followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
 In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w is used)
+
+**Note** : baboon0, baboon1, baboon2 baboon3 can be used for template `Baba21 <doi:10.18112/openneuro.ds005424.v1.0.0>`_
+and matching
+
+**Note2** : some templates are available in downgraded versions: baboon1_0p6, baboon2_0p6 baboon3_0p6 and macaque_0p5 and show significant decrease in processing time with low redection in quality. However, not all combinations are available
 
 --------------------------------------
 The following parameters are optional
 --------------------------------------
 *(but highly recommanded)*
 
-* dt
+* - dt
+
 specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").
 **Note** : default is T1 if the attribute is omitted
 
-* -deriv  creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
+* -deriv
 
-* -pad  exports (in derivatives) important files in native (original) space
+creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
+
+* -pad
+
+exports most important files in native (original) space
 
 --------------------------------------
 The following parameters are optional
@@ -128,7 +145,6 @@ The following parameters are optional
 ***********************
 Command line examples
 ***********************
-
 
 .. code:: bash
 
