@@ -551,7 +551,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
         nprocs = 4
 
     if "test" not in ssoft:
-        if "seq" in ssoft or nprocs == 0:
+        if nprocs == 1:
             main_workflow.run()
         else:
             main_workflow.run(plugin='MultiProc',
