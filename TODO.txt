@@ -1,3 +1,10 @@
+19/05/2025
+
+debug due to singularity calling old version in home
+to avoid, use:
+    singularity run --cleanenv --no-home
+
+
 16/04/2025
 Speed test: using downsampled version in brainmask (otherwise atlasbrex is too long)
 
