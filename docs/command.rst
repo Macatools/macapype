@@ -41,8 +41,8 @@ All the data have to be in BIDS format to run properly (see `BIDS specification 
 
 In particular:
 
-* _T1w (BIDS) extension is expected for T1 weighted images (BIDS)
-* _T2w (BIDS) extension is expected for T2 weighted images (BIDS)
+* ``_T1w`` (BIDS) extension is expected for T1 weighted images (BIDS)
+* ``_T2w`` (BIDS) extension is expected for T2 weighted images (BIDS)
 
 .. image:: ./img/images/BIDS_orga.jpg
     :width: 600
@@ -58,29 +58,29 @@ Command line parameters
 mandatory parameters
 --------------------
 
-* -data : path to your data dataset (existing BIDS format directory)
+* ``-data`` : path to your data dataset (existing BIDS format directory)
 
-* -out : path to the output results (an existing path)
+* ``-out`` : path to the output results (an existing path)
 
-* -soft : can be one of these : SPM or ANTS (**NB: ** SPM requires a specific version of macapype/skullTo3d, not available by default)
+* ``-soft`` : can be one of these : SPM or ANTS (**NB: ** SPM requires a specific version of macapype/skullTo3d, not available by default)
 
     In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
 
-    * _4animal :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
+    * ``_4animal`` :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
 
-    * _quick : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
+    * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
 
     This option should be used if the coregistration to template in preparation is not performed correctly:
 
-    * _robustreg (at the end) to have a more robust registration (in two steps)
+    * ``_robustreg`` (at the end) to have a more robust registration (in two steps)
 
     Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
 
-    * _test : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
+    * ``_test`` : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
 
-    * _prep (at the end) will perform data preparation (no brain extraction and segmentation)
+    * ``_prep`` (at the end) will perform data preparation (no brain extraction and segmentation)
 
-    * _noseg (at the end) will perform data preparation and brain extraction (no segmentation)
+    * ``_noseg`` (at the end) will perform data preparation and brain extraction (no segmentation)
 
 
 ------------------------
@@ -102,7 +102,8 @@ optional parameters
 -------------------
 *(but highly recommanded)*
 
-* -dt : specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").
+* -dt : specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2")
+
 **Note** : default is T1 if the attribute is omitted
 
 * -deriv : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
@@ -128,12 +129,11 @@ More optional parameters
 **Warning: the mask should be in the same space as the data. And only works with -soft ANTS so far**
 
 Command line examples
-***********************
+*********************
 
 .. code:: bash
 
     $ python workflows/segment_pnh.py -data ~/Data_maca -out ./local_test -soft ANTS -params params.json
-
 
 .. code:: bash
 
