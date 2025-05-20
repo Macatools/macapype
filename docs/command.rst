@@ -62,19 +62,20 @@ mandatory parameters
 * ``-out`` : path to the output results (an existing path)
 * ``-soft`` : can be one of these : SPM or ANTS (**NB: ** SPM requires a specific version of macapype/skullTo3d, not available by default)
 
-   In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
+ In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
 
-   * ``_4animal`` :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
-   * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used)
-   **NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default
+ * ``_4animal`` :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
+ * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) **NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default
 
   This option should be used if the coregistration to template in preparation is not performed correctly:
+
   * ``_robustreg`` (at the end) to have a more robust registration (in two steps)
 
-    Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
-    * ``_test`` : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
-    * ``_prep`` (at the end) will perform data preparation (no brain extraction and segmentation)
-    * ``_noseg`` (at the end) will perform data preparation and brain extraction (no segmentation)
+   Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
+
+   * ``_test`` : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
+   * ``_prep`` (at the end) will perform data preparation (no brain extraction and segmentation)
+   * ``_noseg`` (at the end) will perform data preparation and brain extraction (no segmentation)
 
 --------------------
 exclusive parameters
@@ -93,7 +94,9 @@ optional parameters
 *(but highly recommanded)*
 
 * ``-dt`` : specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2")
+
 **Note** : default is T1 if the attribute is omitted
+
 * ``-deriv`` : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
 * ``-pad`` : exports most important files in native (original) space
 
@@ -110,6 +113,7 @@ More optional parameters
  * default = 4 if unspecified ; if is put to 1, then the sequential processing is used
 
 * ``-mask`` allows to specify a precomputed binary mask file (skipping brain extraction). The best usage of this option is: precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified (one file is specified at a time...).
+
 **Warning: ** the mask should be in the same space as the data. And only works with -soft ANTS so far
 
 Command line examples
