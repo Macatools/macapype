@@ -100,6 +100,44 @@
             "copy_header" : true,
             "operation" : "PadImage",
             "op2" : "70"
+        },
+
+
+        "comment": "the following nodes are mutually exclusive, and are optional",
+
+        "N4debias":
+        {
+            "comment": "PREFERED",
+            "comment": "OPTIONAL",
+            "params": "N4BiasFieldCorrection (ANTS)",
+            "comment": "same parameters for T1 and T2",
+
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
+        },
+        "comment": "OR",
+        "fast":
+        {
+            "comment": "OPTIONAL",
+            "comment": "same parameters for T1 and T2",
+            "params": "FAST (FSL) used for debias not segmentation",
+
+            "args": "-l 3"
+        },
+        "comment": "OR",
+        "itk_debias":
+        {
+            "comment": "OPTIONAL",
+            "comment": "same parameters for T1 and T2",
+            "params": "N4BiasFieldCorrectionImageFilter (SimpleITK python package) used for debias",
+            "comment": "TODO: not wrapped properly as a node",
+            "comment": "not really used so far"
         }
+
+
     }
 }

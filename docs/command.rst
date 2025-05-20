@@ -64,13 +64,24 @@ the path to your data dataset (existing BIDS format directory)
 * -out
 the path to the output results (an existing path)
 
-* -soft
-can be one of these : SPM or ANTS
-    * with _robustreg (at the end) to have a more robust registration (in two steps)
-    * with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
-    * with _prep (at the end) will perform data preparation (no brain extraction and segmentation)
-    * with _noseg (at the end) will perform data preparation and brain extraction (no segmentation)
-    * with _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1)
+* -soft  *like in macapype*
+can be one of these : SPM or ANTS (**NB** SPM requires a specific version of macapype/skullTo3d, not available by default)
+
+    In extra, all this option are available (to place after SPM or ANTS):
+
+    * _4animal will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
+
+    * _quick will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
+
+    * _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
+
+    * _robustreg (at the end) to have a more robust registration (in two steps)
+
+    * _prep (at the end) will perform data preparation (no brain extraction and segmentation)
+    * _noseg (at the end) will perform data preparation and brain extraction (no segmentation)
+    * _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1)
+
+
 
 --------------------------------------
 The following parameters are exclusive
