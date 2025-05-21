@@ -5,19 +5,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Launching a processing &#8212; Macapype 0.5.11 documentation</title>
+    <title>Launching a processing &#8212; Macapype 0.6-rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <script src="_static/documentation_options.js?v=559aaa41"></script>
+    <script src="_static/documentation_options.js?v=d23ad5ac"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Parameters" href="params.html" />
+    <link rel="next" title="Derivatives" href="derivatives.html" />
     <link rel="prev" title="Quick test" href="quick_test.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -41,7 +41,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.5.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6-rc1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -107,15 +107,21 @@
 <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#expected-input-data">Expected input data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-parameters">Command line parameters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-optional">The following parameters are optional</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">The following parameters are optional</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#command-line-examples">Command line examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mandatory-parameters">mandatory parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exclusive-parameters">exclusive parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-parameters">optional parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-optional-parameters">more optional parameters</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-examples">Command line examples</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="derivatives.html">Derivatives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html#data-preparation">Data Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html#brain-extraction">Brain extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html#brain-segmentation">Brain segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html#optional-post-brain-segmentation">Optional Post brain segmentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a><ul>
@@ -148,17 +154,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#expected-input-data">Expected input data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-parameters">Command line parameters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-optional">The following parameters are optional</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">The following parameters are optional</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#command-line-examples">Command line examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mandatory-parameters">mandatory parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exclusive-parameters">exclusive parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-parameters">optional parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-optional-parameters">more optional parameters</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-examples">Command line examples</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 </ul>
@@ -203,17 +208,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#expected-input-data">Expected input data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-parameters">Command line parameters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-following-parameters-are-optional">The following parameters are optional</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">The following parameters are optional</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#command-line-examples">Command line examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mandatory-parameters">mandatory parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exclusive-parameters">exclusive parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-parameters">optional parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-optional-parameters">more optional parameters</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-examples">Command line examples</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 </ul>
@@ -247,8 +251,8 @@
 <p>All the data have to be in BIDS format to run properly (see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/index.html">BIDS specification</a> for more details)</p>
 <p>In particular:</p>
 <ul class="simple">
-<li><p>_T1w (BIDS) extension is expected for T1 weighted images (BIDS)</p></li>
-<li><p>_T2w (BIDS) extension is expected for T2 weighted images (BIDS)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_T1w</span></code> (BIDS) extension is expected for T1 weighted images (BIDS)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_T2w</span></code> (BIDS) extension is expected for T2 weighted images (BIDS)</p></li>
 </ul>
 <a class="reference internal image-reference" href="_images/BIDS_orga.jpg"><img alt="_images/BIDS_orga.jpg" class="align-center" src="_images/BIDS_orga.jpg" style="width: 600px;" />
 </a>
@@ -256,97 +260,74 @@
 </section>
 <section id="command-line-parameters">
 <h2>Command line parameters<a class="headerlink" href="#command-line-parameters" title="Link to this heading">¶</a></h2>
-<section id="the-following-parameters-are-mandatory">
-<h3>The following parameters are mandatory<a class="headerlink" href="#the-following-parameters-are-mandatory" title="Link to this heading">¶</a></h3>
+<section id="mandatory-parameters">
+<h3>mandatory parameters<a class="headerlink" href="#mandatory-parameters" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">-data</span></code> : path to your data dataset (existing BIDS format directory)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-out</span></code> : path to the output results (an existing path)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-soft</span></code> : can be one of these : SPM or ANTS ( <strong>NB:</strong> SPM requires a specific version of macapype/skullTo3d, not available by default)</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">-soft</span></code> value, it is possible to add some key words (e.g. <code class="docutils literal notranslate"><span class="pre">-soft</span> <span class="pre">ANTS_robustreg_prep</span></code>) all these options are available (to place after SPM or ANTS, e.g) and will change the brain extraction:</p>
 <ul class="simple">
-<li><p>-data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_4animal</span></code> :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_quick</span></code> : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used)</p></li>
 </ul>
-<p>the path to your data dataset (existing BIDS format directory)</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default</p>
+<p>This option should be used if the coregistration to template in preparation is not performed correctly:</p>
 <ul class="simple">
-<li><p>-out</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_robustreg</span></code> (at the end) to have a more robust registration (in two steps)</p></li>
 </ul>
-<p>the path to the output results (an existing path)</p>
+<p>Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:</p>
 <ul class="simple">
-<li><p>-soft</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_test</span></code> : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_prep</span></code> (at the end) will perform data preparation (no brain extraction and segmentation)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_noseg</span></code> (at the end) will perform data preparation and brain extraction (no segmentation)</p></li>
 </ul>
-<dl class="simple">
-<dt>can be one of these<span class="classifier">SPM or ANTS</span></dt><dd><ul class="simple">
-<li><p>with _robustreg (at the end) to have a more robust registration (in two steps)</p></li>
-<li><p>with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)</p></li>
-<li><p>with _prep (at the end) will perform data preparation (no brain extraction and segmentation)</p></li>
-<li><p>with _noseg (at the end) will perform data preparation and brain extraction (no segmentation)</p></li>
-<li><p>with _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1)</p></li>
+</li>
 </ul>
-</dd>
-</dl>
 </section>
-<section id="the-following-parameters-are-exclusive">
-<h3>The following parameters are exclusive<a class="headerlink" href="#the-following-parameters-are-exclusive" title="Link to this heading">¶</a></h3>
+<section id="exclusive-parameters">
+<h3>exclusive parameters<a class="headerlink" href="#exclusive-parameters" title="Link to this heading">¶</a></h3>
 <p><em>(but one is mandatory)</em></p>
-<ul>
-<li><dl class="option-list">
-<dt><kbd><span class="option">-p<var>arams</var></span></kbd></dt>
-<dd><p><em>(mandatory if -species is omitted)</em></p>
-</dd>
-</dl>
-</li>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-params</span></code> : <em>(mandatory if -species is omitted)</em> a json file specifiying the global parameters of the analysis. See <a class="reference internal" href="params.html#params"><span class="std std-ref">Parameters</span></a> for more details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-species</span></code> : <em>(mandatory if -params is omitted)</em> followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}</p></li>
 </ul>
-<p>a json file specifiying the global parameters of the analysis. See <a class="reference internal" href="params.html#params"><span class="std std-ref">Parameters</span></a> for more details</p>
-<ul>
-<li><dl class="option-list">
-<dt><kbd><span class="option">-s<var>pecies</var></span></kbd></dt>
-<dd><p><em>(mandatory if -params is omitted)</em></p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
-In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w is used)</p>
+<p><strong>NB</strong> : marmoT2 can be used for segmenting from the T2w image (by default, T1w is used for marmo)</p>
+<p><strong>NB</strong> : baboon0, baboon1, baboon2 baboon3 can be used for template <a class="reference external" href="doi:10.18112/openneuro.ds005424.v1.0.0">Baba21</a>
+and matching</p>
+<p><strong>NB</strong> : some templates are available in downgraded versions: baboon1_0p6, baboon2_0p6 baboon3_0p6 and macaque_0p5 and show significant decrease in processing time with low redection in quality. However, not all combinations are available</p>
 </section>
-<section id="the-following-parameters-are-optional">
-<h3>The following parameters are optional<a class="headerlink" href="#the-following-parameters-are-optional" title="Link to this heading">¶</a></h3>
+<section id="optional-parameters">
+<h3>optional parameters<a class="headerlink" href="#optional-parameters" title="Link to this heading">¶</a></h3>
 <p><em>(but highly recommanded)</em></p>
 <ul class="simple">
-<li><p>dt</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-dt</span></code> : specifies the datatype available to perform brain segmentation (can be “T1”, or “T1 T2”)</p></li>
 </ul>
-<p>specifies the datatype available to perform brain segmentation (can be “T1”, or “T1 T2”).
-<strong>Note</strong> : default is T1 if the attribute is omitted</p>
-<ul>
-<li><dl class="option-list">
-<dt><kbd><span class="option">-d<var>eriv</var></span></kbd></dt>
-<dd><p>creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion</p>
-</dd>
-</dl>
-</li>
-<li><dl class="option-list">
-<dt><kbd><span class="option">-p<var>ad</var></span></kbd></dt>
-<dd><p>exports (in derivatives) important files in native (original) space</p>
-</dd>
-</dl>
-</li>
+<p><strong>Note</strong> : default is T1 if the attribute is omitted</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-deriv</span></code> : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion. See <a class="reference internal" href="derivatives.html#derivatives"><span class="std std-ref">Derivatives</span></a> for a descrition of the outputs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-pad</span></code> : exports most important files in native (original) space</p></li>
 </ul>
 </section>
-<section id="id1">
-<h3>The following parameters are optional<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<section id="more-optional-parameters">
+<h3>more optional parameters<a class="headerlink" href="#more-optional-parameters" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>-indiv or -indiv_params : a json file overwriting the default parameters (both macapype default and parameters specified in -params json file) for specific subjects/sessions. See <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a> for more details</p></li>
-<li><p>-sub (-subjects), -ses (-sessions), -acq (-acquisions), -rec (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator. <strong>Note</strong> if not specified, the full BIDS dataset will be processed</p></li>
-<li><p>-mask allows to specify a precomputed binary mask file (skipping brain extraction). The best usage of this option is: precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified (one file is specified at a time…).</p></li>
-</ul>
-<p><strong>Warning: the mask should be in the same space as the data. And only works with -soft ANTS so far</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>-nprocs<span class="classifier">an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype</span></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">-indiv</span></code> or <code class="docutils literal notranslate"><span class="pre">-indiv_params</span></code> : a json file overwriting the default parameters (both macapype default and parameters specified in -params json file) for specific subjects/sessions. See <a class="reference internal" href="indiv_params.html#indiv-params"><span class="std std-ref">Individual Parameters</span></a> for more details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-sub</span></code> (-subjects), <code class="docutils literal notranslate"><span class="pre">-ses</span></code> (-sessions), <code class="docutils literal notranslate"><span class="pre">-acq</span></code> (-acquisions), <code class="docutils literal notranslate"><span class="pre">-rec</span></code> (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator. <strong>Note</strong> if not specified, the full BIDS dataset will be processed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-nprocs</span></code> : an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype</p>
+<ul>
 <li><p>typically equals to the number of subjects*session (i.e. iterables).</p></li>
 <li><p>can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)</p></li>
-<li><p>default = 4 if unspecified ; if is put to 0, then the sequential processing is used (equivalent to -soft with _seq, see before)</p></li>
+<li><p>default = 4 if unspecified ; if is put to 1, then the sequential processing is used</p></li>
 </ul>
-</dd>
-</dl>
 </li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-mask</span></code> allows to specify a precomputed binary mask file (skipping brain extraction). The best usage of this option is: precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified (one file is specified at a time…).</p></li>
 </ul>
+<p><strong>Warning:</strong> the mask should be in the same space as the data. And only works with -soft ANTS so far</p>
+</section>
+</section>
 <section id="command-line-examples">
-<h4>Command line examples<a class="headerlink" href="#command-line-examples" title="Link to this heading">¶</a></h4>
+<h2>Command line examples<a class="headerlink" href="#command-line-examples" title="Link to this heading">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>workflows/segment_pnh.py<span class="w"> </span>-data<span class="w"> </span>~/Data_maca<span class="w"> </span>-out<span class="w"> </span>./local_test<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-params<span class="w"> </span>params.json
 </pre></div>
 </div>
@@ -356,8 +337,6 @@ In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>workflows/segment_pnh.py<span class="w"> </span>-data<span class="w"> </span>~/Data_maca<span class="w"> </span>-out<span class="w"> </span>./local_test<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-params<span class="w"> </span>params.json<span class="w"> </span>-sub<span class="w"> </span>Apache<span class="w"> </span>Baron<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-rec<span class="w"> </span>mean<span class="w"> </span>-deriv<span class="w"> </span>-pad
 </pre></div>
 </div>
-</section>
-</section>
 </section>
 </section>
 
@@ -373,7 +352,7 @@ In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-05-20.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-05-21.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
