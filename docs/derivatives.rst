@@ -20,17 +20,19 @@ Data Preparation
 Native
 ------
 
-Original files (possibly after reorientation and avereging):
 
-sub-Stevie_ses-01_space-native_T1w.nii.gz
-sub-Stevie_ses-01_space-native_T2w.nii.gz
+Original files (possibly after reorientation and avereging):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*sub-Stevie_ses-01_space-native_T1w.nii.gz*
+*sub-Stevie_ses-01_space-native_T2w.nii.gz*
 
 If -pad is defined in command line (See `Commands <commands>`):
 
-sub-Stevie_ses-01_space-native_desc-denoised_T1w.nii.gz
-sub-Stevie_ses-01_space-native_desc-denoised_T2w.nii.gz
-sub-Stevie_ses-01_space-native_desc-debiased_T1w.nii.gz
-sub-Stevie_ses-01_space-native_desc-debiased_T2w.nii.gz
+*sub-Stevie_ses-01_space-native_desc-denoised_T1w.nii.gz*
+*sub-Stevie_ses-01_space-native_desc-denoised_T2w.nii.gz*
+*sub-Stevie_ses-01_space-native_desc-debiased_T1w.nii.gz*
+*sub-Stevie_ses-01_space-native_desc-debiased_T2w.nii.gz*
 
 **NB:** Both denoise and debias are optional
 
