@@ -21,15 +21,12 @@ All files are by default in stereo space; if option ``-pad`` is provided to the 
 Data Preparation
 ****************
 
-Native
-------
-
-
 Original files (possibly after reorientation and avereging):
 
 *sub-Stevie_ses-01_space-native_T1w.nii.gz*
 
 *sub-Stevie_ses-01_space-native_T2w.nii.gz*
+
 
 If -pad is defined in command line (See `Commands <commands>`):
 
@@ -43,14 +40,13 @@ If -pad is defined in command line (See `Commands <commands>`):
 
 **NB:** Both denoise and debias are optional
 
-Stereo
-------
 
-Original files in template space:
+Original files in stereo space:
 
 *sub-Stevie_ses-01_space-stereo_T1w.nii.gz*
 
 *sub-Stevie_ses-01_space-stereo_T2w.nii.gz*
+
 
 After some preprocessing :
 
@@ -64,14 +60,13 @@ After some preprocessing :
 
 **NB:** Both denoise and debias are optional
 
-Transformations
----------------
+
+Transformations:
 
 *sub-Stevie_ses-01_space-native_target-stereo_affine.txt*
 
 *sub-Stevie_ses-01_space-stereo_target-native_affine.txt*
 
-****************
 Brain extraction
 ****************
 
@@ -81,7 +76,6 @@ Brain mask:
 
 *sub-Stevie_ses-01_space-native_desc-brain_mask.nii.gz*
 
-******************
 Brain segmentation
 ******************
 
@@ -94,6 +88,7 @@ Brainmasked files after T1*T2 Bias correction:
 *sub-Stevie_ses-01_space-native_desc-debiased_desc-brain_T2w.nii.gz*
 
 *sub-Stevie_ses-01_space-native_desc-debiased_desc-brain_T1w.nii.gz*
+
 
 Segmentated files as probability tisses:
 
@@ -109,13 +104,13 @@ Segmentated files as probability tisses:
 
 *sub-Stevie_ses-01_space-native_label-CSF_probseg.nii.gz*
 
+
 Segmentated files as indexed tisses:
 
 *sub-Stevie_ses-01_space-stereo_desc-brain_dseg.nii.gz*
 
 *sub-Stevie_ses-01_space-native_desc-brain_dseg.nii.gz*
 
-********************************
 Optional Post brain segmentation
 ********************************
 
@@ -124,6 +119,7 @@ Segmented files in mrtrix format:
 *sub-Stevie_ses-01_space-stereo_desc-5tt_dseg.nii.gz*
 
 *sub-Stevie_ses-01_space-native_desc-5tt_dseg.nii.gz*
+
 
 White matter + Gray matter binary mask and corresponding mesh:
 
