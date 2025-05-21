@@ -7,57 +7,103 @@
 Introduction
 ************
 
+Depending on the options provided by command line and params.json, different files will ouput
+
+Derivatives will be output if option ``-deriv`` is provided to the command line (See `Commands <commands>`):
+
+All files are by default in stereo space; if option ``-pad`` is provided to the command line (See `Commands <commands>`), files in native  will also be output.
+
 ****************
 Data Preparation
 ****************
 
-Docker allows to provide all necessary softwares in extra to macapype packages. The Docker image we provide include ANTS 2.3.1, FSL 5.0.10 and AFNI (latest version). See at the bottom of this page for docker with SPM Stand-alone.
+Native
+------
 
-**Note 1** :the image is quite big (~5GB) so requires some space on your "/" partition.
+Original files (possibly after reorientation and avereging):
 
-Dockerfile
------------
+sub-Stevie_ses-01_space-native_T1w.nii.gz
+sub-Stevie_ses-01_space-native_T2w.nii.gz
 
-Downloading Dockerfile and building an image:
+If -pad is defined in command line (See `Commands <commands>`):
 
-.. code:: bash
+sub-Stevie_ses-01_space-native_desc-denoised_T1w.nii.gz
+sub-Stevie_ses-01_space-native_desc-denoised_T2w.nii.gz
+sub-Stevie_ses-01_space-native_desc-debiased_T1w.nii.gz
+sub-Stevie_ses-01_space-native_desc-debiased_T2w.nii.gz
 
-    # Downloading Dockerfile
-    $ wget https://github.com/Macatools/macapype/blob/master/Dockerfile
+**NB:** Both denoise and debias are optional
 
-    # Building your image from the Dockerfile
-    $ docker build -t macapype_docker .
+Stereo
+------
 
-Docker image
-------------
+Original files in template space:
 
-A docker image can also be downloaded directly from `DockerHub repo <https://hub.docker.com/r/macatools/macapype>`_ :
+sub-Stevie_ses-01_space-stereo_T1w.nii.gz
+sub-Stevie_ses-01_space-stereo_T2w.nii.gz
 
-.. code:: bash
+After some preprocessing :
 
-    $ docker pull macatools/macapype:latest
+sub-Stevie_ses-01_space-stereo_desc-denoised_T1w.nii.gz
+sub-Stevie_ses-01_space-stereo_desc-denoised_T2w.nii.gz
+sub-Stevie_ses-01_space-stereo_desc-debiased_T1w.nii.gz
+sub-Stevie_ses-01_space-stereo_desc-debiased_T2w.nii.gz
 
-Starting from the release v0.2.1 on github, the docker images are tagged accordingly on Dockerhub:
+**NB:** Both denoise and debias are optional
 
-.. code:: bash
+Transformations
+---------------
 
-    $ docker pull macatools/macapype:version-0.2.1
+sub-Stevie_ses-01_space-native_target-stereo_affine.txt
+sub-Stevie_ses-01_space-stereo_target-native_affine.txt
+
+****************
+Brain extraction
+****************
+
+Brain mask:
+
+sub-Stevie_ses-01_space-stereo_desc-brain_mask.nii.gz
+sub-Stevie_ses-01_space-native_desc-brain_mask.nii.gz
 
 
-See :ref:`Quick test <quick_test>` for testing if your docker installation works properly on test datasets.
+******************
+Brain segmentation
+******************
 
-Note on Singularity
--------------------
+Brainmasked files after T1*T2 Bias correction:
 
-It is possible (and recommanded) to use singularity version of container on shared computers/clusters. macapype docker version has been tested and is compatible with versions of singularity higher than 0.3 ("sif" version)
+sub-Stevie_ses-01_space-stereo_desc-debiased_desc-brain_T1w.nii.gz
+sub-Stevie_ses-01_space-stereo_desc-debiased_desc-brain_T2w.nii.gz
 
-Here is an example of a command line to install and convert the docker image to singularity image :
+sub-Stevie_ses-01_space-native_desc-debiased_desc-brain_T2w.nii.gz
+sub-Stevie_ses-01_space-native_desc-debiased_desc-brain_T1w.nii.gz
 
-.. code:: bash
+Segmentated files as probability tisses:
 
-    $ export SINGULARITY_TMPDIR=/tmp/; export SINGULARITY_CACHEDIR=/tmp/; sudo -E /path/to/bin/singularity build /path/to/containers/macapype_v0.4.2.sif docker://macatools/macapype:v0.4.2
+sub-Stevie_ses-01_space-stereo_label-WM_probseg.nii.gz
+sub-Stevie_ses-01_space-stereo_label-GM_probseg.nii.gz
+sub-Stevie_ses-01_space-stereo_label-CSF_probseg.nii.gz
 
-It *seems* the sudo priviliges are required to install and build images, so in case you have trouble, ask the admin of your cluster to perform this operation
+sub-Stevie_ses-01_space-native_label-WM_probseg.nii.gz
+sub-Stevie_ses-01_space-native_label-GM_probseg.nii.gz
+sub-Stevie_ses-01_space-native_label-CSF_probseg.nii.gz
 
-See :ref:`Quick test <quick_test>` for testing if your singularity installation works properly on test datasets.
+Segmentated files as indexed tisses:
+
+sub-Stevie_ses-01_space-stereo_desc-brain_dseg.nii.gz
+sub-Stevie_ses-01_space-native_desc-brain_dseg.nii.gz
+
+Segmented files in mrtrix format:
+
+sub-Stevie_ses-01_space-stereo_desc-5tt_dseg.nii.gz
+sub-Stevie_ses-01_space-native_desc-5tt_dseg.nii.gz
+
+
+White matter + Gray matter binary mask and corresponding mesh:
+
+sub-Stevie_ses-01_space-stereo_desc-wmgm_mask.nii.gz
+sub-Stevie_ses-01_space-native_desc-wmgm_mask.nii.gz
+
+sub-Stevie_ses-01_desc-wmgm_mask.stl
 

@@ -103,16 +103,16 @@ optional parameters
 * ``-pad`` : exports most important files in native (original) space
 
 ------------------------
-More optional parameters
+more optional parameters
 ------------------------
 
 * ``-indiv`` or ``-indiv_params`` : a json file overwriting the default parameters (both macapype default and parameters specified in -params json file) for specific subjects/sessions. See :ref:`Individual Parameters <indiv_params>` for more details
 * ``-sub`` (-subjects), ``-ses`` (-sessions), ``-acq`` (-acquisions), ``-rec`` (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator. **Note** if not specified, the full BIDS dataset will be processed
 * ``-nprocs`` : an integer, to specifiy the number of processes that should be allocated by the parralel engine of macapype
 
- * typically equals to the number of subjects*session (i.e. iterables).
- * can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)
- * default = 4 if unspecified ; if is put to 1, then the sequential processing is used
+  * typically equals to the number of subjects*session (i.e. iterables).
+  * can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)
+  * default = 4 if unspecified ; if is put to 1, then the sequential processing is used
 
 * ``-mask`` allows to specify a precomputed binary mask file (skipping brain extraction). The best usage of this option is: precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified (one file is specified at a time...).
 
