@@ -27,8 +27,9 @@ Original files (possibly after reorientation and avereging):
 
 *sub-Stevie_ses-01_space-native_T2w.nii.gz*
 
-
 |
+|
+
 If -pad is defined in command line (See `Commands <commands>`):
 
 *sub-Stevie_ses-01_space-native_desc-denoised_T1w.nii.gz*
@@ -41,14 +42,13 @@ If -pad is defined in command line (See `Commands <commands>`):
 
 **NB:** Both denoise and debias are optional
 
-
 |
+
 Original files in stereo space:
 
 *sub-Stevie_ses-01_space-stereo_T1w.nii.gz*
 
 *sub-Stevie_ses-01_space-stereo_T2w.nii.gz*
-
 
 |
 After some preprocessing :
@@ -62,8 +62,6 @@ After some preprocessing :
 *sub-Stevie_ses-01_space-stereo_desc-debiased_T2w.nii.gz*
 
 **NB:** Both denoise and debias are optional
-
-
 |
 Transformations:
 
