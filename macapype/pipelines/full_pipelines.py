@@ -948,7 +948,8 @@ def create_full_ants_subpipes(
                     'stereo_masked_debiased_T1',
                     'stereo_masked_debiased_T2',
 
-                    'native_brain_mask', "native_masked_debiased_T1",
+                    'native_brain_mask',
+                    "native_masked_debiased_T1",
                     "native_masked_debiased_T2",
 
                     'stereo_segmented_brain_mask',

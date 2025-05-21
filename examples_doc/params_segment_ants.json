@@ -1,56 +1,4 @@
 {
-    "comment": "the following nodes are mutually exclusive, and are optional",
-    "correct_bias_pipe":
-    {
-        "comment": "is problematic if hypointensities (zeros) in T2w images outside of the brain, as as division by 0 will be performed",
-        "comment": "N4debias or fast are preferred",
-
-        "smooth":
-        {
-
-            "comment": "mandatory if correct_bias_pipe is defined",
-            "params": "MathsCommand (FSL)",
-
-            "args": "-bin -s 2"
-        },
-        "norm_smooth":
-        {
-            "comment": "mandatory if correct_bias_pipe is defined",
-            "params": "MultiImageMaths (FSL)",
-
-            "op_string": "-s 2 -div %s"
-        },
-        "smooth_bias":
-        {
-            "comment": "mandatory if correct_bias_pipe is defined",
-            "params": "Smooth (FSL)",
-
-            "sigma": 2
-        }
-    },
-    "comment": "OR",
-    "N4debias":
-    {
-        "comment": "PREFERED",
-        "comment": "OPTIONAL",
-        "params": "N4BiasFieldCorrection (ANTS)",
-        "comment": "same parameters for T1 and T2",
-
-        "dimension": 3,
-        "bspline_fitting_distance": 200,
-        "n_iterations": [50, 50, 40, 30],
-        "convergence_threshold": 0.00000001,
-        "shrink_factor": 2,
-        "args": "-r 0 --verbose 1"
-    },
-    "comment": "OR",
-    "fast":
-    {
-        "comment": "OPTIONAL",
-        "comment": "same parameters for T1 and T2",
-        "params": "FAST (FSL) used for debias not segmentation",
-    },
-
     "comment": "MANDATORY if mask is not provided as input of command line",
     "extract_pipe":
     {
@@ -67,9 +15,10 @@
             "params": "Smooth (FSL)",
         },
 
+        "comment": "the following nodes are mutually exclusive, but are mandatory if extract_pipe is defined (ie mask not provided)",
         "atlas_brex":
         {
-            "comment": "mandatory if extract_pipe is defined",
+            "comment": "DEFAULT if extract_pipe is defined",
             "params": "AtlasBREX (local wrap in macapype of Johannes Lohmeier tool)",
 
             "f": 0.7,
@@ -78,6 +27,25 @@
             "wrp": "10,10,10",
             "dil": 1,
             "nrm": 1
+        },
+        "comment": "OR",
+        "hd-bet":
+        {
+            "comment": "OPTIONAL",
+            "comment": "corresponds to _quick option in -soft",
+            "comment": "WARNING: requires the hd-bet package to be installed, or container with -spm-hdbet or -full options",
+            "params": "hd-bet (HD-BET python package Deep Learning) used for debias not segmentation",
+        },
+        "comment": "OR",
+        "bet4animal":
+        {
+            "comment": "OPTIONAL",
+            "comment": "corresponds to _4animal option in -soft",
+            "params": "bet4animal (FSL > 6.0.6)",
+
+            "f": 0.65,
+            "label": 2,
+            "robust": true
         }
     },
 
