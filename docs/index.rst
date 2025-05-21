@@ -50,6 +50,7 @@ Table of contents
     docker_install
     quick_test
     command
+    derivatives
     params
     indiv_params
 
