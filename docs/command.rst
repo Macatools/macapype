@@ -60,11 +60,13 @@ mandatory parameters
 
 * ``-data`` : path to your data dataset (existing BIDS format directory)
 * ``-out`` : path to the output results (an existing path)
-* ``-soft`` : can be one of these : SPM or ANTS (**NB: ** SPM requires a specific version of macapype/skullTo3d, not available by default)
+* ``-soft`` : can be one of these : SPM or ANTS ( **NB:** SPM requires a specific version of macapype/skullTo3d, not available by default)
 
-  In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
+  For ``-soft`` value, it is possible to add some key words (e.g. ``-soft ANTS_robustreg_prep``) all these options are available (to place after SPM or ANTS, e.g) and will change the brain extraction:
+
   * ``_4animal`` :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
-  * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) **NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default
+  * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used)
+  **NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default
 
   This option should be used if the coregistration to template in preparation is not performed correctly:
 
@@ -96,7 +98,8 @@ optional parameters
 
 **Note** : default is T1 if the attribute is omitted
 
-* ``-deriv`` : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
+* ``-deriv`` : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion. See :ref:`Derivatives <derivatives>` for a descrition of the outputs
+
 * ``-pad`` : exports most important files in native (original) space
 
 ------------------------
