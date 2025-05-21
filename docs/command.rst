@@ -85,8 +85,10 @@ exclusive parameters
 
 * ``-params`` : *(mandatory if -species is omitted)* a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 * ``-species`` : *(mandatory if -params is omitted)* followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp} In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w is used)
+
 **Note** : baboon0, baboon1, baboon2 baboon3 can be used for template `Baba21 <doi:10.18112/openneuro.ds005424.v1.0.0>`_
 and matching
+
 **Note2** : some templates are available in downgraded versions: baboon1_0p6, baboon2_0p6 baboon3_0p6 and macaque_0p5 and show significant decrease in processing time with low redection in quality. However, not all combinations are available
 
 -------------------
@@ -116,7 +118,7 @@ more optional parameters
 
 * ``-mask`` allows to specify a precomputed binary mask file (skipping brain extraction). The best usage of this option is: precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified (one file is specified at a time...).
 
-**Warning: ** the mask should be in the same space as the data. And only works with -soft ANTS so far
+**Warning:** the mask should be in the same space as the data. And only works with -soft ANTS so far
 
 Command line examples
 *********************
