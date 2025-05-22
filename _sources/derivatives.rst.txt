@@ -13,10 +13,12 @@ Depending on the options provided by command line and params.json, different fil
 
 Derivatives will be output if option ``-deriv`` is provided to the command line (See `Commands <commands>`):
 
-All files are by default in stereo space; if option ``-pad`` is provided to the command line (See `Commands <commands>`), files in native  will also be output.
+All files are by default in stereo space; if option ``-padback`` is provided to the command line (See `Commands <commands>`), files in native  will also be output.
 
 Data Preparation
 ****************
+
+|
 
 Original files (possibly after reorientation and avereging):
 
@@ -26,7 +28,7 @@ Original files (possibly after reorientation and avereging):
 
 |
 
-If -pad is defined in command line (See `Commands <commands>`):
+If ``-padback`` is defined in command line (See `Commands <commands>`):
 
 *sub-Stevie_ses-01_space-native_desc-denoised_T1w.nii.gz*
 
@@ -68,8 +70,12 @@ Transformations:
 
 *sub-Stevie_ses-01_space-stereo_target-native_affine.txt*
 
+|
+
 Brain extraction
 ****************
+
+|
 
 Brain mask:
 
@@ -77,8 +83,12 @@ Brain mask:
 
 *sub-Stevie_ses-01_space-native_desc-brain_mask.nii.gz*
 
+|
+
 Brain segmentation
 ******************
+
+|
 
 Brainmasked files after T1*T2 Bias correction:
 
@@ -114,8 +124,12 @@ Segmentated files as indexed tisses:
 
 *sub-Stevie_ses-01_space-native_desc-brain_dseg.nii.gz*
 
+|
+
 Optional Post brain segmentation
 ********************************
+
+|
 
 Segmented files in mrtrix format:
 

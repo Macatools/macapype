@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Derivatives &#8212; Macapype 0.6-rc1 documentation</title>
+    <title>Derivatives &#8212; Macapype 0.6-rc3 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <script src="_static/documentation_options.js?v=d23ad5ac"></script>
+    <script src="_static/documentation_options.js?v=41badbdf"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -41,7 +41,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6-rc1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6-rc3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -222,17 +222,20 @@
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>Depending on the options provided by command line and params.json, different files will ouput</p>
 <p>Derivatives will be output if option <code class="docutils literal notranslate"><span class="pre">-deriv</span></code> is provided to the command line (See <cite>Commands &lt;commands&gt;</cite>):</p>
-<p>All files are by default in stereo space; if option <code class="docutils literal notranslate"><span class="pre">-pad</span></code> is provided to the command line (See <cite>Commands &lt;commands&gt;</cite>), files in native  will also be output.</p>
+<p>All files are by default in stereo space; if option <code class="docutils literal notranslate"><span class="pre">-padback</span></code> is provided to the command line (See <cite>Commands &lt;commands&gt;</cite>), files in native  will also be output.</p>
 </section>
 <section id="data-preparation">
 <h2>Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>Original files (possibly after reorientation and avereging):</p>
 <p><em>sub-Stevie_ses-01_space-native_T1w.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-native_T2w.nii.gz</em></p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>If -pad is defined in command line (See <cite>Commands &lt;commands&gt;</cite>):</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">-padback</span></code> is defined in command line (See <cite>Commands &lt;commands&gt;</cite>):</p>
 <p><em>sub-Stevie_ses-01_space-native_desc-denoised_T1w.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-native_desc-denoised_T2w.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-native_desc-debiased_T1w.nii.gz</em></p>
@@ -259,15 +262,27 @@
 <p>Transformations:</p>
 <p><em>sub-Stevie_ses-01_space-native_target-stereo_affine.txt</em></p>
 <p><em>sub-Stevie_ses-01_space-stereo_target-native_affine.txt</em></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 </section>
 <section id="brain-extraction">
 <h2>Brain extraction<a class="headerlink" href="#brain-extraction" title="Link to this heading">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>Brain mask:</p>
 <p><em>sub-Stevie_ses-01_space-stereo_desc-brain_mask.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-native_desc-brain_mask.nii.gz</em></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 </section>
 <section id="brain-segmentation">
 <h2>Brain segmentation<a class="headerlink" href="#brain-segmentation" title="Link to this heading">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>Brainmasked files after T1*T2 Bias correction:</p>
 <p><em>sub-Stevie_ses-01_space-stereo_desc-debiased_desc-brain_T1w.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-stereo_desc-debiased_desc-brain_T2w.nii.gz</em></p>
@@ -289,9 +304,15 @@
 <p>Segmentated files as indexed tisses:</p>
 <p><em>sub-Stevie_ses-01_space-stereo_desc-brain_dseg.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-native_desc-brain_dseg.nii.gz</em></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 </section>
 <section id="optional-post-brain-segmentation">
 <h2>Optional Post brain segmentation<a class="headerlink" href="#optional-post-brain-segmentation" title="Link to this heading">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>Segmented files in mrtrix format:</p>
 <p><em>sub-Stevie_ses-01_space-stereo_desc-5tt_dseg.nii.gz</em></p>
 <p><em>sub-Stevie_ses-01_space-native_desc-5tt_dseg.nii.gz</em></p>
@@ -317,7 +338,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-05-21.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-05-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
