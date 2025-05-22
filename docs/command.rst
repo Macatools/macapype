@@ -31,7 +31,7 @@ For container (docker and singularity), here are some examples - add your proper
 
 .. code:: bash
 
-    $ singularity run -v binding_to_host:binding_guest /path/to/containers/macapype_v0.0.4.1.sif segment_pnh
+    $ singularity run -v binding_to_host:binding_guest /path/to/containers/macapype_v0.6.sif segment_pnh
 
 Expected input data
 *******************

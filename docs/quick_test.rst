@@ -25,13 +25,13 @@ Testing from Singularity image
 
 .. code:: bash
 
-    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg_test -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg_test -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
 
-    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg_prep -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg_prep -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
 
-    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg_noseg -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg_noseg -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
 
-    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
+    $ singularity run -B /path/to/data:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
 
 
 The 4 commands earlier corresponds to brain segmentation performed on an example of marmoset (Tresor) . The 4 steps corresponds to incremental processings, and can performed in the given order. It is possible to test directly the last command (with *-soft ANTS*), but the caching system of nipype should work and the previous steps will not be performed again.
@@ -64,11 +64,11 @@ The 4 commands earlier corresponds to brain segmentation performed on an example
 Testing from docker image
 ------------------------
 
-For testing the docker installation, the beginning of the commands should be replaced by docker run -v /path/to/data:/data macatools/macapype:v0.3.1, e.g.
+For testing the docker installation, the beginning of the commands should be replaced by docker run -v /path/to/data:/data macatools/macapype:v0.6, e.g.
 
 .. code:: bash
 
-    $ docker run -v /path/to/data:/data macatools/macapype:v0.5 segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
+    $ docker run -v /path/to/data:/data macatools/macapype:v0.6 segment_pnh -data /data/macapype_CI_v2.1/cerimed_marmo -out /data/macapype_CI_v2.1/cerimed_marmo/results -soft ANTS_robustreg -species marmo -sub Tresor -ses 01 -deriv -padback -dt T1 T2
 
 
 Testing from python package install
@@ -100,22 +100,22 @@ Baboon
 
 .. code:: bash
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_adult -soft ANTS -species baboon -sub Prune -ses 3 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_adult -soft ANTS -species baboon -sub Prune -ses 3 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon3 -sub Prune -ses 3 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon3 -sub Prune -ses 3 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon2 -sub Prune -ses 2 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon2 -sub Prune -ses 2 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon1 -sub Prune -ses 1 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon1 -sub Prune -ses 1 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon0 -sub Prune -ses 0 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data /data/macapype_CI_v2.1/cerimed_baboon -out /data/macapype_CI_v2.1/cerimed_baboon/results_all_ages -soft ANTS -species baboon0 -sub Prune -ses 0 -deriv -padback -dt T1 T2  -indiv /data/cerimed_baboon/indiv_params_segment_baboon.json
 
 Macaque
 *******
 
 .. code:: bash
 
-    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_pnh -data segment_pnh -data /data/macapype_CI_v2.1/cerimed_macaque -out /data/macapype_CI_v2.1/cerimed_macaque/results -soft ANTS_robustreg -sub Stevie -ses 01 -deriv -padback -dt T1 T2 -species macaque
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.6.sif segment_pnh -data segment_pnh -data /data/macapype_CI_v2.1/cerimed_macaque -out /data/macapype_CI_v2.1/cerimed_macaque/results -soft ANTS_robustreg -sub Stevie -ses 01 -deriv -padback -dt T1 T2 -species macaque
 
 Testing different pipelines and options
 #######################################
