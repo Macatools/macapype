@@ -42,7 +42,7 @@ RUN python -m pip install xvfbwrapper \
 
 RUN python -m pip install graphviz \
     pybids \
-    nipype \
+    nipype==1.9.2\
     nilearn \
     scikit-image \
     brain-slam

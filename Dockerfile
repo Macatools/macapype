@@ -42,12 +42,14 @@ RUN python -m pip install xvfbwrapper \
 
 RUN python -m pip install graphviz \
     pybids \
-    nipype==1.9.2 \
+    nipype==1.8.6 \
     nilearn \
     scikit-image \
     brain-slam
 
 RUN python -m pip install SimpleITK
+
+ENV OPENBLAS_NUM_THREADS=1
 
 ############################################# install macapype
 
