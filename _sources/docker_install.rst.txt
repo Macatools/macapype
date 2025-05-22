@@ -36,7 +36,7 @@ Starting from the release v0.2.1 on github, the docker images are tagged accordi
 
 .. code:: bash
 
-    $ docker pull macatools/macapype:version-0.2.1
+    $ docker pull macatools/macapype:v0.6
 
 
 See :ref:`Quick test <quick_test>` for testing if your docker installation works properly on test datasets.
@@ -50,7 +50,7 @@ Here is an example of a command line to install and convert the docker image to 
 
 .. code:: bash
 
-    $ export SINGULARITY_TMPDIR=/tmp/; export SINGULARITY_CACHEDIR=/tmp/; sudo -E /path/to/bin/singularity build /path/to/containers/macapype_v0.4.2.sif docker://macatools/macapype:v0.4.2
+    $ export SINGULARITY_TMPDIR=/tmp/; export SINGULARITY_CACHEDIR=/tmp/; sudo -E /path/to/bin/singularity build /path/to/containers/macapype_v0.6.sif docker://macatools/macapype:v0.6
 
 It *seems* the sudo priviliges are required to install and build images, so in case you have trouble, ask the admin of your cluster to perform this operation
 
