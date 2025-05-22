@@ -624,7 +624,7 @@ def main():
                         help="output derivatives in BIDS orig directory",
                         required=False)
 
-    parser.add_argument("-pad", dest="pad", action='store_true',
+    parser.add_argument("-pad", "-padback", dest="pad", action='store_true',
                         help="padding mask and seg_mask",
                         required=False)
 
