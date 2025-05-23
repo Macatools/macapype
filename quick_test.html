@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Quick test &#8212; Macapype 0.6-rc5 documentation</title>
+    <title>Quick test &#8212; Macapype 0.6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <script src="_static/documentation_options.js?v=2e4bcf0b"></script>
+    <script src="_static/documentation_options.js?v=ec806d2c"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -41,7 +41,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Macapype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6-rc5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -309,10 +309,14 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
 </section>
 <section id="testing-the-macaque-and-baboon-datasets">
 <h2>Testing the macaque and baboon datasets<a class="headerlink" href="#testing-the-macaque-and-baboon-datasets" title="Link to this heading">¶</a></h2>
-<p>Two other dataset, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.</p>
+<p>Two other datasets, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.</p>
+<p>baboon is for adult template</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon/results_adult<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon<span class="w"> </span>-sub<span class="w"> </span>Prune<span class="w"> </span>-ses<span class="w"> </span><span class="m">3</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w">  </span>-indiv<span class="w"> </span>/data/cerimed_baboon/indiv_params_segment_baboon.json
-
-$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon/results_all_ages<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon3<span class="w"> </span>-sub<span class="w"> </span>Prune<span class="w"> </span>-ses<span class="w"> </span><span class="m">3</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w">  </span>-indiv<span class="w"> </span>/data/cerimed_baboon/indiv_params_segment_baboon.json
+</pre></div>
+</div>
+<p>baboon0, baboon1, baboon2 baboon3 can be used for template <a class="reference external" href="doi:10.18112/openneuro.ds005424.v1.0.0">Baba21</a>
+and matching ages</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon/results_all_ages<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon3<span class="w"> </span>-sub<span class="w"> </span>Prune<span class="w"> </span>-ses<span class="w"> </span><span class="m">3</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w">  </span>-indiv<span class="w"> </span>/data/cerimed_baboon/indiv_params_segment_baboon.json
 
 $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon/results_all_ages<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon2<span class="w"> </span>-sub<span class="w"> </span>Prune<span class="w"> </span>-ses<span class="w"> </span><span class="m">2</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w">  </span>-indiv<span class="w"> </span>/data/cerimed_baboon/indiv_params_segment_baboon.json
 
@@ -327,9 +331,21 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
 </section>
 <section id="testing-different-pipelines-and-options">
 <h2>Testing different pipelines and options<a class="headerlink" href="#testing-different-pipelines-and-options" title="Link to this heading">¶</a></h2>
-<blockquote>
-<div><p>It is possible to run the pipeline with only T1w available with <em>-dt T1</em> (instead of <em>-dt T1 T2</em> previously). Please see <a class="reference external" href="command">Commands</a> for further information on the parameters available for command line</p>
-</div></blockquote>
+<p>Some options can be added to <code class="docutils literal notranslate"><span class="pre">-soft</span></code> and/or <code class="docutils literal notranslate"><span class="pre">-species</span></code> for faster and less precise computations, like <code class="docutils literal notranslate"><span class="pre">-soft</span> <span class="pre">ANTS_4animal</span></code> for a faster version of brain extraction using FSL bet4animal, or <code class="docutils literal notranslate"><span class="pre">-species</span> <span class="pre">macaque_0p5</span></code> to use donwsampled version of the template, or a combination of both options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque/results_0p5<span class="w"> </span>-soft<span class="w"> </span>ANTS_robustreg<span class="w"> </span>-sub<span class="w"> </span>Stevie<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w"> </span>-species<span class="w"> </span>macaque_0p5
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_4animal_robustreg<span class="w"> </span>-sub<span class="w"> </span>Stevie<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w"> </span>-species<span class="w"> </span>macaque
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque/results_0p5<span class="w"> </span>-soft<span class="w"> </span>ANTS_4animal_robustreg<span class="w"> </span>-sub<span class="w"> </span>Stevie<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w"> </span>-species<span class="w"> </span>macaque_0p5
+</pre></div>
+</div>
+<p>It is also possible to run the pipeline with only T1w available with <em>-dt T1</em> (instead of <em>-dt T1 T2</em> previously).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_macaque/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_robustreg<span class="w"> </span>-sub<span class="w"> </span>Stevie<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>-species<span class="w"> </span>macaque
+</pre></div>
+</div>
+<p>Please see <a class="reference external" href="command">Commands</a> for further information on the parameters available for command line</p>
 </section>
 </section>
 
@@ -345,7 +361,7 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
       
     </p>
     <p>
-        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-05-22.<br/>
+        &copy; Copyright 2025, Macapype Developers (macatools). Last updated on 2025-05-23.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
