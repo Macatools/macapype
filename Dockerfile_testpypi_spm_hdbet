@@ -51,7 +51,7 @@ RUN python -m pip install SimpleITK
 
 RUN python -m pip install HD-BET
 
-ENV OPENBLAS_NUM_THREADS=1
+ENV OPENBLAS_NUM_THREADS=1 # should be added in macapype_env
 
 ############################################# install macapype
 
@@ -67,4 +67,4 @@ RUN rm -rf \
      /var/*/apt/*/partial \
      /var/log/apt/term*
 
-ENV LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH # to check if useful
