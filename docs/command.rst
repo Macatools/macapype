@@ -89,7 +89,7 @@ exclusive parameters
 **NB** : marmoT2 can be used for segmenting from the T2w image (by default, T1w is used for marmo)
 
 **NB** : baboon0, baboon1, baboon2 baboon3 can be used for template `Baba21 <doi:10.18112/openneuro.ds005424.v1.0.0>`_
-and matching
+and matching ages
 
 **NB** : some templates are available in downgraded versions: baboon1_0p6, baboon2_0p6 baboon3_0p6 and macaque_0p5 and show significant decrease in processing time with low redection in quality. However, not all combinations are available
 

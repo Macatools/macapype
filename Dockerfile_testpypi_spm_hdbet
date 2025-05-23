@@ -51,11 +51,11 @@ RUN python -m pip install SimpleITK
 
 RUN python -m pip install HD-BET
 
-ENV OPENBLAS_NUM_THREADS=1 # should be added in macapype_env
+ENV OPENBLAS_NUM_THREADS=1
 
 ############################################# install macapype
 
-RUN python -m pip install --pre macapype --upgrade
+RUN python -m pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
 RUN python -c "import macapype; print(macapype.__version__)"
 
 ################################################## Finishing
