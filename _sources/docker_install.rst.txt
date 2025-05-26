@@ -38,8 +38,13 @@ Starting from the release v0.2.1 on github, the docker images are tagged accordi
 
     $ docker pull macatools/macapype:v0.6
 
-
 See :ref:`Quick test <quick_test>` for testing if your docker installation works properly on test datasets.
+
+**NB** for running ``-soft SPM`` and/or hdbet (corresponding ``-soft ANTS_quick``), a bigger version of the docker is available:
+
+.. code:: bash
+
+    $ docker pull macatools/macapype:v0.6-spm-hdbet
 
 Note on Singularity
 -------------------
