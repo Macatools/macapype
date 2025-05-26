@@ -51,7 +51,8 @@ RUN python -m pip install SimpleITK
 
 RUN python -m pip install HD-BET
 
-ENV OPENBLAS_NUM_THREADS=1 # should be added in macapype_env
+# should be added in macapype_env
+ENV OPENBLAS_NUM_THREADS=1
 
 ############################################# install macapype
 
