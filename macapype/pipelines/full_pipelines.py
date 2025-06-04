@@ -1527,8 +1527,20 @@ def create_full_ants_subpipes(
         seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
                          IsoSurface_tissues_pipe, 'inputnode.threshold_csf')
 
-        seg_pipe.connect(brain_segment_pipe, "outputnode.csf_stl",
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_wm",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_wm')
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_gm",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_gm')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.csf_stl",
                          outputnode, 'csf_stl')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.wm_stl",
+                         outputnode, 'wm_stl')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.gm_stl",
+                         outputnode, 'gm_stl')
 
     return seg_pipe
 
