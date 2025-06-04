@@ -470,20 +470,20 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
             print("Renaming wmgm_stl file")
 
-            rename_stereo_wmgm_stl = pe.Node(
-                niu.Rename(), name="rename_stereo_wmgm_stl")
-            rename_stereo_wmgm_stl.inputs.format_string = \
+            rename_csfwmgm_stl = pe.Node(
+                niu.Rename(), name="rename_csfwmgm_stl")
+            rename_csfwmgm_stl.inputs.format_string = \
                 pref_deriv + "_desc-wmgm_mask"
-            rename_stereo_wmgm_stl.inputs.parse_string = parse_str
-            rename_stereo_wmgm_stl.inputs.keep_ext = True
+            rename_csfwmgm_stl.inputs.parse_string = parse_str
+            rename_csfwmgm_stl.inputs.keep_ext = True
 
             main_workflow.connect(
                 segment_pnh_pipe, 'outputnode.wmgm_stl',
-                rename_stereo_wmgm_stl, 'in_file')
+                rename_csfwmgm_stl, 'in_file')
 
             main_workflow.connect(
-                rename_stereo_wmgm_stl, 'out_file',
-                datasink, '@stereo_wmgm_stl')
+                rename_csfwmgm_stl, 'out_file',
+                datasink, '@csfwmgm_stl')
 
             print("Renaming wmgm_nii file")
             rename_stereo_wmgm_mask = pe.Node(
@@ -500,6 +500,59 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_stereo_wmgm_mask, 'out_file',
                 datasink, '@stereo_wmgm_mask')
+
+        if "IsoSurface_tissues_pipe" in params["brain_segment_pipe"]:
+
+            print("Renaming csf_stl file")
+
+            rename_csf_stl = pe.Node(
+                niu.Rename(), name="rename_csf_stl")
+            rename_csf_stl.inputs.format_string = \
+                pref_deriv + "_desc-csf_mask"
+            rename_csf_stl.inputs.parse_string = parse_str
+            rename_csf_stl.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.csf_stl',
+                rename_csf_stl, 'in_file')
+
+            main_workflow.connect(
+                rename_csf_stl, 'out_file',
+                datasink, '@csf_stl')
+
+            print("Renaming wm_stl file")
+
+            rename_wm_stl = pe.Node(
+                niu.Rename(), name="rename_wm_stl")
+            rename_wm_stl.inputs.format_string = \
+                pref_deriv + "_desc-wm_mask"
+            rename_wm_stl.inputs.parse_string = parse_str
+            rename_wm_stl.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.wm_stl',
+                rename_wm_stl, 'in_file')
+
+            main_workflow.connect(
+                rename_wm_stl, 'out_file',
+                datasink, '@wm_stl')
+
+            print("Renaming gm_stl file")
+
+            rename_gm_stl = pe.Node(
+                niu.Rename(), name="rename_gm_stl")
+            rename_gm_stl.inputs.format_string = \
+                pref_deriv + "_desc-gm_mask"
+            rename_gm_stl.inputs.parse_string = parse_str
+            rename_gm_stl.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.gm_stl',
+                rename_gm_stl, 'in_file')
+
+            main_workflow.connect(
+                rename_gm_stl, 'out_file',
+                datasink, '@gm_stl')
 
     elif "old_segment_pipe" in params.keys():
 
