@@ -747,7 +747,7 @@ def create_IsoSurface_brain_pipe(params={},
 
 
 def create_IsoSurface_tissues_pipe(params={},
-                                 name="IsoSurface_tissues_pipe"):
+                                   name="IsoSurface_tissues_pipe"):
 
     # creating pipeline
     IsoSurface_tissues_pipe = pe.Workflow(name=name)
@@ -786,13 +786,12 @@ def create_IsoSurface_tissues_pipe(params={},
         name='outputnode')
 
     IsoSurface_tissues_pipe.connect(csf2mesh, 'stl_file',
-                                  outputnode, "csf_stl")
+                                    outputnode, "csf_stl")
 
     IsoSurface_tissues_pipe.connect(wm2mesh, 'stl_file',
-                                  outputnode, "wm_stl")
+                                    outputnode, "wm_stl")
 
     IsoSurface_tissues_pipe.connect(gm2mesh, 'stl_file',
-                                  outputnode, "gm_stl")
+                                    outputnode, "gm_stl")
 
     return IsoSurface_tissues_pipe
-
