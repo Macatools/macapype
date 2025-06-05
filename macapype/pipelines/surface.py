@@ -710,7 +710,7 @@ def create_IsoSurface_brain_pipe(params={},
                                output_names=["mask_file"],
                                function=merge_tissues),
         params=parse_key(params, "merge_brain_tissues"),
-        name="keep_GCC_brain")
+        name="merge_brain_tissues")
 
     IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
                                   merge_brain_tissues, 'dseg_file')
@@ -744,3 +744,54 @@ def create_IsoSurface_brain_pipe(params={},
                                   outputnode, "wmgm_stl")
 
     return IsoSurface_brain_pipe
+
+
+def create_IsoSurface_tissues_pipe(params={},
+                                   name="IsoSurface_tissues_pipe"):
+
+    # creating pipeline
+    IsoSurface_tissues_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["threshold_csf", "threshold_wm", "threshold_gm"]),
+        name='inputnode')
+
+    # csf2mesh
+    csf2mesh = pe.Node(interface=IsoSurface(),
+                       name="csf2mesh")
+
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_csf',
+                                    csf2mesh, "nii_file")
+
+    # wm2mesh
+    wm2mesh = pe.Node(interface=IsoSurface(),
+                      name="wm2mesh")
+
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_wm',
+                                    wm2mesh, "nii_file")
+
+    # gm2mesh
+    gm2mesh = pe.Node(interface=IsoSurface(),
+                      name="gm2mesh")
+
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_gm',
+                                    gm2mesh, "nii_file")
+
+    # outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["csf_stl", "gm_stl", "wm_stl"]),
+        name='outputnode')
+
+    IsoSurface_tissues_pipe.connect(csf2mesh, 'stl_file',
+                                    outputnode, "csf_stl")
+
+    IsoSurface_tissues_pipe.connect(wm2mesh, 'stl_file',
+                                    outputnode, "wm_stl")
+
+    IsoSurface_tissues_pipe.connect(gm2mesh, 'stl_file',
+                                    outputnode, "gm_stl")
+
+    return IsoSurface_tissues_pipe

@@ -34,7 +34,8 @@ from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import create_extract_pipe
 
-from .surface import (create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe)
+from .surface import (create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe,
+                      create_IsoSurface_tissues_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files
 
@@ -965,6 +966,10 @@ def create_full_ants_subpipes(
                     "native_wmgm_mask",
                     "wmgm_stl",
 
+                    "csf_stl",
+                    "gm_stl",
+                    "wm_stl",
+
                     "stereo_to_native_trans",
                     "native_to_stereo_trans"]),
         name='outputnode')
@@ -1512,6 +1517,30 @@ def create_full_ants_subpipes(
                 seg_pipe, data_preparation_pipe,
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
+
+    if "IsoSurface_tissues_pipe" in params["brain_segment_pipe"]:
+
+        IsoSurface_tissues_pipe = create_IsoSurface_tissues_pipe(
+            params=parse_key(params["brain_segment_pipe"],
+                             "IsoSurface_tissues_pipe"))
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_csf')
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_wm",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_wm')
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_gm",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_gm')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.csf_stl",
+                         outputnode, 'csf_stl')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.wm_stl",
+                         outputnode, 'wm_stl')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.gm_stl",
+                         outputnode, 'gm_stl')
 
     return seg_pipe
 
