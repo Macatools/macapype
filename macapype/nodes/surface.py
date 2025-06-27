@@ -4,20 +4,24 @@ from nipype.interfaces.base import (
 from nipype.interfaces.afni.base import AFNICommandBase
 
 
+def getLargestCC(segmentation):
+
+    from skimage.measure import label
+    import numpy as np
+
+    labels = label(segmentation)
+    assert labels.max() != 0  # assume at least 1 CC
+    largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
+    return largestCC, labels
+
+
 def keep_gcc(nii_file):
     import os
     import nibabel as nib
     import numpy as np
     from nipype.utils.filemanip import split_filename as split_f
 
-    def getLargestCC(segmentation):
-
-        from skimage.measure import label
-
-        labels = label(segmentation)
-        assert labels.max() != 0  # assume at least 1 CC
-        largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
-        return largestCC, labels
+    from macapype.nodes.surface import getLargestCC
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
@@ -37,6 +41,44 @@ def keep_gcc(nii_file):
     labels_file = os.path.abspath(fname + "_labels" + ext)
 
     nib.save(labels_img, labels_file)
+
+    # nibabel (np.array -> nifti)
+    new_img = nib.Nifti1Image(dataobj=new_data,
+                              header=img.header,
+                              affine=img.affine)
+
+    gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
+
+    nib.save(new_img, gcc_nii_file)
+
+    return gcc_nii_file
+
+
+def keep_gcc_by_index(nii_file):
+    import os
+    import nibabel as nib
+    import numpy as np
+    from nipype.utils.filemanip import split_filename as split_f
+
+    from macapype.nodes.surface import getLargestCC
+
+    # nibabel (nifti -> np.array)
+    img = nib.load(nii_file)
+    data = img.get_fdata().astype(np.int16)
+
+    path, fname, ext = split_f(nii_file)
+
+    print(np.unique(data))
+
+    new_data = np.zeros(data.shape, data.dtype)
+
+    for index in np.unique(data)[1:]:
+        data_data_bin_index = np.zeros(data.shape, data.dtype)
+        data_data_bin_index[data == index] = 1
+
+        if np.sum(data_data_bin_index):
+            gcc_index_data, _ = getLargestCC(data_data_bin_index)
+            new_data[gcc_index_data] = index
 
     # nibabel (np.array -> nifti)
     new_img = nib.Nifti1Image(dataobj=new_data,
