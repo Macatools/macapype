@@ -14,6 +14,7 @@ def getLargestCC(segmentation):
     largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
     return largestCC, labels
 
+
 def keep_gcc(nii_file):
     import os
     import nibabel as nib
@@ -53,7 +54,6 @@ def keep_gcc(nii_file):
     return gcc_nii_file
 
 
-
 def keep_gcc_by_index(nii_file):
     import os
     import nibabel as nib
@@ -77,8 +77,8 @@ def keep_gcc_by_index(nii_file):
         data_data_bin_index[data == index] = 1
 
         if np.sum(data_data_bin_index):
-            gcc_index_data, labels_index_data = getLargestCC(data_data_bin_index)
-            new_data[gcc_index_data == True] = index
+            gcc_index_data, _ = getLargestCC(data_data_bin_index)
+            new_data[gcc_index_data] = index
 
     # nibabel (np.array -> nifti)
     new_img = nib.Nifti1Image(dataobj=new_data,
@@ -90,6 +90,7 @@ def keep_gcc_by_index(nii_file):
     nib.save(new_img, gcc_nii_file)
 
     return gcc_nii_file
+
 
 def merge_tissues(dseg_file, keep_indexes):
 

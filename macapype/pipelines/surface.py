@@ -705,7 +705,6 @@ def create_IsoSurface_brain_pipe(params={},
             fields=["segmented_file"]),
         name='inputnode')
 
-
     # keep_gcc_mask
     keep_gcc_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -715,7 +714,6 @@ def create_IsoSurface_brain_pipe(params={},
 
     IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
                                   keep_gcc_mask, "nii_file")
-
 
     # merge_brain_tissues
     merge_brain_tissues = NodeParams(
