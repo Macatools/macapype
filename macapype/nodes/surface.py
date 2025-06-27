@@ -4,20 +4,20 @@ from nipype.interfaces.base import (
 from nipype.interfaces.afni.base import AFNICommandBase
 
 
+def getLargestCC(segmentation):
+
+    from skimage.measure import label
+
+    labels = label(segmentation)
+    assert labels.max() != 0  # assume at least 1 CC
+    largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
+    return largestCC, labels
+
 def keep_gcc(nii_file):
     import os
     import nibabel as nib
     import numpy as np
     from nipype.utils.filemanip import split_filename as split_f
-
-    def getLargestCC(segmentation):
-
-        from skimage.measure import label
-
-        labels = label(segmentation)
-        assert labels.max() != 0  # assume at least 1 CC
-        largestCC = labels == np.argmax(np.bincount(labels.flat)[1:])+1
-        return largestCC, labels
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
@@ -49,6 +49,37 @@ def keep_gcc(nii_file):
 
     return gcc_nii_file
 
+
+
+def keep_gcc_by_index(nii_file):
+    import os
+    import nibabel as nib
+    import numpy as np
+    from nipype.utils.filemanip import split_filename as split_f
+
+    # nibabel (nifti -> np.array)
+    img = nib.load(nii_file)
+    data = img.get_fdata().astype(np.int16)
+
+    print(np.unique(data))
+
+    new_data = np.zeros(data.shape, data.dtype)
+
+    for index in np.unique(data)[1:]:
+        data_data_bin_index = np.zeros(data.shape, data.dtype)
+        gcc_index_data, = getLargestCC(data_data_bin_index)
+        new_data[gcc_index_data == True] = index
+
+    # nibabel (np.array -> nifti)
+    new_img = nib.Nifti1Image(dataobj=new_data,
+                              header=img.header,
+                              affine=img.affine)
+
+    gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
+
+    nib.save(new_img, gcc_nii_file)
+
+    return gcc_nii_file
 
 def merge_tissues(dseg_file, keep_indexes):
 
