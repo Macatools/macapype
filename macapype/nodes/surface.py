@@ -19,6 +19,8 @@ def keep_gcc(nii_file):
     import numpy as np
     from nipype.utils.filemanip import split_filename as split_f
 
+    from macapype.nodes.surface import getLargestCC
+
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
     data = img.get_fdata().astype(np.int16)
@@ -56,6 +58,8 @@ def keep_gcc_by_index(nii_file):
     import nibabel as nib
     import numpy as np
     from nipype.utils.filemanip import split_filename as split_f
+
+    from macapype.nodes.surface import getLargestCC
 
     # nibabel (nifti -> np.array)
     img = nib.load(nii_file)
