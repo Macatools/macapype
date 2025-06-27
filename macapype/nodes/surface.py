@@ -75,7 +75,7 @@ def keep_gcc_by_index(nii_file):
         data_data_bin_index[data == index] = 1
 
         if np.sum(data_data_bin_index):
-            gcc_index_data, = getLargestCC(data_data_bin_index)
+            gcc_index_data, labels_index_data = getLargestCC(data_data_bin_index)
             new_data[gcc_index_data == True] = index
 
     # nibabel (np.array -> nifti)
