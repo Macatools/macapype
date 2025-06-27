@@ -7,6 +7,7 @@ from nipype.interfaces.afni.base import AFNICommandBase
 def getLargestCC(segmentation):
 
     from skimage.measure import label
+    import numpy as np
 
     labels = label(segmentation)
     assert labels.max() != 0  # assume at least 1 CC
