@@ -71,8 +71,11 @@ def keep_gcc_by_index(nii_file):
 
     for index in np.unique(data)[1:]:
         data_data_bin_index = np.zeros(data.shape, data.dtype)
-        gcc_index_data, = getLargestCC(data_data_bin_index)
-        new_data[gcc_index_data == True] = index
+        data_data_bin_index[data == index] = 1
+
+        if np.sum(data_data_bin_index):
+            gcc_index_data, = getLargestCC(data_data_bin_index)
+            new_data[gcc_index_data == True] = index
 
     # nibabel (np.array -> nifti)
     new_img = nib.Nifti1Image(dataobj=new_data,
