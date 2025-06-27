@@ -66,6 +66,8 @@ def keep_gcc_by_index(nii_file):
     img = nib.load(nii_file)
     data = img.get_fdata().astype(np.int16)
 
+    path, fname, ext = split_f(nii_file)
+
     print(np.unique(data))
 
     new_data = np.zeros(data.shape, data.dtype)
