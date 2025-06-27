@@ -725,7 +725,7 @@ def create_IsoSurface_brain_pipe(params={},
         params=parse_key(params, "merge_brain_tissues"),
         name="keep_GCC_brain")
 
-    IsoSurface_brain_pipe.connect(keep_gcc_mask, "gcc_nii_file")
+    IsoSurface_brain_pipe.connect(keep_gcc_mask, "gcc_nii_file",
                                   merge_brain_tissues, 'dseg_file')
 
     # keep_gcc_bin_mask
