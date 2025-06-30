@@ -69,6 +69,10 @@
             {
                 "keep_indexes": [1,2,3]
             }
+        },
+
+        "IsoSurface_tissues_pipe":
+        {
         }
     }
 }

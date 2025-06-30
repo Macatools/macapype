@@ -769,26 +769,59 @@ def create_IsoSurface_tissues_pipe(params={},
             fields=["threshold_csf", "threshold_wm", "threshold_gm"]),
         name='inputnode')
 
+    # keep_gcc_csf_mask
+    keep_gcc_csf_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_csf_mask")
+
+    IsoSurface_brain_pipe.connect(inputnode, 'threshold_csf',
+                                  keep_gcc_csf_mask, "nii_file")
+
     # csf2mesh
     csf2mesh = pe.Node(interface=IsoSurface(),
                        name="csf2mesh")
 
-    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_csf',
+    IsoSurface_tissues_pipe.connect(keep_gcc_csf_mask, 'gcc_nii_file',
                                     csf2mesh, "nii_file")
 
-    # wm2mesh
-    wm2mesh = pe.Node(interface=IsoSurface(),
-                      name="wm2mesh")
 
-    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_wm',
-                                    wm2mesh, "nii_file")
+
+    # keep_gcc_csf_mask
+    keep_gcc_csf_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_csf_mask")
+
+    IsoSurface_brain_pipe.connect(inputnode, 'threshold_csf',
+                                  keep_gcc_csf_mask, "nii_file")
+
+    # csf2mesh
+    csf2mesh = pe.Node(interface=IsoSurface(),
+                       name="csf2mesh")
+
+    IsoSurface_tissues_pipe.connect(keep_gcc_csf_mask, 'gcc_nii_file',
+                                    csf2mesh, "nii_file")
+
+    # keep_gcc_gm_mask
+    keep_gcc_gm_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_gm_mask")
+
+    IsoSurface_brain_pipe.connect(inputnode, 'threshold_gm',
+                                  keep_gcc_gm_mask, "nii_file")
 
     # gm2mesh
     gm2mesh = pe.Node(interface=IsoSurface(),
-                      name="gm2mesh")
+                       name="gm2mesh")
 
-    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_gm',
+    IsoSurface_tissues_pipe.connect(keep_gcc_gm_mask, 'gcc_nii_file',
                                     gm2mesh, "nii_file")
+
 
     # outputnode
     outputnode = pe.Node(
