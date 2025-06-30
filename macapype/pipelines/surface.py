@@ -776,7 +776,7 @@ def create_IsoSurface_tissues_pipe(params={},
                                function=keep_gcc),
         name="keep_gcc_csf_mask")
 
-    IsoSurface_brain_pipe.connect(inputnode, 'threshold_csf',
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_csf',
                                   keep_gcc_csf_mask, "nii_file")
 
     # csf2mesh
@@ -795,7 +795,7 @@ def create_IsoSurface_tissues_pipe(params={},
                                function=keep_gcc),
         name="keep_gcc_csf_mask")
 
-    IsoSurface_brain_pipe.connect(inputnode, 'threshold_csf',
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_csf',
                                   keep_gcc_csf_mask, "nii_file")
 
     # csf2mesh
@@ -812,7 +812,7 @@ def create_IsoSurface_tissues_pipe(params={},
                                function=keep_gcc),
         name="keep_gcc_gm_mask")
 
-    IsoSurface_brain_pipe.connect(inputnode, 'threshold_gm',
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_gm',
                                   keep_gcc_gm_mask, "nii_file")
 
     # gm2mesh
