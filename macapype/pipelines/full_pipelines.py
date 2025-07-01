@@ -1269,7 +1269,7 @@ def create_full_ants_subpipes(
                 inter_val="LIN")
 
     elif "debias" in params.keys() and \
-            not "extract_pipe" in params.keys():
+             "extract_pipe" not in params.keys():
 
         # Bias correction of cropped images
         debias = NodeParams(T1xT2BiasFieldCorrection(),
