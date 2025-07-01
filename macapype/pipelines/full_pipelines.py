@@ -1273,7 +1273,7 @@ def create_full_ants_subpipes(
                 inter_val="LIN")
 
     elif "debias" in params.keys():
-        if not "extract_pipe" in params.keys():
+        if "extract_pipe" in params.keys():
 
             print("Found debias AND extract_pipe")
 
