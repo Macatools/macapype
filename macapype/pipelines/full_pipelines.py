@@ -1272,7 +1272,7 @@ def create_full_ants_subpipes(
                 outputnode, "native_masked_debiased_T2", params,
                 inter_val="LIN")
 
-    elif "debias" in params.keys()
+    elif "debias" in params.keys():
         if not "extract_pipe" in params.keys():
 
             print("Found debias AND extract_pipe")
