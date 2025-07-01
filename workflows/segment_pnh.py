@@ -220,7 +220,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
 
         print("Using orig params file:", params_file)
 
-        extra_wf_name = "_orig"
+        wf_name += "_orig"
 
     # indiv_params
     if indiv_params_file is not None:
