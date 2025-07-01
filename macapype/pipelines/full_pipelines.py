@@ -1137,6 +1137,61 @@ def create_full_ants_subpipes(
                     outputnode, "native_brain_mask", params)
 
         # full extract brain pipeline (correct_bias, denoising, extract brain)
+        elif "debias" in params.keys():
+
+            # Bias correction of cropped images
+            debias = NodeParams(T1xT2BiasFieldCorrection(),
+                                params=parse_key(params, "debias"),
+                                name='debias')
+
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_debiased_T1",
+                debias, 't1_file')
+
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_debiased_T2",
+                debias, 't2_file')
+
+            debias.inputs.bet = 1
+
+            # outputnode
+            seg_pipe.connect(
+                debias, "debiased_mask_file",
+                outputnode, "stereo_brain_mask")
+
+            if pad:
+                pad_back(
+                    seg_pipe, data_preparation_pipe,
+                    debias, "debiased_mask_file",
+                    outputnode, "native_brain_mask", params)
+
+            # TODO is not used now...
+            seg_pipe.connect(
+                inputnode, ('indiv_params', parse_key, "debias"),
+                debias, 'indiv_params')
+
+            # outputnode
+            seg_pipe.connect(
+                debias, 't1_debiased_brain_file',
+                outputnode, "stereo_masked_debiased_T1")
+
+            seg_pipe.connect(
+                debias, 't2_debiased_brain_file',
+                outputnode, "stereo_masked_debiased_T2")
+
+            if pad:
+                pad_back(
+                    seg_pipe, data_preparation_pipe,
+                    debias, 't1_debiased_brain_file',
+                    outputnode, "native_masked_debiased_T1", params,
+                    inter_val="LIN")
+
+                pad_back(
+                    seg_pipe, data_preparation_pipe,
+                    debias, 't2_debiased_brain_file',
+                    outputnode, "native_masked_debiased_T2", params,
+                    inter_val="LIN")
+
         else:
             print("no extract_brain method is defined, skipping")
             return seg_pipe
@@ -1213,7 +1268,9 @@ def create_full_ants_subpipes(
                 outputnode, "native_masked_debiased_T2", params,
                 inter_val="LIN")
 
-    elif "debias" in params.keys():
+    elif "debias" in params.keys() and \
+            not "extract_pipe" in params.keys():
+
         # Bias correction of cropped images
         debias = NodeParams(T1xT2BiasFieldCorrection(),
                             params=parse_key(params, "debias"),
@@ -1266,7 +1323,6 @@ def create_full_ants_subpipes(
             outputnode, "stereo_masked_debiased_T2")
 
         if pad:
-
             pad_back(
                 seg_pipe, data_preparation_pipe,
                 debias, 't1_debiased_brain_file',
