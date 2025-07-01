@@ -1272,74 +1272,76 @@ def create_full_ants_subpipes(
                 outputnode, "native_masked_debiased_T2", params,
                 inter_val="LIN")
 
-    elif "debias" in params.keys() and \
-             "extract_pipe" in params.keys():
+    elif "debias" in params.keys()
+        if not "extract_pipe" in params.keys():
 
-        print("Found debias AND extract_pipe")
+            print("Found debias AND extract_pipe")
 
-        # Bias correction of cropped images
-        debias = NodeParams(T1xT2BiasFieldCorrection(),
-                            params=parse_key(params, "debias"),
-                            name='debias')
+            # Bias correction of cropped images
+            debias = NodeParams(T1xT2BiasFieldCorrection(),
+                                params=parse_key(params, "debias"),
+                                name='debias')
 
-        seg_pipe.connect(
-            data_preparation_pipe, "outputnode.stereo_debiased_T1",
-            debias, 't1_file')
-
-        seg_pipe.connect(
-            data_preparation_pipe, "outputnode.stereo_debiased_T2",
-            debias, 't2_file')
-
-        if mask_file is None:
-            if "extract_pipe" in params.keys():
-                seg_pipe.connect(
-                    extract_pipe, "outputnode.mask_file",
-                    debias, 'b')
-            else:
-                debias.inputs.bet = 1
-
-                # outputnode
-                seg_pipe.connect(
-                    debias, "debiased_mask_file",
-                    outputnode, "stereo_brain_mask")
-
-                if pad:
-                    pad_back(
-                        seg_pipe, data_preparation_pipe,
-                        debias, "debiased_mask_file",
-                        outputnode, "native_brain_mask", params)
-
-        else:
             seg_pipe.connect(
-                apply_crop_external_mask, "out_file",
-                debias, 'b')
+                data_preparation_pipe, "outputnode.stereo_debiased_T1",
+                debias, 't1_file')
 
-        # TODO is not used now...
-        seg_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "debias"),
-            debias, 'indiv_params')
+            seg_pipe.connect(
+                data_preparation_pipe, "outputnode.stereo_debiased_T2",
+                debias, 't2_file')
 
-        # outputnode
-        seg_pipe.connect(
-            debias, 't1_debiased_brain_file',
-            outputnode, "stereo_masked_debiased_T1")
+            if mask_file is None:
+                if "extract_pipe" in params.keys():
+                    seg_pipe.connect(
+                        extract_pipe, "outputnode.mask_file",
+                        debias, 'b')
+                else:
+                    debias.inputs.bet = 1
 
-        seg_pipe.connect(
-            debias, 't2_debiased_brain_file',
-            outputnode, "stereo_masked_debiased_T2")
+                    # outputnode
+                    seg_pipe.connect(
+                        debias, "debiased_mask_file",
+                        outputnode, "stereo_brain_mask")
 
-        if pad:
-            pad_back(
-                seg_pipe, data_preparation_pipe,
+                    if pad:
+                        pad_back(
+                            seg_pipe, data_preparation_pipe,
+                            debias, "debiased_mask_file",
+                            outputnode, "native_brain_mask", params)
+
+            else:
+                seg_pipe.connect(
+                    apply_crop_external_mask, "out_file",
+                    debias, 'b')
+
+            # TODO is not used now...
+            seg_pipe.connect(
+                inputnode, ('indiv_params', parse_key, "debias"),
+                debias, 'indiv_params')
+
+            # outputnode
+            seg_pipe.connect(
                 debias, 't1_debiased_brain_file',
-                outputnode, "native_masked_debiased_T1", params,
-                inter_val="LIN")
+                outputnode, "stereo_masked_debiased_T1")
 
-            pad_back(
-                seg_pipe, data_preparation_pipe,
+            seg_pipe.connect(
                 debias, 't2_debiased_brain_file',
-                outputnode, "native_masked_debiased_T2", params,
-                inter_val="LIN")
+                outputnode, "stereo_masked_debiased_T2")
+
+            if pad:
+                pad_back(
+                    seg_pipe, data_preparation_pipe,
+                    debias, 't1_debiased_brain_file',
+                    outputnode, "native_masked_debiased_T1", params,
+                    inter_val="LIN")
+
+                pad_back(
+                    seg_pipe, data_preparation_pipe,
+                    debias, 't2_debiased_brain_file',
+                    outputnode, "native_masked_debiased_T2", params,
+                    inter_val="LIN")
+        else:
+            print ('debias performed brain extraction as well')
 
     else:
 
