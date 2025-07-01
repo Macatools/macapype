@@ -1089,6 +1089,8 @@ def create_full_ants_subpipes(
         # full extract brain pipeline (correct_bias, denoising, extract brain)
         if "extract_pipe" in params.keys():
 
+            print("Found extract_pipe")
+
             # brain extraction
             extract_pipe = create_extract_pipe(
                 params_template=params_template_brainmask,
@@ -1138,6 +1140,8 @@ def create_full_ants_subpipes(
 
         # full extract brain pipeline (correct_bias, denoising, extract brain)
         elif "debias" in params.keys():
+
+            print("Found debias without extract_pipe")
 
             # Bias correction of cropped images
             debias = NodeParams(T1xT2BiasFieldCorrection(),
@@ -1269,7 +1273,9 @@ def create_full_ants_subpipes(
                 inter_val="LIN")
 
     elif "debias" in params.keys() and \
-             "extract_pipe" not in params.keys():
+             "extract_pipe" in params.keys():
+
+        print("Found debias AND extract_pipe")
 
         # Bias correction of cropped images
         debias = NodeParams(T1xT2BiasFieldCorrection(),
