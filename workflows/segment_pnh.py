@@ -418,7 +418,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
             params=params, mask_file=mask_file, space=space, pad=pad)
 
     elif 't1' in datatypes:
-        segment_pnh_pipe = create_full_T1_ants_subpipes(
+        segment_pnh_pipe = create_full_T1_subpipes(
             params_template_stereo=params_template_stereo,
             params_template_brainmask=params_template_brainmask,
             params_template_seg=params_template_seg,
