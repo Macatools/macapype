@@ -769,25 +769,76 @@ def create_IsoSurface_tissues_pipe(params={},
             fields=["threshold_csf", "threshold_wm", "threshold_gm"]),
         name='inputnode')
 
+    # bin_csf
+    bin_csf = pe.Node(interface=fsl.UnaryMaths(), name="bin_csf")
+    bin_csf.inputs.operation = "bin"
+
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_csf',
+                                    bin_csf, 'in_file')
+
+    # keep_gcc_csf_mask
+    keep_gcc_csf_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_csf_mask")
+
+    IsoSurface_tissues_pipe.connect(bin_csf, 'out_file',
+                                    keep_gcc_csf_mask, "nii_file")
+
     # csf2mesh
     csf2mesh = pe.Node(interface=IsoSurface(),
                        name="csf2mesh")
 
-    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_csf',
+    IsoSurface_tissues_pipe.connect(keep_gcc_csf_mask, 'gcc_nii_file',
                                     csf2mesh, "nii_file")
+
+    # bin_wm
+    bin_wm = pe.Node(interface=fsl.UnaryMaths(), name="bin_wm")
+    bin_wm.inputs.operation = "bin"
+
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_wm',
+                                    bin_wm, 'in_file')
+
+    # keep_gcc_wm_mask
+    keep_gcc_wm_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_wm_mask")
+
+    IsoSurface_tissues_pipe.connect(bin_wm, 'out_file',
+                                    keep_gcc_wm_mask, "nii_file")
 
     # wm2mesh
     wm2mesh = pe.Node(interface=IsoSurface(),
                       name="wm2mesh")
 
-    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_wm',
+    IsoSurface_tissues_pipe.connect(keep_gcc_wm_mask, 'gcc_nii_file',
                                     wm2mesh, "nii_file")
+
+    # bin_gm
+    bin_gm = pe.Node(interface=fsl.UnaryMaths(), name="bin_gm")
+    bin_gm.inputs.operation = "bin"
+
+    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_gm',
+                                    bin_gm, 'in_file')
+
+    # keep_gcc_gm_mask
+    keep_gcc_gm_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="keep_gcc_gm_mask")
+
+    IsoSurface_tissues_pipe.connect(bin_gm, 'out_file',
+                                    keep_gcc_gm_mask, "nii_file")
 
     # gm2mesh
     gm2mesh = pe.Node(interface=IsoSurface(),
                       name="gm2mesh")
 
-    IsoSurface_tissues_pipe.connect(inputnode, 'threshold_gm',
+    IsoSurface_tissues_pipe.connect(keep_gcc_gm_mask, 'gcc_nii_file',
                                     gm2mesh, "nii_file")
 
     # outputnode
