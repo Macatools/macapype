@@ -150,6 +150,7 @@ def create_brain_old_segment_from_mask_pipe(
     if not mask_from_seg_pipe in params:
         print("** Warning, segmented file will not be provided, \
             missing mask_from_seg_pipe in brain_old_segment_pipe**")
+
     mask_from_seg_pipe = create_mask_from_seg_pipe(
         params=parse_key(params, "mask_from_seg_pipe"))
 
@@ -176,7 +177,6 @@ def create_brain_old_segment_from_mask_pipe(
 # ANTS based segmentation (from Kepkee Loh / Julien Sein)
 # (-soft ANTS)
 ###############################################################################
-
 
 def create_brain_segment_from_mask_pipe(
         params_template, params={}, name="brain_segment_from_mask_pipe",
