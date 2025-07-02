@@ -1209,7 +1209,7 @@ def create_full_T1T2_subpipes(
     if "nii2mesh_brain_pipe" in params.keys():
 
         nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
-            params=parse_key(params["nii2mesh_brain_pipe"]))
+            params=parse_key(params, "nii2mesh_brain_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                          nii2mesh_brain_pipe, 'inputnode.segmented_file')
@@ -1230,7 +1230,7 @@ def create_full_T1T2_subpipes(
     elif "IsoSurface_brain_pipe" in params.keys():
 
         IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
-            params=parse_key(params["IsoSurface_brain_pipe"]))
+            params=parse_key(params, "IsoSurface_brain_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                          IsoSurface_brain_pipe, 'inputnode.segmented_file')
@@ -1251,7 +1251,7 @@ def create_full_T1T2_subpipes(
     if "IsoSurface_tissues_pipe" in params:
 
         IsoSurface_tissues_pipe = create_IsoSurface_tissues_pipe(
-            params=parse_key(params["IsoSurface_tissues_pipe"]))
+            params=parse_key(params, "IsoSurface_tissues_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
                          IsoSurface_tissues_pipe, 'inputnode.threshold_csf')
@@ -1592,11 +1592,10 @@ def create_full_T1_subpipes(
                 outputnode, "native_gen_5tt", params)
 
     # ################################################### surface
-    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
+    if "nii2mesh_brain_pipe" in params:
 
         nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
-            params=parse_key(params["brain_segment_pipe"],
-                             "nii2mesh_brain_pipe"))
+            params=parse_key(params, "nii2mesh_brain_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                          nii2mesh_brain_pipe, 'inputnode.segmented_file')
@@ -1614,11 +1613,10 @@ def create_full_T1_subpipes(
                 nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
-    elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"].keys():
+    elif "IsoSurface_brain_pipe" in params.keys():
 
         IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
-            params=parse_key(params["brain_segment_pipe"],
-                             "IsoSurface_brain_pipe"))
+            params=parse_key(params, "IsoSurface_brain_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                          IsoSurface_brain_pipe, 'inputnode.segmented_file')
