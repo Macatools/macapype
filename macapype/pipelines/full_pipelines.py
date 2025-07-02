@@ -147,9 +147,11 @@ def create_brain_old_segment_from_mask_pipe(
         outputnode, 'threshold_gm')
 
     # mask_from_seg_pipe
-    if not mask_from_seg_pipe in params:
+    if not "mask_from_seg_pipe" in params:
         print("** Warning, segmented file will not be provided, \
             missing mask_from_seg_pipe in brain_old_segment_pipe**")
+
+        return brain_old_segment_pipe
 
     mask_from_seg_pipe = create_mask_from_seg_pipe(
         params=parse_key(params, "mask_from_seg_pipe"))
