@@ -66,15 +66,11 @@
         },
         "mask_from_seg_pipe":
         {
-            "dilate_mask":
+            "merge_indexed_mask":
             {
-                "kernel_shape": "sphere",
-                "kernel_size": 2
-            },
-            "erode_mask":
-            {
-                "kernel_shape": "sphere",
-                "kernel_size": 2
+                "index_csf": 1,
+                "index_gm": 2,
+                "index_wm": 3
             }
         }
     }
