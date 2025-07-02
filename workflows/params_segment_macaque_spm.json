@@ -60,9 +60,9 @@
         {
             "merge_indexed_mask":
             {
-                "index_csf": 1,
-                "index_gm": 2,
-                "index_wm": 3
+                "index_gm": 1,
+                "index_wm": 2,
+                "index_csf": 3
             }
         }
     },
@@ -73,7 +73,7 @@
     {
         "merge_brain_tissues":
         {
-            "keep_indexes": [2,3]
+            "keep_indexes": [1,2]
         }
     },
     "IsoSurface_tissues_pipe":
