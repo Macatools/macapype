@@ -45,381 +45,6 @@ from macapype.utils.misc import parse_key, list_input_files
 ###############################################################################
 
 
-def create_full_spm_subpipes(
-        params_template_stereo, params_template_brainmask, params_template_seg,
-        params={}, name='full_spm_subpipes',
-        mask_file=None, pad=False, space='template'):
-    """ Description: SPM based segmentation pipeline from T1w and T2w images
-    in template space
-
-    Processing steps:
-
-    - Data preparation (short, with betcrop or crop)
-    - debias using T1xT2BiasFieldCorrection (using mask is betcrop)
-    - registration to template file with IterREGBET
-    - SPM segmentation the old way (SPM8, not dartel based)
-
-    Params:
-
-    - short_preparation_pipe (see :class:`create_short_preparation_pipe \
-    <macapype.pipelines.prepare.create_short_preparation_pipe>`)
-    - debias (see :class:`T1xT2BiasFieldCorrection \
-    <macapype.nodes.correct_bias.T1xT2BiasFieldCorrection>`) - also available \
-    as :ref:`indiv_params <indiv_params>`
-    - reg (see :class:`IterREGBET <macapype.nodes.register.IterREGBET>`) - \
-    also available as :ref:`indiv_params <indiv_params>`
-    - native_old_segment_pipe (see :class:`create_native_old_segment_pipe \
-    <macapype.pipelines.segment.create_old_segment_pipe>`)
-
-    Inputs:
-
-        inputnode:
-
-            list_T1:
-                T1 file names
-
-            list_T2:
-                T2 file names
-
-            indiv_params (opt):
-                dict with individuals parameters for some nodes
-
-
-        arguments:
-
-            params_template:
-                dict of template files containing brain_template and priors \
-            (list of template based segmented tissues)
-
-            params:
-                dictionary of node sub-parameters (from a json file)
-
-            name:
-                pipeline name (default = "full_spm_subpipes")
-
-    Outputs:
-
-            old_segment_pipe.thresh_gm.out_file:
-                segmented grey matter in template space
-
-            old_segment_pipe.thresh_wm.out_file:
-                segmented white matter in template space
-
-            old_segment_pipe.thresh_csf.out_file:
-                segmented csf in template space
-    """
-
-    print("Full pipeline name: ", name)
-
-    # Creating pipeline
-    seg_pipe = pe.Workflow(name=name)
-
-    # Creating input node
-    inputnode = pe.Node(
-        niu.IdentityInterface(fields=['list_T1', 'list_T2', 'indiv_params']),
-        name='inputnode'
-    )
-
-    # output node
-    outputnode = pe.Node(
-        niu.IdentityInterface(fields=[
-            'native_T1', 'native_T2',
-            'stereo_T1', 'stereo_T2',
-
-            "stereo_padded_T1",
-            "stereo_padded_T2",
-
-            'stereo_brain_mask',
-
-            'stereo_debiased_T1',
-            'stereo_debiased_T2',
-            'stereo_masked_debiased_T1',
-            'stereo_masked_debiased_T2',
-            "stereo_denoised_T1",
-            "native_denoised_T1",
-            "stereo_denoised_T2",
-            "native_denoised_T2",
-
-            'native_brain_mask', 'native_debiased_T1',
-            'native_masked_debiased_T1', 'native_debiased_T2',
-            'native_masked_debiased_T2',
-
-            'stereo_prob_wm', 'stereo_prob_gm',
-            'stereo_prob_csf',
-            'stereo_segmented_brain_mask',
-            'stereo_gen_5tt',
-
-            'native_segmented_brain_mask',
-            'native_prob_wm', 'native_prob_gm', 'native_prob_csf',
-            'native_gen_5tt',
-
-            "stereo_wmgm_mask", "native_wmgm_mask",
-            "wmgm_stl",
-
-            'stereo_to_native_trans',
-            "native_to_stereo_trans"]),
-        name='outputnode')
-
-    # preprocessing
-    if 'short_preparation_pipe' in params.keys():
-        data_preparation_pipe = create_short_preparation_pipe(
-            params=parse_key(params, "short_preparation_pipe"),
-            params_template=params_template_stereo)
-
-    else:
-        print("Error, short_preparation_pipe, \
-            was not found in params, skipping")
-
-        test_node = pe.Node(niu.Function(input_names=['list_T1', 'list_T2'],
-                                         output_names=[''],
-                                         function=list_input_files),
-                            name="test_node")
-
-        seg_pipe.connect(inputnode, 'list_T1',
-                         test_node, 'list_T1')
-        seg_pipe.connect(inputnode, 'list_T2',
-                         test_node, 'list_T2')
-
-        return seg_pipe
-
-    seg_pipe.connect(inputnode, 'list_T1',
-                     data_preparation_pipe, 'inputnode.list_T1')
-    seg_pipe.connect(inputnode, 'list_T2',
-                     data_preparation_pipe, 'inputnode.list_T2')
-    seg_pipe.connect(inputnode, 'indiv_params',
-                     data_preparation_pipe, 'inputnode.indiv_params')
-
-    # outputnode
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T1',
-                     outputnode, 'native_T1')
-
-    seg_pipe.connect(data_preparation_pipe, 'outputnode.native_T2',
-                     outputnode, 'native_T2')
-
-    if "denoise" in params["short_preparation_pipe"].keys():
-        seg_pipe.connect(data_preparation_pipe,
-                         'outputnode.stereo_denoised_T1',
-                         outputnode, 'stereo_denoised_T1')
-
-        seg_pipe.connect(data_preparation_pipe,
-                         'outputnode.stereo_denoised_T2',
-                         outputnode, 'stereo_denoised_T2')
-
-        if pad and space == "native":
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                data_preparation_pipe, "outputnode.stereo_denoised_T1",
-                outputnode, "native_denoised_T1", params,
-                inter_val="LIN")
-
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                data_preparation_pipe, "outputnode.stereo_denoised_T2",
-                outputnode, "native_denoised_T2", params,
-                inter_val="LIN")
-
-    seg_pipe.connect(
-        data_preparation_pipe, 'outputnode.stereo_T1',
-        outputnode, "stereo_T1")
-
-    seg_pipe.connect(
-        data_preparation_pipe, 'outputnode.stereo_T2',
-        outputnode, "stereo_T2")
-
-    seg_pipe.connect(
-        data_preparation_pipe, "outputnode.stereo_padded_T1",
-        outputnode, "stereo_padded_T1")
-
-    seg_pipe.connect(
-        data_preparation_pipe, "outputnode.stereo_padded_T2",
-        outputnode, "stereo_padded_T2")
-
-    seg_pipe.connect(
-        data_preparation_pipe,  "outputnode.stereo_to_native_trans",
-        outputnode, 'stereo_to_native_trans')
-
-    seg_pipe.connect(
-        data_preparation_pipe,  "outputnode.native_to_stereo_trans",
-        outputnode, 'native_to_stereo_trans')
-
-    if ("fast" in params["short_preparation_pipe"]
-            or "N4debias" in params["short_preparation_pipe"]
-            or "itk_debias" in params["short_preparation_pipe"]):
-
-        # debiased
-        seg_pipe.connect(
-            data_preparation_pipe, 'outputnode.stereo_debiased_T1',
-            outputnode, 'stereo_debiased_T1')
-
-        seg_pipe.connect(
-            data_preparation_pipe, 'outputnode.stereo_debiased_T2',
-            outputnode, 'stereo_debiased_T2')
-
-        if pad:
-
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                data_preparation_pipe, "outputnode.stereo_debiased_T1",
-                outputnode, "native_debiased_T1", params, inter_val="LIN")
-
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                data_preparation_pipe, "outputnode.stereo_debiased_T2",
-                outputnode, "native_debiased_T2", params, inter_val="LIN")
-
-    # debias
-    debias = NodeParams(T1xT2BiasFieldCorrection(),
-                        params=parse_key(params, "debias"),
-                        name='debias')
-
-    seg_pipe.connect(
-        data_preparation_pipe, 'outputnode.stereo_debiased_T1',
-        debias, 't1_file')
-    seg_pipe.connect(
-        data_preparation_pipe, 'outputnode.stereo_debiased_T2',
-        debias, 't2_file')
-
-    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "debias"),
-                     debias, 'indiv_params')
-
-    if mask_file is None:
-        debias.inputs.bet = 1
-
-    else:
-        print("Using native external mask {}".format(mask_file))
-
-        # apply transfo to list
-        apply_crop_external_mask = pe.Node(RegResample(inter_val="NN"),
-                                           name='apply_crop_external_mask')
-
-        apply_crop_external_mask.inputs.flo_file = mask_file
-
-        seg_pipe.connect(data_preparation_pipe,
-                         'outputnode.native_to_stereo_trans',
-                         apply_crop_external_mask, "trans_file")
-
-        seg_pipe.connect(
-                data_preparation_pipe, "outputnode.stereo_debiased_T1",
-                apply_crop_external_mask, "ref_file")
-
-        seg_pipe.connect(apply_crop_external_mask, "out_file",
-                         debias, "b")
-
-    # outputnode
-    if mask_file is None:
-        seg_pipe.connect(debias, "debiased_mask_file",
-                         outputnode, "stereo_brain_mask")
-    else:
-        seg_pipe.connect(apply_crop_external_mask, "out_file",
-                         outputnode, "stereo_brain_mask")
-
-    # debiased brain
-    seg_pipe.connect(debias, 't1_debiased_brain_file',
-                     outputnode, "stereo_masked_debiased_T1")
-
-    seg_pipe.connect(debias, 't2_debiased_brain_file',
-                     outputnode, "stereo_masked_debiased_T2")
-
-    if pad:
-        if mask_file is None:
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                debias, "debiased_mask_file",
-                outputnode, "native_brain_mask",  params)
-        else:
-            outputnode.inputs.native_brain_mask = mask_file
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            debias, "t1_debiased_brain_file",
-            outputnode, "native_masked_debiased_T1", params, inter_val="LIN")
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            debias, "t2_debiased_brain_file",
-            outputnode, "native_masked_debiased_T2", params, inter_val="LIN")
-
-    # debiased if not processed in short_preparation_pipe
-    if not ("fast" in params["short_preparation_pipe"]
-            or "N4debias" in params["short_preparation_pipe"]
-            or "itk_debias" in params["short_preparation_pipe"]):
-
-        seg_pipe.connect(
-            debias, 't1_debiased_file',
-            outputnode, 'stereo_debiased_T1')
-
-        seg_pipe.connect(
-            debias, 't2_debiased_file',
-            outputnode, 'stereo_debiased_T2')
-
-        if pad:
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                debias, 't1_debiased_file',
-                outputnode, "native_debiased_T1", params,
-                inter_val="LIN")
-
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                debias, 't2_debiased_file',
-                outputnode, "native_debiased_T2", params,
-                inter_val="LIN")
-
-
-    # create_brain_old_segment_from_mask_pipe was here
-
-    if "mask_from_brain_old_segment_pipe" in params.keys():
-
-        mask_from_brain_old_segment_pipe = create_mask_from_brain_old_segment_pipe(
-            params=parse_key(params, "mask_from_brain_old_segment_pipe"))
-
-        brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_csf',
-                         mask_from_brain_old_segment_pipe, 'inputnode.mask_csf')
-
-        brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
-                         mask_from_brain_old_segment_pipe, 'inputnode.mask_wm')
-
-        brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_gm',
-                         mask_from_brain_old_segment_pipe, 'inputnode.mask_gm')
-
-        brain_old_segment_pipe.connect(inputnode, 'indiv_params',
-                         mask_from_brain_old_segment_pipe, 'inputnode.indiv_params')
-
-        # outputnode
-        brain_old_segment_pipe.connect(mask_from_brain_old_segment_pipe, "wmgm2mesh.stl_file",
-                         outputnode, 'wmgm_stl')
-
-        brain_old_segment_pipe.connect(
-            mask_from_brain_old_segment_pipe,
-            'merge_indexed_mask.indexed_mask',
-            outputnode, 'stereo_segmented_brain_mask')
-
-        if pad and space == "native":
-            pad_back(
-                brain_old_segment_pipe, data_preparation_pipe,
-                mask_from_brain_old_segment_pipe,
-                'merge_indexed_mask.indexed_mask',
-                outputnode, "native_segmented_brain_mask", params)
-
-
-
-
-
-
-
-        if pad and space == "native":
-            pad_back(
-                seg_pipe, data_preparation_pipe,
-                export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                outputnode, "native_gen_5tt", params)
-
-    return seg_pipe
-
-
-
-
-
-
 def create_brain_old_segment_from_mask_pipe(
         params_template, params={},
         name="brain_old_segment_from_mask_pipe", space="native"):
@@ -877,13 +502,12 @@ def create_brain_segment_from_mask_pipe(
                                    outputnode, 'prob_csf')
 
     return brain_segment_pipe
+ # #############################################################################################################
 
-# #############################################################################################################################
 
-
-def create_full_ants_subpipes(
+def create_full_T1T2_subpipes(
         params_template_stereo, params_template_brainmask, params_template_seg,
-        params={}, name="full_ants_subpipes", mask_file=None,
+        params={}, name="full_T1T2_subpipes", mask_file=None,
         space="native", pad=False):
     """Description: Segment T1 (using T2 for bias correction) .
 
@@ -1653,9 +1277,9 @@ def create_full_ants_subpipes(
 # -soft ANTS_T1
 
 
-def create_full_T1_ants_subpipes(
+def create_full_T1_subpipes(
         params_template_stereo, params_template_brainmask, params_template_seg,
-        params={}, name="full_T1_ants_subpipes", mask_file=None,
+        params={}, name="full_T1_subpipes", mask_file=None,
         space="native", pad=False):
     """
     Description: Full pipeline to segment T1 (with no T2).
@@ -1873,14 +1497,22 @@ def create_full_T1_ants_subpipes(
             inter_val="LIN")
 
     # ### full_segment (restarting from the avg_align files)
-    if "brain_segment_pipe" not in params.keys():
-        print("Error, brain_segment_pipe was not found in params, \
-            skipping")
-        return seg_pipe
+    if "brain_segment_pipe" in params.keys():
 
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
         params_template=params_template_seg,
         params=parse_key(params, "brain_segment_pipe"), space=space)
+
+    elif "brain_old_segment_pipe" in params.keys():
+
+    brain_old_segment_pipe = create_brain_old_segment_from_mask_pipe(
+        params_template=params_template_seg,
+        params=parse_key(params, "brain_segment_pipe"), space=space)
+
+    else
+        print("Error, brain_segment_pipe was not found in params, \
+            skipping")
+        return seg_pipe
 
     seg_pipe.connect(
         data_preparation_pipe, 'outputnode.stereo_debiased_T1',
@@ -1930,16 +1562,35 @@ def create_full_T1_ants_subpipes(
             outputnode, "native_prob_csf", params,
             inter_val="LIN")
 
-    if "export_5tt_pipe" in params["brain_segment_pipe"]:
+    # ############################################## export 5tt
 
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                         outputnode, 'stereo_gen_5tt')
+    if "export_5tt_pipe" in params.keys():
+
+        export_5tt_pipe = create_5tt_pipe(
+            params=parse_key(params, "export_5tt_pipe"))
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_gm',
+                                   export_5tt_pipe, 'inputnode.gm_file')
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_wm',
+                                   export_5tt_pipe, 'inputnode.wm_file')
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_csf',
+                                   export_5tt_pipe, 'inputnode.csf_file')
+
+        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                                   outputnode, 'stereo_gen_5tt')
+
         if pad and space == "native":
             pad_back(
                 seg_pipe, data_preparation_pipe,
                 brain_segment_pipe, "outputnode.gen_5tt",
                 outputnode, "native_gen_5tt", params)
 
+    # ################################################### surface
     if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
 
         nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(

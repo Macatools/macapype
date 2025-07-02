@@ -1,0 +1,98 @@
+{
+    "general":
+    {
+        "template_name": "Haiko_v1.5"
+    },
+    "short_preparation_pipe":
+    {
+        "aladin_T2_on_T1":{},
+    	"crop_aladin_pipe":
+    	{
+            "reg_T1_on_template":
+            {
+                "rig_only_flag":true
+            },
+            "reg_T1_on_template2":
+            {
+                "rig_only_flag":true
+            }
+    	},
+        "denoise":
+        {
+        },
+        "N4debias":
+        {
+            "dimension": 3,
+            "bspline_fitting_distance": 200,
+            "n_iterations": [50, 50, 40, 30],
+            "convergence_threshold": 0.00000001,
+            "shrink_factor": 2,
+            "args": "-r 0 --verbose 1"
+        }
+    },
+    "extract_pipe":
+    {
+        "bet4animal":
+        {
+            "f": 0.5,
+            "label": 2,
+            "robust": true
+        }
+    },
+    "debias":
+    {
+        "s": 2
+    },
+    "brain_segment_pipe":
+    {
+        "reg":
+        {
+            "n": 2,
+            "m": "ref",
+            "dof": 12
+        },
+        "old_segment_pipe":
+        {
+            "segment":
+            {
+                "gm_output_type": [false, false, true],
+                "wm_output_type": [false, false, true],
+                "csf_output_type": [false, false, true]
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
+            }
+        },
+        "mask_from_seg_pipe":
+        {
+            "merge_indexed_mask":
+            {
+                "index_csf": 1,
+                "index_gm": 2,
+                "index_wm": 3
+            }
+        }
+    },
+    "export_5tt_pipe":
+    {
+    },
+    "IsoSurface_brain_pipe":
+    {
+        "merge_brain_tissues":
+        {
+            "keep_indexes": [2,3]
+        }
+    },
+    "IsoSurface_tissues_pipe":
+    {
+    }
+}
