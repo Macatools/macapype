@@ -1052,10 +1052,14 @@ def create_full_T1T2_subpipes(
             params_template=params_template_seg,
             params=parse_key(params, "brain_segment_pipe"), space=space)
 
+        seg_pipe_name = "brain_segment_pipe"
+
     elif "brain_old_segment_pipe" in params.keys():
         brain_segment_pipe = create_brain_old_segment_from_mask_pipe(
             params_template=params_template_seg,
             params=parse_key(params, "brain_old_segment_pipe"), space=space)
+
+        seg_pipe_name = "brain_old_segment_pipe"
 
     else:
         return seg_pipe
@@ -1063,7 +1067,7 @@ def create_full_T1T2_subpipes(
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
 
-    if 'use_T2' in params['brain_segment_pipe'].keys():
+    if 'use_T2' in params[seg_pipe_name].keys():
 
         # using T2
         if "masked_correct_bias_pipe" in params.keys():
