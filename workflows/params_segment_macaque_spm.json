@@ -65,5 +65,18 @@
                 "index_wm": 3
             }
         }
+    },
+    "export_5tt_pipe":
+    {
+    },
+    "IsoSurface_brain_pipe":
+    {
+        "merge_brain_tissues":
+        {
+            "keep_indexes": [2,3]
+        }
+    },
+    "IsoSurface_tissues_pipe":
+    {
     }
 }
