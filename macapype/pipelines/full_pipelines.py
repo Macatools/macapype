@@ -1499,19 +1499,19 @@ def create_full_T1_subpipes(
     # ### full_segment (restarting from the avg_align files)
     if "brain_segment_pipe" in params.keys():
 
-    brain_segment_pipe = create_brain_segment_from_mask_pipe(
-        params_template=params_template_seg,
-        params=parse_key(params, "brain_segment_pipe"), space=space)
+        brain_segment_pipe = create_brain_segment_from_mask_pipe(
+            params_template=params_template_seg,
+            params=parse_key(params, "brain_segment_pipe"), space=space)
 
     elif "brain_old_segment_pipe" in params.keys():
 
-    brain_old_segment_pipe = create_brain_old_segment_from_mask_pipe(
-        params_template=params_template_seg,
-        params=parse_key(params, "brain_segment_pipe"), space=space)
+        brain_old_segment_pipe = create_brain_old_segment_from_mask_pipe(
+            params_template=params_template_seg,
+            params=parse_key(params, "brain_segment_pipe"), space=space)
 
     else
-        print("Error, brain_segment_pipe was not found in params, \
-            skipping")
+        print("Error, brain_segment_pipe or brain_old_segment_pipe\
+            was not found in params, skipping")
         return seg_pipe
 
     seg_pipe.connect(
