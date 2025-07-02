@@ -816,7 +816,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 datasink, '@native_segmented_brain_mask')
 
             # rename 5tt
-            if "export_5tt_pipe" in params["brain_segment_pipe"].keys():
+            if "export_5tt_pipe" in params.keys():
                 rename_native_gen_5tt = pe.Node(
                     niu.Rename(), name="rename_native_gen_5tt")
                 rename_native_gen_5tt.inputs.format_string = \
@@ -832,8 +832,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     rename_native_gen_5tt, 'out_file',
                     datasink, '@native_gen_5tt')
 
-            if "nii2mesh_brain_pipe" in params["brain_segment_pipe"] \
-                    or "IsoSurface_brain_pipe" in params["brain_segment_pipe"]:
+            if "nii2mesh_brain_pipe" in params.keys() \
+                    or "IsoSurface_brain_pipe" in params.keys():
 
                 print("Renaming wmgm_stl file")
 
