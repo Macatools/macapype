@@ -111,7 +111,7 @@ def create_brain_old_segment_from_mask_pipe(
         brain_old_segment_pipe.connect(reg, 'inv_transfo_file',
                          old_segment_pipe, 'inputnode.inv_transfo_file')
 
-        brain_old_segment_pipe.connect(debias, 't1_debiased_brain_file',
+        brain_old_segment_pipe.connect(inputnode, 'masked_debiased_T1',
                          old_segment_pipe, 'inputnode.native_T1')
 
         brain_old_segment_pipe.connect(inputnode, 'indiv_params',
