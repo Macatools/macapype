@@ -1032,24 +1032,4 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     seg_pipe.connect(bin_csf, 'out_file',
                      merge_indexed_mask, "mask_csf_file")
 
-    # Compute union of the 3 tissues
-    # Done with 2 fslmaths as it seems to hard to do it
-    wmgm_union = pe.Node(fsl.BinaryMaths(), name="wmgm_union")
-    wmgm_union.inputs.operation = "add"
-    seg_pipe.connect(bin_gm, 'out_file', wmgm_union, 'in_file')
-    seg_pipe.connect(bin_wm, 'out_file', wmgm_union, 'operand_file')
-
-    # bin mask
-    bin_mask = pe.Node(interface=fsl.UnaryMaths(), name="bin_mask")
-    bin_mask.inputs.operation = "bin"
-
-    seg_pipe.connect(wmgm_union, 'out_file', bin_mask, 'in_file')
-
-    # wmgm2mesh
-    wmgm2mesh = pe.Node(
-        interface=IsoSurface(),
-        name="wmgm2mesh")
-
-    seg_pipe.connect(bin_mask, 'out_file', wmgm2mesh, "nii_file")
-
     return seg_pipe

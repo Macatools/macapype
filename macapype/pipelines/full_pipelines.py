@@ -365,145 +365,47 @@ def create_full_spm_subpipes(
                 outputnode, "native_debiased_T2", params,
                 inter_val="LIN")
 
-    # Iterative registration to the INIA19 template
-    if "reg" not in params.keys():
 
-        print("No reg, skipping")
-        return seg_pipe
+    # create_brain_old_segment_from_mask_pipe was here
 
-    reg = NodeParams(IterREGBET(),
-                     params=parse_key(params, "reg"),
-                     name='reg')
+    if "mask_from_brain_old_segment_pipe" in params.keys():
 
-    reg.inputs.refb_file = params_template_brainmask["template_brain"]
+        mask_from_brain_old_segment_pipe = create_mask_from_brain_old_segment_pipe(
+            params=parse_key(params, "mask_from_brain_old_segment_pipe"))
 
-    seg_pipe.connect(debias, 't1_debiased_file',
-                     reg, 'inw_file')
+        brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_csf',
+                         mask_from_brain_old_segment_pipe, 'inputnode.mask_csf')
 
-    seg_pipe.connect(debias, 't1_debiased_brain_file',
-                     reg, 'inb_file')
+        brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
+                         mask_from_brain_old_segment_pipe, 'inputnode.mask_wm')
 
-    seg_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
-                     reg, 'indiv_params')
+        brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_gm',
+                         mask_from_brain_old_segment_pipe, 'inputnode.mask_gm')
 
-    # Compute brain mask using old_segment of SPM and postprocessing on
-    # tissues' masks
-    if "old_segment_pipe" not in params.keys():
-        print("No segmentation, skipping")
-        return seg_pipe
-
-    if space == "template":
-
-        old_segment_pipe = create_old_segment_pipe(
-            params_template_seg, params=parse_key(params, "old_segment_pipe"))
-
-        seg_pipe.connect(reg, 'warp_file',
-                         old_segment_pipe, 'inputnode.T1')
-
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         old_segment_pipe, 'inputnode.indiv_params')
-
-    elif space == "native":
-
-        old_segment_pipe = create_native_old_segment_pipe(
-            params_template_seg, params=parse_key(params, "old_segment_pipe"))
-
-        seg_pipe.connect(reg, 'inv_transfo_file',
-                         old_segment_pipe, 'inputnode.inv_transfo_file')
-
-        seg_pipe.connect(debias, 't1_debiased_brain_file',
-                         old_segment_pipe, 'inputnode.native_T1')
-
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         old_segment_pipe, 'inputnode.indiv_params')
-    else:
-
-        print("Error, space={}".format(space))
-        return seg_pipe
-
-    # outputnode
-    seg_pipe.connect(
-        old_segment_pipe, 'outputnode.prob_wm',
-        outputnode, 'stereo_prob_wm')
-
-    seg_pipe.connect(
-        old_segment_pipe, 'outputnode.prob_csf',
-        outputnode, 'stereo_prob_csf')
-
-    seg_pipe.connect(
-        old_segment_pipe, 'outputnode.prob_gm',
-        outputnode, 'stereo_prob_gm')
-
-    if pad and space == "native":
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            old_segment_pipe, "outputnode.prob_gm",
-            outputnode, "native_prob_gm", params, inter_val="LIN")
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            old_segment_pipe, "outputnode.prob_wm",
-            outputnode, "native_prob_wm", params, inter_val="LIN")
-
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            old_segment_pipe, "outputnode.prob_csf",
-            outputnode, "native_prob_csf", params, inter_val="LIN")
-
-    if "mask_from_seg_pipe" in params.keys():
-
-        mask_from_seg_pipe = create_mask_from_seg_pipe(
-            params=parse_key(params, "mask_from_seg_pipe"))
-
-        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_csf',
-                         mask_from_seg_pipe, 'inputnode.mask_csf')
-
-        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
-                         mask_from_seg_pipe, 'inputnode.mask_wm')
-
-        seg_pipe.connect(old_segment_pipe, 'outputnode.threshold_gm',
-                         mask_from_seg_pipe, 'inputnode.mask_gm')
-
-        seg_pipe.connect(inputnode, 'indiv_params',
-                         mask_from_seg_pipe, 'inputnode.indiv_params')
+        brain_old_segment_pipe.connect(inputnode, 'indiv_params',
+                         mask_from_brain_old_segment_pipe, 'inputnode.indiv_params')
 
         # outputnode
-        seg_pipe.connect(mask_from_seg_pipe, "wmgm2mesh.stl_file",
+        brain_old_segment_pipe.connect(mask_from_brain_old_segment_pipe, "wmgm2mesh.stl_file",
                          outputnode, 'wmgm_stl')
 
-        seg_pipe.connect(
-            mask_from_seg_pipe,
+        brain_old_segment_pipe.connect(
+            mask_from_brain_old_segment_pipe,
             'merge_indexed_mask.indexed_mask',
             outputnode, 'stereo_segmented_brain_mask')
 
         if pad and space == "native":
             pad_back(
-                seg_pipe, data_preparation_pipe,
-                mask_from_seg_pipe,
+                brain_old_segment_pipe, data_preparation_pipe,
+                mask_from_brain_old_segment_pipe,
                 'merge_indexed_mask.indexed_mask',
                 outputnode, "native_segmented_brain_mask", params)
 
-    if "export_5tt_pipe" in params["old_segment_pipe"].keys():
 
-        export_5tt_pipe = create_5tt_pipe(
-            params=parse_key(params["old_segment_pipe"], "export_5tt_pipe"))
 
-        seg_pipe.connect(
-            old_segment_pipe, 'outputnode.threshold_gm',
-            export_5tt_pipe, 'inputnode.gm_file')
 
-        seg_pipe.connect(
-            old_segment_pipe, 'outputnode.threshold_wm',
-            export_5tt_pipe, 'inputnode.wm_file')
 
-        seg_pipe.connect(
-            old_segment_pipe, 'outputnode.threshold_csf',
-            export_5tt_pipe, 'inputnode.csf_file')
 
-        seg_pipe.connect(
-            export_5tt_pipe, 'export_5tt.gen_5tt_file',
-            outputnode, 'stereo_gen_5tt')
 
         if pad and space == "native":
             pad_back(
@@ -512,6 +414,138 @@ def create_full_spm_subpipes(
                 outputnode, "native_gen_5tt", params)
 
     return seg_pipe
+
+
+
+
+
+
+def create_brain_old_segment_from_mask_pipe(
+        params_template, params={},
+        name="brain_old_segment_from_mask_pipe", space="native"):
+
+    brain_old_segment_pipe = pe.Workflow(name=name)
+
+    # creating inputnode
+    inputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=['masked_debiased_T1', "debiased_T1", 'indiv_params']),
+        name='inputnode')
+
+    # creating outputnode
+    outputnode = pe.Node(
+        niu.IdentityInterface(
+            fields=["segmented_file",
+                    "threshold_gm", "threshold_wm", "threshold_csf",
+                    "prob_gm", "prob_wm", "prob_csf"]),
+        name='outputnode')
+
+    # Iterative registration to the INIA19 template
+    if "reg" not in params.keys():
+
+        print("No reg, skipping")
+        return brain_old_segment_pipe
+
+    reg = NodeParams(IterREGBET(),
+                     params=parse_key(params, "reg"),
+                     name='reg')
+
+    reg.inputs.refb_file = params_template_brainmask["template_brain"]
+
+    brain_old_segment_pipe.connect(inputnode, 'debiased_T1',
+                     reg, 'inw_file')
+
+    brain_old_segment_pipe.connect(inputnode, 'masked_debiased_T1',
+                     reg, 'inb_file')
+
+    brain_old_segment_pipe.connect(inputnode, ('indiv_params', parse_key, "reg"),
+                     reg, 'indiv_params')
+
+    # Compute brain mask using old_segment of SPM and postprocessing on
+    # tissues' masks
+    if "old_segment_pipe" not in params.keys():
+        print("No segmentation, skipping")
+        return brain_old_segment_pipe
+
+    if space == "template":
+
+        old_segment_pipe = create_old_segment_pipe(
+            params_template_seg, params=parse_key(params, "old_segment_pipe"))
+
+        brain_old_segment_pipe.connect(reg, 'warp_file',
+                         old_segment_pipe, 'inputnode.T1')
+
+        brain_old_segment_pipe.connect(inputnode, 'indiv_params',
+                         old_segment_pipe, 'inputnode.indiv_params')
+
+    elif space == "native":
+
+        old_segment_pipe = create_native_old_segment_pipe(
+            params_template_seg, params=parse_key(params, "old_segment_pipe"))
+
+        brain_old_segment_pipe.connect(reg, 'inv_transfo_file',
+                         old_segment_pipe, 'inputnode.inv_transfo_file')
+
+        brain_old_segment_pipe.connect(debias, 't1_debiased_brain_file',
+                         old_segment_pipe, 'inputnode.native_T1')
+
+        brain_old_segment_pipe.connect(inputnode, 'indiv_params',
+                         old_segment_pipe, 'inputnode.indiv_params')
+    else:
+
+        print("Error, space={}".format(space))
+        return brain_old_segment_pipe
+
+    # outputnode
+    brain_old_segment_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_wm',
+        outputnode, 'prob_wm')
+
+    brain_old_segment_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_csf',
+        outputnode, 'prob_csf')
+
+    brain_old_segment_pipe.connect(
+        old_segment_pipe, 'outputnode.prob_gm',
+        outputnode, 'prob_gm')
+
+    brain_old_segment_pipe.connect(
+        old_segment_pipe, 'outputnode.threshold_wm',
+        outputnode, 'threshold_wm')
+
+    brain_old_segment_pipe.connect(
+        old_segment_pipe, 'outputnode.threshold_csf',
+        outputnode, 'threshold_csf')
+
+    brain_old_segment_pipe.connect(
+        old_segment_pipe, 'outputnode.threshold_gm',
+        outputnode, 'threshold_gm')
+
+    # mask_from_seg_pipe
+    if not mask_from_seg_pipe in params:
+        print("** Warning, segmented file will not be provided, \
+            missing mask_from_seg_pipe in brain_old_segment_pipe**")
+    mask_from_seg_pipe = create_mask_from_seg_pipe(
+        params=parse_key(params, "mask_from_seg_pipe"))
+
+    brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_csf',
+                        mask_from_seg_pipe, 'inputnode.mask_csf')
+
+    brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_wm',
+                        mask_from_seg_pipe, 'inputnode.mask_wm')
+
+    brain_old_segment_pipe.connect(old_segment_pipe, 'outputnode.threshold_gm',
+                        mask_from_seg_pipe, 'inputnode.mask_gm')
+
+    brain_old_segment_pipe.connect(inputnode, 'indiv_params',
+                        mask_from_seg_pipe, 'inputnode.indiv_params')
+
+    # outputnode
+    brain_old_segment_pipe.connect(mask_from_seg_pipe,
+                     'merge_indexed_mask.indexed_mask',
+                     outputnode, 'segmented_file')
+
+    return brain_old_segment_pipe
 
 ###############################################################################
 # ANTS based segmentation (from Kepkee Loh / Julien Sein)
@@ -577,9 +611,9 @@ def create_brain_segment_from_mask_pipe(
     # creating outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["segmented_file", "threshold_gm", "threshold_wm",
-                    "threshold_csf", "prob_gm", "prob_wm",
-                    "prob_csf", "gen_5tt"]),
+            fields=["segmented_file",
+                    "threshold_gm", "threshold_wm", "threshold_csf",
+                    "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
 
     if "use_priors" in params["segment_atropos_pipe"].keys():
@@ -751,26 +785,6 @@ def create_brain_segment_from_mask_pipe(
         inputnode, 'masked_debiased_T1',
         segment_atropos_pipe, "inputnode.brain_file")
 
-    if "export_5tt_pipe" in params.keys():
-
-        export_5tt_pipe = create_5tt_pipe(
-            params=parse_key(params, "export_5tt_pipe"))
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_gm',
-                                   export_5tt_pipe, 'inputnode.gm_file')
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_wm',
-                                   export_5tt_pipe, 'inputnode.wm_file')
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_csf',
-                                   export_5tt_pipe, 'inputnode.csf_file')
-
-        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
-                                   outputnode, 'gen_5tt')
-
     if space == 'native':
 
         brain_segment_pipe.connect(segment_atropos_pipe,
@@ -854,6 +868,7 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(reg_seg_pipe,
                                    'outputnode.norm_threshold_csf',
                                    outputnode, 'threshold_csf')
+
         brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_gm',
                                    outputnode, 'prob_gm')
         brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_wm',
@@ -1406,12 +1421,21 @@ def create_full_ants_subpipes(
 
     # ################################### brain_segment
     # (restarting from the avg_align files)
-    if "brain_segment_pipe" not in params.keys():
+    if "brain_segment_pipe" in params.keys():
         return seg_pipe
 
-    brain_segment_pipe = create_brain_segment_from_mask_pipe(
-        params_template=params_template_seg,
-        params=parse_key(params, "brain_segment_pipe"), space=space)
+        brain_segment_pipe = create_brain_segment_from_mask_pipe(
+            params_template=params_template_seg,
+            params=parse_key(params, "brain_segment_pipe"), space=space)
+
+    elif brain_old_segment_pipe in params.keys():
+
+        brain_segment_pipe = create_brain_old_segment_from_mask_pipe(
+            params_template=params_template_seg,
+            params=parse_key(params, "brain_old_segment_pipe"), space=space)
+
+    else:
+        return seg_pipe
 
     seg_pipe.connect(inputnode, 'indiv_params',
                      brain_segment_pipe, 'inputnode.indiv_params')
@@ -1527,10 +1551,25 @@ def create_full_ants_subpipes(
 
     # ############################################## export 5tt
 
-    if "export_5tt_pipe" in params["brain_segment_pipe"]:
+    if "export_5tt_pipe" in params.keys():
 
-        seg_pipe.connect(brain_segment_pipe, 'outputnode.gen_5tt',
-                         outputnode, 'stereo_gen_5tt')
+        export_5tt_pipe = create_5tt_pipe(
+            params=parse_key(params, "export_5tt_pipe"))
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_gm',
+                                   export_5tt_pipe, 'inputnode.gm_file')
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_wm',
+                                   export_5tt_pipe, 'inputnode.wm_file')
+
+        brain_segment_pipe.connect(segment_atropos_pipe,
+                                   'outputnode.threshold_csf',
+                                   export_5tt_pipe, 'inputnode.csf_file')
+
+        brain_segment_pipe.connect(export_5tt_pipe, 'export_5tt.gen_5tt_file',
+                                   outputnode, 'stereo_gen_5tt')
 
         if pad and space == "native":
             pad_back(
@@ -1540,15 +1579,15 @@ def create_full_ants_subpipes(
 
     # ############################################## surface
 
-    if "nii2mesh_brain_pipe" in params["brain_segment_pipe"].keys():
+    if "nii2mesh_brain_pipe" in params.keys():
 
         nii2mesh_brain_pipe = create_nii2mesh_brain_pipe(
-            params=parse_key(params["brain_segment_pipe"],
-                             "nii2mesh_brain_pipe"))
+            params=parse_key(params["nii2mesh_brain_pipe"]))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                          nii2mesh_brain_pipe, 'inputnode.segmented_file')
 
+        # outputnode
         seg_pipe.connect(nii2mesh_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
@@ -1561,15 +1600,15 @@ def create_full_ants_subpipes(
                 nii2mesh_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
-    elif "IsoSurface_brain_pipe" in params["brain_segment_pipe"].keys():
+    elif "IsoSurface_brain_pipe" in params.keys():
 
         IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
-            params=parse_key(params["brain_segment_pipe"],
-                             "IsoSurface_brain_pipe"))
+            params=parse_key(params["IsoSurface_brain_pipe"]))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
                          IsoSurface_brain_pipe, 'inputnode.segmented_file')
 
+        # outputnode
         seg_pipe.connect(IsoSurface_brain_pipe, "outputnode.wmgm_stl",
                          outputnode, 'wmgm_stl')
 
@@ -1582,11 +1621,10 @@ def create_full_ants_subpipes(
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
-    if "IsoSurface_tissues_pipe" in params["brain_segment_pipe"]:
+    if "IsoSurface_tissues_pipe" in params:
 
         IsoSurface_tissues_pipe = create_IsoSurface_tissues_pipe(
-            params=parse_key(params["brain_segment_pipe"],
-                             "IsoSurface_tissues_pipe"))
+            params=parse_key(params["IsoSurface_tissues_pipe"]))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
                          IsoSurface_tissues_pipe, 'inputnode.threshold_csf')
@@ -1597,6 +1635,7 @@ def create_full_ants_subpipes(
         seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_gm",
                          IsoSurface_tissues_pipe, 'inputnode.threshold_gm')
 
+        # outputnode
         seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.csf_stl",
                          outputnode, 'csf_stl')
 
