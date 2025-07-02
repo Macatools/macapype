@@ -1183,15 +1183,15 @@ def create_full_T1T2_subpipes(
         export_5tt_pipe = create_5tt_pipe(
             params=parse_key(params, "export_5tt_pipe"))
 
-        brain_segment_pipe.connect(segment_atropos_pipe,
+        brain_segment_pipe.connect(brain_segment_pipe,
                                    'outputnode.threshold_gm',
                                    export_5tt_pipe, 'inputnode.gm_file')
 
-        brain_segment_pipe.connect(segment_atropos_pipe,
+        brain_segment_pipe.connect(brain_segment_pipe,
                                    'outputnode.threshold_wm',
                                    export_5tt_pipe, 'inputnode.wm_file')
 
-        brain_segment_pipe.connect(segment_atropos_pipe,
+        brain_segment_pipe.connect(brain_segment_pipe,
                                    'outputnode.threshold_csf',
                                    export_5tt_pipe, 'inputnode.csf_file')
 
