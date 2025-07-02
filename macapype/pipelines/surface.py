@@ -769,9 +769,6 @@ def create_IsoSurface_tissues_pipe(params={},
             fields=["threshold_csf", "threshold_wm", "threshold_gm"]),
         name='inputnode')
 
-
-
-
     # bin_csf
     bin_csf = pe.Node(interface=fsl.UnaryMaths(), name="bin_csf")
     bin_csf.inputs.operation = "bin"
@@ -796,12 +793,6 @@ def create_IsoSurface_tissues_pipe(params={},
     IsoSurface_tissues_pipe.connect(keep_gcc_csf_mask, 'gcc_nii_file',
                                     csf2mesh, "nii_file")
 
-
-
-
-
-
-
     # bin_wm
     bin_wm = pe.Node(interface=fsl.UnaryMaths(), name="bin_wm")
     bin_wm.inputs.operation = "bin"
@@ -821,15 +812,10 @@ def create_IsoSurface_tissues_pipe(params={},
 
     # wm2mesh
     wm2mesh = pe.Node(interface=IsoSurface(),
-                       name="wm2mesh")
+                      name="wm2mesh")
 
     IsoSurface_tissues_pipe.connect(keep_gcc_wm_mask, 'gcc_nii_file',
                                     wm2mesh, "nii_file")
-
-
-
-
-
 
     # bin_gm
     bin_gm = pe.Node(interface=fsl.UnaryMaths(), name="bin_gm")
@@ -850,17 +836,10 @@ def create_IsoSurface_tissues_pipe(params={},
 
     # gm2mesh
     gm2mesh = pe.Node(interface=IsoSurface(),
-                       name="gm2mesh")
+                      name="gm2mesh")
 
     IsoSurface_tissues_pipe.connect(keep_gcc_gm_mask, 'gcc_nii_file',
                                     gm2mesh, "nii_file")
-
-
-
-
-
-
-
 
     # outputnode
     outputnode = pe.Node(

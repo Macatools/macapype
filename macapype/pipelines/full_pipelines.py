@@ -1341,7 +1341,7 @@ def create_full_ants_subpipes(
                     outputnode, "native_masked_debiased_T2", params,
                     inter_val="LIN")
         else:
-            print ('debias performed brain extraction as well')
+            print('debias performed brain extraction as well')
 
     else:
 
