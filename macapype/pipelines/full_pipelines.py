@@ -1506,7 +1506,7 @@ def create_full_T1_subpipes(
             params=parse_key(params, "brain_segment_pipe"), space=space)
 
     elif "brain_old_segment_pipe" in params.keys():
-        brain_old_segment_pipe = create_brain_old_segment_from_mask_pipe(
+        brain_segment_pipe = create_brain_old_segment_from_mask_pipe(
             params_template=params_template_seg,
             params=parse_key(params, "brain_old_segment_pipe"), space=space)
 
