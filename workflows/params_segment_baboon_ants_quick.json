@@ -61,16 +61,16 @@
                 "wm": 3,
                 "csf": 1
             }
-        },
-        "export_5tt_pipe":
+        }
+    },
+    "export_5tt_pipe":
+    {
+    },
+    "IsoSurface_brain_pipe":
+    {
+        "merge_brain_tissues":
         {
-        },
-        "IsoSurface_brain_pipe":
-        {
-            "merge_brain_tissues":
-            {
-                "keep_indexes": [2,3]
-            }
+            "keep_indexes": [2,3]
         }
     }
 }
