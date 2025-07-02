@@ -1355,6 +1355,8 @@ def create_full_T1_subpipes(
                     "stereo_wmgm_mask",
                     "wmgm_stl",
 
+                    "csf_stl", "gm_stl", "wm_stl",
+
                     "stereo_to_native_trans",
                     "native_to_stereo_trans"]),
         name='outputnode')
