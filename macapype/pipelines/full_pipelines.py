@@ -1420,7 +1420,7 @@ def create_full_T1_subpipes(
             inter_val="LIN")
 
     #  extract brain pipeline
-    if "extract_pipe" in params.keys():
+    if "extract_pipe" not in params.keys():
         print("Error, extract_pipe was not found in params, \
             skipping")
         exit(-1)
