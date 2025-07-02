@@ -1634,4 +1634,28 @@ def create_full_T1_subpipes(
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
 
+    if "IsoSurface_tissues_pipe" in params:
+
+        IsoSurface_tissues_pipe = create_IsoSurface_tissues_pipe(
+            params=parse_key(params, "IsoSurface_tissues_pipe"))
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_csf')
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_wm",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_wm')
+
+        seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_gm",
+                         IsoSurface_tissues_pipe, 'inputnode.threshold_gm')
+
+        # outputnode
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.csf_stl",
+                         outputnode, 'csf_stl')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.wm_stl",
+                         outputnode, 'wm_stl')
+
+        seg_pipe.connect(IsoSurface_tissues_pipe, "outputnode.gm_stl",
+                         outputnode, 'gm_stl')
+
     return seg_pipe
