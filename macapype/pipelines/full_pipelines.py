@@ -1201,7 +1201,7 @@ def create_full_T1T2_subpipes(
         if pad and space == "native":
             pad_back(
                 seg_pipe, data_preparation_pipe,
-                brain_segment_pipe, "outputnode.gen_5tt",
+                export_5tt_pipe, 'export_5tt.gen_5tt_file',
                 outputnode, "native_gen_5tt", params)
 
     # ############################################## surface
@@ -1588,7 +1588,7 @@ def create_full_T1_subpipes(
         if pad and space == "native":
             pad_back(
                 seg_pipe, data_preparation_pipe,
-                brain_segment_pipe, "outputnode.gen_5tt",
+                export_5tt_pipe, 'export_5tt.gen_5tt_file'
                 outputnode, "native_gen_5tt", params)
 
     # ################################################### surface
