@@ -75,7 +75,7 @@ def create_brain_old_segment_from_mask_pipe(
                      params=parse_key(params, "reg"),
                      name='reg')
 
-    reg.inputs.refb_file = params_template_brainmask["template_brain"]
+    reg.inputs.refb_file = params_template["template_brain"]
 
     brain_old_segment_pipe.connect(inputnode, 'debiased_T1',
                      reg, 'inw_file')
@@ -95,7 +95,7 @@ def create_brain_old_segment_from_mask_pipe(
     if space == "template":
 
         old_segment_pipe = create_old_segment_pipe(
-            params_template_seg, params=parse_key(params, "old_segment_pipe"))
+            params_template, params=parse_key(params, "old_segment_pipe"))
 
         brain_old_segment_pipe.connect(reg, 'warp_file',
                          old_segment_pipe, 'inputnode.T1')
@@ -106,7 +106,7 @@ def create_brain_old_segment_from_mask_pipe(
     elif space == "native":
 
         old_segment_pipe = create_native_old_segment_pipe(
-            params_template_seg, params=parse_key(params, "old_segment_pipe"))
+            params_template, params=parse_key(params, "old_segment_pipe"))
 
         brain_old_segment_pipe.connect(reg, 'inv_transfo_file',
                          old_segment_pipe, 'inputnode.inv_transfo_file')
