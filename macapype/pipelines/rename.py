@@ -748,7 +748,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     rename_native_brain_mask, 'out_file',
                     datasink, '@native_brain_mask')
 
-        if "brain_segment_pipe" in params or "brain_old_segment_pipe" in params:
+        if "brain_segment_pipe" in params or \
+                "brain_old_segment_pipe" in params:
 
             # rename prob_wm
             rename_native_prob_wm = pe.Node(

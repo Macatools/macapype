@@ -9,9 +9,6 @@ from ..nodes.segment import (AtroposN4, merge_masks,
                              merge_imgs, split_indexed_mask, copy_header,
                              compute_5tt, fill_list_vol)
 
-
-from macapype.nodes.surface import IsoSurface
-
 from ..utils.misc import (gunzip, merge_3_elem_to_list,
                           get_pattern, get_list_length, get_index)
 
