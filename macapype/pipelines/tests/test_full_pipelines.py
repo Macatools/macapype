@@ -161,8 +161,7 @@ def test_create_full_T1_subpipes_all_default_params():
                     "graph.png"))
 
 
-
 if __name__ == '__main__':
 
-    test_create_full_ants_T1T2_subpipes_all_default_params()
-    test_create_full_ants_T1_subpipes_all_default_params()
+    test_create_full_T1T2_subpipes_all_default_params()
+    test_create_full_T1_subpipes_all_default_params()
