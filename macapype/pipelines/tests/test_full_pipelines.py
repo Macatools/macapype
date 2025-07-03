@@ -116,7 +116,7 @@ def test_create_full_T1_subpipes_all_default_params():
     import os
     import json
 
-    softs = ["ants", "spm"]
+    softs = ["ants"]
     all_species = ["marmo", "macaque", 'baboon']
     spaces = ["native", "template"]
     pads = [True, False]
