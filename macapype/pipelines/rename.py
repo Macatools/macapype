@@ -358,7 +358,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_brain_mask, 'out_file',
                 datasink, '@stereo_brain_mask')
 
-    if "brain_segment_pipe" in params or "old_segment_pipe" in params:
+    if "brain_segment_pipe" in params or "brain_old_segment_pipe" in params:
 
         # rename prob_wm
         rename_stereo_prob_wm = pe.Node(niu.Rename(),
@@ -408,8 +408,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_prob_csf, 'out_file',
             datasink, '@stereo_prob_csf')
 
-    if "brain_segment_pipe" in params:
-
         # rename segmented_brain_mask
         rename_stereo_segmented_brain_mask = pe.Node(
             niu.Rename(),
@@ -448,7 +446,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 datasink, '@stereo_padded_segmented_brain_mask')
 
         # rename 5tt
-        if "export_5tt_pipe" in params["brain_segment_pipe"].keys():
+        if "export_5tt_pipe" in params.keys():
             rename_stereo_gen_5tt = pe.Node(
                 niu.Rename(),
                 name="rename_stereo_gen_5tt")
@@ -465,8 +463,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_gen_5tt, 'out_file',
                 datasink, '@stereo_gen_5tt')
 
-        if "nii2mesh_brain_pipe" in params["brain_segment_pipe"] \
-                or "IsoSurface_brain_pipe" in params["brain_segment_pipe"]:
+        if "nii2mesh_brain_pipe" in params \
+                or "IsoSurface_brain_pipe" in params:
 
             print("Renaming wmgm_stl file")
 
@@ -501,7 +499,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_wmgm_mask, 'out_file',
                 datasink, '@stereo_wmgm_mask')
 
-        if "IsoSurface_tissues_pipe" in params["brain_segment_pipe"]:
+        if "IsoSurface_tissues_pipe" in params:
 
             print("Renaming csf_stl file")
 
@@ -553,45 +551,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_gm_stl, 'out_file',
                 datasink, '@gm_stl')
-
-    elif "old_segment_pipe" in params.keys():
-
-        if "mask_from_seg_pipe" in params.keys():
-
-            # rename segmented_brain_mask
-            rename_stereo_segmented_brain_mask = pe.Node(
-                niu.Rename(),
-                name="rename_stereo_segmented_brain_mask")
-            rename_stereo_segmented_brain_mask.inputs.format_string = \
-                pref_deriv + "_space-stereo_desc-brain_dseg"
-            rename_stereo_segmented_brain_mask.inputs.parse_string = \
-                parse_str
-            rename_stereo_segmented_brain_mask.inputs.keep_ext = True
-
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.stereo_segmented_brain_mask',
-                rename_stereo_segmented_brain_mask, 'in_file')
-
-            main_workflow.connect(
-                rename_stereo_segmented_brain_mask, 'out_file',
-                datasink, '@stereo_segmented_brain_mask')
-
-            # rename 5tt
-            if "export_5tt_pipe" in params["old_segment_pipe"].keys():
-                rename_stereo_gen_5tt = pe.Node(
-                    niu.Rename(), name="rename_stereo_gen_5tt")
-                rename_stereo_gen_5tt.inputs.format_string = \
-                    pref_deriv + "_space-stereo_desc-5tt_dseg"
-                rename_stereo_gen_5tt.inputs.parse_string = parse_str
-                rename_stereo_gen_5tt.inputs.keep_ext = True
-
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.stereo_gen_5tt',
-                    rename_stereo_gen_5tt, 'in_file')
-
-                main_workflow.connect(
-                    rename_stereo_gen_5tt, 'out_file',
-                    datasink, '@stereo_gen_5tt')
 
     # if pad back to native is defined
     if pad:
@@ -789,7 +748,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     rename_native_brain_mask, 'out_file',
                     datasink, '@native_brain_mask')
 
-        if "brain_segment_pipe" in params or "old_segment_pipe" in params:
+        if "brain_segment_pipe" in params or \
+                "brain_old_segment_pipe" in params:
 
             # rename prob_wm
             rename_native_prob_wm = pe.Node(
@@ -839,8 +799,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_native_prob_csf, 'out_file',
                 datasink, '@native_prob_csf')
 
-        if "brain_segment_pipe" in params:
-
             # rename segmented_brain_mask
             rename_native_segmented_brain_mask = pe.Node(
                 niu.Rename(),
@@ -859,7 +817,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 datasink, '@native_segmented_brain_mask')
 
             # rename 5tt
-            if "export_5tt_pipe" in params["brain_segment_pipe"].keys():
+            if "export_5tt_pipe" in params.keys():
                 rename_native_gen_5tt = pe.Node(
                     niu.Rename(), name="rename_native_gen_5tt")
                 rename_native_gen_5tt.inputs.format_string = \
@@ -875,8 +833,8 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                     rename_native_gen_5tt, 'out_file',
                     datasink, '@native_gen_5tt')
 
-            if "nii2mesh_brain_pipe" in params["brain_segment_pipe"] \
-                    or "IsoSurface_brain_pipe" in params["brain_segment_pipe"]:
+            if "nii2mesh_brain_pipe" in params.keys() \
+                    or "IsoSurface_brain_pipe" in params.keys():
 
                 print("Renaming wmgm_stl file")
 
@@ -910,60 +868,3 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 main_workflow.connect(
                     rename_native_wmgm_mask, 'out_file',
                     datasink, '@native_wmgm_mask')
-
-        elif "old_segment_pipe" in params.keys():
-
-            if "mask_from_seg_pipe" in params.keys():
-
-                # rename segmented_brain_mask
-                rename_native_segmented_brain_mask = pe.Node(
-                    niu.Rename(),
-                    name="rename_native_segmented_brain_mask")
-                rename_native_segmented_brain_mask.inputs.format_string = \
-                    pref_deriv + "_space-native_desc-brain_dseg"
-                rename_native_segmented_brain_mask.inputs.parse_string = \
-                    parse_str
-                rename_native_segmented_brain_mask.inputs.keep_ext = True
-
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.native_segmented_brain_mask',
-                    rename_native_segmented_brain_mask, 'in_file')
-
-                main_workflow.connect(
-                    rename_native_segmented_brain_mask, 'out_file',
-                    datasink, '@native_segmented_brain_mask')
-
-                print("Renaming wmgm_stl file")
-
-                rename_native_wmgm_stl = pe.Node(
-                    niu.Rename(),
-                    name="rename_native_wmgm_stl")
-                rename_native_wmgm_stl.inputs.format_string = \
-                    pref_deriv + "_desc-wmgm_mask"
-                rename_native_wmgm_stl.inputs.parse_string = parse_str
-                rename_native_wmgm_stl.inputs.keep_ext = True
-
-                main_workflow.connect(
-                    segment_pnh_pipe, 'outputnode.wmgm_stl',
-                    rename_native_wmgm_stl, 'in_file')
-
-                main_workflow.connect(
-                    rename_native_wmgm_stl, 'out_file',
-                    datasink, '@native_wmgm_stl')
-
-                # rename 5tt
-                if "export_5tt_pipe" in params["old_segment_pipe"].keys():
-                    rename_native_gen_5tt = pe.Node(
-                        niu.Rename(), name="rename_native_gen_5tt")
-                    rename_native_gen_5tt.inputs.format_string = \
-                        pref_deriv + "_space-native_desc-5tt_dseg"
-                    rename_native_gen_5tt.inputs.parse_string = parse_str
-                    rename_native_gen_5tt.inputs.keep_ext = True
-
-                    main_workflow.connect(
-                        segment_pnh_pipe, 'outputnode.native_gen_5tt',
-                        rename_native_gen_5tt, 'in_file')
-
-                    main_workflow.connect(
-                        rename_native_gen_5tt, 'out_file',
-                        datasink, '@native_gen_5tt')

@@ -23,54 +23,68 @@
     {
         "s": 4
     },
-    "reg":
+
+    "brain_old_segment_pipe":
     {
-        "n": 2,
-        "m": "ref",
-        "dof": 12
-    },
-    "old_segment_pipe":
-    {
-        "segment":
+
+        "reg":
         {
-            "gm_output_type": [false, false, true],
-            "wm_output_type": [false, false, true],
-            "csf_output_type": [false, false, true]
+            "n": 2,
+            "m": "ref",
+            "dof": 12
         },
-        "threshold_gm":
+        "old_segment_pipe":
         {
-            "thresh": 0.5
-        },
-        "threshold_wm":
-        {
-            "thresh": 0.5
-        },
-        "threshold_csf":
-        {
-            "thresh": 0.5
-        },
-        "export_5tt_pipe":
-        {
-        },
-        "IsoSurface_brain_pipe":
-        {
-            "merge_brain_tissues":
+            "segment":
             {
-                "keep_indexes": [1,2,3]
+                "gm_output_type": [false, false, true],
+                "wm_output_type": [false, false, true],
+                "csf_output_type": [false, false, true]
+            },
+            "threshold_gm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
+            },
+            "export_5tt_pipe":
+            {
+            },
+            "IsoSurface_brain_pipe":
+            {
+                "merge_brain_tissues":
+                {
+                    "keep_indexes": [1,2,3]
+                }
+            }
+        },
+        "mask_from_seg_pipe":
+        {
+            "merge_indexed_mask":
+            {
+                "index_gm": 1,
+                "index_wm": 2,
+                "index_csf": 3
             }
         }
     },
-    "mask_from_seg_pipe":
+    "export_5tt_pipe":
     {
-        "dilate_mask":
+    },
+    "IsoSurface_brain_pipe":
+    {
+        "merge_brain_tissues":
         {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
-        },
-        "erode_mask":
-        {
-            "kernel_shape": "sphere",
-            "kernel_size": 2
+            "keep_indexes": [1,2]
         }
+    },
+    "IsoSurface_tissues_pipe":
+    {
     }
 }

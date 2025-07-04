@@ -59,9 +59,8 @@ import nipype.interfaces.utility as niu
 import nipype.interfaces.fsl as fsl
 
 from macapype.pipelines.full_pipelines import (
-    create_full_spm_subpipes,
-    create_full_ants_subpipes,
-    create_full_T1_ants_subpipes)
+    create_full_T1T2_subpipes,
+    create_full_T1_subpipes)
 
 from macapype.pipelines.rename import rename_all_brain_derivatives
 
@@ -249,6 +248,12 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
     # soft
     wf_name += "_{}".format(soft)
 
+    if 't1' in datatypes:
+        wf_name += '_t1'
+
+        if 't2' in datatypes:
+            wf_name += 't2'
+
     assert "spm" in ssoft or "spm12" in ssoft or "ants" in ssoft, \
         "error with {}, should be among [spm12, spm, ants]".format(ssoft)
 
@@ -411,27 +416,19 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
         space = "native"
 
     # which soft is used
-    if "spm" in ssoft or "spm12" in ssoft:
-        segment_pnh_pipe = create_full_spm_subpipes(
+    if 't1' in datatypes and 't2' in datatypes:
+        segment_pnh_pipe = create_full_T1T2_subpipes(
             params_template_stereo=params_template_stereo,
             params_template_brainmask=params_template_brainmask,
             params_template_seg=params_template_seg,
-            params=params, mask_file=mask_file, pad=pad, space=space)
+            params=params, mask_file=mask_file, space=space, pad=pad)
 
-    elif "ants" in ssoft:
-        if 't1' in datatypes and 't2' in datatypes:
-            segment_pnh_pipe = create_full_ants_subpipes(
-                params_template_stereo=params_template_stereo,
-                params_template_brainmask=params_template_brainmask,
-                params_template_seg=params_template_seg,
-                params=params, mask_file=mask_file, space=space, pad=pad)
-
-        elif 't1' in datatypes:
-            segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template_stereo=params_template_stereo,
-                params_template_brainmask=params_template_brainmask,
-                params_template_seg=params_template_seg,
-                params=params, mask_file=mask_file, space=space, pad=pad)
+    elif 't1' in datatypes:
+        segment_pnh_pipe = create_full_T1_subpipes(
+            params_template_stereo=params_template_stereo,
+            params_template_brainmask=params_template_brainmask,
+            params_template_seg=params_template_seg,
+            params=params, mask_file=mask_file, space=space, pad=pad)
 
     # list of all required outputs
     output_query = {}
@@ -467,11 +464,6 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
 
     if "t2" in datatypes:
         main_workflow.connect(datasource, 'T2',
-                              segment_pnh_pipe, 'inputnode.list_T2')
-
-    elif "t1" in datatypes and "spm" in ssoft:
-        # cheating using T2 as T1
-        main_workflow.connect(datasource, 'T1',
                               segment_pnh_pipe, 'inputnode.list_T2')
 
     if deriv:

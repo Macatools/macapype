@@ -32,20 +32,18 @@
     },
     "extract_pipe":
     {
-        "atlas_brex":
+        "bet4animal":
         {
-            "f": 0.7,
-            "reg": 1,
-            "msk": "b,0.5,0,0",
-            "wrp": "10,10,10",
-            "dil": 1
+            "f": 0.5,
+            "label": 2,
+            "robust": true
         }
     },
     "debias":
     {
         "s": 2
     },
-    "brain_segment_pipe":
+    "brain_old_segment_pipe":
     {
         "reg":
         {
@@ -53,18 +51,34 @@
             "m": "ref",
             "dof": 12
         },
-        "segment_atropos_pipe":
+        "old_segment_pipe":
         {
-            "use_priors": 0.0,
-            "Atropos":
+            "segment":
             {
-                "dimension": 3
+                "gm_output_type": [false, false, true],
+                "wm_output_type": [false, false, true],
+                "csf_output_type": [false, false, true]
             },
-            "tissue_dict":
+            "threshold_gm":
             {
-                "gm": 2,
-                "wm": 3,
-                "csf": 1
+                "thresh": 0.5
+            },
+            "threshold_wm":
+            {
+                "thresh": 0.5
+            },
+            "threshold_csf":
+            {
+                "thresh": 0.5
+            }
+        },
+        "mask_from_seg_pipe":
+        {
+            "merge_indexed_mask":
+            {
+                "index_csf": 1,
+                "index_gm": 2,
+                "index_wm": 3
             }
         }
     },
@@ -77,5 +91,8 @@
         {
             "keep_indexes": [2,3]
         }
+    },
+    "IsoSurface_tissues_pipe":
+    {
     }
 }
