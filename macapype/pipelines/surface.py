@@ -761,6 +761,19 @@ def create_open_IsoSurface_brain_pipe(params={},
         IsoSurface_brain_pipe.connect(
             keep_gcc_bin_mask, 'gcc_nii_file',
             wmgm_dilate, "in_file")
+    else:
+
+        # keep_gcc_bin_mask
+        keep_gcc_bin_mask = pe.Node(
+            interface=niu.Function(
+                input_names=["nii_file"],
+                output_names=["gcc_nii_file"],
+                function=keep_gcc),
+            name="keep_gcc_bin_mask")
+
+        IsoSurface_brain_pipe.connect(
+            merge_brain_tissues, 'mask_file',
+            keep_gcc_bin_mask, "nii_file")
 
     # wmgm2mesh
     wmgm2mesh = NodeParams(
