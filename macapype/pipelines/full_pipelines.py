@@ -34,8 +34,9 @@ from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
 
 from .extract_brain import create_extract_pipe
 
-from .surface import (create_nii2mesh_brain_pipe, create_IsoSurface_brain_pipe,
-                      create_IsoSurface_tissues_pipe)
+from .surface import (create_nii2mesh_brain_pipe,
+                      create_open_IsoSurface_brain_pipe,
+                      create_open_IsoSurface_tissues_pipe)
 
 from macapype.utils.misc import parse_key, list_input_files
 
@@ -1238,7 +1239,7 @@ def create_full_T1T2_subpipes(
 
     elif "IsoSurface_brain_pipe" in params.keys():
 
-        IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
+        IsoSurface_brain_pipe = create_open_IsoSurface_brain_pipe(
             params=parse_key(params, "IsoSurface_brain_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
@@ -1259,7 +1260,7 @@ def create_full_T1T2_subpipes(
 
     if "IsoSurface_tissues_pipe" in params:
 
-        IsoSurface_tissues_pipe = create_IsoSurface_tissues_pipe(
+        IsoSurface_tissues_pipe = create_open_IsoSurface_tissues_pipe(
             params=parse_key(params, "IsoSurface_tissues_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
@@ -1623,7 +1624,7 @@ def create_full_T1_subpipes(
 
     elif "IsoSurface_brain_pipe" in params.keys():
 
-        IsoSurface_brain_pipe = create_IsoSurface_brain_pipe(
+        IsoSurface_brain_pipe = create_open_IsoSurface_brain_pipe(
             params=parse_key(params, "IsoSurface_brain_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.segmented_file",
@@ -1644,7 +1645,7 @@ def create_full_T1_subpipes(
 
     if "IsoSurface_tissues_pipe" in params:
 
-        IsoSurface_tissues_pipe = create_IsoSurface_tissues_pipe(
+        IsoSurface_tissues_pipe = create_open_IsoSurface_tissues_pipe(
             params=parse_key(params, "IsoSurface_tissues_pipe"))
 
         seg_pipe.connect(brain_segment_pipe, "outputnode.threshold_csf",
