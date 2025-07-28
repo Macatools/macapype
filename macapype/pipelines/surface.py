@@ -14,8 +14,7 @@ from nipype.interfaces.fsl.maths import (
 from macapype.nodes.surface import (Meshify, split_LR_mask,
                                     wrap_nii2mesh,
                                     IsoSurface, merge_tissues,
-                                    keep_gcc,
-                                    keep_gcc_by_index)
+                                    keep_gcc)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
@@ -708,16 +707,6 @@ def create_open_IsoSurface_brain_pipe(params={},
             fields=["segmented_file"]),
         name='inputnode')
 
-    # keep_gcc_mask
-    keep_gcc_mask = pe.Node(
-        interface=niu.Function(input_names=["nii_file"],
-                               output_names=["gcc_nii_file"],
-                               function=keep_gcc_by_index),
-        name="keep_gcc_mask")
-
-    IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
-                                  keep_gcc_mask, "nii_file")
-
     # merge_brain_tissues
     merge_brain_tissues = NodeParams(
         interface=niu.Function(input_names=["dseg_file", "keep_indexes"],
@@ -726,7 +715,7 @@ def create_open_IsoSurface_brain_pipe(params={},
         params=parse_key(params, "merge_brain_tissues"),
         name="merge_brain_tissues")
 
-    IsoSurface_brain_pipe.connect(keep_gcc_mask, "gcc_nii_file",
+    IsoSurface_brain_pipe.connect(inputnode, "segmented_file",
                                   merge_brain_tissues, 'dseg_file')
 
     if "wmgm_dilate" in params and "wmgm_erode" in params:
@@ -825,16 +814,6 @@ def create_close_IsoSurface_brain_pipe(params={},
             fields=["segmented_file"]),
         name='inputnode')
 
-    # keep_gcc_mask
-    keep_gcc_mask = pe.Node(
-        interface=niu.Function(input_names=["nii_file"],
-                               output_names=["gcc_nii_file"],
-                               function=keep_gcc_by_index),
-        name="keep_gcc_mask")
-
-    IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
-                                  keep_gcc_mask, "nii_file")
-
     # merge_brain_tissues
     merge_brain_tissues = NodeParams(
         interface=niu.Function(input_names=["dseg_file", "keep_indexes"],
@@ -843,7 +822,7 @@ def create_close_IsoSurface_brain_pipe(params={},
         params=parse_key(params, "merge_brain_tissues"),
         name="merge_brain_tissues")
 
-    IsoSurface_brain_pipe.connect(keep_gcc_mask, "gcc_nii_file",
+    IsoSurface_brain_pipe.connect(inputnode, "segmented_file",
                                   merge_brain_tissues, 'dseg_file')
 
     # keep_gcc_bin_mask
@@ -944,13 +923,13 @@ def create_open_IsoSurface_tissues_pipe(params={},
     IsoSurface_tissues_pipe.connect(inputnode, 'threshold_wm',
                                     bin_wm, 'in_file')
 
-
     if "wm_dilate" in params and "wm_erode" in params:
 
         # wm_erode
-        wm_erode = NodeParams(interface=ErodeImage(),
-                                params=parse_key(params, "wm_erode"),
-                                name="wm_erode")
+        wm_erode = NodeParams(
+            interface=ErodeImage(),
+            params=parse_key(params, "wm_erode"),
+            name="wm_erode")
 
         IsoSurface_tissues_pipe.connect(
             bin_wm, 'out_file',
@@ -1007,9 +986,6 @@ def create_open_IsoSurface_tissues_pipe(params={},
             wm_keep_gcc, 'gcc_nii_file',
             wm2mesh, "nii_file")
 
-
-
-
     # ######### csf mesh
     # bin_csf
     bin_csf = pe.Node(interface=fsl.UnaryMaths(), name="bin_csf")
@@ -1021,9 +997,10 @@ def create_open_IsoSurface_tissues_pipe(params={},
     if "csf_dilate" in params and "csf_erode" in params:
 
         # csf_erode
-        csf_erode = NodeParams(interface=ErodeImage(),
-                                params=parse_key(params, "csf_erode"),
-                                name="csf_erode")
+        csf_erode = NodeParams(
+            interface=ErodeImage(),
+            params=parse_key(params, "csf_erode"),
+            name="csf_erode")
 
         IsoSurface_tissues_pipe.connect(
             bin_csf, 'out_file',
@@ -1080,8 +1057,6 @@ def create_open_IsoSurface_tissues_pipe(params={},
             csf_keep_gcc, 'gcc_nii_file',
             csf2mesh, "nii_file")
 
-
-
     # ######### gm mesh
     # bin_gm
     bin_gm = pe.Node(interface=fsl.UnaryMaths(), name="bin_gm")
@@ -1093,9 +1068,10 @@ def create_open_IsoSurface_tissues_pipe(params={},
     if "gm_dilate" in params and "gm_erode" in params:
 
         # gm_erode
-        gm_erode = NodeParams(interface=ErodeImage(),
-                                params=parse_key(params, "gm_erode"),
-                                name="gm_erode")
+        gm_erode = NodeParams(
+            interface=ErodeImage(),
+            params=parse_key(params, "gm_erode"),
+            name="gm_erode")
 
         IsoSurface_tissues_pipe.connect(
             bin_gm, 'out_file',
@@ -1151,8 +1127,6 @@ def create_open_IsoSurface_tissues_pipe(params={},
         IsoSurface_tissues_pipe.connect(
             gm_keep_gcc, 'gcc_nii_file',
             gm2mesh, "nii_file")
-
-
 
     # ####outputnode
     outputnode = pe.Node(

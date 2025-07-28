@@ -9,6 +9,9 @@ from ..nodes.segment import (AtroposN4, merge_masks,
                              merge_imgs, split_indexed_mask, copy_header,
                              compute_5tt, fill_list_vol)
 
+
+from ..nodes.surface import keep_gcc_by_index
+
 from ..utils.misc import (gunzip, merge_3_elem_to_list,
                           get_pattern, get_list_length, get_index)
 
@@ -375,15 +378,15 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
 
         seg_at.inputs.prior_weight = params["use_priors"]
 
-    # split dseg_mask
-    split_dseg_mask = pe.Node(
+    # keep_gcc_mask
+    keep_gcc_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
-                               output_names=["list_split_files"],
-                               function=split_indexed_mask),
-        name="split_dseg_mask")
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc_by_index),
+        name="keep_gcc_mask")
 
     segment_pipe.connect(seg_at, 'segmented_file',
-                         split_dseg_mask, "nii_file")
+                         keep_gcc_mask, "nii_file")
 
     # on segmentation indexed mask (with labels)
     outputnode = pe.Node(
@@ -395,6 +398,16 @@ def create_segment_atropos_pipe(params={}, name="segment_atropos_pipe"):
 
     segment_pipe.connect(seg_at, 'segmented_file',
                          outputnode, 'segmented_file')
+
+    # split dseg_mask
+    split_dseg_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["list_split_files"],
+                               function=split_indexed_mask),
+        name="split_dseg_mask")
+
+    segment_pipe.connect(keep_gcc_mask, 'gcc_nii_file',
+                         split_dseg_mask, "nii_file")
 
     if "tissue_dict" in params.keys():
         tissue_dict = params["tissue_dict"]
@@ -1028,5 +1041,15 @@ def create_mask_from_seg_pipe(params={}, name="mask_from_seg_pipe"):
     seg_pipe.connect(bin_wm, 'out_file', merge_indexed_mask, "mask_wm_file")
     seg_pipe.connect(bin_csf, 'out_file',
                      merge_indexed_mask, "mask_csf_file")
+
+    # keep_gcc_mask
+    keep_gcc_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc_by_index),
+        name="keep_gcc_mask")
+
+    seg_pipe.connect(merge_indexed_mask, 'indexed_mask',
+                     keep_gcc_mask, "nii_file")
 
     return seg_pipe
