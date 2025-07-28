@@ -204,20 +204,17 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             del params["mask_from_seg_pipe"]
             print("Deleting mask_from_seg_pipe")
 
-
-        if "IsoSurface_brain_pipe"in params.keys():
+        if "IsoSurface_brain_pipe" in params.keys():
             del params["IsoSurface_brain_pipe"]
             print("Deleting IsoSurface_brain_pipe")
 
-
-        if "IsoSurface_tissues_pipe"in params.keys():
+        if "IsoSurface_tissues_pipe" in params.keys():
             del params["IsoSurface_tissues_pipe"]
             print("Deleting IsoSurface_tissues_pipe")
 
-        if "export_5tt_pipe"in params.keys():
+        if "export_5tt_pipe" in params.keys():
             del params["export_5tt_pipe"]
             print("Deleting export_5tt_pipe")
-
 
     if "prep" in ssoft:
         print("Found prep in soft")
@@ -249,18 +246,17 @@ def update_params(ssoft=[], subjects=None, sessions=None,
             del params["mask_from_seg_pipe"]
             print("Deleting mask_from_seg_pipe")
 
-        if "IsoSurface_brain_pipe"in params.keys():
+        if "IsoSurface_brain_pipe" in params.keys():
             del params["IsoSurface_brain_pipe"]
             print("Deleting IsoSurface_brain_pipe")
 
-        if "IsoSurface_tissues_pipe"in params.keys():
+        if "IsoSurface_tissues_pipe" in params.keys():
             del params["IsoSurface_tissues_pipe"]
             print("Deleting IsoSurface_tissues_pipe")
 
-        if "export_5tt_pipe"in params.keys():
+        if "export_5tt_pipe" in params.keys():
             del params["export_5tt_pipe"]
             print("Deleting export_5tt_pipe")
-
 
     print("After modif, running with params:")
     pprint.pprint(params)

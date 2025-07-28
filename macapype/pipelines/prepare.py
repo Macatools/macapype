@@ -670,7 +670,6 @@ def create_short_preparation_pipe(params, params_template={},
                 fast_T2, "restored_image",
                 outputnode, "stereo_debiased_T1")
 
-
         else:
 
             data_preparation_pipe.connect(
@@ -680,7 +679,6 @@ def create_short_preparation_pipe(params, params_template={},
             data_preparation_pipe.connect(
                 fast_T2, "restored_image",
                 outputnode, "stereo_debiased_T2")
-
 
     elif "itk_debias" in params:
 
@@ -788,11 +786,6 @@ def create_short_preparation_pipe(params, params_template={},
                 data_preparation_pipe.connect(
                     apply_crop_aladin_T2, 'out_file',
                     outputnode, "stereo_debiased_T2")
-
-
-
-
-
 
     # resample T1 to higher dimension
     if "pad_template" in params.keys():

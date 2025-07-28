@@ -273,7 +273,7 @@ class CropVolume(CommandLine):
 
 ###############################################################################
 # Equivalent of flirt_average in FSL
-def average_align(list_img, reorient=False, max_index = None):
+def average_align(list_img, reorient=False, max_index=None):
 
     import os
     import nibabel as nib
