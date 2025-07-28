@@ -181,7 +181,7 @@ def create_brain_old_segment_from_mask_pipe(
 
     # outputnode
     brain_old_segment_pipe.connect(
-        mask_from_seg_pipe, 'keep_gcc_mask.gcc_nii_file',
+        mask_from_seg_pipe, 'merge_indexed_mask.indexed_mask',
         outputnode, 'segmented_file')
 
     return brain_old_segment_pipe

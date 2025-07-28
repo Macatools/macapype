@@ -14,7 +14,8 @@ from nipype.interfaces.fsl.maths import (
 from macapype.nodes.surface import (Meshify, split_LR_mask,
                                     wrap_nii2mesh,
                                     IsoSurface, merge_tissues,
-                                    keep_gcc)
+                                    keep_gcc,
+                                    keep_gcc_by_index)
 
 from macapype.utils.utils_nodes import parse_key, NodeParams
 
@@ -707,6 +708,16 @@ def create_open_IsoSurface_brain_pipe(params={},
             fields=["segmented_file"]),
         name='inputnode')
 
+    # keep_gcc_mask
+    keep_gcc_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc_by_index),
+        name="keep_gcc_mask")
+
+    IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
+                                  keep_gcc_mask, "nii_file")
+
     # merge_brain_tissues
     merge_brain_tissues = NodeParams(
         interface=niu.Function(input_names=["dseg_file", "keep_indexes"],
@@ -715,7 +726,7 @@ def create_open_IsoSurface_brain_pipe(params={},
         params=parse_key(params, "merge_brain_tissues"),
         name="merge_brain_tissues")
 
-    IsoSurface_brain_pipe.connect(inputnode, "segmented_file",
+    IsoSurface_brain_pipe.connect(keep_gcc_mask, "gcc_nii_file",
                                   merge_brain_tissues, 'dseg_file')
 
     if "wmgm_dilate" in params and "wmgm_erode" in params:
@@ -814,6 +825,16 @@ def create_close_IsoSurface_brain_pipe(params={},
             fields=["segmented_file"]),
         name='inputnode')
 
+    # keep_gcc_mask
+    keep_gcc_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc_by_index),
+        name="keep_gcc_mask")
+
+    IsoSurface_brain_pipe.connect(inputnode, 'segmented_file',
+                                  keep_gcc_mask, "nii_file")
+
     # merge_brain_tissues
     merge_brain_tissues = NodeParams(
         interface=niu.Function(input_names=["dseg_file", "keep_indexes"],
@@ -822,7 +843,7 @@ def create_close_IsoSurface_brain_pipe(params={},
         params=parse_key(params, "merge_brain_tissues"),
         name="merge_brain_tissues")
 
-    IsoSurface_brain_pipe.connect(inputnode, "segmented_file",
+    IsoSurface_brain_pipe.connect(keep_gcc_mask, "gcc_nii_file",
                                   merge_brain_tissues, 'dseg_file')
 
     # keep_gcc_bin_mask
