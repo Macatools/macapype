@@ -100,6 +100,16 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
         segment_pipe.connect(split_seg, ('list_split_files', get_list_length),
                              seg_at, "numberOfClasses")
 
+    # keep_gcc_mask
+    keep_gcc_mask = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc_by_index),
+        name="keep_gcc_mask")
+
+    segment_pipe.connect(seg_at, 'segmented_file',
+                         keep_gcc_mask, "nii_file")
+
     # split dseg_mask
     split_dseg_mask = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -107,7 +117,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                                function=split_indexed_mask),
         name="split_dseg_mask")
 
-    segment_pipe.connect(seg_at, 'segmented_file',
+    segment_pipe.connect(keep_gcc_mask, 'gcc_nii_file',
                          split_dseg_mask, "nii_file")
 
     # on segmentation indexed mask (with labels)
@@ -118,7 +128,7 @@ def create_segment_atropos_seg_pipe(params={}, name="segment_atropos_pipe"):
                     "prob_csf"]),
         name='outputnode')
 
-    segment_pipe.connect(seg_at, 'segmented_file',
+    segment_pipe.connect(keep_gcc_mask, 'gcc_nii_file',
                          outputnode, 'segmented_file')
 
     if "tissue_dict" in params.keys():
