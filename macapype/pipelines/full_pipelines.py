@@ -1262,8 +1262,8 @@ def create_full_T1T2_subpipes(
         if "pad_template" in params["short_preparation_pipe"].keys():
             pad_stereo_wmgm_mask = NodeParams(
                 ImageMath(),
-                params=parse_key(params["short_preparation_pipe"],
-                                "pad_template"),
+                params=parse_key(
+                    params["short_preparation_pipe"], "pad_template"),
                 name="pad_stereo_wmgm_mask")
 
             seg_pipe.connect(
