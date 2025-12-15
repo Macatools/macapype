@@ -281,9 +281,8 @@ def create_brain_segment_from_mask_pipe(
 
             reg.inputs.refb_file = params_template["template_brain"]
 
-            if "nonlin_reg" in params["reg"]:
-                reg.inputs.refw_file = params_template["template_head"]
-                reg.inputs.k = True
+            reg.inputs.refw_file = params_template["template_head"]
+            reg.inputs.k = True
 
             brain_segment_pipe.connect(
                 inputnode, 'debiased_T1',
