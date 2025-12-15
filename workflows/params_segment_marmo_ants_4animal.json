@@ -42,6 +42,8 @@
     {
         "reg":
         {
+            "nonlin_reg":{},
+
             "n": 2,
             "m": "ref",
             "dof": 12

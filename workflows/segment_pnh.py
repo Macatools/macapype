@@ -305,6 +305,18 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, datatypes,
                 "Could not find template_seg {}".format(template_seg)
             params_template["template_seg"] = template_seg
 
+        elif len(template_files) == 4:
+
+            template_seg = os.path.join(template_path, template_files[2])
+            assert os.path.exists(template_seg), \
+                "Could not find template_seg {}".format(template_seg)
+            params_template["template_seg"] = template_seg
+
+            template_parcel = os.path.join(template_path, template_files[3])
+            assert os.path.exists(template_parcel), \
+                "Could not find template_parcel {}".format(template_parcel)
+            params_template["template_parcel"] = template_parcel
+
         elif len(template_files) == 5:
 
             template_gm = os.path.join(template_path, template_files[2])

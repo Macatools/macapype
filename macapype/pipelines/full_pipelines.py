@@ -365,6 +365,26 @@ def create_brain_segment_from_mask_pipe(
                 brain_segment_pipe.connect(
                     reg, 'inv_transfo_file',
                     register_csf_to_nat, "in_matrix_file")
+
+
+            if "template_parcel" in params_template.keys():
+
+                # seg
+                register_parcel_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_parcel_to_nat")
+                register_parcel_to_nat.inputs.interp = "nearestneighbour"
+
+                register_parcel_to_nat.inputs.in_file = params_template[
+                    "template_parcel"]
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_parcel_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_parcel_to_nat, "in_matrix_file")
+
+
         else:
             print("##### Error, no coregistration method is defined")
             return brain_segment_pipe
