@@ -618,6 +618,7 @@ def create_full_T1T2_subpipes(
 
                     "stereo_wmgm_mask",
                     "native_wmgm_mask",
+                    "stereo_padded_wmgm_mask",
                     "wmgm_stl",
 
                     "csf_stl",
@@ -1257,6 +1258,21 @@ def create_full_T1T2_subpipes(
                 seg_pipe, data_preparation_pipe,
                 IsoSurface_brain_pipe, "outputnode.wmgm_nii",
                 outputnode, "native_wmgm_mask", params)
+
+        if "pad_template" in params["short_preparation_pipe"].keys():
+            pad_stereo_wmgm_mask = NodeParams(
+                ImageMath(),
+                params=parse_key(
+                    params["short_preparation_pipe"], "pad_template"),
+                name="pad_stereo_wmgm_mask")
+
+            seg_pipe.connect(
+                IsoSurface_brain_pipe, "outputnode.wmgm_nii",
+                pad_stereo_wmgm_mask, "op1")
+
+            seg_pipe.connect(
+                pad_stereo_wmgm_mask, "output_image",
+                outputnode, "stereo_padded_wmgm_mask")
 
     if "IsoSurface_tissues_pipe" in params:
 

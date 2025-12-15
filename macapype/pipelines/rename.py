@@ -499,6 +499,26 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_wmgm_mask, 'out_file',
                 datasink, '@stereo_wmgm_mask')
 
+        if "pad_template" in params["short_preparation_pipe"].keys():
+
+            rename_stereo_padded_wmgm_mask = pe.Node(
+                niu.Rename(),
+                name="v")
+            rename_stereo_padded_wmgm_mask.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-pad_desc-wmgm_mask"
+            rename_stereo_padded_wmgm_mask.inputs.parse_string = \
+                parse_str
+            rename_stereo_padded_wmgm_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe,
+                'outputnode.stereo_padded_wmgm_mask',
+                rename_stereo_padded_wmgm_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_padded_wmgm_mask, 'out_file',
+                datasink, '@stereo_padded_wmgm_mask')
+
         if "IsoSurface_tissues_pipe" in params:
 
             print("Renaming csf_stl file")
