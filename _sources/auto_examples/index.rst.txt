@@ -27,7 +27,7 @@ Examples Gallery
   .. image:: /auto_examples/images/thumb/sphx_glr_plot_segment_sphinx_macaque_ants_based_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_plot_segment_sphinx_macaque_ants_based.py`
+  :doc:`/auto_examples/plot_segment_sphinx_macaque_ants_based`
 
 .. raw:: html
 
