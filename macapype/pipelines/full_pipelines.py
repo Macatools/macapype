@@ -9,7 +9,8 @@ from nipype.interfaces import fsl
 
 from nipype.interfaces.ants.utils import ImageMath
 
-from nipype.interfaces.niftyreg.regutils import RegResample
+from nipype.interfaces.niftyreg.reg import RegF3D
+from nipype.interfaces.niftyreg.regutils import RegResample, RegTransform
 
 from ..utils.utils_nodes import NodeParams
 
@@ -418,6 +419,143 @@ def create_brain_segment_from_mask_pipe(
 #                     reg, 'inv_transfo_file',
 #                     register_parcel_to_nat, "in_matrix_file")
 #
+
+        elif "reg_f3d" in params:
+            # Iterative registration to the template
+            reg_f3d = pe.Node(
+                RegF3D,
+                name='reg_f3d')
+
+            reg_f3d.inputs.rmask_file= params_template["template_brain"]
+
+            reg_f3d.inputs.ref_file  = params_template["template_head"]
+
+            brain_segment_pipe.connect(
+                inputnode, 'debiased_T1',
+                flo_file, 'inw_file')
+
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                fmask_file, 'inb_file')
+#
+#             # merge_tuple
+#             merge_tuple =  pe.Node(
+#                 Merge(3), name="merge_tuple")
+#
+#             brain_segment_pipe.connect(
+#                 reg_f3d, 'masked_debiased_T1',
+#                 merge_tuple, 'in1')
+#
+#             brain_segment_pipe.connect(
+#                 reg, 'nonlin_invwarp_file',
+#                 merge_tuple, "in2")
+#
+#             # inv_transfo
+#             inv_transfo = pe.Node(
+#                 RegTransform(), name="inv_transfo")
+#
+#             inv_transfo.inputs.interp = "nn"
+#
+#             inv_transfo.inputs.in_file = params_template[
+#                 "template_seg"]
+#
+#             inv_transfo.connect(
+#                 merge_tuple, 'out',
+#                 register_seg_to_nat, 'inv_nrr_input')
+#
+#             brain_segment_pipe.connect(
+#                 reg, 'nonlin_invwarp_file',
+#                 register_seg_to_nat, "field_file")
+#
+            if "template_seg" in params_template.keys():
+
+                # seg
+                register_seg_to_nat = pe.Node(
+                    RegResample(), name="register_seg_to_nat")
+
+                register_seg_to_nat.inputs.inter_val = "NN"
+
+                register_seg_to_nat.inputs.flo_file = params_template[
+                    "template_seg"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_seg_to_nat, 'ref_file')
+
+                brain_segment_pipe.connect(
+                    reg_f3d, 'invcpp_file',
+                    register_seg_to_nat, "trans_file")
+            else:
+                #TODO
+                # gm
+                register_gm_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_gm_to_nat")
+                register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
+                register_gm_to_nat.inputs.interp = "nearestneighbour"
+
+                register_gm_to_nat.inputs.in_file = \
+                    params_template["template_gm"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_gm_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_gm_to_nat, "in_matrix_file")
+
+                # wm
+                register_wm_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_wm_to_nat")
+                register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
+                register_wm_to_nat.inputs.interp = "nearestneighbour"
+
+                register_wm_to_nat.inputs.in_file = \
+                    params_template["template_wm"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_wm_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_wm_to_nat, "in_matrix_file")
+
+                # csf
+                register_csf_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_csf_to_nat")
+                register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
+                register_csf_to_nat.inputs.interp = "nearestneighbour"
+
+                register_csf_to_nat.inputs.in_file = \
+                    params_template["template_csf"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_csf_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_csf_to_nat, "in_matrix_file")
+
+
+            if "template_parcel" in params_template.keys():
+
+                register_parcel_to_nat = pe.Node(
+                    RegResample(), name="register_parcel_to_nat")
+
+                register_parcel_to_nat.inputs.inter_val = "NN"
+
+                register_parcel_to_nat.inputs.flo_file = params_template[
+                    "template_parcel"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_parcel_to_nat, 'ref_file')
+
+                brain_segment_pipe.connect(
+                    reg_f3d, 'invcpp_file',
+                    register_parcel_to_nat, "trans_file")
 
         else:
             print("##### Error, no coregistration method is defined")

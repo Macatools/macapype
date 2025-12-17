@@ -37,11 +37,8 @@
     },
     "brain_segment_pipe":
     {
-        "reg":
+        "reg_f3d":
         {
-            "n": 2,
-            "m": "ref",
-            "dof": 12
         },
         "segment_atropos_pipe":
         {
