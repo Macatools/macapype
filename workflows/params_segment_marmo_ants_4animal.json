@@ -17,9 +17,6 @@
                 "rig_only_flag":true
             }
         },
-        "denoise":
-        {
-        },
         "fast":
         {
             "args": "-l 3"
