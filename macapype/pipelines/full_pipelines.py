@@ -579,6 +579,11 @@ def create_brain_segment_from_mask_pipe(
                 brain_segment_pipe.connect(
                     register_seg_to_nat, 'out_file',
                     segment_atropos_pipe, "inputnode.seg_file")
+
+            elif "reg_f3d" in params:
+                brain_segment_pipe.connect(
+                    register_seg_to_nat, 'out_file',
+                    segment_atropos_pipe, "inputnode.seg_file")
     else:
         print("#### create_segment_atropos_pipe (3 tissues) ")
 
