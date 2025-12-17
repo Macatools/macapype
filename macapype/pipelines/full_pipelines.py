@@ -300,18 +300,34 @@ def create_brain_segment_from_mask_pipe(
 
                 # seg
                 register_seg_to_nat = pe.Node(
-                    fsl.ApplyXFM(), name="register_seg_to_nat")
-                register_seg_to_nat.inputs.interp = "nearestneighbour"
+                    fsl.ApplyWarp(), name="register_seg_to_nat")
+
+                register_seg_to_nat.inputs.interp = "nn"
 
                 register_seg_to_nat.inputs.in_file = params_template[
                     "template_seg"]
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
-                    register_seg_to_nat, 'reference')
+                    register_seg_to_nat, 'ref_file')
 
                 brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_seg_to_nat, "in_matrix_file")
+                    reg, 'nonlin_invwarp_file',
+                    register_seg_to_nat, "field_file")
+                #
+                # # seg
+                # register_seg_to_nat = pe.Node(
+                #     fsl.ApplyXFM(), name="register_seg_to_nat")
+                # register_seg_to_nat.inputs.interp = "nearestneighbour"
+                #
+                # register_seg_to_nat.inputs.in_file = params_template[
+                #     "template_seg"]
+                # brain_segment_pipe.connect(
+                #     inputnode, 'masked_debiased_T1',
+                #     register_seg_to_nat, 'reference')
+                #
+                # brain_segment_pipe.connect(
+                #     reg, 'inv_transfo_file',
+                #     register_seg_to_nat, "in_matrix_file")
 
             else:
                 # gm
@@ -370,19 +386,38 @@ def create_brain_segment_from_mask_pipe(
 
                 # seg
                 register_parcel_to_nat = pe.Node(
-                    fsl.ApplyXFM(), name="register_parcel_to_nat")
-                register_parcel_to_nat.inputs.interp = "nearestneighbour"
+                    fsl.ApplyWarp(), name="register_parcel_to_nat")
+
+                register_parcel_to_nat.inputs.interp = "nn"
 
                 register_parcel_to_nat.inputs.in_file = params_template[
                     "template_parcel"]
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
-                    register_parcel_to_nat, 'reference')
+                    register_parcel_to_nat, 'ref_file')
 
                 brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_parcel_to_nat, "in_matrix_file")
+                    reg, 'nonlin_invwarp_file',
+                    register_parcel_to_nat, "field_file")
 
+#
+#
+#
+#                 # seg
+#                 register_parcel_to_nat = pe.Node(
+#                     fsl.ApplyXFM(), name="register_parcel_to_nat")
+#                 register_parcel_to_nat.inputs.interp = "nearestneighbour"
+#
+#                 register_parcel_to_nat.inputs.in_file = params_template[
+#                     "template_parcel"]
+#                 brain_segment_pipe.connect(
+#                     inputnode, 'masked_debiased_T1',
+#                     register_parcel_to_nat, 'reference')
+#
+#                 brain_segment_pipe.connect(
+#                     reg, 'inv_transfo_file',
+#                     register_parcel_to_nat, "in_matrix_file")
+#
 
         else:
             print("##### Error, no coregistration method is defined")

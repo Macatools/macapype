@@ -279,7 +279,8 @@ for ((i = 1 ; i  <= $NITER ; i++)); do
   # Extra whole-head non-linear registration, if wanted
   if [[ -n $REF_WHOLE ]] && [[ $i == $NITER ]]; then
     echo "FNIRT..."
-    "${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} # compute warp
+    #"${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} # compute warp
+    "${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} --miter=1,1 --subsamp=4,2 --infwhm=6,6 --reffwhm=4,4 --estint=false --applyrefmask=false --applyinmask=false # compute warp
     echo "Inverting warp..."
     "${FSLPREFIX}invwarp" -r $IN_WHOLE -w ${WARP[WH_WARP]} -o ${WARP[WH_INVWARP]}
     echo "Applying inverse warp..."
