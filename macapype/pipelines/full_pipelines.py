@@ -423,7 +423,7 @@ def create_brain_segment_from_mask_pipe(
         elif "reg_f3d" in params:
             # Iterative registration to the template
             reg_f3d = pe.Node(
-                RegF3D,
+                RegF3D(),
                 name='reg_f3d')
 
             reg_f3d.inputs.rmask_file= params_template["template_brain"]
