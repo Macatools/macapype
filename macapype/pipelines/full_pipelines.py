@@ -432,11 +432,11 @@ def create_brain_segment_from_mask_pipe(
 
             brain_segment_pipe.connect(
                 inputnode, 'debiased_T1',
-                flo_file, 'inw_file')
+                reg_f3d, 'flo_file')
 
             brain_segment_pipe.connect(
                 inputnode, 'masked_debiased_T1',
-                fmask_file, 'inb_file')
+                reg_f3d, 'fmask_file')
 #
 #             # merge_tuple
 #             merge_tuple =  pe.Node(
