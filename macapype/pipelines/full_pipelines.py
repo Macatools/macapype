@@ -251,7 +251,7 @@ def create_brain_segment_from_mask_pipe(
     # creating outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["segmented_file", "stereo_parcel", "stereo_parcel_gm",
+            fields=["segmented_file", "parcel_gm",
                     "threshold_gm", "threshold_wm", "threshold_csf",
                     "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
@@ -314,21 +314,6 @@ def create_brain_segment_from_mask_pipe(
                 brain_segment_pipe.connect(
                     reg, 'nonlin_invwarp_file',
                     register_seg_to_nat, "field_file")
-                #
-                # # seg
-                # register_seg_to_nat = pe.Node(
-                #     fsl.ApplyXFM(), name="register_seg_to_nat")
-                # register_seg_to_nat.inputs.interp = "nearestneighbour"
-                #
-                # register_seg_to_nat.inputs.in_file = params_template[
-                #     "template_seg"]
-                # brain_segment_pipe.connect(
-                #     inputnode, 'masked_debiased_T1',
-                #     register_seg_to_nat, 'reference')
-                #
-                # brain_segment_pipe.connect(
-                #     reg, 'inv_transfo_file',
-                #     register_seg_to_nat, "in_matrix_file")
 
             else:
                 # gm
@@ -490,7 +475,8 @@ def create_brain_segment_from_mask_pipe(
                     reg, 'inv_transfo_file',
                     register_csf_to_nat, "in_matrix_file")
 
-            if "template_parcel" in params_template.keys():
+            if "template_parcel" in params_template.keys() \
+                and "parcel_gm" in params:
 
                 register_parcel_to_nat = pe.Node(
                     RegResample(), name="register_parcel_to_nat")
@@ -511,11 +497,6 @@ def create_brain_segment_from_mask_pipe(
         else:
             print("##### Error, no coregistration method is defined")
             return brain_segment_pipe
-
-    # output
-    if "template_parcel" in params_template.keys():
-        brain_segment_pipe.connect(register_parcel_to_nat, 'out_file',
-                                   outputnode, 'stereo_parcel')
 
     # ants Atropos
     if "template_seg" in params_template.keys():
@@ -577,7 +558,7 @@ def create_brain_segment_from_mask_pipe(
         inputnode, 'masked_debiased_T1',
         segment_atropos_pipe, "inputnode.brain_file")
 
-    if "template_parcel" in params_template.keys():
+    if "parcel_gm" in params and "template_parcel" in params_template.keys():
 
         mult_gm_parcel = pe.Node(fsl.BinaryMaths(), name = "mult_gm_parcel")
 
@@ -592,7 +573,7 @@ def create_brain_segment_from_mask_pipe(
         mult_gm_parcel.inputs.operation = "mul"
 
         brain_segment_pipe.connect(mult_gm_parcel, 'out_file',
-                                   outputnode, 'stereo_parcel_gm')
+                                   outputnode, 'parcel_gm')
 
     #outputnode
     if space == 'native':
@@ -788,6 +769,7 @@ def create_full_T1T2_subpipes(
                     'stereo_padded_segmented_brain_mask',
                     'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
                     "stereo_gen_5tt",
+                    "stereo_parcel_gm"
 
                     'native_segmented_brain_mask',
                     'native_prob_gm', 'native_prob_wm', 'native_prob_csf',
@@ -1330,6 +1312,10 @@ def create_full_T1T2_subpipes(
 
     seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
                      outputnode, 'stereo_prob_csf')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.parcel_gm',
+                     outputnode, 'stereo_parcel_gm')
+
 
     if pad and space == "native":
         pad_back(

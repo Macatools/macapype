@@ -425,6 +425,26 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_segmented_brain_mask, 'out_file',
             datasink, '@stereo_segmented_brain_mask')
 
+        if "parcel_gm" in params:
+
+        # rename parcel_gm
+        rename_stereo_parcel_gm = pe.Node(
+            niu.Rename(),
+            name="rename_stereo_parcel_gm")
+        rename_stereo_parcel_gm.inputs.format_string = \
+            pref_deriv + "_space-stereo_desc-parcelgm_dseg"
+        rename_stereo_parcel_gm.inputs.parse_string = parse_str
+        rename_stereo_parcel_gm.inputs.keep_ext = True
+
+        main_workflow.connect(
+            segment_pnh_pipe, 'outputnode.stereo_parcel_gm',
+            rename_stereo_parcel_gm, 'in_file')
+
+        main_workflow.connect(
+            rename_stereo_parcel_gm, 'out_file',
+            datasink, '@stereo_parcel_gm')
+
+
         if "pad_template" in params["short_preparation_pipe"].keys():
 
             rename_stereo_padded_segmented_brain_mask = pe.Node(

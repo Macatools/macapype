@@ -53,7 +53,10 @@
                 "wm": 3,
                 "csf": 4
             }
-        }
+        },
+        "parcel_gm":
+        {}
+
     },
     "export_5tt_pipe":
     {
