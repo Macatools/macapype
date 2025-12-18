@@ -609,6 +609,7 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.threshold_csf',
                                    outputnode, 'threshold_csf')
+
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_gm',
                                    outputnode, 'prob_gm')
