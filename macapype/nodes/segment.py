@@ -248,11 +248,12 @@ def merge_imgs(list_img_files):
             path, fname, ext = split_f(img_file)
             img = nib.load(img_file)
             img_data = img.get_fdata()
-            new_img_data = np.zeros(shape=img_data.shape, dtype = np.int)
+            new_img_data = np.zeros(shape=img_data.shape, dtype = np.int32)
             new_img_data[img_data != 0] = 1
 
         else:
             img_data = nib.load(img_file).get_fdata()
+
             assert img_data.shape == new_img_data.shape, \
                 "Error, shapes {} != {}".format(img_data.shape,
                                                 new_img_data.shape)
