@@ -512,7 +512,9 @@ def create_brain_segment_from_mask_pipe(
             print("##### Error, no coregistration method is defined")
             return brain_segment_pipe
 
-    brain_segment_pipe.connect(register_parcel_to_nat, 'out_file',
+    # output
+    if "template_parcel" in params_template.keys():
+        brain_segment_pipe.connect(register_parcel_to_nat, 'out_file',
                                    outputnode, 'stereo_parcel')
 
     # ants Atropos
@@ -575,12 +577,12 @@ def create_brain_segment_from_mask_pipe(
         inputnode, 'masked_debiased_T1',
         segment_atropos_pipe, "inputnode.brain_file")
 
-    if "template_parcel" in params_template:
+    if "template_parcel" in params_template.keys():
 
         mult_gm_parcel = pe.Node(fsl.BinaryMaths(), name = "mult_gm_parcel")
 
         brain_segment_pipe.connect(
-            segment_atropos_pipe, 'outputnode.segmented_file',
+            'outputnode.threshold_gm',
             mult_gm_parcel, 'in_file')
 
         brain_segment_pipe.connect(
