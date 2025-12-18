@@ -582,7 +582,7 @@ def create_brain_segment_from_mask_pipe(
         mult_gm_parcel = pe.Node(fsl.BinaryMaths(), name = "mult_gm_parcel")
 
         brain_segment_pipe.connect(
-            segment_atropos_pipe, 'outputnode.segmented_file',
+            segment_atropos_pipe, 'outputnode.threshold_gm',
             mult_gm_parcel, 'in_file')
 
         brain_segment_pipe.connect(
