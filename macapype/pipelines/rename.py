@@ -465,7 +465,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_padded_segmented_brain_mask, 'out_file',
                 datasink, '@stereo_padded_segmented_brain_mask')
 
-            if "parcel_gm" in  in params["brain_segment_pipe"]:
+            if "parcel_gm" in params["brain_segment_pipe"]:
 
                 rename_stereo_padded_parcel_gm = pe.Node(
                     niu.Rename(),
