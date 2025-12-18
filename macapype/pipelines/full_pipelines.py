@@ -758,26 +758,30 @@ def create_full_T1T2_subpipes(
 
                     'stereo_brain_mask',
                     'stereo_padded_brain_mask',
+                    'native_brain_mask',
+
                     'stereo_masked_debiased_T1',
                     'stereo_masked_debiased_T2',
-
-                    'native_brain_mask',
                     "native_masked_debiased_T1",
                     "native_masked_debiased_T2",
 
                     'stereo_segmented_brain_mask',
                     'stereo_padded_segmented_brain_mask',
-                    'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
-                    "stereo_gen_5tt",
-                    "stereo_parcel_gm"
-
                     'native_segmented_brain_mask',
+
+                    'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
                     'native_prob_gm', 'native_prob_wm', 'native_prob_csf',
+
+                    "stereo_gen_5tt",
                     "native_gen_5tt",
 
+                    "stereo_parcel_gm",
+                    "stereo_padded_parcel_gm"
+                    "native_parcel_gm",
+
                     "stereo_wmgm_mask",
-                    "native_wmgm_mask",
                     "stereo_padded_wmgm_mask",
+                    "native_wmgm_mask",
                     "wmgm_stl",
 
                     "csf_stl",
@@ -1337,6 +1341,12 @@ def create_full_T1T2_subpipes(
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params,
             inter_val="LIN")
+        pad_back(
+            seg_pipe, data_preparation_pipe,
+            brain_segment_pipe, "outputnode.parcel_gm",
+            outputnode, "native_parcel_gm", params,
+            inter_val="NN")
+
 
     if "pad_template" in params["short_preparation_pipe"].keys():
         pad_stereo_stereo_brain_mask = NodeParams(
@@ -1352,6 +1362,22 @@ def create_full_T1T2_subpipes(
         seg_pipe.connect(
             pad_stereo_stereo_brain_mask, "output_image",
             outputnode, "stereo_padded_segmented_brain_mask")
+
+
+    if "pad_template" in params["short_preparation_pipe"].keys():
+        pad_stereo_parcel_gm = NodeParams(
+            ImageMath(),
+            params=parse_key(params["short_preparation_pipe"],
+                             "pad_template"),
+            name="pad_stereo_parcel_gm")
+
+        seg_pipe.connect(
+            brain_segment_pipe, "outputnode.segmented_file",
+            pad_stereo_parcel_gm, "op1")
+
+        seg_pipe.connect(
+            pad_stereo_parcel_gm, "output_image",
+            outputnode, "stereo_padded_parcel_gm")
 
     # ############################################## export 5tt
 
