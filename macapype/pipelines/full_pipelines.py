@@ -251,7 +251,7 @@ def create_brain_segment_from_mask_pipe(
     # creating outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["segmented_file", "parcel_gm",
+            fields=["segmented_file", "parcel", "parcel_gm",
                     "threshold_gm", "threshold_wm", "threshold_csf",
                     "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
@@ -498,6 +498,10 @@ def create_brain_segment_from_mask_pipe(
             print("##### Error, no coregistration method is defined")
             return brain_segment_pipe
 
+
+    #outputnode
+    brain_segment_pipe.connect(register_parcel_to_nat, 'out_file',
+                               outputnode, 'parcel')
     # ants Atropos
     if "template_seg" in params_template.keys():
 
@@ -775,6 +779,7 @@ def create_full_T1T2_subpipes(
                     "stereo_gen_5tt",
                     "native_gen_5tt",
 
+                    "stereo_parcel",
                     "stereo_parcel_gm",
                     "stereo_padded_parcel_gm"
                     "native_parcel_gm",
@@ -1319,6 +1324,9 @@ def create_full_T1T2_subpipes(
 
     seg_pipe.connect(brain_segment_pipe, 'outputnode.parcel_gm',
                      outputnode, 'stereo_parcel_gm')
+
+    seg_pipe.connect(brain_segment_pipe, 'outputnode.parcel',
+                     outputnode, 'stereo_parcel')
 
 
     if pad and space == "native":
