@@ -427,23 +427,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
         if "parcel_gm" in params["brain_segment_pipe"]:
 
-            # rename parcel
-            rename_stereo_parcel = pe.Node(
-                niu.Rename(),
-                name="rename_stereo_parcel")
-            rename_stereo_parcel.inputs.format_string = \
-                pref_deriv + "_space-stereo_desc-parcelgm_dseg"
-            rename_stereo_parcel.inputs.parse_string = parse_str
-            rename_stereo_parcel.inputs.keep_ext = True
-
-            main_workflow.connect(
-                segment_pnh_pipe, 'outputnode.stereo_parcel',
-                rename_stereo_parcel, 'in_file')
-
-            main_workflow.connect(
-                rename_stereo_parcel, 'out_file',
-                datasink, '@stereo_parcel')
-
             # rename parcel_gm
             rename_stereo_parcel_gm = pe.Node(
                 niu.Rename(),
