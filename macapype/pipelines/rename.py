@@ -432,7 +432,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 niu.Rename(),
                 name="rename_stereo_parcel")
             rename_stereo_parcel.inputs.format_string = \
-                pref_deriv + "_space-stereo_desc-parcelgm_dseg"
+                pref_deriv + "_space-stereo_desc-parcel_dseg"
             rename_stereo_parcel.inputs.parse_string = parse_str
             rename_stereo_parcel.inputs.keep_ext = True
 
@@ -449,7 +449,7 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 niu.Rename(),
                 name="rename_stereo_parcel_gm")
             rename_stereo_parcel_gm.inputs.format_string = \
-                pref_deriv + "_space-stereo_desc-parcel_dseg"
+                pref_deriv + "_space-stereo_desc-parcelgm_dseg"
             rename_stereo_parcel_gm.inputs.parse_string = parse_str
             rename_stereo_parcel_gm.inputs.keep_ext = True
 
