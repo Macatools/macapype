@@ -429,7 +429,9 @@ def create_brain_segment_from_mask_pipe(
                     reg_f3d, 'invcpp_file',
                     register_seg_to_nat, "trans_file")
             else:
-                # #TODO
+
+                #TODO
+                pass
                 # # gm
                 # register_gm_to_nat = pe.Node(
                 #     fsl.ApplyXFM(), name="register_gm_to_nat")
