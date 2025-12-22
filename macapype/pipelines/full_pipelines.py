@@ -404,7 +404,7 @@ def create_brain_segment_from_mask_pipe(
                     "template_parcel"]
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
-                    register_parcel_to_nat, 'ref_file')
+                    register_parcel_to_nat, 'reference')
 
                 brain_segment_pipe.connect(
                     reg, 'inv_transfo_file',
