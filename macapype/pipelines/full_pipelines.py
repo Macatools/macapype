@@ -368,7 +368,8 @@ def create_brain_segment_from_mask_pipe(
                     register_csf_to_nat, "in_matrix_file")
 
 
-            if "template_parcel" in params_template.keys():
+            if "template_parcel" in params_template.keys() \
+                and "parcel_gm" in params:
 
                 # seg
                 register_parcel_to_nat = pe.Node(
@@ -385,6 +386,11 @@ def create_brain_segment_from_mask_pipe(
                 brain_segment_pipe.connect(
                     reg, 'nonlin_invwarp_file',
                     register_parcel_to_nat, "field_file")
+
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_parcel_to_nat, "premat")
 
         elif "reg_f3d" in params:
             # Iterative registration to the template
@@ -423,57 +429,57 @@ def create_brain_segment_from_mask_pipe(
                     reg_f3d, 'invcpp_file',
                     register_seg_to_nat, "trans_file")
             else:
-                #TODO
-                # gm
-                register_gm_to_nat = pe.Node(
-                    fsl.ApplyXFM(), name="register_gm_to_nat")
-                register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
-                register_gm_to_nat.inputs.interp = "nearestneighbour"
-
-                register_gm_to_nat.inputs.in_file = \
-                    params_template["template_gm"]
-
-                brain_segment_pipe.connect(
-                    inputnode, 'masked_debiased_T1',
-                    register_gm_to_nat, 'reference')
-
-                brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_gm_to_nat, "in_matrix_file")
-
-                # wm
-                register_wm_to_nat = pe.Node(
-                    fsl.ApplyXFM(), name="register_wm_to_nat")
-                register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
-                register_wm_to_nat.inputs.interp = "nearestneighbour"
-
-                register_wm_to_nat.inputs.in_file = \
-                    params_template["template_wm"]
-
-                brain_segment_pipe.connect(
-                    inputnode, 'masked_debiased_T1',
-                    register_wm_to_nat, 'reference')
-
-                brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_wm_to_nat, "in_matrix_file")
-
-                # csf
-                register_csf_to_nat = pe.Node(
-                    fsl.ApplyXFM(), name="register_csf_to_nat")
-                register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
-                register_csf_to_nat.inputs.interp = "nearestneighbour"
-
-                register_csf_to_nat.inputs.in_file = \
-                    params_template["template_csf"]
-
-                brain_segment_pipe.connect(
-                    inputnode, 'masked_debiased_T1',
-                    register_csf_to_nat, 'reference')
-
-                brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_csf_to_nat, "in_matrix_file")
+                # #TODO
+                # # gm
+                # register_gm_to_nat = pe.Node(
+                #     fsl.ApplyXFM(), name="register_gm_to_nat")
+                # register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
+                # register_gm_to_nat.inputs.interp = "nearestneighbour"
+                #
+                # register_gm_to_nat.inputs.in_file = \
+                #     params_template["template_gm"]
+                #
+                # brain_segment_pipe.connect(
+                #     inputnode, 'masked_debiased_T1',
+                #     register_gm_to_nat, 'reference')
+                #
+                # brain_segment_pipe.connect(
+                #     reg, 'inv_transfo_file',
+                #     register_gm_to_nat, "in_matrix_file")
+                #
+                # # wm
+                # register_wm_to_nat = pe.Node(
+                #     fsl.ApplyXFM(), name="register_wm_to_nat")
+                # register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
+                # register_wm_to_nat.inputs.interp = "nearestneighbour"
+                #
+                # register_wm_to_nat.inputs.in_file = \
+                #     params_template["template_wm"]
+                #
+                # brain_segment_pipe.connect(
+                #     inputnode, 'masked_debiased_T1',
+                #     register_wm_to_nat, 'reference')
+                #
+                # brain_segment_pipe.connect(
+                #     reg, 'inv_transfo_file',
+                #     register_wm_to_nat, "in_matrix_file")
+                #
+                # # csf
+                # register_csf_to_nat = pe.Node(
+                #     fsl.ApplyXFM(), name="register_csf_to_nat")
+                # register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
+                # register_csf_to_nat.inputs.interp = "nearestneighbour"
+                #
+                # register_csf_to_nat.inputs.in_file = \
+                #     params_template["template_csf"]
+                #
+                # brain_segment_pipe.connect(
+                #     inputnode, 'masked_debiased_T1',
+                #     register_csf_to_nat, 'reference')
+                #
+                # brain_segment_pipe.connect(
+                #     reg, 'inv_transfo_file',
+                #     register_csf_to_nat, "in_matrix_file")
 
             if "template_parcel" in params_template.keys() \
                 and "parcel_gm" in params:
