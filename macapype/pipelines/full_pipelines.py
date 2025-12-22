@@ -282,8 +282,9 @@ def create_brain_segment_from_mask_pipe(
 
             reg.inputs.refb_file = params_template["template_brain"]
 
-            reg.inputs.refw_file = params_template["template_head"]
-            reg.inputs.k = True
+#
+#             reg.inputs.refw_file = params_template["template_head"]
+#             reg.inputs.k = True
 
             brain_segment_pipe.connect(
                 inputnode, 'debiased_T1',
@@ -371,6 +372,7 @@ def create_brain_segment_from_mask_pipe(
             if "template_parcel" in params_template.keys() \
                 and "parcel_gm" in params:
 
+                # nonlin flirt
                 # seg
                 register_parcel_to_nat = pe.Node(
                     fsl.ApplyWarp(), name="register_parcel_to_nat")
@@ -391,6 +393,23 @@ def create_brain_segment_from_mask_pipe(
                 # brain_segment_pipe.connect(
                 #     reg, 'inv_transfo_file',
                 #     register_parcel_to_nat, "premat")
+
+
+                register_parcel_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_parcel_to_nat")
+
+                register_parcel_to_nat.inputs.interp = "nn"
+
+                register_parcel_to_nat.inputs.in_file = params_template[
+                    "template_parcel"]
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_parcel_to_nat, 'ref_file')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_parcel_to_nat, "in_matrix_file")
+
 
         elif "reg_f3d" in params:
             # Iterative registration to the template
