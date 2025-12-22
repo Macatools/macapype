@@ -387,10 +387,10 @@ def create_brain_segment_from_mask_pipe(
                     reg, 'nonlin_invwarp_file',
                     register_parcel_to_nat, "field_file")
 
-
-                brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_parcel_to_nat, "premat")
+                #
+                # brain_segment_pipe.connect(
+                #     reg, 'inv_transfo_file',
+                #     register_parcel_to_nat, "premat")
 
         elif "reg_f3d" in params:
             # Iterative registration to the template
