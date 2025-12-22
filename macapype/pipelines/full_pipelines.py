@@ -398,7 +398,7 @@ def create_brain_segment_from_mask_pipe(
                 register_parcel_to_nat = pe.Node(
                     fsl.ApplyXFM(), name="register_parcel_to_nat")
 
-                register_parcel_to_nat.inputs.interp = "nn"
+                register_parcel_to_nat.inputs.interp = "nearestneighbour"
 
                 register_parcel_to_nat.inputs.in_file = params_template[
                     "template_parcel"]
