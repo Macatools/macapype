@@ -878,23 +878,23 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
             if "parcel_gm" in params["brain_segment_pipe"]:
 
-                rename_native_padded_parcel_gm = pe.Node(
+                rename_native_parcel_gm = pe.Node(
                     niu.Rename(),
-                    name="rename_native_padded_parcel_gm")
-                rename_native_padded_parcel_gm.inputs.format_string = \
+                    name="rename_native_parcel_gm")
+                rename_native_parcel_gm.inputs.format_string = \
                     pref_deriv + "_space-native_desc-pad_desc-parcelgm_dseg"
-                rename_native_padded_parcel_gm.inputs.parse_string = \
+                rename_native_parcel_gm.inputs.parse_string = \
                     parse_str
-                rename_native_padded_parcel_gm.inputs.keep_ext = True
+                rename_native_parcel_gm.inputs.keep_ext = True
 
                 main_workflow.connect(
                     segment_pnh_pipe,
-                    'outputnode.native_padded_parcel_gm',
-                    rename_native_padded_parcel_gm, 'in_file')
+                    'outputnode.native_parcel_gm',
+                    rename_native_parcel_gm, 'in_file')
 
                 main_workflow.connect(
-                    rename_native_padded_parcel_gm, 'out_file',
-                    datasink, '@native_padded_parcel_gm')
+                    rename_native_parcel_gm, 'out_file',
+                    datasink, '@native_parcel_gm')
 
             # rename 5tt
             if "export_5tt_pipe" in params.keys():
