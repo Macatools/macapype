@@ -1341,11 +1341,12 @@ def create_full_T1T2_subpipes(
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params,
             inter_val="LIN")
-        pad_back(
-            seg_pipe, data_preparation_pipe,
-            brain_segment_pipe, "outputnode.parcel_gm",
-            outputnode, "native_parcel_gm", params,
-            inter_val="NN")
+#
+#         pad_back(
+#             seg_pipe, data_preparation_pipe,
+#             brain_segment_pipe, "outputnode.parcel_gm",
+#             outputnode, "native_parcel_gm", params,
+#             inter_val="NN")
 
 
     if "pad_template" in params["short_preparation_pipe"].keys():
