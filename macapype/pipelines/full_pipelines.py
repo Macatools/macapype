@@ -371,30 +371,30 @@ def create_brain_segment_from_mask_pipe(
 
             if "template_parcel" in params_template.keys() \
                 and "parcel_gm" in params:
-
-                # nonlin flirt
-                # seg
-                register_parcel_to_nat = pe.Node(
-                    fsl.ApplyWarp(), name="register_parcel_to_nat")
-
-                register_parcel_to_nat.inputs.interp = "nn"
-
-                register_parcel_to_nat.inputs.in_file = params_template[
-                    "template_parcel"]
-                brain_segment_pipe.connect(
-                    inputnode, 'masked_debiased_T1',
-                    register_parcel_to_nat, 'ref_file')
-
-                brain_segment_pipe.connect(
-                    reg, 'nonlin_invwarp_file',
-                    register_parcel_to_nat, "field_file")
-
+                #
+                # # nonlin flirt
+                # # seg
+                # register_parcel_to_nat = pe.Node(
+                #     fsl.ApplyWarp(), name="register_parcel_to_nat")
+                #
+                # register_parcel_to_nat.inputs.interp = "nn"
+                #
+                # register_parcel_to_nat.inputs.in_file = params_template[
+                #     "template_parcel"]
+                # brain_segment_pipe.connect(
+                #     inputnode, 'masked_debiased_T1',
+                #     register_parcel_to_nat, 'ref_file')
                 #
                 # brain_segment_pipe.connect(
-                #     reg, 'inv_transfo_file',
-                #     register_parcel_to_nat, "premat")
+                #     reg, 'nonlin_invwarp_file',
+                #     register_parcel_to_nat, "field_file")
+                #
+                # #
+                # # brain_segment_pipe.connect(
+                # #     reg, 'inv_transfo_file',
+                # #     register_parcel_to_nat, "premat")
 
-
+                # flirt version
                 register_parcel_to_nat = pe.Node(
                     fsl.ApplyXFM(), name="register_parcel_to_nat")
 
