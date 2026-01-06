@@ -344,9 +344,11 @@ class IterREGBET(CommandLine):
         outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
         outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
 
-        if isdefined(self.inputs.refw_file) and self.inputs.k==True:
-            outputs["nonlin_warp_file"] = os.path.abspath(outfile + "_Warp.nii.gz")
-            outputs["nonlin_invwarp_file"] = os.path.abspath(outfile + "_InverseWarp.nii.gz")
+        if isdefined(self.inputs.refw_file) and self.inputs.k is True:
+            outputs["nonlin_warp_file"] = \
+                os.path.abspath(outfile + "_Warp.nii.gz")
+            outputs["nonlin_invwarp_file"] = \
+                os.path.abspath(outfile + "_InverseWarp.nii.gz")
 
         return outputs
 

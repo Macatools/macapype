@@ -444,7 +444,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
                 rename_stereo_parcel_gm, 'out_file',
                 datasink, '@stereo_parcel_gm')
 
-
         if "pad_template" in params["short_preparation_pipe"].keys():
 
             rename_stereo_padded_segmented_brain_mask = pe.Node(

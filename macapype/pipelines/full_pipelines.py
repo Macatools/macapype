@@ -10,7 +10,7 @@ from nipype.interfaces import fsl
 from nipype.interfaces.ants.utils import ImageMath
 
 from nipype.interfaces.niftyreg.reg import RegF3D
-from nipype.interfaces.niftyreg.regutils import RegResample, RegTransform
+from nipype.interfaces.niftyreg.regutils import RegResample
 
 from ..utils.utils_nodes import NodeParams
 
@@ -31,7 +31,7 @@ from .segment import (create_old_segment_pipe,
 
 from .correct_bias import create_masked_correct_bias_pipe
 
-from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
+from .register import (create_register_NMT_pipe)
 
 from .extract_brain import create_extract_pipe
 
@@ -282,9 +282,8 @@ def create_brain_segment_from_mask_pipe(
 
             reg.inputs.refb_file = params_template["template_brain"]
 
-#
-#             reg.inputs.refw_file = params_template["template_head"]
-#             reg.inputs.k = True
+            # reg.inputs.refw_file = params_template["template_head"]
+            # reg.inputs.k = True
 
             brain_segment_pipe.connect(
                 inputnode, 'debiased_T1',
@@ -368,31 +367,8 @@ def create_brain_segment_from_mask_pipe(
                     reg, 'inv_transfo_file',
                     register_csf_to_nat, "in_matrix_file")
 
-
             if "template_parcel" in params_template.keys() \
-                and "parcel_gm" in params:
-                #
-                # # nonlin flirt
-                # # seg
-                # register_parcel_to_nat = pe.Node(
-                #     fsl.ApplyWarp(), name="register_parcel_to_nat")
-                #
-                # register_parcel_to_nat.inputs.interp = "nn"
-                #
-                # register_parcel_to_nat.inputs.in_file = params_template[
-                #     "template_parcel"]
-                # brain_segment_pipe.connect(
-                #     inputnode, 'masked_debiased_T1',
-                #     register_parcel_to_nat, 'ref_file')
-                #
-                # brain_segment_pipe.connect(
-                #     reg, 'nonlin_invwarp_file',
-                #     register_parcel_to_nat, "field_file")
-                #
-                # #
-                # # brain_segment_pipe.connect(
-                # #     reg, 'inv_transfo_file',
-                # #     register_parcel_to_nat, "premat")
+                    and "parcel_gm" in params:
 
                 # flirt version
                 register_parcel_to_nat = pe.Node(
@@ -410,16 +386,15 @@ def create_brain_segment_from_mask_pipe(
                     reg, 'inv_transfo_file',
                     register_parcel_to_nat, "in_matrix_file")
 
-
         elif "reg_f3d" in params:
             # Iterative registration to the template
             reg_f3d = pe.Node(
                 RegF3D(),
                 name='reg_f3d')
 
-            reg_f3d.inputs.rmask_file= params_template["template_brain"]
+            reg_f3d.inputs.rmask_file = params_template["template_brain"]
 
-            reg_f3d.inputs.ref_file  = params_template["template_head"]
+            reg_f3d.inputs.ref_file = params_template["template_head"]
 
             brain_segment_pipe.connect(
                 inputnode, 'debiased_T1',
@@ -448,62 +423,13 @@ def create_brain_segment_from_mask_pipe(
                     reg_f3d, 'invcpp_file',
                     register_seg_to_nat, "trans_file")
             else:
-
-                #TODO
+                # TODO
+                print("**** register split template files \
+                    is not impremented for template reg_f3d ****")
                 pass
-                # # gm
-                # register_gm_to_nat = pe.Node(
-                #     fsl.ApplyXFM(), name="register_gm_to_nat")
-                # register_gm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
-                # register_gm_to_nat.inputs.interp = "nearestneighbour"
-                #
-                # register_gm_to_nat.inputs.in_file = \
-                #     params_template["template_gm"]
-                #
-                # brain_segment_pipe.connect(
-                #     inputnode, 'masked_debiased_T1',
-                #     register_gm_to_nat, 'reference')
-                #
-                # brain_segment_pipe.connect(
-                #     reg, 'inv_transfo_file',
-                #     register_gm_to_nat, "in_matrix_file")
-                #
-                # # wm
-                # register_wm_to_nat = pe.Node(
-                #     fsl.ApplyXFM(), name="register_wm_to_nat")
-                # register_wm_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
-                # register_wm_to_nat.inputs.interp = "nearestneighbour"
-                #
-                # register_wm_to_nat.inputs.in_file = \
-                #     params_template["template_wm"]
-                #
-                # brain_segment_pipe.connect(
-                #     inputnode, 'masked_debiased_T1',
-                #     register_wm_to_nat, 'reference')
-                #
-                # brain_segment_pipe.connect(
-                #     reg, 'inv_transfo_file',
-                #     register_wm_to_nat, "in_matrix_file")
-                #
-                # # csf
-                # register_csf_to_nat = pe.Node(
-                #     fsl.ApplyXFM(), name="register_csf_to_nat")
-                # register_csf_to_nat.inputs.output_type = "NIFTI_GZ"  # for SPM
-                # register_csf_to_nat.inputs.interp = "nearestneighbour"
-                #
-                # register_csf_to_nat.inputs.in_file = \
-                #     params_template["template_csf"]
-                #
-                # brain_segment_pipe.connect(
-                #     inputnode, 'masked_debiased_T1',
-                #     register_csf_to_nat, 'reference')
-                #
-                # brain_segment_pipe.connect(
-                #     reg, 'inv_transfo_file',
-                #     register_csf_to_nat, "in_matrix_file")
 
             if "template_parcel" in params_template.keys() \
-                and "parcel_gm" in params:
+                    and "parcel_gm" in params:
 
                 register_parcel_to_nat = pe.Node(
                     RegResample(), name="register_parcel_to_nat")
@@ -586,8 +512,7 @@ def create_brain_segment_from_mask_pipe(
         segment_atropos_pipe, "inputnode.brain_file")
 
     if "parcel_gm" in params and "template_parcel" in params_template.keys():
-
-        mult_gm_parcel = pe.Node(fsl.BinaryMaths(), name = "mult_gm_parcel")
+        mult_gm_parcel = pe.Node(fsl.BinaryMaths(), name="mult_gm_parcel")
 
         brain_segment_pipe.connect(
             segment_atropos_pipe, 'outputnode.threshold_gm',
@@ -602,7 +527,7 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(mult_gm_parcel, 'out_file',
                                    outputnode, 'parcel_gm')
 
-    #outputnode
+    # outputnode
     if space == 'native':
 
         brain_segment_pipe.connect(segment_atropos_pipe,
@@ -1347,7 +1272,6 @@ def create_full_T1T2_subpipes(
     seg_pipe.connect(brain_segment_pipe, 'outputnode.parcel_gm',
                      outputnode, 'stereo_parcel_gm')
 
-
     if pad and space == "native":
         pad_back(
             seg_pipe, data_preparation_pipe,
@@ -1368,13 +1292,6 @@ def create_full_T1T2_subpipes(
             brain_segment_pipe, "outputnode.prob_csf",
             outputnode, "native_prob_csf", params,
             inter_val="LIN")
-#
-#         pad_back(
-#             seg_pipe, data_preparation_pipe,
-#             brain_segment_pipe, "outputnode.parcel_gm",
-#             outputnode, "native_parcel_gm", params,
-#             inter_val="NN")
-
 
     if "pad_template" in params["short_preparation_pipe"].keys():
         pad_stereo_stereo_brain_mask = NodeParams(
@@ -1390,7 +1307,6 @@ def create_full_T1T2_subpipes(
         seg_pipe.connect(
             pad_stereo_stereo_brain_mask, "output_image",
             outputnode, "stereo_padded_segmented_brain_mask")
-
 
     if "pad_template" in params["short_preparation_pipe"].keys():
         pad_stereo_parcel_gm = NodeParams(
