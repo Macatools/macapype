@@ -1270,7 +1270,7 @@ def create_full_T1T2_subpipes(
     seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
                      outputnode, 'stereo_prob_csf')
 
-    if "parcel_gm" in params["brain_segment_pipe"]:
+    if "parcel_gm" in params[seg_pipe_name].keys():
         seg_pipe.connect(
             brain_segment_pipe, 'outputnode.parcel_gm',
             outputnode, 'stereo_parcel_gm')
