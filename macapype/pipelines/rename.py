@@ -366,7 +366,6 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
         elif "brain_old_segment_pipe" in params.keys():
             seg_pipe_name = "brain_old_segment_pipe"
 
-
         # rename prob_wm
         rename_stereo_prob_wm = pe.Node(niu.Rename(),
                                         name="rename_stereo_prob_wm")
