@@ -1191,6 +1191,7 @@ def create_full_T1T2_subpipes(
         seg_pipe_name = "brain_old_segment_pipe"
 
     else:
+        print("No segmentation will be performed, skipping")
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'indiv_params',
@@ -1269,8 +1270,10 @@ def create_full_T1T2_subpipes(
     seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
                      outputnode, 'stereo_prob_csf')
 
-    seg_pipe.connect(brain_segment_pipe, 'outputnode.parcel_gm',
-                     outputnode, 'stereo_parcel_gm')
+    if "parcel_gm" in params["brain_segment_pipe"]:
+        seg_pipe.connect(
+            brain_segment_pipe, 'outputnode.parcel_gm',
+            outputnode, 'stereo_parcel_gm')
 
     if pad and space == "native":
         pad_back(
