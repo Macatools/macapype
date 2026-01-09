@@ -9,6 +9,7 @@ from nipype.interfaces import fsl
 
 from nipype.interfaces.ants.utils import ImageMath
 
+from nipype.interfaces.niftyreg.reg import RegF3D
 from nipype.interfaces.niftyreg.regutils import RegResample
 
 from ..utils.utils_nodes import NodeParams
@@ -30,7 +31,7 @@ from .segment import (create_old_segment_pipe,
 
 from .correct_bias import create_masked_correct_bias_pipe
 
-from .register import (create_register_NMT_pipe, create_reg_seg_pipe)
+from .register import (create_register_NMT_pipe)
 
 from .extract_brain import create_extract_pipe
 
@@ -250,7 +251,7 @@ def create_brain_segment_from_mask_pipe(
     # creating outputnode
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["segmented_file",
+            fields=["segmented_file", "parcel", "parcel_gm",
                     "threshold_gm", "threshold_wm", "threshold_csf",
                     "prob_gm", "prob_wm", "prob_csf"]),
         name='outputnode')
@@ -281,9 +282,8 @@ def create_brain_segment_from_mask_pipe(
 
             reg.inputs.refb_file = params_template["template_brain"]
 
-            if "nonlin_reg" in params["reg"]:
-                reg.inputs.refw_file = params_template["template_head"]
-                reg.inputs.k = True
+            # reg.inputs.refw_file = params_template["template_head"]
+            # reg.inputs.k = True
 
             brain_segment_pipe.connect(
                 inputnode, 'debiased_T1',
@@ -301,18 +301,19 @@ def create_brain_segment_from_mask_pipe(
 
                 # seg
                 register_seg_to_nat = pe.Node(
-                    fsl.ApplyXFM(), name="register_seg_to_nat")
-                register_seg_to_nat.inputs.interp = "nearestneighbour"
+                    fsl.ApplyWarp(), name="register_seg_to_nat")
+
+                register_seg_to_nat.inputs.interp = "nn"
 
                 register_seg_to_nat.inputs.in_file = params_template[
                     "template_seg"]
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
-                    register_seg_to_nat, 'reference')
+                    register_seg_to_nat, 'ref_file')
 
                 brain_segment_pipe.connect(
-                    reg, 'inv_transfo_file',
-                    register_seg_to_nat, "in_matrix_file")
+                    reg, 'nonlin_invwarp_file',
+                    register_seg_to_nat, "field_file")
 
             else:
                 # gm
@@ -365,6 +366,87 @@ def create_brain_segment_from_mask_pipe(
                 brain_segment_pipe.connect(
                     reg, 'inv_transfo_file',
                     register_csf_to_nat, "in_matrix_file")
+
+            if "template_parcel" in params_template.keys() \
+                    and "parcel_gm" in params:
+
+                # flirt version
+                register_parcel_to_nat = pe.Node(
+                    fsl.ApplyXFM(), name="register_parcel_to_nat")
+
+                register_parcel_to_nat.inputs.interp = "nearestneighbour"
+
+                register_parcel_to_nat.inputs.in_file = params_template[
+                    "template_parcel"]
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_parcel_to_nat, 'reference')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_parcel_to_nat, "in_matrix_file")
+
+        elif "reg_f3d" in params:
+            # Iterative registration to the template
+            reg_f3d = pe.Node(
+                RegF3D(),
+                name='reg_f3d')
+
+            reg_f3d.inputs.rmask_file = params_template["template_brain"]
+
+            reg_f3d.inputs.ref_file = params_template["template_head"]
+
+            brain_segment_pipe.connect(
+                inputnode, 'debiased_T1',
+                reg_f3d, 'flo_file')
+
+            brain_segment_pipe.connect(
+                inputnode, 'masked_debiased_T1',
+                reg_f3d, 'fmask_file')
+
+            if "template_seg" in params_template.keys():
+
+                # seg
+                register_seg_to_nat = pe.Node(
+                    RegResample(), name="register_seg_to_nat")
+
+                register_seg_to_nat.inputs.inter_val = "NN"
+
+                register_seg_to_nat.inputs.flo_file = params_template[
+                    "template_seg"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_seg_to_nat, 'ref_file')
+
+                brain_segment_pipe.connect(
+                    reg_f3d, 'invcpp_file',
+                    register_seg_to_nat, "trans_file")
+            else:
+                # TODO
+                print("**** register split template files \
+                    is not impremented for template reg_f3d ****")
+                pass
+
+            if "template_parcel" in params_template.keys() \
+                    and "parcel_gm" in params:
+
+                register_parcel_to_nat = pe.Node(
+                    RegResample(), name="register_parcel_to_nat")
+
+                register_parcel_to_nat.inputs.inter_val = "NN"
+
+                register_parcel_to_nat.inputs.flo_file = params_template[
+                    "template_parcel"]
+
+                brain_segment_pipe.connect(
+                    inputnode, 'masked_debiased_T1',
+                    register_parcel_to_nat, 'ref_file')
+
+                brain_segment_pipe.connect(
+                    reg_f3d, 'invcpp_file',
+                    register_parcel_to_nat, "trans_file")
+
         else:
             print("##### Error, no coregistration method is defined")
             return brain_segment_pipe
@@ -384,6 +466,11 @@ def create_brain_segment_from_mask_pipe(
                     register_NMT_pipe, 'outputnode.native_template_seg',
                     segment_atropos_pipe, "inputnode.seg_file")
             elif "reg" in params:
+                brain_segment_pipe.connect(
+                    register_seg_to_nat, 'out_file',
+                    segment_atropos_pipe, "inputnode.seg_file")
+
+            elif "reg_f3d" in params:
                 brain_segment_pipe.connect(
                     register_seg_to_nat, 'out_file',
                     segment_atropos_pipe, "inputnode.seg_file")
@@ -424,6 +511,23 @@ def create_brain_segment_from_mask_pipe(
         inputnode, 'masked_debiased_T1',
         segment_atropos_pipe, "inputnode.brain_file")
 
+    if "parcel_gm" in params and "template_parcel" in params_template.keys():
+        mult_gm_parcel = pe.Node(fsl.BinaryMaths(), name="mult_gm_parcel")
+
+        brain_segment_pipe.connect(
+            segment_atropos_pipe, 'outputnode.threshold_gm',
+            mult_gm_parcel, 'in_file')
+
+        brain_segment_pipe.connect(
+            register_parcel_to_nat, 'out_file',
+            mult_gm_parcel, 'operand_file')
+
+        mult_gm_parcel.inputs.operation = "mul"
+
+        brain_segment_pipe.connect(mult_gm_parcel, 'out_file',
+                                   outputnode, 'parcel_gm')
+
+    # outputnode
     if space == 'native':
 
         brain_segment_pipe.connect(segment_atropos_pipe,
@@ -438,6 +542,7 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.threshold_csf',
                                    outputnode, 'threshold_csf')
+
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_gm',
                                    outputnode, 'prob_gm')
@@ -447,73 +552,78 @@ def create_brain_segment_from_mask_pipe(
         brain_segment_pipe.connect(segment_atropos_pipe,
                                    'outputnode.prob_csf',
                                    outputnode, 'prob_csf')
-
-    elif space == "template":
-        reg_seg_pipe = create_reg_seg_pipe()
-
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.segmented_file',
-                                   reg_seg_pipe,
-                                   'inputnode.native_seg')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_gm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_threshold_gm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_wm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_threshold_wm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.threshold_csf',
-                                   reg_seg_pipe,
-                                   'inputnode.native_threshold_csf')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_gm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_prob_gm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_wm',
-                                   reg_seg_pipe,
-                                   'inputnode.native_prob_wm')
-        brain_segment_pipe.connect(segment_atropos_pipe,
-                                   'outputnode.prob_csf',
-                                   reg_seg_pipe,
-                                   'inputnode.native_prob_csf')
-
-        # other inputs
-        if "reg" in params:
-            brain_segment_pipe.connect(
-                reg, 'transfo_file',
-                reg_seg_pipe, 'inputnode.transfo_file')
-
-        elif "register_NMT_pipe" in params:
-            brain_segment_pipe.connect(
-                register_NMT_pipe,
-                'NMT_subject_align.transfo_file',
-                reg_seg_pipe, 'inputnode.transfo_file')
-
-        reg_seg_pipe.inputs.inputnode.ref_image = \
-            params_template['template_head']
-
-        # output node
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_seg',
-                                   outputnode, 'segmented_file')
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_threshold_gm',
-                                   outputnode, 'threshold_gm')
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_threshold_wm',
-                                   outputnode, 'threshold_wm')
-        brain_segment_pipe.connect(reg_seg_pipe,
-                                   'outputnode.norm_threshold_csf',
-                                   outputnode, 'threshold_csf')
-        # outputnodes
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_gm',
-                                   outputnode, 'prob_gm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_wm',
-                                   outputnode, 'prob_wm')
-        brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_csf',
-                                   outputnode, 'prob_csf')
+    #
+    # elif space == "template":
+    #     reg_seg_pipe = create_reg_seg_pipe()
+    #
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.segmented_file',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_seg')
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.threshold_gm',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_threshold_gm')
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.threshold_wm',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_threshold_wm')
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.threshold_csf',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_threshold_csf')
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.prob_gm',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_prob_gm')
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.prob_wm',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_prob_wm')
+    #     brain_segment_pipe.connect(segment_atropos_pipe,
+    #                                'outputnode.prob_csf',
+    #                                reg_seg_pipe,
+    #                                'inputnode.native_prob_csf')
+    #
+    #     # other inputs
+    #     if "reg" in params:
+    #         brain_segment_pipe.connect(
+    #             reg, 'transfo_file',
+    #             reg_seg_pipe, 'inputnode.transfo_file')
+    #
+    #     elif "register_NMT_pipe" in params:
+    #         brain_segment_pipe.connect(
+    #             register_NMT_pipe,
+    #             'NMT_subject_align.transfo_file',
+    #             reg_seg_pipe, 'inputnode.transfo_file')
+    #
+    #     elif "reg_f3d" in params:
+    #         #TODO
+    #         print("Error, not implemented space=template and reg_f3d")
+    #         return brain_segment_pipe
+    #
+    #     reg_seg_pipe.inputs.inputnode.ref_image = \
+    #         params_template['template_head']
+    #
+    #     # output node
+    #     brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_seg',
+    #                                outputnode, 'segmented_file')
+    #     brain_segment_pipe.connect(reg_seg_pipe,
+    #                                'outputnode.norm_threshold_gm',
+    #                                outputnode, 'threshold_gm')
+    #     brain_segment_pipe.connect(reg_seg_pipe,
+    #                                'outputnode.norm_threshold_wm',
+    #                                outputnode, 'threshold_wm')
+    #     brain_segment_pipe.connect(reg_seg_pipe,
+    #                                'outputnode.norm_threshold_csf',
+    #                                outputnode, 'threshold_csf')
+    #     # outputnodes
+    #     brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_gm',
+    #                                outputnode, 'prob_gm')
+    #     brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_wm',
+    #                                outputnode, 'prob_wm')
+    #     brain_segment_pipe.connect(reg_seg_pipe, 'outputnode.norm_prob_csf',
+    #                                outputnode, 'prob_csf')
 
     return brain_segment_pipe
 
@@ -600,25 +710,30 @@ def create_full_T1T2_subpipes(
 
                     'stereo_brain_mask',
                     'stereo_padded_brain_mask',
+                    'native_brain_mask',
+
                     'stereo_masked_debiased_T1',
                     'stereo_masked_debiased_T2',
-
-                    'native_brain_mask',
                     "native_masked_debiased_T1",
                     "native_masked_debiased_T2",
 
                     'stereo_segmented_brain_mask',
                     'stereo_padded_segmented_brain_mask',
-                    'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
-                    "stereo_gen_5tt",
-
                     'native_segmented_brain_mask',
+
+                    'stereo_prob_gm', 'stereo_prob_wm', 'stereo_prob_csf',
                     'native_prob_gm', 'native_prob_wm', 'native_prob_csf',
+
+                    "stereo_gen_5tt",
                     "native_gen_5tt",
 
+                    "stereo_parcel_gm",
+                    "stereo_padded_parcel_gm"
+                    "native_parcel_gm",
+
                     "stereo_wmgm_mask",
-                    "native_wmgm_mask",
                     "stereo_padded_wmgm_mask",
+                    "native_wmgm_mask",
                     "wmgm_stl",
 
                     "csf_stl",
@@ -1076,6 +1191,7 @@ def create_full_T1T2_subpipes(
         seg_pipe_name = "brain_old_segment_pipe"
 
     else:
+        print("No segmentation will be performed, skipping")
         return seg_pipe
 
     seg_pipe.connect(inputnode, 'indiv_params',
@@ -1154,6 +1270,11 @@ def create_full_T1T2_subpipes(
     seg_pipe.connect(brain_segment_pipe, 'outputnode.prob_csf',
                      outputnode, 'stereo_prob_csf')
 
+    if "parcel_gm" in params[seg_pipe_name].keys():
+        seg_pipe.connect(
+            brain_segment_pipe, 'outputnode.parcel_gm',
+            outputnode, 'stereo_parcel_gm')
+
     if pad and space == "native":
         pad_back(
             seg_pipe, data_preparation_pipe,
@@ -1189,6 +1310,21 @@ def create_full_T1T2_subpipes(
         seg_pipe.connect(
             pad_stereo_stereo_brain_mask, "output_image",
             outputnode, "stereo_padded_segmented_brain_mask")
+
+    if "pad_template" in params["short_preparation_pipe"].keys():
+        pad_stereo_parcel_gm = NodeParams(
+            ImageMath(),
+            params=parse_key(params["short_preparation_pipe"],
+                             "pad_template"),
+            name="pad_stereo_parcel_gm")
+
+        seg_pipe.connect(
+            brain_segment_pipe, "outputnode.segmented_file",
+            pad_stereo_parcel_gm, "op1")
+
+        seg_pipe.connect(
+            pad_stereo_parcel_gm, "output_image",
+            outputnode, "stereo_padded_parcel_gm")
 
     # ############################################## export 5tt
 

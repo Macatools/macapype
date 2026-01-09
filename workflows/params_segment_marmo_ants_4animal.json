@@ -17,9 +17,6 @@
                 "rig_only_flag":true
             }
         },
-        "denoise":
-        {
-        },
         "fast":
         {
             "args": "-l 3"
@@ -40,11 +37,8 @@
     },
     "brain_segment_pipe":
     {
-        "reg":
+        "reg_f3d":
         {
-            "n": 2,
-            "m": "ref",
-            "dof": 12
         },
         "segment_atropos_pipe":
         {
@@ -59,7 +53,10 @@
                 "wm": 3,
                 "csf": 4
             }
-        }
+        },
+        "parcel_gm":
+        {}
+
     },
     "export_5tt_pipe":
     {
