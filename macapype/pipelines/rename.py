@@ -360,6 +360,12 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
 
     if "brain_segment_pipe" in params or "brain_old_segment_pipe" in params:
 
+        if "brain_segment_pipe" in params.keys():
+            seg_pipe_name = "brain_segment_pipe"
+
+        elif "brain_old_segment_pipe" in params.keys():
+            seg_pipe_name = "brain_old_segment_pipe"
+
         # rename prob_wm
         rename_stereo_prob_wm = pe.Node(niu.Rename(),
                                         name="rename_stereo_prob_wm")
@@ -425,6 +431,25 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_segmented_brain_mask, 'out_file',
             datasink, '@stereo_segmented_brain_mask')
 
+        if "parcel_gm" in params[seg_pipe_name]:
+
+            # rename parcel_gm
+            rename_stereo_parcel_gm = pe.Node(
+                niu.Rename(),
+                name="rename_stereo_parcel_gm")
+            rename_stereo_parcel_gm.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-parcelgm_dseg"
+            rename_stereo_parcel_gm.inputs.parse_string = parse_str
+            rename_stereo_parcel_gm.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe, 'outputnode.stereo_parcel_gm',
+                rename_stereo_parcel_gm, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_parcel_gm, 'out_file',
+                datasink, '@stereo_parcel_gm')
+
         if "pad_template" in params["short_preparation_pipe"].keys():
 
             rename_stereo_padded_segmented_brain_mask = pe.Node(
@@ -444,6 +469,26 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_stereo_padded_segmented_brain_mask, 'out_file',
                 datasink, '@stereo_padded_segmented_brain_mask')
+
+            if "parcel_gm" in params[seg_pipe_name]:
+
+                rename_stereo_padded_parcel_gm = pe.Node(
+                    niu.Rename(),
+                    name="rename_stereo_padded_parcel_gm")
+                rename_stereo_padded_parcel_gm.inputs.format_string = \
+                    pref_deriv + "_space-stereo_desc-pad_desc-parcelgm_dseg"
+                rename_stereo_padded_parcel_gm.inputs.parse_string = \
+                    parse_str
+                rename_stereo_padded_parcel_gm.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe,
+                    'outputnode.stereo_padded_parcel_gm',
+                    rename_stereo_padded_parcel_gm, 'in_file')
+
+                main_workflow.connect(
+                    rename_stereo_padded_parcel_gm, 'out_file',
+                    datasink, '@stereo_padded_parcel_gm')
 
         # rename 5tt
         if "export_5tt_pipe" in params.keys():
@@ -498,6 +543,26 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_stereo_wmgm_mask, 'out_file',
                 datasink, '@stereo_wmgm_mask')
+
+        if "pad_template" in params["short_preparation_pipe"].keys():
+
+            rename_stereo_padded_wmgm_mask = pe.Node(
+                niu.Rename(),
+                name="v")
+            rename_stereo_padded_wmgm_mask.inputs.format_string = \
+                pref_deriv + "_space-stereo_desc-pad_desc-wmgm_mask"
+            rename_stereo_padded_wmgm_mask.inputs.parse_string = \
+                parse_str
+            rename_stereo_padded_wmgm_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                segment_pnh_pipe,
+                'outputnode.stereo_padded_wmgm_mask',
+                rename_stereo_padded_wmgm_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_stereo_padded_wmgm_mask, 'out_file',
+                datasink, '@stereo_padded_wmgm_mask')
 
         if "IsoSurface_tissues_pipe" in params:
 
@@ -815,6 +880,26 @@ def rename_all_brain_derivatives(params, main_workflow, segment_pnh_pipe,
             main_workflow.connect(
                 rename_native_segmented_brain_mask, 'out_file',
                 datasink, '@native_segmented_brain_mask')
+            #
+            # if "parcel_gm" in params["brain_segment_pipe"]:
+            #
+            #     rename_native_parcel_gm = pe.Node(
+            #         niu.Rename(),
+            #         name="rename_native_parcel_gm")
+            #     rename_native_parcel_gm.inputs.format_string = \
+            #         pref_deriv + "_space-native_desc-pad_desc-parcelgm_dseg"
+            #     rename_native_parcel_gm.inputs.parse_string = \
+            #         parse_str
+            #     rename_native_parcel_gm.inputs.keep_ext = True
+            #
+            #     main_workflow.connect(
+            #         segment_pnh_pipe,
+            #         'outputnode.native_parcel_gm',
+            #         rename_native_parcel_gm, 'in_file')
+            #
+            #     main_workflow.connect(
+            #         rename_native_parcel_gm, 'out_file',
+            #         datasink, '@native_parcel_gm')
 
             # rename 5tt
             if "export_5tt_pipe" in params.keys():

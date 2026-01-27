@@ -278,11 +278,13 @@ for ((i = 1 ; i  <= $NITER ; i++)); do
   
   # Extra whole-head non-linear registration, if wanted
   if [[ -n $REF_WHOLE ]] && [[ $i == $NITER ]]; then
-    echo "FNIRT..."
+    echo "FNIRT..." 1>&2
     "${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} # compute warp
-    echo "Inverting warp..."
+    #"${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} --miter=5,3 --subsamp=4,2 --infwhm=6,4 --reffwhm=4,2 --estint=false --applyrefmask=false --applyinmask=false # compute warp
+    #"${FSLPREFIX}fnirt" --in=$IN_WHOLE --ref=$REF_WHOLE --aff=$I2R_XFM --iout=${WARP[WH_OUT]} --cout=${WARP[WH_WARP]} --miter=1 --subsamp=4 --infwhm=6 --reffwhm=4 --estint=false --applyrefmask=false --applyinmask=false # compute warp
+    echo "Inverting warp..." 1>&2
     "${FSLPREFIX}invwarp" -r $IN_WHOLE -w ${WARP[WH_WARP]} -o ${WARP[WH_INVWARP]}
-    echo "Applying inverse warp..."
+    echo "Applying inverse warp..." 1>&2
     "${FSLPREFIX}applywarp" --ref=$IN_WHOLE --in=${TMP[REF_MASK]} --out=$IN_OUT_MASK --warp=${WARP[WH_INVWARP]} --interp=nn
   else
     "${FSLPREFIX}flirt" -in ${TMP[REF_MASK]} -ref $IN_WHOLE -out $IN_OUT_MASK -interp nearestneighbour -applyxfm -init $R2I_XFM # move brain mask to in_file

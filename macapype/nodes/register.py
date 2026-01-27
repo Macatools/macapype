@@ -221,6 +221,12 @@ class IterREGBETOutputSpec(TraitedSpec):
             exists=True,
             desc="inv_transfo_file")
 
+    nonlin_warp_file = File(
+            desc="nonlin_warp_file")
+
+    nonlin_invwarp_file = File(
+            desc="nonlin_invwarp_file")
+
 
 class IterREGBET(CommandLine):
     """
@@ -334,8 +340,16 @@ class IterREGBET(CommandLine):
             outfile = self._gen_outfilename()
 
         outputs["warp_file"] = os.path.abspath(outfile + ".nii.gz")
+
         outputs["transfo_file"] = os.path.abspath(outfile + ".xfm")
         outputs["inv_transfo_file"] = os.path.abspath(outfile + "_inverse.xfm")
+
+        if isdefined(self.inputs.refw_file) and self.inputs.k is True:
+            outputs["nonlin_warp_file"] = \
+                os.path.abspath(outfile + "_Warp.nii.gz")
+            outputs["nonlin_invwarp_file"] = \
+                os.path.abspath(outfile + "_InverseWarp.nii.gz")
+
         return outputs
 
 

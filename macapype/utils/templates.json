@@ -232,5 +232,11 @@
         "template_head": "template_space-stereoINT_largeFOV_T1w.nii.gz",
         "template_brain": "template_space-stereoINT_largeFOV_T1w_brain.nii.gz",
         "template_seg": "segmentation_six_types_seg_largeFOV_space-stereoINT.nii.gz"
+    },
+    "template_MBM_space-stereoINTv2":{
+        "template_head": "template_T1w_resampled_largeFOV_reorient_space-stereoINTv2.nii.gz",
+        "template_brain": "template_T1w_brain_resampled_largeFOV_reorient_space-stereoINTv2.nii.gz",
+        "template_seg": "segmentation_six_types_seg_resampled_largeFOV_reorient_space-stereoINTv2.nii.gz",
+        "template_parcel": "atlas_RikenBMA_cortex_largeFOV_resampled_reorient_space-stereoINTv2.nii.gz"
     }
 }
