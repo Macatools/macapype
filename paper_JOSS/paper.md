@@ -52,7 +52,7 @@ Although brain anatomical Magnetic Resonance Imaging (MRI) processing is largely
 # Statement of Need
 Non-human primates (NHPs) are increasingly used for neuroimaging studies due to the progress of MR acquisitions and the promises it holds in the field of neuroscience [@milham2018open]. Despite the standardization of MRI processing in humans with several well-known software options available, such as AFNI [@cox1996afni], FSL [@smith2004advances], SPM12 [@frackowiak1997human], and ANTS [@avants2011reproducible], defining robust processing pipelines for NHP anatomical image segmentation remains difficult.
 
-# Related Packages
+# State of the field
 Two categories of methods have been proposed to address the issue of NHP anatomical MR image segmentation. The first category corresponds to particular implementations for PNH images of existing human-MRI softwares such as **NHP-Freesurfer** and **CIVET-Macaque**, respectively relying on human-MRI softwares Freesurfer [@fischl2012freesurfer] and  CIVET [@lepage2021civet]. The second category relies on the use of deep-learning and machine learning techniques, such as **U-Nets** , for example **nBEST** to provide brain mask, segmentation of GM, WM and subcurtical nuclei [@ZHONG2024120652]. The latter requires the use of GPUs, most existing softwares performs relatively badly on small NHP species such as marmoset due to the lack of flexibility in the processing steps and the variability of brain peculiarities among NHP species.
 
 # Software design
