@@ -44,7 +44,7 @@ If ``-deriv``` is provided, see :ref:`Derivatives <derivatives>` for a descritio
 Contributing to the project
 ***************************
 
-If you are willing to contribute to macapype, see insctructions `here <https://https://github.com/macatools/macapype/blob/master/CONTRIBUTING.md>`_
+If you are willing to contribute to macapype, see insctructions `here <https://github.com/macatools/macapype/blob/master/CONTRIBUTING.md>`_
 
 Table of contents
 ******************
