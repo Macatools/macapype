@@ -129,7 +129,7 @@ html_theme_options = {
         #("Github", "https://github.com/macatools/macapype", True),
     #]
     'navbar_links': [
-        ("Github", "https://github.com/davidmeunier79/macapype", True),
+        ("Github", "https://github.com/macatools/macapype", True),
     ]
     }
 
