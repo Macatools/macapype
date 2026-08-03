@@ -23,7 +23,7 @@ docker pull macatools/macapype:latest
 
 https://macatools.github.io/macapype/
 
-# External documentation related to project:
+# External documentation related to project
 
 [A guide for PNH MRI processing](https://github.com/PRIME-RE/prime-re.github.io/wiki), and in particular, the session on [structural MRI processing](https://github.com/PRIME-RE/prime-re.github.io/wiki/Structural-processing)
 
@@ -35,4 +35,5 @@ The macapype_users can be be found [here](https://framateam.org/signup_user_comp
 
 
 # Contribution to project
-Willing to contribute to the project: See the instruction in [CONTRUBUTING.md] (https://github.com/macatools/macapype/blob/master/CONTRUBUTING.md)
+
+Are you willing to contribute to the project? See the instructions in [CONTRIBUTING.md] (https://github.com/macatools/macapype/blob/master/CONTRIBUTING.md)
