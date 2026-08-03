@@ -31,6 +31,8 @@ https://macatools.github.io/macapype/
 
 
 # Forum macapype_users
-
 The macapype_users can be be found [here](https://framateam.org/signup_user_complete/?id=ebtxf45nmiyqmkm8e6oh9qjsoe) (requires a framateam/framagit account, but should be accessible with a github or bitbucket account)
 
+
+# Contribution to project
+Willing to contribute to the project: See the instruction in [CONTRUBUTING.md] (https://github.com/davidmeunier79/macapype/blob/master/CONTRUBUTING.md)
