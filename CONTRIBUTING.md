@@ -20,7 +20,7 @@ To contribute to Macapype on GitHub:
 
 Before opening a new issue, check existing open issues on [Macapype Issues](https://github.com/Macatools/macapype/issues) to avoid duplicates. When opening an issue, please use one of the primary labels below:
 
-### `bug`
+### ![bug](https://img.shields.io/badge/-bug-fc2929.svg)
 Use this label for pipeline crashes, unexpected errors, or incorrect image processing outputs.
 * **What to include:**
   * Operating system, Python version, Macapype version, and relevant underlying software (e.g., Nipype, AFNI, ANTs, FSL, SPM).
@@ -28,14 +28,14 @@ Use this label for pipeline crashes, unexpected errors, or incorrect image proce
   * Full error tracebacks.
   * **Images & Screenshots:** Attach visual artifacts, failed brain masks/segmentations, or Quality Control (QC) output images to illustrate the defect.
 
-### `feature`
+### ![feature](https://img.shields.io/badge/-feature-a2eeef.svg)
 Use this label to request new pipelines, support for additional neuroimaging packages, or enhancements to existing workflows.
 * **What to include:**
   * Clear explanation of the feature and its scientific or operational benefit.
   * Expected input/output specifications.
   * **Diagrams & Visuals:** Attach workflow flowcharts, node diagrams, or target output images where applicable.
 
-### `documentation`
+### ![documentation](https://img.shields.io/badge/-documentation-0075ca.svg)
 Use this label to report typos, missing docstrings, unclear installation steps, or request new tutorials.
 * **What to include:**
   * Link or file location of the relevant documentation page.
