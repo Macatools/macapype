@@ -16,7 +16,7 @@ python setup.py develop
 
 # Docker image
 ```shell
-docker pull macatools/macapype/latest
+docker pull macatools/macapype:latest
 ```
 
 # Documentation
