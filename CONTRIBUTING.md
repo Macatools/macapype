@@ -87,7 +87,6 @@ git push origin my-feature-branch
    * `[FIX]` Bug fix
    * `[ENH]` Enhancement / Feature
    * `[DOC]` Documentation update
-   * `[TST]` Test addition or update
 4. **Link to a previously created issue:** In the PR description, reference the issue using keywords so GitHub automatically closes it when merged:
    * Examples: `Fixes #320`, `Closes #123`, or `Resolves #320`.
 
