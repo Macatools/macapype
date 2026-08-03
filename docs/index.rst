@@ -40,6 +40,12 @@ See :ref:`Commands <command>` for a description on the avalaible command paramet
 
 If ``-deriv``` is provided, see :ref:`Derivatives <derivatives>` for a descrition of the outputs
 
+
+Contributing to the project
+***************************
+
+If you are willing to contribute to macapype, see insctructions `here <https://https://github.com/macatools/macapype/blob/master/CONTRIBUTING.md>`_
+
 Table of contents
 ******************
 
