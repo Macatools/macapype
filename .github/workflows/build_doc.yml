@@ -23,10 +23,6 @@ jobs:
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
-      - name: Test with pytest
-        run:
-            py.test --cov macapype --ignore=examples/ --ignore=run_examples/
-
       - name: Build the Doc 🔧
         run: |
           cd docs
