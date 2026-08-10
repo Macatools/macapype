@@ -40,6 +40,10 @@ See :ref:`Commands <command>` for a description on the avalaible command paramet
 
 If ``-deriv``` is provided, see :ref:`Derivatives <derivatives>` for a descrition of the outputs
 
+Useful tips
+***********
+
+Before using macapype, or if it fails due to unconventioanal head coverage or position, or image orientation, :ref:`here are some tips <utils>` to improve the quality of the processing before starting.
 
 Contributing to the project
 ***************************
@@ -59,5 +63,6 @@ Table of contents
     derivatives
     params
     indiv_params
+    utils
 
 
