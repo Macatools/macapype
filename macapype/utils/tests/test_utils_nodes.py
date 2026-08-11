@@ -26,8 +26,8 @@ def test_NodeParams_init():
 
     with pytest.raises(AssertionError):
         bet_crop = NodeParams(interface=T1xT2BET(),
-                                params=params,
-                                name="bet_crop")
+                              params=params,
+                              name="bet_crop")
         bet_crop.run()
 
 
@@ -46,6 +46,7 @@ def test_NodeParams_load_inputs_from_dict():
 
     with pytest.raises(AssertionError):
         bet_crop.load_inputs_from_dict(params)
+
 
 def test_MapNodeParams():
 
