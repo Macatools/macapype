@@ -6,8 +6,10 @@ Useful tips (before processing)
 _______________________________
 
 
+If default pipelines are failing, it may be due to original images being non-optimal for processing. Please check axis labels, orientation , and cropping before retrying to run macapype
+
 **************************************
-How to orient the labels your images ?
+How to orient the axis labels your images ?
 **************************************
 
 In particular, the image should be in neurological convention, i.e. left label on the right of the image in FSL coronal representation, and x values increasion from left to right.
@@ -16,7 +18,7 @@ In particular, the image should be in neurological convention, i.e. left label o
     :scale: 50%
     :align: center
 
-If is not the case, use the following procedure to swap the X-axis
+If is not the case, it is possible to use FSL use the following procedure to swap the X-axis
 
 .. code-block:: bash
 
@@ -31,6 +33,7 @@ After the labels are reoriented:
 .. image:: ./img/crop/good_orient_mark.png
     :scale: 50%
     :align: center
+
 
 ********************************************
 How to tilt the orientation of your images ?
@@ -122,6 +125,8 @@ rename everything back as intended in BIDS
     mv sub-Pandore_ses-01_rec-mean_T1w_nudge_std.nii.gz  sub-Pandore_ses-01_rec-mean_T1w.nii.gz
     mv sub-Pandore_ses-01_T2w_flirt.nii.gz  sub-Pandore_ses-01_T2w.nii.gz
 
+
+Other possibilities to perform interactively labels modification and images orientation include tools such as  `Reorient <https://neuroanatomy.github.io/reorient>`_ .
 
 
 ************************************
