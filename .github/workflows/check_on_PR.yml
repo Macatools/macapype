@@ -25,6 +25,14 @@ jobs:
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
+        - name: Test Academic Cloud Connectivity
+        run: |
+            # Test HTTP headers, response code, and redirect behavior
+            curl -I -v -L --max-time 15 "https://amubox.univ-amu.fr/public.php/dav/files/qzsfymDYjx692Q4" || true
+
+            # Test with a browser User-Agent
+            curl -I -v -L -A "Mozilla/5.0" --max-time 15 "https://amubox.univ-amu.fr/public.php/dav/files/qzsfymDYjx692Q4" || true
+
       - name: Test with pytest
         run:
             py.test --cov macapype --ignore=examples/ --ignore=run_examples/

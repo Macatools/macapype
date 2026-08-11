@@ -37,4 +37,4 @@ The macapype_users can be be found [here](https://framateam.org/signup_user_comp
 
 # Contribution to project
 
-Are you willing to contribute to the project? See the instructions in [CONTRIBUTING.md] (https://github.com/macatools/macapype/blob/master/CONTRIBUTING.md)
+Are you willing to contribute to the project? See the instructions in [CONTRIBUTING.md](https://github.com/macatools/macapype/blob/master/CONTRIBUTING.md)
