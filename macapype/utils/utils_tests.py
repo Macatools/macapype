@@ -105,7 +105,7 @@ def load_test_data(name, path_to=""):
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
 
-    if not op.exists(data_path)
+    if not op.exists(data_path):
         print("Error, cannot find {}".format(data_path))
         return ""
 
