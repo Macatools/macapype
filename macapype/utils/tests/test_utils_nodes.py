@@ -10,21 +10,31 @@ from macapype.utils.utils_nodes import NodeParams, MapNodeParams, ParseParams
 from nipype.interfaces.base import traits
 import nipype.interfaces.fsl as fsl
 
-data_path = load_test_data("data_test_macaque")
+@pytest.fixture(scope="session")
+def test_data_files():
+    """Load test data once per session - skip if unavailable"""
+    try:
+        data_path = load_test_data("data_test_macaque")
+        return {
+            "data_path": data_path,
+            "T1_file": op.join(data_path, "sub-Apache_ses-01_T1w.nii"),
+            "T2_file": op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+        }
+    except AssertionError as e:
+        pytest.skip(f"Test data not available: {e}")
 
-T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+def test_NodeParams_init(test_data_files):
+    params = {"t1_file": test_data_files["T1_file"],
+              "t2_file": test_data_files["T2_file"], "aT2": True}
 
 
-def test_NodeParams_init():
-    params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
     with pytest.raises(AssertionError):
         bet_crop = NodeParams(interface=T1xT2BET(), params=params,  # noqa
                               name="bet_crop")
 
 
 def test_NodeParams_load_inputs_from_dict():
-    params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
+    params = {"t1_file": T1_file, "t2_file": T2_file, "aT2": True}
     bet_crop = NodeParams(interface=T1xT2BET(), name="bet_crop")
     with pytest.raises(AssertionError):
         bet_crop.load_inputs_from_dict(params)
