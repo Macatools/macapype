@@ -42,7 +42,7 @@ The 4 commands earlier corresponds to brain segmentation performed on an example
 
     /path/to/data/macapype_CI_v2.1/cerimed_marmo/results/macapype_ants/graph.png
 
-* The second one (*-soft ANTS_prep*) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated croping and alignement in the template space:
+* The second one (*-soft ANTS_prep*) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated cropping and alignement in the template space:
 
 .. code:: bash
 
@@ -93,7 +93,7 @@ From github install
 Testing the macaque and baboon datasets
 #######################################
 
-Two other datasets, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.
+Two other datasets, corresponding to one macaque and one baboon, are available in the test dataset. Please note that due to higher image resolution, the preprocessing will take a longer time.
 
 Baboon
 ******

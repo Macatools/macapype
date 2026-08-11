@@ -266,7 +266,7 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>The second one (<em>-soft ANTS_prep</em>) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated croping and alignement in the template space:</p></li>
+<li><p>The second one (<em>-soft ANTS_prep</em>) is to run data preparation pipeline (corresponding to preprocessing). If it works, you should be able to see the data after automated cropping and alignement in the template space:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/path/to/data/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/sub-Tresor_ses-01_space-stereo_T1w.nii.gz
 </pre></div>
@@ -310,7 +310,7 @@ $<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> 
 </section>
 <section id="testing-the-macaque-and-baboon-datasets">
 <h2>Testing the macaque and baboon datasets<a class="headerlink" href="#testing-the-macaque-and-baboon-datasets" title="Link to this heading">¶</a></h2>
-<p>Two other datasets, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.</p>
+<p>Two other datasets, corresponding to one macaque and one baboon, are available in the test dataset. Please note that due to higher image resolution, the preprocessing will take a longer time.</p>
 <p>baboon is for adult template</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.6.sif<span class="w"> </span>segment_pnh<span class="w"> </span>-data<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon<span class="w"> </span>-out<span class="w"> </span>/data/macapype_CI_v2.1/cerimed_baboon/results_adult<span class="w"> </span>-soft<span class="w"> </span>ANTS<span class="w"> </span>-species<span class="w"> </span>baboon<span class="w"> </span>-sub<span class="w"> </span>Prune<span class="w"> </span>-ses<span class="w"> </span><span class="m">3</span><span class="w"> </span>-deriv<span class="w"> </span>-padback<span class="w"> </span>-dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w">  </span>-indiv<span class="w"> </span>/data/cerimed_baboon/indiv_params_segment_baboon.json
 </pre></div>
