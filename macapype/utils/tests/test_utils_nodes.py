@@ -12,9 +12,13 @@ import nipype.interfaces.fsl as fsl
 
 data_path = load_test_data("data_test_macaque")
 
-T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+if data_path != "":
 
+    T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+    T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+else:
+    T1_file = ""
+    T2_file = ""
 
 def test_NodeParams_init():
     params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
