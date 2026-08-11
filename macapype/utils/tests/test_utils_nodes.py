@@ -16,36 +16,35 @@ def test_NodeParams_init():
 
         data_path = load_test_data("data_test_macaque")
 
-        T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-        T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
-
-        params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
-        with pytest.raises(AssertionError):
-            bet_crop = NodeParams(interface=T1xT2BET(),
-                                  params=params,
-                                  name="bet_crop")
-            bet_crop.run()
-
     except AssertionError as e:
         pytest.skip(f"Test data not available: {e}")
+
+    T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+    T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+
+    params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
+    with pytest.raises(AssertionError):
+        bet_crop = NodeParams(interface=T1xT2BET(),
+                                params=params,
+                                name="bet_crop")
+        bet_crop.run()
 
 
 def test_NodeParams_load_inputs_from_dict():
     try:
         data_path = load_test_data("data_test_macaque")
 
-        T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-        T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
-
-        params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
-        bet_crop = NodeParams(interface=T1xT2BET(), name="bet_crop")
-
-        with pytest.raises(AssertionError):
-            bet_crop.load_inputs_from_dict(params)
-
     except AssertionError as e:
         pytest.skip(f"Test data not available: {e}")
 
+    T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+    T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+
+    params = {"t_file": T1_file, "t2_file": T2_file, "aT2": True}
+    bet_crop = NodeParams(interface=T1xT2BET(), name="bet_crop")
+
+    with pytest.raises(AssertionError):
+        bet_crop.load_inputs_from_dict(params)
 
 def test_MapNodeParams():
 
@@ -57,16 +56,16 @@ def test_MapNodeParams():
     try:
         data_path = load_test_data("data_test_macaque")
 
-        T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
-        T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
-
-        crop_bb.inputs.in_file = [T1_file, T2_file]
-
-        with pytest.raises(ValueError):
-            crop_bb.run()
-
     except AssertionError as e:
         pytest.skip(f"Test data not available: {e}")
+
+    T1_file = op.join(data_path, "sub-Apache_ses-01_T1w.nii")
+    T2_file = op.join(data_path, "sub-Apache_ses-01_T2w.nii")
+
+    crop_bb.inputs.in_file = [T1_file, T2_file]
+
+    with pytest.raises(ValueError):
+        crop_bb.run()
 
 
 def test_ParseParams():
