@@ -57,8 +57,8 @@ def _download_data_zip(data_zip, name):
 
             return True
 
-    if not op.exists(data_zip):
-        print("Error, data_zip = {} not found ".format(data_zip))
+    assert op.exists(data_zip), \
+        "Error, data_zip = {} not found ".format(data_zip)
 
     return False
 
@@ -92,25 +92,18 @@ def load_test_data(name, path_to=""):
 
         val = _download_data_zip(data_zip, name)
 
-        if val==False:
-            print("Error, cannot download {}".format(data_zip))
-            return ""
+        assert val, "Error, cannot download {}".format(data_zip)
 
-    if not op.exists(data_zip):
-        print("Error, cannot find {}".format(data_zip))
-        return ""
+    assert op.exists(data_zip), "Error, cannot find {}".format(data_zip)
 
     os.system("ls -l {}".format(data_dirpath))
     print("Unzip {} to {}".format(data_zip, data_path))
     os.system("unzip -o {} -d {}".format(data_zip, data_path))
     os.remove(data_zip)
 
-    if not op.exists(data_path):
-        print("Error, cannot find {}".format(data_path))
-        return ""
+    assert op.exists(data_path), "Error, cannot find {}".format(data_path)
 
-    else:
-        return data_path
+    return data_path
 
 
 def format_template(data_path, template_name):
