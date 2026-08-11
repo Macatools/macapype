@@ -6,7 +6,7 @@ Useful tips (before processing)
 _______________________________
 
 
-If default pipelines are failing, it may be due to original images being non-optimal for processing. Please check axis labels, orientation , and cropping before retrying to run macapype
+If default pipelines are failing, it may be due to original images being non-optimal for processing. Please check axis labels, orientation , and cropping before retrying to run macapype. Here we will focus on a method using FSL and FSLeyes. Other possibilities to perform interactively labels modification and images orientation include tools such as  `Reorient <https://neuroanatomy.github.io/reorient>`_ .
 
 **************************************
 How to orient the axis labels your images ?
@@ -125,8 +125,6 @@ rename everything back as intended in BIDS
     mv sub-Pandore_ses-01_rec-mean_T1w_nudge_std.nii.gz  sub-Pandore_ses-01_rec-mean_T1w.nii.gz
     mv sub-Pandore_ses-01_T2w_flirt.nii.gz  sub-Pandore_ses-01_T2w.nii.gz
 
-
-Other possibilities to perform interactively labels modification and images orientation include tools such as  `Reorient <https://neuroanatomy.github.io/reorient>`_ .
 
 
 ************************************
