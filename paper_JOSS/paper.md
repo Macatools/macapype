@@ -3,7 +3,7 @@ title: 'Macapype: An open multi-software framework for non-human primate brain a
 tags:
   - Python
   - Non human primate (NHP)
-  - anatomical MRI (Magentic Resonance Imaging)
+  - anatomical MRI (Magnetic Resonance Imaging)
   - pipeline
   - brain segmentation
   - brain extraction
@@ -57,8 +57,7 @@ Two categories of methods have been proposed to address the issue of NHP anatomi
 
 # Software design
 In this context, we propose a general framework for the tissue segmentation of non-human primate brain MR images that can provide multiple pipelines to adapt to a variety of image qualities and species. This open-source framework, named Macapype, is built on the Nipype [gorgolewski2011nipype] , a widely used Python framework for human MRI analysis.
-
-The Macapype package was specifically designed to provide wraps of custom tools specific to NHP anatomical MRI preprocessingn, as well pipelines and workflows to achieve high-quality automated tissue segmentation of NHP anatomical images. In particular, the tuning of parameters for different species, should be possible if needed via the use parameters files
+The Macapype package was specifically designed to provide wrappers of custom tools specific to NHP anatomical MRI preprocessing, as well as pipelines and workflows to achieve high-quality automated tissue segmentation of NHP anatomical images. In particular, the tuning of parameters for different species, should be possible if needed via the use of parameter files.
 
 ![Different pipelines are chained\label{pipeline}](./pipelines.png)
 
@@ -72,19 +71,19 @@ The data preparation pipeline is specified in a JSON parameters file and depends
 
 ## Brain extraction pipeline
 
-For skull-stripping step, Macapype offers a choice between AtlasBRex [@lohmeier2019atlasbrex] and bet4animal, an optimized version of brain extraction tool (BET in FSL) for NHP. HD-BET [@Isensee2019hdbet] is also available for deep-learning-based brain extraction.
+For the skull-stripping step, Macapype offers a choice between AtlasBRex [@lohmeier2019atlasbrex] and bet4animal, an optimized version of the brain extraction tool (BET in FSL) for NHP. HD-BET [@Isensee2019hdbet] is also available for deep-learning-based brain extraction.
 
 ## Tissue segmentation pipeline
 
-Tissue segmentation is template-based and can be done in template or native space. Macapype provides templates for macaque, marmoset, baboon, and chimpanzee. T1xT2 debias is applied, followed by normalization and segmentation using ANTS-based Atropos or SPM12-based old segment.
+Tissue segmentation is template-based and can be done in template or native space. Macapype provides templates for macaque, marmoset, baboon, and chimpanzee. T1xT2 debias is applied, followed by normalization and segmentation using ANTs-based Atropos or SPM12-based old segment.
 
 ## Post-processing pipeline
 
-For compatibility with further processing, Macapype provides formatting options, such as the 5tt file from MRTrix [@tournier2019mrtrix3] for further processing of diffusion MRI  and meshes in STL format for 3D printing.
+For compatibility with further processing, Macapype provides formatting options, such as the 5tt file from MRtrix [@tournier2019mrtrix3] for further processing of diffusion MRI and meshes in STL format for 3D printing.
 
 # Research impact statement
 
-Macapype is compatible with FAIR principles, storing all processing steps and parameters in a JSON file. It allows evaluation of results at different preprocessing steps and is tested on images from the PRIME-DE database  [@milham2018open] and is listed as a software solution on PRIME-RE [@messinger2021collaborative].
+Macapype is compatible with FAIR principles, storing all processing steps and parameters in a JSON file. It allows evaluation of results at different preprocessing steps and is tested on images from the PRIME-DE database [@milham2018open] and is listed as a software solution on PRIME-RE [@messinger2021collaborative].
 
 # AI usage disclosure
 
