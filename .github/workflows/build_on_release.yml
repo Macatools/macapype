@@ -86,7 +86,7 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -130,7 +130,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -174,7 +175,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -218,7 +220,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -263,7 +266,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -308,7 +312,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
 
@@ -352,7 +357,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -396,7 +402,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -440,7 +447,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -484,7 +492,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -528,7 +537,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -572,7 +582,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -616,7 +627,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -660,7 +672,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -704,7 +717,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -748,7 +762,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
@@ -792,7 +807,8 @@ jobs:
       - name: Download dataset
         run: |
 
-            curl https://amubox.univ-amu.fr/public.php/dav/files/CoSC5w5ATZextme --output macapype_CI_v2.1.zip
+            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
+
 
             unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
 
