@@ -241,35 +241,35 @@
 <p>Here is json file with all possible nodes to be tuned in indiv_params; In particular, the specifications of sub- and ses- are mandatory before the specification of nodes; Also note that the nodes are specified directly, without specifiying the sub-pipelines they belong to.</p>
 <p>The nodes belonging to “short_data_preparation” pipeline (see <a href="#id1"><span class="problematic" id="id2">`Params&lt;params&gt;`_</span></a>) are common to both -soft ANTS and SPM :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;sub-test&quot;</span><span class="p">:</span>
+    <span class="s2">"sub-test"</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;ses-01&quot;</span><span class="p">:</span>
+        <span class="s2">"ses-01"</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;reorient&quot;</span><span class="p">:</span>
+            <span class="s2">"reorient"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL node in params&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;SwapDimensions (FSL)&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;new_dims&quot;</span><span class="p">:</span> <span class="s2">&quot;x z -y&quot;</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL node in params"</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"SwapDimensions (FSL)"</span><span class="p">,</span>
+                <span class="s2">"new_dims"</span><span class="p">:</span> <span class="s2">"x z -y"</span>
             <span class="p">},</span>
 
-            <span class="s2">&quot;crop_T1&quot;</span><span class="p">:</span>
+            <span class="s2">"crop_T1"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL node in params&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;fslroi (FSL)&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="mf">0.8</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL node in params"</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"fslroi (FSL)"</span><span class="p">,</span>
+                <span class="s2">"args"</span><span class="p">:</span> <span class="mf">0.8</span>
             <span class="p">},</span>
 
-            <span class="s2">&quot;reg_T1_on_template&quot;</span><span class="p">:</span>
+            <span class="s2">"reg_T1_on_template"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;RegAladin (NiftyReg)&quot;</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"RegAladin (NiftyReg)"</span>
 
             <span class="p">},</span>
-            <span class="s2">&quot;reg_T1_on_template2&quot;</span><span class="p">:</span>
+            <span class="s2">"reg_T1_on_template2"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL node in params&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;typically used with -soft _robustreg &quot;</span><span class="p">,</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL node in params"</span><span class="p">,</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"typically used with -soft _robustreg "</span><span class="p">,</span>
 
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;RegAladin (NiftyReg)&quot;</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"RegAladin (NiftyReg)"</span>
 
             <span class="p">}</span>
         <span class="p">}</span>
@@ -279,44 +279,44 @@
 </div>
 <p>For -soft SPM, here is the set of nodes that can be individually tuned:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;sub-test&quot;</span><span class="p">:</span>
+    <span class="s2">"sub-test"</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;ses-01&quot;</span><span class="p">:</span>
+        <span class="s2">"ses-01"</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
+            <span class="s2">"debias"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)"</span><span class="p">,</span>
 
-                <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span>
+                <span class="s2">"s"</span><span class="p">:</span> <span class="mi">2</span>
             <span class="p">},</span>
 
-            <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+            <span class="s2">"reg"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;IterREGBET (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"IterREGBET (local wrap of Regis Trapeau tools)"</span><span class="p">,</span>
 
-                <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
+                <span class="s2">"n"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"m"</span><span class="p">:</span> <span class="s2">"ref"</span><span class="p">,</span>
+                <span class="s2">"dof"</span><span class="p">:</span> <span class="mi">12</span>
             <span class="p">},</span>
 
 
-            <span class="s2">&quot;threshold_gm&quot;</span><span class="p">:</span>
+            <span class="s2">"threshold_gm"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold (FSL)&quot;</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"Threshold (FSL)"</span><span class="p">,</span>
 
-                <span class="s2">&quot;thr&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+                <span class="s2">"thr"</span><span class="p">:</span> <span class="mf">0.5</span>
             <span class="p">},</span>
-            <span class="s2">&quot;threshold_wm&quot;</span><span class="p">:</span>
+            <span class="s2">"threshold_wm"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold (FSL)&quot;</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"Threshold (FSL)"</span><span class="p">,</span>
 
-                <span class="s2">&quot;thr&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+                <span class="s2">"thr"</span><span class="p">:</span> <span class="mf">0.5</span>
             <span class="p">},</span>
-            <span class="s2">&quot;threshold_csf&quot;</span><span class="p">:</span>
+            <span class="s2">"threshold_csf"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold (FSL)&quot;</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"Threshold (FSL)"</span><span class="p">,</span>
 
-                <span class="s2">&quot;thr&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+                <span class="s2">"thr"</span><span class="p">:</span> <span class="mf">0.5</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -325,58 +325,58 @@
 </div>
 <p>For -soft ANTS, here is the set of nodes that can be individually tuned:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;sub-test&quot;</span><span class="p">:</span>
+    <span class="s2">"sub-test"</span><span class="p">:</span>
     <span class="p">{</span>
-        <span class="s2">&quot;ses-01&quot;</span><span class="p">:</span>
+        <span class="s2">"ses-01"</span><span class="p">:</span>
         <span class="p">{</span>
-            <span class="s2">&quot;N4debias&quot;</span><span class="p">:</span>
+            <span class="s2">"N4debias"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;N4BiasFieldCorrection (ANTS)&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"N4BiasFieldCorrection (ANTS)"</span><span class="p">,</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL"</span><span class="p">,</span>
 
-                <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                <span class="s2">&quot;bspline_fitting_distance&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-                <span class="s2">&quot;n_iterations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
-                <span class="s2">&quot;convergence_threshold&quot;</span><span class="p">:</span> <span class="mf">0.00000001</span><span class="p">,</span>
-                <span class="s2">&quot;shrink_factor&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;-r 0 --verbose 1&quot;</span>
+                <span class="s2">"dimension"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">"bspline_fitting_distance"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                <span class="s2">"n_iterations"</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+                <span class="s2">"convergence_threshold"</span><span class="p">:</span> <span class="mf">0.00000001</span><span class="p">,</span>
+                <span class="s2">"shrink_factor"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"args"</span><span class="p">:</span> <span class="s2">"-r 0 --verbose 1"</span>
             <span class="p">},</span>
-            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fast&quot;</span><span class="p">:</span>
+            <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OR"</span><span class="p">,</span>
+            <span class="s2">"fast"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;FAST (FSL)&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-
-            <span class="s2">&quot;atlas_brex&quot;</span><span class="p">:</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="mf">0.8</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL"</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"FAST (FSL)"</span><span class="p">,</span>
             <span class="p">},</span>
 
-            <span class="s2">&quot;debias&quot;</span><span class="p">:</span>
+            <span class="s2">"atlas_brex"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;commnet&quot;</span><span class="p">:</span> <span class="s2">&quot;# TODO is not used now... in code&quot;</span> <span class="p">,</span>
-                <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span>
+                <span class="s2">"f"</span><span class="p">:</span> <span class="mf">0.8</span>
+            <span class="p">},</span>
+
+            <span class="s2">"debias"</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL"</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"T1xT2BiasFieldCorrection (local wrap of Regis Trapeau tools)"</span><span class="p">,</span>
+                <span class="s2">"commnet"</span><span class="p">:</span> <span class="s2">"# TODO is not used now... in code"</span> <span class="p">,</span>
+                <span class="s2">"s"</span><span class="p">:</span> <span class="mi">2</span>
             <span class="p">},</span>
 
 
 
-            <span class="s2">&quot;norm_intensity&quot;</span><span class="p">:</span>
+            <span class="s2">"norm_intensity"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL node in params, if register_NMT_pipe is defined&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;N4BiasFieldCorrection (ANTS)&quot;</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL node in params, if register_NMT_pipe is defined"</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"N4BiasFieldCorrection (ANTS)"</span>
             <span class="p">},</span>
-            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;reg&quot;</span><span class="p">:</span>
+            <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OR"</span><span class="p">,</span>
+            <span class="s2">"reg"</span><span class="p">:</span>
             <span class="p">{</span>
-                <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL node in params, if reg is defined&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;IterREGBET (local wrap of Regis Trapeau tools)&quot;</span><span class="p">,</span>
+                <span class="s2">"comment"</span><span class="p">:</span> <span class="s2">"OPTIONAL node in params, if reg is defined"</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="s2">"IterREGBET (local wrap of Regis Trapeau tools)"</span><span class="p">,</span>
 
-                <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;dof&quot;</span><span class="p">:</span> <span class="mi">12</span>
+                <span class="s2">"n"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"m"</span><span class="p">:</span> <span class="s2">"ref"</span><span class="p">,</span>
+                <span class="s2">"dof"</span><span class="p">:</span> <span class="mi">12</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -398,7 +398,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2026, Macapype Developers (macatools). Last updated on 2026-08-11.<br/>
+        &copy; Copyright 2026, Macapype Developers (macatools). Last updated on 2026-08-17.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/>
     </p>
   </div>
