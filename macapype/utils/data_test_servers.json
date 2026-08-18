@@ -3,7 +3,14 @@
         "server": "https://zenodo.org",
         "data_dir": {
             "Juna_Chimp_T1_1mm_skull.nii.gz": "4683381",
-            "Juna_Chimp": "4738619"
+            "Juna_Chimp": "4738619",
+            "NMT_v2.0_asym": "21992104",
+            "NMT_v2.0_asym_0p5": "21992266",
+            "MBM_v3.0.1_6seg_stereoINT":"21992298",
+            "BaBa21-1":"21992450",
+            "BaBa21-2":"21992507",
+            "BaBa21-3":"21992563"
+
             },
         "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"
     },

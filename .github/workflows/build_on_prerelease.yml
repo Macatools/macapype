@@ -289,9 +289,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_4animal/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_4animal_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_4animal/sub-Tresor/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_4animal_t1t2/sub-Tresor/ses-01/anat/
             echo ""
 
 
@@ -380,9 +380,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/derivatives/macapype_ants/sub-Prune/ses-3/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results/derivatives/macapype_ants_t1t2/sub-Prune/ses-3/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -390,7 +390,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results
 
   run-pretest-ants-baboon3:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon3)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -425,9 +425,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants/sub-Prune/ses-3/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants_t1t2/sub-Prune/ses-3/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -435,7 +435,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3
 
   run-pretest-ants-baboon2:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon2)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -470,9 +470,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants/sub-Prune/ses-2/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants_t1t2/sub-Prune/ses-2/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -480,7 +480,7 @@ jobs:
             sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2
 
   run-pretest-ants-baboon1:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon)
+    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon1)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -515,324 +515,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants/sub-Prune/ses-1/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1
-
-  run-pretest-ants-baboon0:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg_prep baboon0)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_robustreg_prep T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results0 -soft ANTS_robustreg_prep -species baboon0 -sub Prune -ses 0 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results0/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results0/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results0/derivatives/macapype_ants/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results0/derivatives/macapype_ants/sub-Prune/ses-0/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results0
-
-  run-pretest-ants-4animal-baboon3-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_4animal_robustreg baboon3_0p6)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_4animal_robustreg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results3 -soft ANTS_4animal_robustreg -species baboon3_0p6 -sub Prune -ses 3 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants_4animal/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants_4animal/sub-Prune/ses-3/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3
-
-  run-pretest-ants-4animal-baboon2-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_4animal_robustreg baboon2_0p6)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_4animal_robustreg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results2 -soft ANTS_4animal_robustreg -species baboon2_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants_4animal/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants_4animal/sub-Prune/ses-2/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2
-
-  run-pretest-ants-4animal-baboon1-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_4animal_robustreg baboon1_0p6)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_4animal_robustreg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results1 -soft ANTS_4animal_robustreg -species baboon1_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants_4animal/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants_4animal/sub-Prune/ses-2/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1
-
-  run-pretest-ants-baboon3-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon3_0p6)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_robustreg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results3 -soft ANTS_robustreg -species baboon3_0p6 -sub Prune -ses 3 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3/derivatives/macapype_ants/sub-Prune/ses-3/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results3
-
-  run-pretest-ants-baboon2-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon2_0p6)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_robustreg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results2 -soft ANTS_robustreg -species baboon2_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2/derivatives/macapype_ants/sub-Prune/ses-2/anat/
-            echo ""
-
-      - name: Cleaning dataset
-        run:
-            sudo rm -rf /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results2
-
-  run-pretest-ants-baboon1-0p6:
-    name: Running all existing pipelines in macapype_CI_v2.1.zip (ANTS_robustreg baboon1_0p6)
-    needs:  docker-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1440
-
-    steps:
-      - name: Pull latest docker image
-        run:
-            docker pull macatools/macapype:latest
-
-      - name: Download dataset
-        run: |
-
-            curl https://zenodo.org/records/21980768/files/macapype_CI_v2.1.zip?download=1 --output macapype_CI_v2.1.zip
-
-
-            unzip -o macapype_CI_v2.1.zip -d macapype_CI_v2.1
-
-            pwd
-            echo ""
-
-            ls macapype_CI_v2.1
-            echo ""
-
-            ls macapype_CI_v2.1/cerimed_baboon
-            echo ""
-
-      - name: Running test pipeline cerimed_baboon ANTS_robustreg T1 T2
-        run: |
-            docker run -i -v /home/runner/work/macapype/macapype/macapype_CI_v2.1:/data macatools/macapype:latest segment_pnh -data /data/cerimed_baboon -out /data/cerimed_baboon/results1 -soft ANTS_robustreg -species baboon1_0p6 -sub Prune -ses 2 -deriv -pad -dt T1 T2
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants/
-
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants/sub-Prune/ses-2/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_baboon/results1/derivatives/macapype_ants_t1t2/sub-Prune/ses-1/anat/
             echo ""
 
       - name: Cleaning dataset
