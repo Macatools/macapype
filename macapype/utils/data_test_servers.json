@@ -9,7 +9,8 @@
             "MBM_v3.0.1_6seg_stereoINT":"21992298",
             "BaBa21-1":"21992450",
             "BaBa21-2":"21992507",
-            "BaBa21-3":"21992563"
+            "BaBa21-3":"21992563",
+            "bma-1_0p2mm": "21993721/files"
 
             },
         "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"

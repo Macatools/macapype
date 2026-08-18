@@ -108,9 +108,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants/sub-Stevie/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_t1t2/sub-Stevie/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -153,9 +153,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants/sub-Stevie/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_t1t2/sub-Stevie/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -198,9 +198,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_4animal/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_4animal_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_4animal/sub-Stevie/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_macaque/results/derivatives/macapype_ants_4animal_t1t2/sub-Stevie/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
@@ -243,9 +243,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_t1t2/sub-Tresor/ses-01/anat/
             echo ""
 
 
@@ -335,9 +335,9 @@ jobs:
 
             ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_t1t2/
 
-            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants/sub-Tresor/ses-01/anat/
+            ls /home/runner/work/macapype/macapype/macapype_CI_v2.1/cerimed_marmo/results/derivatives/macapype_ants_t1t2/sub-Tresor/ses-01/anat/
             echo ""
 
       - name: Cleaning dataset
