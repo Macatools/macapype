@@ -1,5 +1,4 @@
 [![Downloads](https://pepy.tech/badge/macapype)](https://pepy.tech/project/macapype)
-[![Build Status](https://travis-ci.com/Macatools/macapype.svg?branch=master)](https://travis-ci.com/Macatools/macapype)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.10203/status.svg)](https://doi.org/10.21105/joss.10203)
 # Quick Install
 To use it:
@@ -22,6 +21,10 @@ docker pull macatools/macapype:latest
 # Documentation
 
 https://macatools.github.io/macapype/
+
+# Article
+
+Macapype is now published in JOSS: [Meunier et al., (2026). Macapype: An open multi-software framework for non-human primate brain anatomical MRI processing. Journal of Open Source Software, 11(125), 10203, https://doi.org/10.21105/joss.10203](https://joss.theoj.org/papers/10.21105/joss.10203)
 
 # External documentation related to project
 
