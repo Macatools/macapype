@@ -1,6 +1,6 @@
 [![Downloads](https://pepy.tech/badge/macapype)](https://pepy.tech/project/macapype)
 [![Build Status](https://travis-ci.com/Macatools/macapype.svg?branch=master)](https://travis-ci.com/Macatools/macapype)
-
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.10203/status.svg)](https://doi.org/10.21105/joss.10203)
 # Quick Install
 To use it:
 ```shell
