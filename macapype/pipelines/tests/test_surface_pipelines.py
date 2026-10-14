@@ -25,7 +25,7 @@ def test_create_surface_pipe():
     }
 
     # params_template
-    template_name = "haiko89_template"
+    template_name = "Haiko_v1.5"
     template_dir = load_test_data(template_name)
 
     params_template = format_template(template_dir, template_name)

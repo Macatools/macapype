@@ -12,18 +12,6 @@ from macapype.utils.utils_tests import (load_test_data, format_template,
 from macapype.utils.utils_nodes import NodeParams
 
 
-def test_server_amubox():
-    tmp_path = make_tmp_dir()
-    name = op.join(tmp_path, "data_test_macaque.zip")
-
-    code = "BdpeSWACJbrNp8r"
-    server = "https://amubox.univ-amu.fr"
-    add = "{}/public.php?service=files&t={}&download".format(server, code)
-    cmd = "wget  --no-check-certificate  \"{}\" -O {}".format(add, name)
-
-    os.system(cmd)
-
-
 def test_load_test_data():
     with pytest.raises(AssertionError):
         load_test_data("do_not_exists")
@@ -53,11 +41,11 @@ def test_data_test_macaque():
 
 def test_zenodo_server():
 
-    test_file = "Juna_Chimp_T1_1mm_skull.nii.gz"
+    test_file = "Haiko_v1.5"
     download_file = os.path.abspath(test_file)
 
     os.system("wget --no-check-certificate  --content-disposition \
-        https://zenodo.org/record/4683381/files/{}?download=1 \
+        https://zenodo.org/record/21994054/files/{}?download=1 \
         -O {}".format(test_file, download_file))
 
     assert os.path.exists(download_file)
@@ -68,7 +56,7 @@ def test_zenodo_server():
 def test_load_test_data_zenodo():
 
     tmp_path = make_tmp_dir()
-    name = "Juna_Chimp"
+    name = "Haiko_v1.5"
     data_path = load_test_data(name=name, path_to=tmp_path)
 
     print(data_path)
