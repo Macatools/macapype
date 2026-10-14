@@ -316,11 +316,9 @@ def create_brain_segment_from_mask_pipe(
                     reg, 'inv_transfo_file',
                     register_seg_to_nat, "postmat")
 
-
                 brain_segment_pipe.connect(
                     reg, 'nonlin_invwarp_file',
                     register_seg_to_nat, "field_file")
-
 
             else:
                 # gm
