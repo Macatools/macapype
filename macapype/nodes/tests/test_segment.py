@@ -37,7 +37,7 @@ def test_fill_list_vol():
 
     import nibabel as nib
 
-    template_name = "MBM_v3.0.1"
+    template_name = "Haiko_v1.5"
     nmt_dir = load_test_data(name=template_name)
     params_template = format_template(nmt_dir, template_name)
 

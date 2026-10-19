@@ -307,9 +307,14 @@ def create_brain_segment_from_mask_pipe(
 
                 register_seg_to_nat.inputs.in_file = params_template[
                     "template_seg"]
+
                 brain_segment_pipe.connect(
                     inputnode, 'masked_debiased_T1',
                     register_seg_to_nat, 'ref_file')
+
+                brain_segment_pipe.connect(
+                    reg, 'inv_transfo_file',
+                    register_seg_to_nat, "postmat")
 
                 brain_segment_pipe.connect(
                     reg, 'nonlin_invwarp_file',

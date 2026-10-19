@@ -18,7 +18,7 @@ def test_create_full_T1T2_subpipes_no_args():
     params = {
         "general":
         {
-            "template_name": "NMT_v1.3better"
+            "template_name": "Haiko_v1.5"
         },
         "short_preparation_pipe":
         {
