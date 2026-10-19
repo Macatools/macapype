@@ -26,6 +26,16 @@ def test_load_test_data_dataset():
     assert len(params_template) != 0
 
 
+def test_load_test_data_dataset_MBM_stereoINTv2():
+
+    template_name = "template_MBM_space-stereoINTv2"
+    nmt_dir = load_test_data(name=template_name)
+    params_template = format_template(nmt_dir, template_name)
+
+    assert len(params_template) != 0
+
+
+
 def test_data_test_macaque():
 
     data_path = load_test_data("data_test_macaque")
