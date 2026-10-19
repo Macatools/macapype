@@ -13,7 +13,8 @@
             "bma-1_0p2mm":"21993721",
             "Haiko_v1.5":"21994054",
             "inia19":"23364736",
-            "data_test_macaque": "23369251"
+            "data_test_macaque": "23369251",
+            "template_MBM_space-stereoINTv2":"23470306"
             },
         "cloud_format_3": "{}/record/{}/files/{}.zip?download=1"
     },
