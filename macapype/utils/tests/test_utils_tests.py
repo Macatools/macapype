@@ -35,7 +35,6 @@ def test_load_test_data_dataset_MBM_stereoINTv2():
     assert len(params_template) != 0
 
 
-
 def test_data_test_macaque():
 
     data_path = load_test_data("data_test_macaque")
