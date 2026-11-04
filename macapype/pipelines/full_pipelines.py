@@ -635,8 +635,8 @@ def create_brain_segment_from_mask_pipe(
 ##############################################################################
 
 
-def create_only_segment_subpipes(params_template_seg,
-        params={}, name="only_segment_subpipes", T1_orient_file, mask_file):
+def create_only_segment_subpipes(params_template_seg, T1_orient_file, mask_file,
+        params={}, name="only_segment_subpipes", ):
     """Description: Segment T1 (using T2 for bias correction) .
 
     Params:
