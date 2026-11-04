@@ -635,6 +635,73 @@ def create_brain_segment_from_mask_pipe(
 ##############################################################################
 
 
+def create_only_segment_subpipes(params_template_seg,
+        params={}, name="only_segment_subpipes", T1_orient_file, mask_file):
+    """Description: Segment T1 (using T2 for bias correction) .
+
+    Params:
+
+    - brain_segment_pipe (see :class:`create_brain_segment_from_mask_pipe\
+    <macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe>`)
+
+    Inputs:
+
+        inputnode:
+
+            list_T1:
+                preprocessed T1 file name
+
+            list_T2:
+                preprocessed T2 file name
+
+            indiv_params (opt):
+                dict with individuals parameters for some nodes
+
+        arguments:
+
+            params_template:
+                dictionary of template files
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
+
+    Outputs:
+
+        brain_mask
+
+        segmented_brain_mask:
+            indexed with tissue classes
+
+    """
+
+    # creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # restore_mask_T1
+    restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
+    #
+    restore_mask_T1.inputs.in_file = T1_orient_file
+
+    restore_mask_T1.inputs.mask_file = mask_file
+
+    # ################################### brain_segment
+    # (restarting from the avg_align files)
+    brain_segment_pipe = create_brain_segment_from_mask_pipe(
+        params_template=params_template_seg,
+        params=parse_key(params, "brain_segment_pipe"), space=space)
+
+    seg_pipe.connect(
+        restore_mask_T1, 'out_file',
+        brain_segment_pipe, 'inputnode.masked_debiased_T1')
+
+    brain_segment_pipe.inputs.inputnode.debiased_T1 = T1_orient_file
+
+    return seg_pipe
+
+
 def create_full_T1T2_subpipes(
         params_template_stereo, params_template_brainmask, params_template_seg,
         params={}, name="full_T1T2_subpipes", mask_file=None,
