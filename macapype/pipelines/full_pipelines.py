@@ -650,14 +650,11 @@ def create_only_segment_subpipes(params_template_seg,
 
         inputnode:
 
-            list_T1:
+            T1_orient_file:
                 preprocessed T1 file name
 
-            list_T2:
+            mask_file:
                 preprocessed T2 file name
-
-            indiv_params (opt):
-                dict with individuals parameters for some nodes
 
         arguments:
 
@@ -679,13 +676,11 @@ def create_only_segment_subpipes(params_template_seg,
 
     """
 
-    # output node
-    input = pe.Node(
-        niu.IdentityInterface(
-            fields=[
-                "T1_orient_file",
-                "mask_file",]),
-        name='outputnode')
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1_orient_file', 'mask_file']),
+        name='inputnode'
+    )
 
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
@@ -699,10 +694,6 @@ def create_only_segment_subpipes(params_template_seg,
     seg_pipe.connect(inputnode, "mask_file",
                      restore_mask_T1, "mask_file")
 
-    restore_mask_T1.inputs.in_file = T1_orient_file
-
-    restore_mask_T1.inputs.mask_file = mask_file
-
     # ################################### brain_segment
     # (restarting from the avg_align files)
     brain_segment_pipe = create_brain_segment_from_mask_pipe(
@@ -713,7 +704,8 @@ def create_only_segment_subpipes(params_template_seg,
         restore_mask_T1, 'out_file',
         brain_segment_pipe, 'inputnode.masked_debiased_T1')
 
-    brain_segment_pipe.inputs.inputnode.debiased_T1 = T1_orient_file
+    seg_pipe.connect(inputnode, "T1_orient_file",
+                     brain_segment_pipe, "inputnode.debiased_T1")
 
     return seg_pipe
 
