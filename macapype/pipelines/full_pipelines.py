@@ -635,6 +635,81 @@ def create_brain_segment_from_mask_pipe(
 ##############################################################################
 
 
+def create_only_segment_subpipes(params_template_seg,
+                                 params={},
+                                 name="only_segment_subpipes",
+                                 space="native"):
+    """Description: Segment T1 (using T2 for bias correction) .
+
+    Params:
+
+    - brain_segment_pipe (see :class:`create_brain_segment_from_mask_pipe\
+    <macapype.pipelines.full_pipelines.create_brain_segment_from_mask_pipe>`)
+
+    Inputs:
+
+        inputnode:
+
+            T1_orient_file:
+                preprocessed T1 file name
+
+            mask_file:
+                preprocessed T2 file name
+
+        arguments:
+
+            params_template:
+                dictionary of template files
+
+            params:
+                dictionary of node sub-parameters (from a json file)
+
+            name:
+                pipeline name (default = "full_segment_pipe")
+
+    Outputs:
+
+        brain_mask
+
+        segmented_brain_mask:
+            indexed with tissue classes
+
+    """
+
+    # Creating input node
+    inputnode = pe.Node(
+        niu.IdentityInterface(fields=['T1_orient_file', 'mask_file']),
+        name='inputnode'
+    )
+
+    # creating pipeline
+    seg_pipe = pe.Workflow(name=name)
+
+    # restore_mask_T1
+    restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
+    #
+    seg_pipe.connect(inputnode, "T1_orient_file",
+                     restore_mask_T1, "in_file")
+
+    seg_pipe.connect(inputnode, "mask_file",
+                     restore_mask_T1, "mask_file")
+
+    # ################################### brain_segment
+    # (restarting from the avg_align files)
+    brain_segment_pipe = create_brain_segment_from_mask_pipe(
+        params_template=params_template_seg,
+        params=parse_key(params, "brain_segment_pipe"), space=space)
+
+    seg_pipe.connect(
+        restore_mask_T1, 'out_file',
+        brain_segment_pipe, 'inputnode.masked_debiased_T1')
+
+    seg_pipe.connect(inputnode, "T1_orient_file",
+                     brain_segment_pipe, "inputnode.debiased_T1")
+
+    return seg_pipe
+
+
 def create_full_T1T2_subpipes(
         params_template_stereo, params_template_brainmask, params_template_seg,
         params={}, name="full_T1T2_subpipes", mask_file=None,
