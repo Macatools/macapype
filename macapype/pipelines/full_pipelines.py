@@ -636,8 +636,6 @@ def create_brain_segment_from_mask_pipe(
 
 
 def create_only_segment_subpipes(params_template_seg,
-                                 T1_orient_file,
-                                 mask_file,
                                  params={},
                                  name="only_segment_subpipes",
                                  space="native"):
@@ -681,12 +679,26 @@ def create_only_segment_subpipes(params_template_seg,
 
     """
 
+    # output node
+    input = pe.Node(
+        niu.IdentityInterface(
+            fields=[
+                "T1_orient_file",
+                "mask_file",]),
+        name='outputnode')
+
     # creating pipeline
     seg_pipe = pe.Workflow(name=name)
 
     # restore_mask_T1
     restore_mask_T1 = pe.Node(fsl.ApplyMask(), name='restore_mask_T1')
     #
+    seg_pipe.connect(inputnode, "T1_orient_file",
+                     restore_mask_T1, "in_file")
+
+    seg_pipe.connect(inputnode, "mask_file",
+                     restore_mask_T1, "mask_file")
+
     restore_mask_T1.inputs.in_file = T1_orient_file
 
     restore_mask_T1.inputs.mask_file = mask_file
